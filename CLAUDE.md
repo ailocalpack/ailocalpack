@@ -2,66 +2,105 @@
 
 Open-source, cross-platform (Windows, macOS, Linux) desktop app that lets a player **install** a community localization for any game they own, or **generate** a new one with an AI agent and **publish** it for others.
 
-Status: pre-code. The stack is not chosen yet; it is the next decision (separate brainstorm). Until it lands, treat this file as the product spec and keep it current as decisions are made: record each settled decision under _Decisions_, and remove the matching item from _Open questions_.
-
-## Core flow
-
-1. **Discover**: on launch, the app scans installed store launchers (Steam, EA app/Origin, Epic, GOG, others) and builds the player's game library. The player can also add a game by pointing at its folder.
-2. **Identify**: each game gets a stable **game identity**, so a localization made on one machine matches the same game on another (see _Open questions_).
-3. **Browse**: show the localizations available for the player's language (default: OS language), with search across other languages.
-4. **Install**: one click puts the pack's files into the game folder, so the player just launches the game and it works. Installing must be reversible: back up every file it overwrites and support uninstall.
-5. **Generate** (when no suitable pack exists for the game, language, or game version): offer to create one with an AI agent:
-   - The player picks an agent (Claude Code, Codex, others) and signs in with **their own account**; the app installs the agent locally if it is missing.
-   - The player picks what to translate: **text**, **audio**, or both.
-   - The agent runs locally against the game files: finds the localizable resources, extracts them, translates them, and repacks them into a pack.
-6. **Publish**: offer to share the generated pack with the community through the registry.
-
-## Registry
-
-There is no backend server; that is a hard constraint. Shared packs live in a separate public git repository, the **registry**, apart from the app's own source repo.
-
-Proposed layout (not final):
-
-```
-games/<game-id>/<game-version>/<language>/
-    text/
-    audio/
-```
-
-- Publishing = the app has the player sign in to the git host, then opens a GitHub pull request with the new pack, but only if it differs from the packs already there.
-- **Pack status**:
-  - **alpha**: published but unreviewed. Visible and installable, shown with a warning.
-  - **verified**: someone ran it in the game, confirmed it works, and it was merged to the main branch.
-- **Rating**: packs get likes or some other rating. The mechanism is not designed yet; it must also work without a server.
+Status: pre-code. Treat this file as the product spec and keep it current: record each settled decision in its section, and remove the matching item from _Open questions_.
 
 ## Constraints
 
-- Every platform is first-class: Windows, macOS, Linux. Store discovery, file paths, and agent installation all differ per OS.
-- No server of our own: the app, the git host, and the player's AI agent account are the whole system.
-- AI usage goes through the player's own agent subscription or account; the project pays for no inference.
-- The app is open source.
+- Every platform is first-class: Windows, macOS, Linux (including Steam Deck). Store discovery, file paths, and agent installation all differ per OS.
+- No server of our own: the app, GitHub, and the player's AI agent account are the whole system.
+- AI usage goes through the player's own agent subscription or API key; the project pays for no inference.
+- Open source.
 
 ## Domain terms
 
 - **Game**: an installed title, found through a store or added manually.
-- **Game identity**: the stable ID used to match a game across machines and stores.
-- **Game version**: the specific build; packs can break between versions.
-- **Pack**: one localization of one game version into one language, made of text and/or audio parts.
-- **Agent**: an external AI coding agent (Claude Code, Codex, etc.) that the app drives to generate a pack.
-- **Registry**: the public git repo of packs.
+- **Game identity**: the stable ID that matches a game across machines (store ID or file fingerprint).
+- **Game version**: the specific build (store build ID or file-hash set); packs can break between versions.
+- **Pack**: one localization of one game into one language. Made of a string table + recipe, or a binary patch as fallback. Has revisions and a status (`alpha` / `verified`).
+- **Recipe**: the part of a pack naming which toolkit tool rebuilds game files from the strings.
+- **Toolkit**: the app's built-in, engine-specific extract/rebuild code; also exposed to agents over MCP.
+- **Agent**: an external AI coding agent (Claude Code, Codex) that the app drives to generate a pack.
+- **Registry**: the separate public GitHub repo of packs.
 
-## Decisions
+## Roadmap
 
-- **Git host: GitHub.** The registry is a GitHub repo; publishing uses GitHub sign-in and opens a pull request.
-- **Packs are stored compressed.** Heavy content (especially audio) must be compacted before it reaches the registry, to keep download traffic and repo size down. The method is still open (see _Open questions_).
+- **MVP**: text only. Steam + manually added folders. All three OSes. Install from the registry, generate with an agent (Claude Code and Codex), publish.
+- **Phase 2**: audio (TTS). **Phase 3**: textures (localized images). The UI shows both as "coming soon" from day one.
+- Post-MVP: more stores (Epic, GOG, EA app), "own API key / local model" agent adapter, manual string editor, cross-store game matching.
+
+## Core flow
+
+1. **Discover**: scan store libraries (Steam in MVP; Steam `appmanifest_*.acf` gives app ID and build ID) and let the player add a game folder manually.
+2. **Identify**: compute game identity and version (see _Game identity_).
+3. **Browse**: list packs for the player's language (default: OS language), with search across other languages; sort by status and rating.
+4. **Install**: one button. Deterministic, agent-free (see _Install_).
+5. **Generate**: when no suitable pack exists, offer to generate one with an agent (see _Generation_).
+6. **Publish**: offer to share the result through the registry (see _Publishing_).
+
+## Stack
+
+- **C# / .NET + Avalonia UI.** Chosen over MAUI (no official Linux) and Tauri/Electron for real Linux support and direct use of .NET modding libraries (AssetsTools.NET, CUE4Parse, UAssetAPI, BepInEx ecosystem).
+- **Distribution: Velopack + GitHub Releases** with delta updates. Linux: AppImage first, Flatpak/Flathub later. Signing: macOS notarization from the start; Windows via free open-source signing (SignPath Foundation).
+- **App UI is multilingual from the start**: strings in resource files, top ~10 player languages, initially AI-translated; community fixes via PRs. Language follows the OS.
+
+## Repositories
+
+- **`ailocalizer`** (this repo): one .NET solution: Avalonia UI, core, toolkit, MCP server, agent adapters, and a CLI used by registry CI to validate packs.
+- **Registry** (separate repo): packs, JSON schemas, GitHub Actions, GitHub Pages index.
+
+## Game identity
+
+- Game ID = store ID (`steam:1091500`). Manually added games get a fingerprint from hashes of the main executable and key data files.
+- Version = store build ID, else a file-hash set.
+- A pack records hashes of the files it touches; before install the app reports compatible / probably compatible / incompatible.
+
+## Install
+
+- **Deterministic and agent-free**: only the app's own built-in code runs. Agent-written code never runs on other players' machines.
+- Reversible: back up every overwritten file; support uninstall.
+- **Game updates**: on app start and in the background (tray), re-check hashes and build IDs of games with installed packs. If a store update or file verification wiped the pack and the version is still compatible, re-apply automatically (with a fresh backup). If incompatible, notify and offer a newer pack revision or generating the missing strings.
+- **Anti-cheat**: games with anti-cheat (EAC, BattlEye, Vanguard, ...), detected by known files and a registry list, are blocked for both install and generation, with an explanation. A registry flag can whitelist games that officially allow mods.
+- **Fonts**: the toolkit checks game fonts for the target script's glyphs; if missing, it swaps in open (OFL) fonts from a whitelist bundled with the app. Packs reference fonts, never ship them.
+
+## Generation
+
+- **Agent adapters behind one interface.** Drive the agent CLI headless (`claude -p`, `codex exec`) with streaming JSON progress, using the player's own subscription login. Both Claude Code and Codex in MVP. An "own API key / local model" adapter comes later.
+- **Agent installation**: use one already on `PATH`; otherwise download the official standalone binary into an app-managed folder (no Node.js, no admin rights), verifying signature/hash. Sign-in runs the agent's own login flow; the app never handles agent tokens.
+- **Sandbox**: the agent works only on a copy of the game files, never the game folder.
+- **Toolkit first**: the toolkit is exposed to the agent as an MCP server. MVP engines: Unity, Unreal Engine, RPG Maker MV/MZ, Ren'Py, Godot. The agent writes its own code only for unknown formats; proven scripts get promoted into the toolkit in later releases.
+- **Pipeline** (stages, persisted to disk, resumable when interrupted or the subscription limit runs out; show a size estimate before starting):
+  1. Explore the game and extract strings via the toolkit.
+  2. Build a glossary (names, terms, tone).
+  3. The app chunks strings and feeds them to the agent with the glossary.
+  4. Rebuild and do a test run.
+- The agent gets string length limits where they can be determined and must preserve placeholders and formatting tags; a validator checks both.
+
+## Pack format
+
+- **Primary: strings + recipe.** A string table (key → translation, JSON/PO) plus a recipe naming the toolkit tool that rebuilds game files locally from the player's own copy.
+- **Fallback: binary patch** (xdelta) produced on the author's machine, for engines the toolkit cannot rebuild.
+- **Data only.** Executable components (mod loaders like BepInEx, XUnity.AutoTranslator) come only from a maintainer-controlled whitelist in the registry: the manifest names the dependency and version, and the app downloads it from the official release and checks its hash. Registry CI rejects any executable file in a pack.
+- **No original text, no game files.** Packs hold keys, translations, and recipes. The editor (later) shows original text from the player's local game copy.
+
+## Registry
+
+- **Layout**: `games/<game-id>/<language>/<pack-id>/` with `manifest.json` and `strings/` (later `audio/`). Several competing packs per game + language are allowed. Game versions are a supported-builds/hashes list in the manifest, not folders; updating a pack for a new game version is a new revision of the same pack.
+- **Storage**: manifests and string tables live in git (reviewable in PRs). Binary parts (patches, later audio) are uploaded by CI to GitHub Release assets and referenced from the manifest by URL + hash. Packs are stored compressed.
+- **Client reads**: never clones and never calls the GitHub API for browsing. It fetches a static `index.json` from GitHub Pages and only the files it installs.
+- **Lifecycle**: a pack PR auto-merges into `main` once CI passes (schema, hashes, no executables) with `status: alpha` (installable, shown with a warning). It becomes `verified` after N independent players (not the author; e.g. N = 3) confirm "works"; a GitHub Action flips the status. Maintainers can grant or revoke `verified` manually.
+- **Rating**: one GitHub Discussion per pack. 👍 reaction = like; templated comments = works / doesn't work reports and reviews. Voting requires GitHub sign-in. A scheduled Action aggregates ratings and confirmations into `index.json`.
+- **Legal**: disclaimer, a clear DMCA takedown process, and a per-game `opt-out` flag for studios that object. Packs for pirated copies are not encouraged.
+- **Licenses**: app under **Apache-2.0**; registry content under **CC BY-SA 4.0**.
+
+## Publishing
+
+- GitHub sign-in via **OAuth Device Flow** (no client secret in the app); token stored in the OS keychain.
+- The app forks the registry via the API, commits the pack to a branch, and opens a PR.
+- Before publishing, it compares with existing packs and offers a new revision of an existing pack (own or someone else's) instead of a duplicate.
 
 ## Open questions
 
-- **Stack**: desktop framework and language, packaging, and auto-update.
-- **Game identity**: store app IDs (Steam appid, etc.) vs. executable hashes vs. a manifest of file hashes; how to match manually added games; how to detect the game version.
-- **Registry layout**: is game version a folder level, or a compatibility range in a pack manifest? What goes in the pack manifest (author, agent used, status, supported versions, checksums)?
-- **Heavy files**: how to compress packs (audio codec and bitrate, archive format, shipping diffs instead of full files) and where large binaries live (plain git, Git LFS with its GitHub quotas, GitHub Release assets). Players should download only the parts they install (text only, a single language).
-- **Rating without a server**: reactions on PRs/issues, a stars file updated through PRs, or something else.
-- **Review process**: who verifies packs, and how verification is recorded.
-- **Agent integration**: how the app drives each agent (CLI, SDK), which instructions or tools it gives the agent for unpacking game formats, and how progress and failures are reported to the player.
-- **Legal**: which game-derived content is safe to redistribute in the registry (e.g. diffs/patches vs. full asset files).
+- **Audio (phase 2)**: TTS engine (local open models like Piper/XTTS vs. cloud via the player's API key, or both via adapters); voice cloning of original actors (default: no, stock voices); audio codec and bitrate for compression.
+- **Archive format** for binary pack parts.
+- **N for `verified`** and anti-abuse rules for confirmations (account age, one vote per account).
+- **Manifest schema**: exact fields (author, agent used, revision, status, supported builds, file hashes, dependencies, fonts).
