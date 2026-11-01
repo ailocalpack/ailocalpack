@@ -11,6 +11,8 @@ Status: pre-code. Treat this file as the product spec and keep it current: recor
 - AI usage goes through the player's own agent subscription or API key; the project pays for no inference.
 - Open source.
 
+UI screens and their states: [`design/README.md`](design/README.md).
+
 ## Domain terms
 
 - **Game**: an installed title, found through a store or added manually.
