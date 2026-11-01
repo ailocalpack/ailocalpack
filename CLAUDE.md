@@ -1,4 +1,4 @@
-# ailocalizer
+# ailocalpack
 
 Open-source, cross-platform (Windows, macOS, Linux) desktop app that lets a player **install** a community localization for any game they own, or **generate** a new one with an AI agent and **publish** it for others.
 
@@ -45,8 +45,10 @@ Status: pre-code. Treat this file as the product spec and keep it current: recor
 
 ## Repositories
 
-- **`ailocalizer`** (this repo): one .NET solution: Avalonia UI, core, toolkit, MCP server, agent adapters, and a CLI used by registry CI to validate packs.
-- **Registry** (separate repo): packs, JSON schemas, GitHub Actions, GitHub Pages index.
+Both live in the GitHub organization **`ailocalpack`** (not a personal account: the index URL is baked into the app and must never move).
+
+- **`ailocalpack/ailocalpack`** (this repo): one .NET solution: Avalonia UI, core, toolkit, MCP server, agent adapters, and a CLI used by registry CI to validate packs.
+- **`ailocalpack/registry`**: packs, JSON schemas, GitHub Actions, GitHub Pages index at `https://ailocalpack.github.io/registry/index.json`.
 
 ## Game identity
 
