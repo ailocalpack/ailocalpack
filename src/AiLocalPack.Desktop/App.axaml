@@ -4,7 +4,7 @@
              xmlns:views="using:AiLocalPack.Desktop.Views"
              x:Class="AiLocalPack.Desktop.App"
              RequestedThemeVariant="Default">
-    <!-- RequestedThemeVariant="Default" follows the OS theme, live; a manual override comes with Settings (task 05). -->
+    <!-- RequestedThemeVariant="Default" follows the OS theme, live; SettingsApplier sets it from Settings → General → Theme. -->
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

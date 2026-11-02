@@ -1,11 +1,166 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+             xmlns:s="using:AiLocalPack.Desktop.ViewModels.Settings"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
-    <!-- Stub: sections come in task 05. -->
-    <StackPanel Margin="24">
-        <TextBlock x:Name="SettingsTitle" Classes="h1" Text="{l:Loc Settings_Title}" />
-    </StackPanel>
+    <!-- Design §8: 272 px section list with search, the selected section (or search results) on the right. -->
+    <UserControl.Resources>
+        <!-- Left half of every row: label (search match highlighted), explanation, optional link. -->
+        <DataTemplate x:Key="RowLabel" x:DataType="s:SettingRow">
+            <StackPanel Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                          Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                <TextBlock Classes="rowHelp" Text="{Binding Help}" IsVisible="{Binding Help, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                <HyperlinkButton Classes="inline" Content="{Binding HelpLinkText}" NavigateUri="{Binding HelpLinkUri}" IsVisible="{Binding HasHelpLink}" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="s:DropdownSettingRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <ComboBox Grid.Column="1" MinWidth="240" VerticalAlignment="Center"
+                              ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}"
+                              AutomationProperties.Name="{Binding Label}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="s:ChoiceOption"><TextBlock Text="{Binding Display}" /></DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="s:SegmentedSettingRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <ListBox Grid.Column="1" Classes="segmented" VerticalAlignment="Center"
+                             ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}"
+                             AutomationProperties.Name="{Binding Label}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="s:ChoiceOption"><TextBlock Text="{Binding Display}" /></DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="s:ToggleSettingRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <ToggleSwitch Grid.Column="1" Classes="bare" VerticalAlignment="Center"
+                                  IsChecked="{Binding IsOn}" AutomationProperties.Name="{Binding Label}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+
+    <Grid ColumnDefinitions="272,*">
+        <!-- Section list -->
+        <Border Background="{DynamicResource AppSurfaceBrush}" BorderBrush="{DynamicResource AppBorderBrush}"
+                BorderThickness="0,0,1,0" Padding="12,18">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Classes="h1" FontSize="20" Margin="8,0,8,10" Text="{l:Loc Settings_Title}" />
+                <TextBox x:Name="SearchBox" DockPanel.Dock="Top" Classes="search" Margin="0,0,0,10"
+                         Text="{Binding Query}" PlaceholderText="{l:Loc Settings_Search_Placeholder}"
+                         AutomationProperties.Name="{l:Loc Settings_Search_Placeholder}">
+                    <TextBox.InnerLeftContent>
+                        <Viewbox Classes="icon" Width="16" Height="16" Margin="10,0,0,0">
+                            <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </TextBox.InnerLeftContent>
+                </TextBox>
+                <TextBlock x:Name="AppVersion" DockPanel.Dock="Bottom" Classes="hint" Margin="8,12,8,0" Text="{Binding Version}" />
+                <ListBox x:Name="SectionList" Classes="sectionNav" ItemsSource="{Binding Sections}" SelectedItem="{Binding NavSelection}"
+                         AutomationProperties.Name="{l:Loc Settings_Title}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="s:SettingsSection">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Viewbox Classes="icon">
+                                    <Path Classes="icon" Data="{Binding IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                          Stroke="{Binding $parent[ListBoxItem].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                <Border Grid.Column="2" Classes="badge" Classes.bad="{Binding BadgeIsError}" IsVisible="{Binding HasBadge}">
+                                    <TextBlock Text="{Binding BadgeCount}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock Grid.Column="2" Classes="hint" Text="{Binding Hint}" IsVisible="{Binding HasHint}" VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer Grid.Column="1">
+            <!-- Content column: fills the pane up to 860 px, left-aligned. -->
+            <Grid Margin="32,26,32,56">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MaxWidth="860" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <!-- Selected section -->
+                <StackPanel x:Name="SectionPage" Spacing="24" IsVisible="{Binding !IsSearching}">
+                    <StackPanel Spacing="2">
+                        <TextBlock x:Name="SectionTitle" Classes="h1" FontSize="26" Text="{Binding SelectedSection.Title}" />
+                        <TextBlock Classes="muted" Text="{Binding SelectedSection.Description}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Border Classes="card" Padding="16,20" IsVisible="{Binding SelectedSection.IsComingSoon}">
+                        <TextBlock x:Name="ComingSoon" Classes="muted" Text="{l:Loc Settings_ComingSoon}" TextWrapping="Wrap" />
+                    </Border>
+                    <ItemsControl ItemsSource="{Binding SelectedSection.Groups}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Spacing="24" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="s:SettingsGroup">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Classes="groupTitle" Text="{Binding Title, Converter={x:Static views:UpperCaseConverter.Instance}}" />
+                                    <Border Classes="card">
+                                        <ItemsControl Classes="rows" ItemsSource="{Binding Rows}" />
+                                    </Border>
+                                    <TextBlock Classes="note" Text="{Binding Note}" IsVisible="{Binding HasNote}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Search results: matching rows grouped under their section -->
+                <StackPanel x:Name="SearchResults" Spacing="24" IsVisible="{Binding IsSearching}">
+                    <ItemsControl ItemsSource="{Binding Results}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Spacing="24" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="s:SettingsSearchHit">
+                                <StackPanel Spacing="8">
+                                    <Button Classes="back" Padding="4,2" HorizontalAlignment="Left"
+                                            Command="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).OpenSectionCommand}"
+                                            CommandParameter="{Binding Section}">
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <Viewbox Classes="icon">
+                                                <Path Classes="icon" Stroke="{DynamicResource AppAccentBrush}"
+                                                      Data="{Binding Section.IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                            </Viewbox>
+                                            <TextBlock Classes="h2" Foreground="{DynamicResource AppAccentBrush}" Text="{Binding Section.Title}" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Border Classes="card" IsVisible="{Binding Rows.Count}">
+                                        <ItemsControl Classes="rows" ItemsSource="{Binding Rows}" />
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="NoResults" Classes="muted" HorizontalAlignment="Center" Margin="0,40"
+                               Text="{Binding NoResultsText}" IsVisible="{Binding HasNoResults}" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

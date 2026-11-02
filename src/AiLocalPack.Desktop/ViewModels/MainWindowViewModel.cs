@@ -41,6 +41,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanGoBack))]
     private void GoBack() => _navigation.GoBack();
 
+    /// <summary>Whether Settings is shown: the ⚙ button is drawn as active.</summary>
+    public bool IsSettingsOpen => _navigation.Current is SettingsViewModel;
+
+    /// <summary>Esc: the page handles it first (clears a search), otherwise back.</summary>
+    [RelayCommand]
+    private void Escape()
+    {
+        if (_navigation.Current?.TryHandleEscape() != true)
+        {
+            _navigation.GoBack();
+        }
+    }
+
     [RelayCommand]
     private void OpenSettings() => _navigation.NavigateTo(_pages.Create<SettingsViewModel>());
 
@@ -55,6 +68,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(CurrentPage));
         OnPropertyChanged(nameof(CanGoBack));
         OnPropertyChanged(nameof(BackLabel));
+        OnPropertyChanged(nameof(IsSettingsOpen));
         GoBackCommand.NotifyCanExecuteChanged();
     }
 }

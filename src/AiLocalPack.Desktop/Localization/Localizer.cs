@@ -41,6 +41,9 @@ public sealed class Localizer : INotifyPropertyChanged
     /// <summary>The string for <paramref name="key"/>; English when the language lacks it; <c>[key]</c> when no language has it.</summary>
     public string this[string key] => Resources.GetString(key, Culture) ?? $"[{key}]";
 
+    /// <summary>The English string for <paramref name="key"/> whatever the UI language (search matches English words too).</summary>
+    public string English(string key) => Resources.GetString(key, CultureInfo.InvariantCulture) ?? $"[{key}]";
+
     /// <summary>Switches the UI language: <paramref name="setting"/> (a language tag or <c>null</c> for "follow the OS"), see <see cref="UiLanguages.Resolve"/>.</summary>
     public void SetLanguage(string? setting) => SetCulture(UiLanguages.Resolve(setting, UiLanguages.Os));
 

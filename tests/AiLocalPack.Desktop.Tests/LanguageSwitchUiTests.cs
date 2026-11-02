@@ -1,5 +1,6 @@
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.ViewModels;
+using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Desktop.Views;
 using Avalonia.Controls;
 using Avalonia.Threading;
@@ -63,6 +64,38 @@ public sealed class LanguageSwitchUiTests
             Find<TextBlock>(window, "GameCount").Text.Should().Be("2 игры");
             window.GetVisualDescendants().OfType<LibraryView>().Should().ContainSingle();
             window.GetVisualDescendants().OfType<TextBlock>().Should().Contain(t => t.Text == "Библиотека");
+        }
+        finally
+        {
+            Localizer.Current.SetLanguage(UiLanguages.Fallback);
+            window.Close();
+        }
+    });
+
+    [Fact]
+    public Task Picking_russian_in_settings_switches_the_ui_without_restart() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = TestServices.Build();
+        services.GetRequiredService<SettingsApplier>().Start();
+        var vm = services.GetRequiredService<MainWindowViewModel>();
+        var window = new MainWindow { DataContext = vm };
+        window.Show();
+        vm.OpenSettingsCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        var language = services.GetRequiredService<GeneralSettingsSection>().UiLanguage;
+
+        try
+        {
+            // Act
+            language.SelectedOption = language.Options.Single(o => (string?)o.Value == "ru");
+            Dispatcher.UIThread.RunJobs();
+
+            // Assert
+            Find<TextBlock>(window, "SectionTitle").Text.Should().Be("Общие");
+            Find<Button>(window, "BackButton").Content.Should().Be("‹ Библиотека");
+            window.GetVisualDescendants().OfType<HighlightTextBlock>().Should().Contain(t => t.Source == "Тема");
+            language.Options[0].Display.Should().StartWith("Системный (");
         }
         finally
         {

@@ -1,6 +1,5 @@
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
-using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.Views;
 using Avalonia;
@@ -33,8 +32,8 @@ public sealed class App : Application
             var logger = LoggerFactory.CreateLogger<App>();
             Dispatcher.UIThread.UnhandledException += (_, e) =>
                 logger.LogCritical(e.Exception, "Unhandled UI thread exception");
-            var settings = _services.GetRequiredService<SettingsStore>().Load();
-            Localizer.Current.SetLanguage(settings.UiLanguage);
+            _services.GetRequiredService<SettingsStore>().Load();
+            _services.GetRequiredService<SettingsApplier>().Start();
             desktop.MainWindow = new MainWindow { DataContext = _services.GetRequiredService<MainWindowViewModel>() };
             desktop.Exit += (_, _) => _services.Dispose();
         }

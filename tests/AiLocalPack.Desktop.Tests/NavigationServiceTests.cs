@@ -1,4 +1,5 @@
 using AiLocalPack.Desktop.Navigation;
+using AiLocalPack.Desktop.Tests.Settings;
 using AiLocalPack.Desktop.ViewModels;
 
 namespace AiLocalPack.Desktop.Tests;
@@ -100,13 +101,13 @@ public sealed class NavigationServiceTests
         // Arrange
         var navigation = new NavigationService();
         navigation.Reset(new RootPage());
-        var settings = new SettingsViewModel();
+        var settings = TestSettingsPages.Create();
         navigation.NavigateTo(settings);
         var raised = 0;
         navigation.Navigated += (_, _) => raised++;
 
         // Act
-        navigation.NavigateTo(new SettingsViewModel());
+        navigation.NavigateTo(TestSettingsPages.Create());
 
         // Assert
         navigation.Current.Should().BeSameAs(settings);

@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen">
     <!-- Min size stays below 1280×800 (Steam Deck), so the app fits there with the title bar. -->
     <Window.KeyBindings>
-        <KeyBinding Gesture="Escape" Command="{Binding GoBackCommand}" />
+        <KeyBinding Gesture="Escape" Command="{Binding EscapeCommand}" />
         <KeyBinding Gesture="Alt+Left" Command="{Binding GoBackCommand}" />
     </Window.KeyBindings>
 
@@ -36,7 +36,7 @@
                             ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{l:Loc Chrome_Activity}">
                         <Path Data="{StaticResource IconBell}" />
                     </Button>
-                    <Button x:Name="SettingsButton" Classes="icon" Command="{Binding OpenSettingsCommand}"
+                    <Button x:Name="SettingsButton" Classes="icon" Classes.on="{Binding IsSettingsOpen}" Command="{Binding OpenSettingsCommand}"
                             ToolTip.Tip="{l:Loc Chrome_Settings}" AutomationProperties.Name="{l:Loc Chrome_Settings}">
                         <Path Data="{StaticResource IconSettings}" />
                     </Button>

@@ -215,6 +215,60 @@ public sealed class SettingsStoreTests : IDisposable
     }
 
     [Fact]
+    public void Settings_missing_from_the_file_get_their_defaults()
+    {
+        // Arrange
+        WriteSettingsFile("""{ "schemaVersion": 1, "uiLanguage": "ru" }""");
+        var store = CreateStore();
+
+        // Act
+        var settings = store.Load();
+
+        // Assert
+        settings.Should().Be(AppSettings.Defaults with { UiLanguage = "ru" });
+        settings.RunInBackground.Should().BeTrue();
+    }
+
+    [Fact]
+    public void General_settings_survive_a_restart()
+    {
+        // Arrange
+        var first = CreateStore();
+        first.Load();
+        var changed = AppSettings.Defaults with
+        {
+            GameLanguage = "pt-BR",
+            Theme = AppTheme.Dark,
+            RunInBackground = false,
+            ReapplyAfterGameUpdates = false,
+            NotifyNeedsDecision = false,
+            NotifyTaskFinished = false,
+            NotifyCommunity = false,
+        };
+        first.Update(_ => changed);
+
+        // Act
+        var reloaded = CreateStore().Load();
+
+        // Assert
+        reloaded.Should().Be(changed);
+    }
+
+    [Fact]
+    public void Theme_is_stored_by_name()
+    {
+        // Arrange
+        var store = CreateStore();
+        store.Load();
+
+        // Act
+        store.Update(s => s with { Theme = AppTheme.Light });
+
+        // Assert
+        JsonNode.Parse(File.ReadAllText(SettingsFile))!["theme"]!.GetValue<string>().Should().Be("Light");
+    }
+
+    [Fact]
     public void An_older_file_is_migrated_and_rewritten()
     {
         // Arrange

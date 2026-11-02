@@ -4,11 +4,23 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Desktop.Tests;
 
-/// <summary>The app's service graph for UI tests: no file logging, app folders in temp (never the player's real ones).</summary>
+/// <summary>
+/// The app's service graph for UI tests: no file logging, app folders in a fresh temp folder per graph (never the
+/// player's real ones), deleted when the provider is disposed.
+/// </summary>
 internal static class TestServices
 {
-    public static AppPaths Paths { get; } =
-        AppPaths.UnderHome(Path.Combine(Path.GetTempPath(), "ailocalpack-tests", "desktop-home"));
-
-    public static ServiceProvider Build() => Composition.BuildServices(NullLoggerFactory.Instance, Paths);
+    /// <param name="configure">Replaces services (a later registration wins), e.g. a fake <see cref="IAppTheming"/>.</param>
+    public static ServiceProvider Build(Action<IServiceCollection>? configure = null)
+    {
+        var home = new TempDir();
+        var provider = Composition.BuildServices(NullLoggerFactory.Instance, AppPaths.UnderHome(home.Path), services =>
+        {
+            // Created by a factory, so the provider disposes it.
+            services.AddSingleton(_ => home);
+            configure?.Invoke(services);
+        });
+        provider.GetRequiredService<TempDir>();
+        return provider;
+    }
 }

@@ -1,6 +1,7 @@
 using System.Globalization;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
+using AiLocalPack.Desktop.Tests.Settings;
 using AiLocalPack.Desktop.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -97,7 +98,7 @@ public sealed class MainWindowViewModelTests
     {
         // Arrange
         var navigation = new NavigationService();
-        var settings = new SettingsViewModel();
+        var settings = TestSettingsPages.Create();
         navigation.Reset(settings);
         using var services = new ServiceCollection().BuildServiceProvider();
 
@@ -106,5 +107,67 @@ public sealed class MainWindowViewModelTests
 
         // Assert
         vm.CurrentPage.Should().BeSameAs(settings);
+    }
+
+    [Fact]
+    public void Escape_goes_back_when_the_page_does_not_use_it()
+    {
+        // Arrange
+        var vm = Create(out var services);
+        using var _ = services;
+        vm.OpenSettingsCommand.Execute(null);
+
+        // Act
+        vm.EscapeCommand.Execute(null);
+
+        // Assert
+        vm.CurrentPage.Should().BeOfType<LibraryViewModel>();
+    }
+
+    [Fact]
+    public void Escape_clears_a_settings_search_before_going_back()
+    {
+        // Arrange
+        var vm = Create(out var services);
+        using var _ = services;
+        vm.OpenSettingsCommand.Execute(null);
+        var settings = (SettingsViewModel)vm.CurrentPage!;
+        settings.Query = "theme";
+
+        // Act
+        vm.EscapeCommand.Execute(null);
+
+        // Assert
+        vm.CurrentPage.Should().BeSameAs(settings);
+        settings.Query.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Escape_on_the_library_does_nothing()
+    {
+        // Arrange
+        var vm = Create(out var services);
+        using var _ = services;
+        var library = vm.CurrentPage;
+
+        // Act
+        vm.EscapeCommand.Execute(null);
+
+        // Assert
+        vm.CurrentPage.Should().BeSameAs(library);
+    }
+
+    [Fact]
+    public void Settings_button_is_active_while_settings_is_open()
+    {
+        // Arrange
+        var vm = Create(out var services);
+        using var _ = services;
+
+        // Act
+        vm.OpenSettingsCommand.Execute(null);
+
+        // Assert
+        vm.IsSettingsOpen.Should().BeTrue();
     }
 }

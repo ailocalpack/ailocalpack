@@ -31,4 +31,176 @@
     <value>Settings</value>
     <comment>Settings screen title, also shown on the back button.</comment>
   </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>System ({0})</value>
+    <comment>Language picker option that follows the OS; {0} = native name of that language.</comment>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>Search settings</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>No settings match “{0}”.</value>
+    <comment>{0} = the search query.</comment>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>This section arrives in a later version of ailocalpack.</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>General</value>
+    <comment>Settings section.</comment>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>Languages, theme, background, notifications</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>Libraries</value>
+    <comment>Settings section.</comment>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Steam folders and manually added games</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>AI agents</value>
+    <comment>Settings section.</comment>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>Claude Code and Codex for generating packs</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>Settings section.</comment>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>Account and the packs you published</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>Storage</value>
+    <comment>Settings section.</comment>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>Backups, working copies, cache</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>About</value>
+    <comment>Settings section.</comment>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>Version, updates, licenses, legal</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>Language</value>
+    <comment>Group title in Settings → General.</comment>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+    <comment>Group title in Settings → General.</comment>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>Background</value>
+    <comment>Group title in Settings → General.</comment>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+    <comment>Group title in Settings → General.</comment>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>Interface language</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>Initially AI-translated. Spotted a bad string?</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>Fix it on GitHub</value>
+    <comment>Link after Settings_UiLanguage_Help.</comment>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>ui locale translation</value>
+    <comment>Extra search words for the row, space-separated.</comment>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>Translate games into</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>Default for browsing packs and for generation. Each game page can pick another language.</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>target language pack locale</value>
+    <comment>Extra search words for the row, space-separated.</comment>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>System follows the OS light / dark setting.</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>dark light mode colors appearance</value>
+    <comment>Extra search words for the row, space-separated.</comment>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>System</value>
+    <comment>Theme option.</comment>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+    <comment>Theme option.</comment>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Light</value>
+    <comment>Theme option.</comment>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>Start with the system, keep running in the tray</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>Lets the app notice game updates while its window is closed.</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>tray autostart startup login background</value>
+    <comment>Extra search words for the row, space-separated.</comment>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>Re-apply packs after game updates</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>If a store update or file check wipes a pack and the build is still compatible, it’s re-installed with a fresh backup. Otherwise you get a notification.</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>Only when the app starts, because the tray is off.</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>You’ll be notified instead and can re-apply by hand.</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>update reinstall restore</value>
+    <comment>Extra search words for the row, space-separated.</comment>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>When something needs your decision</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>Paused generation, incompatible pack after a game update, failed re-apply, rejected PR.</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>When a task finishes</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>Pack installed or re-applied, generation finished, PR merged, app update ready.</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>Community activity on my packs</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>New reviews, “works” confirmations, a pack becoming verified.</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>notifications alerts</value>
+    <comment>Extra search words for notification rows, space-separated.</comment>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>Shown as system notifications while the window is closed; inside the app everything is in Activity either way.</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>System notifications need the tray (Background above); until then events only appear in Activity.</value>
+  </data>
 </root>

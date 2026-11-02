@@ -13,4 +13,7 @@ public abstract class PageViewModel : ObservableObject
     /// Default: same type. Pages with parameters (a game page) compare them too.
     /// </summary>
     public virtual bool IsSamePage(PageViewModel other) => other.GetType() == GetType();
+
+    /// <summary>Lets the page use Esc first (clear a search); returns <c>false</c> to let the window go back.</summary>
+    public virtual bool TryHandleEscape() => false;
 }

@@ -28,4 +28,154 @@
   <data name="Settings_Title" xml:space="preserve">
     <value>Настройки</value>
   </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>Системный ({0})</value>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>Поиск настроек</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>Нет настроек по запросу «{0}».</value>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>Этот раздел появится в одной из следующих версий ailocalpack.</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>Общие</value>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>Языки, тема, фоновая работа, уведомления</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>Библиотеки</value>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Папки Steam и игры, добавленные вручную</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>ИИ-агенты</value>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>Claude Code и Codex для создания переводов</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>Аккаунт и опубликованные вами переводы</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>Хранилище</value>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>Резервные копии, рабочие копии, кэш</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>Версия, обновления, лицензии, правовая информация</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>Оформление</value>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>Фоновая работа</value>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>Уведомления</value>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>Язык интерфейса</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>Изначально переведён ИИ. Нашли неудачную строку?</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>Исправьте на GitHub</value>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>интерфейс локаль перевод</value>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>Переводить игры на</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>По умолчанию для просмотра переводов и генерации. На странице игры можно выбрать другой язык.</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>целевой язык перевод локаль</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>«Системная» следует светлой или тёмной теме ОС.</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>тёмная светлая режим цвета оформление</value>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>Системная</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>Запускать вместе с системой и работать в трее</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>Так приложение замечает обновления игр, даже когда его окно закрыто.</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>трей автозапуск автозагрузка фон</value>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>Переустанавливать переводы после обновлений игр</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>Если обновление из магазина или проверка файлов сотрёт перевод, а сборка всё ещё совместима, он установится заново со свежей резервной копией. Иначе придёт уведомление.</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>Только при запуске приложения, потому что работа в трее выключена.</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>Вместо этого придёт уведомление, и перевод можно будет переустановить вручную.</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>обновление переустановка восстановление</value>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>Когда нужно ваше решение</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>Генерация на паузе, перевод несовместим после обновления игры, переустановка не удалась, PR отклонён.</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>Когда задача завершена</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>Перевод установлен или переустановлен, генерация завершена, PR принят, готово обновление приложения.</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>Активность сообщества по моим переводам</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>Новые отзывы, подтверждения «работает», перевод стал проверенным.</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>уведомления оповещения</value>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>Показываются как системные уведомления, пока окно закрыто; в самом приложении всё есть в «Активности» в любом случае.</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>Системным уведомлениям нужна работа в трее (раздел «Фоновая работа» выше); пока она выключена, события видны только в «Активности».</value>
+  </data>
 </root>
