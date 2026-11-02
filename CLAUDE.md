@@ -13,6 +13,8 @@ Status: solution skeleton in place (no features yet). Treat this file as the pro
 
 UI screens and their states: [`design/README.md`](design/README.md).
 
+Implementation tasks (numbered; the user names one to implement): [`tasks/README.md`](tasks/README.md). Follow its *Definition of done* and tick the task's checkbox when finished.
+
 ## Domain terms
 
 - **Game**: an installed title, found through a store or added manually.
