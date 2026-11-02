@@ -3,8 +3,12 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <AssemblyName>ailocalpack</AssemblyName>
-        <Description>Command-line entry point: pack validation for registry CI.</Description>
+        <Description>Command-line entry point: pack validation for registry CI, game discovery for manual checks.</Description>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.CommandLine" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />

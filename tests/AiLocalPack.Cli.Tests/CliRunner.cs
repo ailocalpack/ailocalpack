@@ -9,7 +9,10 @@ internal static class CliRunner
 {
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(1);
 
-    public static async Task<CliResult> RunAsync(params string[] args)
+    public static Task<CliResult> RunAsync(params string[] args) => RunAsync(new Dictionary<string, string>(), args);
+
+    /// <summary>Runs the CLI with extra environment variables (e.g. <c>AILOCALPACK_STEAM_ROOT</c>).</summary>
+    public static async Task<CliResult> RunAsync(IReadOnlyDictionary<string, string> environment, params string[] args)
     {
         var cliDll = Path.Combine(AppContext.BaseDirectory, "ailocalpack.dll");
         if (!File.Exists(cliDll))
@@ -25,6 +28,11 @@ internal static class CliRunner
             RedirectStandardError = true,
             UseShellExecute = false,
         };
+        foreach (var (name, value) in environment)
+        {
+            start.Environment[name] = value;
+        }
+
         start.ArgumentList.Add(cliDll);
         foreach (var arg in args)
         {
