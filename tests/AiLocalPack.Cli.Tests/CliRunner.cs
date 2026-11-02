@@ -11,9 +11,13 @@ internal static class CliRunner
 
     public static Task<CliResult> RunAsync(params string[] args) => RunAsync(new Dictionary<string, string>(), args);
 
-    /// <summary>Runs the CLI with extra environment variables (e.g. <c>AILOCALPACK_STEAM_ROOT</c>).</summary>
+    /// <summary>
+    /// Runs the CLI with extra environment variables (e.g. <c>AILOCALPACK_STEAM_ROOT</c>). Without <c>AILOCALPACK_HOME</c>
+    /// the run gets a throwaway app home, so the CLI never touches the real app folders.
+    /// </summary>
     public static async Task<CliResult> RunAsync(IReadOnlyDictionary<string, string> environment, params string[] args)
     {
+        using var home = environment.ContainsKey("AILOCALPACK_HOME") ? null : new TempDir();
         var cliDll = Path.Combine(AppContext.BaseDirectory, "ailocalpack.dll");
         if (!File.Exists(cliDll))
         {
@@ -28,6 +32,11 @@ internal static class CliRunner
             RedirectStandardError = true,
             UseShellExecute = false,
         };
+        if (home is not null)
+        {
+            start.Environment["AILOCALPACK_HOME"] = home.Path;
+        }
+
         foreach (var (name, value) in environment)
         {
             start.Environment[name] = value;

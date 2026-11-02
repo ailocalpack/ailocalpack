@@ -33,6 +33,9 @@ public sealed record AppPaths
 
     public string Logs => Path.Combine(Data, "logs");
 
+    /// <summary>The game catalog (machine-local: holds install paths).</summary>
+    public string GamesFile => Path.Combine(Data, "games.json");
+
     /// <summary>Originals of game files overwritten by installed packs (what makes uninstall possible).</summary>
     public string Backups => Path.Combine(Data, "backups");
 

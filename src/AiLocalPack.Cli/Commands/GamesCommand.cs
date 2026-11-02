@@ -2,29 +2,36 @@ using System.CommandLine;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
 
-/// <summary><c>games list [--json]</c>: installed games (Steam in MVP).</summary>
+/// <summary><c>games list [--json]</c>: the game catalog after a fresh Steam scan.</summary>
 internal static class GamesCommand
 {
     public static Command Build(OsEnvironment env)
     {
         var json = new Option<bool>("--json") { Description = "Print JSON instead of a table." };
-        var list = new Command("list", "List installed Steam games with app ID, build ID, folder and last played time.") { json };
+        var list = new Command(
+            "list",
+            "Scan Steam, update the game catalog and list its games with ID, build, folder and last played time.") { json };
         list.SetAction(result =>
         {
             var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan();
+            var catalog = new GameCatalog(AppPaths.Resolve(env), NullLogger<GameCatalog>.Instance, TimeProvider.System);
+            catalog.Load();
+            catalog.Refresh(scan);
             var output = result.InvocationConfiguration.Output;
             if (result.GetValue(json))
             {
-                WriteJson(output, scan);
+                WriteJson(output, scan, catalog.Games);
             }
             else
             {
-                WriteTable(output, scan);
+                WriteTable(output, scan, catalog.Games);
             }
 
             return 0;
@@ -33,42 +40,49 @@ internal static class GamesCommand
         return new Command("games", "Installed games.") { list };
     }
 
-    private static void WriteJson(TextWriter output, SteamScan scan)
+    private static void WriteJson(TextWriter output, SteamScan scan, IReadOnlyList<Game> games)
     {
         var dto = new GamesListJson(
             [.. scan.Libraries.Select(l => new LibraryJson(l.Path, l.IsAvailable))],
-            [.. scan.Games.Select(g => new GameJson(
-                $"steam:{g.AppId.ToString(CultureInfo.InvariantCulture)}",
-                g.AppId,
+            [.. games.Select(g => new GameJson(
+                g.Id.ToString(),
+                g.Source.ToString().ToLowerInvariant(),
+                g.Id.SteamAppId,
                 g.Name,
-                g.BuildId,
+                g.Version?.BuildId,
                 g.InstallPath,
                 g.LibraryPath,
-                g.LastPlayed?.ToUniversalTime()))]);
+                g.LastPlayed?.ToUniversalTime(),
+                g.IsAvailable))]);
         output.WriteLine(JsonSerializer.Serialize(dto, CliJsonContext.Default.GamesListJson));
     }
 
-    private static void WriteTable(TextWriter output, SteamScan scan)
+    private static void WriteTable(TextWriter output, SteamScan scan, IReadOnlyList<Game> games)
     {
         if (scan.Libraries.Count == 0)
         {
             output.WriteLine("Steam not found.");
-            return;
+            if (games.Count == 0)
+            {
+                return;
+            }
+
+            output.WriteLine();
         }
 
-        string[] header = ["APP ID", "BUILD", "LAST PLAYED", "NAME", "FOLDER"];
-        var rows = scan.Games.Select(g => new[]
+        string[] header = ["ID", "BUILD", "LAST PLAYED", "NAME", "FOLDER"];
+        var rows = games.Select(g => new[]
         {
-            g.AppId.ToString(CultureInfo.InvariantCulture),
-            g.BuildId ?? "-",
+            g.Id.ToString(),
+            g.Version?.BuildId ?? (g.Version is null ? "-" : "files"),
             g.LastPlayed?.ToLocalTime().ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) ?? "never",
             g.Name,
-            g.InstallPath,
+            g.IsAvailable ? g.InstallPath : $"{g.InstallPath} (not available)",
         }).ToList();
 
         if (rows.Count == 0)
         {
-            output.WriteLine("No installed Steam games.");
+            output.WriteLine("No installed games.");
         }
         else
         {
@@ -78,6 +92,11 @@ internal static class GamesCommand
             {
                 output.WriteLine(Row(row, widths));
             }
+        }
+
+        if (scan.Libraries.Count == 0)
+        {
+            return;
         }
 
         output.WriteLine();
@@ -99,12 +118,14 @@ internal sealed record LibraryJson(string Path, bool Available);
 
 internal sealed record GameJson(
     string Id,
-    uint AppId,
+    string Source,
+    uint? AppId,
     string Name,
     string? BuildId,
     string InstallPath,
-    string LibraryPath,
-    DateTimeOffset? LastPlayed);
+    string? LibraryPath,
+    DateTimeOffset? LastPlayed,
+    bool Available);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
 [JsonSerializable(typeof(GamesListJson))]

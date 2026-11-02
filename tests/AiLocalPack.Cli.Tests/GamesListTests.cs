@@ -12,7 +12,15 @@ public sealed class GamesListTests : IDisposable
     public void Dispose() => _dir.Dispose();
 
     private Task<CliResult> RunAsync(params string[] args) =>
-        CliRunner.RunAsync(new Dictionary<string, string> { ["AILOCALPACK_STEAM_ROOT"] = _steam.Root }, args);
+        CliRunner.RunAsync(
+            new Dictionary<string, string>
+            {
+                ["AILOCALPACK_STEAM_ROOT"] = _steam.Root,
+                ["AILOCALPACK_HOME"] = _dir.Combine("home"),
+            },
+            args);
+
+    private static JsonArray Games(CliResult result) => JsonNode.Parse(result.StdOut)!["games"]!.AsArray();
 
     [Fact]
     public async Task Json_lists_games_and_libraries_of_the_fixture_steam()
@@ -31,12 +39,14 @@ public sealed class GamesListTests : IDisposable
             ["games"] = new JsonArray(new JsonObject
             {
                 ["id"] = "steam:413150",
+                ["source"] = "steam",
                 ["appId"] = 413150,
                 ["name"] = "Stardew Valley",
                 ["buildId"] = "16826371",
                 ["installPath"] = Path.Combine(_steam.Root, "steamapps", "common", "Stardew Valley"),
                 ["libraryPath"] = _steam.Root,
                 ["lastPlayed"] = "2027-01-15T08:00:00+00:00",
+                ["available"] = true,
             }),
         };
 
@@ -77,5 +87,51 @@ public sealed class GamesListTests : IDisposable
 
         // Assert
         result.StdOut.Should().Contain("Steam not found.");
+    }
+
+    [Fact]
+    public async Task Second_run_shows_the_same_ids_from_the_catalog()
+    {
+        // Arrange
+        _steam.AddGame(413150, "Stardew Valley").AddGame(1091500, "Cyberpunk 2077");
+        var first = await RunAsync("games", "list", "--json");
+
+        // Act
+        var second = await RunAsync("games", "list", "--json");
+
+        // Assert
+        Games(second).Select(g => (string?)g!["id"]).Should()
+            .Equal(Games(first).Select(g => (string?)g!["id"]))
+            .And.Equal("steam:1091500", "steam:413150");
+    }
+
+    [Fact]
+    public async Task Game_on_a_library_that_went_missing_stays_listed_as_not_available()
+    {
+        // Arrange
+        var sdCard = _steam.AddLibrary("SdCard/SteamLibrary");
+        _steam.AddGame(413150, "Stardew Valley", library: sdCard);
+        await RunAsync("games", "list", "--json");
+        Directory.Delete(sdCard, recursive: true);
+
+        // Act
+        var result = await RunAsync("games", "list", "--json");
+
+        // Assert
+        Games(result).Should().ContainSingle()
+            .Which!["available"]!.GetValue<bool>().Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Catalog_is_saved_in_the_app_data_folder()
+    {
+        // Arrange
+        _steam.AddGame(413150, "Stardew Valley");
+
+        // Act
+        await RunAsync("games", "list");
+
+        // Assert
+        File.ReadAllText(_dir.Combine("home/data/games.json")).Should().Contain("steam:413150");
     }
 }
