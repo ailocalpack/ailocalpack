@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+    </ItemGroup>
+</Project>

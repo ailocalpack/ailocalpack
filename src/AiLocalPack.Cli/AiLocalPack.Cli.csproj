@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>ailocalpack</AssemblyName>
+        <Description>Command-line entry point: pack validation for registry CI.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Mcp\AiLocalPack.Mcp.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>Adapters that drive external AI agents (Claude Code, Codex).</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+    </ItemGroup>
+</Project>

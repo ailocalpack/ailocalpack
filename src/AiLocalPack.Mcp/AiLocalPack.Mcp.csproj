@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>MCP server exposing the toolkit to agents.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
+    </ItemGroup>
+</Project>

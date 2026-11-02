@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>Domain model: games, identity, packs, registry, install.</Description>
+    </PropertyGroup>
+
+</Project>

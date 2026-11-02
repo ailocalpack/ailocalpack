@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>Engine-specific string extract/rebuild tools.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+    </ItemGroup>
+</Project>

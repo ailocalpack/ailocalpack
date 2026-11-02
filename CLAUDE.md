@@ -2,7 +2,7 @@
 
 Open-source, cross-platform (Windows, macOS, Linux) desktop app that lets a player **install** a community localization for any game they own, or **generate** a new one with an AI agent and **publish** it for others.
 
-Status: pre-code. Treat this file as the product spec and keep it current: record each settled decision in its section, and remove the matching item from _Open questions_.
+Status: solution skeleton in place (no features yet). Treat this file as the product spec and keep it current: record each settled decision in its section, and remove the matching item from _Open questions_.
 
 ## Constraints
 
@@ -50,6 +50,8 @@ UI screens and their states: [`design/README.md`](design/README.md).
 Both live in the GitHub organization **`ailocalpack`** (not a personal account: the index URL is baked into the app and must never move).
 
 - **`ailocalpack/ailocalpack`** (this repo): one .NET solution: Avalonia UI, core, toolkit, MCP server, agent adapters, and a CLI used by registry CI to validate packs.
+  - Layout: `AiLocalPack.slnx`; `src/AiLocalPack.{Core,Toolkit,Agents,Mcp,Cli,Desktop}`; `tests/AiLocalPack.*.Tests` (xunit.v3 on Microsoft.Testing.Platform).
+  - .NET 10 (`global.json`). Shared settings in `Directory.Build.props`: `TreatWarningsAsErrors` and NuGet audit (`all`, level `low`) fail the build on any vulnerable package, transitive included. Versions only in `Directory.Packages.props` (central package management; pin patched transitive versions there).
 - **`ailocalpack/registry`**: packs, JSON schemas, GitHub Actions, GitHub Pages index at `https://ailocalpack.github.io/registry/index.json`.
 
 ## Game identity
