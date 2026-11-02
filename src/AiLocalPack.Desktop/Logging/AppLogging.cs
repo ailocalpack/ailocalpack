@@ -4,11 +4,9 @@ using Serilog.Extensions.Logging;
 
 namespace AiLocalPack.Desktop.Logging;
 
-/// <summary>Rolling-file logging. Lives in the temp folder until app data folders arrive (task 04).</summary>
+/// <summary>Rolling-file logging into <see cref="AiLocalPack.Core.Storage.AppPaths.Logs"/>.</summary>
 internal static class AppLogging
 {
-    public static string DefaultDirectory { get; } = Path.Combine(Path.GetTempPath(), "ailocalpack", "logs");
-
     public static ILoggerFactory CreateFactory(string directory)
     {
         var serilog = new LoggerConfiguration()

@@ -3,7 +3,6 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Desktop.Tests;
 
@@ -11,7 +10,7 @@ public sealed class MainWindowViewModelTests
 {
     private static MainWindowViewModel Create(out ServiceProvider services)
     {
-        services = Composition.BuildServices(NullLoggerFactory.Instance);
+        services = TestServices.Build();
         return services.GetRequiredService<MainWindowViewModel>();
     }
 
@@ -19,7 +18,7 @@ public sealed class MainWindowViewModelTests
     public void Starts_on_library_without_back()
     {
         // Arrange
-        using var services = Composition.BuildServices(NullLoggerFactory.Instance);
+        using var services = TestServices.Build();
 
         // Act
         var vm = services.GetRequiredService<MainWindowViewModel>();

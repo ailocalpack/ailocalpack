@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Desktop.Tests;
 
@@ -19,7 +18,7 @@ public sealed class LanguageSwitchUiTests
     public Task Switching_language_updates_the_open_window() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
-        using var services = Composition.BuildServices(NullLoggerFactory.Instance);
+        using var services = TestServices.Build();
         var vm = services.GetRequiredService<MainWindowViewModel>();
         var window = new MainWindow { DataContext = vm };
         window.Show();
@@ -49,7 +48,7 @@ public sealed class LanguageSwitchUiTests
     public Task Library_shows_the_game_count_in_the_current_language() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
-        using var services = Composition.BuildServices(NullLoggerFactory.Instance);
+        using var services = TestServices.Build();
         var window = new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
         window.Show();
         Dispatcher.UIThread.RunJobs();

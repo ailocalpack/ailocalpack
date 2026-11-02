@@ -7,7 +7,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Desktop.Tests;
 
@@ -15,7 +14,7 @@ public sealed class MainWindowTests
 {
     private static MainWindow Create()
     {
-        var services = Composition.BuildServices(NullLoggerFactory.Instance);
+        var services = TestServices.Build();
         var window = new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
         window.Closed += (_, _) => services.Dispose();
         return window;

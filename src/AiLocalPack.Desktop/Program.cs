@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Logging;
 using Avalonia;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,8 @@ internal static class Program
     [STAThread]
     public static int Main(string[] args)
     {
-        using var loggerFactory = AppLogging.CreateFactory(AppLogging.DefaultDirectory);
+        var paths = AppPaths.Resolve(OsEnvironment.Current);
+        using var loggerFactory = AppLogging.CreateFactory(paths.Logs);
         var logger = loggerFactory.CreateLogger("AiLocalPack");
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
             logger.LogCritical(e.ExceptionObject as Exception, "Unhandled exception (terminating: {Terminating})", e.IsTerminating);
@@ -19,8 +21,11 @@ internal static class Program
             e.SetObserved();
         };
 
-        logger.LogInformation("Starting ailocalpack on {Os}", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+        logger.LogInformation(
+            "Starting ailocalpack on {Os}; config {Config}, data {Data}, cache {Cache}",
+            System.Runtime.InteropServices.RuntimeInformation.OSDescription, paths.Config, paths.Data, paths.Cache);
         App.LoggerFactory = loggerFactory;
+        App.Paths = paths;
         try
         {
             return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
