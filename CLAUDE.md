@@ -53,6 +53,10 @@ Both live in the GitHub organization **`ailocalpack`** (not a personal account: 
 
 - **`ailocalpack/ailocalpack`** (this repo): one .NET solution: Avalonia UI, core, toolkit, MCP server, agent adapters, and a CLI used by registry CI to validate packs.
   - Layout: `AiLocalPack.slnx`; `src/AiLocalPack.{Core,Toolkit,Agents,Mcp,Cli,Desktop}`; `tests/AiLocalPack.*.Tests` (xunit.v3 on Microsoft.Testing.Platform).
+  - Tests: one `tests/AiLocalPack.<Project>.Tests` per `src` project, plus `tests/AiLocalPack.TestKit` (shared helpers: `TempDir`, `FakeHttpHandler`, `FakeClock`; referenced by every test project via `tests/Directory.Build.props`). Run with `dotnet test` from the root.
+  - Test style: assertions only through **AwesomeAssertions** (`x.Should()...`, global using in `tests/Directory.Build.props`), never xunit `Assert.*`. Every test follows **AAA** with explicit `// Arrange`, `// Act`, `// Assert` comments; the Act step is one action, and an expected exception is captured as `var act = () => ...;` then asserted with `act.Should().Throw<...>()`. One behaviour per test.
+  - Time: code that reads the clock takes a `TimeProvider` (default `TimeProvider.System`); tests pass `FakeClock`.
+  - UI tests: Avalonia headless via `HeadlessUnitTestSession` and plain `[Fact]` (`HeadlessUi.RunAsync` in Desktop.Tests). `Avalonia.Headless.XUnit` 12.1.x is built against xunit.v3 3.x and breaks discovery on xunit.v3 4.x; switch to `[AvaloniaFact]` once it supports v4.
   - .NET 10 (`global.json`). Shared settings in `Directory.Build.props`: `TreatWarningsAsErrors` and NuGet audit (`all`, level `low`) fail the build on any vulnerable package, transitive included. Versions only in `Directory.Packages.props` (central package management; pin patched transitive versions there).
 - **`ailocalpack/registry`**: packs, JSON schemas, GitHub Actions, GitHub Pages index at `https://ailocalpack.github.io/registry/index.json`.
 

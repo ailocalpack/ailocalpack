@@ -1,17 +1,30 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
+  <!-- Shared test helpers: a plain library, not a test project -->
   <PropertyGroup>
+    <IsTestKit Condition="'$(MSBuildProjectName)' == 'AiLocalPack.TestKit'">true</IsTestKit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestKit)' != 'true'">
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Condition="'$(IsTestKit)' == 'true'">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestKit)' != 'true'">
     <PackageReference Include="xunit.v3" />
+    <PackageReference Include="AwesomeAssertions" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)AiLocalPack.TestKit/AiLocalPack.TestKit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(IsTestKit)' != 'true'">
     <Using Include="Xunit" />
+    <Using Include="AwesomeAssertions" />
+    <Using Include="AiLocalPack.TestKit" />
   </ItemGroup>
 </Project>

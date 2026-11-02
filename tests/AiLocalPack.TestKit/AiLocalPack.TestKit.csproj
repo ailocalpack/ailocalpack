@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>Shared test helpers: temp folders, fake HTTP, fake clock.</Description>
+    </PropertyGroup>
+</Project>
