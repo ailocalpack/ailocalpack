@@ -1,3 +1,4 @@
+using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ internal static class Composition
         services.AddSingleton(loggerFactory);
         services.AddLogging();
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(Localizer.Current);
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IPageFactory, PageFactory>();
         services.AddSingleton<MainWindowViewModel>();

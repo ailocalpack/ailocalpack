@@ -5,7 +5,7 @@ namespace AiLocalPack.Desktop.ViewModels;
 /// <summary>A screen shown in the main window's content area.</summary>
 public abstract class PageViewModel : ObservableObject
 {
-    /// <summary>Short name, used for the back button ("‹ Library").</summary>
+    /// <summary>Short name in the current UI language, used for the back button ("‹ Library"). Read again after a language switch.</summary>
     public abstract string Title { get; }
 
     /// <summary>

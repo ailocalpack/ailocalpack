@@ -57,6 +57,8 @@ public sealed class MainWindowTests
         Find<Button>(window, "ActivityButton").IsVisible.Should().BeTrue();
         Find<Button>(window, "SettingsButton").IsVisible.Should().BeTrue();
         Find<Button>(window, "BackButton").IsVisible.Should().BeFalse();
+        ToolTip.GetTip(Find<Button>(window, "SettingsButton")).Should().Be("Settings");
+        Find<TextBlock>(window, "GameCount").Text.Should().Be("2 games");
         Shows<LibraryView>(window).Should().BeTrue();
         window.Close();
     });

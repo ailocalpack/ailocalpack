@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+        xmlns:l="using:AiLocalPack.Desktop.Localization"
         x:Class="AiLocalPack.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="ailocalpack"
@@ -28,15 +29,15 @@
                             Content="{Binding BackLabel}"
                             Command="{Binding GoBackCommand}"
                             IsVisible="{Binding CanGoBack}"
-                            AutomationProperties.Name="Back" />
+                            AutomationProperties.Name="{Binding BackLabel}" />
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
                     <Button x:Name="ActivityButton" Classes="icon" Command="{Binding OpenActivityCommand}"
-                            ToolTip.Tip="Activity" AutomationProperties.Name="Activity">
+                            ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{l:Loc Chrome_Activity}">
                         <Path Data="{StaticResource IconBell}" />
                     </Button>
                     <Button x:Name="SettingsButton" Classes="icon" Command="{Binding OpenSettingsCommand}"
-                            ToolTip.Tip="Settings" AutomationProperties.Name="Settings">
+                            ToolTip.Tip="{l:Loc Chrome_Settings}" AutomationProperties.Name="{l:Loc Chrome_Settings}">
                         <Path Data="{StaticResource IconSettings}" />
                     </Button>
                 </StackPanel>

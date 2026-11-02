@@ -6,6 +6,8 @@
         <Description>Avalonia desktop app.</Description>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <!-- English strings live in the main assembly (Strings.resx); other languages in satellite assemblies. -->
+        <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,6 +21,17 @@
         <PackageReference Include="Serilog" />
         <PackageReference Include="Serilog.Extensions.Logging" />
         <PackageReference Include="Serilog.Sinks.File" />
+    </ItemGroup>
+
+    <!-- UI strings: Strings.resx (English, neutral) + Strings.<lang>.resx. The build generates the typed Strings class. -->
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\Strings.resx">
+            <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+            <StronglyTypedNamespace>AiLocalPack.Desktop.Resources</StronglyTypedNamespace>
+            <StronglyTypedClassName>Strings</StronglyTypedClassName>
+            <StronglyTypedFileName>$(IntermediateOutputPath)Strings.Designer.cs</StronglyTypedFileName>
+            <PublicClass>false</PublicClass>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

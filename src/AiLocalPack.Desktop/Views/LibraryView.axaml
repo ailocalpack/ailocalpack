@@ -1,11 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.LibraryView"
              x:DataType="vm:LibraryViewModel">
     <!-- Stub: the cover grid comes in task 11. -->
     <StackPanel Margin="24" Spacing="12">
-        <TextBlock Classes="h1" Text="{Binding Title}" />
+        <StackPanel Spacing="2">
+            <TextBlock Classes="h1" Text="{l:Loc Library_Title}" />
+            <TextBlock x:Name="GameCount" Classes="muted" Text="{Binding GameCount}" />
+        </StackPanel>
         <ItemsControl x:Name="StubGames" ItemsSource="{Binding Games}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>

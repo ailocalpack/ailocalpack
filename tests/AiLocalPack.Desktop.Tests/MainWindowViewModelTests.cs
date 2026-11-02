@@ -1,3 +1,5 @@
+using System.Globalization;
+using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -101,7 +103,7 @@ public sealed class MainWindowViewModelTests
         using var services = new ServiceCollection().BuildServiceProvider();
 
         // Act
-        var vm = new MainWindowViewModel(navigation, new PageFactory(services));
+        var vm = new MainWindowViewModel(navigation, new PageFactory(services), new Localizer(CultureInfo.GetCultureInfo("en")));
 
         // Assert
         vm.CurrentPage.Should().BeSameAs(settings);

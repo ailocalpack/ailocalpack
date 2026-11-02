@@ -1,10 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
     <!-- Stub: sections come in task 05. -->
     <StackPanel Margin="24">
-        <TextBlock x:Name="SettingsTitle" Classes="h1" Text="{Binding Title}" />
+        <TextBlock x:Name="SettingsTitle" Classes="h1" Text="{l:Loc Settings_Title}" />
     </StackPanel>
 </UserControl>
