@@ -43,6 +43,7 @@ public sealed class GamesListTests : IDisposable
                 ["appId"] = 413150,
                 ["name"] = "Stardew Valley",
                 ["buildId"] = "16826371",
+                ["engine"] = "unknown",
                 ["installPath"] = Path.Combine(_steam.Root, "steamapps", "common", "Stardew Valley"),
                 ["libraryPath"] = _steam.Root,
                 ["lastPlayed"] = "2027-01-15T08:00:00+00:00",
@@ -133,5 +134,47 @@ public sealed class GamesListTests : IDisposable
 
         // Assert
         File.ReadAllText(_dir.Combine("home/data/games.json")).Should().Contain("steam:413150");
+    }
+
+    [Fact]
+    public async Task Json_shows_the_detected_engine()
+    {
+        // Arrange
+        _steam.AddGame(413150, "Stardew Valley");
+        _dir.GodotWindows("Steam/steamapps/common/Stardew Valley", major: 4);
+
+        // Act
+        var result = await RunAsync("games", "list", "--json");
+
+        // Assert
+        Games(result).Should().ContainSingle().Which!["engine"]!.GetValue<string>().Should().Be("godot:4");
+    }
+
+    [Fact]
+    public async Task Table_shows_the_engine_name()
+    {
+        // Arrange
+        _steam.AddGame(413150, "Stardew Valley");
+        _dir.RpgMakerMv("Steam/steamapps/common/Stardew Valley");
+
+        // Act
+        var result = await RunAsync("games", "list");
+
+        // Assert
+        result.StdOut.Should().Contain("RPG Maker MV");
+    }
+
+    [Fact]
+    public async Task Engine_is_saved_in_the_catalog()
+    {
+        // Arrange
+        _steam.AddGame(413150, "Stardew Valley");
+        _dir.RenPy("Steam/steamapps/common/Stardew Valley");
+
+        // Act
+        await RunAsync("games", "list");
+
+        // Assert
+        File.ReadAllText(_dir.Combine("home/data/games.json")).Should().Contain("\"engine\": \"renpy\"");
     }
 }

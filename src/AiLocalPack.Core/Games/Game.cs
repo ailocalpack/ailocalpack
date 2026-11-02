@@ -17,7 +17,10 @@ public enum GameSource
 /// <param name="InstallPath">Game folder.</param>
 /// <param name="LibraryPath">Steam library holding the game; <c>null</c> for manual games.</param>
 /// <param name="Version">Installed build; <c>null</c> when unknown (no build ID, file hashes not computed yet).</param>
-/// <param name="Engine">Detected engine (task 09); <c>null</c> = not detected yet.</param>
+/// <param name="Engine">
+/// Detected engine ID from the toolkit's <c>EngineKind</c> (<c>unity:il2cpp</c>, <c>unreal:5</c>, <c>rpgmaker:mz</c>,
+/// <c>renpy</c>, <c>godot:4</c>, <c>unknown</c>); <c>null</c> = not detected yet.
+/// </param>
 /// <param name="AntiCheat">Detected anti-cheat display name (task 10); <c>null</c> = none found or not checked yet.</param>
 /// <param name="LastPlayed">Last launch, or <c>null</c> when never played or unknown.</param>
 /// <param name="IsAvailable">

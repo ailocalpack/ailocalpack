@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Engines;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
@@ -17,13 +18,14 @@ internal static class GamesCommand
         var json = new Option<bool>("--json") { Description = "Print JSON instead of a table." };
         var list = new Command(
             "list",
-            "Scan Steam, update the game catalog and list its games with ID, build, folder and last played time.") { json };
+            "Scan Steam, update the game catalog and list its games with ID, build, engine, folder and last played time.") { json };
         list.SetAction(result =>
         {
             var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan();
             var catalog = new GameCatalog(AppPaths.Resolve(env), NullLogger<GameCatalog>.Instance, TimeProvider.System);
             catalog.Load();
-            catalog.Refresh(scan);
+            var changes = catalog.Refresh(scan);
+            new EngineDetector().UpdateCatalog(catalog, changes);
             var output = result.InvocationConfiguration.Output;
             if (result.GetValue(json))
             {
@@ -50,6 +52,7 @@ internal static class GamesCommand
                 g.Id.SteamAppId,
                 g.Name,
                 g.Version?.BuildId,
+                g.Engine,
                 g.InstallPath,
                 g.LibraryPath,
                 g.LastPlayed?.ToUniversalTime(),
@@ -70,11 +73,12 @@ internal static class GamesCommand
             output.WriteLine();
         }
 
-        string[] header = ["ID", "BUILD", "LAST PLAYED", "NAME", "FOLDER"];
+        string[] header = ["ID", "BUILD", "ENGINE", "LAST PLAYED", "NAME", "FOLDER"];
         var rows = games.Select(g => new[]
         {
             g.Id.ToString(),
             g.Version?.BuildId ?? (g.Version is null ? "-" : "files"),
+            EngineKind.TryParse(g.Engine, out var engine) ? engine.DisplayName : "-",
             g.LastPlayed?.ToLocalTime().ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) ?? "never",
             g.Name,
             g.IsAvailable ? g.InstallPath : $"{g.InstallPath} (not available)",
@@ -122,6 +126,7 @@ internal sealed record GameJson(
     uint? AppId,
     string Name,
     string? BuildId,
+    string? Engine,
     string InstallPath,
     string? LibraryPath,
     DateTimeOffset? LastPlayed,
