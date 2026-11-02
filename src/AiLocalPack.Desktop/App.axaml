@@ -1,8 +1,32 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
              x:Class="AiLocalPack.Desktop.App"
              RequestedThemeVariant="Default">
+    <!-- RequestedThemeVariant="Default" follows the OS theme, live; a manual override comes with Settings (task 05). -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://AiLocalPack/Styles/Theme.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.Styles>
-        <FluentTheme />
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light" Accent="#4152e0" RegionColor="#ffffff" />
+                <ColorPaletteResources x:Key="Dark" Accent="#5566f0" RegionColor="#151922" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
+        <StyleInclude Source="avares://AiLocalPack/Styles/Controls.axaml" />
     </Application.Styles>
+
+    <!-- View-model-first navigation: each page view model maps to its view here (no reflection). -->
+    <Application.DataTemplates>
+        <DataTemplate DataType="vm:LibraryViewModel"><views:LibraryView /></DataTemplate>
+        <DataTemplate DataType="vm:GamePageViewModel"><views:GamePageView /></DataTemplate>
+        <DataTemplate DataType="vm:SettingsViewModel"><views:SettingsView /></DataTemplate>
+    </Application.DataTemplates>
 </Application>

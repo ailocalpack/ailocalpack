@@ -1,0 +1,35 @@
+<!-- ailocalpack theme on top of Fluent: neutral surfaces, one accent, dark + light (tokens from design/drafts). -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#0d1015" />
+            <SolidColorBrush x:Key="AppSurfaceBrush" Color="#151922" />
+            <SolidColorBrush x:Key="AppSurface2Brush" Color="#1c2230" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#14ffffff" />
+            <SolidColorBrush x:Key="AppTextBrush" Color="#e9edf4" />
+            <SolidColorBrush x:Key="AppMutedBrush" Color="#9aa4b6" />
+            <SolidColorBrush x:Key="AppAccentBrush" Color="#7b8cff" />
+            <SolidColorBrush x:Key="AppAccentFillBrush" Color="#5566f0" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#f4f6fa" />
+            <SolidColorBrush x:Key="AppSurfaceBrush" Color="#ffffff" />
+            <SolidColorBrush x:Key="AppSurface2Brush" Color="#eef1f6" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#170f172a" />
+            <SolidColorBrush x:Key="AppTextBrush" Color="#141a26" />
+            <SolidColorBrush x:Key="AppMutedBrush" Color="#556075" />
+            <SolidColorBrush x:Key="AppAccentBrush" Color="#4152e0" />
+            <SolidColorBrush x:Key="AppAccentFillBrush" Color="#4152e0" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <LinearGradientBrush x:Key="AppLogoBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#5566f0" />
+        <GradientStop Offset="1" Color="#9a5cf0" />
+    </LinearGradientBrush>
+
+    <!-- Lucide icons (ISC), drawn as strokes -->
+    <StreamGeometry x:Key="IconBell">M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9 M10.3 21a1.94 1.94 0 0 0 3.4 0</StreamGeometry>
+    <StreamGeometry x:Key="IconSettings">M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z M15 12a3 3 0 1 1-6 0a3 3 0 0 1 6 0z</StreamGeometry>
+</ResourceDictionary>

@@ -1,8 +1,49 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
         x:Class="AiLocalPack.Desktop.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Title="ailocalpack"
-        Width="1100" Height="720"
-        MinWidth="800" MinHeight="560">
-    <TextBlock Text="ailocalpack" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        Width="1200" Height="760"
+        MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+    <!-- Min size stays below 1280×800 (Steam Deck), so the app fits there with the title bar. -->
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Escape" Command="{Binding GoBackCommand}" />
+        <KeyBinding Gesture="Alt+Left" Command="{Binding GoBackCommand}" />
+    </Window.KeyBindings>
+
+    <DockPanel>
+        <Border x:Name="Chrome" DockPanel.Dock="Top" Height="52" Padding="20,0,12,0"
+                Background="{DynamicResource AppSurfaceBrush}"
+                BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="0,0,0,1">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border Width="26" Height="26" CornerRadius="8" Background="{StaticResource AppLogoBrush}">
+                        <TextBlock Text="al" Foreground="White" FontSize="12" FontWeight="ExtraBold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock x:Name="Logo" Text="ailocalpack" FontSize="15" FontWeight="ExtraBold" VerticalAlignment="Center" />
+                    <Button x:Name="BackButton" Classes="back" Margin="12,0,0,0"
+                            Content="{Binding BackLabel}"
+                            Command="{Binding GoBackCommand}"
+                            IsVisible="{Binding CanGoBack}"
+                            AutomationProperties.Name="Back" />
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <Button x:Name="ActivityButton" Classes="icon" Command="{Binding OpenActivityCommand}"
+                            ToolTip.Tip="Activity" AutomationProperties.Name="Activity">
+                        <Path Data="{StaticResource IconBell}" />
+                    </Button>
+                    <Button x:Name="SettingsButton" Classes="icon" Command="{Binding OpenSettingsCommand}"
+                            ToolTip.Tip="Settings" AutomationProperties.Name="Settings">
+                        <Path Data="{StaticResource IconSettings}" />
+                    </Button>
+                </StackPanel>
+                <Panel />
+            </DockPanel>
+        </Border>
+
+        <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}" />
+    </DockPanel>
 </Window>

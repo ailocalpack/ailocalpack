@@ -2,7 +2,7 @@
 
 Open-source, cross-platform (Windows, macOS, Linux) desktop app that lets a player **install** a community localization for any game they own, or **generate** a new one with an AI agent and **publish** it for others.
 
-Status: solution skeleton in place (no features yet). Treat this file as the product spec and keep it current: record each settled decision in its section, and remove the matching item from _Open questions_.
+Status: solution skeleton and app shell (navigation, chrome, theme) in place; no features yet. Treat this file as the product spec and keep it current: record each settled decision in its section, and remove the matching item from _Open questions_.
 
 ## Constraints
 
@@ -45,6 +45,8 @@ Implementation tasks (numbered; the user names one to implement): [`tasks/README
 
 - **C# / .NET + Avalonia UI.** Chosen over MAUI (no official Linux) and Tauri/Electron for real Linux support and direct use of .NET modding libraries (AssetsTools.NET, CUE4Parse, UAssetAPI, BepInEx ecosystem).
 - **Distribution: Velopack + GitHub Releases** with delta updates. Linux: AppImage first, Flatpak/Flathub later. Signing: macOS notarization from the start; Windows via free open-source signing (SignPath Foundation).
+- **Desktop app structure**: MVVM with CommunityToolkit.Mvvm, `Microsoft.Extensions.DependencyInjection` (graph in `Composition`), view-model-first navigation (`INavigationService` back stack with Library as root; page views mapped by `DataTemplate`s in `App.axaml`, no reflection view locator). Back: chrome button, Esc, Alt+←, mouse back button. Theme: Fluent + own tokens (`Styles/Theme.axaml`, colors from `design/drafts`), follows the OS.
+- **Logging**: Serilog rolling file via `Microsoft.Extensions.Logging` (daily, 7 files, 10 MB cap); unhandled exceptions (AppDomain, UI dispatcher, unobserved tasks) are logged.
 - **App UI is multilingual from the start**: strings in resource files, top ~10 player languages, initially AI-translated; community fixes via PRs. Language follows the OS.
 
 ## Repositories

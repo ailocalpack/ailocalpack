@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+             x:Class="AiLocalPack.Desktop.Views.GamePageView"
+             x:DataType="vm:GamePageViewModel">
+    <!-- Stub: header and tabs come in task 22. -->
+    <StackPanel Margin="24" Spacing="8">
+        <TextBlock x:Name="GameTitle" Classes="h1" Text="{Binding Title}" />
+        <TextBlock Classes="muted" Text="{Binding Game.Id}" />
+    </StackPanel>
+</UserControl>
