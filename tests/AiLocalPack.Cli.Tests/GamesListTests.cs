@@ -44,6 +44,8 @@ public sealed class GamesListTests : IDisposable
                 ["name"] = "Stardew Valley",
                 ["buildId"] = "16826371",
                 ["engine"] = "unknown",
+                ["antiCheat"] = "none",
+                ["blocked"] = false,
                 ["installPath"] = Path.Combine(_steam.Root, "steamapps", "common", "Stardew Valley"),
                 ["libraryPath"] = _steam.Root,
                 ["lastPlayed"] = "2027-01-15T08:00:00+00:00",
@@ -176,5 +178,34 @@ public sealed class GamesListTests : IDisposable
 
         // Assert
         File.ReadAllText(_dir.Combine("home/data/games.json")).Should().Contain("\"engine\": \"renpy\"");
+    }
+
+    [Fact]
+    public async Task Json_marks_a_game_with_anti_cheat_as_blocked()
+    {
+        // Arrange
+        _steam.AddGame(1172470, "Shooter");
+        _dir.Dir("Steam/steamapps/common/Shooter/EasyAntiCheat");
+
+        // Act
+        var result = await RunAsync("games", "list", "--json");
+
+        // Assert
+        var game = Games(result).Should().ContainSingle().Which!;
+        (game["antiCheat"]!.GetValue<string>(), game["blocked"]!.GetValue<bool>()).Should().Be(("eac", true));
+    }
+
+    [Fact]
+    public async Task Table_shows_the_anti_cheat_name()
+    {
+        // Arrange
+        _steam.AddGame(1172470, "Shooter");
+        _dir.Dir("Steam/steamapps/common/Shooter/BattlEye");
+
+        // Act
+        var result = await RunAsync("games", "list");
+
+        // Assert
+        result.StdOut.Should().ContainAll("ANTI-CHEAT", "BattlEye");
     }
 }

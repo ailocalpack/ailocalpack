@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "antiCheats": [
+    {
+      "id": "eac",
+      "name": "Easy Anti-Cheat",
+      "markers": [
+        "EasyAntiCheat/",
+        "EasyAntiCheat_x64.dll",
+        "EasyAntiCheat_x86.dll",
+        "EasyAntiCheat_Setup.exe",
+        "EasyAntiCheat_EOS_Setup.exe",
+        "start_protected_game.exe"
+      ]
+    },
+    {
+      "id": "battleye",
+      "name": "BattlEye",
+      "markers": [
+        "BattlEye/",
+        "BEClient.dll",
+        "BEClient_x64.dll",
+        "BEService.exe",
+        "BEService_x64.exe",
+        "*_BE.exe"
+      ]
+    },
+    {
+      "id": "vanguard",
+      "name": "Riot Vanguard",
+      "markers": [
+        "Riot Vanguard/",
+        "vgc.exe",
+        "vgk.sys"
+      ]
+    },
+    {
+      "id": "gameguard",
+      "name": "nProtect GameGuard",
+      "markers": [
+        "GameGuard/",
+        "GameGuard.des",
+        "GameMon.des"
+      ]
+    },
+    {
+      "id": "xigncode",
+      "name": "XIGNCODE3",
+      "markers": [
+        "XIGNCODE/",
+        "x3.xem",
+        "xxd-0.xem"
+      ]
+    },
+    {
+      "id": "punkbuster",
+      "name": "PunkBuster",
+      "markers": [
+        "pb/pbcl.dll",
+        "pb/pbsv.dll",
+        "PnkBstrA.exe",
+        "PnkBstrB.exe"
+      ]
+    },
+    {
+      "id": "mhyprot",
+      "name": "HoYoverse anti-cheat (mhyprot)",
+      "markers": [
+        "mhypbase.dll",
+        "mhyprot*.sys"
+      ]
+    }
+  ],
+  "games": [],
+  "allowed": []
+}

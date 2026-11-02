@@ -19,7 +19,7 @@ public sealed class ToolkitDetectTests : IDisposable
 
         // Assert
         (result.ExitCode, result.StdOut.ReplaceLineEndings("\n")).Should().Be((0,
-            "engine: Unity (IL2CPP)\nconfidence: high\nmarker: Game_Data/globalgamemanagers\nexecutable: Game.exe\n"));
+            "engine: Unity (IL2CPP)\nconfidence: high\nmarker: Game_Data/globalgamemanagers\nexecutable: Game.exe\nanti-cheat: none\n"));
     }
 
     [Fact]
@@ -43,6 +43,7 @@ public sealed class ToolkitDetectTests : IDisposable
                 ["marker"] = "Game.pck",
                 ["executable"] = "Game.exe",
             }),
+            ["antiCheats"] = new JsonArray(),
         };
 
         // Act
@@ -62,7 +63,7 @@ public sealed class ToolkitDetectTests : IDisposable
         var result = await CliRunner.RunAsync("toolkit", "detect", folder);
 
         // Assert
-        (result.ExitCode, result.StdOut.Trim()).Should().Be((0, "engine: unknown"));
+        (result.ExitCode, result.StdOut.ReplaceLineEndings("\n")).Should().Be((0, "engine: unknown\nanti-cheat: none\n"));
     }
 
     [Fact]
@@ -76,6 +77,35 @@ public sealed class ToolkitDetectTests : IDisposable
 
         // Assert
         result.StdOut.Should().ContainAll("engine: unknown (ambiguous)", "Unity (Mono)", "Godot 4");
+    }
+
+    [Fact]
+    public async Task Text_shows_the_anti_cheat_and_its_marker()
+    {
+        // Arrange
+        _dir.UnrealWindows().File("EasyAntiCheat/EasyAntiCheat_x64.dll", "MZ");
+
+        // Act
+        var result = await CliRunner.RunAsync("toolkit", "detect", _dir.Path);
+
+        // Assert
+        result.StdOut.Should().Contain("anti-cheat: Easy Anti-Cheat (EasyAntiCheat/)");
+    }
+
+    [Fact]
+    public async Task Json_lists_every_anti_cheat()
+    {
+        // Arrange
+        _dir.Dir("EasyAntiCheat").File("Bin/BEClient_x64.dll", "MZ");
+        var expected = new JsonArray(
+            new JsonObject { ["id"] = "eac", ["name"] = "Easy Anti-Cheat", ["marker"] = "EasyAntiCheat/" },
+            new JsonObject { ["id"] = "battleye", ["name"] = "BattlEye", ["marker"] = "Bin/BEClient_x64.dll" });
+
+        // Act
+        var result = await CliRunner.RunAsync("toolkit", "detect", _dir.Path, "--json");
+
+        // Assert
+        JsonNode.DeepEquals(JsonNode.Parse(result.StdOut)!["antiCheats"], expected).Should().BeTrue(result.StdOut);
     }
 
     [Fact]

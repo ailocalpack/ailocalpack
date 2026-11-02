@@ -1,18 +1,19 @@
 using System.CommandLine;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 
 namespace AiLocalPack.Cli.Commands;
 
-/// <summary><c>toolkit detect &lt;folder&gt; [--json]</c>: what the toolkit finds in a game folder.</summary>
+/// <summary><c>toolkit detect &lt;folder&gt; [--json]</c>: what the toolkit finds in a game folder (engine, anti-cheat).</summary>
 internal static class ToolkitCommand
 {
     public static Command Build()
     {
         var folder = new Argument<string>("folder") { Description = "Game folder (or a macOS .app bundle)." };
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
-        var detect = new Command("detect", "Detect the engine of a game folder: engine, confidence, marker file and main executable.")
+        var detect = new Command("detect", "Detect the engine and anti-cheat of a game folder: engine, confidence, marker file, main executable, anti-cheat.")
         {
             folder,
             json,
@@ -27,14 +28,18 @@ internal static class ToolkitCommand
             }
 
             var detection = new EngineDetector().Detect(path);
+            var antiCheat = new AntiCheatDetector().Detect(path);
             var output = result.InvocationConfiguration.Output;
             if (result.GetValue(json))
             {
-                WriteJson(output, detection);
+                WriteJson(output, detection, antiCheat);
             }
             else
             {
                 WriteText(output, detection);
+                output.WriteLine(antiCheat.Matches.Count == 0
+                    ? "anti-cheat: none"
+                    : $"anti-cheat: {string.Join(", ", antiCheat.Matches.Select(m => $"{m.Name} ({m.Marker})"))}");
             }
 
             return 0;
@@ -68,7 +73,7 @@ internal static class ToolkitCommand
         }
     }
 
-    private static void WriteJson(TextWriter output, EngineDetection detection)
+    private static void WriteJson(TextWriter output, EngineDetection detection, AntiCheatDetection antiCheat)
     {
         var dto = new DetectJson(
             detection.Kind.ToString(),
@@ -78,7 +83,8 @@ internal static class ToolkitCommand
             detection.Match?.MainExecutable,
             detection.IsAmbiguous,
             [.. detection.Candidates.Select(c => new CandidateJson(
-                c.Kind.ToString(), c.Kind.DisplayName, Confidence(c.Confidence), c.Marker, c.MainExecutable))]);
+                c.Kind.ToString(), c.Kind.DisplayName, Confidence(c.Confidence), c.Marker, c.MainExecutable))],
+            [.. antiCheat.Matches.Select(m => new AntiCheatJson(m.Id, m.Name, m.Marker))]);
         output.WriteLine(JsonSerializer.Serialize(dto, ToolkitJsonContext.Default.DetectJson));
     }
 
@@ -92,9 +98,12 @@ internal sealed record DetectJson(
     string? Marker,
     string? Executable,
     bool Ambiguous,
-    IReadOnlyList<CandidateJson> Candidates);
+    IReadOnlyList<CandidateJson> Candidates,
+    IReadOnlyList<AntiCheatJson> AntiCheats);
 
 internal sealed record CandidateJson(string Engine, string Name, string Confidence, string Marker, string? Executable);
+
+internal sealed record AntiCheatJson(string Id, string Name, string Marker);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
 [JsonSerializable(typeof(DetectJson))]

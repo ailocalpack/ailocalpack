@@ -175,7 +175,7 @@ public sealed class GameCatalogMergeTests
     {
         // Arrange
         var steam = Steam(1091500, "Cyberpunk 2077");
-        var stored = Stored(steam) with { Engine = "redengine", AntiCheat = "Easy Anti-Cheat" };
+        var stored = Stored(steam) with { Engine = "redengine", AntiCheat = "eac" };
 
         // Act
         var (games, _) = Merge([stored], Scan(steam));

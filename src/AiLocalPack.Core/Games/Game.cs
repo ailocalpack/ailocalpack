@@ -21,7 +21,11 @@ public enum GameSource
 /// Detected engine ID from the toolkit's <c>EngineKind</c> (<c>unity:il2cpp</c>, <c>unreal:5</c>, <c>rpgmaker:mz</c>,
 /// <c>renpy</c>, <c>godot:4</c>, <c>unknown</c>); <c>null</c> = not detected yet.
 /// </param>
-/// <param name="AntiCheat">Detected anti-cheat display name (task 10); <c>null</c> = none found or not checked yet.</param>
+/// <param name="AntiCheat">
+/// Anti-cheat ID found in the game files (<c>AntiCheatPolicy</c> rules: <c>eac</c>, <c>battleye</c>…), <c>none</c> when the
+/// check found nothing, <c>null</c> = not checked yet. Whether it blocks the game is decided by <c>AntiCheatPolicy.Resolve</c>
+/// (known-games list, whitelist).
+/// </param>
 /// <param name="LastPlayed">Last launch, or <c>null</c> when never played or unknown.</param>
 /// <param name="IsAvailable">
 /// <c>false</c> while the game folder can't be reached (Steam library on an unplugged drive or SD card, Steam not found,

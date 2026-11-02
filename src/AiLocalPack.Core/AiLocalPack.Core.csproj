@@ -9,6 +9,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="AntiCheat/anti-cheat.json" LogicalName="AiLocalPack.Core.AntiCheat.anti-cheat.json" />
+    </ItemGroup>
+
+    <ItemGroup>
         <InternalsVisibleTo Include="AiLocalPack.Core.Tests" />
     </ItemGroup>
 </Project>

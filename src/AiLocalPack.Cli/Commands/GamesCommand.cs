@@ -2,9 +2,11 @@ using System.CommandLine;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -18,7 +20,7 @@ internal static class GamesCommand
         var json = new Option<bool>("--json") { Description = "Print JSON instead of a table." };
         var list = new Command(
             "list",
-            "Scan Steam, update the game catalog and list its games with ID, build, engine, folder and last played time.") { json };
+            "Scan Steam, update the game catalog and list its games with ID, build, engine, anti-cheat, folder and last played time.") { json };
         list.SetAction(result =>
         {
             var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan();
@@ -26,6 +28,7 @@ internal static class GamesCommand
             catalog.Load();
             var changes = catalog.Refresh(scan);
             new EngineDetector().UpdateCatalog(catalog, changes);
+            new AntiCheatDetector().UpdateCatalog(catalog, changes);
             var output = result.InvocationConfiguration.Output;
             if (result.GetValue(json))
             {
@@ -53,6 +56,8 @@ internal static class GamesCommand
                 g.Name,
                 g.Version?.BuildId,
                 g.Engine,
+                g.AntiCheat,
+                AntiCheatPolicy.Bundled.Resolve(g).IsBlocked,
                 g.InstallPath,
                 g.LibraryPath,
                 g.LastPlayed?.ToUniversalTime(),
@@ -73,12 +78,13 @@ internal static class GamesCommand
             output.WriteLine();
         }
 
-        string[] header = ["ID", "BUILD", "ENGINE", "LAST PLAYED", "NAME", "FOLDER"];
+        string[] header = ["ID", "BUILD", "ENGINE", "ANTI-CHEAT", "LAST PLAYED", "NAME", "FOLDER"];
         var rows = games.Select(g => new[]
         {
             g.Id.ToString(),
             g.Version?.BuildId ?? (g.Version is null ? "-" : "files"),
             EngineKind.TryParse(g.Engine, out var engine) ? engine.DisplayName : "-",
+            AntiCheatCell(AntiCheatPolicy.Bundled.Resolve(g)),
             g.LastPlayed?.ToLocalTime().ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) ?? "never",
             g.Name,
             g.IsAvailable ? g.InstallPath : $"{g.InstallPath} (not available)",
@@ -111,6 +117,13 @@ internal static class GamesCommand
         }
     }
 
+    private static string AntiCheatCell(AntiCheatVerdict verdict) => verdict switch
+    {
+        { AntiCheatId: null } => "-",
+        { IsAllowed: true } => $"{verdict.Name} (allowed)",
+        _ => verdict.Name!,
+    };
+
     /// <summary>Columns padded to <paramref name="widths"/>, the last one left as is.</summary>
     private static string Row(string[] cells, int[] widths) =>
         string.Join("  ", cells.Select((c, i) => i == cells.Length - 1 ? c : c.PadRight(widths[i])));
@@ -127,6 +140,8 @@ internal sealed record GameJson(
     string Name,
     string? BuildId,
     string? Engine,
+    string? AntiCheat,
+    bool Blocked,
     string InstallPath,
     string? LibraryPath,
     DateTimeOffset? LastPlayed,
