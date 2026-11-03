@@ -27,13 +27,24 @@ public static class LanguageOptions
         return Build(localizer, system, GameLanguages.Tags);
     }
 
+    /// <summary>
+    /// Loads the native names and the sort order of every listed language. The first lookup reads ICU culture data
+    /// (about half a second), so the app does it off the UI thread at startup and Settings opens without a pause.
+    /// Thread-safe; the results are cached by .NET, not here.
+    /// </summary>
+    public static void Preload()
+    {
+        _ = Sorted(UiLanguages.Supported);
+        _ = Sorted(GameLanguages.Tags);
+    }
+
     private static List<ChoiceOption> Build(Localizer localizer, string systemName, IEnumerable<string> tags)
     {
         ArgumentNullException.ThrowIfNull(localizer);
-        var languages = tags
-            .Select(tag => (Tag: tag, Name: LanguageNames.Native(tag)))
-            .OrderBy(l => l.Name, LanguageNames.Order)
-            .Select(l => new ChoiceOption(l.Tag, () => l.Name));
+        var languages = Sorted(tags).Select(l => new ChoiceOption(l.Tag, () => l.Name));
         return [new ChoiceOption(null, () => localizer.Format(nameof(Strings.Settings_Language_System), systemName)), .. languages];
     }
+
+    private static List<(string Tag, string Name)> Sorted(IEnumerable<string> tags) =>
+        [.. tags.Select(tag => (Tag: tag, Name: LanguageNames.Native(tag))).OrderBy(l => l.Name, LanguageNames.Order)];
 }

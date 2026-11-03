@@ -3,6 +3,7 @@ using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.ViewModels;
+using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Desktop.Views;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -40,6 +41,9 @@ public sealed class App : Application
             _services.GetRequiredService<GameCatalog>().Load();
             _ = _services.GetRequiredService<GameLibrary>().RefreshAsync();
             desktop.MainWindow = new MainWindow { DataContext = _services.GetRequiredService<MainWindowViewModel>() };
+            // Once the window is up, so the first frame isn't delayed: Settings then opens without a pause.
+            var preloader = _services.GetRequiredService<SettingsPreloader>();
+            desktop.MainWindow.Opened += (_, _) => _ = preloader.PreloadAsync();
             desktop.Exit += (_, _) => _services.Dispose();
         }
 

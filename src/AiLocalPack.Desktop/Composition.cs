@@ -49,6 +49,7 @@ internal static class Composition
         AddGames(services);
         services.AddSingleton<MainWindowViewModel>();
         AddSettingsSections(services);
+        services.AddSingleton<SettingsPreloader>();
         configure?.Invoke(services);
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
