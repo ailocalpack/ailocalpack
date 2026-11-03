@@ -203,4 +203,70 @@
   <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
     <value>System notifications need the tray (Background above); until then events only appear in Activity.</value>
   </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>Search games</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>Sort</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>By name</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>Recently played</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>Add a game folder</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>Looking for games in Steam libraries…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>Steam library not found</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>We couldn't find Steam, or it has no games. Add a game folder manually or point us to your Steam libraries.</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>Add game folder</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>Settings → Libraries</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>Nothing found</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>No games match “{0}”. Game not in the library? Add its folder.</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>Clear search</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>Add folder</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>manual</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>Unknown engine</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>Folder not available</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0} (blocked: {1})</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>Anti-cheat</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>Open game page</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>Open game folder</value>
+  </data>
 </root>

@@ -209,4 +209,123 @@
         <Setter Property="FontSize" Value="15" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
+    <!-- Toolbar button with a border (+ Folder, Settings → Libraries) -->
+    <Style Selector="Button.ghost">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.accent">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="ComboBox.toolbar">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Keyboard shortcut hint (Ctrl F in the search box) -->
+    <Style Selector="Border.kbd">
+        <Setter Property="Margin" Value="0,0,8,0" />
+        <Setter Property="Padding" Value="6,1" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextElement.FontSize" Value="11" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+
+    <!-- Info banner (scanning) -->
+    <Style Selector="Border.banner">
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+    </Style>
+
+    <!-- Library card: the whole card is one button; no button chrome, the cover lifts on hover -->
+    <Style Selector="Button.gameCard">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Button.gameCard:pointerover /template/ ContentPresenter, Button.gameCard:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.gameCard Border.cover">
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="BoxShadow" Value="0 6 18 0 #40000000" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Button.gameCard:pointerover Border.cover, Button.gameCard:focus-visible Border.cover">
+        <Setter Property="RenderTransform" Value="translateY(-3px)" />
+        <Setter Property="BoxShadow" Value="0 16 36 0 #73000000" />
+    </Style>
+    <Style Selector="Button.gameCard.blocked Image, Button.gameCard.blocked TextBlock.coverName">
+        <Setter Property="Opacity" Value="0.35" />
+    </Style>
+    <Style Selector="Button.gameCard.blocked TextBlock.cardName">
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Button.gameCard.dimmed">
+        <Setter Property="Opacity" Value="0.55" />
+    </Style>
+    <Style Selector="TextBlock.coverName">
+        <Setter Property="Margin" Value="14" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Foreground" Value="#f2ffffff" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
+    <Style Selector="TextBlock.cardName">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <Style Selector="TextBlock.cardMeta">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
+    <!-- Status badge on a cover (top left); always icon + text -->
+    <Style Selector="Border.statusBadge">
+        <Setter Property="Margin" Value="8" />
+        <Setter Property="Padding" Value="8,3" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="TextElement.FontSize" Value="12" />
+        <Setter Property="TextElement.FontWeight" Value="Bold" />
+        <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Border.statusBadge.bad">
+        <Setter Property="Background" Value="#e6c23434" />
+    </Style>
+
+    <!-- Skeleton block while the first scan runs -->
+    <Style Selector="Border.skeleton">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="CornerRadius" Value="6" />
+    </Style>
 </Styles>

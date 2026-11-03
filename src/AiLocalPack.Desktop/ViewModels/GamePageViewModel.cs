@@ -1,9 +1,11 @@
+using AiLocalPack.Core.Games;
+
 namespace AiLocalPack.Desktop.ViewModels;
 
 /// <summary>Game page. Stub: header and tabs come in task 22.</summary>
-public sealed class GamePageViewModel(StubGame game) : PageViewModel
+public sealed class GamePageViewModel(Game game) : PageViewModel
 {
-    public StubGame Game { get; } = game;
+    public Game Game { get; } = game;
 
     public override string Title => Game.Name;
 

@@ -1,27 +1,164 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
+             xmlns:lib="using:AiLocalPack.Desktop.ViewModels.Library"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.LibraryView"
              x:DataType="vm:LibraryViewModel">
-    <!-- Stub: the cover grid comes in task 11. -->
-    <StackPanel Margin="24" Spacing="12">
-        <StackPanel Spacing="2">
-            <TextBlock Classes="h1" Text="{l:Loc Library_Title}" />
-            <TextBlock x:Name="GameCount" Classes="muted" Text="{Binding GameCount}" />
-        </StackPanel>
-        <ItemsControl x:Name="StubGames" ItemsSource="{Binding Games}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="vm:StubGame">
-                    <Button Margin="0,0,12,12" Width="180" Height="100"
-                            Content="{Binding Name}"
-                            Command="{Binding $parent[ItemsControl].((vm:LibraryViewModel)DataContext).OpenGameCommand}"
-                            CommandParameter="{Binding}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
+    <!-- Design §1: toolbar (search, sort, + Folder) over a responsive cover grid; scanning, empty and no-results states. -->
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Margin="24,16,24,12" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+            <TextBox x:Name="SearchBox" Classes="search" MaxWidth="520" HorizontalAlignment="Stretch"
+                     Text="{Binding Query}" PlaceholderText="{l:Loc Library_Search_Placeholder}"
+                     AutomationProperties.Name="{l:Loc Library_Search_Placeholder}">
+                <TextBox.InnerLeftContent>
+                    <Viewbox Classes="icon" Width="16" Height="16" Margin="10,0,0,0">
+                        <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
+                    </Viewbox>
+                </TextBox.InnerLeftContent>
+                <TextBox.InnerRightContent>
+                    <Border Classes="kbd"><TextBlock Text="{x:Static vm:LibraryViewModel.SearchShortcut}" /></Border>
+                </TextBox.InnerRightContent>
+            </TextBox>
+            <ComboBox x:Name="SortBox" Grid.Column="1" Classes="toolbar" MinWidth="190"
+                      ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSort}"
+                      AutomationProperties.Name="{l:Loc Library_Sort_Label}" ToolTip.Tip="{l:Loc Library_Sort_Label}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="lib:LibrarySortOption">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconSort}" Stroke="{DynamicResource AppMutedBrush}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding Display}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button x:Name="AddFolderButton" Grid.Column="2" Classes="ghost" Command="{Binding AddFolderCommand}"
+                    ToolTip.Tip="{l:Loc Library_AddFolder_Tip}" AutomationProperties.Name="{l:Loc Library_AddFolder_Tip}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Viewbox Classes="icon" Width="16" Height="16">
+                        <Path Classes="icon" Data="{StaticResource IconFolderPlus}" Stroke="{Binding $parent[Button].Foreground}" />
+                    </Viewbox>
+                    <TextBlock Text="{l:Loc Library_AddFolder}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <ScrollViewer x:Name="Scroller">
+            <StackPanel Margin="24,0,24,32" Spacing="16">
+                <Border x:Name="ScanBanner" Classes="banner" IsVisible="{Binding IsScanning}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Viewbox Classes="icon" Width="16" Height="16">
+                            <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppAccentBrush}" />
+                        </Viewbox>
+                        <TextBlock Text="{l:Loc Library_Scanning}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <ItemsControl x:Name="Skeletons" ItemsSource="{Binding Skeletons}" IsVisible="{Binding ShowSkeletons}" Focusable="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><views:CardGrid /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Spacing="10">
+                                <views:AspectBox><Border Classes="skeleton" CornerRadius="12" /></views:AspectBox>
+                                <Border Classes="skeleton" Height="14" Width="110" HorizontalAlignment="Left" />
+                                <Border Classes="skeleton" Height="10" Width="70" HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <ItemsControl x:Name="Games" ItemsSource="{Binding VisibleCards}" IsVisible="{Binding ShowGrid}"
+                              AutomationProperties.Name="{Binding GameCount}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><views:CardGrid /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="lib:GameCardViewModel">
+                            <Button Classes="gameCard" Classes.blocked="{Binding IsBlocked}" Classes.dimmed="{Binding IsDimmed}"
+                                    Command="{Binding OpenCommand}" AutomationProperties.Name="{Binding AccessibleName}">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="{l:Loc Library_Menu_OpenPage}" Command="{Binding OpenCommand}" />
+                                        <MenuItem Header="{l:Loc Library_Menu_OpenFolder}" Command="{Binding OpenFolderCommand}" />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                                <StackPanel Spacing="10">
+                                    <views:AspectBox>
+                                        <Border Classes="cover" Background="{Binding PlaceholderBrush}">
+                                            <Panel>
+                                                <TextBlock Classes="coverName" Text="{Binding Name}" IsVisible="{Binding !HasCover}" />
+                                                <Image Source="{Binding Cover}" Stretch="UniformToFill" IsVisible="{Binding HasCover}" />
+                                                <Viewbox Classes="icon" Width="36" Height="36" IsVisible="{Binding IsBlocked}"
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="#d9ffffff" />
+                                                </Viewbox>
+                                                <Border Classes="statusBadge bad" IsVisible="{Binding IsBlocked}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                                        <Viewbox Classes="icon" Width="12" Height="12">
+                                                            <Path Classes="icon" Data="{StaticResource IconShield}" Stroke="White" />
+                                                        </Viewbox>
+                                                        <TextBlock Text="{Binding BadgeText}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Panel>
+                                        </Border>
+                                    </views:AspectBox>
+                                    <StackPanel Spacing="3">
+                                        <TextBlock Classes="cardName" Text="{Binding Name}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <TextBlock Classes="cardMeta" Text="{Binding ContextLine}" />
+                                            <TextBlock Classes="cardMeta" Text="·" Foreground="{DynamicResource AppFaintBrush}" IsVisible="{Binding ShowManualSeparator}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding IsManual}">
+                                                <Viewbox Classes="icon" Width="12" Height="12">
+                                                    <Path Classes="icon" Data="{StaticResource IconHardDrive}" Stroke="{DynamicResource AppMutedBrush}" />
+                                                </Viewbox>
+                                                <TextBlock Classes="cardMeta" Text="{Binding ManualText}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Steam not found / no games -->
+                <StackPanel x:Name="EmptyState" IsVisible="{Binding IsEmpty}"
+                            MaxWidth="480" Margin="0,64,0,0" Spacing="12" HorizontalAlignment="Center">
+                    <Border Width="72" Height="72" CornerRadius="36" Background="{DynamicResource AppSurface2Brush}" HorizontalAlignment="Center">
+                        <Viewbox Classes="icon" Width="32" Height="32">
+                            <Path Classes="icon" Data="{StaticResource IconGamepad}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <TextBlock Classes="h1" Text="{l:Loc Library_Empty_Title}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" Text="{l:Loc Library_Empty_Text}" TextAlignment="Center" TextWrapping="Wrap" />
+                    <WrapPanel HorizontalAlignment="Center" Margin="0,8,0,0" ItemSpacing="10" LineSpacing="10">
+                        <Button x:Name="EmptyAddFolder" Classes="accent" Command="{Binding AddFolderCommand}" Content="{l:Loc Library_Empty_AddFolder}" />
+                        <Button x:Name="EmptyLibraries" Classes="ghost" Command="{Binding OpenLibrarySettingsCommand}" Content="{l:Loc Library_Empty_Libraries}" />
+                    </WrapPanel>
+                </StackPanel>
+
+                <!-- Search hides every game -->
+                <StackPanel x:Name="NoResults" IsVisible="{Binding HasNoResults}"
+                            MaxWidth="480" Margin="0,64,0,0" Spacing="12" HorizontalAlignment="Center">
+                    <Border Width="72" Height="72" CornerRadius="36" Background="{DynamicResource AppSurface2Brush}" HorizontalAlignment="Center">
+                        <Viewbox Classes="icon" Width="32" Height="32">
+                            <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <TextBlock Classes="h1" Text="{l:Loc Library_NoResults_Title}" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="NoResultsText" Classes="muted" Text="{Binding NoResultsText}" TextAlignment="Center" TextWrapping="Wrap" />
+                    <WrapPanel HorizontalAlignment="Center" Margin="0,8,0,0" ItemSpacing="10" LineSpacing="10">
+                        <Button x:Name="ResetSearch" Classes="ghost" Command="{Binding ClearSearchCommand}" Content="{l:Loc Library_NoResults_Reset}" />
+                        <Button Classes="ghost" Command="{Binding AddFolderCommand}" Content="{l:Loc Library_NoResults_AddFolder}" />
+                    </WrapPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

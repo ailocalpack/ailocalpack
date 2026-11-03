@@ -7,5 +7,6 @@
     <StackPanel Margin="24" Spacing="8">
         <TextBlock x:Name="GameTitle" Classes="h1" Text="{Binding Title}" />
         <TextBlock Classes="muted" Text="{Binding Game.Id}" />
+        <TextBlock Classes="muted" Text="{Binding Game.InstallPath}" />
     </StackPanel>
 </UserControl>

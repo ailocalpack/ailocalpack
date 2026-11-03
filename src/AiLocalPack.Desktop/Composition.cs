@@ -1,10 +1,19 @@
+using System.Net.Http.Headers;
+using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
+using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
+using AiLocalPack.Toolkit.AntiCheat;
+using AiLocalPack.Toolkit.Engines;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -14,10 +23,12 @@ namespace AiLocalPack.Desktop;
 internal static class Composition
 {
     /// <param name="configure">Runs last, so tests can replace services (a later registration wins).</param>
-    public static ServiceProvider BuildServices(ILoggerFactory loggerFactory, AppPaths paths, Action<IServiceCollection>? configure = null)
+    public static ServiceProvider BuildServices(
+        ILoggerFactory loggerFactory, AppPaths paths, OsEnvironment env, Action<IServiceCollection>? configure = null)
     {
         var services = new ServiceCollection();
         services.AddSingleton(paths);
+        services.AddSingleton(env);
         services.AddSingleton(loggerFactory);
         services.AddLogging();
         services.AddSingleton(TimeProvider.System);
@@ -27,10 +38,38 @@ internal static class Composition
         services.AddSingleton<IPageFactory, PageFactory>();
         services.AddSingleton<IAppTheming, AvaloniaAppTheming>();
         services.AddSingleton<SettingsApplier>();
+        services.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>();
+        services.AddSingleton<ISystemShell, SystemShell>();
+        AddGames(services);
         services.AddSingleton<MainWindowViewModel>();
         AddSettingsSections(services);
         configure?.Invoke(services);
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+    }
+
+    /// <summary>Game catalog, Steam scan, detection and covers.</summary>
+    private static void AddGames(IServiceCollection services)
+    {
+        services.AddSingleton<GameCatalog>();
+        services.AddSingleton(sp => new SteamLocator(sp.GetRequiredService<OsEnvironment>()));
+        services.AddSingleton(sp => new SteamLibraryScanner(sp.GetRequiredService<SteamLocator>(), sp.GetService<ILogger<SteamLibraryScanner>>()));
+        services.AddSingleton(sp => new EngineDetector(sp.GetService<ILogger<EngineDetector>>()));
+        services.AddSingleton(sp => AntiCheatPolicy.Bundled);
+        services.AddSingleton(sp => new AntiCheatDetector(sp.GetRequiredService<AntiCheatPolicy>(), sp.GetService<ILogger<AntiCheatDetector>>()));
+        services.AddSingleton<GameLibrary>();
+        services.AddSingleton(_ =>
+        {
+            var http = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
+            return http;
+        });
+        services.AddSingleton(sp => new CoverResolver(
+            sp.GetRequiredService<SteamLocator>().FindRoots,
+            sp.GetRequiredService<HttpClient>(),
+            sp.GetRequiredService<AppPaths>(),
+            sp.GetRequiredService<TimeProvider>(),
+            sp.GetRequiredService<ILogger<CoverResolver>>()));
+        services.AddSingleton<ICoverLoader, CoverLoader>();
     }
 
     /// <summary>Settings sections, in the order of the section list. A section without rows yet shows "coming in a later version".</summary>

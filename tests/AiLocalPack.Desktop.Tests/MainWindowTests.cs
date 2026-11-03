@@ -14,7 +14,7 @@ public sealed class MainWindowTests
 {
     private static MainWindow Create()
     {
-        var services = TestServices.Build();
+        var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha").AddGame(20, "Beta"));
         var window = new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
         window.Closed += (_, _) => services.Dispose();
         return window;
@@ -57,7 +57,7 @@ public sealed class MainWindowTests
         Find<Button>(window, "SettingsButton").IsVisible.Should().BeTrue();
         Find<Button>(window, "BackButton").IsVisible.Should().BeFalse();
         ToolTip.GetTip(Find<Button>(window, "SettingsButton")).Should().Be("Settings");
-        Find<TextBlock>(window, "GameCount").Text.Should().Be("2 games");
+        Find<ItemsControl>(window, "Games").ItemCount.Should().Be(2);
         Shows<LibraryView>(window).Should().BeTrue();
         window.Close();
     });
@@ -82,7 +82,7 @@ public sealed class MainWindowTests
     {
         // Arrange
         var window = Open();
-        var game = Find<ItemsControl>(window, "StubGames").GetVisualDescendants().OfType<Button>().First();
+        var game = Find<ItemsControl>(window, "Games").GetVisualDescendants().OfType<Button>().First();
 
         // Act
         Click(window, game);
@@ -100,7 +100,7 @@ public sealed class MainWindowTests
     {
         // Arrange
         var window = Open();
-        Click(window, Find<ItemsControl>(window, "StubGames").GetVisualDescendants().OfType<Button>().First());
+        Click(window, Find<ItemsControl>(window, "Games").GetVisualDescendants().OfType<Button>().First());
 
         // Act
         Click(window, Find<Button>(window, "BackButton"));

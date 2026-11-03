@@ -11,7 +11,7 @@ public sealed class NavigationServiceTests
         public override string Title => "Root";
     }
 
-    private static GamePageViewModel Game(string id) => new(new StubGame(id, id));
+    private static GamePageViewModel Game(uint appId) => new(TestGames.Steam(appId, $"Game {appId}"));
 
     [Fact]
     public void Navigate_to_pushes_the_page()
@@ -20,7 +20,7 @@ public sealed class NavigationServiceTests
         var navigation = new NavigationService();
         var root = new RootPage();
         navigation.Reset(root);
-        var game = Game("stub:1");
+        var game = Game(1);
 
         // Act
         navigation.NavigateTo(game);
@@ -41,7 +41,7 @@ public sealed class NavigationServiceTests
         navigation.Navigated += (_, _) => raised++;
 
         // Act
-        navigation.NavigateTo(Game("stub:1"));
+        navigation.NavigateTo(Game(1));
 
         // Assert
         raised.Should().Be(1);
@@ -54,7 +54,7 @@ public sealed class NavigationServiceTests
         var navigation = new NavigationService();
         var root = new RootPage();
         navigation.Reset(root);
-        navigation.NavigateTo(Game("stub:1"));
+        navigation.NavigateTo(Game(1));
 
         // Act
         navigation.GoBack();
@@ -121,11 +121,11 @@ public sealed class NavigationServiceTests
         // Arrange
         var navigation = new NavigationService();
         navigation.Reset(new RootPage());
-        var game = Game("stub:1");
+        var game = Game(1);
         navigation.NavigateTo(game);
 
         // Act
-        navigation.NavigateTo(Game("stub:1"));
+        navigation.NavigateTo(Game(1));
 
         // Assert
         navigation.Current.Should().BeSameAs(game);
@@ -137,9 +137,9 @@ public sealed class NavigationServiceTests
         // Arrange
         var navigation = new NavigationService();
         navigation.Reset(new RootPage());
-        var first = Game("stub:1");
+        var first = Game(1);
         navigation.NavigateTo(first);
-        var second = Game("stub:2");
+        var second = Game(2);
 
         // Act
         navigation.NavigateTo(second);
@@ -155,7 +155,7 @@ public sealed class NavigationServiceTests
         // Arrange
         var navigation = new NavigationService();
         navigation.Reset(new RootPage());
-        navigation.NavigateTo(Game("stub:1"));
+        navigation.NavigateTo(Game(1));
         var root = new RootPage();
 
         // Act

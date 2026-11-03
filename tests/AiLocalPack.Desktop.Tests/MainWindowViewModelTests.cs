@@ -11,7 +11,7 @@ public sealed class MainWindowViewModelTests
 {
     private static MainWindowViewModel Create(out ServiceProvider services)
     {
-        services = TestServices.Build();
+        services = TestServices.Build(steam: s => s.AddGame(10, "Alpha").AddGame(20, "Beta"));
         return services.GetRequiredService<MainWindowViewModel>();
     }
 
@@ -39,10 +39,10 @@ public sealed class MainWindowViewModelTests
         var library = (LibraryViewModel)vm.CurrentPage!;
 
         // Act
-        library.OpenGameCommand.Execute(library.Games[0]);
+        library.VisibleCards[0].OpenCommand.Execute(null);
 
         // Assert
-        vm.CurrentPage.Should().BeOfType<GamePageViewModel>().Which.Game.Should().Be(library.Games[0]);
+        vm.CurrentPage.Should().BeOfType<GamePageViewModel>().Which.Game.Should().Be(library.VisibleCards[0].Game);
         vm.BackLabel.Should().Be("‹ Library");
         vm.GoBackCommand.CanExecute(null).Should().BeTrue();
     }
@@ -54,7 +54,7 @@ public sealed class MainWindowViewModelTests
         var vm = Create(out var services);
         using var _ = services;
         var library = (LibraryViewModel)vm.CurrentPage!;
-        library.OpenGameCommand.Execute(library.Games[0]);
+        library.VisibleCards[0].OpenCommand.Execute(null);
 
         // Act
         vm.GoBackCommand.Execute(null);

@@ -1,7 +1,9 @@
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.ViewModels;
+using AiLocalPack.Desktop.ViewModels.Library;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Desktop.Views;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -19,12 +21,12 @@ public sealed class LanguageSwitchUiTests
     public Task Switching_language_updates_the_open_window() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
-        using var services = TestServices.Build();
+        using var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha"));
         var vm = services.GetRequiredService<MainWindowViewModel>();
         var window = new MainWindow { DataContext = vm };
         window.Show();
         var library = (LibraryViewModel)vm.CurrentPage!;
-        library.OpenGameCommand.Execute(library.Games[0]);
+        library.VisibleCards[0].OpenCommand.Execute(null);
         Dispatcher.UIThread.RunJobs();
 
         try
@@ -46,10 +48,10 @@ public sealed class LanguageSwitchUiTests
     });
 
     [Fact]
-    public Task Library_shows_the_game_count_in_the_current_language() => HeadlessUi.RunAsync(() =>
+    public Task Library_shows_its_toolbar_in_the_current_language() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
-        using var services = TestServices.Build();
+        using var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha"));
         var window = new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
         window.Show();
         Dispatcher.UIThread.RunJobs();
@@ -61,9 +63,9 @@ public sealed class LanguageSwitchUiTests
             Dispatcher.UIThread.RunJobs();
 
             // Assert
-            Find<TextBlock>(window, "GameCount").Text.Should().Be("2 игры");
-            window.GetVisualDescendants().OfType<LibraryView>().Should().ContainSingle();
-            window.GetVisualDescendants().OfType<TextBlock>().Should().Contain(t => t.Text == "Библиотека");
+            Find<TextBox>(window, "SearchBox").PlaceholderText.Should().Be("Поиск игр");
+            Find<ComboBox>(window, "SortBox").SelectedItem.Should().BeOfType<LibrarySortOption>().Which.Display.Should().Be("По названию");
+            AutomationProperties.GetName(Find<ItemsControl>(window, "Games")).Should().Be("1 игра");
         }
         finally
         {

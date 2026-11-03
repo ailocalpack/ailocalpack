@@ -178,4 +178,70 @@
   <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
     <value>Системным уведомлениям нужна работа в трее (раздел «Фоновая работа» выше); пока она выключена, события видны только в «Активности».</value>
   </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>Поиск игр</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>Сортировка</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>По названию</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>Недавние</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>Папка</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>Добавить папку с игрой</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>Ищем игры в библиотеках Steam…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>Библиотека Steam не найдена</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>Не удалось найти Steam, или в нём нет игр. Добавьте папку с игрой вручную или укажите библиотеки Steam.</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>Добавить папку с игрой</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>Настройки → Библиотеки</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>Ничего не найдено</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>Нет игр по запросу «{0}». Игры нет в библиотеке? Добавьте её папку.</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>Сбросить поиск</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>Добавить папку</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>вручную</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>Неизвестный движок</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>Папка недоступна</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0} (заблокирована: {1})</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>Античит</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>Открыть страницу игры</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>Открыть папку игры</value>
+  </data>
 </root>

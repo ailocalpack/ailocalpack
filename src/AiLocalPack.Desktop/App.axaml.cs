@@ -1,5 +1,7 @@
+using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.Views;
 using Avalonia;
@@ -28,12 +30,15 @@ public sealed class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            _services = Composition.BuildServices(LoggerFactory, Paths ?? AppPaths.Resolve(OsEnvironment.Current));
+            _services = Composition.BuildServices(LoggerFactory, Paths ?? AppPaths.Resolve(OsEnvironment.Current), OsEnvironment.Current);
             var logger = LoggerFactory.CreateLogger<App>();
             Dispatcher.UIThread.UnhandledException += (_, e) =>
                 logger.LogCritical(e.Exception, "Unhandled UI thread exception");
             _services.GetRequiredService<SettingsStore>().Load();
             _services.GetRequiredService<SettingsApplier>().Start();
+            // The library shows the saved catalog at once; the Steam scan refreshes it in the background.
+            _services.GetRequiredService<GameCatalog>().Load();
+            _ = _services.GetRequiredService<GameLibrary>().RefreshAsync();
             desktop.MainWindow = new MainWindow { DataContext = _services.GetRequiredService<MainWindowViewModel>() };
             desktop.Exit += (_, _) => _services.Dispose();
         }

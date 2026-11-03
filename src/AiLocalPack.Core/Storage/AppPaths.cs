@@ -42,6 +42,9 @@ public sealed record AppPaths
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 
+    /// <summary>Game covers downloaded from the Steam CDN (safe to delete: fetched again when missing).</summary>
+    public string Covers => Path.Combine(Cache, "covers");
+
     /// <summary>All three roots under <paramref name="home"/> (made absolute against the current directory).</summary>
     public static AppPaths UnderHome(string home)
     {
