@@ -15,6 +15,18 @@ public enum AddGameStep
 
     /// <summary>Step 2: one game's summary (cover, name, facts, answer block, details, primary action).</summary>
     Summary,
+
+    /// <summary>Several games: folders scanned, games streaming in, <c>Stop and show</c>; then each game is analyzed.</summary>
+    Scanning,
+
+    /// <summary>Several games: count, status tally, cover strip, skipped folders, <c>Start adding</c>.</summary>
+    Overview,
+
+    /// <summary>Several games: one game's summary at a time with a segmented progress bar, Previous / Skip / Add.</summary>
+    Review,
+
+    /// <summary>Several games: what was added and what was skipped, <c>To library</c>.</summary>
+    Result,
 }
 
 public enum AnalysisStepState

@@ -92,21 +92,6 @@ public sealed class AddGameDialogViewModelTests : IDisposable
     }
 
     [Fact]
-    public async Task Folder_with_several_games_asks_for_one_game_folder()
-    {
-        // Arrange
-        _games.RenPy("Indie/Wren").RenPy("Indie/Moss");
-
-        // Act
-        var vm = await Analyzed("Indie");
-
-        // Assert
-        vm.Step.Should().Be(AddGameStep.Pick);
-        vm.PickError.Should().Be("“Indie” holds 2 games.");
-        vm.PickErrorDetail.Should().Contain("pick one game's folder");
-    }
-
-    [Fact]
     public async Task Choose_folder_analyzes_the_picked_folder()
     {
         // Arrange
@@ -118,7 +103,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
 
         // Assert
         vm.Step.Should().Be(AddGameStep.Summary);
-        vm.Name.Should().Be("Wren and Whistle");
+        vm.Summary!.Name.Should().Be("Wren and Whistle");
     }
 
     [Fact]
@@ -182,14 +167,14 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         // Assert
         vm.Step.Should().Be(AddGameStep.Summary);
         vm.StepText.Should().Be("Step 2 of 2");
-        vm.Name.Should().Be("Wren and Whistle");
-        vm.EngineText.Should().Be("Ren'Py");
-        vm.ExecutableText.Should().Be("Wren and Whistle.exe");
-        vm.SizeText.Should().StartWith("6 files · ");
-        vm.GamePath.Should().Be(_games.Combine(folder));
+        vm.Summary!.Name.Should().Be("Wren and Whistle");
+        vm.Summary!.EngineText.Should().Be("Ren'Py");
+        vm.Summary!.ExecutableText.Should().Be("Wren and Whistle.exe");
+        vm.Summary!.SizeText.Should().StartWith("6 files · ");
+        vm.Summary!.GamePath.Should().Be(_games.Combine(folder));
         vm.PrimaryText.Should().Be("Add game");
-        vm.ShowRegistryNote.Should().BeTrue();
-        vm.HasSubfolderNotice.Should().BeFalse();
+        vm.Summary!.ShowRegistryNote.Should().BeTrue();
+        vm.Summary!.HasSubfolderNotice.Should().BeFalse();
     }
 
     [Fact]
@@ -203,7 +188,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
 
         // Assert
         vm.Step.Should().Be(AddGameStep.Summary);
-        vm.SubfolderNotice.Should().Be($"“Indie” holds one game, in the subfolder GOG{Path.DirectorySeparatorChar}Moss.");
+        vm.Summary!.SubfolderNotice.Should().Be($"“Indie” holds one game, in the subfolder GOG{Path.DirectorySeparatorChar}Moss.");
     }
 
     [Fact]
@@ -216,11 +201,11 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed("Old Lighthouse");
 
         // Assert
-        vm.IsEngineUnknown.Should().BeTrue();
-        vm.ShowEngineWarning.Should().BeTrue();
-        vm.IsDetailsOpen.Should().BeTrue();
-        vm.EngineText.Should().Be("Engine not recognized");
-        vm.SelectedEngine!.Kind.Should().Be(EngineKind.Unknown);
+        vm.Summary!.IsEngineUnknown.Should().BeTrue();
+        vm.Summary!.ShowEngineWarning.Should().BeTrue();
+        vm.Summary!.IsDetailsOpen.Should().BeTrue();
+        vm.Summary!.EngineText.Should().Be("Engine not recognized");
+        vm.Summary!.SelectedEngine!.Kind.Should().Be(EngineKind.Unknown);
     }
 
     [Fact]
@@ -233,9 +218,9 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed(folder);
 
         // Assert
-        vm.IsDetailsOpen.Should().BeFalse();
-        vm.EngineOptions.Select(o => o.Display).Should().Equal("Ren'Py", "Unity", "Unreal Engine", "RPG Maker", "Godot", "Other / don't know");
-        vm.SelectedEngine.Should().Be(vm.EngineOptions[0]);
+        vm.Summary!.IsDetailsOpen.Should().BeFalse();
+        vm.Summary!.EngineOptions.Select(o => o.Display).Should().Equal("Ren'Py", "Unity", "Unreal Engine", "RPG Maker", "Godot", "Other / don't know");
+        vm.Summary!.SelectedEngine.Should().Be(vm.Summary!.EngineOptions[0]);
     }
 
     [Fact]
@@ -248,8 +233,8 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed("Frostbound");
 
         // Assert
-        vm.IsBlocked.Should().BeTrue();
-        vm.AntiCheatTitle.Should().Be("Easy Anti-Cheat detected.");
+        vm.Summary!.IsBlocked.Should().BeTrue();
+        vm.Summary!.AntiCheatTitle.Should().Be("Easy Anti-Cheat detected.");
         vm.PrimaryText.Should().Be("Add as unavailable");
     }
 
@@ -278,13 +263,13 @@ public sealed class AddGameDialogViewModelTests : IDisposable
 
         // Assert
         var game = Catalog.Games.Should().ContainSingle().Subject;
-        game.Id.Should().Be(vm.Analysis!.Id);
+        game.Id.Should().Be(vm.Summary!.Analysis.Id);
         game.Name.Should().Be("Wren and Whistle");
         game.Source.Should().Be(GameSource.Manual);
         game.InstallPath.Should().Be(_games.Combine("Wren and Whistle"));
         game.Engine.Should().Be("renpy");
         game.AntiCheat.Should().Be("none");
-        game.Version.Should().Be(vm.Analysis.Version);
+        game.Version.Should().Be(vm.Summary!.Analysis.Version);
         game.IsAvailable.Should().BeTrue();
     }
 
@@ -321,8 +306,8 @@ public sealed class AddGameDialogViewModelTests : IDisposable
     {
         // Arrange
         var vm = await Analyzed(RenPyGame());
-        vm.RenameCommand.Execute(null);
-        vm.Name = "  Wren & Whistle ";
+        vm.Summary!.RenameCommand.Execute(null);
+        vm.Summary!.Name = "  Wren & Whistle ";
 
         // Act
         await vm.PrimaryCommand.ExecuteAsync(null);
@@ -338,7 +323,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed(RenPyGame());
 
         // Act
-        vm.Name = "   ";
+        vm.Summary!.Name = "   ";
 
         // Assert
         vm.PrimaryCommand.CanExecute(null).Should().BeFalse();
@@ -351,10 +336,10 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed(RenPyGame());
 
         // Act
-        vm.RenameCommand.Execute(null);
+        vm.Summary!.RenameCommand.Execute(null);
 
         // Assert
-        vm.IsRenaming.Should().BeTrue();
+        vm.Summary!.IsRenaming.Should().BeTrue();
     }
 
     [Fact]
@@ -362,14 +347,14 @@ public sealed class AddGameDialogViewModelTests : IDisposable
     {
         // Arrange
         var vm = await Analyzed(RenPyGame());
-        vm.RenameCommand.Execute(null);
+        vm.Summary!.RenameCommand.Execute(null);
 
         // Act
         var handled = vm.TryHandleEscape();
 
         // Assert
         handled.Should().BeTrue();
-        vm.IsRenaming.Should().BeFalse();
+        vm.Summary!.IsRenaming.Should().BeFalse();
     }
 
     [Fact]
@@ -378,7 +363,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         // Arrange
         _games.File("Old Lighthouse/lighthouse.exe", "MZ");
         var vm = await Analyzed("Old Lighthouse");
-        vm.SelectedEngine = vm.EngineOptions.Single(o => o.Kind.Engine == GameEngine.Godot);
+        vm.Summary!.SelectedEngine = vm.Summary!.EngineOptions.Single(o => o.Kind.Engine == GameEngine.Godot);
 
         // Act
         await vm.PrimaryCommand.ExecuteAsync(null);
@@ -392,15 +377,15 @@ public sealed class AddGameDialogViewModelTests : IDisposable
     {
         // Arrange
         var vm = await Analyzed(RenPyGame());
-        var detected = vm.Analysis!.Id;
-        vm.SelectedExecutable = "Wren and Whistle-32.exe";
+        var detected = vm.Summary!.Analysis.Id;
+        vm.Summary!.SelectedExecutable = "Wren and Whistle-32.exe";
 
         // Act
         await vm.PrimaryCommand.ExecuteAsync(null);
 
         // Assert
         Catalog.Games.Should().ContainSingle().Which.Id.Should().NotBe(detected);
-        vm.ExecutableOptions.Should().Contain("Wren and Whistle-32.exe");
+        vm.Summary!.ExecutableOptions.Should().Contain("Wren and Whistle-32.exe");
     }
 
     [Fact]
@@ -414,7 +399,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
 
         // Assert
         vm.Step.Should().Be(AddGameStep.Pick);
-        vm.Analysis.Should().BeNull();
+        vm.Summary.Should().BeNull();
     }
 
     [Fact]
@@ -444,11 +429,11 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed(folder);
 
         // Assert
-        vm.IsDuplicate.Should().BeTrue();
-        vm.DuplicateText.Should().Be("This game is already in the library as “Wren and Whistle”.");
+        vm.Summary!.IsDuplicate.Should().BeTrue();
+        vm.Summary!.DuplicateText.Should().Be("This game is already in the library as “Wren and Whistle”.");
         vm.PrimaryText.Should().Be("Open game page");
-        vm.CanEdit.Should().BeFalse();
-        vm.ShowRegistryNote.Should().BeFalse();
+        vm.Summary!.CanEdit.Should().BeFalse();
+        vm.Summary!.ShowRegistryNote.Should().BeFalse();
     }
 
     [Fact]
@@ -479,7 +464,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed(RenPyGame("Copy B/Wren"));
 
         // Assert
-        vm.IsDuplicate.Should().BeTrue();
+        vm.Summary!.IsDuplicate.Should().BeTrue();
     }
 
     [Fact]
@@ -493,7 +478,7 @@ public sealed class AddGameDialogViewModelTests : IDisposable
         var vm = await Analyzed(folder);
 
         // Assert
-        vm.Existing!.Name.Should().Be("Known");
+        vm.Summary!.Existing!.Name.Should().Be("Known");
     }
 
     // ---------- Formatting ----------

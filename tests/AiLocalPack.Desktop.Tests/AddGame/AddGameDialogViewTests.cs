@@ -83,4 +83,31 @@ public sealed class AddGameDialogViewTests
         Find<Button>(window, "PrimaryButton").Content.Should().Be("Add game");
         window.Close();
     });
+
+    [Fact]
+    public Task Folder_with_several_games_shows_the_overview_and_the_review() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var games = new TempDir();
+        games.RenPy("Indie/Wren", name: "Wren").RenPy("Indie/Moss", name: "Moss").File("Indie/_CommonRedist/vcredist_x64.exe", "MZ");
+        using var services = TestServices.Build(s => s.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>());
+        var window = Open(services);
+        var dialog = services.GetRequiredService<IDialogService>().Show<AddGameDialogViewModel>();
+        await dialog.AnalyzeAsync(games.Combine("Indie"));
+        Dispatcher.UIThread.RunJobs();
+        var overview = (Find<StackPanel>(window, "OverviewStep").IsVisible, Find<TextBlock>(window, "OverviewTitle").Text);
+
+        // Act
+        Find<Button>(window, "StartButton").Command!.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        overview.Should().Be((true, "Found 2 games in “Indie”"));
+        Find<StackPanel>(window, "SummaryStep").IsVisible.Should().BeTrue();
+        Find<ItemsControl>(window, "ReviewProgress").IsVisible.Should().BeTrue();
+        Find<TextBlock>(window, "GameName").Text.Should().Be("Moss");
+        Find<TextBlock>(window, "StepText").Text.Should().Be("Game 1 of 2");
+        Find<Button>(window, "OtherFolderButton").IsVisible.Should().BeFalse();
+        window.Close();
+    });
 }

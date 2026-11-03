@@ -310,18 +310,6 @@
   <data name="AddGame_Error_TooLarge" xml:space="preserve">
     <value>«{0}» слишком большая для поиска. Выберите папку поуже.</value>
   </data>
-  <data name="AddGame_Error_Several_One" xml:space="preserve">
-    <value>В «{1}» найдена {0} игра.</value>
-  </data>
-  <data name="AddGame_Error_Several_Few" xml:space="preserve">
-    <value>В «{1}» найдено {0} игры.</value>
-  </data>
-  <data name="AddGame_Error_Several_Many" xml:space="preserve">
-    <value>В «{1}» найдено {0} игр.</value>
-  </data>
-  <data name="AddGame_Error_Several_Detail" xml:space="preserve">
-    <value>Добавление нескольких игр сразу появится в следующей версии. Пока выберите папку одной игры.</value>
-  </data>
   <data name="AddGame_Error_Unreadable" xml:space="preserve">
     <value>Не удаётся прочитать файлы «{0}».</value>
   </data>
@@ -456,5 +444,206 @@
   </data>
   <data name="AddGame_OpenGamePage" xml:space="preserve">
     <value>Открыть страницу игры</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>Добавить игры</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>Добавлена в библиотеку как «{0}».</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>Поиск игр</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>Ищем игры в «{0}»…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>Просмотрено папок: {0} из {1}</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>до 3 уровней вглубь</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>Проверяем игру {0} из {1}: {2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>Остановить и показать</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>Дальше — по одной игре: проверьте данные и добавьте. Любую игру можно пропустить; игры, которые уже есть в библиотеке, пропускаются автоматически.</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>Нечего добавлять</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>Поиск остановлен: показаны игры, найденные до этого момента.</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>Папка очень большая, поэтому поиск остановился раньше. Чтобы найти остальное, выберите папку поменьше.</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>Эти игры уже есть в вашей библиотеке через Steam.</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>Начать добавление</value>
+  </data>
+  <data name="AddGame_StartFrom" xml:space="preserve">
+    <value>Начать с этой игры</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>нет исполняемых файлов</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>установщики библиотек (DirectX, Visual C++…)</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>установщик игры, а не установленная игра</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>утилита, а не игра</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>сохранения</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>Новая</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>Античит</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>В библиотеке</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>Не читается</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>Добавлена</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>Пропущена</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>Все игры</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>Игра {0} из {1}</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>Дальше</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>Игры не добавлены</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>Пропущенные игры можно добавить позже из той же папки.</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>добавлена</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>добавлена как недоступная (античит)</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>пропущена</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>уже в библиотеке</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>пропущена: файлы не читаются</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>В библиотеку</value>
+  </data>
+  <data name="AddGame_Scanning_Found_One" xml:space="preserve">
+    <value>Найдена {0} игра · можно остановить и посмотреть найденное</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Few" xml:space="preserve">
+    <value>Найдено {0} игры · можно остановить и посмотреть найденное</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Many" xml:space="preserve">
+    <value>Найдено {0} игр · можно остановить и посмотреть найденное</value>
+  </data>
+  <data name="AddGame_Overview_Title_One" xml:space="preserve">
+    <value>В «{1}» найдена {0} игра</value>
+  </data>
+  <data name="AddGame_Overview_Title_Few" xml:space="preserve">
+    <value>В «{1}» найдено {0} игры</value>
+  </data>
+  <data name="AddGame_Overview_Title_Many" xml:space="preserve">
+    <value>В «{1}» найдено {0} игр</value>
+  </data>
+  <data name="AddGame_Overview_Queue_One" xml:space="preserve">
+    <value>{0} игра, по одной</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Few" xml:space="preserve">
+    <value>{0} игры, по одной</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Many" xml:space="preserve">
+    <value>{0} игр, по одной</value>
+  </data>
+  <data name="AddGame_Skipped_Title_One" xml:space="preserve">
+    <value>Пропущена {0} папка без игр</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Few" xml:space="preserve">
+    <value>Пропущено {0} папки без игр</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Many" xml:space="preserve">
+    <value>Пропущено {0} папок без игр</value>
+  </data>
+  <data name="AddGame_Tally_New_One" xml:space="preserve">
+    <value>{0} новая</value>
+  </data>
+  <data name="AddGame_Tally_New_Few" xml:space="preserve">
+    <value>{0} новые</value>
+  </data>
+  <data name="AddGame_Tally_New_Many" xml:space="preserve">
+    <value>{0} новых</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_One" xml:space="preserve">
+    <value>{0} с античитом</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Few" xml:space="preserve">
+    <value>{0} с античитом</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Many" xml:space="preserve">
+    <value>{0} с античитом</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_One" xml:space="preserve">
+    <value>{0} уже в библиотеке</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Few" xml:space="preserve">
+    <value>{0} уже в библиотеке</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Many" xml:space="preserve">
+    <value>{0} уже в библиотеке</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_One" xml:space="preserve">
+    <value>{0} не читается</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Few" xml:space="preserve">
+    <value>{0} не читаются</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Many" xml:space="preserve">
+    <value>{0} не читаются</value>
+  </data>
+  <data name="AddGame_Result_Title_One" xml:space="preserve">
+    <value>Добавлена {0} игра</value>
+  </data>
+  <data name="AddGame_Result_Title_Few" xml:space="preserve">
+    <value>Добавлено {0} игры</value>
+  </data>
+  <data name="AddGame_Result_Title_Many" xml:space="preserve">
+    <value>Добавлено {0} игр</value>
   </data>
 </root>

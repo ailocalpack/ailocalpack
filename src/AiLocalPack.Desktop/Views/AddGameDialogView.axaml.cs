@@ -59,9 +59,9 @@ public sealed partial class AddGameDialogView : UserControl
     // Enter or Esc in the name field ends renaming (Esc is also handled by the window, through the view model).
     private void OnNameKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Enter && DataContext is AddGameDialogViewModel vm)
+        if (e.Key == Key.Enter && DataContext is AddGameDialogViewModel { Summary: { } summary })
         {
-            vm.IsRenaming = false;
+            summary.IsRenaming = false;
             e.Handled = true;
         }
     }

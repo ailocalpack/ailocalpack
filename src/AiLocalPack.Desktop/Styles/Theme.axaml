@@ -70,6 +70,8 @@
     <StreamGeometry x:Key="IconXCircle">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M15 9l-6 6 M9 9l6 6</StreamGeometry>
     <StreamGeometry x:Key="IconUndo">M9 14 4 9l5-5 M4 9h10.5a5.5 5.5 0 0 1 0 11H11</StreamGeometry>
     <StreamGeometry x:Key="IconChevronRight">M9 18l6-6-6-6</StreamGeometry>
+    <StreamGeometry x:Key="IconChevronLeft">M15 18l-6-6 6-6</StreamGeometry>
+    <StreamGeometry x:Key="IconSkip">M5 4l10 8-10 8z M19 5v14</StreamGeometry>
     <StreamGeometry x:Key="IconCloud">M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z</StreamGeometry>
     <StreamGeometry x:Key="IconScan">M3 7V5a2 2 0 0 1 2-2h2 M17 3h2a2 2 0 0 1 2 2v2 M21 17v2a2 2 0 0 1-2 2h-2 M7 21H5a2 2 0 0 1-2-2v-2 M7 12h10</StreamGeometry>
     <StreamGeometry x:Key="IconTrash">M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2</StreamGeometry>

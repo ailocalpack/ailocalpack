@@ -335,15 +335,6 @@
   <data name="AddGame_Error_TooLarge" xml:space="preserve">
     <value>“{0}” is too large to search. Pick a narrower folder.</value>
   </data>
-  <data name="AddGame_Error_Several_One" xml:space="preserve">
-    <value>“{1}” holds {0} game.</value>
-  </data>
-  <data name="AddGame_Error_Several_Other" xml:space="preserve">
-    <value>“{1}” holds {0} games.</value>
-  </data>
-  <data name="AddGame_Error_Several_Detail" xml:space="preserve">
-    <value>Adding several games at once comes in a later version. For now, pick one game's folder.</value>
-  </data>
   <data name="AddGame_Error_Unreadable" xml:space="preserve">
     <value>Can't read the files of “{0}”.</value>
   </data>
@@ -475,5 +466,179 @@
   </data>
   <data name="AddGame_OpenGamePage" xml:space="preserve">
     <value>Open game page</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>Add games</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>Added to the library as “{0}”.</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>Finding games</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>Looking for games in “{0}”…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>Scanned {0} of {1} folders</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>up to 3 levels deep</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>Checking game {0} of {1}: {2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>Stop and show</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>Next, one game at a time: check the details and add it. You can skip any game; games already in the library are skipped automatically.</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>Nothing new to add</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>Search stopped: showing the games found so far.</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>This folder is very large, so the search stopped early. Pick a narrower folder to find the rest.</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>These games are already in your library via Steam.</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>Start adding</value>
+  </data>
+  <data name="AddGame_StartFrom" xml:space="preserve">
+    <value>Start from this game</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>no executable files</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>runtime installers (DirectX, Visual C++…)</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>a game installer, not an installed game</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>a utility, not a game</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>saved games</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>Anti-cheat</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>In library</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>Can't be read</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>Added</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>All games</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>Game {0} of {1}</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>No games added</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>Skipped games can be added later from the same folder.</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>added</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>added as unavailable (anti-cheat)</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>skipped</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>already in the library</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>skipped: its files can't be read</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>To library</value>
+  </data>
+  <data name="AddGame_Scanning_Found_One" xml:space="preserve">
+    <value>Found {0} game · you can stop and review what's found</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Other" xml:space="preserve">
+    <value>Found {0} games · you can stop and review what's found</value>
+  </data>
+  <data name="AddGame_Overview_Title_One" xml:space="preserve">
+    <value>Found {0} game in “{1}”</value>
+  </data>
+  <data name="AddGame_Overview_Title_Other" xml:space="preserve">
+    <value>Found {0} games in “{1}”</value>
+  </data>
+  <data name="AddGame_Overview_Queue_One" xml:space="preserve">
+    <value>{0} game, one at a time</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Other" xml:space="preserve">
+    <value>{0} games, one at a time</value>
+  </data>
+  <data name="AddGame_Skipped_Title_One" xml:space="preserve">
+    <value>Skipped {0} folder without games</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Other" xml:space="preserve">
+    <value>Skipped {0} folders without games</value>
+  </data>
+  <data name="AddGame_Tally_New_One" xml:space="preserve">
+    <value>{0} new</value>
+  </data>
+  <data name="AddGame_Tally_New_Other" xml:space="preserve">
+    <value>{0} new</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_One" xml:space="preserve">
+    <value>{0} with anti-cheat</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Other" xml:space="preserve">
+    <value>{0} with anti-cheat</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_One" xml:space="preserve">
+    <value>{0} already in the library</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Other" xml:space="preserve">
+    <value>{0} already in the library</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_One" xml:space="preserve">
+    <value>{0} can't be read</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Other" xml:space="preserve">
+    <value>{0} can't be read</value>
+  </data>
+  <data name="AddGame_Result_Title_One" xml:space="preserve">
+    <value>Added {0} game</value>
+  </data>
+  <data name="AddGame_Result_Title_Other" xml:space="preserve">
+    <value>Added {0} games</value>
   </data>
 </root>
