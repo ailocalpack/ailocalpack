@@ -149,7 +149,9 @@ public sealed partial class LibraryViewModel : PageViewModel
 
     private void SyncCards()
     {
-        var games = _library.Catalog.Games;
+        // Steam games of a library that isn't available (unplugged drive, SD card) are hidden until it's back
+        // (Settings → Libraries says so); a manual game whose folder is gone stays, dimmed, so it can be removed.
+        var games = _library.Catalog.Games.Where(g => g.Source == GameSource.Manual || g.IsAvailable).ToList();
         var ids = games.Select(g => g.Id).ToHashSet();
         foreach (var gone in _cards.Keys.Where(id => !ids.Contains(id)).ToList())
         {

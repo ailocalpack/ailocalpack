@@ -22,35 +22,72 @@ public sealed class SteamLibraryScanner(SteamLocator locator, ILogger<SteamLibra
     /// <summary>Scans every Steam root <see cref="SteamLocator"/> finds; no Steam gives <see cref="SteamScan.Empty"/>.</summary>
     public SteamScan Scan() => Scan(locator.FindRoots());
 
-    /// <summary>Scans the given Steam roots (folders holding <c>steamapps/</c>). A game in several roots is listed once.</summary>
-    public SteamScan Scan(IEnumerable<string> roots)
+    /// <summary>Scans every Steam root <see cref="SteamLocator"/> finds, with the player's added and removed library folders.</summary>
+    public SteamScan Scan(SteamLibraryChoices choices) => Scan(locator.FindRoots(), choices);
+
+    /// <summary>
+    /// Scans the given Steam roots (folders holding <c>steamapps/</c>), then the folders the player added (each one a single
+    /// library). Libraries in <see cref="SteamLibraryChoices.Ignored"/> are left out, except the roots themselves. A game
+    /// in several libraries is listed once (first one wins); a folder reached twice is listed once, as Steam's.
+    /// </summary>
+    public SteamScan Scan(IEnumerable<string> roots, SteamLibraryChoices? choices = null)
     {
         ArgumentNullException.ThrowIfNull(roots);
+        choices ??= SteamLibraryChoices.None;
+        var ignored = choices.Ignored.Select(Normalize).ToHashSet(PathComparer);
         var libraries = new List<SteamLibrary>();
         var games = new Dictionary<uint, SteamGame>();
         var seenLibraries = new HashSet<string>(PathComparer);
+        var anyLastPlayed = new Dictionary<uint, DateTimeOffset>();
         foreach (var root in roots)
         {
             var lastPlayed = ReadLastPlayed(root);
-            foreach (var path in LibraryPaths(root))
+            foreach (var (appId, played) in lastPlayed)
             {
-                if (!seenLibraries.Add(Identity(path)))
+                if (!anyLastPlayed.TryGetValue(appId, out var known) || played > known)
                 {
-                    continue;
+                    anyLastPlayed[appId] = played;
                 }
+            }
 
-                var available = Directory.Exists(Path.Combine(path, "steamapps"));
-                libraries.Add(new SteamLibrary(path, available));
-                if (!available)
+            var paths = LibraryPaths(root);
+            for (var i = 0; i < paths.Count; i++)
+            {
+                // The root (index 0) is where Steam is: it can't be removed from the list.
+                if (i == 0 || !ignored.Contains(paths[i]))
                 {
-                    _logger.LogInformation("Steam library {Path} is not available", path);
-                    continue;
+                    AddLibrary(paths[i], addedByHand: false, lastPlayed);
                 }
+            }
+        }
 
-                foreach (var game in ReadGames(path, lastPlayed))
-                {
-                    games.TryAdd(game.AppId, game);
-                }
+        // Added folders have no Steam of their own: last played comes from any Steam found.
+        foreach (var added in choices.Added)
+        {
+            if (!string.IsNullOrWhiteSpace(added) && Path.IsPathRooted(added))
+            {
+                AddLibrary(Normalize(added), addedByHand: true, anyLastPlayed);
+            }
+        }
+
+        void AddLibrary(string path, bool addedByHand, IReadOnlyDictionary<uint, DateTimeOffset> lastPlayed)
+        {
+            if (!seenLibraries.Add(Identity(path)))
+            {
+                return;
+            }
+
+            var available = Directory.Exists(Path.Combine(path, "steamapps"));
+            libraries.Add(new SteamLibrary(path, available, addedByHand));
+            if (!available)
+            {
+                _logger.LogInformation("Steam library {Path} is not available", path);
+                return;
+            }
+
+            foreach (var game in ReadGames(path, lastPlayed))
+            {
+                games.TryAdd(game.AppId, game);
             }
         }
 
@@ -59,6 +96,36 @@ public sealed class SteamLibraryScanner(SteamLocator locator, ILogger<SteamLibra
             .ThenBy(g => g.AppId)
             .ToList();
         return new SteamScan(libraries, sorted);
+    }
+
+    /// <summary>
+    /// The library folder for a folder the player picked: the folder itself when it holds <c>steamapps/</c>, its parent
+    /// for a picked <c>steamapps</c>, the grandparent for <c>steamapps/common</c>; <c>null</c> when it isn't a Steam library.
+    /// </summary>
+    public static string? FindLibraryFolder(string picked)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(picked);
+        try
+        {
+            var folder = new DirectoryInfo(Normalize(picked));
+            if (folder.Name.Equals("common", StringComparison.OrdinalIgnoreCase)
+                && folder.Parent is { } parent
+                && parent.Name.Equals("steamapps", StringComparison.OrdinalIgnoreCase))
+            {
+                folder = parent;
+            }
+
+            if (folder.Name.Equals("steamapps", StringComparison.OrdinalIgnoreCase) && folder.Parent is { } library && folder.Exists)
+            {
+                return Normalize(library.FullName);
+            }
+
+            return Directory.Exists(Path.Combine(folder.FullName, "steamapps")) ? Normalize(folder.FullName) : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            return null;
+        }
     }
 
     /// <summary>The root itself (always a library), then the folders listed in <c>libraryfolders.vdf</c>.</summary>

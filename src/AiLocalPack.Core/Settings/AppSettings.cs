@@ -22,6 +22,13 @@ namespace AiLocalPack.Core.Settings;
 /// <param name="NotifyNeedsDecision">System notification when something needs the player's decision (task 39).</param>
 /// <param name="NotifyTaskFinished">System notification when a task finishes (task 39).</param>
 /// <param name="NotifyCommunity">System notification about community activity on the player's packs (task 39).</param>
+/// <param name="SteamLibraryFolders">
+/// Steam library folders the player added by hand (Settings → Libraries): libraries on drives Steam doesn't list.
+/// <c>null</c> = none (read through <see cref="SteamLibraries"/>).
+/// </param>
+/// <param name="IgnoredSteamLibraries">
+/// Library folders Steam lists that the player removed (a gone SD card); the scan leaves them out until added again.
+/// </param>
 public sealed record AppSettings(
     int SchemaVersion = AppSettings.CurrentSchemaVersion,
     string? UiLanguage = null,
@@ -31,9 +38,15 @@ public sealed record AppSettings(
     bool ReapplyAfterGameUpdates = true,
     bool NotifyNeedsDecision = true,
     bool NotifyTaskFinished = true,
-    bool NotifyCommunity = true)
+    bool NotifyCommunity = true,
+    IReadOnlyList<string>? SteamLibraryFolders = null,
+    IReadOnlyList<string>? IgnoredSteamLibraries = null)
 {
     public const int CurrentSchemaVersion = 1;
 
     public static AppSettings Defaults { get; } = new();
+
+    /// <summary>The player's changes to the Steam library list, for <see cref="Steam.SteamLibraryScanner.Scan(Steam.SteamLibraryChoices)"/>.</summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public Steam.SteamLibraryChoices SteamLibraries => new(SteamLibraryFolders ?? [], IgnoredSteamLibraries ?? []);
 }

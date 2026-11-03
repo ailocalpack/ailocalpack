@@ -237,4 +237,19 @@ public sealed class GameCatalogMergeTests
         // Assert
         games.Select(g => g.Name).Should().Equal("Alpha", "beta", "Gamma");
     }
+
+    [Fact]
+    public void Steam_not_found_but_a_folder_added_by_hand_keeps_the_other_steam_games_as_unavailable()
+    {
+        // Arrange
+        var stardew = Stored(Steam(413150, "Stardew Valley"));
+        var scan = new SteamScan([new SteamLibrary(SdCard, true, IsAddedByHand: true)], []);
+
+        // Act
+        var (games, changes) = Merge([stardew], scan);
+
+        // Assert
+        games.Should().Equal(stardew with { IsAvailable = false });
+        changes.Should().BeEmpty();
+    }
 }

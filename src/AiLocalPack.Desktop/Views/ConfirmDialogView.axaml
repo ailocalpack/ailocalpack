@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="using:AiLocalPack.Desktop.Dialogs"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.ConfirmDialogView"
+             x:DataType="d:ConfirmDialogViewModel"
+             Width="480">
+    <!-- Design §8: destructive actions confirm in a dialog that says what is not affected. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,22,24,20" Spacing="12">
+            <TextBlock x:Name="ConfirmTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" />
+            <TextBlock x:Name="ConfirmMessage" Classes="muted" Text="{Binding Message}" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,6,0,0">
+                <Button x:Name="CancelButton" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc Confirm_Cancel}" />
+                <Button x:Name="ConfirmButton" Classes.accent="{Binding !IsDestructive}" Classes.danger="{Binding IsDestructive}"
+                        Command="{Binding ConfirmCommand}" Content="{Binding ConfirmText}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

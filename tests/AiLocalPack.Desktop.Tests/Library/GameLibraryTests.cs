@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Library;
@@ -17,16 +18,23 @@ public sealed class GameLibraryTests : IDisposable
 
     public void Dispose() => _dir.Dispose();
 
+    private readonly FakeClock _clock = new();
+    private SettingsStore? _settings;
+
     private GameLibrary Create(string? steamRoot = null)
     {
         var root = steamRoot ?? _steam.Root;
         var env = new OsEnvironment(OsEnvironment.Current.Os, _dir.Dir("user").Combine("user"), n => n == SteamLocator.RootVariable ? root : null);
-        var catalog = new GameCatalog(AppPaths.UnderHome(_dir.Combine("app")), NullLogger<GameCatalog>.Instance, new FakeClock());
+        var paths = AppPaths.UnderHome(_dir.Combine("app"));
+        var catalog = new GameCatalog(paths, NullLogger<GameCatalog>.Instance, _clock);
+        _settings = new SettingsStore(paths, NullLogger<SettingsStore>.Instance, _clock);
         return new GameLibrary(
             catalog,
             new SteamLibraryScanner(new SteamLocator(env)),
             new EngineDetector(),
             new AntiCheatDetector(),
+            _settings,
+            _clock,
             NullLogger<GameLibrary>.Instance);
     }
 
@@ -117,5 +125,75 @@ public sealed class GameLibraryTests : IDisposable
 
         // Assert
         library.Catalog.Games.Should().ContainSingle(g => g.Name == "Alpha");
+    }
+
+    [Fact]
+    public void Refresh_remembers_the_scan_and_when_it_finished()
+    {
+        // Arrange
+        var library = Create();
+
+        // Act
+        library.Refresh();
+
+        // Assert
+        library.LastScan!.Libraries.Select(l => l.Path).Should().Equal(_steam.Root);
+        library.LastScanAt.Should().Be(_clock.GetUtcNow());
+    }
+
+    [Fact]
+    public void Refresh_scans_library_folders_added_in_settings()
+    {
+        // Arrange
+        var extra = _dir.Dir("Extra/steamapps").Combine("Extra");
+        _steam.AddGame(30, "Gamma", library: extra);
+        var library = Create();
+        _settings!.Update(s => s with { SteamLibraryFolders = [extra] });
+
+        // Act
+        library.Refresh();
+
+        // Assert
+        library.Catalog.Games.Should().ContainSingle(g => g.Name == "Gamma" && g.LibraryPath == extra);
+        library.LastScan!.Libraries.Should().Contain(new SteamLibrary(extra, true, IsAddedByHand: true));
+    }
+
+    [Fact]
+    public void Refresh_leaves_out_library_folders_removed_in_settings()
+    {
+        // Arrange
+        var card = _steam.AddLibrary("Card", create: false);
+        var library = Create();
+        _settings!.Update(s => s with { IgnoredSteamLibraries = [card] });
+
+        // Act
+        library.Refresh();
+
+        // Assert
+        library.LastScan!.Libraries.Select(l => l.Path).Should().Equal(_steam.Root);
+    }
+
+    [Fact]
+    public async Task Refresh_requested_while_one_runs_runs_again_afterwards()
+    {
+        // Arrange
+        var library = Create();
+        var scans = 0;
+        library.StateChanged += (_, _) =>
+        {
+            if (!library.IsScanning)
+            {
+                Interlocked.Increment(ref scans);
+            }
+        };
+        var first = library.RefreshAsync();
+
+        // Act
+        var second = library.RefreshAsync();
+        await Task.WhenAll(first, second);
+
+        // Assert
+        second.Should().NotBeSameAs(first);
+        scans.Should().Be(2);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using AiLocalPack.Desktop.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -39,6 +40,9 @@ public class SettingsSection : ObservableObject, ISearchableSection
     public virtual IReadOnlyList<SettingsGroup> Groups => [];
 
     public bool IsComingSoon => Groups.Count == 0;
+
+    /// <summary>The section's own problems, shown on top of its page; sections that track problems keep the badge in step.</summary>
+    public ObservableCollection<SettingsAlert> Alerts { get; } = [];
 
     /// <summary>Problems to act on in this section; 0 hides the badge.</summary>
     public int BadgeCount

@@ -332,4 +332,47 @@ public sealed class GameCatalogTests : IDisposable
         catalog.Games.Should().ContainSingle();
         _logger.Entries.Should().NotContain(e => e.Message.Contains("Can't write", StringComparison.Ordinal));
     }
+
+    [Fact]
+    public void Removing_a_steam_library_removes_only_its_steam_games()
+    {
+        // Arrange
+        var catalog = CreateCatalog();
+        catalog.Load();
+        var root = OperatingSystem.IsWindows() ? @"C:\Steam" : "/steam";
+        var card = OperatingSystem.IsWindows() ? @"E:\SteamLibrary" : "/media/sd/SteamLibrary";
+        catalog.Refresh(new SteamScan(
+            [new SteamLibrary(root, true), new SteamLibrary(card, true)],
+            [
+                new SteamGame(10, "Alpha", "1", Path.Combine(root, "steamapps", "common", "Alpha"), root, null),
+                new SteamGame(20, "Beta", "1", Path.Combine(card, "steamapps", "common", "Beta"), card, null),
+            ]));
+        GameCatalogChangedEventArgs? raised = null;
+        catalog.Changed += (_, e) => raised = e;
+
+        // Act
+        var removed = catalog.RemoveSteamLibrary(card + Path.DirectorySeparatorChar);
+
+        // Assert
+        removed.Should().Be(1);
+        catalog.Games.Select(g => g.Name).Should().Equal("Alpha");
+        raised!.Changes.Should().ContainSingle().Which.Should().BeOfType<GameRemoved>();
+    }
+
+    [Fact]
+    public void Removing_a_library_without_games_changes_nothing()
+    {
+        // Arrange
+        var catalog = CreateCatalog();
+        catalog.Load();
+        var raised = false;
+        catalog.Changed += (_, _) => raised = true;
+
+        // Act
+        var removed = catalog.RemoveSteamLibrary("/nowhere");
+
+        // Assert
+        removed.Should().Be(0);
+        raised.Should().BeFalse();
+    }
 }

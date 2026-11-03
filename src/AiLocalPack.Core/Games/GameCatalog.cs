@@ -116,6 +116,23 @@ public sealed class GameCatalog
         return changes.Count > 0;
     }
 
+    /// <summary>
+    /// Removes the Steam games of a library folder the player removed from the list (Settings → Libraries), so they don't
+    /// stay as unavailable. Their folders and installed packs stay on disk. Returns how many games left.
+    /// </summary>
+    public int RemoveSteamLibrary(string libraryPath)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(libraryPath);
+        var changes = Apply(games =>
+        {
+            var gone = games.Where(g => g.Source == GameSource.Steam && PathNames.Same(g.LibraryPath, libraryPath)).ToList();
+            return gone.Count == 0
+                ? (games, [])
+                : ([.. games.Except(gone)], [.. gone.Select(g => new GameRemoved(g))]);
+        });
+        return changes.Count;
+    }
+
     /// <summary>Replaces details of a game found by later steps (engine, anti-cheat, file-hash version) and saves. False if not found.</summary>
     public bool Update(GameId id, Func<Game, Game> change)
     {

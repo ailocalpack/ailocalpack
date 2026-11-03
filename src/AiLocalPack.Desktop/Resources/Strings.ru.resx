@@ -646,4 +646,157 @@
   <data name="AddGame_Result_Title_Many" xml:space="preserve">
     <value>Добавлено {0} игр</value>
   </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>Добавленные вручную игры</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>Другие магазины</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>Удаление убирает игру только из ailocalpack. Файлы игры и установленные пакеты остаются как есть.</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>пересканировать, сканировать, обновить, steamapps, папки библиотек</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · сканирование…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>Читаем папки библиотек Steam.</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>Последнее сканирование в {0}. Steam сканируется заново при каждом запуске приложения.</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>Ещё не сканировался.</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>Steam не найден</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>Если Steam установлен в необычном месте, добавьте папку его библиотеки ниже.</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>Пересканировать</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>Сканирование</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>Убрать</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Папка библиотеки Steam</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · найдена через Steam</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · добавлена вами</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>Недоступна</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_One" xml:space="preserve">
+    <value>{0} игра скрыта</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Few" xml:space="preserve">
+    <value>{0} игры скрыты</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Many" xml:space="preserve">
+    <value>{0} игр скрыто</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>Добавить папку библиотеки Steam</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>Только если библиотека на другом диске не нашлась.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, диск, sd-карта, библиотека, добавить</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>Выберите папку библиотеки Steam</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>«{0}» — не библиотека Steam: в ней нет папки steamapps.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>«{0}» уже есть в списке.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить список папок. Попробуйте ещё раз.</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>Убрать «{0}» из ailocalpack?</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>Её игры пропадут из библиотеки. Папка, игры и установленные пакеты остаются на диске, Steam не меняется. Папку можно добавить снова позже.</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>Добавленная вручную игра</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>Нет добавленных вручную игр. Нажмите «Добавить папку с игрой» здесь или в библиотеке либо перетащите папку в окно.</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>Добавить папку с игрой</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>вручную, папка, игра, gog, itch, epic</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>Убрать «{0}» из ailocalpack?</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>Папка игры и установленный пакет остаются на диске. Папку можно добавить снова позже.</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games, GOG, EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>Пока добавляйте их игры как папки.</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, магазин, galaxy</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>Скоро</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>Библиотека Steam недоступна</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
+    <value>{1}: {0} игра скрыта, пока папка не вернётся. Установленные пакеты не тронуты.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Few" xml:space="preserve">
+    <value>{1}: {0} игры скрыты, пока папка не вернётся. Установленные пакеты не тронуты.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Many" xml:space="preserve">
+    <value>{1}: {0} игр скрыто, пока папка не вернётся. Установленные пакеты не тронуты.</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Settings_Steam_Folders_One" xml:space="preserve">
+    <value>{0} папка</value>
+  </data>
+  <data name="Settings_Steam_Folders_Few" xml:space="preserve">
+    <value>{0} папки</value>
+  </data>
+  <data name="Settings_Steam_Folders_Many" xml:space="preserve">
+    <value>{0} папок</value>
+  </data>
 </root>

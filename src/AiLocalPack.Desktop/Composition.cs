@@ -14,6 +14,7 @@ using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
+using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Folders;
@@ -90,7 +91,8 @@ internal static class Composition
     {
         services.AddSingleton<GeneralSettingsSection>();
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<GeneralSettingsSection>());
-        AddPlaceholder(SettingsSectionId.Libraries, "IconFolder", nameof(Strings.Settings_Libraries_Title), nameof(Strings.Settings_Libraries_Description));
+        services.AddSingleton<LibrariesSettingsSection>();
+        services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<LibrariesSettingsSection>());
         AddPlaceholder(SettingsSectionId.Agents, "IconBot", nameof(Strings.Settings_Agents_Title), nameof(Strings.Settings_Agents_Description));
         AddPlaceholder(SettingsSectionId.GitHub, "IconGitHub", nameof(Strings.Settings_GitHub_Title), nameof(Strings.Settings_GitHub_Description));
         AddPlaceholder(SettingsSectionId.Storage, "IconHardDrive", nameof(Strings.Settings_Storage_Title), nameof(Strings.Settings_Storage_Description));

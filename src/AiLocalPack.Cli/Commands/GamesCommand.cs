@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.AntiCheat;
@@ -23,8 +24,11 @@ internal static class GamesCommand
             "Scan Steam, update the game catalog and list its games with ID, build, engine, anti-cheat, folder and last played time.") { json };
         list.SetAction(result =>
         {
-            var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan();
-            var catalog = new GameCatalog(AppPaths.Resolve(env), NullLogger<GameCatalog>.Instance, TimeProvider.System);
+            var paths = AppPaths.Resolve(env);
+            // The library folders the player added or removed in Settings → Libraries count here too.
+            var settings = new SettingsStore(paths, NullLogger<SettingsStore>.Instance, TimeProvider.System).Load();
+            var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan(settings.SteamLibraries);
+            var catalog = new GameCatalog(paths, NullLogger<GameCatalog>.Instance, TimeProvider.System);
             catalog.Load();
             var changes = catalog.Refresh(scan);
             new EngineDetector().UpdateCatalog(catalog, changes);
@@ -48,7 +52,7 @@ internal static class GamesCommand
     private static void WriteJson(TextWriter output, SteamScan scan, IReadOnlyList<Game> games)
     {
         var dto = new GamesListJson(
-            [.. scan.Libraries.Select(l => new LibraryJson(l.Path, l.IsAvailable))],
+            [.. scan.Libraries.Select(l => new LibraryJson(l.Path, l.IsAvailable, l.IsAddedByHand))],
             [.. games.Select(g => new GameJson(
                 g.Id.ToString(),
                 g.Source.ToString().ToLowerInvariant(),
@@ -67,7 +71,7 @@ internal static class GamesCommand
 
     private static void WriteTable(TextWriter output, SteamScan scan, IReadOnlyList<Game> games)
     {
-        if (scan.Libraries.Count == 0)
+        if (!scan.SteamFound)
         {
             output.WriteLine("Steam not found.");
             if (games.Count == 0)
@@ -113,7 +117,8 @@ internal static class GamesCommand
         output.WriteLine("Libraries:");
         foreach (var library in scan.Libraries)
         {
-            output.WriteLine(library.IsAvailable ? $"  {library.Path}" : $"  {library.Path} (not available)");
+            var notes = string.Join(", ", new[] { library.IsAddedByHand ? "added by hand" : null, library.IsAvailable ? null : "not available" }.OfType<string>());
+            output.WriteLine(notes.Length == 0 ? $"  {library.Path}" : $"  {library.Path} ({notes})");
         }
     }
 
@@ -131,7 +136,7 @@ internal static class GamesCommand
 
 internal sealed record GamesListJson(IReadOnlyList<LibraryJson> Libraries, IReadOnlyList<GameJson> Games);
 
-internal sealed record LibraryJson(string Path, bool Available);
+internal sealed record LibraryJson(string Path, bool Available, bool AddedByHand);
 
 internal sealed record GameJson(
     string Id,

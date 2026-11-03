@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
              xmlns:s="using:AiLocalPack.Desktop.ViewModels.Settings"
+             xmlns:lib="using:AiLocalPack.Desktop.ViewModels.Settings.Libraries"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
@@ -57,6 +58,144 @@
                 </Grid>
             </Border>
         </DataTemplate>
+
+        <!-- Settings → Libraries -->
+        <DataTemplate DataType="lib:SteamSummaryRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconGamepad}" Stroke="{DynamicResource AppTextBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <Button x:Name="RescanButton" Grid.Column="2" Classes="ghost sm" VerticalAlignment="Center"
+                            Command="{Binding RescanCommand}" AutomationProperties.Name="{Binding RescanText}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsScanning}">
+                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                <Panel>
+                                    <Path Classes="icon" Stroke="{Binding $parent[Button].Foreground}" Data="{StaticResource IconLoader}" IsVisible="{Binding IsScanning}" />
+                                    <Path Classes="icon" Stroke="{Binding $parent[Button].Foreground}" Data="{StaticResource IconRefresh}" IsVisible="{Binding !IsScanning}" />
+                                </Panel>
+                            </Viewbox>
+                            <TextBlock Text="{Binding RescanText}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:LibraryFolderRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic" Classes.warn="{Binding !IsAvailable}">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Panel>
+                                <Path Classes="icon" Data="{StaticResource IconHardDrive}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding IsAvailable}" />
+                                <Path Classes="icon" Data="{StaticResource IconHardDrive}" Stroke="{DynamicResource AppWarnBrush}" IsVisible="{Binding !IsAvailable}" />
+                            </Panel>
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock x:Name="FolderPath" Classes="mono" Classes.struck="{Binding !IsAvailable}" Source="{Binding Label}" TextWrapping="Wrap"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Border Classes="fact warn" IsVisible="{Binding !IsAvailable}">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <Viewbox Classes="icon" Width="12" Height="12">
+                                        <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding NotAvailableText}" />
+                                </StackPanel>
+                            </Border>
+                            <TextBlock Classes="rowHelp" Text="{Binding Help}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button Classes="ghost sm" Command="{Binding RescanCommand}" IsVisible="{Binding !IsAvailable}" Content="{Binding RescanText}" />
+                        <Button Classes="bare sm" Command="{Binding OpenCommand}" IsVisible="{Binding IsAvailable}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding OpenText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="bare sm" Command="{Binding RemoveCommand}" IsVisible="{Binding CanRemove}" Content="{Binding RemoveText}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:ManualGameRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic" Classes.warn="{Binding !IsAvailable}">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Panel>
+                                <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding IsAvailable}" />
+                                <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppWarnBrush}" IsVisible="{Binding !IsAvailable}" />
+                            </Panel>
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <WrapPanel>
+                            <TextBlock Classes="mono" Foreground="{DynamicResource AppMutedBrush}" Text="{Binding Path}" TextWrapping="Wrap" />
+                            <TextBlock Classes="rowHelp" Text=" · " IsVisible="{Binding HasEngine}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding Engine}" IsVisible="{Binding HasEngine}" />
+                        </WrapPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button Classes="bare sm" Command="{Binding OpenCommand}" IsVisible="{Binding IsAvailable}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding OpenText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="bare sm" Command="{Binding RemoveCommand}" Content="{Binding RemoveText}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:ActionSettingRow">
+            <Border Classes="settingRow" MinHeight="52" Padding="10,6">
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                    <WrapPanel>
+                        <Button Classes="bare sm" Command="{Binding Command}" AutomationProperties.Name="{Binding Label}" Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Stroke="{Binding $parent[Button].Foreground}"
+                                          Data="{Binding IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                </Viewbox>
+                                <views:HighlightTextBlock Source="{Binding Label}"
+                                                          Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                            </StackPanel>
+                        </Button>
+                        <TextBlock Classes="hint" Text="{Binding Help}" VerticalAlignment="Center"
+                                   IsVisible="{Binding Help, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </WrapPanel>
+                    <TextBlock Classes="error" Margin="10,0" Text="{Binding Error}" IsVisible="{Binding HasError}" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:TextSettingRow">
+            <Border Classes="settingRow">
+                <TextBlock Classes="rowHelp" VerticalAlignment="Center" Text="{Binding Label}" />
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:ComingSoonSettingRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" Opacity="0.75" />
+                    <Border Grid.Column="1" Classes="soonPill" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding PillText}" />
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
     </UserControl.DataTemplates>
 
     <Grid ColumnDefinitions="272,*">
@@ -109,6 +248,30 @@
                         <TextBlock x:Name="SectionTitle" Classes="h1" FontSize="26" Text="{Binding SelectedSection.Title}" />
                         <TextBlock Classes="muted" Text="{Binding SelectedSection.Description}" TextWrapping="Wrap" />
                     </StackPanel>
+                    <!-- The section's own alerts: tone card, the reason, the fixing button -->
+                    <ItemsControl x:Name="Alerts" ItemsSource="{Binding SelectedSection.Alerts}"
+                                  IsVisible="{Binding SelectedSection.Alerts.Count}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Spacing="10" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="s:SettingsAlert">
+                                <Border Classes="notice warn" Classes.bad="{Binding IsError}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Viewbox Classes="icon" Width="18" Height="18" VerticalAlignment="Top" Margin="0,1,0,0">
+                                            <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" />
+                                        </Viewbox>
+                                        <StackPanel Grid.Column="1" Spacing="2">
+                                            <TextBlock Classes="title" Text="{Binding Title}" />
+                                            <TextBlock Classes="sub" Text="{Binding Text}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Classes="ghost sm" VerticalAlignment="Center"
+                                                Content="{Binding ActionText}" Command="{Binding Action}" IsVisible="{Binding HasAction}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                     <Border Classes="card" Padding="16,20" IsVisible="{Binding SelectedSection.IsComingSoon}">
                         <TextBlock x:Name="ComingSoon" Classes="muted" Text="{l:Loc Settings_ComingSoon}" TextWrapping="Wrap" />
                     </Border>

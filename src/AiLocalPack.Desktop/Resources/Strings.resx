@@ -641,4 +641,148 @@
   <data name="AddGame_Result_Title_Other" xml:space="preserve">
     <value>Added {0} games</value>
   </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>Manually added games</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>Other stores</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>Removing a game only removes it from ailocalpack. Game files and installed packs stay as they are.</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>rescan, scan, refresh, steamapps, library folders</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · scanning…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>Reading Steam library folders.</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>Last scan at {0}. Steam is scanned again every time the app starts.</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>Not scanned yet.</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>Steam not found</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>If Steam is installed somewhere unusual, add its library folder below.</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>Rescan</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>Scanning</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Steam library folder</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · found by Steam</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · added by you</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>Not available</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_One" xml:space="preserve">
+    <value>{0} game hidden</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Other" xml:space="preserve">
+    <value>{0} games hidden</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>Add Steam library folder</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>Only if a library on another drive wasn't found.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, drive, disk, sd card, library, add</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>Choose a Steam library folder</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>«{0}» isn't a Steam library: there is no steamapps folder in it.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>«{0}» is already in the list.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>Couldn't save the folder list. Try again.</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>Remove «{0}» from ailocalpack?</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>Its games leave the library. The folder, the games and installed packs stay on disk, and Steam is not changed. You can add the folder again later.</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>Manually added game</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>No manually added games. Use Add game folder here or in the library, or drag a folder into the window.</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>Add game folder</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>manual, folder, game, gog, itch, epic</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>Remove «{0}» from ailocalpack?</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>The game folder and any installed pack stay on disk. You can add the folder again later.</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games, GOG, EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>Until then, add their games as folders.</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, store, galaxy</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>Coming soon</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>A Steam library isn't available</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
+    <value>{1}: {0} game is hidden until the folder is back. Installed packs are untouched.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Other" xml:space="preserve">
+    <value>{1}: {0} games are hidden until the folder is back. Installed packs are untouched.</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Settings_Steam_Folders_One" xml:space="preserve">
+    <value>{0} folder</value>
+  </data>
+  <data name="Settings_Steam_Folders_Other" xml:space="preserve">
+    <value>{0} folders</value>
+  </data>
 </root>

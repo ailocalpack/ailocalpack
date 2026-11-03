@@ -282,4 +282,117 @@ public sealed class SteamLibraryScannerTests : IDisposable
         // Assert
         scan.Should().BeEquivalentTo(SteamScan.Empty);
     }
+
+    [Fact]
+    public void Lists_games_of_a_library_folder_added_by_hand()
+    {
+        // Arrange
+        var extra = _dir.Dir("Extra/steamapps").Combine("Extra");
+        _steam.AddGame(30, "Gamma", library: extra);
+
+        // Act
+        var scan = Scanner().Scan(new SteamLibraryChoices([extra], []));
+
+        // Assert
+        scan.Libraries.Should().Equal(new SteamLibrary(_steam.Root, true), new SteamLibrary(extra, true, IsAddedByHand: true));
+        scan.Games.Should().ContainSingle().Which.LibraryPath.Should().Be(extra);
+    }
+
+    [Fact]
+    public void A_folder_added_by_hand_that_steam_lists_too_is_reported_once_as_steams()
+    {
+        // Arrange
+        var sdCard = _steam.AddLibrary("SdCard");
+
+        // Act
+        var scan = Scanner().Scan(new SteamLibraryChoices([sdCard], []));
+
+        // Assert
+        scan.Libraries.Should().Equal(new SteamLibrary(_steam.Root, true), new SteamLibrary(sdCard, true));
+    }
+
+    [Fact]
+    public void A_missing_folder_added_by_hand_is_reported_as_not_available()
+    {
+        // Arrange
+        var gone = _dir.Combine("Gone");
+
+        // Act
+        var scan = Scanner().Scan(new SteamLibraryChoices([gone], []));
+
+        // Assert
+        scan.Libraries.Should().Contain(new SteamLibrary(gone, false, IsAddedByHand: true));
+    }
+
+    [Fact]
+    public void Leaves_out_a_library_the_player_removed()
+    {
+        // Arrange
+        var sdCard = _steam.AddLibrary("SdCard");
+        _steam.AddGame(20, "Beta", library: sdCard);
+
+        // Act
+        var scan = Scanner().Scan(new SteamLibraryChoices([], [sdCard]));
+
+        // Assert
+        scan.Libraries.Select(l => l.Path).Should().Equal(_steam.Root);
+        scan.Games.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void The_steam_root_can_not_be_left_out()
+    {
+        // Arrange
+        _steam.AddGame(10, "Alpha");
+
+        // Act
+        var scan = Scanner().Scan(new SteamLibraryChoices([], [_steam.Root]));
+
+        // Assert
+        scan.Games.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void Folders_added_by_hand_alone_do_not_count_as_steam_found()
+    {
+        // Arrange
+        var extra = _dir.Dir("Extra/steamapps").Combine("Extra");
+        var env = new OsEnvironment(OsKind.Linux, _dir.Path, name => name == SteamLocator.RootVariable ? _dir.Combine("no-steam") : null);
+
+        // Act
+        var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan(new SteamLibraryChoices([extra], []));
+
+        // Assert
+        scan.SteamFound.Should().BeFalse();
+        scan.Libraries.Should().ContainSingle();
+    }
+
+    [Theory]
+    [InlineData("Lib", "Lib")]
+    [InlineData("Lib/steamapps", "Lib")]
+    [InlineData("Lib/steamapps/common", "Lib")]
+    public void Find_library_folder_accepts_the_library_or_its_steamapps(string picked, string expected)
+    {
+        // Arrange
+        _dir.Dir("Lib/steamapps/common");
+
+        // Act
+        var folder = SteamLibraryScanner.FindLibraryFolder(_dir.Combine(picked));
+
+        // Assert
+        folder.Should().Be(_dir.Combine(expected));
+    }
+
+    [Fact]
+    public void Find_library_folder_rejects_a_folder_without_steamapps()
+    {
+        // Arrange
+        _dir.Dir("Games/common");
+
+        // Act
+        var folder = SteamLibraryScanner.FindLibraryFolder(_dir.Combine("Games/common"));
+
+        // Assert
+        folder.Should().BeNull();
+    }
 }

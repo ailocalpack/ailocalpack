@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using Microsoft.Extensions.Logging;
 
@@ -307,5 +308,48 @@ public sealed class SettingsStoreTests : IDisposable
 
         // Assert
         File.ReadAllText(SettingsFile).Should().Be(content);
+    }
+
+    [Fact]
+    public void Steam_library_folders_survive_a_restart()
+    {
+        // Arrange
+        var store = CreateStore();
+        store.Load();
+        store.Update(s => s with { SteamLibraryFolders = ["/mnt/games/SteamLibrary"], IgnoredSteamLibraries = ["/run/media/sd"] });
+
+        // Act
+        var loaded = CreateStore().Load();
+
+        // Assert
+        loaded.SteamLibraries.Added.Should().Equal("/mnt/games/SteamLibrary");
+        loaded.SteamLibraries.Ignored.Should().Equal("/run/media/sd");
+    }
+
+    [Fact]
+    public void Missing_steam_library_lists_read_as_empty()
+    {
+        // Arrange
+        WriteSettingsFile("""{ "schemaVersion": 1 }""");
+
+        // Act
+        var loaded = CreateStore().Load();
+
+        // Assert
+        loaded.SteamLibraries.Should().BeEquivalentTo(SteamLibraryChoices.None);
+    }
+
+    [Fact]
+    public void Derived_steam_library_choices_are_not_written_to_the_file()
+    {
+        // Arrange
+        var store = CreateStore();
+        store.Load();
+
+        // Act
+        store.Update(s => s with { SteamLibraryFolders = ["/mnt/games/SteamLibrary"] });
+
+        // Assert
+        JsonNode.Parse(File.ReadAllText(SettingsFile))!.AsObject().Select(p => p.Key).Should().NotContain("steamLibraries");
     }
 }

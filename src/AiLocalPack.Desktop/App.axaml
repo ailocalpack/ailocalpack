@@ -3,6 +3,7 @@
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:add="using:AiLocalPack.Desktop.ViewModels.AddGame"
+             xmlns:dialogs="using:AiLocalPack.Desktop.Dialogs"
              x:Class="AiLocalPack.Desktop.App"
              RequestedThemeVariant="Default">
     <!-- RequestedThemeVariant="Default" follows the OS theme, live; SettingsApplier sets it from Settings → General → Theme. -->
@@ -31,5 +32,6 @@
         <DataTemplate DataType="vm:SettingsViewModel"><views:SettingsView /></DataTemplate>
         <!-- Dialogs, shown over the window by IDialogService -->
         <DataTemplate DataType="add:AddGameDialogViewModel"><views:AddGameDialogView /></DataTemplate>
+        <DataTemplate DataType="dialogs:ConfirmDialogViewModel"><views:ConfirmDialogView /></DataTemplate>
     </Application.DataTemplates>
 </Application>

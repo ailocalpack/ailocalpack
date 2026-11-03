@@ -12,8 +12,9 @@ public static class GameCatalogMerge
     /// Steam games in the scan are added or refreshed (name, folder, library, build, last played; engine and anti-cheat
     /// kept); a different build ID than stored gives <see cref="GameVersionChanged"/>. A stored Steam game missing from
     /// the scan is kept as unavailable when its library is listed but not available, or when Steam was not found at all
-    /// (Steam on a missing drive must not wipe the catalog); otherwise it was uninstalled and is removed. Manual games
-    /// are kept; their availability follows <paramref name="directoryExists"/>. Result is sorted by name, then ID.
+    /// (<see cref="SteamScan.SteamFound"/>: Steam on a missing drive must not wipe the catalog); otherwise it was
+    /// uninstalled and is removed. Manual games are kept; their availability follows <paramref name="directoryExists"/>.
+    /// Result is sorted by name, then ID.
     /// </summary>
     public static (IReadOnlyList<Game> Games, IReadOnlyList<GameChange> Changes) Merge(
         IEnumerable<Game> stored,
@@ -26,7 +27,7 @@ public static class GameCatalogMerge
 
         var scanned = scan.Games.ToDictionary(g => GameId.Steam(g.AppId));
         var unavailableLibraries = scan.Libraries.Where(l => !l.IsAvailable).Select(l => l.Path).ToHashSet(PathComparer);
-        var steamFound = scan.Libraries.Count > 0;
+        var steamFound = scan.SteamFound;
         var games = new List<Game>();
         var changes = new List<GameChange>();
         var seen = new HashSet<GameId>();

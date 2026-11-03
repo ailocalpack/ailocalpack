@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace AiLocalPack.Cli.Tests;
@@ -34,8 +35,8 @@ public sealed class GamesListTests : IDisposable
         var expected = new JsonObject
         {
             ["libraries"] = new JsonArray(
-                new JsonObject { ["path"] = _steam.Root, ["available"] = true },
-                new JsonObject { ["path"] = missing, ["available"] = false }),
+                new JsonObject { ["path"] = _steam.Root, ["available"] = true, ["addedByHand"] = false },
+                new JsonObject { ["path"] = missing, ["available"] = false, ["addedByHand"] = false }),
             ["games"] = new JsonArray(new JsonObject
             {
                 ["id"] = "steam:413150",
@@ -123,6 +124,23 @@ public sealed class GamesListTests : IDisposable
         // Assert
         Games(result).Should().ContainSingle()
             .Which!["available"]!.GetValue<bool>().Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Lists_games_of_a_library_folder_added_in_settings()
+    {
+        // Arrange
+        var extra = _dir.Dir("Extra/steamapps").Combine("Extra");
+        _steam.AddGame(413150, "Stardew Valley", library: extra);
+        _dir.File("home/config/settings.json", JsonSerializer.Serialize(new { schemaVersion = 1, steamLibraryFolders = new[] { extra } }));
+
+        // Act
+        var result = await RunAsync("games", "list", "--json");
+
+        // Assert
+        Games(result).Should().ContainSingle().Which!["libraryPath"]!.GetValue<string>().Should().Be(extra);
+        JsonNode.Parse(result.StdOut)!["libraries"]!.AsArray()
+            .Should().ContainSingle(l => (bool)l!["addedByHand"]!);
     }
 
     [Fact]

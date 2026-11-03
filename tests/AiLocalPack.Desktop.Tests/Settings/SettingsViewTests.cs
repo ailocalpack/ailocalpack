@@ -67,9 +67,9 @@ public sealed class SettingsViewTests
 
         // Assert
         Find<TextBlock>(window, "SectionTitle").Text.Should().Be("Libraries");
-        Find<ListBox>(window, "SectionList").SelectedItem.Should().BeOfType<SettingsSection>()
+        Find<ListBox>(window, "SectionList").SelectedItem.Should().BeAssignableTo<SettingsSection>()
             .Which.Id.Should().Be(SettingsSectionId.Libraries);
-        Find<TextBlock>(window, "ComingSoon").IsEffectivelyVisible.Should().BeTrue();
+        Find<TextBlock>(window, "ComingSoon").IsEffectivelyVisible.Should().BeFalse();
         window.Close();
     });
 
@@ -200,6 +200,46 @@ public sealed class SettingsViewTests
 
         // Assert
         services.GetRequiredService<SettingsStore>().Current.Theme.Should().Be(AppTheme.Dark);
+        window.Close();
+    });
+
+    [Fact]
+    public Task Libraries_shows_folders_the_alert_and_the_badge() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        string card = "";
+        using var services = TestServices.Build(steam: s => card = s.AddLibrary("SdCard", create: false));
+
+        // Act
+        var window = Open(services, SettingsSectionId.Libraries);
+
+        // Assert
+        window.GetVisualDescendants().OfType<HighlightTextBlock>().Select(t => t.Source)
+            .Should().Contain([card, "Add Steam library folder", "Add game folder", "Epic Games, GOG, EA app"]);
+        window.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text)
+            .Should().Contain(["A Steam library isn't available", "Not available"]);
+        window.GetVisualDescendants().OfType<HighlightTextBlock>().Where(t => t.Name == "FolderPath")
+            .Should().ContainSingle(t => t.Source == card).Which.Classes.Should().Contain("struck");
+        var libraries = Find<ListBox>(window, "SectionList").Items.OfType<SettingsSection>().Single(s => s.Id == SettingsSectionId.Libraries);
+        libraries.HasBadge.Should().BeTrue();
+        window.Close();
+    });
+
+    [Fact]
+    public Task Removing_a_folder_shows_the_confirmation_dialog() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = TestServices.Build(steam: s => s.AddLibrary("SdCard", create: false));
+        var window = Open(services, SettingsSectionId.Libraries);
+        var section = services.GetRequiredService<ViewModels.Settings.Libraries.LibrariesSettingsSection>();
+
+        // Act
+        section.Folders[1].RemoveCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        Find<TextBlock>(window, "ConfirmTitle").Text.Should().StartWith("Remove «");
+        Find<Button>(window, "ConfirmButton").Classes.Should().Contain("danger");
         window.Close();
     });
 }
