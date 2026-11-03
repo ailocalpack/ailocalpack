@@ -14,7 +14,7 @@ public static class CliApp
         var root = new RootCommand("ailocalpack: install, generate and publish game localizations.")
         {
             GamesCommand.Build(env),
-            ToolkitCommand.Build(),
+            ToolkitCommand.Build(env),
         };
         root.SetAction(result =>
         {

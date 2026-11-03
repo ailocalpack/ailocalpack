@@ -83,6 +83,16 @@ public sealed class EngineDetector(ILogger<EngineDetector>? logger = null)
         return due.Count;
     }
 
+    /// <summary>
+    /// Whether an engine layout starts right in <paramref name="folder"/> (or a <c>.app</c> bundle in it), not deeper:
+    /// the folder recognizer's "engine marker" test.
+    /// </summary>
+    internal static bool HasLayout(FolderView folder) =>
+        Rules.Any(r => r.MatchFolder(folder).Any())
+        || folder.DirNames.Where(IsBundle).Any(name => Rules.Any(r => r.MatchApp(folder.Dir(name)!).Any()));
+
+    internal static bool IsBundle(string name) => name.EndsWith(".app", StringComparison.OrdinalIgnoreCase) && name.Length > 4;
+
     private static void Collect(FolderView folder, int depth, List<(EngineMatch, int)> found)
     {
         Add(found, Rules.SelectMany(r => r.MatchFolder(folder)), depth);
@@ -95,6 +105,4 @@ public sealed class EngineDetector(ILogger<EngineDetector>? logger = null)
 
     private static void Add(List<(EngineMatch, int)> found, IEnumerable<EngineMatch> matches, int depth) =>
         found.AddRange(matches.Select(m => (m, depth)));
-
-    private static bool IsBundle(string name) => name.EndsWith(".app", StringComparison.OrdinalIgnoreCase);
 }

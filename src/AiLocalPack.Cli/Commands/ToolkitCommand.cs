@@ -1,15 +1,20 @@
 using System.CommandLine;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Folders;
 
 namespace AiLocalPack.Cli.Commands;
 
-/// <summary><c>toolkit detect &lt;folder&gt; [--json]</c>: what the toolkit finds in a game folder (engine, anti-cheat).</summary>
+/// <summary>
+/// <c>toolkit detect &lt;folder&gt; [--json]</c>: what the toolkit finds in a game folder (engine, anti-cheat).
+/// <c>toolkit scan-folder &lt;folder&gt; [--json]</c>: the games in a folder, with fingerprint and version.
+/// </summary>
 internal static class ToolkitCommand
 {
-    public static Command Build()
+    public static Command Build(OsEnvironment env)
     {
         var folder = new Argument<string>("folder") { Description = "Game folder (or a macOS .app bundle)." };
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
@@ -45,7 +50,7 @@ internal static class ToolkitCommand
             return 0;
         });
 
-        return new Command("toolkit", "Engine toolkit.") { detect };
+        return new Command("toolkit", "Engine toolkit.") { detect, ScanFolderCommand.Build(env) };
     }
 
     private static void WriteText(TextWriter output, EngineDetection detection)

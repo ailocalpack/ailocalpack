@@ -12,8 +12,8 @@ internal static class Executables
     /// <summary>Windows executables (minus installers and crash handlers), then Linux binaries; each group sorted by name.</summary>
     public static IEnumerable<string> In(FolderView folder)
     {
-        var windows = folder.FileNames.Where(n => n.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && !IsHelper(n));
-        var linux = folder.FileNames.Where(n => !IsHelper(n) && IsLinuxBinary(folder, n));
+        var windows = folder.FileNames.Where(n => n.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && !IsHelper(n) && !IsInstaller(n));
+        var linux = folder.FileNames.Where(n => !IsHelper(n) && !IsInstaller(n) && IsLinuxBinary(folder, n));
         return windows.Concat(linux).Select(folder.RelativeOf);
     }
 
@@ -33,7 +33,13 @@ internal static class Executables
         LinuxExtensions.Any(e => name.EndsWith(e, StringComparison.OrdinalIgnoreCase))
         || (!Path.HasExtension(name) && BinaryProbe.IsElf(folder.FullPathOf(name)));
 
-    private static bool IsHelper(string name)
+    /// <summary>Setup programs (<c>setup.exe</c>, <c>setup_game_1.0.exe</c>, <c>install.sh</c>, <c>GameInstaller.exe</c>), compared ignoring case.</summary>
+    public static bool IsInstaller(string name) =>
+        name.StartsWith("setup", StringComparison.OrdinalIgnoreCase)
+        || (name.Contains("install", StringComparison.OrdinalIgnoreCase) && !name.StartsWith("unins", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>Crash handlers, uninstallers, redistributable and prerequisite installers.</summary>
+    public static bool IsHelper(string name)
     {
         var lower = name.ToLowerInvariant();
         return lower.StartsWith("unins", StringComparison.Ordinal) || HelperNameParts.Any(p => lower.Contains(p, StringComparison.Ordinal));

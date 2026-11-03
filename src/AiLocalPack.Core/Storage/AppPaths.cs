@@ -45,6 +45,9 @@ public sealed record AppPaths
     /// <summary>Game covers downloaded from the Steam CDN (safe to delete: fetched again when missing).</summary>
     public string Covers => Path.Combine(Cache, "covers");
 
+    /// <summary>Remembered SHA-256 of game files (<see cref="FileHashCache"/>; safe to delete: files are hashed again).</summary>
+    public string FileHashes => Path.Combine(Cache, "file-hashes.json");
+
     /// <summary>All three roots under <paramref name="home"/> (made absolute against the current directory).</summary>
     public static AppPaths UnderHome(string home)
     {
