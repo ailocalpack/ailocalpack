@@ -244,4 +244,217 @@
   <data name="Library_Menu_OpenFolder" xml:space="preserve">
     <value>Открыть папку игры</value>
   </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>Убрать из библиотеки</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>Отпустите папку, чтобы добавить игру</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>Папку игры или папку с несколькими играми</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>Добавить игру</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>Шаг {0} из {1}</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>Перетащите сюда папку игры</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>Мы определим движок и проверим файлы игры. Файлы только читаются, ничего не меняется.</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>Выбрать папку…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>Выберите папку игры</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>Папку можно перетащить и прямо на библиотеку</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>Где папка игры?</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>Ярлык на рабочем столе: правый клик → «Расположение файла».</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>Dock: правый клик по игре → Параметры → Показать в Finder.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>Ярлык на рабочем столе: путь к игре указан в строке Exec его файла .desktop.</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG, itch.io, Epic: в лаунчере есть «Открыть папку установки».</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Игры Steam добавлять не нужно: они появляются в библиотеке сами.</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>В «{0}» и её подпапках игр не найдено.</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>Выберите папку, в которой лежит исполняемый файл игры.</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>Папка «{0}» не существует или не открывается.</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>«{0}» слишком большая для поиска. Выберите папку поуже.</value>
+  </data>
+  <data name="AddGame_Error_Several_One" xml:space="preserve">
+    <value>В «{1}» найдена {0} игра.</value>
+  </data>
+  <data name="AddGame_Error_Several_Few" xml:space="preserve">
+    <value>В «{1}» найдено {0} игры.</value>
+  </data>
+  <data name="AddGame_Error_Several_Many" xml:space="preserve">
+    <value>В «{1}» найдено {0} игр.</value>
+  </data>
+  <data name="AddGame_Error_Several_Detail" xml:space="preserve">
+    <value>Добавление нескольких игр сразу появится в следующей версии. Пока выберите папку одной игры.</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>Не удаётся прочитать файлы «{0}».</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>Не удаётся открыть изображение. Выберите файл PNG или JPEG.</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>Анализируем «{0}»…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>Файлы игры только читаются, ничего не меняется</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>Ищем исполняемые файлы</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>Определяем движок</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>Снимаем отпечаток файлов</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>Ищем в реестре</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0} из {1:N0} файлов</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>в следующей версии</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>Движок не распознан</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>Нет исполняемого файла</value>
+  </data>
+  <data name="AddGame_Files_One" xml:space="preserve">
+    <value>{0} файл</value>
+  </data>
+  <data name="AddGame_Files_Few" xml:space="preserve">
+    <value>{0} файла</value>
+  </data>
+  <data name="AddGame_Files_Many" xml:space="preserve">
+    <value>{0} файлов</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} Б</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} КБ</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} МБ</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} ГБ</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>Переименовать</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>Сменить обложку</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>Другая папка</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>В «{0}» одна игра, в подпапке {1}.</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>Поиск пакетов появится в следующей версии.</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>Здесь будут пакеты для этой игры из реестра. Игру можно добавить уже сейчас.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>Движок не распознан.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>Пакет всё равно можно сгенерировать: агент сам разберётся в файлах игры. Если вы знаете движок, выберите его в параметрах.</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>Эта игра уже есть в библиотеке: «{0}».</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>Обнаружен {0}.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>Для этой игры нельзя устанавливать и генерировать пакеты: античит может заблокировать аккаунт. Игру всё равно можно добавить, в библиотеке она будет недоступной.</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>Изменить параметры игры</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>Движок</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>определён</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>не определён</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>Главный исполняемый файл</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>Обложка</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>Выбрать изображение…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>Значок игры</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>Выберите изображение для обложки</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>Другой / не знаю</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>Добавить игру</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>Добавить как недоступную</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>Открыть страницу игры</value>
+  </data>
 </root>

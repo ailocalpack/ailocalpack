@@ -1,3 +1,4 @@
+using AiLocalPack.Desktop.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -9,7 +10,14 @@ public sealed partial class LibraryView : UserControl
 {
     private TopLevel? _topLevel;
 
-    public LibraryView() => InitializeComponent();
+    public LibraryView()
+    {
+        InitializeComponent();
+        DropTarget.AddHandler(DragDrop.DragEnterEvent, OnDragOver);
+        DropTarget.AddHandler(DragDrop.DragOverEvent, OnDragOver);
+        DropTarget.AddHandler(DragDrop.DragLeaveEvent, (_, _) => DropOverlay.IsVisible = false);
+        DropTarget.AddHandler(DragDrop.DropEvent, OnDrop);
+    }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -23,6 +31,24 @@ public sealed partial class LibraryView : UserControl
         _topLevel?.RemoveHandler(KeyDownEvent, OnWindowKeyDown);
         _topLevel = null;
         base.OnDetachedFromVisualTree(e);
+    }
+
+    private void OnDragOver(object? sender, DragEventArgs e)
+    {
+        var hasFiles = e.DataTransfer.Contains(DataFormat.File);
+        e.DragEffects = hasFiles ? DragDropEffects.Copy : DragDropEffects.None;
+        DropOverlay.IsVisible = hasFiles;
+        e.Handled = true;
+    }
+
+    private void OnDrop(object? sender, DragEventArgs e)
+    {
+        DropOverlay.IsVisible = false;
+        if (DataContext is LibraryViewModel vm && DroppedFolder.From(e) is { } folder)
+        {
+            e.Handled = true;
+            _ = vm.AddDroppedFolderAsync(folder);
+        }
     }
 
     // Ctrl F (⌘ F on macOS) focuses the search wherever the focus is in the window.

@@ -1,4 +1,5 @@
 using System.Globalization;
+using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Tests.Settings;
@@ -103,7 +104,7 @@ public sealed class MainWindowViewModelTests
         using var services = new ServiceCollection().BuildServiceProvider();
 
         // Act
-        var vm = new MainWindowViewModel(navigation, new PageFactory(services), new Localizer(CultureInfo.GetCultureInfo("en")));
+        var vm = new MainWindowViewModel(navigation, new PageFactory(services), new Localizer(CultureInfo.GetCultureInfo("en")), new DialogService(services));
 
         // Assert
         vm.CurrentPage.Should().BeSameAs(settings);

@@ -6,7 +6,9 @@
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.LibraryView"
              x:DataType="vm:LibraryViewModel">
-    <!-- Design §1: toolbar (search, sort, + Folder) over a responsive cover grid; scanning, empty and no-results states. -->
+    <!-- Design §1: toolbar (search, sort, + Folder) over a responsive cover grid; scanning, empty and no-results states.
+         A folder dragged over the library shows a dashed drop zone; dropping it opens the add-folder dialog (design §2). -->
+    <Panel x:Name="DropTarget" DragDrop.AllowDrop="True">
     <DockPanel>
         <Grid DockPanel.Dock="Top" Margin="24,16,24,12" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
             <TextBox x:Name="SearchBox" Classes="search" MaxWidth="520" HorizontalAlignment="Stretch"
@@ -85,6 +87,7 @@
                                     <ContextMenu>
                                         <MenuItem Header="{l:Loc Library_Menu_OpenPage}" Command="{Binding OpenCommand}" />
                                         <MenuItem Header="{l:Loc Library_Menu_OpenFolder}" Command="{Binding OpenFolderCommand}" />
+                                        <MenuItem Header="{l:Loc Library_Menu_Remove}" Command="{Binding RemoveCommand}" IsVisible="{Binding IsManual}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                                 <StackPanel Spacing="10">
@@ -93,6 +96,8 @@
                                             <Panel>
                                                 <TextBlock Classes="coverName" Text="{Binding Name}" IsVisible="{Binding !HasCover}" />
                                                 <Image Source="{Binding Cover}" Stretch="UniformToFill" IsVisible="{Binding HasCover}" />
+                                                <Image Source="{Binding Icon}" Stretch="Uniform" IsVisible="{Binding HasIcon}"
+                                                       Width="72" Height="72" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,40" />
                                                 <Viewbox Classes="icon" Width="36" Height="36" IsVisible="{Binding IsBlocked}"
                                                          HorizontalAlignment="Center" VerticalAlignment="Center">
                                                     <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="#d9ffffff" />
@@ -161,4 +166,18 @@
             </StackPanel>
         </ScrollViewer>
     </DockPanel>
+
+    <Panel x:Name="DropOverlay" IsVisible="False" Margin="16" IsHitTestVisible="False">
+        <Rectangle Classes="dropzone active" />
+        <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border Width="72" Height="72" CornerRadius="36" Background="{DynamicResource AppSurfaceBrush}" HorizontalAlignment="Center">
+                <Viewbox Classes="icon" Width="32" Height="32">
+                    <Path Classes="icon" Data="{StaticResource IconFolderPlus}" Stroke="{DynamicResource AppAccentBrush}" />
+                </Viewbox>
+            </Border>
+            <TextBlock Classes="h1" Text="{l:Loc Library_Drop_Title}" HorizontalAlignment="Center" />
+            <TextBlock Classes="muted" Text="{l:Loc Library_Drop_Text}" HorizontalAlignment="Center" />
+        </StackPanel>
+    </Panel>
+    </Panel>
 </UserControl>

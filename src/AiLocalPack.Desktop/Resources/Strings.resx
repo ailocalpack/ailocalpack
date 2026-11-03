@@ -269,4 +269,211 @@
   <data name="Library_Menu_OpenFolder" xml:space="preserve">
     <value>Open game folder</value>
   </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>Remove from library</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>Drop the folder to add the game</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>A game folder, or a folder with several games</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>Add game</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>Step {0} of {1}</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>Drop a game folder here</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>The engine is detected and the game files are checked. They are only read, nothing is changed.</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>Choose folder…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>Choose a game folder</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>You can also drop a folder straight onto the library</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>Where is my game folder?</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>Desktop shortcut: right-click it → “Open file location”.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>Dock: right-click the game → Options → Show in Finder.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>Desktop shortcut: the game path is in the Exec line of its .desktop file.</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG, itch.io, Epic: the launcher has “Open install folder”.</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Steam games don't need adding: they show up in the library by themselves.</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>No games found in “{0}” or its subfolders.</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>Pick the folder that holds the game's executable file.</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>The folder “{0}” doesn't exist or can't be opened.</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>“{0}” is too large to search. Pick a narrower folder.</value>
+  </data>
+  <data name="AddGame_Error_Several_One" xml:space="preserve">
+    <value>“{1}” holds {0} game.</value>
+  </data>
+  <data name="AddGame_Error_Several_Other" xml:space="preserve">
+    <value>“{1}” holds {0} games.</value>
+  </data>
+  <data name="AddGame_Error_Several_Detail" xml:space="preserve">
+    <value>Adding several games at once comes in a later version. For now, pick one game's folder.</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>Can't read the files of “{0}”.</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>Can't open this image. Choose a PNG or JPEG file.</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>Analyzing “{0}”…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>Game files are only read; nothing is changed</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>Finding executables</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>Detecting engine</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>Fingerprinting files</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>Looking up the registry</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0} of {1:N0} files</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>in a later version</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>Engine not recognized</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>No executable</value>
+  </data>
+  <data name="AddGame_Files_One" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="AddGame_Files_Other" xml:space="preserve">
+    <value>{0} files</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} GB</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>Change cover</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>Other folder</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>“{0}” holds one game, in the subfolder {1}.</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>Pack lookup comes in a later version.</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>Packs for this game from the registry will show here. You can add the game now.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>Engine not recognized.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>You can still generate a pack: the agent will figure out the game files itself. If you know the engine, pick it in the details.</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>This game is already in the library as “{0}”.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>{0} detected.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>Packs can't be installed or generated for this game: the anti-cheat may ban your account. You can still add the game; the library shows it as unavailable.</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>Edit game details</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>Engine</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>detected</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>not detected</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>Main executable</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>Choose image…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>Use game icon</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>Choose a cover image</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>Other / don't know</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>Add game</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>Add as unavailable</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>Open game page</value>
+  </data>
 </root>

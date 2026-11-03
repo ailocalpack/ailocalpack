@@ -2,11 +2,13 @@ using System.Globalization;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
+using AiLocalPack.Desktop.ViewModels.AddGame;
 using AiLocalPack.Desktop.ViewModels.Library;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -32,6 +34,8 @@ public sealed partial class LibraryViewModel : PageViewModel
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ISystemShell _shell;
+    private readonly IDialogService _dialogs;
+    private readonly ManualCoverStore _manualCovers;
     private readonly Dictionary<GameId, GameCardViewModel> _cards = [];
 
     [ObservableProperty]
@@ -56,7 +60,9 @@ public sealed partial class LibraryViewModel : PageViewModel
         IPageFactory pages,
         Localizer localizer,
         IUiDispatcher ui,
-        ISystemShell shell)
+        ISystemShell shell,
+        IDialogService dialogs,
+        ManualCoverStore manualCovers)
     {
         _library = library;
         _covers = covers;
@@ -66,6 +72,8 @@ public sealed partial class LibraryViewModel : PageViewModel
         _localizer = localizer;
         _ui = ui;
         _shell = shell;
+        _dialogs = dialogs;
+        _manualCovers = manualCovers;
         _sortOptions = BuildSortOptions();
         _selectedSort = _sortOptions[0];
         _localizer.CultureChanged += (_, _) => OnCultureChanged();
@@ -121,10 +129,15 @@ public sealed partial class LibraryViewModel : PageViewModel
     [RelayCommand]
     private void ClearSearch() => Query = string.Empty;
 
-    /// <summary>The add-folder dialog comes in task 13; the button is already in the toolbar.</summary>
+    /// <summary>Opens the add-folder dialog on step 1 (design §2).</summary>
     [RelayCommand]
-    private static void AddFolder()
+    private void AddFolder() => _dialogs.Show<AddGameDialogViewModel>();
+
+    /// <summary>A folder dropped on the library: the dialog opens straight on the analysis (step 1 skipped).</summary>
+    public Task AddDroppedFolderAsync(string folder)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(folder);
+        return _dialogs.Show<AddGameDialogViewModel>().AnalyzeAsync(folder);
     }
 
     [RelayCommand]
@@ -151,7 +164,7 @@ public sealed partial class LibraryViewModel : PageViewModel
             }
             else
             {
-                card = new GameCardViewModel(game, _localizer, _policy, OpenGame, OpenFolder);
+                card = new GameCardViewModel(game, _localizer, _policy, OpenGame, OpenFolder, Remove);
                 _cards.Add(game.Id, card);
                 _ = card.LoadCoverAsync(_covers);
             }
@@ -166,6 +179,15 @@ public sealed partial class LibraryViewModel : PageViewModel
     private void OpenGame(GameCardViewModel card) => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(card.Game));
 
     private void OpenFolder(GameCardViewModel card) => _shell.OpenFolder(card.Game.InstallPath);
+
+    /// <summary>Removes a manual game and its stored cover; its folder stays on disk.</summary>
+    private void Remove(GameCardViewModel card)
+    {
+        if (card.Game.Source == GameSource.Manual && _library.Catalog.RemoveManual(card.Game.Id))
+        {
+            _manualCovers.Delete(card.Game.Id);
+        }
+    }
 
     private void OnScanStateChanged()
     {

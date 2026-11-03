@@ -42,6 +42,12 @@ public sealed record AppPaths
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 
+    /// <summary>
+    /// Covers of manually added games: the image the player picked or the game's icon (in data, not cache: a picked
+    /// image can't be fetched again).
+    /// </summary>
+    public string GameCovers => Path.Combine(Data, "covers");
+
     /// <summary>Game covers downloaded from the Steam CDN (safe to delete: fetched again when missing).</summary>
     public string Covers => Path.Combine(Cache, "covers");
 

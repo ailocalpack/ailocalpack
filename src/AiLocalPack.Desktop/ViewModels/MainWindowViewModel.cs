@@ -1,3 +1,4 @@
+using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
@@ -6,19 +7,22 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AiLocalPack.Desktop.ViewModels;
 
-/// <summary>Global chrome (logo, back, Activity, Settings) around the current page.</summary>
+/// <summary>Global chrome (logo, back, Activity, Settings) around the current page, and the modal dialog over it.</summary>
 public sealed partial class MainWindowViewModel : ObservableObject
 {
     private readonly INavigationService _navigation;
     private readonly IPageFactory _pages;
     private readonly Localizer _localizer;
+    private readonly IDialogService _dialogs;
 
-    public MainWindowViewModel(INavigationService navigation, IPageFactory pages, Localizer localizer)
+    public MainWindowViewModel(INavigationService navigation, IPageFactory pages, Localizer localizer, IDialogService dialogs)
     {
         _navigation = navigation;
         _pages = pages;
         _localizer = localizer;
+        _dialogs = dialogs;
         _navigation.Navigated += (_, _) => OnNavigated();
+        _dialogs.Changed += (_, _) => OnDialogChanged();
         _localizer.CultureChanged += (_, _) => OnPropertyChanged(nameof(BackLabel));
         if (_navigation.Current is null)
         {
@@ -32,7 +36,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public PageViewModel? CurrentPage => _navigation.Current;
 
-    public bool CanGoBack => _navigation.CanGoBack;
+    public bool CanGoBack => _navigation.CanGoBack && !HasDialog;
+
+    /// <summary>The modal dialog shown over the window (the page and chrome are disabled meanwhile), or <c>null</c>.</summary>
+    public DialogViewModel? Dialog => _dialogs.Current;
+
+    public bool HasDialog => _dialogs.Current is not null;
 
     /// <summary>Back button text: "‹ " plus the title of the page it returns to.</summary>
     public string BackLabel =>
@@ -44,10 +53,20 @@ public sealed partial class MainWindowViewModel : ObservableObject
     /// <summary>Whether Settings is shown: the ⚙ button is drawn as active.</summary>
     public bool IsSettingsOpen => _navigation.Current is SettingsViewModel;
 
-    /// <summary>Esc: the page handles it first (clears a search), otherwise back.</summary>
+    /// <summary>Esc: an open dialog handles it (or closes); else the page handles it first (clears a search), otherwise back.</summary>
     [RelayCommand]
     private void Escape()
     {
+        if (_dialogs.Current is { } dialog)
+        {
+            if (!dialog.TryHandleEscape())
+            {
+                _dialogs.Close(dialog);
+            }
+
+            return;
+        }
+
         if (_navigation.Current?.TryHandleEscape() != true)
         {
             _navigation.GoBack();
@@ -61,6 +80,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private static void OpenActivity()
     {
+    }
+
+    private void OnDialogChanged()
+    {
+        OnPropertyChanged(nameof(Dialog));
+        OnPropertyChanged(nameof(HasDialog));
+        OnPropertyChanged(nameof(CanGoBack));
+        GoBackCommand.NotifyCanExecuteChanged();
     }
 
     private void OnNavigated()

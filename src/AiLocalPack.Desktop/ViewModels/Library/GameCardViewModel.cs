@@ -33,13 +33,19 @@ public sealed partial class GameCardViewModel : ObservableObject
     private readonly AntiCheatPolicy _policy;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasCover))]
-    private Bitmap? _cover;
+    [NotifyPropertyChangedFor(nameof(Cover), nameof(HasCover), nameof(Icon), nameof(HasIcon))]
+    private CoverImage? _image;
 
     /// <param name="open">Opens the game page (card click, context menu).</param>
     /// <param name="openFolder">Opens the game folder in the file manager (context menu).</param>
+    /// <param name="remove">Removes a manual game from the library (context menu); <c>null</c> = no such item.</param>
     public GameCardViewModel(
-        Game game, Localizer localizer, AntiCheatPolicy policy, Action<GameCardViewModel> open, Action<GameCardViewModel> openFolder)
+        Game game,
+        Localizer localizer,
+        AntiCheatPolicy policy,
+        Action<GameCardViewModel> open,
+        Action<GameCardViewModel> openFolder,
+        Action<GameCardViewModel>? remove = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(localizer);
@@ -49,6 +55,7 @@ public sealed partial class GameCardViewModel : ObservableObject
         Game = game;
         OpenCommand = new RelayCommand(() => open(this));
         OpenFolderCommand = new RelayCommand(() => openFolder(this), () => IsAvailable);
+        RemoveCommand = new RelayCommand(() => remove?.Invoke(this), () => remove is not null && IsManual);
         _localizer = localizer;
         _policy = policy;
         var (top, bottom) = Placeholders[StableHash(game.Id.ToString()) % (uint)Placeholders.Length];
@@ -68,9 +75,20 @@ public sealed partial class GameCardViewModel : ObservableObject
     /// <summary>Disabled while the folder isn't available.</summary>
     public IRelayCommand OpenFolderCommand { get; }
 
+    /// <summary>Removes the game from the library; only manual games (Steam games leave when uninstalled in Steam).</summary>
+    public IRelayCommand RemoveCommand { get; }
+
     public string Name => Game.Name;
 
+    /// <summary>Cover art, cropped to 2:3; <c>null</c> when there is none or the image is an icon.</summary>
+    public Bitmap? Cover => Image is { IsIcon: false } image ? image.Bitmap : null;
+
     public bool HasCover => Cover is not null;
+
+    /// <summary>A manual game's icon, drawn small on the placeholder (the name stays visible).</summary>
+    public Bitmap? Icon => Image is { IsIcon: true } image ? image.Bitmap : null;
+
+    public bool HasIcon => Icon is not null;
 
     /// <summary>Background of the placeholder cover (no art): a gradient with the game name on it.</summary>
     public IBrush PlaceholderBrush { get; }
@@ -145,6 +163,7 @@ public sealed partial class GameCardViewModel : ObservableObject
         OnPropertyChanged(nameof(IsBlocked));
         OnPropertyChanged(nameof(IsDimmed));
         OpenFolderCommand.NotifyCanExecuteChanged();
+        RemoveCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>Re-raises the texts after a UI language switch.</summary>
@@ -164,9 +183,9 @@ public sealed partial class GameCardViewModel : ObservableObject
         ArgumentNullException.ThrowIfNull(loader);
         try
         {
-            if (await loader.LoadAsync(Game, cancellationToken) is { } bitmap)
+            if (await loader.LoadAsync(Game, cancellationToken) is { } image)
             {
-                Cover = bitmap;
+                Image = image;
             }
         }
         catch (OperationCanceledException)

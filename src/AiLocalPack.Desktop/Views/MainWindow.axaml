@@ -14,37 +14,45 @@
         <KeyBinding Gesture="Alt+Left" Command="{Binding GoBackCommand}" />
     </Window.KeyBindings>
 
-    <DockPanel>
-        <Border x:Name="Chrome" DockPanel.Dock="Top" Height="52" Padding="20,0,12,0"
-                Background="{DynamicResource AppSurfaceBrush}"
-                BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="0,0,0,1">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                    <Border Width="26" Height="26" CornerRadius="8" Background="{StaticResource AppLogoBrush}">
-                        <TextBlock Text="al" Foreground="White" FontSize="12" FontWeight="ExtraBold"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <TextBlock x:Name="Logo" Text="ailocalpack" FontSize="15" FontWeight="ExtraBold" VerticalAlignment="Center" />
-                    <Button x:Name="BackButton" Classes="back" Margin="12,0,0,0"
-                            Content="{Binding BackLabel}"
-                            Command="{Binding GoBackCommand}"
-                            IsVisible="{Binding CanGoBack}"
-                            AutomationProperties.Name="{Binding BackLabel}" />
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                    <Button x:Name="ActivityButton" Classes="icon" Command="{Binding OpenActivityCommand}"
-                            ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{l:Loc Chrome_Activity}">
-                        <Path Data="{StaticResource IconBell}" />
-                    </Button>
-                    <Button x:Name="SettingsButton" Classes="icon" Classes.on="{Binding IsSettingsOpen}" Command="{Binding OpenSettingsCommand}"
-                            ToolTip.Tip="{l:Loc Chrome_Settings}" AutomationProperties.Name="{l:Loc Chrome_Settings}">
-                        <Path Data="{StaticResource IconSettings}" />
-                    </Button>
-                </StackPanel>
-                <Panel />
-            </DockPanel>
-        </Border>
+    <Panel>
+        <DockPanel x:Name="Main" IsEnabled="{Binding !HasDialog}">
+            <Border x:Name="Chrome" DockPanel.Dock="Top" Height="52" Padding="20,0,12,0"
+                    Background="{DynamicResource AppSurfaceBrush}"
+                    BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="0,0,0,1">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <Border Width="26" Height="26" CornerRadius="8" Background="{StaticResource AppLogoBrush}">
+                            <TextBlock Text="al" Foreground="White" FontSize="12" FontWeight="ExtraBold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock x:Name="Logo" Text="ailocalpack" FontSize="15" FontWeight="ExtraBold" VerticalAlignment="Center" />
+                        <Button x:Name="BackButton" Classes="back" Margin="12,0,0,0"
+                                Content="{Binding BackLabel}"
+                                Command="{Binding GoBackCommand}"
+                                IsVisible="{Binding CanGoBack}"
+                                AutomationProperties.Name="{Binding BackLabel}" />
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <Button x:Name="ActivityButton" Classes="icon" Command="{Binding OpenActivityCommand}"
+                                ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{l:Loc Chrome_Activity}">
+                            <Path Data="{StaticResource IconBell}" />
+                        </Button>
+                        <Button x:Name="SettingsButton" Classes="icon" Classes.on="{Binding IsSettingsOpen}" Command="{Binding OpenSettingsCommand}"
+                                ToolTip.Tip="{l:Loc Chrome_Settings}" AutomationProperties.Name="{l:Loc Chrome_Settings}">
+                            <Path Data="{StaticResource IconSettings}" />
+                        </Button>
+                    </StackPanel>
+                    <Panel />
+                </DockPanel>
+            </Border>
 
-        <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}" />
-    </DockPanel>
+            <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}" />
+        </DockPanel>
+
+        <!-- Modal dialog: scrim over the whole window (chrome included), the dialog's view in the middle -->
+        <Border x:Name="DialogScrim" Classes="scrim" IsVisible="{Binding HasDialog}">
+            <ContentControl x:Name="DialogHost" Content="{Binding Dialog}" Margin="24"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+    </Panel>
 </Window>

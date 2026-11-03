@@ -1,0 +1,284 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AiLocalPack.Desktop.ViewModels.AddGame"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.AddGameDialogView"
+             x:DataType="vm:AddGameDialogViewModel"
+             Width="720" MaxHeight="720">
+    <!-- Design §2: step 1 (drop zone), analyzing (checklist), step 2 (one game's summary). -->
+    <Border Classes="dialog">
+        <DockPanel>
+            <!-- Header -->
+            <Grid DockPanel.Dock="Top" Margin="24,16,12,8" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                <TextBlock Classes="dialogTitle" Text="{l:Loc AddGame_Title}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Classes="hint" Text="{Binding StepText}" VerticalAlignment="Center" />
+                <Button x:Name="CloseButton" Grid.Column="2" Classes="icon" Command="{Binding CloseCommand}"
+                        ToolTip.Tip="{l:Loc AddGame_Close}" AutomationProperties.Name="{l:Loc AddGame_Close}">
+                    <Path Data="{StaticResource IconX}" />
+                </Button>
+            </Grid>
+
+            <!-- Footers, one per step -->
+            <Border DockPanel.Dock="Bottom" Classes="dialogFooter" IsVisible="{Binding IsPick}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBlock Classes="hint" Text="{l:Loc AddGame_DropHint}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}" Content="{l:Loc AddGame_Cancel}" />
+                </Grid>
+            </Border>
+            <Border DockPanel.Dock="Bottom" Classes="dialogFooter" IsVisible="{Binding IsAnalyzing}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBlock Classes="hint" Text="{l:Loc AddGame_Analyzing_Note}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    <Button x:Name="CancelAnalysis" Grid.Column="1" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc AddGame_Cancel}" />
+                </Grid>
+            </Border>
+            <Border DockPanel.Dock="Bottom" Classes="dialogFooter" IsVisible="{Binding IsSummary}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Button x:Name="BackButton" Classes="ghost" Command="{Binding BackCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc AddGame_Back}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="PrimaryButton" Grid.Column="2" Classes="accent" Classes.ghost="{Binding IsBlocked}"
+                            Command="{Binding PrimaryCommand}" Content="{Binding PrimaryText}" />
+                </Grid>
+            </Border>
+
+            <ScrollViewer>
+                <Panel Margin="24,8,24,20">
+                    <!-- Step 1: pick a folder -->
+                    <StackPanel x:Name="PickStep" Spacing="14" IsVisible="{Binding IsPick}">
+                        <Panel x:Name="DropZone" MinHeight="230" DragDrop.AllowDrop="True">
+                            <Rectangle x:Name="DropZoneFrame" Classes="dropzone" />
+                            <StackPanel Spacing="10" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Border Width="56" Height="56" CornerRadius="28" Background="{DynamicResource AppAccentSoftBrush}" HorizontalAlignment="Center">
+                                    <Viewbox Classes="icon" Width="26" Height="26">
+                                        <Path Classes="icon" Data="{StaticResource IconFolderPlus}" Stroke="{DynamicResource AppAccentBrush}" />
+                                    </Viewbox>
+                                </Border>
+                                <TextBlock Classes="h2" Text="{l:Loc AddGame_Drop_Title}" HorizontalAlignment="Center" />
+                                <TextBlock Classes="muted" Text="{l:Loc AddGame_Drop_Text}" MaxWidth="440" TextAlignment="Center" TextWrapping="Wrap" />
+                                <Button x:Name="ChooseFolderButton" Classes="accent" HorizontalAlignment="Center" Margin="0,6,0,0"
+                                        Command="{Binding ChooseFolderCommand}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Viewbox Classes="icon" Width="16" Height="16">
+                                            <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock Text="{l:Loc AddGame_ChooseFolder}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Panel>
+
+                        <Border x:Name="PickError" Classes="notice bad" IsVisible="{Binding HasPickError}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Viewbox Classes="icon" VerticalAlignment="Top">
+                                    <Path Classes="icon" Data="{StaticResource IconXCircle}" Stroke="{DynamicResource AppBadBrush}" />
+                                </Viewbox>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Classes="title" Text="{Binding PickError}" />
+                                    <TextBlock Classes="sub" Text="{Binding PickErrorDetail}" IsVisible="{Binding PickErrorDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Expander x:Name="Hint" Header="{l:Loc AddGame_Hint_Title}" IsExpanded="{Binding IsHintOpen}" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="{Binding HintShortcut}" TextWrapping="Wrap" />
+                                <TextBlock Text="{l:Loc AddGame_Hint_Launchers}" TextWrapping="Wrap" />
+                                <TextBlock Text="{l:Loc AddGame_Hint_Steam}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+
+                    <!-- Analyzing -->
+                    <StackPanel x:Name="AnalyzingStep" Spacing="12" IsVisible="{Binding IsAnalyzing}" Margin="0,12">
+                        <Viewbox Classes="icon spin" Width="40" Height="40" HorizontalAlignment="Center">
+                            <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                            <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppAccentBrush}" />
+                        </Viewbox>
+                        <TextBlock Classes="h2" Text="{Binding AnalyzingTitle}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+                        <TextBlock Classes="hint" Text="{Binding FolderPath}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+                        <ItemsControl x:Name="Checklist" ItemsSource="{Binding Steps}" MaxWidth="440" Margin="0,8,0,0" Focusable="False">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:AnalysisStepViewModel">
+                                    <Border Classes="notice" Margin="0,3">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                            <Panel Width="16" Height="16">
+                                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding IsDone}">
+                                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="#3fb37f" />
+                                                </Viewbox>
+                                                <Viewbox Classes="icon spin" Width="16" Height="16" IsVisible="{Binding IsRunning}">
+                                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppAccentBrush}" />
+                                                </Viewbox>
+                                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding IsWaiting}">
+                                                    <Path Classes="icon" Data="{StaticResource IconCircle}" Stroke="{DynamicResource AppFaintBrush}" />
+                                                </Viewbox>
+                                            </Panel>
+                                            <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="2" Classes="sub" Text="{Binding Detail}" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <!-- Step 2: one game -->
+                    <StackPanel x:Name="SummaryStep" Spacing="14" IsVisible="{Binding IsSummary}">
+                        <Border x:Name="SubfolderNotice" Classes="notice info" IsVisible="{Binding HasSubfolderNotice}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Viewbox Classes="icon"><Path Classes="icon" Data="{StaticResource IconScan}" Stroke="{DynamicResource AppAccentBrush}" /></Viewbox>
+                                <TextBlock Grid.Column="1" Text="{Binding SubfolderNotice}" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="18">
+                            <!-- Cover (2:3) with a button to change it -->
+                            <Panel Width="120" Height="180" VerticalAlignment="Top">
+                                <Border CornerRadius="12" ClipToBounds="True" Background="{StaticResource AppLogoBrush}" Opacity="0.85" />
+                                <Border CornerRadius="12" ClipToBounds="True">
+                                    <Panel>
+                                        <Image Source="{Binding CoverArt}" Stretch="UniformToFill" IsVisible="{Binding HasCoverArt}" />
+                                        <Image Source="{Binding CoverIcon}" Stretch="Uniform" Width="64" Height="64" IsVisible="{Binding HasCoverIcon}" />
+                                        <Viewbox Classes="icon" Width="32" Height="32" IsVisible="{Binding !HasCoverIcon}">
+                                            <Path Classes="icon" Data="{StaticResource IconImage}" Stroke="#b3ffffff" IsVisible="{Binding !HasCoverArt}" />
+                                        </Viewbox>
+                                    </Panel>
+                                </Border>
+                                <Button x:Name="CoverButton" Classes="icon" Width="32" Height="32" Margin="6" Background="#b3101318"
+                                        HorizontalAlignment="Right" VerticalAlignment="Bottom" IsVisible="{Binding CanEdit}"
+                                        Command="{Binding ChooseCoverCommand}"
+                                        ToolTip.Tip="{l:Loc AddGame_ChangeCover}" AutomationProperties.Name="{l:Loc AddGame_ChangeCover}">
+                                    <Path Data="{StaticResource IconImage}" Width="14" Height="14" Stroke="White" />
+                                </Button>
+                            </Panel>
+
+                            <StackPanel Grid.Column="1" Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                    <TextBlock x:Name="GameName" Classes="h1" Text="{Binding Name}" TextWrapping="Wrap" IsVisible="{Binding !IsRenaming}" />
+                                    <TextBox x:Name="NameBox" Text="{Binding Name}" IsVisible="{Binding IsRenaming}" FontSize="18"
+                                             AutomationProperties.Name="{l:Loc AddGame_Details_Name}" />
+                                    <Button x:Name="RenameButton" Grid.Column="1" Classes="icon" Width="34" Height="34" VerticalAlignment="Top"
+                                            Command="{Binding RenameCommand}" IsVisible="{Binding CanEdit}"
+                                            ToolTip.Tip="{l:Loc AddGame_Rename}" AutomationProperties.Name="{l:Loc AddGame_Rename}">
+                                        <Path Data="{StaticResource IconPencil}" Width="14" Height="14" />
+                                    </Button>
+                                </Grid>
+                                <WrapPanel ItemSpacing="6" LineSpacing="6">
+                                    <Border Classes="fact" Classes.warn="{Binding IsEngineUnknown}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Viewbox Classes="icon" Width="13" Height="13">
+                                                <Path Classes="icon" Data="{StaticResource IconCpu}" Stroke="{DynamicResource AppMutedBrush}" />
+                                            </Viewbox>
+                                            <TextBlock x:Name="EngineFact" Text="{Binding EngineText}" FontWeight="Bold" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Classes="fact">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Viewbox Classes="icon" Width="13" Height="13">
+                                                <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{DynamicResource AppMutedBrush}" />
+                                            </Viewbox>
+                                            <TextBlock Text="{Binding ExecutableText}" FontWeight="Bold" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Classes="fact">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Viewbox Classes="icon" Width="13" Height="13">
+                                                <Path Classes="icon" Data="{StaticResource IconHardDrive}" Stroke="{DynamicResource AppMutedBrush}" />
+                                            </Viewbox>
+                                            <TextBlock Text="{Binding SizeText}" />
+                                        </StackPanel>
+                                    </Border>
+                                </WrapPanel>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppMutedBrush}" />
+                                    </Viewbox>
+                                    <SelectableTextBlock Grid.Column="1" Classes="muted" Text="{Binding GamePath}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                    <Button x:Name="OtherFolderButton" Grid.Column="2" Classes="link" Command="{Binding ChooseFolderCommand}" Content="{l:Loc AddGame_OtherFolder}" />
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Answer block and notices -->
+                        <Border x:Name="DuplicateNotice" Classes="notice info" IsVisible="{Binding IsDuplicate}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Viewbox Classes="icon"><Path Classes="icon" Data="{StaticResource IconCheckCircle}" Stroke="{DynamicResource AppAccentBrush}" /></Viewbox>
+                                <TextBlock Grid.Column="1" Classes="title" Text="{Binding DuplicateText}" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                        <Border x:Name="AntiCheatNotice" Classes="notice bad" IsVisible="{Binding IsBlocked}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Viewbox Classes="icon" VerticalAlignment="Top"><Path Classes="icon" Data="{StaticResource IconShield}" Stroke="{DynamicResource AppBadBrush}" /></Viewbox>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Classes="title" Text="{Binding AntiCheatTitle}" />
+                                    <TextBlock Classes="sub" Text="{l:Loc AddGame_AntiCheat_Text}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border x:Name="EngineWarning" Classes="notice warn" IsVisible="{Binding ShowEngineWarning}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Viewbox Classes="icon" VerticalAlignment="Top"><Path Classes="icon" Data="{StaticResource IconCpu}" Stroke="{DynamicResource AppWarnBrush}" /></Viewbox>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Classes="title" Text="{l:Loc AddGame_EngineWarning_Title}" />
+                                    <TextBlock Classes="sub" Text="{l:Loc AddGame_EngineWarning_Text}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border x:Name="RegistryNote" Classes="notice neutral" IsVisible="{Binding ShowRegistryNote}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Viewbox Classes="icon" VerticalAlignment="Top"><Path Classes="icon" Data="{StaticResource IconCloud}" Stroke="{DynamicResource AppMutedBrush}" /></Viewbox>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Classes="title" Text="{l:Loc AddGame_Registry_Title}" />
+                                    <TextBlock Classes="sub" Text="{l:Loc AddGame_Registry_Text}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <TextBlock Foreground="{DynamicResource AppBadBrush}" Text="{Binding SummaryError}" TextWrapping="Wrap"
+                                   IsVisible="{Binding SummaryError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+                        <!-- Edit game details -->
+                        <Expander x:Name="Details" Header="{l:Loc AddGame_Details}" IsExpanded="{Binding IsDetailsOpen}"
+                                  IsVisible="{Binding CanEdit}" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="hint" Text="{l:Loc AddGame_Details_Name}" />
+                                    <TextBox x:Name="DetailsName" Text="{Binding Name}" AutomationProperties.Name="{l:Loc AddGame_Details_Name}" />
+                                </StackPanel>
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Classes="hint" Text="{l:Loc AddGame_Details_Engine}" />
+                                            <TextBlock Classes="hint" Foreground="#3fb37f" Text="{l:Loc AddGame_Details_Detected}" IsVisible="{Binding IsEngineDetected}" />
+                                            <TextBlock Classes="hint" Foreground="{DynamicResource AppWarnBrush}" Text="{l:Loc AddGame_Details_NotDetected}" IsVisible="{Binding !IsEngineDetected}" />
+                                        </StackPanel>
+                                        <ComboBox x:Name="EngineBox" HorizontalAlignment="Stretch" ItemsSource="{Binding EngineOptions}" SelectedItem="{Binding SelectedEngine}"
+                                                  AutomationProperties.Name="{l:Loc AddGame_Details_Engine}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Spacing="4">
+                                        <TextBlock Classes="hint" Text="{l:Loc AddGame_Details_Executable}" />
+                                        <ComboBox x:Name="ExecutableBox" HorizontalAlignment="Stretch" ItemsSource="{Binding ExecutableOptions}" SelectedItem="{Binding SelectedExecutable}" AutomationProperties.Name="{l:Loc AddGame_Details_Executable}" />
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="hint" Text="{l:Loc AddGame_Details_Cover}" />
+                                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                                        <Button Classes="ghost" Command="{Binding ChooseCoverCommand}" Content="{l:Loc AddGame_Details_ChooseImage}" />
+                                        <Button Classes="ghost" Command="{Binding UseIconCommand}" Content="{l:Loc AddGame_Details_UseIcon}" />
+                                    </WrapPanel>
+                                    <TextBlock Foreground="{DynamicResource AppBadBrush}" FontSize="12" Text="{Binding CoverError}" TextWrapping="Wrap"
+                                               IsVisible="{Binding CoverError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </Panel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

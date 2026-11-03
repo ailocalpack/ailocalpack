@@ -184,6 +184,55 @@ public sealed class FolderRecognizer(EngineDetector? engines = null, ILogger<Fol
         return found;
     }
 
+    /// <summary>
+    /// Executables of a game folder a player can choose as the main one (Edit game details): <paramref name="mainExecutable"/>
+    /// first, then the folder's executables in the recognizer's order (Windows, Linux, scripts, bundles; a bundle's
+    /// <c>Contents/MacOS</c> binaries), then those of binaries subfolders (<c>bin/x64</c>…). Relative, '/'-separated.
+    /// Never throws for disk state.
+    /// </summary>
+    public static IReadOnlyList<string> ListExecutables(string gameFolder, string? mainExecutable)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
+        var folder = FolderView.Root(Path.GetFullPath(gameFolder));
+        var list = new List<string>();
+        if (mainExecutable is not null)
+        {
+            list.Add(mainExecutable);
+        }
+
+        if (IsBundleLike(folder))
+        {
+            if (folder.At("Contents/MacOS") is { } macOs)
+            {
+                list.AddRange(macOs.FileNames.Select(macOs.RelativeOf));
+            }
+        }
+        else
+        {
+            var scripts = folder.FileNames
+                .Where(n => n.EndsWith(".sh", StringComparison.OrdinalIgnoreCase) && !Executables.IsInstaller(n) && !Executables.IsHelper(n))
+                .Select(folder.RelativeOf);
+            var bundles = folder.DirNames.Where(EngineDetector.IsBundle).Select(folder.RelativeOf);
+            list.AddRange(Executables.In(folder).Concat(scripts).Concat(bundles));
+            AddBinaryFolders(folder, list, 2);
+        }
+
+        return [.. list.Distinct(StringComparer.Ordinal)];
+
+        static void AddBinaryFolders(FolderView folder, List<string> list, int levels)
+        {
+            foreach (var name in folder.DirNames.Where(n => BinaryFolders.Contains(n, StringComparer.OrdinalIgnoreCase)))
+            {
+                var bin = folder.Dir(name)!;
+                list.AddRange(Executables.In(bin));
+                if (levels > 1)
+                {
+                    AddBinaryFolders(bin, list, levels - 1);
+                }
+            }
+        }
+    }
+
     private static bool IsGame(FolderView folder) =>
         IsBundleLike(folder)
         || FirstExecutable(folder) is not null

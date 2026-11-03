@@ -4,7 +4,9 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Desktop.AddGame;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
@@ -14,6 +16,7 @@ using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Folders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -40,6 +43,8 @@ internal static class Composition
         services.AddSingleton<SettingsApplier>();
         services.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>();
         services.AddSingleton<ISystemShell, SystemShell>();
+        services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IFilePicker, AvaloniaFilePicker>();
         AddGames(services);
         services.AddSingleton<MainWindowViewModel>();
         AddSettingsSections(services);
@@ -69,7 +74,15 @@ internal static class Composition
             sp.GetRequiredService<AppPaths>(),
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<CoverResolver>>()));
+        services.AddSingleton<ManualCoverStore>();
         services.AddSingleton<ICoverLoader, CoverLoader>();
+
+        // Adding a game folder (design §2)
+        services.AddSingleton(sp => FileHashCache.Load(sp.GetRequiredService<AppPaths>().FileHashes, sp.GetService<ILogger<FileHashCache>>()));
+        services.AddSingleton(sp => new FolderRecognizer(sp.GetRequiredService<EngineDetector>(), sp.GetService<ILogger<FolderRecognizer>>()));
+        services.AddSingleton(sp => new GameFingerprinter(sp.GetRequiredService<FileHashCache>(), sp.GetService<ILogger<GameFingerprinter>>()));
+        services.AddSingleton(sp => new GameIconExtractor(sp.GetService<ILogger<GameIconExtractor>>()));
+        services.AddSingleton<GameFolderAnalyzer>();
     }
 
     /// <summary>Settings sections, in the order of the section list. A section without rows yet shows "coming in a later version".</summary>
