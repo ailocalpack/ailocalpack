@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "patched",
+  "game": "steam:620",
+  "language": "ru",
+  "title": "Полный перевод",
+  "authors": [
+    {
+      "github": "alice",
+      "name": "Alice"
+    },
+    {
+      "github": "bob-2"
+    }
+  ],
+  "revision": 2,
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-10-01T12:00:00Z",
+      "by": "alice",
+      "notes": "First release"
+    },
+    {
+      "revision": 2,
+      "date": "2026-11-01T09:30:00+03:00",
+      "by": "bob-2",
+      "notes": "Strings of the November update"
+    }
+  ],
+  "status": "alpha",
+  "agent": {
+    "id": "claude-code",
+    "version": "2.1.3",
+    "model": "claude-opus-5-5"
+  },
+  "builds": [
+    {
+      "buildId": "1234567",
+      "files": {
+        "www/data/Map001.json": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "www/data/System.json": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  ],
+  "strings": {
+    "path": "strings/strings.json.gz",
+    "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "size": 48213
+  },
+  "dependencies": [
+    {
+      "id": "bepinex",
+      "version": "5.4.23"
+    }
+  ],
+  "fonts": [
+    "noto-sans"
+  ],
+  "coverage": {
+    "translated": 1500,
+    "total": 1520
+  },
+  "license": "CC-BY-SA-4.0",
+  "created": "2026-10-01T12:00:00Z",
+  "updated": "2026-11-01T06:30:00Z",
+  "patch": {
+    "format": "vcdiff",
+    "url": "https://github.com/ailocalpack/registry/releases/download/packs/steam-620-ru-patched-2.vcdiff",
+    "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "size": 2048,
+    "files": {
+      "www/data/Map001.json": "3333333333333333333333333333333333333333333333333333333333333333",
+      "www/data/System.json": "4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  }
+}

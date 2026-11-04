@@ -3,4 +3,14 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\AiLocalPack.Core\AiLocalPack.Core.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <!-- Checks that the C# models and the JSON Schemas agree -->
+        <PackageReference Include="JsonSchema.Net" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\schemas\*.json" LinkBase="schemas" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="..\fixtures\packs\**\*" LinkBase="fixtures\packs" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 </Project>

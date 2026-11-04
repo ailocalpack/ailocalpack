@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/string-table.schema.json",
+  "title": "ailocalpack string table",
+  "description": "The translations of a pack: key (from the recipe's extractor) → translated text. Stored gzip-compressed (strings/strings.json.gz). Holds no original text. Unknown properties are allowed.",
+  "type": "object",
+  "required": ["schemaVersion", "language", "strings"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "language": {
+      "enum": ["ar", "bg", "cs", "da", "de", "el", "en", "es-ES", "es-419", "fi", "fr", "hu", "id", "it", "ja", "ko", "nb", "nl", "pl", "pt-BR", "pt-PT", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant"]
+    },
+    "strings": {
+      "description": "Key → translation. Keys are not empty.",
+      "type": "object",
+      "propertyNames": { "minLength": 1 },
+      "additionalProperties": { "type": "string" }
+    },
+    "context": {
+      "description": "Optional translator notes: key (present in strings) → note.",
+      "type": "object",
+      "propertyNames": { "minLength": 1 },
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

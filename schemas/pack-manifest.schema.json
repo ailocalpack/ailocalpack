@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/pack-manifest.schema.json",
+  "title": "ailocalpack pack manifest",
+  "description": "manifest.json of one pack: one localization of one game into one language. Stored at games/<game>/<language>/<id>/manifest.json in the registry. Unknown properties are allowed (forward compatibility); a breaking change raises schemaVersion.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "game", "language", "title", "authors", "revision", "revisions", "status", "builds", "coverage", "license", "created", "updated"],
+  "oneOf": [
+    { "required": ["recipe", "strings"], "not": { "required": ["patch"] } },
+    { "required": ["patch"], "not": { "required": ["recipe"] } }
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": {
+      "description": "Pack ID, unique for the game + language; also the folder name.",
+      "$ref": "#/$defs/slug"
+    },
+    "game": {
+      "description": "Game identity: steam:<app id> or fp:<SHA-256 fingerprint>.",
+      "type": "string",
+      "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})$"
+    },
+    "language": {
+      "description": "Target language, a BCP 47 tag from the languages Steam supports.",
+      "enum": ["ar", "bg", "cs", "da", "de", "el", "en", "es-ES", "es-419", "fi", "fr", "hu", "id", "it", "ja", "ko", "nb", "nl", "pl", "pt-BR", "pt-PT", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant"]
+    },
+    "title": { "$ref": "#/$defs/text", "maxLength": 80 },
+    "authors": {
+      "description": "Credited people. The first one is the original author; later ones made revisions.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["github"],
+        "properties": {
+          "github": { "$ref": "#/$defs/githubLogin" },
+          "name": { "$ref": "#/$defs/text", "maxLength": 80 }
+        }
+      }
+    },
+    "revision": { "description": "Current revision, equal to the last entry of revisions.", "type": "integer", "minimum": 1 },
+    "revisions": {
+      "description": "Revision history, oldest first, numbered 1, 2, 3…",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["revision", "date", "by"],
+        "properties": {
+          "revision": { "type": "integer", "minimum": 1 },
+          "date": { "type": "string", "format": "date-time" },
+          "by": { "description": "GitHub login of the revision author, listed in authors.", "$ref": "#/$defs/githubLogin" },
+          "notes": { "type": "string", "maxLength": 2000 }
+        }
+      }
+    },
+    "status": { "enum": ["alpha", "verified"] },
+    "agent": {
+      "description": "The AI agent that generated the pack; absent for a pack made by hand.",
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "version": { "$ref": "#/$defs/text", "maxLength": 64 },
+        "model": { "$ref": "#/$defs/text", "maxLength": 128 }
+      }
+    },
+    "builds": {
+      "description": "Game builds the pack was made for or tested on. Each lists the files the pack touches with their original SHA-256 in that build; Steam games also give the build ID.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["files"],
+        "properties": {
+          "buildId": { "type": "string", "pattern": "^[0-9]{1,20}$" },
+          "files": { "$ref": "#/$defs/fileHashes" }
+        }
+      }
+    },
+    "recipe": {
+      "description": "Toolkit tool that rebuilds game files from the string table on the player's machine.",
+      "type": "object",
+      "required": ["tool", "version"],
+      "properties": {
+        "tool": { "$ref": "#/$defs/slug" },
+        "version": { "$ref": "#/$defs/semver" },
+        "parameters": { "type": "object" }
+      }
+    },
+    "strings": {
+      "description": "The string table file, relative to the pack folder.",
+      "type": "object",
+      "required": ["path", "sha256", "size"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^strings/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$", "not": { "pattern": "(^|/)\\.\\.?(/|$)" } },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "patch": {
+      "description": "Binary patch fallback for engines the toolkit cannot rebuild: one build only, applied over its files.",
+      "type": "object",
+      "required": ["format", "url", "sha256", "size", "files"],
+      "properties": {
+        "format": { "enum": ["vcdiff"] },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size": { "type": "integer", "minimum": 1 },
+        "files": { "description": "SHA-256 of each touched file after patching.", "$ref": "#/$defs/fileHashes" }
+      }
+    },
+    "dependencies": {
+      "description": "Executable components from the registry whitelist (mod loaders), downloaded from their official release.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "version"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "version": { "$ref": "#/$defs/text", "maxLength": 64 }
+        }
+      }
+    },
+    "fonts": {
+      "description": "Open fonts from the app's whitelist swapped in at install (referenced, never shipped).",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/slug" }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["translated", "total"],
+      "properties": {
+        "translated": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "license": { "const": "CC-BY-SA-4.0" },
+    "created": { "type": "string", "format": "date-time" },
+    "updated": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64 },
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "semver": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "githubLogin": { "type": "string", "maxLength": 39, "pattern": "^[A-Za-z0-9](-?[A-Za-z0-9]){0,38}$" },
+    "fileHashes": {
+      "description": "Relative path ('/' separators, no '.' or '..' parts) → SHA-256 lowercase hex.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[^/\\\\]+(/[^/\\\\]+)*$", "not": { "pattern": "(^|/)\\.\\.?(/|$)" } },
+      "additionalProperties": { "$ref": "#/$defs/sha256" }
+    }
+  }
+}

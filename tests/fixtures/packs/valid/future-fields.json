@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "future",
+  "game": "fp:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "language": "pt-BR",
+  "title": "Tradução",
+  "authors": [
+    {
+      "github": "carol",
+      "avatar": "x"
+    }
+  ],
+  "revision": 1,
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-09-01T00:00:00Z",
+      "by": "carol"
+    }
+  ],
+  "status": "verified",
+  "builds": [
+    {
+      "files": {
+        "game/script.rpyc": "1111111111111111111111111111111111111111111111111111111111111111"
+      }
+    }
+  ],
+  "recipe": {
+    "tool": "renpy",
+    "version": "0.3.12",
+    "minAppVersion": "2.0.0"
+  },
+  "strings": {
+    "path": "strings/strings.json.gz",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "size": 10
+  },
+  "coverage": {
+    "translated": 0,
+    "total": 1
+  },
+  "license": "CC-BY-SA-4.0",
+  "created": "2026-09-01T00:00:00Z",
+  "updated": "2026-09-01T00:00:00Z",
+  "discussion": {
+    "number": 12
+  }
+}
