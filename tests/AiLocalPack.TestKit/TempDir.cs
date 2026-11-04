@@ -74,6 +74,22 @@ public sealed class TempDir : IDisposable
         return this;
     }
 
+    /// <summary>Copies the folder <paramref name="source"/> (absolute) with everything inside to <paramref name="relativePath"/>.</summary>
+    public TempDir CopyFolder(string source, string relativePath)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        var target = Combine(relativePath);
+        foreach (var file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
+        {
+            var to = System.IO.Path.Combine(target, System.IO.Path.GetRelativePath(source, file));
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(to)!);
+            System.IO.File.Copy(file, to);
+        }
+
+        Directory.CreateDirectory(target);
+        return this;
+    }
+
     public void Dispose()
     {
         if (_disposed)

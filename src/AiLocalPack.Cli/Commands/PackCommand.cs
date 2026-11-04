@@ -13,6 +13,7 @@ namespace AiLocalPack.Cli.Commands;
 /// <summary>
 /// <c>pack check &lt;manifest&gt; --game &lt;id&gt; [--json]</c>: whether a pack fits the player's copy of a game.
 /// Exit code 0 = compatible or probably compatible, 2 = incompatible, 1 = the check couldn't run.
+/// <c>pack validate &lt;folder&gt;… [--github]</c>: the checks registry CI runs on a pack; exit code 1 = a pack is invalid.
 /// </summary>
 internal static class PackCommand
 {
@@ -77,7 +78,57 @@ internal static class PackCommand
             return Task.FromResult(compatibility.CanInstall ? 0 : IncompatibleExitCode);
         });
 
-        return new Command("pack", "Packs: one localization of one game into one language.") { check };
+        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate() };
+    }
+
+    private static Command BuildValidate()
+    {
+        var folders = new Argument<string[]>("folder")
+        {
+            Description = "Pack folders (games/<game>/<language>/<pack id>/ in a registry checkout).",
+            Arity = ArgumentArity.OneOrMore,
+        };
+        var github = new Option<bool>("--github") { Description = "Also print problems as GitHub Actions annotations (::error file=...)." };
+        var validate = new Command(
+            "validate",
+            "Check pack folders as registry CI does: manifest, string table, size and hash, folder layout, no executable files, size limits. Exit code 1 = a pack is invalid.")
+        {
+            folders, github,
+        };
+        validate.SetAction((result, cancellationToken) =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            var annotate = result.GetValue(github);
+            var allValid = true;
+            foreach (var folder in result.GetValue(folders)!)
+            {
+                var validation = PackValidator.Validate(folder, cancellationToken);
+                allValid &= validation.IsValid;
+                var name = folder.Replace('\\', '/').TrimEnd('/');
+                if (validation.IsValid)
+                {
+                    var pack = validation.Manifest!;
+                    output.WriteLine($"{name}: valid ({pack.Game}/{pack.Language}/{pack.Id} rev {pack.Revision}, "
+                        + $"{pack.Coverage.Translated} of {pack.Coverage.Total} strings translated)");
+                    continue;
+                }
+
+                output.WriteLine($"{name}: invalid, {Count(validation.Problems.Count, "problem")}");
+                foreach (var problem in validation.Problems)
+                {
+                    output.WriteLine(annotate
+                        ? GitHubAnnotations.Format(
+                            "error",
+                            Path.Combine(validation.Folder, problem.File.Length > 0 ? problem.File : "manifest.json"),
+                            problem.Field,
+                            problem.File.Length > 0 ? problem.Message : $"{problem.Message} ({name})")
+                        : $"  {problem}");
+                }
+            }
+
+            return Task.FromResult(allValid ? 0 : 1);
+        });
+        return validate;
     }
 
     private static PackManifest? ReadManifest(string path, TextWriter error)

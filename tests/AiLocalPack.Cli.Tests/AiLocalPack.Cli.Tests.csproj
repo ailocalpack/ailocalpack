@@ -6,5 +6,6 @@
 
     <ItemGroup>
         <None Include="..\fixtures\registry\**\*" LinkBase="fixtures\registry" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="..\fixtures\registry-ratings.json" Link="fixtures\registry-ratings.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

@@ -14,7 +14,11 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
 
-/// <summary><c>index show [--game &lt;id&gt;] [--lang &lt;tag&gt;] [--json]</c>: the registry index, fetched or from the saved copy.</summary>
+/// <summary>
+/// <c>index show [--game &lt;id&gt;] [--lang &lt;tag&gt;] [--json]</c>: the registry index, fetched or from the saved copy.
+/// <c>index build &lt;registry root&gt; --out &lt;file&gt; [--ratings &lt;file&gt;] [--generated &lt;time&gt;] [--github]</c>:
+/// <c>index.json</c> from a registry checkout, as the registry's Pages workflow runs it.
+/// </summary>
 internal static class IndexCommand
 {
     // Titles in any script stay readable.
@@ -95,8 +99,105 @@ internal static class IndexCommand
             return 0;
         });
 
-        return new Command("index", "The registry index of packs.") { show };
+        return new Command("index", "The registry index of packs.") { show, BuildBuild() };
     }
+
+    private static Command BuildBuild()
+    {
+        var root = new Argument<string>("registry-root") { Description = "The registry checkout (holds games/ and policy/)." };
+        var outFile = new Option<string>("--out") { Description = "Where to write index.json.", Required = true };
+        var ratingsFile = new Option<string?>("--ratings") { Description = "ratings.json with likes, works / doesn't work counts and discussion links per pack." };
+        var generatedOption = new Option<string?>("--generated")
+        {
+            Description = "Build time to record (RFC 3339, e.g. 2026-11-04T12:00:00Z); default now. For reproducible output.",
+        };
+        var github = new Option<bool>("--github") { Description = "Print warnings as GitHub Actions annotations (::warning file=...)." };
+        var build = new Command(
+            "build",
+            "Build index.json from a registry checkout: every valid pack under games/, opt-out and anti-cheat flags from policy/, ratings. Invalid packs are left out with a warning.")
+        {
+            root, outFile, ratingsFile, generatedOption, github,
+        };
+        build.SetAction((result, cancellationToken) =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            var error = result.InvocationConfiguration.Error;
+            var rootPath = Path.GetFullPath(result.GetValue(root)!);
+            var annotate = result.GetValue(github);
+
+            var generated = DateTimeOffset.UtcNow;
+            if (result.GetValue(generatedOption) is { } generatedText
+                && !DateTimeOffset.TryParse(generatedText, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out generated))
+            {
+                error.WriteLine($"'{generatedText}' is not a date and time (e.g. 2026-11-04T12:00:00Z).");
+                return Task.FromResult(1);
+            }
+
+            IReadOnlyDictionary<RegistryPackKey, RegistryPackRating>? ratings = null;
+            if (result.GetValue(ratingsFile) is { } ratingsPath)
+            {
+                string text;
+                try
+                {
+                    text = File.ReadAllText(ratingsPath);
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+                {
+                    error.WriteLine($"Can't read the ratings {ratingsPath}: {e.Message}");
+                    return Task.FromResult(1);
+                }
+
+                (ratings, var ratingErrors) = RegistryRatings.Read(text);
+                if (ratings is null)
+                {
+                    error.WriteLine($"{ratingsPath} is not a valid ratings file:");
+                    foreach (var problem in ratingErrors)
+                    {
+                        error.WriteLine($"  {problem}");
+                    }
+
+                    return Task.FromResult(1);
+                }
+            }
+
+            var built = RegistryIndexBuilder.Build(rootPath, generated, ratings, cancellationToken);
+            if (built.Index is not { } index)
+            {
+                error.WriteLine($"Can't build the index of {rootPath}:");
+                foreach (var problem in built.Problems)
+                {
+                    error.WriteLine(annotate ? Annotation("error", rootPath, problem) : $"  {problem}");
+                }
+
+                return Task.FromResult(1);
+            }
+
+            foreach (var problem in built.Problems)
+            {
+                error.WriteLine(annotate ? Annotation("warning", rootPath, problem) : $"warning: {problem}");
+            }
+
+            var outPath = result.GetValue(outFile)!;
+            var json = RegistryIndexSerializer.Write(index).ReplaceLineEndings("\n") + "\n";
+            try
+            {
+                AtomicFile.WriteAllBytes(outPath, System.Text.Encoding.UTF8.GetBytes(json));
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                error.WriteLine($"Can't write {outPath}: {e.Message}");
+                return Task.FromResult(1);
+            }
+
+            output.WriteLine($"Wrote {outPath}: {index.Games.Count} games, {index.PackCount} packs"
+                + (built.Problems.Count > 0 ? $", {built.Problems.Count} warning{(built.Problems.Count == 1 ? "" : "s")}." : "."));
+            return Task.FromResult(0);
+        });
+        return build;
+    }
+
+    private static string Annotation(string level, string root, RegistryBuildProblem problem) =>
+        GitHubAnnotations.Format(level, problem.File.Length > 0 ? Path.Combine(root, problem.File) : null, problem.Field, problem.Message);
 
     /// <summary>Same settings as the app's client: decompression, a user agent, no overall timeout (the index client times each try).</summary>
     private static HttpClient CreateHttpClient()

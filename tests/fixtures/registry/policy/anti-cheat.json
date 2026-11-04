@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "antiCheats": [],
+  "games": [],
+  "allowed": [
+    {
+      "game": "steam:570",
+      "note": "Sample entry: the game has an anti-cheat but officially allows mods."
+    }
+  ]
+}

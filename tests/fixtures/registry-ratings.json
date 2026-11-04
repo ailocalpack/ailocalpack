@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "packs": {
+    "steam:620/de/komplett": {
+      "likes": 2,
+      "works": 0,
+      "doesNotWork": 0
+    },
+    "steam:620/ru/full": {
+      "likes": 12,
+      "works": 5,
+      "doesNotWork": 1,
+      "discussion": "https://github.com/ailocalpack/registry/discussions/1"
+    }
+  }
+}

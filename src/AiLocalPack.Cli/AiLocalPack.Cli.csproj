@@ -6,6 +6,13 @@
         <Description>Command-line entry point: pack validation for registry CI, game discovery for manual checks.</Description>
     </PropertyGroup>
 
+    <!-- Released as one self-contained file per OS (dotnet publish -r linux-x64 -c Release): registry CI downloads and runs it, no .NET needed. -->
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+        <SelfContained>true</SelfContained>
+        <PublishSingleFile>true</PublishSingleFile>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="System.CommandLine" />
     </ItemGroup>

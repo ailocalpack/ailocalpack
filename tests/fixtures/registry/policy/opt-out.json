@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "games": [
+    {
+      "game": "steam:400",
+      "note": "Sample entry: the publisher asked not to distribute fan translations."
+    }
+  ]
+}
