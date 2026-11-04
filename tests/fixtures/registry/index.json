@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "generated": "2026-11-04T12:00:00Z",
+  "games": {
+    "fp:3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f": {
+      "packs": {
+        "ru": [
+          {
+            "id": "full",
+            "title": "Полный перевод",
+            "author": {
+              "github": "alice"
+            },
+            "status": "alpha",
+            "revision": 1,
+            "updated": "2026-08-01T00:00:00Z",
+            "coverage": {
+              "translated": 40,
+              "total": 50
+            },
+            "buildIds": [],
+            "buildCount": 1,
+            "manifest": "games/fp-3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f/ru/full/manifest.json",
+            "size": 100
+          }
+        ]
+      }
+    },
+    "steam:400": {
+      "optOut": true
+    },
+    "steam:570": {
+      "antiCheatAllowed": true
+    },
+    "steam:620": {
+      "packs": {
+        "de": [
+          {
+            "id": "komplett",
+            "title": "Komplette Übersetzung",
+            "author": {
+              "github": "dieter"
+            },
+            "status": "alpha",
+            "revision": 1,
+            "updated": "2026-09-15T10:00:00Z",
+            "coverage": {
+              "translated": 1520,
+              "total": 1520
+            },
+            "buildIds": [
+              "1234567"
+            ],
+            "buildCount": 1,
+            "manifest": "games/steam-620/de/komplett/manifest.json",
+            "size": 95,
+            "rating": {
+              "likes": 2,
+              "works": 0,
+              "doesNotWork": 0
+            }
+          }
+        ],
+        "ru": [
+          {
+            "id": "full",
+            "title": "Полный перевод",
+            "author": {
+              "github": "alice",
+              "name": "Alice"
+            },
+            "status": "verified",
+            "revision": 2,
+            "updated": "2026-11-01T06:30:00Z",
+            "coverage": {
+              "translated": 1500,
+              "total": 1520
+            },
+            "buildIds": [
+              "1234567",
+              "1250000"
+            ],
+            "buildCount": 2,
+            "manifest": "games/steam-620/ru/full/manifest.json",
+            "size": 142,
+            "rating": {
+              "likes": 12,
+              "works": 5,
+              "doesNotWork": 1
+            },
+            "discussion": "https://github.com/ailocalpack/registry/discussions/1"
+          },
+          {
+            "id": "menus",
+            "title": "Только меню",
+            "author": {
+              "github": "carol"
+            },
+            "status": "alpha",
+            "revision": 1,
+            "updated": "2026-10-20T08:00:00Z",
+            "coverage": {
+              "translated": 300,
+              "total": 1520
+            },
+            "buildIds": [
+              "1250000"
+            ],
+            "buildCount": 1,
+            "manifest": "games/steam-620/ru/menus/manifest.json",
+            "size": 117
+          }
+        ]
+      }
+    }
+  }
+}

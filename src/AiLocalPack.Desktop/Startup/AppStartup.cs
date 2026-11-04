@@ -1,8 +1,10 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
+using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
+using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using Microsoft.Extensions.Logging;
@@ -12,7 +14,7 @@ namespace AiLocalPack.Desktop.Startup;
 /// <summary>
 /// Runs what the app does on start (design §9) and reports it as <see cref="Progress"/>. Blocking steps (settings,
 /// the saved game catalog) run off the UI thread before the library is shown, so the splash stays live; background
-/// checks (Steam scan, engine and anti-cheat detection) run while the library is in use. Never throws: a failed step
+/// checks (Steam scan, engine and anti-cheat detection, the registry's pack list) run while the library is in use. Never throws: a failed step
 /// is logged and shown as a warning, and the app goes on with what it has.
 /// </summary>
 public sealed class AppStartup
@@ -21,6 +23,7 @@ public sealed class AppStartup
     public const string CatalogStep = "catalog";
     public const string SteamStep = "steam";
     public const string DetectionStep = "detect";
+    public const string IndexStep = "index";
 
     /// <summary>New games named in the Steam step's result; more are counted ("+3").</summary>
     private const int NamedNewGames = 3;
@@ -29,6 +32,7 @@ public sealed class AppStartup
     private readonly SettingsApplier _applier;
     private readonly GameCatalog _catalog;
     private readonly GameLibrary _library;
+    private readonly PackIndex _index;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
@@ -36,6 +40,7 @@ public sealed class AppStartup
     private readonly StartupStep _catalogStep;
     private readonly StartupStep _steamStep;
     private readonly StartupStep _detectionStep;
+    private readonly StartupStep _indexStep;
     private bool _backgroundStarted;
 
     public AppStartup(
@@ -43,6 +48,7 @@ public sealed class AppStartup
         SettingsApplier applier,
         GameCatalog catalog,
         GameLibrary library,
+        PackIndex index,
         Localizer localizer,
         IUiDispatcher ui,
         TimeProvider time,
@@ -52,6 +58,7 @@ public sealed class AppStartup
         _applier = applier;
         _catalog = catalog;
         _library = library;
+        _index = index;
         _localizer = localizer;
         _ui = ui;
         _logger = logger;
@@ -59,7 +66,8 @@ public sealed class AppStartup
         _catalogStep = new(CatalogStep, StartupPhase.Blocking, nameof(Strings.Startup_Step_Catalog), localizer, time);
         _steamStep = new(SteamStep, StartupPhase.Background, nameof(Strings.Startup_Step_Steam), localizer, time);
         _detectionStep = new(DetectionStep, StartupPhase.Background, nameof(Strings.Startup_Step_Detection), localizer, time);
-        Progress = new StartupProgress([_settingsStep, _catalogStep, _steamStep, _detectionStep], localizer);
+        _indexStep = new(IndexStep, StartupPhase.Background, nameof(Strings.Startup_Step_Index), localizer, time);
+        Progress = new StartupProgress([_settingsStep, _catalogStep, _steamStep, _detectionStep, _indexStep], localizer);
     }
 
     public StartupProgress Progress { get; }
@@ -86,6 +94,12 @@ public sealed class AppStartup
         _steamStep.Start();
         _library.Progressed += OnLibraryProgressed;
         _ = _library.RefreshAsync();
+        _indexStep.Start();
+        _ = _index.RefreshAsync().ContinueWith(
+            t => _ui.Post(() => CompleteIndex(t.Result)),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.Default);
     }
 
     private async Task LoadSettingsAsync()
@@ -207,6 +221,29 @@ public sealed class AppStartup
 
             return _localizer.Format(nameof(Strings.Startup_Steam_New), games, names);
         });
+    }
+
+    private void CompleteIndex(RegistryIndexSnapshot snapshot)
+    {
+        switch (snapshot)
+        {
+            case { IsFresh: true, Index: { } index }:
+                _indexStep.Complete(StartupTone.Ok, () => _localizer.Plural(nameof(Strings.Startup_Index_Done_One), index.PackCount));
+                break;
+            case { IsStale: true, FetchedAt: { } savedAt }:
+                _indexStep.Complete(StartupTone.Warn, () => _localizer.Format(
+                    nameof(Strings.Startup_Index_Stale), savedAt.ToLocalTime().ToString("g", _localizer.Culture)));
+                break;
+            case { Problem: RegistryIndexProblem.NewerFormat }:
+                _indexStep.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Index_NewerFormat)]);
+                break;
+            case { Problem: RegistryIndexProblem.InvalidLocation }:
+                _indexStep.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Index_BadAddress)]);
+                break;
+            default:
+                _indexStep.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Index_Unavailable)]);
+                break;
+        }
     }
 
     private void Fail(StartupStep step) => step.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Failed)]);

@@ -1,6 +1,8 @@
+using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
@@ -10,6 +12,7 @@ using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
+using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
@@ -48,6 +51,12 @@ internal static class Composition
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IFilePicker, AvaloniaFilePicker>();
         AddGames(services);
+        services.AddSingleton(sp => new RegistryIndexClient(
+            sp.GetRequiredService<HttpClient>(),
+            sp.GetRequiredService<AppPaths>(),
+            sp.GetRequiredService<TimeProvider>(),
+            sp.GetRequiredService<ILogger<RegistryIndexClient>>()));
+        services.AddSingleton<PackIndex>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
         services.AddTransient<SplashViewModel>();
@@ -70,7 +79,11 @@ internal static class Composition
         services.AddSingleton<GameLibrary>();
         services.AddSingleton(_ =>
         {
-            var http = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            // GitHub Pages serves index.json compressed when asked.
+            var http = new HttpClient(new SocketsHttpHandler { AutomaticDecompression = DecompressionMethods.All })
+            {
+                Timeout = TimeSpan.FromSeconds(20),
+            };
             http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
             return http;
         });

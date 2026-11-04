@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "full",
+  "game": "steam:620",
+  "language": "ru",
+  "title": "Полный перевод",
+  "authors": [
+    {
+      "github": "alice",
+      "name": "Alice"
+    },
+    {
+      "github": "bob-2"
+    }
+  ],
+  "revision": 2,
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-10-01T12:00:00Z",
+      "by": "alice",
+      "notes": "First release"
+    },
+    {
+      "revision": 2,
+      "date": "2026-11-01T06:30:00Z",
+      "by": "bob-2",
+      "notes": "Strings of the November update"
+    }
+  ],
+  "status": "verified",
+  "agent": {
+    "id": "claude-code",
+    "model": "claude-opus-5-5"
+  },
+  "builds": [
+    {
+      "buildId": "1234567",
+      "files": {
+        "www/data/Map001.json": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "www/data/System.json": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    },
+    {
+      "buildId": "1250000",
+      "files": {
+        "www/data/Map001.json": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "www/data/System.json": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  ],
+  "recipe": {
+    "tool": "rpgmaker",
+    "version": "1.0.0"
+  },
+  "strings": {
+    "path": "strings/strings.json.gz",
+    "sha256": "5140d3f499f0bdfc7fbd01c224750f7effa27c7cf720911a99036572b6f3ef9b",
+    "size": 142
+  },
+  "coverage": {
+    "translated": 1500,
+    "total": 1520
+  },
+  "license": "CC-BY-SA-4.0",
+  "created": "2026-10-01T12:00:00Z",
+  "updated": "2026-11-01T06:30:00Z"
+}

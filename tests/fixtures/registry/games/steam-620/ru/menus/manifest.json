@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "menus",
+  "game": "steam:620",
+  "language": "ru",
+  "title": "Только меню",
+  "authors": [
+    {
+      "github": "carol"
+    }
+  ],
+  "revision": 1,
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-10-20T08:00:00Z",
+      "by": "carol"
+    }
+  ],
+  "status": "alpha",
+  "builds": [
+    {
+      "buildId": "1250000",
+      "files": {
+        "www/data/System.json": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  ],
+  "recipe": {
+    "tool": "rpgmaker",
+    "version": "1.0.0"
+  },
+  "strings": {
+    "path": "strings/strings.json.gz",
+    "sha256": "1158a276c07f8c69e3571de3a6881b1229b9b2f42b9a72f7cba01977a017c660",
+    "size": 117
+  },
+  "coverage": {
+    "translated": 300,
+    "total": 1520
+  },
+  "license": "CC-BY-SA-4.0",
+  "created": "2026-10-20T08:00:00Z",
+  "updated": "2026-10-20T08:00:00Z"
+}

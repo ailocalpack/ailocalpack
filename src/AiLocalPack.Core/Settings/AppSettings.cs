@@ -29,6 +29,10 @@ namespace AiLocalPack.Core.Settings;
 /// <param name="IgnoredSteamLibraries">
 /// Library folders Steam lists that the player removed (a gone SD card); the scan leaves them out until added again.
 /// </param>
+/// <param name="RegistryIndexUrl">
+/// Hidden dev setting (no UI): another registry index, an <c>https://</c> URL or a local folder
+/// (<see cref="Registry.RegistryLocation.TryParse"/>); <c>AILOCALPACK_INDEX_URL</c> wins over it. <c>null</c> = the public registry.
+/// </param>
 public sealed record AppSettings(
     int SchemaVersion = AppSettings.CurrentSchemaVersion,
     string? UiLanguage = null,
@@ -40,7 +44,8 @@ public sealed record AppSettings(
     bool NotifyTaskFinished = true,
     bool NotifyCommunity = true,
     IReadOnlyList<string>? SteamLibraryFolders = null,
-    IReadOnlyList<string>? IgnoredSteamLibraries = null)
+    IReadOnlyList<string>? IgnoredSteamLibraries = null,
+    string? RegistryIndexUrl = null)
 {
     public const int CurrentSchemaVersion = 1;
 

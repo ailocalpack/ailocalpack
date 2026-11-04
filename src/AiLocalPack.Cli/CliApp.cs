@@ -15,6 +15,7 @@ public static class CliApp
         {
             GamesCommand.Build(env),
             ToolkitCommand.Build(env),
+            IndexCommand.Build(env),
         };
         root.SetAction(result =>
         {

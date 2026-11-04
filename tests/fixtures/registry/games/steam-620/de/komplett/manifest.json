@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "komplett",
+  "game": "steam:620",
+  "language": "de",
+  "title": "Komplette Übersetzung",
+  "authors": [
+    {
+      "github": "dieter"
+    }
+  ],
+  "revision": 1,
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-09-15T10:00:00Z",
+      "by": "dieter"
+    }
+  ],
+  "status": "alpha",
+  "agent": {
+    "id": "codex"
+  },
+  "builds": [
+    {
+      "buildId": "1234567",
+      "files": {
+        "www/data/Map001.json": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  ],
+  "recipe": {
+    "tool": "rpgmaker",
+    "version": "1.0.0"
+  },
+  "strings": {
+    "path": "strings/strings.json.gz",
+    "sha256": "8aa7c7124454c602e8ba434512fd52e08f2d505ad25fc14f13fcaaf68bf782ec",
+    "size": 95
+  },
+  "coverage": {
+    "translated": 1520,
+    "total": 1520
+  },
+  "license": "CC-BY-SA-4.0",
+  "created": "2026-09-15T10:00:00Z",
+  "updated": "2026-09-15T10:00:00Z"
+}

@@ -51,6 +51,12 @@ public sealed record AppPaths
     /// <summary>Game covers downloaded from the Steam CDN (safe to delete: fetched again when missing).</summary>
     public string Covers => Path.Combine(Cache, "covers");
 
+    /// <summary>
+    /// The last registry index downloaded (<c>index.json</c> + <c>index.meta.json</c>), shown when the registry can't be
+    /// reached (safe to delete: downloaded again).
+    /// </summary>
+    public string RegistryCache => Path.Combine(Cache, "registry");
+
     /// <summary>Remembered SHA-256 of game files (<see cref="FileHashCache"/>; safe to delete: files are hashed again).</summary>
     public string FileHashes => Path.Combine(Cache, "file-hashes.json");
 

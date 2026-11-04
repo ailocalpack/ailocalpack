@@ -88,7 +88,42 @@ public sealed class FakeHttpHandlerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         handler.Requests.Should().ContainSingle()
-            .Which.Should().Be(new RecordedRequest(HttpMethod.Post, new Uri(url), """{"name":"registry"}"""));
+            .Which.Should().BeEquivalentTo(new { Method = HttpMethod.Post, Uri = new Uri(url), Body = """{"name":"registry"}""" });
+    }
+
+    [Fact]
+    public async Task Records_request_headers()
+    {
+        // Arrange
+        using var handler = new FakeHttpHandler().OnGet(IndexUrl, "{}");
+        using var client = handler.CreateClient();
+        using var request = new HttpRequestMessage(HttpMethod.Get, IndexUrl);
+        request.Headers.TryAddWithoutValidation("If-None-Match", "\"v1\"");
+
+        // Act
+        using var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
+
+        // Assert
+        handler.Requests.Single().Header("if-none-match").Should().Be("\"v1\"");
+    }
+
+    [Fact]
+    public async Task Async_route_gets_the_request_cancellation()
+    {
+        // Arrange
+        using var handler = new FakeHttpHandler().OnAsync(IndexUrl, async (_, ct) =>
+        {
+            await Task.Delay(Timeout.Infinite, ct);
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        });
+        using var client = handler.CreateClient();
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+
+        // Act
+        var act = () => client.GetAsync(new Uri(IndexUrl), cts.Token);
+
+        // Assert
+        await act.Should().ThrowAsync<OperationCanceledException>();
     }
 
     [Fact]

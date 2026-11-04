@@ -871,6 +871,30 @@
   <data name="Startup_Detection_Done_Many" xml:space="preserve">
     <value>Проверено {0} игр</value>
   </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>Обновление списка пакетов</value>
+  </data>
+  <data name="Startup_Index_Done_One" xml:space="preserve">
+    <value>{0} пакет</value>
+  </data>
+  <data name="Startup_Index_Done_Few" xml:space="preserve">
+    <value>{0} пакета</value>
+  </data>
+  <data name="Startup_Index_Done_Many" xml:space="preserve">
+    <value>{0} пакетов</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>Нет связи: показан сохранённый список от {0}</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>Реестр пакетов недоступен</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>Для списка пакетов нужна новая версия приложения</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>Адрес реестра пакетов неверен: подробности в журнале</value>
+  </data>
   <data name="Splash_Version" xml:space="preserve">
     <value>Версия {0}</value>
   </data>

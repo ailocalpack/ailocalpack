@@ -91,7 +91,8 @@ public static class PackManifestSerializer
         return JsonSerializer.Serialize(file, PackJsonWriter.Context.PackManifestJson);
     }
 
-    internal static string StatusText(PackStatus status) => status switch
+    /// <summary>The status as written in manifests and the index: <c>alpha</c>, <c>verified</c>.</summary>
+    public static string StatusText(PackStatus status) => status switch
     {
         PackStatus.Alpha => "alpha",
         PackStatus.Verified => "verified",

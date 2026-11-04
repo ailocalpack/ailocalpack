@@ -3,4 +3,8 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\AiLocalPack.Cli\AiLocalPack.Cli.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\fixtures\registry\**\*" LinkBase="fixtures\registry" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 </Project>

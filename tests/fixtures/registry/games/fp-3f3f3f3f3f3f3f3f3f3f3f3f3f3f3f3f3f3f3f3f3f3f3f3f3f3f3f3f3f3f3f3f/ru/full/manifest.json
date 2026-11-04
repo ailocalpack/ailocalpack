@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "full",
+  "game": "fp:3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f",
+  "language": "ru",
+  "title": "Полный перевод",
+  "authors": [
+    {
+      "github": "alice"
+    }
+  ],
+  "revision": 1,
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-08-01T00:00:00Z",
+      "by": "alice"
+    }
+  ],
+  "status": "alpha",
+  "agent": {
+    "id": "claude-code"
+  },
+  "builds": [
+    {
+      "files": {
+        "game/script.rpy": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      }
+    }
+  ],
+  "recipe": {
+    "tool": "renpy",
+    "version": "1.0.0"
+  },
+  "strings": {
+    "path": "strings/strings.json.gz",
+    "sha256": "6e221b40c8f32311ec71b5316dcb5b038bc927844c1cb7879ca78bb52a6b3070",
+    "size": 100
+  },
+  "coverage": {
+    "translated": 40,
+    "total": 50
+  },
+  "license": "CC-BY-SA-4.0",
+  "created": "2026-08-01T00:00:00Z",
+  "updated": "2026-08-01T00:00:00Z"
+}

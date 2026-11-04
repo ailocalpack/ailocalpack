@@ -28,7 +28,7 @@ public sealed class WindowsRegistry : IWindowsRegistry
 
         try
         {
-            using var key = Registry.CurrentUser.OpenSubKey(keyPath);
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath);
             return key?.GetValue(valueName) as string;
         }
         catch (Exception e) when (e is SecurityException or UnauthorizedAccessException or IOException)

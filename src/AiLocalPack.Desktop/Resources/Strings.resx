@@ -854,6 +854,27 @@
   <data name="Startup_Detection_Done_Other" xml:space="preserve">
     <value>Checked {0} games</value>
   </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>Updating the pack list</value>
+  </data>
+  <data name="Startup_Index_Done_One" xml:space="preserve">
+    <value>{0} pack</value>
+  </data>
+  <data name="Startup_Index_Done_Other" xml:space="preserve">
+    <value>{0} packs</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>Offline: showing the saved list from {0}</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>Can't reach the pack registry</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>The pack list needs a newer version of the app</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>The pack registry address is not valid: details are in the log</value>
+  </data>
   <data name="Splash_Version" xml:space="preserve">
     <value>Version {0}</value>
   </data>

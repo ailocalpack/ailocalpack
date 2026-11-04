@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/registry-index.schema.json",
+  "title": "ailocalpack registry index",
+  "description": "index.json published to GitHub Pages: every pack of the registry, by game and language, with the community numbers aggregated by the registry's Actions. Built by `ailocalpack index build`. The app browses from this file alone and fetches a pack's manifest only when it is needed. Unknown properties are allowed (forward compatibility); a breaking change raises schemaVersion.",
+  "type": "object",
+  "required": ["schemaVersion", "generated", "games"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generated": { "description": "When the index was built (RFC 3339 with offset).", "$ref": "#/$defs/date" },
+    "games": {
+      "description": "Game ID (steam:<app id> or fp:<SHA-256 fingerprint>) → its packs and flags.",
+      "type": "object",
+      "propertyNames": { "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})$" },
+      "additionalProperties": { "$ref": "#/$defs/game" }
+    }
+  },
+  "$defs": {
+    "game": {
+      "type": "object",
+      "properties": {
+        "optOut": { "description": "The publisher asked not to distribute fan translations: install and generation are blocked.", "type": "boolean" },
+        "antiCheatAllowed": { "description": "The game has an anti-cheat but officially allows mods: not blocked.", "type": "boolean" },
+        "packs": {
+          "description": "Language tag → packs into that language.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/language" },
+          "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/pack" } }
+        }
+      }
+    },
+    "pack": {
+      "type": "object",
+      "required": ["id", "title", "author", "status", "revision", "updated", "coverage", "buildIds", "buildCount", "manifest", "size"],
+      "properties": {
+        "id": { "description": "Pack ID, unique for the game + language.", "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64 },
+        "title": { "$ref": "#/$defs/text", "maxLength": 80 },
+        "author": {
+          "description": "The original author (the manifest's first author).",
+          "type": "object",
+          "required": ["github"],
+          "properties": {
+            "github": { "type": "string", "maxLength": 39, "pattern": "^[A-Za-z0-9](-?[A-Za-z0-9]){0,38}$" },
+            "name": { "$ref": "#/$defs/text", "maxLength": 80 }
+          }
+        },
+        "status": { "enum": ["alpha", "verified"] },
+        "revision": { "type": "integer", "minimum": 1 },
+        "updated": { "$ref": "#/$defs/date" },
+        "coverage": {
+          "type": "object",
+          "required": ["translated", "total"],
+          "properties": {
+            "translated": { "type": "integer", "minimum": 0 },
+            "total": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "buildIds": {
+          "description": "Store build IDs the pack supports (empty for a manually added game, matched by file hashes).",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[0-9]{1,20}$" }
+        },
+        "buildCount": { "description": "How many game builds the manifest lists.", "type": "integer", "minimum": 1 },
+        "manifest": {
+          "description": "The pack's manifest.json, relative to index.json ('/' separators, no '.' or '..' parts).",
+          "type": "string",
+          "pattern": "^([^/\\\\]+/)*manifest\\.json$",
+          "not": { "pattern": "(^|/)\\.\\.?(/|$)" }
+        },
+        "size": { "description": "Download size in bytes (string table or binary patch).", "type": "integer", "minimum": 1 },
+        "rating": {
+          "description": "Aggregated from the pack's GitHub Discussion; absent = nothing yet.",
+          "type": "object",
+          "properties": {
+            "likes": { "type": "integer", "minimum": 0 },
+            "works": { "description": "Players (not the author) who confirmed it works.", "type": "integer", "minimum": 0 },
+            "doesNotWork": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "discussion": { "description": "The pack's GitHub Discussion.", "type": "string", "pattern": "^https://" }
+      }
+    },
+    "language": {
+      "enum": ["ar", "bg", "cs", "da", "de", "el", "en", "es-ES", "es-419", "fi", "fr", "hu", "id", "it", "ja", "ko", "nb", "nl", "pl", "pt-BR", "pt-PT", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant"]
+    },
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "date": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?([Zz]|[+-]\\d{2}:\\d{2})$"
+    }
+  }
+}

@@ -12,5 +12,6 @@
     <ItemGroup>
         <None Include="..\..\schemas\*.json" LinkBase="schemas" CopyToOutputDirectory="PreserveNewest" />
         <None Include="..\fixtures\packs\**\*" LinkBase="fixtures\packs" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="..\fixtures\registry\**\*" LinkBase="fixtures\registry" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
