@@ -2,6 +2,7 @@ using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
+using AiLocalPack.Desktop.Startup;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -15,15 +16,28 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly Localizer _localizer;
     private readonly IDialogService _dialogs;
 
-    public MainWindowViewModel(INavigationService navigation, IPageFactory pages, Localizer localizer, IDialogService dialogs)
+    public MainWindowViewModel(
+        INavigationService navigation, IPageFactory pages, Localizer localizer, IDialogService dialogs, StartupProgress startup)
     {
+        Startup = startup;
+        Startup.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(StartupProgress.IsBackgroundRunning))
+            {
+                OnPropertyChanged(nameof(ActivityName));
+            }
+        };
         _navigation = navigation;
         _pages = pages;
         _localizer = localizer;
         _dialogs = dialogs;
         _navigation.Navigated += (_, _) => OnNavigated();
         _dialogs.Changed += (_, _) => OnDialogChanged();
-        _localizer.CultureChanged += (_, _) => OnPropertyChanged(nameof(BackLabel));
+        _localizer.CultureChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(BackLabel));
+            OnPropertyChanged(nameof(ActivityName));
+        };
         if (_navigation.Current is null)
         {
             _navigation.Reset(_pages.Create<LibraryViewModel>());
@@ -35,6 +49,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     public PageViewModel? CurrentPage => _navigation.Current;
+
+    /// <summary>Startup checks: "Checking for changes…" and the ring on 🔔 while background checks run, their list under 🔔.</summary>
+    public StartupProgress Startup { get; }
+
+    /// <summary>Screen reader name of 🔔: says when startup checks are running.</summary>
+    public string ActivityName => _localizer[Startup.IsBackgroundRunning ? nameof(Strings.Chrome_Activity_Checking) : nameof(Strings.Chrome_Activity)];
 
     public bool CanGoBack => _navigation.CanGoBack && !HasDialog;
 
@@ -75,12 +95,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     [RelayCommand]
     private void OpenSettings() => _navigation.NavigateTo(_pages.Create<SettingsViewModel>());
-
-    /// <summary>Activity panel arrives in task 38; the button is already in the chrome.</summary>
-    [RelayCommand]
-    private static void OpenActivity()
-    {
-    }
 
     private void OnDialogChanged()
     {

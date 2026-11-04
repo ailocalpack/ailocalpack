@@ -12,6 +12,7 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
+using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
@@ -47,6 +48,9 @@ internal static class Composition
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IFilePicker, AvaloniaFilePicker>();
         AddGames(services);
+        services.AddSingleton<AppStartup>();
+        services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
+        services.AddTransient<SplashViewModel>();
         services.AddSingleton<MainWindowViewModel>();
         AddSettingsSections(services);
         services.AddSingleton<SettingsPreloader>();

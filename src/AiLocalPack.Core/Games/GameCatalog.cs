@@ -43,6 +43,12 @@ public sealed class GameCatalog
 
     public string FilePath { get; }
 
+    /// <summary>What the last <see cref="Load"/> found; <see cref="GameCatalogLoadOutcome.NotLoaded"/> before it.</summary>
+    public GameCatalogLoadOutcome LoadOutcome { get; private set; }
+
+    /// <summary>Where a corrupted file was moved by the last <see cref="Load"/>; <c>null</c> otherwise or when the move failed.</summary>
+    public string? CorruptedBackupPath { get; private set; }
+
     /// <summary>All games, sorted by name. Empty until <see cref="Load"/>.</summary>
     public IReadOnlyList<Game> Games
     {
@@ -64,11 +70,15 @@ public sealed class GameCatalog
         return Games.FirstOrDefault(g => g.Id == id);
     }
 
-    /// <summary>Reads <c>games.json</c>. Missing → empty. Broken entries are skipped with a warning. Raises no event.</summary>
+    /// <summary>
+    /// Reads <c>games.json</c>. Missing → empty. Broken entries are skipped with a warning. Raises no event.
+    /// <see cref="LoadOutcome"/> tells what was found.
+    /// </summary>
     public IReadOnlyList<Game> Load()
     {
         lock (_lock)
         {
+            CorruptedBackupPath = null;
             _games = GameCatalogMerge.Sort(Read());
             return _games;
         }
@@ -196,12 +206,14 @@ public sealed class GameCatalog
         catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
         {
             _logger.LogInformation("No game catalog at {Path}; starting empty", FilePath);
+            LoadOutcome = GameCatalogLoadOutcome.Missing;
             return [];
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
             _canSave = false;
             _logger.LogError(e, "Can't read game catalog {Path}; starting empty and not saving this session", FilePath);
+            LoadOutcome = GameCatalogLoadOutcome.Unreadable;
             return [];
         }
 
@@ -215,6 +227,8 @@ public sealed class GameCatalog
         {
             var backup = BackUpCorrupted();
             _logger.LogWarning(e, "Game catalog {Path} is corrupted; moved it to {Backup} and starting empty", FilePath, backup);
+            LoadOutcome = GameCatalogLoadOutcome.Corrupted;
+            CorruptedBackupPath = backup;
             return [];
         }
 
@@ -225,6 +239,7 @@ public sealed class GameCatalog
                 FilePath, file.SchemaVersion, CurrentSchemaVersion);
         }
 
+        LoadOutcome = GameCatalogLoadOutcome.Loaded;
         var games = new List<Game>();
         var ids = new HashSet<GameId>();
         foreach (var entry in file.Games ?? [])

@@ -44,6 +44,12 @@ public sealed class GameLibrary(
     public event EventHandler? StateChanged;
 
     /// <summary>
+    /// Raised (on the refreshing thread) as a refresh moves on: <see cref="GameLibraryScanned"/> once the Steam scan is
+    /// merged, then <see cref="GameLibraryDetected"/>, or <see cref="GameLibraryRefreshFailed"/> instead of either.
+    /// </summary>
+    public event EventHandler<GameLibraryProgress>? Progressed;
+
+    /// <summary>
     /// Refreshes in the background. While one runs, one more is queued after it (the request may come from a settings
     /// change the running scan hasn't seen); further requests join the queued one.
     /// </summary>
@@ -101,13 +107,15 @@ public sealed class GameLibrary(
             logger.LogInformation(
                 "Steam scan: {Libraries} libraries, {Games} games, {Changes} catalog changes",
                 scan.Libraries.Count, scan.Games.Count, changes.Count);
-            engines.UpdateCatalog(Catalog, changes);
-            antiCheats.UpdateCatalog(Catalog, changes);
+            Progressed?.Invoke(this, new GameLibraryScanned(scan, changes));
+            var detected = Math.Max(engines.UpdateCatalog(Catalog, changes), antiCheats.UpdateCatalog(Catalog, changes));
+            Progressed?.Invoke(this, new GameLibraryDetected(detected));
         }
         catch (Exception e)
         {
             // A failed refresh must not take the app down; the catalog keeps the last known games.
             logger.LogError(e, "Game library refresh failed");
+            Progressed?.Invoke(this, new GameLibraryRefreshFailed(e));
         }
         finally
         {
@@ -121,3 +129,15 @@ public sealed class GameLibrary(
         }
     }
 }
+
+/// <summary>A step of a <see cref="GameLibrary"/> refresh.</summary>
+public abstract record GameLibraryProgress;
+
+/// <summary>The Steam scan was merged into the catalog.</summary>
+public sealed record GameLibraryScanned(SteamScan Scan, IReadOnlyList<GameChange> Changes) : GameLibraryProgress;
+
+/// <summary>Engines and anti-cheats were detected; <paramref name="Games"/> = how many games were checked (0 = none needed it).</summary>
+public sealed record GameLibraryDetected(int Games) : GameLibraryProgress;
+
+/// <summary>The refresh stopped with an error (logged); the catalog keeps what it had.</summary>
+public sealed record GameLibraryRefreshFailed(Exception Error) : GameLibraryProgress;

@@ -18,8 +18,8 @@ namespace AiLocalPack.Desktop.ViewModels;
 
 /// <summary>
 /// Library (home) screen, design §1: the catalog's games as a cover grid with search and sort. States: scanning (banner;
-/// skeleton cards while no game is known yet), Steam not found / empty, nothing found for the search. Registry statuses,
-/// filter chips and the language selector come in task 21.
+/// skeleton cards while no game is known yet), a damaged saved list (banner), Steam not found / empty, nothing found
+/// for the search. Registry statuses, filter chips and the language selector come in task 21.
 /// </summary>
 public sealed partial class LibraryViewModel : PageViewModel
 {
@@ -51,6 +51,10 @@ public sealed partial class LibraryViewModel : PageViewModel
 
     [ObservableProperty]
     private IReadOnlyList<LibrarySortOption> _sortOptions = [];
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowCatalogDamaged))]
+    private bool _catalogDamagedDismissed;
 
     public LibraryViewModel(
         GameLibrary library,
@@ -106,6 +110,17 @@ public sealed partial class LibraryViewModel : PageViewModel
     /// <summary>Games exist but the search hides them all.</summary>
     public bool HasNoResults => HasGames && VisibleCards.Count == 0;
 
+    /// <summary>
+    /// The saved game list was damaged at startup and rebuilt from the scan (design §9): a banner says manual games
+    /// need adding again and where the old file is, until dismissed. Shown once the scan has found the Steam games.
+    /// </summary>
+    public bool ShowCatalogDamaged =>
+        _library.Catalog.LoadOutcome == GameCatalogLoadOutcome.Corrupted && _library.HasScanned && !CatalogDamagedDismissed;
+
+    public string CatalogDamagedText => _library.Catalog.CorruptedBackupPath is { } backup
+        ? _localizer.Format(nameof(Strings.Library_CatalogDamaged), Path.GetFileName(backup))
+        : _localizer[nameof(Strings.Library_CatalogDamaged_NoBackup)];
+
     public string NoResultsText => _localizer.Format(nameof(Strings.Library_NoResults_Text), Query.Trim());
 
     /// <summary>"18 games" (screen reader name of the grid).</summary>
@@ -128,6 +143,9 @@ public sealed partial class LibraryViewModel : PageViewModel
 
     [RelayCommand]
     private void ClearSearch() => Query = string.Empty;
+
+    [RelayCommand]
+    private void DismissCatalogDamaged() => CatalogDamagedDismissed = true;
 
     /// <summary>Opens the add-folder dialog on step 1 (design §2).</summary>
     [RelayCommand]
@@ -198,6 +216,7 @@ public sealed partial class LibraryViewModel : PageViewModel
         OnPropertyChanged(nameof(ShowSkeletons));
         OnPropertyChanged(nameof(IsEmpty));
         OnPropertyChanged(nameof(HasNoResults));
+        OnPropertyChanged(nameof(ShowCatalogDamaged));
     }
 
     private void UpdateVisible()
@@ -234,6 +253,7 @@ public sealed partial class LibraryViewModel : PageViewModel
 
         OnPropertyChanged(nameof(GameCount));
         OnPropertyChanged(nameof(NoResultsText));
+        OnPropertyChanged(nameof(CatalogDamagedText));
         UpdateVisible();
     }
 

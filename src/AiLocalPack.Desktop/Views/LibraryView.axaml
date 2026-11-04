@@ -59,6 +59,21 @@
                     </StackPanel>
                 </Border>
 
+                <Border x:Name="CatalogDamagedBanner" Classes="banner warn" IsVisible="{Binding ShowCatalogDamaged}">
+                    <DockPanel>
+                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" />
+                        </Viewbox>
+                        <Button DockPanel.Dock="Right" Classes="icon sm" Command="{Binding DismissCatalogDamagedCommand}" Margin="4,0,0,0"
+                                ToolTip.Tip="{l:Loc Library_Banner_Dismiss}" AutomationProperties.Name="{l:Loc Library_Banner_Dismiss}">
+                            <Path Data="{StaticResource IconX}" />
+                        </Button>
+                        <Button DockPanel.Dock="Right" Classes="ghost sm" Command="{Binding AddFolderCommand}" Margin="12,0,0,0"
+                                Content="{l:Loc Library_Empty_AddFolder}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding CatalogDamagedText}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    </DockPanel>
+                </Border>
+
                 <ItemsControl x:Name="Skeletons" ItemsSource="{Binding Skeletons}" IsVisible="{Binding ShowSkeletons}" Focusable="False">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate><views:CardGrid /></ItemsPanelTemplate>

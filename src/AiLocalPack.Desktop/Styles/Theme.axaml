@@ -18,6 +18,10 @@
             <SolidColorBrush x:Key="AppWarnBrush" Color="#f0b44c" />
             <SolidColorBrush x:Key="AppBadBrush" Color="#ef6b6b" />
             <SolidColorBrush x:Key="AppHighlightBrush" Color="#4df0b44c" />
+            <SolidColorBrush x:Key="AppOkBrush" Color="#4cc38a" />
+            <SolidColorBrush x:Key="AppOkSoftBrush" Color="#294cc38a" />
+            <SolidColorBrush x:Key="AppWarnSoftBrush" Color="#29f0b44c" />
+            <SolidColorBrush x:Key="AppGenBrush" Color="#3fc6d9" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="AppBackgroundBrush" Color="#f4f6fa" />
@@ -35,6 +39,10 @@
             <SolidColorBrush x:Key="AppWarnBrush" Color="#9a6200" />
             <SolidColorBrush x:Key="AppBadBrush" Color="#c23434" />
             <SolidColorBrush x:Key="AppHighlightBrush" Color="#4dc48000" />
+            <SolidColorBrush x:Key="AppOkBrush" Color="#17834f" />
+            <SolidColorBrush x:Key="AppOkSoftBrush" Color="#1a17834f" />
+            <SolidColorBrush x:Key="AppWarnSoftBrush" Color="#1fc48000" />
+            <SolidColorBrush x:Key="AppGenBrush" Color="#0a7f91" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -70,6 +78,7 @@
     <StreamGeometry x:Key="IconXCircle">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M15 9l-6 6 M9 9l6 6</StreamGeometry>
     <StreamGeometry x:Key="IconUndo">M9 14 4 9l5-5 M4 9h10.5a5.5 5.5 0 0 1 0 11H11</StreamGeometry>
     <StreamGeometry x:Key="IconChevronRight">M9 18l6-6-6-6</StreamGeometry>
+    <StreamGeometry x:Key="IconChevronDown">M6 9l6 6 6-6</StreamGeometry>
     <StreamGeometry x:Key="IconChevronLeft">M15 18l-6-6 6-6</StreamGeometry>
     <StreamGeometry x:Key="IconSkip">M5 4l10 8-10 8z M19 5v14</StreamGeometry>
     <StreamGeometry x:Key="IconCloud">M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z</StreamGeometry>

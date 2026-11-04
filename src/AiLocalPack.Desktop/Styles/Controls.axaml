@@ -252,6 +252,14 @@
         <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
     </Style>
 
+    <Style Selector="Border.banner.warn">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+    </Style>
+    <Style Selector="Button.icon.sm">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+    </Style>
+
     <!-- Library card: the whole card is one button; no button chrome, the cover lifts on hover -->
     <Style Selector="Button.gameCard">
         <Setter Property="Padding" Value="0" />
@@ -480,6 +488,103 @@
         <Setter Property="TextElement.FontSize" Value="12" />
         <Setter Property="TextElement.FontWeight" Value="SemiBold" />
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+
+    <!-- Startup checklist row (splash details, startup checks under 🔔), design §9 -->
+    <Style Selector="Border.startupStep">
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Border.startupStep.running">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="Border.startupStep.waiting">
+        <Setter Property="Opacity" Value="0.55" />
+    </Style>
+    <Style Selector="TextBlock.stepLabel">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="TextBlock.stepLabel.skipped">
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="TextBlock.stepDetail">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <Style Selector="TextBlock.stepDetail.warn">
+        <Setter Property="Foreground" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.stepIcon">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+
+    <!-- Splash window -->
+    <Style Selector="ProgressBar.splashBar">
+        <Setter Property="MinHeight" Value="6" />
+        <Setter Property="Height" Value="6" />
+        <Setter Property="CornerRadius" Value="3" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="Foreground" Value="{StaticResource AppLogoBrush}" />
+    </Style>
+    <Style Selector="Button.splashToggle">
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.splashToggle:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <!-- The ring around the big logo mark fades out as it grows -->
+    <Style Selector="Border.breathe">
+        <Style.Animations>
+            <Animation Duration="0:0:2.2" IterationCount="Infinite" Easing="CubicEaseOut">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.55" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="0.92" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="0.92" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="1.18" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="1.18" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- Startup checks under 🔔: "Checking for changes…" and a ring spinning around the bell -->
+    <Style Selector="Arc.ring">
+        <Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="StrokeLineCap" Value="Round" />
+        <Setter Property="StartAngle" Value="-135" />
+        <Setter Property="SweepAngle" Value="90" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Style.Animations>
+            <Animation Duration="0:0:1" IterationCount="Infinite">
+                <KeyFrame Cue="0%"><Setter Property="RotateTransform.Angle" Value="0" /></KeyFrame>
+                <KeyFrame Cue="100%"><Setter Property="RotateTransform.Angle" Value="360" /></KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    <Style Selector="FlyoutPresenter.startupChecks">
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="MaxWidth" Value="420" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
     </Style>
 
     <!-- Spinner: a rotating loader icon -->

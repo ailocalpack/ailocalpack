@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:startup="using:AiLocalPack.Desktop.Startup"
+             x:Class="AiLocalPack.Desktop.Views.StartupStepView"
+             x:DataType="startup:StartupStep">
+    <!-- One line of the startup checklist (design §9): status icon, label, result line. -->
+    <Border Classes="startupStep" Classes.running="{Binding IsRunning}" Classes.waiting="{Binding IsWaiting}">
+        <DockPanel>
+            <Panel DockPanel.Dock="Left" Width="24" Height="24" Margin="0,0,12,0" VerticalAlignment="Center">
+                <Ellipse IsVisible="{Binding IsWaiting}" Stroke="{DynamicResource AppBorderStrongBrush}"
+                         StrokeThickness="2" StrokeDashArray="2,2" />
+                <Viewbox Classes="icon spin" Width="20" Height="20" IsVisible="{Binding IsRunning}">
+                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppAccentBrush}" />
+                </Viewbox>
+                <Border Classes="stepIcon" Background="{DynamicResource AppOkSoftBrush}" IsVisible="{Binding IsOk}">
+                    <Viewbox Classes="icon" Width="14" Height="14">
+                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" StrokeThickness="2.4" />
+                    </Viewbox>
+                </Border>
+                <Border Classes="stepIcon" Background="{DynamicResource AppWarnSoftBrush}" IsVisible="{Binding IsWarn}">
+                    <Viewbox Classes="icon" Width="14" Height="14">
+                        <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" StrokeThickness="2.4" />
+                    </Viewbox>
+                </Border>
+                <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding IsSkipped}">
+                    <Path Classes="icon" Data="{StaticResource IconX}" Stroke="{DynamicResource AppFaintBrush}" StrokeThickness="2.4" />
+                </Viewbox>
+            </Panel>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Classes="stepLabel" Classes.skipped="{Binding IsSkipped}" Text="{Binding Label}" />
+                <TextBlock Classes="stepDetail" Classes.warn="{Binding IsWarn}" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

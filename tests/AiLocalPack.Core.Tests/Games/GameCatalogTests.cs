@@ -243,6 +243,62 @@ public sealed class GameCatalogTests : IDisposable
     }
 
     [Fact]
+    public void Load_reports_a_missing_file()
+    {
+        // Arrange
+        var catalog = CreateCatalog();
+
+        // Act
+        catalog.Load();
+
+        // Assert
+        catalog.LoadOutcome.Should().Be(GameCatalogLoadOutcome.Missing);
+    }
+
+    [Fact]
+    public void Load_reports_a_read_file()
+    {
+        // Arrange
+        CreateCatalog().Refresh(Scan((413150, "Stardew Valley", "100")));
+        var catalog = CreateCatalog();
+
+        // Act
+        catalog.Load();
+
+        // Assert
+        catalog.LoadOutcome.Should().Be(GameCatalogLoadOutcome.Loaded);
+    }
+
+    [Fact]
+    public void Load_reports_a_corrupted_file_and_its_backup()
+    {
+        // Arrange
+        WriteCatalogFile("{ not json");
+        var catalog = CreateCatalog();
+
+        // Act
+        catalog.Load();
+
+        // Assert
+        (catalog.LoadOutcome, catalog.CorruptedBackupPath).Should().Be(
+            (GameCatalogLoadOutcome.Corrupted, $"{Paths.GamesFile}.20261102-101530.bak"));
+    }
+
+    [Fact]
+    public void Load_reports_an_unreadable_file()
+    {
+        // Arrange
+        _dir.Dir("data/games.json");
+        var catalog = CreateCatalog();
+
+        // Act
+        catalog.Load();
+
+        // Assert
+        catalog.LoadOutcome.Should().Be(GameCatalogLoadOutcome.Unreadable);
+    }
+
+    [Fact]
     public void Broken_entries_are_skipped_and_the_rest_is_read()
     {
         // Arrange

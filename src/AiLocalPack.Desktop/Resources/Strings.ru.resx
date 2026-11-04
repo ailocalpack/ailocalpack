@@ -799,4 +799,100 @@
   <data name="Settings_Steam_Folders_Many" xml:space="preserve">
     <value>{0} папок</value>
   </data>
+  <data name="Chrome_Activity_Checking" xml:space="preserve">
+    <value>Активность: идут проверки при запуске</value>
+  </data>
+  <data name="Chrome_CheckingForChanges" xml:space="preserve">
+    <value>Проверяем изменения…</value>
+  </data>
+  <data name="Startup_Step_Settings" xml:space="preserve">
+    <value>Загрузка настроек</value>
+  </data>
+  <data name="Startup_Step_Catalog" xml:space="preserve">
+    <value>Открываем библиотеку игр</value>
+  </data>
+  <data name="Startup_Step_Steam" xml:space="preserve">
+    <value>Сканируем библиотеки Steam</value>
+  </data>
+  <data name="Startup_Step_Detection" xml:space="preserve">
+    <value>Определяем движки и античиты</value>
+  </data>
+  <data name="Startup_Waiting" xml:space="preserve">
+    <value>Ожидает</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>Не удалось: подробности в журнале</value>
+  </data>
+  <data name="Startup_Summary" xml:space="preserve">
+    <value>{0} из {1}</value>
+  </data>
+  <data name="Startup_Checks_Title" xml:space="preserve">
+    <value>Проверки при запуске</value>
+  </data>
+  <data name="Startup_Settings_Done" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Startup_Settings_ThemeSystem" xml:space="preserve">
+    <value>системная тема</value>
+  </data>
+  <data name="Startup_Settings_ThemeDark" xml:space="preserve">
+    <value>тёмная тема</value>
+  </data>
+  <data name="Startup_Settings_ThemeLight" xml:space="preserve">
+    <value>светлая тема</value>
+  </data>
+  <data name="Startup_Catalog_Missing" xml:space="preserve">
+    <value>Игр пока нет: первый запуск</value>
+  </data>
+  <data name="Startup_Catalog_Corrupted" xml:space="preserve">
+    <value>Список игр был повреждён: копия сохранена, собираем заново из Steam</value>
+  </data>
+  <data name="Startup_Catalog_Unreadable" xml:space="preserve">
+    <value>Не удаётся прочитать список игр: начинаем с пустого, изменения не сохраняются</value>
+  </data>
+  <data name="Startup_Steam_NotFound" xml:space="preserve">
+    <value>Steam не найден</value>
+  </data>
+  <data name="Startup_Steam_New" xml:space="preserve">
+    <value>{0} · новые: {1}</value>
+  </data>
+  <data name="Startup_Steam_More" xml:space="preserve">
+    <value>{0} +{1}</value>
+  </data>
+  <data name="Startup_Detection_None" xml:space="preserve">
+    <value>Новых и обновлённых игр нет</value>
+  </data>
+  <data name="Startup_Detection_Done_One" xml:space="preserve">
+    <value>Проверена {0} игра</value>
+  </data>
+  <data name="Startup_Detection_Done_Few" xml:space="preserve">
+    <value>Проверены {0} игры</value>
+  </data>
+  <data name="Startup_Detection_Done_Many" xml:space="preserve">
+    <value>Проверено {0} игр</value>
+  </data>
+  <data name="Splash_Version" xml:space="preserve">
+    <value>Версия {0}</value>
+  </data>
+  <data name="Splash_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Splash_Details" xml:space="preserve">
+    <value>Подробнее</value>
+  </data>
+  <data name="Splash_HideDetails" xml:space="preserve">
+    <value>Скрыть подробности</value>
+  </data>
+  <data name="Splash_Slow" xml:space="preserve">
+    <value>Дольше обычного. Пожалуйста, не закрывайте приложение: готово шагов {0} из {1}.</value>
+  </data>
+  <data name="Library_CatalogDamaged" xml:space="preserve">
+    <value>Сохранённый список игр был повреждён. Игры Steam найдены заново, а добавленные вручную нужно добавить ещё раз. Старый файл сохранён как {0}.</value>
+  </data>
+  <data name="Library_CatalogDamaged_NoBackup" xml:space="preserve">
+    <value>Сохранённый список игр был повреждён. Игры Steam найдены заново, а добавленные вручную нужно добавить ещё раз.</value>
+  </data>
+  <data name="Library_Banner_Dismiss" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
 </root>

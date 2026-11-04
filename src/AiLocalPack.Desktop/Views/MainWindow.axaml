@@ -33,9 +33,28 @@
                                 AutomationProperties.Name="{Binding BackLabel}" />
                     </StackPanel>
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                        <Button x:Name="ActivityButton" Classes="icon" Command="{Binding OpenActivityCommand}"
-                                ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{l:Loc Chrome_Activity}">
-                            <Path Data="{StaticResource IconBell}" />
+                        <TextBlock x:Name="StartupNote" Text="{l:Loc Chrome_CheckingForChanges}" IsVisible="{Binding Startup.IsBackgroundRunning}"
+                                   FontSize="12" Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" Margin="0,0,2,0" />
+                        <!-- Activity arrives in task 38; until then 🔔 lists the startup checks (design §9). -->
+                        <Button x:Name="ActivityButton" Classes="icon"
+                                ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{Binding ActivityName}">
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedRight" FlyoutPresenterClasses="startupChecks">
+                                    <StackPanel x:Name="StartupChecks" Width="384" Spacing="2">
+                                        <DockPanel Margin="10,8,10,4">
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding Startup.BackgroundSummary}" FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource AppFaintBrush}" />
+                                            <TextBlock Text="{l:Loc Startup_Checks_Title}" FontSize="13" FontWeight="Bold" />
+                                        </DockPanel>
+                                        <ItemsControl x:Name="StartupCheckList" ItemsSource="{Binding Startup.Background}" Focusable="False" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                            <Panel>
+                                <Path Data="{StaticResource IconBell}" />
+                                <Arc x:Name="ActivityRing" Classes="ring" Width="32" Height="32"
+                                     IsVisible="{Binding Startup.IsBackgroundRunning}" />
+                            </Panel>
                         </Button>
                         <Button x:Name="SettingsButton" Classes="icon" Classes.on="{Binding IsSettingsOpen}" Command="{Binding OpenSettingsCommand}"
                                 ToolTip.Tip="{l:Loc Chrome_Settings}" AutomationProperties.Name="{l:Loc Chrome_Settings}">

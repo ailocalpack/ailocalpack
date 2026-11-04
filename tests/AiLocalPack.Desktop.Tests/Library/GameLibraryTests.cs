@@ -68,6 +68,24 @@ public sealed class GameLibraryTests : IDisposable
     }
 
     [Fact]
+    public void Refresh_reports_the_scan_then_the_detection()
+    {
+        // Arrange
+        _steam.AddGame(10, "Alpha").AddGame(20, "Beta");
+        var library = Create();
+        var progress = new List<GameLibraryProgress>();
+        library.Progressed += (_, p) => progress.Add(p);
+
+        // Act
+        library.Refresh();
+
+        // Assert
+        progress.Should().HaveCount(2);
+        progress[0].Should().BeOfType<GameLibraryScanned>().Which.Changes.Should().HaveCount(2);
+        progress[1].Should().Be(new GameLibraryDetected(2));
+    }
+
+    [Fact]
     public void Refresh_detects_engine_and_anti_cheat()
     {
         // Arrange

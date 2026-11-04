@@ -1,10 +1,13 @@
+using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.Views;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -40,6 +43,60 @@ public sealed class MainWindowTests
         window.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
 
     private static bool Shows<TView>(Window window) => window.GetVisualDescendants().OfType<TView>().Any();
+
+    [Fact]
+    public Task Chrome_says_while_startup_checks_run() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        var window = Create();
+        var vm = (MainWindowViewModel)window.DataContext!;
+        window.Show();
+
+        // Act
+        vm.Startup.Find(AppStartup.SteamStep)!.Start();
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        Find<TextBlock>(window, "StartupNote").IsVisible.Should().BeTrue();
+        Find<Avalonia.Controls.Shapes.Arc>(window, "ActivityRing").IsVisible.Should().BeTrue();
+        AutomationProperties.GetName(Find<Button>(window, "ActivityButton")).Should().Be("Activity: startup checks running");
+        window.Close();
+    });
+
+    [Fact]
+    public Task Bell_lists_the_startup_checks() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        var window = Open();
+        var vm = (MainWindowViewModel)window.DataContext!;
+        vm.Startup.Find(AppStartup.SteamStep)!.Complete(StartupTone.Ok, () => "2 games");
+
+        // Act
+        Click(window, Find<Button>(window, "ActivityButton"));
+
+        // Assert
+        var flyout = (Flyout)Find<Button>(window, "ActivityButton").Flyout!;
+        flyout.IsOpen.Should().BeTrue();
+        var list = ((Control)flyout.Content!).GetLogicalDescendants().OfType<ItemsControl>().Single(c => c.Name == "StartupCheckList");
+        list.ItemCount.Should().Be(2);
+        window.Close();
+    });
+
+    [Fact]
+    public Task Chrome_is_quiet_without_startup_checks() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        var window = Create();
+
+        // Act
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        Find<TextBlock>(window, "StartupNote").IsVisible.Should().BeFalse();
+        Find<Avalonia.Controls.Shapes.Arc>(window, "ActivityRing").IsVisible.Should().BeFalse();
+        window.Close();
+    });
 
     [Fact]
     public Task Renders_chrome_on_library() => HeadlessUi.RunAsync(() =>
