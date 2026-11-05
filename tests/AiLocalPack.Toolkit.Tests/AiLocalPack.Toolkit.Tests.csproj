@@ -3,4 +3,8 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\fixtures\games\**\*" LinkBase="fixtures\games" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 </Project>

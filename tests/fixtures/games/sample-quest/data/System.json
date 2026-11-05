@@ -1,0 +1,8 @@
+{
+  "gameTitle": "Sample Quest",
+  "locale": "en_US",
+  "currencyUnit": "G",
+  "terms": {
+    "commands": ["Fight", "Escape", "Attack", "Guard", "Item", "Skill", "Equip", "Status", "Formation", "Save", "Game End", "Options", "Weapon", "Armor", "Key Item", "Equip", "Optimize", "Clear", "New Game", "Continue", null, "To Title", "Cancel"]
+  }
+}
