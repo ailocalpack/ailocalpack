@@ -11,9 +11,9 @@ Status: solution skeleton, app shell (navigation, chrome, theme), settings store
 - AI usage goes through the player's own agent subscription or API key; the project pays for no inference.
 - Open source.
 
-UI screens and their states: [`design/README.md`](design/README.md).
+UI screens and their states: `design/README.md` (drafts in `design/drafts`).
 
-Implementation tasks (numbered; the user names one to implement): [`tasks/README.md`](tasks/README.md). Follow its *Definition of done* and tick the task's checkbox when finished.
+Implementation tasks (numbered; the user names one to implement): `tasks/README.md`. Follow its *Definition of done* and tick the task's checkbox when finished. `design/` and `tasks/` are the maintainer's local working notes, kept out of the repository (`.git/info/exclude`); references like "task 21" or "design §2" in code point into them.
 
 ## Domain terms
 

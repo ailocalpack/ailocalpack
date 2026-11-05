@@ -1,4 +1,4 @@
-<!-- ailocalpack theme on top of Fluent: neutral surfaces, one accent, dark + light (tokens from design/drafts). -->
+<!-- ailocalpack theme on top of Fluent: neutral surfaces, one accent, dark + light (tokens from the design drafts). -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.ThemeDictionaries>
