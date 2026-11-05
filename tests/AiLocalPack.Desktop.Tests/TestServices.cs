@@ -79,9 +79,17 @@ internal sealed class FakeShell : ISystemShell
 {
     public List<string> OpenedFolders { get; } = [];
 
+    public List<Uri> OpenedUrls { get; } = [];
+
     public bool OpenFolder(string path)
     {
         OpenedFolders.Add(path);
+        return true;
+    }
+
+    public bool OpenUrl(Uri url)
+    {
+        OpenedUrls.Add(url);
         return true;
     }
 }

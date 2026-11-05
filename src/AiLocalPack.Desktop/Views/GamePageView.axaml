@@ -8,7 +8,8 @@
              x:DataType="vm:GamePageViewModel">
     <!-- Design §3: hero header (backdrop from the cover's colors, cover, name, fact chips, installed pack block,
          primary action + caption), update banner, tab bar (Packs, Generation, Audio and Textures "soon") and the tab.
-         When the header scrolls away, a copy of the tab bar sticks to the top with a mini cover, name and the action. -->
+         When the header scrolls away, a copy of the tab bar sticks to the top with a mini cover, name and the action.
+         A blocked game (§3a) keeps the header (grey cover, no action) and shows the red explanation instead of the tabs. -->
     <UserControl.Resources>
         <DataTemplate x:Key="TabStrip" x:DataType="vm:GamePageViewModel">
             <ItemsControl ItemsSource="{Binding Tabs}" AutomationProperties.Name="{l:Loc Game_Tabs_Label}">
@@ -142,13 +143,38 @@
                     </DockPanel>
                 </Border>
 
+                <!-- Blocked game (§3a): anti-cheat or studio opt-out, instead of the tabs -->
+                <Border x:Name="BlockedPanel" Classes="blockedPanel" Margin="24,14,24,40" IsVisible="{Binding IsBlocked}">
+                    <DockPanel>
+                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="28" Height="28" Margin="0,2,16,0" VerticalAlignment="Top">
+                            <Path Classes="icon" Data="{StaticResource IconBan}" Stroke="{DynamicResource AppBadBrush}" />
+                        </Viewbox>
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="h2" FontSize="18" Text="{l:Loc Game_Blocked_Title}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="BlockedText" Classes="muted" Text="{Binding BlockedText}" TextWrapping="Wrap" />
+                            <StackPanel Orientation="Horizontal" Spacing="2" Margin="0,4,0,0">
+                                <TextBlock Classes="muted" Text="{l:Loc Game_Blocked_Mistake}" VerticalAlignment="Center" />
+                                <Button x:Name="ReportButton" Classes="link" Command="{Binding ReportCommand}" VerticalAlignment="Center"
+                                        ToolTip.Tip="{l:Loc Game_Blocked_Report_Tip}" AutomationProperties.Name="{l:Loc Game_Blocked_Report}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{l:Loc Game_Blocked_Report}" VerticalAlignment="Center" />
+                                        <Viewbox Classes="icon" Width="13" Height="13">
+                                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        </Viewbox>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
                 <!-- Tab bar (in the flow; the sticky copy below takes over once it scrolls under the top) -->
-                <Border x:Name="TabBar" Margin="24,14,24,0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource AppBorderBrush}">
+                <Border x:Name="TabBar" Margin="24,14,24,0" IsVisible="{Binding ShowTabs}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource AppBorderBrush}">
                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource TabStrip}" />
                 </Border>
 
                 <!-- Tab content -->
-                <Panel Margin="24,20,24,40">
+                <Panel x:Name="TabContent" Margin="24,20,24,40" IsVisible="{Binding ShowTabs}">
                     <!-- Packs: the list and details come with task 24 -->
                     <StackPanel x:Name="PacksPanel" IsVisible="{Binding IsPacksTab}" Spacing="8">
                         <TextBlock Classes="muted" Text="{l:Loc Game_Packs_Unknown}" IsVisible="{Binding IsStatusUnknown}" TextWrapping="Wrap" />
@@ -205,7 +231,7 @@
         </ScrollViewer>
 
         <!-- Sticky tab bar -->
-        <Border x:Name="StickyBar" VerticalAlignment="Top" Background="{DynamicResource StickyBarBrush}" IsVisible="{Binding IsTabBarStuck}">
+        <Border x:Name="StickyBar" VerticalAlignment="Top" Background="{DynamicResource StickyBarBrush}" IsVisible="{Binding ShowStickyBar}">
             <Grid Margin="24,0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
                 <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource AppBorderBrush}" Grid.ColumnSpan="2" />
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource TabStrip}" />

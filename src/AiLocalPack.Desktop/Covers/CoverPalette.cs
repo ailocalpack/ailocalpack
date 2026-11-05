@@ -1,9 +1,7 @@
-using System.Runtime.InteropServices;
 using AiLocalPack.Core.Games;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 
 namespace AiLocalPack.Desktop.Covers;
 
@@ -85,28 +83,7 @@ public static class CoverPalette
     {
         ArgumentNullException.ThrowIfNull(bitmap);
         var size = bitmap.PixelSize;
-        if (size.Width == 0 || size.Height == 0)
-        {
-            return null;
-        }
-
-        var stride = size.Width * 4;
-        var buffer = new byte[stride * size.Height];
-        var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-        try
-        {
-            bitmap.CopyPixels(new BufferFramebuffer(handle.AddrOfPinnedObject(), size, stride, bitmap.Dpi));
-        }
-        catch (NotSupportedException)
-        {
-            return null;
-        }
-        finally
-        {
-            handle.Free();
-        }
-
-        return Extract(buffer, size.Width, size.Height, stride);
+        return BitmapPixels.ReadBgra(bitmap) is { } buffer ? Extract(buffer, size.Width, size.Height, size.Width * 4) : null;
     }
 
     /// <summary>The backdrop colors of a game without cover art: its placeholder gradient.</summary>
@@ -135,25 +112,5 @@ public static class CoverPalette
         public Bucket Add(byte r, byte g, byte b) => new(Count + 1, R + r, G + g, B + b);
 
         public Color Average() => Color.FromRgb((byte)(R / Count), (byte)(G / Count), (byte)(B / Count));
-    }
-
-    /// <summary>A plain BGRA (unpremultiplied) buffer to copy a bitmap into; Avalonia transcodes to it.</summary>
-    private sealed class BufferFramebuffer(IntPtr address, PixelSize size, int rowBytes, Vector dpi) : ILockedFramebuffer
-    {
-        public IntPtr Address { get; } = address;
-
-        public PixelSize Size { get; } = size;
-
-        public int RowBytes { get; } = rowBytes;
-
-        public Vector Dpi { get; } = dpi;
-
-        public PixelFormat Format => PixelFormat.Bgra8888;
-
-        public AlphaFormat AlphaFormat => AlphaFormat.Unpremul;
-
-        public void Dispose()
-        {
-        }
     }
 }

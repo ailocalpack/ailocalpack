@@ -1174,4 +1174,22 @@
   <data name="Game_Tabs_Label" xml:space="preserve">
     <value>Разделы страницы игры</value>
   </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>Локализация для этой игры недоступна</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>Обнаружен {0}. Изменение файлов игры может привести к блокировке аккаунта, поэтому ailocalpack не устанавливает и не создаёт паки для игр с античитом.</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>Издатель попросил не распространять любительские переводы этой игры, поэтому ailocalpack не устанавливает и не создаёт для неё паки.</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>Считаете, что это ошибка?</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>Сообщить</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>Откроет на GitHub заполненное обращение в реестр паков</value>
+  </data>
 </root>

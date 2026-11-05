@@ -12,7 +12,9 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
+using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels.GamePage;
+using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using Avalonia;
 using Avalonia.Media;
@@ -20,6 +22,8 @@ using Avalonia.Media.Immutable;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Desktop.ViewModels;
 
@@ -29,6 +33,8 @@ namespace AiLocalPack.Desktop.ViewModels;
 /// Packs (count), Generation (% while a job runs), Audio and Textures (coming soon). The tab bar sticks to the top with
 /// a mini cover, the name and the primary action once the header scrolls away (<see cref="IsTabBarStuck"/>, set by the
 /// view). Follows the catalog (rename, drive unplugged), the pack list and the target language while open.
+/// A blocked game (design §3a: anti-cheat, studio opt-out) keeps the header with a grey cover and no action, and shows
+/// the red explanation with <c>Report</c> instead of the tabs.
 /// </summary>
 public sealed partial class GamePageViewModel : PageViewModel
 {
@@ -38,13 +44,20 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly SettingsStore _settings;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
+    private readonly ISystemShell _shell;
+    private readonly AntiCheatDetector _antiCheats;
+    private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
     private IBrush? _placeholderBrush;
-    private (IBrush Base, IBrush Glow, IBrush SecondGlow)? _backdrop;
+    private IBrush? _greyPlaceholderBrush;
+    private (IBrush Base, IBrush Glow, IBrush SecondGlow, bool Grey)? _backdrop;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Cover), nameof(HasCover), nameof(Icon), nameof(HasIcon))]
     private CoverImage? _image;
+
+    /// <summary>A grey copy of <see cref="Image"/>'s bitmap, shown while the game is blocked.</summary>
+    private Bitmap? _greyImage;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPacksTab), nameof(IsGenerationTab), nameof(IsSoonTab), nameof(SoonTitle), nameof(SoonText), nameof(SoonIcon))]
@@ -52,6 +65,7 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     /// <summary>The header scrolled out of view: the sticky bar shows the mini cover, name and primary action.</summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowStickyBar))]
     private bool _isTabBarStuck;
 
     /// <param name="initialTab">The tab to open; <see cref="GamePageTab.Default"/> = Generation while a job runs, else Packs.</param>
@@ -64,7 +78,10 @@ public sealed partial class GamePageViewModel : PageViewModel
         Localizer localizer,
         IUiDispatcher ui,
         ICoverLoader covers,
-        GamePageTab initialTab = GamePageTab.Default)
+        ISystemShell shell,
+        AntiCheatDetector antiCheats,
+        GamePageTab initialTab = GamePageTab.Default,
+        ILogger<GamePageViewModel>? logger = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         Game = game;
@@ -74,6 +91,9 @@ public sealed partial class GamePageViewModel : PageViewModel
         _settings = settings;
         _localizer = localizer;
         _ui = ui;
+        _shell = shell;
+        _antiCheats = antiCheats;
+        _logger = logger ?? NullLogger<GamePageViewModel>.Instance;
         Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Generation, GamePageTab.Audio, GamePageTab.Textures }
             .Select(t => new GameTabViewModel(t, tab => SelectedTab = tab))];
         PrimaryCommand = new RelayCommand(RunPrimary, () => CanRunPrimary);
@@ -110,19 +130,23 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     // ---------- Cover and backdrop ----------
 
-    public Bitmap? Cover => Image is { IsIcon: false } image ? image.Bitmap : null;
+    /// <summary>The cover art; grey while the game is blocked.</summary>
+    public Bitmap? Cover => Image is { IsIcon: false } image ? Shown(image) : null;
 
     public bool HasCover => Cover is not null;
 
-    public Bitmap? Icon => Image is { IsIcon: true } image ? image.Bitmap : null;
+    /// <summary>The game's icon on the placeholder; grey while the game is blocked.</summary>
+    public Bitmap? Icon => Image is { IsIcon: true } image ? Shown(image) : null;
 
     public bool HasIcon => Icon is not null;
 
     /// <summary>The colors the backdrop is drawn from: the cover's, else the placeholder's (until the cover loads).</summary>
     public CoverColors BackdropColors { get; private set; }
 
-    /// <summary>Made on first read (UI thread), like the library's placeholder brush.</summary>
-    public IBrush PlaceholderBrush => _placeholderBrush ??= PlaceholderColors.CreateBrush(Game.Id);
+    /// <summary>Made on first read (UI thread), like the library's placeholder brush; grey while the game is blocked.</summary>
+    public IBrush PlaceholderBrush => IsBlocked
+        ? _greyPlaceholderBrush ??= PlaceholderColors.CreateBrush(Game.Id, greyscale: true)
+        : _placeholderBrush ??= PlaceholderColors.CreateBrush(Game.Id);
 
     /// <summary>The backdrop's base: the cover's dominant color, darkened.</summary>
     public IBrush BackdropBrush => Backdrop.Base;
@@ -133,7 +157,9 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>A second glow at the top right, in another color of the cover.</summary>
     public IBrush BackdropSecondGlowBrush => Backdrop.SecondGlow;
 
-    private (IBrush Base, IBrush Glow, IBrush SecondGlow) Backdrop => _backdrop ??= CreateBackdrop(BackdropColors);
+    /// <summary>A blocked game's backdrop is grey like its cover.</summary>
+    private (IBrush Base, IBrush Glow, IBrush SecondGlow, bool Grey) Backdrop =>
+        _backdrop is { } backdrop && backdrop.Grey == IsBlocked ? backdrop : (_backdrop = CreateBackdrop(BackdropColors, IsBlocked)).Value;
 
     // ---------- Fact chips ----------
 
@@ -223,6 +249,51 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     /// <summary>The banner's <c>Translate new strings</c>: only when the header offers the update (else it is the header's action).</summary>
     public bool ShowBannerTranslate => Action.Kind == GamePrimaryActionKind.UpdatePack;
+
+    // ---------- Blocked game (design §3a) ----------
+
+    /// <summary>Anti-cheat or studio opt-out: the red explanation replaces the tabs.</summary>
+    public bool IsBlocked => Status.IsBlocked;
+
+    /// <summary>The tab bar and the tab: hidden for a blocked game.</summary>
+    public bool ShowTabs => !IsBlocked;
+
+    /// <summary>The sticky copy of the tab bar: once the in-flow one scrolled away, never for a blocked game.</summary>
+    public bool ShowStickyBar => IsTabBarStuck && !IsBlocked;
+
+    /// <summary>"Easy Anti-Cheat was detected. Modifying game files can get your account banned…" or the opt-out text.</summary>
+    public string BlockedText => Status.Block switch
+    {
+        LocalizationBlock.OptOut => _localizer[nameof(Strings.Game_Blocked_OptOut)],
+        LocalizationBlock.AntiCheat => _localizer.Format(nameof(Strings.Game_Blocked_AntiCheat), Status.AntiCheatName ?? string.Empty),
+        _ => string.Empty,
+    };
+
+    /// <summary>
+    /// <c>Report</c>: a new registry issue in the browser, filled in with the game, its ID, the reason and the anti-cheat
+    /// file found in the folder (looked up again off the UI thread: the catalog keeps only the anti-cheat ID).
+    /// </summary>
+    [RelayCommand]
+    private async Task ReportAsync()
+    {
+        if (_statuses.ResolveBlock(Game) is not { } block)
+        {
+            return;
+        }
+
+        string? detectedFile = null;
+        if (block.Reason == LocalizationBlock.AntiCheat && Game.IsAvailable)
+        {
+            var path = Game.InstallPath;
+            var detection = await Task.Run(() => _antiCheats.Detect(path));
+            detectedFile = (detection.Matches.FirstOrDefault(m => m.Id == block.AntiCheatId) ?? detection.Match)?.Marker;
+        }
+
+        if (!_shell.OpenUrl(BlockReport.IssueUri(Game, block, detectedFile, AppVersion.Current)))
+        {
+            _logger.LogWarning("Couldn't open the block report for {Game}", Game.Id);
+        }
+    }
 
     // ---------- Tabs ----------
 
@@ -344,6 +415,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         }
     }
 
+    private Bitmap Shown(CoverImage image) => IsBlocked && _greyImage is { } grey ? grey : image.Bitmap;
+
     private async Task LoadCoverAsync(ICoverLoader covers)
     {
         BackdropColors = CoverPalette.ForPlaceholder(Game.Id);
@@ -354,10 +427,12 @@ public sealed partial class GamePageViewModel : PageViewModel
                 return;
             }
 
-            // An icon is small and mostly transparent; its colors still beat the placeholder's.
-            var colors = await Task.Run(() => CoverPalette.FromBitmap(image.Bitmap), _closed.Token);
+            // An icon is small and mostly transparent; its colors still beat the placeholder's. The grey copy is made
+            // for every game: the block can come with a later pack list while the page is open.
+            var (colors, grey) = await Task.Run(() => (CoverPalette.FromBitmap(image.Bitmap), BitmapPixels.Greyscale(image.Bitmap)), _closed.Token);
             _ui.Post(() =>
             {
+                _greyImage = grey;
                 Image = image;
                 if (colors is { } found)
                 {
@@ -375,11 +450,16 @@ public sealed partial class GamePageViewModel : PageViewModel
         }
     }
 
-    private static (IBrush Base, IBrush Glow, IBrush SecondGlow) CreateBackdrop(CoverColors colors)
+    private static (IBrush Base, IBrush Glow, IBrush SecondGlow, bool Grey) CreateBackdrop(CoverColors colors, bool grey)
     {
+        if (grey)
+        {
+            colors = new CoverColors(BitmapPixels.Greyscale(colors.Dominant), BitmapPixels.Greyscale(colors.Glow), BitmapPixels.Greyscale(colors.SecondGlow));
+        }
+
         var dominant = colors.Dominant;
         var dark = Color.FromRgb((byte)(dominant.R * 0.45), (byte)(dominant.G * 0.45), (byte)(dominant.B * 0.45));
-        return (new ImmutableSolidColorBrush(dark), Glow(colors.Glow, 0.12, 0.6), Glow(colors.SecondGlow, 0.85, 0.5));
+        return (new ImmutableSolidColorBrush(dark), Glow(colors.Glow, 0.12, 0.6), Glow(colors.SecondGlow, 0.85, 0.5), grey);
     }
 
     /// <summary>A radial glow from the top edge at <paramref name="x"/> (relative), fading out over <paramref name="radius"/> of the width.</summary>

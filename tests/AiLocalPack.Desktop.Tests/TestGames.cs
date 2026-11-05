@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Games;
+using AiLocalPack.TestKit;
 
 namespace AiLocalPack.Desktop.Tests;
 
@@ -36,4 +37,12 @@ internal static class TestGames
             null,
             null,
             true);
+
+    /// <summary>Adds Steam game 30 "Shooter" with an <c>EasyAntiCheat/</c> folder (blocked once the library is refreshed).</summary>
+    public static SteamFixture AddShooter(SteamFixture steam)
+    {
+        steam.AddGame(30, "Shooter");
+        Directory.CreateDirectory(Path.Combine(steam.Root, "steamapps", "common", "Shooter", "EasyAntiCheat"));
+        return steam;
+    }
 }

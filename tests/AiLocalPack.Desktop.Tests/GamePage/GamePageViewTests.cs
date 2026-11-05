@@ -25,7 +25,7 @@ public sealed class GamePageViewTests : IDisposable
     {
         packs?.Invoke(_registry);
         _registry.Write();
-        var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha").AddGame(20, "Beta"), registry: _registry.Path);
+        var services = TestServices.Build(steam: s => TestGames.AddShooter(s.AddGame(10, "Alpha").AddGame(20, "Beta")), registry: _registry.Path);
         services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
         services.GetRequiredService<PackIndex>().RefreshAsync().GetAwaiter().GetResult();
         return services;
@@ -93,6 +93,38 @@ public sealed class GamePageViewTests : IDisposable
 
         // Assert
         Find<Button>(window, "PrimaryAction").IsEffectivelyVisible.Should().BeFalse();
+        window.Close();
+    });
+
+    [Fact]
+    public Task Blocked_game_shows_the_explanation_instead_of_the_tabs() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var window = OpenGame(services, 30);
+
+        // Assert
+        (Find<Border>(window, "BlockedPanel").IsEffectivelyVisible,
+            Find<Border>(window, "TabBar").IsEffectivelyVisible,
+            Find<Panel>(window, "TabContent").IsEffectivelyVisible,
+            Find<Button>(window, "ReportButton").IsEffectivelyEnabled)
+            .Should().Be((true, false, false, true));
+        window.Close();
+    });
+
+    [Fact]
+    public Task Game_that_is_not_blocked_has_no_explanation() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var window = OpenGame(services, 10);
+
+        // Assert
+        Find<Border>(window, "BlockedPanel").IsEffectivelyVisible.Should().BeFalse();
         window.Close();
     });
 

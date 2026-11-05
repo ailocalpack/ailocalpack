@@ -23,6 +23,9 @@ public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, Se
 
     public LocalizationStatus Resolve(Game game) => Resolve(game, Language);
 
+    /// <summary>Why install and generation refuse the game (<see cref="GameBlocks"/>); <c>null</c> when they don't.</summary>
+    public GameBlock? ResolveBlock(Game game) => GameBlocks.Resolve(game, policy, packIndex.Current?.Index);
+
     public LocalizationStatus Resolve(Game game, string language)
     {
         ArgumentNullException.ThrowIfNull(game);

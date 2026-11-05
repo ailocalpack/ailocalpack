@@ -81,7 +81,8 @@ public sealed record LocalizationStatus(
 public static class LocalizationStatuses
 {
     /// <summary>
-    /// In this order: opt-out, then a blocking anti-cheat (unless the registry allows the game) → blocked; a generation
+    /// In this order: opt-out, then a blocking anti-cheat (unless the registry allows the game) → blocked
+    /// (<see cref="GameBlocks.Resolve(GameId, AntiCheatVerdict, RegistryIndex?)"/>); a generation
     /// job → generating / paused; an installed pack → needs update when an update broke it, else installed; no index →
     /// unknown; packs for the language → pack available; else no pack.
     /// </summary>
@@ -103,14 +104,9 @@ public static class LocalizationStatuses
         var registryGame = index?.Find(game.Id);
         IReadOnlyList<RegistryPack> packs = registryGame is null ? [] : Rank(registryGame.PacksIn(language), game);
 
-        if (registryGame is { OptOut: true })
+        if (GameBlocks.Resolve(game.Id, antiCheat, index) is { } block)
         {
-            return new(LocalizationStatusKind.Blocked, LocalizationBlock.OptOut, packs);
-        }
-
-        if (antiCheat.IsBlocked && registryGame is not { AntiCheatAllowed: true })
-        {
-            return new(LocalizationStatusKind.Blocked, LocalizationBlock.AntiCheat, packs, antiCheat.Name);
+            return new(LocalizationStatusKind.Blocked, block.Reason, packs, block.AntiCheatName);
         }
 
         if (job is not null)

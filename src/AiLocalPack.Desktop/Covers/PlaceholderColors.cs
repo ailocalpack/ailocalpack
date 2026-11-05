@@ -20,9 +20,15 @@ public static class PlaceholderColors
     public static (Color Top, Color Bottom) For(GameId id) => Gradients[StableHash(id.ToString()) % (uint)Gradients.Length];
 
     /// <summary>The placeholder cover: a diagonal gradient. Avalonia object: create it on the UI thread.</summary>
-    public static IBrush CreateBrush(GameId id)
+    /// <param name="greyscale">Grey, for a blocked game's page (design §3a).</param>
+    public static IBrush CreateBrush(GameId id, bool greyscale = false)
     {
         var (top, bottom) = For(id);
+        if (greyscale)
+        {
+            (top, bottom) = (BitmapPixels.Greyscale(top), BitmapPixels.Greyscale(bottom));
+        }
+
         return new LinearGradientBrush
         {
             StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),

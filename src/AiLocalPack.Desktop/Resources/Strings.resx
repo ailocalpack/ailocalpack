@@ -1145,4 +1145,22 @@
   <data name="Game_Tabs_Label" xml:space="preserve">
     <value>Game page sections</value>
   </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>Localization is unavailable for this game</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>{0} was detected. Modifying game files can get your account banned, so ailocalpack doesn't install or generate packs for games with anti-cheat.</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>The publisher asked not to distribute fan translations for this game, so ailocalpack doesn't install or generate packs for it.</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>Think this is a mistake?</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>Opens a prefilled issue in the pack registry on GitHub</value>
+  </data>
 </root>

@@ -18,12 +18,15 @@ public sealed class GamePageViewModelTests : IDisposable
 
     public void Dispose() => _registry.Dispose();
 
-    /// <summary>Steam games 10 "Alpha" and 20 "Beta" (build 1000), target language Russian, the registry as the test wrote it.</summary>
+    /// <summary>
+    /// Steam games 10 "Alpha", 20 "Beta" and 30 "Shooter" (Easy Anti-Cheat folder), build 1000, target language Russian,
+    /// the registry as the test wrote it.
+    /// </summary>
     private async Task<ServiceProvider> BuildAsync(Action<TestRegistry>? packs = null)
     {
         packs?.Invoke(_registry);
         _registry.Write();
-        var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha").AddGame(20, "Beta"), registry: _registry.Path);
+        var services = TestServices.Build(steam: s => TestGames.AddShooter(s.AddGame(10, "Alpha").AddGame(20, "Beta")), registry: _registry.Path);
         services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
         await services.GetRequiredService<PackIndex>().RefreshAsync();
         return services;
@@ -310,5 +313,120 @@ public sealed class GamePageViewModelTests : IDisposable
 
         // Assert
         (page.IsStatusUnknown, page.HasPrimaryAction).Should().Be((true, false));
+    }
+
+    [Fact]
+    public async Task Anti_cheat_game_explains_the_block_instead_of_the_tabs()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = Open(services, 30);
+
+        // Assert
+        (page.IsBlocked, page.ShowTabs, page.BlockedText).Should().Be((
+            true,
+            false,
+            "Easy Anti-Cheat was detected. Modifying game files can get your account banned, so ailocalpack doesn't install or generate packs for games with anti-cheat."));
+    }
+
+    [Fact]
+    public async Task Opted_out_game_says_the_publisher_asked()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.OptOut(10));
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        page.BlockedText.Should().StartWith("The publisher asked not to distribute fan translations for this game");
+    }
+
+    [Fact]
+    public async Task Registry_whitelist_lifts_the_block()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.AllowAntiCheat(30));
+
+        // Act
+        var page = Open(services, 30);
+
+        // Assert
+        (page.IsBlocked, page.ShowTabs, page.Action.Kind).Should().Be((false, true, GamePrimaryActionKind.Generate));
+    }
+
+    [Fact]
+    public async Task Blocked_game_never_shows_the_sticky_bar()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 30);
+
+        // Act
+        page.IsTabBarStuck = true;
+
+        // Assert
+        page.ShowStickyBar.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Opt_out_arriving_with_a_new_pack_list_blocks_the_open_page()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 10);
+        _registry.OptOut(10).Write();
+
+        // Act
+        await services.GetRequiredService<PackIndex>().RefreshAsync();
+
+        // Assert
+        (page.IsBlocked, page.ShowTabs).Should().Be((true, false));
+    }
+
+    [Fact]
+    public async Task Report_opens_the_registry_issue_with_the_detected_file()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 30);
+
+        // Act
+        await page.ReportCommand.ExecuteAsync(null);
+
+        // Assert
+        var body = Uri.UnescapeDataString(services.GetRequiredService<FakeShell>().OpenedUrls.Single().Query);
+        body.Should().Contain("title=Block report: Shooter (steam:30)").And.Contain("**Detected file:** `EasyAntiCheat/`");
+    }
+
+    [Fact]
+    public async Task Report_of_an_opted_out_game_names_the_flag()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.OptOut(10));
+        var page = Open(services, 10);
+
+        // Act
+        await page.ReportCommand.ExecuteAsync(null);
+
+        // Assert
+        Uri.UnescapeDataString(services.GetRequiredService<FakeShell>().OpenedUrls.Single().Query)
+            .Should().Contain("**Blocked because:** the registry's opt-out flag");
+    }
+
+    [Fact]
+    public async Task Report_of_a_game_that_is_not_blocked_opens_nothing()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 10);
+
+        // Act
+        await page.ReportCommand.ExecuteAsync(null);
+
+        // Assert
+        services.GetRequiredService<FakeShell>().OpenedUrls.Should().BeEmpty();
     }
 }
