@@ -316,19 +316,137 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
 
-    <!-- Status badge on a cover (top left); always icon + text -->
+    <!-- Status badge on a cover (top left): always icon + text, colored text on a solid plate; faded (.stale) while the
+         pack list is the saved copy -->
     <Style Selector="Border.statusBadge">
         <Setter Property="Margin" Value="8" />
-        <Setter Property="Padding" Value="8,3" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Padding" Value="7,0,9,0" />
+        <Setter Property="CornerRadius" Value="7" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{DynamicResource AppBadgeBrush}" />
         <Setter Property="TextElement.FontSize" Value="12" />
         <Setter Property="TextElement.FontWeight" Value="Bold" />
-        <Setter Property="TextElement.Foreground" Value="White" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.stale">
+        <Setter Property="Opacity" Value="0.75" />
+    </Style>
+    <Style Selector="Border.statusBadge.ok">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.ok Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.accent">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.accent Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.warn">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.warn Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.gen">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.gen Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" />
     </Style>
     <Style Selector="Border.statusBadge.bad">
-        <Setter Property="Background" Value="#e6c23434" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="Border.statusBadge.bad Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+
+    <!-- Generation progress along the bottom of a cover; hidden while the quick action shows -->
+    <Style Selector="ProgressBar.coverProgress">
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="MinHeight" Value="5" />
+        <Setter Property="Height" Value="5" />
+        <Setter Property="CornerRadius" Value="3" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Background" Value="#40ffffff" />
+    </Style>
+    <Style Selector="ProgressBar.coverProgress.paused">
+        <Setter Property="Opacity" Value="0.6" />
+    </Style>
+    <Style Selector="Button.gameCard:pointerover ProgressBar.coverProgress, Button.gameCard:focus-within ProgressBar.coverProgress">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- Quick action over the bottom of a cover: only on hover or keyboard focus -->
+    <Style Selector="Button.quick">
+        <Setter Property="Margin" Value="8" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="IsVisible" Value="False" />
+        <Setter Property="Background" Value="{DynamicResource AppBadgeBrush}" />
+    </Style>
+    <Style Selector="Button.gameCard:pointerover Button.quick.has, Button.gameCard:focus-within Button.quick.has">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="Button.quick.primary">
+        <Setter Property="Background" Value="{DynamicResource AppAccentFillBrush}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.quick.warn">
+        <Setter Property="Background" Value="{DynamicResource AppWarnBrush}" />
+        <Setter Property="Foreground" Value="#1a1205" />
+    </Style>
+    <Style Selector="Button.quick.gen">
+        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="#06222a" />
+    </Style>
+    <Style Selector="Button.quick.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <!-- Status filter chip: pill with a live count; the chosen one is raised and its count accent -->
+    <Style Selector="Button.chip">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="17" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.chip:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.chip.on">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.chip TextBlock.count">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="Button.chip.on TextBlock.count">
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
     </Style>
 
     <!-- Skeleton block while the first scan runs -->

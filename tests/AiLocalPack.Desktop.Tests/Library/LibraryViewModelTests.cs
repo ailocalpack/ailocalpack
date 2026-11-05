@@ -162,7 +162,7 @@ public sealed class LibraryViewModelTests
     }
 
     [Fact]
-    public void Sort_options_are_by_name_then_recently_played()
+    public void Sort_options_are_important_first_recently_played_and_by_name()
     {
         // Arrange
         using var services = WithGames("Celeste");
@@ -171,8 +171,8 @@ public sealed class LibraryViewModelTests
         var vm = Create(services);
 
         // Assert
-        vm.SortOptions.Select(o => o.Display).Should().Equal("By name", "Recently played");
-        vm.SelectedSort.Value.Should().Be(LibrarySort.ByName);
+        vm.SortOptions.Select(o => o.Display).Should().Equal("Important first", "Recently played", "By name");
+        vm.SelectedSort.Value.Should().Be(LibrarySort.ImportantFirst);
     }
 
     [Fact]

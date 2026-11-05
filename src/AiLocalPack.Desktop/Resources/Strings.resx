@@ -243,7 +243,7 @@
     <value>No games match “{0}”. Game not in the library? Add its folder.</value>
   </data>
   <data name="Library_NoResults_Reset" xml:space="preserve">
-    <value>Clear search</value>
+    <value>Reset search and filter</value>
   </data>
   <data name="Library_NoResults_AddFolder" xml:space="preserve">
     <value>Add folder</value>
@@ -898,5 +898,104 @@
   </data>
   <data name="Library_Banner_Dismiss" xml:space="preserve">
     <value>Dismiss</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>Pack available</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>No pack</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>Needs update</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>Generating</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>Filter by status</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>Generating · {0}%</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>Paused · {0}%</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>Resume</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>Generate with AI</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>Studio opted out</value>
+  </data>
+  <data name="Library_Card_PackCount_One" xml:space="preserve">
+    <value>{0} pack</value>
+  </data>
+  <data name="Library_Card_PackCount_Other" xml:space="preserve">
+    <value>{0} packs</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>verified</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>alpha</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>≈ {0} min</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>{0} likes</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>Translate to</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>Language for the badges and counts. Also in Settings → General.</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>Important first</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>Can't reach the pack registry. Showing data saved on {0}.</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>Can't reach the pack registry. Pack statuses appear once it answers.</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>The pack registry uses a newer format. Update the app to see the current packs.</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>The pack registry address set for the app is not valid, so pack statuses can't be shown.</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>No games match this filter. Game not in the library? Add its folder.</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>No games match “{0}” with this filter. Game not in the library? Add its folder.</value>
   </data>
 </root>

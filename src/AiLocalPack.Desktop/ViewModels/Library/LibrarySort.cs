@@ -1,13 +1,19 @@
 namespace AiLocalPack.Desktop.ViewModels.Library;
 
-/// <summary>Order of the library grid. <c>Important first</c> (by pack status) comes with registry statuses (task 21).</summary>
+/// <summary>Order of the library grid.</summary>
 public enum LibrarySort
 {
-    /// <summary>Alphabetical in the UI language, ignoring case.</summary>
-    ByName,
+    /// <summary>
+    /// By status (needs update, paused, generating, pack available, installed, no pack, blocked), then last played;
+    /// the default.
+    /// </summary>
+    ImportantFirst,
 
     /// <summary>Last played first; never played games after them, by name.</summary>
     RecentlyPlayed,
+
+    /// <summary>Alphabetical in the UI language, ignoring case.</summary>
+    ByName,
 }
 
 /// <summary>An entry of the sort dropdown.</summary>

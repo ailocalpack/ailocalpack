@@ -64,7 +64,7 @@ public sealed class LanguageSwitchUiTests
 
             // Assert
             Find<TextBox>(window, "SearchBox").PlaceholderText.Should().Be("Поиск игр");
-            Find<ComboBox>(window, "SortBox").SelectedItem.Should().BeOfType<LibrarySortOption>().Which.Display.Should().Be("По названию");
+            Find<ComboBox>(window, "SortBox").SelectedItem.Should().BeOfType<LibrarySortOption>().Which.Display.Should().Be("Сначала важное");
             AutomationProperties.GetName(Find<ItemsControl>(window, "Games")).Should().Be("1 игра");
         }
         finally

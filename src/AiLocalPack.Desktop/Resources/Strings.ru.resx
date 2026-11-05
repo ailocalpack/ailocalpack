@@ -218,7 +218,7 @@
     <value>Нет игр по запросу «{0}». Игры нет в библиотеке? Добавьте её папку.</value>
   </data>
   <data name="Library_NoResults_Reset" xml:space="preserve">
-    <value>Сбросить поиск</value>
+    <value>Сбросить поиск и фильтр</value>
   </data>
   <data name="Library_NoResults_AddFolder" xml:space="preserve">
     <value>Добавить папку</value>
@@ -918,5 +918,107 @@
   </data>
   <data name="Library_Banner_Dismiss" xml:space="preserve">
     <value>Скрыть</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>Установлен</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>Есть пакет</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>Нет пакета</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>Нужно обновить</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>Генерация</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>Фильтр по статусу</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>Генерация · {0}%</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>Пауза · {0}%</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>Недоступно</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>Создать с ИИ</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>Студия против переводов</value>
+  </data>
+  <data name="Library_Card_PackCount_One" xml:space="preserve">
+    <value>{0} пакет</value>
+  </data>
+  <data name="Library_Card_PackCount_Few" xml:space="preserve">
+    <value>{0} пакета</value>
+  </data>
+  <data name="Library_Card_PackCount_Many" xml:space="preserve">
+    <value>{0} пакетов</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>проверен</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>альфа</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>≈ {0} мин</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>Лайков: {0}</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>Перевод на</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>Язык для статусов и счётчиков. Его же можно сменить в Настройки → Общие.</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>Сначала важное</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>Не удаётся связаться с реестром пакетов. Показаны данные, сохранённые {0}.</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>Не удаётся связаться с реестром пакетов. Статусы пакетов появятся, когда он ответит.</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>Реестр пакетов использует более новый формат. Обновите приложение, чтобы видеть актуальные пакеты.</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>Адрес реестра пакетов, заданный приложению, неверный, поэтому статусы пакетов не показать.</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>Под этот фильтр ни одна игра не подходит. Игры нет в библиотеке? Добавьте её папку.</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>С этим фильтром ничего не нашлось по запросу «{0}». Игры нет в библиотеке? Добавьте её папку.</value>
   </data>
 </root>

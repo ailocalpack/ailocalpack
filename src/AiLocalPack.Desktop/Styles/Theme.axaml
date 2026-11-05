@@ -22,6 +22,8 @@
             <SolidColorBrush x:Key="AppOkSoftBrush" Color="#294cc38a" />
             <SolidColorBrush x:Key="AppWarnSoftBrush" Color="#29f0b44c" />
             <SolidColorBrush x:Key="AppGenBrush" Color="#3fc6d9" />
+            <SolidColorBrush x:Key="AppBadgeBrush" Color="#d10a0c12" />
+            <SolidColorBrush x:Key="AppGenSoftBrush" Color="#293fc6d9" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="AppBackgroundBrush" Color="#f4f6fa" />
@@ -43,6 +45,8 @@
             <SolidColorBrush x:Key="AppOkSoftBrush" Color="#1a17834f" />
             <SolidColorBrush x:Key="AppWarnSoftBrush" Color="#1fc48000" />
             <SolidColorBrush x:Key="AppGenBrush" Color="#0a7f91" />
+            <SolidColorBrush x:Key="AppBadgeBrush" Color="#ebffffff" />
+            <SolidColorBrush x:Key="AppGenSoftBrush" Color="#1a0a7f91" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -88,4 +92,13 @@
     <StreamGeometry x:Key="IconAlert">M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z M12 9v4 M12 17h.01</StreamGeometry>
     <StreamGeometry x:Key="IconPlus">M5 12h14 M12 5v14</StreamGeometry>
     <StreamGeometry x:Key="IconTrash">M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2</StreamGeometry>
+    <StreamGeometry x:Key="IconDownload">M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5l5-5 M12 15V3</StreamGeometry>
+    <StreamGeometry x:Key="IconPause">M7 4h2a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z M15 4h2a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z</StreamGeometry>
+    <StreamGeometry x:Key="IconPlay">M6 3L20 12L6 21z</StreamGeometry>
+    <StreamGeometry x:Key="IconSparkles">M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z</StreamGeometry>
+    <StreamGeometry x:Key="IconWifiOff">M12 20h.01 M8.5 16.43a5 5 0 0 1 7 0 M5 12.86a10 10 0 0 1 5.17-2.69 M19 12.86a10 10 0 0 0-2.01-1.53 M2 8.82a15 15 0 0 1 4.18-2.65 M22 8.82a15 15 0 0 0-11.29-3.76 M2 2l20 20</StreamGeometry>
+    <StreamGeometry x:Key="IconThumbsUp">M7 10v12 M15 5.88L14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88z</StreamGeometry>
+    <StreamGeometry x:Key="IconGlobe">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20 M2 12h20</StreamGeometry>
+    <!-- Dashed circle ("No pack"), drawn as arcs -->
+    <StreamGeometry x:Key="IconCircleDashed">M10.1 2.18a9.93 9.93 0 0 1 3.8 0 M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7 M21.82 10.1a9.93 9.93 0 0 1 0 3.8 M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69 M13.9 21.82a9.94 9.94 0 0 1-3.8 0 M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7 M2.18 13.9a9.93 9.93 0 0 1 0-3.8 M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69</StreamGeometry>
 </ResourceDictionary>
