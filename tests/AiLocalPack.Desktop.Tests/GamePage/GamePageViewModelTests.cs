@@ -1,0 +1,314 @@
+using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Library;
+using AiLocalPack.Core.Settings;
+using AiLocalPack.Desktop.Library;
+using AiLocalPack.Desktop.Navigation;
+using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Desktop.Tests.Library;
+using AiLocalPack.Desktop.ViewModels;
+using AiLocalPack.Desktop.ViewModels.GamePage;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace AiLocalPack.Desktop.Tests.GamePage;
+
+/// <summary>The game page's header and tabs (task 22) over the real service graph with a local registry.</summary>
+public sealed class GamePageViewModelTests : IDisposable
+{
+    private readonly TestRegistry _registry = new();
+
+    public void Dispose() => _registry.Dispose();
+
+    /// <summary>Steam games 10 "Alpha" and 20 "Beta" (build 1000), target language Russian, the registry as the test wrote it.</summary>
+    private async Task<ServiceProvider> BuildAsync(Action<TestRegistry>? packs = null)
+    {
+        packs?.Invoke(_registry);
+        _registry.Write();
+        var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha").AddGame(20, "Beta"), registry: _registry.Path);
+        services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
+        await services.GetRequiredService<PackIndex>().RefreshAsync();
+        return services;
+    }
+
+    private static Game GameOf(ServiceProvider services, uint appId) =>
+        services.GetRequiredService<GameLibrary>().Catalog.Games.Single(g => g.Id == GameId.Steam(appId));
+
+    private static GamePageViewModel Open(ServiceProvider services, uint appId, GamePageTab tab = GamePageTab.Default) =>
+        services.GetRequiredService<IPageFactory>().Create<GamePageViewModel>(GameOf(services, appId), tab);
+
+    [Fact]
+    public async Task Game_with_a_pack_offers_installing_it()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.Pack(10, "ru", "lanterns", Core.Packs.PackStatus.Verified));
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        (page.PrimaryText, page.PrimaryCaption).Should().Be(("Install best pack", "«lanterns» · verified · made for your version"));
+    }
+
+    [Fact]
+    public async Task Game_without_a_pack_offers_generation()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.Pack(10, "ru", "lanterns"));
+
+        // Act
+        var page = Open(services, 20);
+
+        // Assert
+        (page.HasPrimaryAction, page.PrimaryText).Should().Be((true, "Generate translation with AI"));
+    }
+
+    [Fact]
+    public async Task Blocked_game_has_no_primary_action()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.Pack(10, "ru", "lanterns").OptOut(10));
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        (page.HasPrimaryAction, page.Action.Kind).Should().Be((false, GamePrimaryActionKind.None));
+    }
+
+    [Fact]
+    public async Task Blocked_game_does_not_invite_to_generate_on_the_packs_tab()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.OptOut(10));
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        page.ShowNoPacks.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Game_without_a_pack_shows_the_empty_packs_tab()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = Open(services, 20);
+
+        // Assert
+        page.ShowNoPacks.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Page_opens_on_packs_by_default()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        page.Tabs.Where(t => t.IsSelected).Select(t => t.Tab).Should().Equal(GamePageTab.Packs);
+    }
+
+    [Fact]
+    public async Task Page_opens_on_the_tab_it_is_asked_for()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = Open(services, 10, GamePageTab.Generation);
+
+        // Assert
+        (page.SelectedTab, page.IsGenerationTab).Should().Be((GamePageTab.Generation, true));
+    }
+
+    [Fact]
+    public async Task Packs_tab_counts_the_packs_for_the_language()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.Pack(10, "ru", "a").Pack(10, "ru", "b").Pack(10, "de", "c"));
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        page.Tabs.Select(t => (t.Tab, t.Counter)).Should().Equal(
+            (GamePageTab.Packs, "2"), (GamePageTab.Generation, ""), (GamePageTab.Audio, ""), (GamePageTab.Textures, ""));
+    }
+
+    [Fact]
+    public async Task Only_audio_and_textures_are_coming_soon()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        page.Tabs.Where(t => t.IsSoon).Select(t => t.Tab).Should().Equal(GamePageTab.Audio, GamePageTab.Textures);
+    }
+
+    [Fact]
+    public async Task Coming_soon_tab_opens_its_illustration()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 10);
+
+        // Act
+        page.Tabs.Single(t => t.Tab == GamePageTab.Textures).SelectCommand.Execute(null);
+
+        // Assert
+        (page.IsSoonTab, page.SoonTitle, page.SoonIcon).Should().Be((true, "Textures: coming soon", "IconImage"));
+    }
+
+    [Fact]
+    public async Task Install_opens_the_packs_tab_until_the_install_flow_exists()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.Pack(10, "ru", "lanterns"));
+        var page = Open(services, 10, GamePageTab.Audio);
+
+        // Act
+        page.PrimaryCommand.Execute(null);
+
+        // Assert
+        page.SelectedTab.Should().Be(GamePageTab.Packs);
+    }
+
+    [Fact]
+    public async Task Generate_opens_the_generation_tab()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 20);
+
+        // Act
+        page.PrimaryCommand.Execute(null);
+
+        // Assert
+        page.SelectedTab.Should().Be(GamePageTab.Generation);
+    }
+
+    [Fact]
+    public async Task Chips_show_engine_store_and_grouped_build()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var catalog = services.GetRequiredService<GameLibrary>().Catalog;
+        catalog.Update(GameId.Steam(10), g => g with { Engine = "unity:mono", Version = GameVersion.FromBuildId("14882031") });
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        (page.EngineText, page.StoreText, page.VersionText).Should().Be(("Unity (Mono)", "Steam", "build 14,882,031"));
+    }
+
+    private static Game ManualWithFiles() => TestGames.Manual("Wren") with
+    {
+        Version = GameVersion.FromFileHashes([new("Game.exe", new string('b', 64))]),
+    };
+
+    [Fact]
+    public async Task Manual_game_shows_a_short_hash_of_its_files()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = services.GetRequiredService<IPageFactory>().Create<GamePageViewModel>(ManualWithFiles());
+
+        // Assert
+        page.VersionText.Should().MatchRegex("^files hash [0-9a-f]{8}$");
+    }
+
+    [Fact]
+    public async Task Manual_game_chips_say_it_was_added_by_hand()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = services.GetRequiredService<IPageFactory>().Create<GamePageViewModel>(ManualWithFiles());
+
+        // Assert
+        (page.StoreText, page.VersionTip).Should().Be(("Added manually", "Game version: hash of 1 file"));
+    }
+
+    [Fact]
+    public async Task Renamed_game_shows_its_new_name()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 10);
+
+        // Act
+        services.GetRequiredService<GameLibrary>().Catalog.Update(GameId.Steam(10), g => g with { Name = "Alpha Remastered" });
+
+        // Assert
+        (page.Name, page.Title).Should().Be(("Alpha Remastered", "Alpha Remastered"));
+    }
+
+    [Fact]
+    public async Task Closed_page_stops_following_the_catalog()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 10);
+        page.OnClosed();
+
+        // Act
+        services.GetRequiredService<GameLibrary>().Catalog.Update(GameId.Steam(10), g => g with { Name = "Alpha Remastered" });
+
+        // Assert
+        page.Name.Should().Be("Alpha");
+    }
+
+    [Fact]
+    public async Task New_pack_list_updates_the_action()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var page = Open(services, 10);
+        _registry.Pack(10, "ru", "lanterns").Write();
+
+        // Act
+        await services.GetRequiredService<PackIndex>().RefreshAsync();
+
+        // Assert
+        page.Action.Kind.Should().Be(GamePrimaryActionKind.InstallBestPack);
+    }
+
+    [Fact]
+    public async Task Changing_the_target_language_updates_the_action()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.Pack(10, "de", "laternen"));
+        var page = Open(services, 10);
+
+        // Act
+        services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "de" });
+
+        // Assert
+        page.Action.Kind.Should().Be(GamePrimaryActionKind.InstallBestPack);
+    }
+
+    [Fact]
+    public async Task Pack_list_not_loaded_yet_offers_nothing()
+    {
+        // Arrange
+        using var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha"));
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        (page.IsStatusUnknown, page.HasPrimaryAction).Should().Be((true, false));
+    }
+}

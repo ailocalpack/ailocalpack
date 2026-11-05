@@ -714,4 +714,138 @@
             </Animation>
         </Style.Animations>
     </Style>
+
+    <!-- Game page (design §3) -->
+    <Style Selector="TextBlock.heroName">
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="LetterSpacing" Value="-0.5" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="Border.heroCover">
+        <Setter Property="Width" Value="132" />
+        <Setter Property="Height" Value="198" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="BoxShadow" Value="0 10 30 0 #66000000" />
+    </Style>
+    <Style Selector="Border.miniCover">
+        <Setter Property="Width" Value="26" />
+        <Setter Property="Height" Value="39" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+    <!-- Fact chip (engine, store, version) -->
+    <Style Selector="Border.factChip">
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Padding" Value="9,0" />
+        <Setter Property="CornerRadius" Value="7" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="TextElement.FontSize" Value="12" />
+        <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.factChip Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <!-- Installed pack block -->
+    <Style Selector="Border.installedPack">
+        <Setter Property="MaxWidth" Value="460" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+    </Style>
+    <Style Selector="Border.installedPack.broken">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+    </Style>
+    <Style Selector="Border.installedPack Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.installedPack.broken Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <!-- Primary action: large accent button; teal while generating -->
+    <Style Selector="Button.primaryAction">
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.primaryAction.sm">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="Button.primaryAction.gen">
+        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="#0d1015" />
+    </Style>
+    <Style Selector="Button.primaryAction.gen:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="#0d1015" />
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+    <!-- Tab bar -->
+    <Style Selector="Button.pageTab">
+        <Setter Property="Height" Value="46" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Margin" Value="0,0,4,0" />
+        <Setter Property="CornerRadius" Value="8,8,0,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0,0,0,2" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.pageTab:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.pageTab.on">
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.on:pointerover /template/ ContentPresenter">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.soon">
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab TextBlock.counter">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.on TextBlock.counter">
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab TextBlock.counter.gen">
+        <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Border.tabSoon">
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Padding" Value="7,0" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="TextElement.FontSize" Value="11" />
+        <Setter Property="TextElement.FontWeight" Value="Bold" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="Border.tabSoon Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <!-- Coming-soon / empty illustration -->
+    <Style Selector="Border.illustration">
+        <Setter Property="Width" Value="96" />
+        <Setter Property="Height" Value="96" />
+        <Setter Property="CornerRadius" Value="26" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
 </Styles>

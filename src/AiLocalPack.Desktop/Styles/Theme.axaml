@@ -24,6 +24,13 @@
             <SolidColorBrush x:Key="AppGenBrush" Color="#3fc6d9" />
             <SolidColorBrush x:Key="AppBadgeBrush" Color="#d10a0c12" />
             <SolidColorBrush x:Key="AppGenSoftBrush" Color="#293fc6d9" />
+            <!-- Game page backdrop from the cover's colors (design §3): strong in dark, much fainter in light -->
+            <x:Double x:Key="HeroBackdropOpacity">0.55</x:Double>
+            <LinearGradientBrush x:Key="HeroFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Offset="0" Color="#000d1015" />
+                <GradientStop Offset="1" Color="#0d1015" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="StickyBarBrush" Color="#eb0d1015" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="AppBackgroundBrush" Color="#f4f6fa" />
@@ -47,6 +54,12 @@
             <SolidColorBrush x:Key="AppGenBrush" Color="#0a7f91" />
             <SolidColorBrush x:Key="AppBadgeBrush" Color="#ebffffff" />
             <SolidColorBrush x:Key="AppGenSoftBrush" Color="#1a0a7f91" />
+            <x:Double x:Key="HeroBackdropOpacity">0.22</x:Double>
+            <LinearGradientBrush x:Key="HeroFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Offset="0" Color="#00f4f6fa" />
+                <GradientStop Offset="1" Color="#f4f6fa" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="StickyBarBrush" Color="#ebf4f6fa" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -99,6 +112,9 @@
     <StreamGeometry x:Key="IconWifiOff">M12 20h.01 M8.5 16.43a5 5 0 0 1 7 0 M5 12.86a10 10 0 0 1 5.17-2.69 M19 12.86a10 10 0 0 0-2.01-1.53 M2 8.82a15 15 0 0 1 4.18-2.65 M22 8.82a15 15 0 0 0-11.29-3.76 M2 2l20 20</StreamGeometry>
     <StreamGeometry x:Key="IconThumbsUp">M7 10v12 M15 5.88L14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88z</StreamGeometry>
     <StreamGeometry x:Key="IconGlobe">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20 M2 12h20</StreamGeometry>
+    <StreamGeometry x:Key="IconMusic">M9 18V5l12-2v13 M9 18a3 3 0 1 1-6 0a3 3 0 0 1 6 0z M21 16a3 3 0 1 1-6 0a3 3 0 0 1 6 0z</StreamGeometry>
+    <StreamGeometry x:Key="IconBox">M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.3 7l8.7 5 8.7-5 M12 22V12</StreamGeometry>
+    <StreamGeometry x:Key="IconTag">M12.59 2.59A2 2 0 0 0 11.17 2H4a2 2 0 0 0-2 2v7.17a2 2 0 0 0 .59 1.42l8.7 8.7a2.43 2.43 0 0 0 3.42 0l6.58-6.58a2.43 2.43 0 0 0 0-3.42z M8 7.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0z</StreamGeometry>
     <!-- Dashed circle ("No pack"), drawn as arcs -->
     <StreamGeometry x:Key="IconCircleDashed">M10.1 2.18a9.93 9.93 0 0 1 3.8 0 M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7 M21.82 10.1a9.93 9.93 0 0 1 0 3.8 M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69 M13.9 21.82a9.94 9.94 0 0 1-3.8 0 M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7 M2.18 13.9a9.93 9.93 0 0 1 0-3.8 M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69</StreamGeometry>
 </ResourceDictionary>

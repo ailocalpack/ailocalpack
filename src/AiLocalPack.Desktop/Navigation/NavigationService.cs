@@ -17,6 +17,11 @@ public sealed class NavigationService : INavigationService
     public void Reset(PageViewModel root)
     {
         ArgumentNullException.ThrowIfNull(root);
+        foreach (var page in _stack.Where(p => !ReferenceEquals(p, root)))
+        {
+            page.OnClosed();
+        }
+
         _stack.Clear();
         _stack.Add(root);
         Navigated?.Invoke(this, EventArgs.Empty);
@@ -27,6 +32,11 @@ public sealed class NavigationService : INavigationService
         ArgumentNullException.ThrowIfNull(page);
         if (Current is { } current && current.IsSamePage(page))
         {
+            if (!ReferenceEquals(current, page))
+            {
+                page.OnClosed();
+            }
+
             return;
         }
 
@@ -41,7 +51,9 @@ public sealed class NavigationService : INavigationService
             return;
         }
 
+        var closed = _stack[^1];
         _stack.RemoveAt(_stack.Count - 1);
+        closed.OnClosed();
         Navigated?.Invoke(this, EventArgs.Empty);
     }
 }

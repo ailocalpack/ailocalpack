@@ -998,4 +998,151 @@
   <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
     <value>No games match “{0}” with this filter. Game not in the library? Add its folder.</value>
   </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>Engine unknown</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>Added manually</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>build {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>files hash {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>Game version: Steam build ID</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_One" xml:space="preserve">
+    <value>Game version: hash of {0} file</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Other" xml:space="preserve">
+    <value>Game version: hash of {0} files</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>Install best pack</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>Generate translation with AI</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>Update to rev {0}</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>Translate new strings</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>View progress</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>Uses your Claude Code or Codex subscription</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>via Steam · with «{0}»</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>with «{0}»</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>Replaces the installed rev {0}</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>No revision for the new game version yet</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>«{0}»</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>made for your version</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>Generating · {0}%</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>Generating · {0}% · ≈ {1} min left</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>Paused · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedReason" xml:space="preserve">
+    <value>Paused: {1} · {0}%</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>Installed pack</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>Installed · incompatible with the new version</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>«{0}» · {1} · rev {2}</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>«{0}» · rev {1}</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>The game updated ({0}). The installed «{1}» rev {2} is incompatible with it; some text may show in English.</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>Audio: coming soon</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>Voice-over in {0} through text-to-speech comes in the next major version. Text translation works today.</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>Textures: coming soon</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>Translating text inside images (signs, menus, maps) comes later. Text translation works today.</value>
+  </data>
+  <data name="Game_Packs_Count_One" xml:space="preserve">
+    <value>{1}: {0} pack</value>
+  </data>
+  <data name="Game_Packs_Count_Other" xml:space="preserve">
+    <value>{1}: {0} packs</value>
+  </data>
+  <data name="Game_Packs_Soon" xml:space="preserve">
+    <value>The pack list with details and install comes in a later version.</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>No translation into {0} yet</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>Generate one with an AI agent, then share it with other players.</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>Generate with AI</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>The pack list hasn't loaded yet. Packs show up once the registry answers.</value>
+  </data>
+  <data name="Game_Generation_Soon" xml:space="preserve">
+    <value>Generating a translation with an AI agent comes in a later version.</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>Packs</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>Generation</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>Textures</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>soon</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>Game page sections</value>
+  </data>
 </root>

@@ -16,4 +16,12 @@ public abstract class PageViewModel : ObservableObject
 
     /// <summary>Lets the page use Esc first (clear a search); returns <c>false</c> to let the window go back.</summary>
     public virtual bool TryHandleEscape() => false;
+
+    /// <summary>
+    /// The page left the back stack (went back from it, reset) or was never shown (navigating to the page already
+    /// shown): it stops listening to the app's services, so the closed page can be collected.
+    /// </summary>
+    public virtual void OnClosed()
+    {
+    }
 }

@@ -1021,4 +1021,157 @@
   <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
     <value>С этим фильтром ничего не нашлось по запросу «{0}». Игры нет в библиотеке? Добавьте её папку.</value>
   </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>Движок не определён</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>Добавлена вручную</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>сборка {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>хеш файлов {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>Версия игры: номер сборки Steam</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_One" xml:space="preserve">
+    <value>Версия игры: хеш {0} файла</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Few" xml:space="preserve">
+    <value>Версия игры: хеш {0} файлов</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Many" xml:space="preserve">
+    <value>Версия игры: хеш {0} файлов</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>Установить лучший пак</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>Создать перевод с ИИ</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>Играть</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>Обновить до ред. {0}</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>Перевести новые строки</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>Посмотреть прогресс</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>По вашей подписке Claude Code или Codex</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>через Steam · с «{0}»</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>с «{0}»</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>Заменит установленную ред. {0}</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>Редакции для новой версии игры пока нет</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>«{0}»</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>для вашей версии</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>Создаётся · {0}%</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>Создаётся · {0}% · осталось ≈ {1} мин</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>На паузе · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedReason" xml:space="preserve">
+    <value>На паузе: {1} · {0}%</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>Установленный пак</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>Установлен · несовместим с новой версией</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>«{0}» · {1} · ред. {2}</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>«{0}» · ред. {1}</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>Игра обновилась ({0}). Установленный «{1}» ред. {2} с ней несовместим: часть текста может быть на английском.</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>Озвучка: скоро</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>Озвучка на языке «{0}» через синтез речи появится в следующей большой версии. Перевод текста работает уже сейчас.</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>Текстуры: скоро</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>Перевод текста на картинках (вывески, меню, карты) появится позже. Перевод текста работает уже сейчас.</value>
+  </data>
+  <data name="Game_Packs_Count_One" xml:space="preserve">
+    <value>{1}: {0} пак</value>
+  </data>
+  <data name="Game_Packs_Count_Few" xml:space="preserve">
+    <value>{1}: {0} пака</value>
+  </data>
+  <data name="Game_Packs_Count_Many" xml:space="preserve">
+    <value>{1}: {0} паков</value>
+  </data>
+  <data name="Game_Packs_Soon" xml:space="preserve">
+    <value>Список паков с подробностями и установкой появится в следующей версии.</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>Перевода на язык «{0}» пока нет</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>Создайте его с ИИ-агентом и поделитесь с другими игроками.</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>Создать с ИИ</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>Список паков ещё не загружен. Паки появятся, когда реестр ответит.</value>
+  </data>
+  <data name="Game_Generation_Soon" xml:space="preserve">
+    <value>Создание перевода с ИИ-агентом появится в следующей версии.</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>Паки</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>Генерация</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>Озвучка</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>Текстуры</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>скоро</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>Разделы страницы игры</value>
+  </data>
 </root>

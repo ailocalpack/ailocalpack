@@ -47,7 +47,8 @@ public enum LocalizationBlock
 
 /// <summary>A pack installed for the game and language (task 29), as the library needs it.</summary>
 /// <param name="BrokenByUpdate">The game updated and the pack no longer fits (task 33).</param>
-public sealed record InstalledPackState(string PackId, bool BrokenByUpdate);
+/// <param name="Revision">The installed revision (the game page offers <c>Update to rev N</c> when the registry has a later one).</param>
+public sealed record InstalledPackState(string PackId, bool BrokenByUpdate, int Revision = 1);
 
 /// <summary>A generation job for the game and language (task 47), as the library needs it.</summary>
 /// <param name="Percent">Progress, 0–100.</param>

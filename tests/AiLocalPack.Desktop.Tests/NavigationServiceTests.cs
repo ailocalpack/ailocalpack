@@ -11,7 +11,21 @@ public sealed class NavigationServiceTests
         public override string Title => "Root";
     }
 
-    private static GamePageViewModel Game(uint appId) => new(TestGames.Steam(appId, $"Game {appId}"));
+    /// <summary>A page with a parameter, like the game page: the same ID is the same page.</summary>
+    private sealed class ItemPage(int id) : PageViewModel
+    {
+        public int Id { get; } = id;
+
+        public int ClosedCount { get; private set; }
+
+        public override string Title => $"Item {Id}";
+
+        public override bool IsSamePage(PageViewModel other) => other is ItemPage page && page.Id == Id;
+
+        public override void OnClosed() => ClosedCount++;
+    }
+
+    private static ItemPage Game(int id) => new(id);
 
     [Fact]
     public void Navigate_to_pushes_the_page()
@@ -177,5 +191,54 @@ public sealed class NavigationServiceTests
 
         // Assert
         act.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Going_back_closes_the_page()
+    {
+        // Arrange
+        var navigation = new NavigationService();
+        navigation.Reset(new RootPage());
+        var page = Game(1);
+        navigation.NavigateTo(page);
+
+        // Act
+        navigation.GoBack();
+
+        // Assert
+        page.ClosedCount.Should().Be(1);
+    }
+
+    [Fact]
+    public void Reset_closes_the_pages_it_drops()
+    {
+        // Arrange
+        var navigation = new NavigationService();
+        navigation.Reset(new RootPage());
+        var page = Game(1);
+        navigation.NavigateTo(page);
+
+        // Act
+        navigation.Reset(new RootPage());
+
+        // Assert
+        page.ClosedCount.Should().Be(1);
+    }
+
+    [Fact]
+    public void A_page_not_shown_because_it_is_already_current_is_closed()
+    {
+        // Arrange
+        var navigation = new NavigationService();
+        navigation.Reset(new RootPage());
+        var shown = Game(1);
+        navigation.NavigateTo(shown);
+        var duplicate = Game(1);
+
+        // Act
+        navigation.NavigateTo(duplicate);
+
+        // Assert
+        (duplicate.ClosedCount, shown.ClosedCount).Should().Be((1, 0));
     }
 }

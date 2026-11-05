@@ -1,5 +1,4 @@
 using System.Globalization;
-using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
@@ -14,6 +13,7 @@ using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.ViewModels.AddGame;
+using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.ViewModels.Library;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -35,7 +35,7 @@ public sealed partial class LibraryViewModel : PageViewModel
 
     private readonly GameLibrary _library;
     private readonly ICoverLoader _covers;
-    private readonly AntiCheatPolicy _policy;
+    private readonly GameStatuses _statuses;
     private readonly INavigationService _navigation;
     private readonly IPageFactory _pages;
     private readonly Localizer _localizer;
@@ -83,7 +83,7 @@ public sealed partial class LibraryViewModel : PageViewModel
     public LibraryViewModel(
         GameLibrary library,
         ICoverLoader covers,
-        AntiCheatPolicy policy,
+        GameStatuses statuses,
         INavigationService navigation,
         IPageFactory pages,
         Localizer localizer,
@@ -96,7 +96,7 @@ public sealed partial class LibraryViewModel : PageViewModel
     {
         _library = library;
         _covers = covers;
-        _policy = policy;
+        _statuses = statuses;
         _navigation = navigation;
         _pages = pages;
         _localizer = localizer;
@@ -338,12 +338,10 @@ public sealed partial class LibraryViewModel : PageViewModel
     private void ApplyStatuses()
     {
         var language = Language;
-        var index = Registry?.Index;
         var stale = IsRegistryStale;
         foreach (var card in _cards.Values)
         {
-            // Installed packs (task 29), broken ones (task 33) and generation jobs (task 47) join here.
-            card.ApplyStatus(LocalizationStatuses.Resolve(card.Game, language, _policy.Resolve(card.Game), index), stale);
+            card.ApplyStatus(_statuses.Resolve(card.Game, language), stale);
         }
 
         foreach (var chip in FilterChips)
@@ -357,10 +355,12 @@ public sealed partial class LibraryViewModel : PageViewModel
     }
 
     /// <summary>
-    /// The card's quick action. Until the flows exist (Install: task 29, Update: 33, View / Resume / Generate: the
-    /// Generation tab, tasks 22 and 52) each opens the game page.
+    /// The card's quick action: View / Resume / Generate open the game page on the Generation tab, Install and Update
+    /// on Packs, until their flows exist (Install: task 29, Update: 33, Generate: 52).
     /// </summary>
-    private void QuickAction(GameCardViewModel card) => OpenGame(card);
+    private void QuickAction(GameCardViewModel card) => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(
+        card.Game,
+        card.StatusKind is LocalizationStatusKind.PackAvailable or LocalizationStatusKind.NeedsUpdate ? GamePageTab.Packs : GamePageTab.Generation));
 
     private void OpenGame(GameCardViewModel card) => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(card.Game));
 

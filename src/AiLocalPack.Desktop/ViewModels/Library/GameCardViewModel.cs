@@ -21,17 +21,6 @@ namespace AiLocalPack.Desktop.ViewModels.Library;
 /// </summary>
 public sealed partial class GameCardViewModel : ObservableObject
 {
-    /// <summary>Placeholder gradients (top, bottom), picked by a stable hash of the game ID so a game keeps its colors.</summary>
-    private static readonly (Color Top, Color Bottom)[] Placeholders =
-    [
-        (Color.Parse("#3b4a8c"), Color.Parse("#1b2140")),
-        (Color.Parse("#2f6f73"), Color.Parse("#132c33")),
-        (Color.Parse("#7a3f6b"), Color.Parse("#2c1530")),
-        (Color.Parse("#7a5a2c"), Color.Parse("#2e2112")),
-        (Color.Parse("#3f6b3a"), Color.Parse("#16271a")),
-        (Color.Parse("#5b4a8c"), Color.Parse("#221a3c")),
-    ];
-
     private readonly Localizer _localizer;
     private IBrush? _placeholderBrush;
 
@@ -102,7 +91,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     /// reads it (on the UI thread), so view models built elsewhere create no Avalonia objects: one made on a pool
     /// thread while a headless UI test sets Avalonia up can take the UI dispatcher from it.
     /// </summary>
-    public IBrush PlaceholderBrush => _placeholderBrush ??= CreatePlaceholderBrush(Game.Id);
+    public IBrush PlaceholderBrush => _placeholderBrush ??= PlaceholderColors.CreateBrush(Game.Id);
 
     public bool IsManual => Game.Source == GameSource.Manual;
 
@@ -333,28 +322,5 @@ public sealed partial class GameCardViewModel : ObservableObject
         catch (OperationCanceledException)
         {
         }
-    }
-
-    private static IBrush CreatePlaceholderBrush(GameId id)
-    {
-        var (top, bottom) = Placeholders[StableHash(id.ToString()) % (uint)Placeholders.Length];
-        return new LinearGradientBrush
-        {
-            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-            EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-            GradientStops = { new GradientStop(top, 0), new GradientStop(bottom, 1) },
-        }.ToImmutable();
-    }
-
-    /// <summary>FNV-1a: <see cref="string.GetHashCode()"/> differs between runs, the placeholder color must not.</summary>
-    private static uint StableHash(string text)
-    {
-        var hash = 2166136261u;
-        foreach (var c in text)
-        {
-            hash = (hash ^ c) * 16777619u;
-        }
-
-        return hash;
     }
 }

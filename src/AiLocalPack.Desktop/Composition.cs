@@ -57,6 +57,7 @@ internal static class Composition
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<RegistryIndexClient>>()));
         services.AddSingleton<PackIndex>();
+        services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
         services.AddTransient<SplashViewModel>();

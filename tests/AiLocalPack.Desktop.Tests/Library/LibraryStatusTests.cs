@@ -5,6 +5,7 @@ using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.ViewModels;
+using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.ViewModels.Library;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -424,6 +425,40 @@ public sealed class LibraryStatusTests : IDisposable
 
         // Assert
         navigation.Current.Should().BeOfType<GamePageViewModel>().Which.Game.Name.Should().Be("Alpha");
+    }
+
+    [Fact]
+    public async Task Install_quick_action_opens_the_packs_tab()
+    {
+        // Arrange
+        _registry.Pack(10, "ru", "full");
+        using var services = await BuildAsync();
+        services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
+        var vm = Create(services);
+        var navigation = services.GetRequiredService<INavigationService>();
+
+        // Act
+        CardOf(vm, "Alpha").QuickActionCommand.Execute(null);
+
+        // Assert
+        navigation.Current.Should().BeOfType<GamePageViewModel>().Which.SelectedTab.Should().Be(GamePageTab.Packs);
+    }
+
+    [Fact]
+    public async Task Generate_quick_action_opens_the_generation_tab()
+    {
+        // Arrange
+        _registry.Pack(10, "ru", "full");
+        using var services = await BuildAsync();
+        services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
+        var vm = Create(services);
+        var navigation = services.GetRequiredService<INavigationService>();
+
+        // Act
+        CardOf(vm, "Beta").QuickActionCommand.Execute(null);
+
+        // Assert
+        navigation.Current.Should().BeOfType<GamePageViewModel>().Which.SelectedTab.Should().Be(GamePageTab.Generation);
     }
 
     [Fact]
