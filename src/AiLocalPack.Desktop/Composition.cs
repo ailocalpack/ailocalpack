@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
@@ -57,6 +58,9 @@ internal static class Composition
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<RegistryIndexClient>>()));
         services.AddSingleton<PackIndex>();
+        services.AddSingleton(sp => new PackManifestClient(sp.GetRequiredService<HttpClient>(), logger: sp.GetRequiredService<ILogger<PackManifestClient>>()));
+        services.AddSingleton(sp => new PackCompatibilityChecker(sp.GetRequiredService<FileHashCache>()));
+        services.AddSingleton<PackManifests>();
         services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);

@@ -19,7 +19,10 @@ internal sealed class TestRegistry : IDisposable
         string id,
         PackStatus status = PackStatus.Alpha,
         int likes = 0,
-        string buildId = "1000")
+        string buildId = "1000",
+        DateTimeOffset? updated = null,
+        int translated = 10,
+        Uri? discussion = null)
     {
         var game = GameId.Steam(appId);
         Game(game).Packs.Add(new RegistryPack(
@@ -30,13 +33,69 @@ internal sealed class TestRegistry : IDisposable
             new PackAuthor("alice"),
             status,
             1,
-            new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero),
-            new PackCoverage(10, 10),
+            updated ?? new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero),
+            new PackCoverage(translated, 10),
             [buildId],
             1,
             $"games/steam-{appId}/{language}/{id}/manifest.json",
             100,
-            new RegistryRating(likes, 0, 0)));
+            new RegistryRating(likes, 0, 0),
+            discussion));
+        return this;
+    }
+
+    /// <summary>
+    /// Writes the manifest of a pack added with <see cref="Pack"/>: a recipe pack made for <paramref name="buildId"/>
+    /// touching <paramref name="files"/> (relative path → SHA-256), by alice with Claude Code, revisions 1…<paramref name="revisions"/>.
+    /// </summary>
+    public TestRegistry Manifest(
+        uint appId,
+        string language,
+        string id,
+        string buildId,
+        IReadOnlyDictionary<string, string> files,
+        int revisions = 1,
+        IReadOnlyList<string>? fonts = null)
+    {
+        WriteFile($"games/steam-{appId}/{language}/{id}/manifest.json", PackManifestSerializer.Write(ManifestModel(appId, language, id, buildId, files, revisions, fonts)));
+        return this;
+    }
+
+    /// <summary>The manifest <see cref="Manifest"/> writes.</summary>
+    public static PackManifest ManifestModel(
+        uint appId,
+        string language,
+        string id,
+        string buildId,
+        IReadOnlyDictionary<string, string> files,
+        int revisions = 1,
+        IReadOnlyList<string>? fonts = null)
+    {
+        var date = new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
+        return new PackManifest(
+            id,
+            GameId.Steam(appId),
+            language,
+            id,
+            [new PackAuthor("alice")],
+            [.. Enumerable.Range(1, revisions).Select(n => new PackRevision(n, date.AddDays(n), "alice", n == 1 ? "first version" : null))],
+            PackStatus.Alpha,
+            new PackAgent("claude-code"),
+            [new PackBuild(buildId, files)],
+            new PackRecipe("rpgmaker", "1.0.0"),
+            new PackStringsFile(PackStringsFile.DefaultPath, new string('0', 64), 10),
+            null,
+            [],
+            fonts ?? [],
+            new PackCoverage(10, 10),
+            date,
+            date.AddDays(revisions));
+    }
+
+    /// <summary>Writes any file of the registry (a damaged manifest).</summary>
+    public TestRegistry WriteFile(string relativePath, string content)
+    {
+        _dir.File(relativePath, content);
         return this;
     }
 

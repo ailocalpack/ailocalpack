@@ -1,0 +1,348 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gp="using:AiLocalPack.Desktop.ViewModels.GamePage"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.PacksTabView"
+             x:DataType="gp:PacksTabViewModel">
+    <!-- Design §4: toolbar (language popover, sort, count), list of registry packs + details panel of the selected one;
+         empty state for a language without packs, offline banner over the saved list. The Mine section comes in task 55. -->
+    <StackPanel Spacing="14">
+        <TextBlock Classes="muted" Text="{l:Loc Game_Packs_Unknown}" IsVisible="{Binding IsUnknown}" TextWrapping="Wrap" />
+
+        <!-- Offline: the saved list -->
+        <Border x:Name="OfflineBanner" Classes="banner warn" IsVisible="{Binding IsStale}">
+            <DockPanel>
+                <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <Path Classes="icon" Data="{StaticResource IconWifiOff}" Stroke="{DynamicResource AppWarnBrush}" />
+                </Viewbox>
+                <Button DockPanel.Dock="Right" Classes="ghost sm" Margin="12,0,0,0" VerticalAlignment="Center"
+                        Command="{Binding RetryRegistryCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="14" Height="14">
+                            <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                        <TextBlock Text="{l:Loc Library_Registry_Retry}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{Binding OfflineText}" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </DockPanel>
+        </Border>
+
+        <!-- Toolbar -->
+        <DockPanel x:Name="PacksToolbar" IsVisible="{Binding !IsUnknown}">
+            <TextBlock x:Name="PackCount" DockPanel.Dock="Right" Classes="muted" FontSize="13" VerticalAlignment="Center" Text="{Binding CountText}" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button x:Name="LanguageButton" Classes="langPicker" ToolTip.Tip="{l:Loc Packs_Language_Tip}"
+                        AutomationProperties.Name="{l:Loc Packs_Language_Label}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconGlobe}" /></Viewbox>
+                        <TextBlock Classes="muted" Text="{l:Loc Packs_Language_Label}" VerticalAlignment="Center" />
+                        <TextBlock x:Name="LanguageName" FontWeight="SemiBold" Text="{Binding LanguageName}" VerticalAlignment="Center" />
+                        <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconChevronDown}" /></Viewbox>
+                    </StackPanel>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <StackPanel Width="280" Spacing="6">
+                                <TextBox x:Name="LanguageSearch" Classes="search" Text="{Binding LanguageQuery}"
+                                         PlaceholderText="{l:Loc Packs_Language_Search}" AutomationProperties.Name="{l:Loc Packs_Language_Search}">
+                                    <TextBox.InnerLeftContent>
+                                        <Viewbox Classes="icon" Width="16" Height="16" Margin="10,0,0,0">
+                                            <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
+                                        </Viewbox>
+                                    </TextBox.InnerLeftContent>
+                                </TextBox>
+                                <TextBlock Classes="capsLabel" Margin="10,4,0,0" Text="{l:Loc Packs_Language_Caption}" />
+                                <ScrollViewer MaxHeight="320">
+                                    <ItemsControl x:Name="LanguageList" ItemsSource="{Binding LanguageOptions}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:PackLanguageOption">
+                                                <Button Classes="langItem" Classes.on="{Binding IsCurrent}" Command="{Binding SelectCommand}"
+                                                        Click="OnLanguagePicked" AutomationProperties.Name="{Binding Name}">
+                                                    <DockPanel>
+                                                        <TextBlock DockPanel.Dock="Right" Classes="count" Text="{Binding CountText}" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                    </DockPanel>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <TextBlock Classes="muted" FontSize="13" Margin="10,4" Text="{l:Loc Packs_Language_NoMatch}" IsVisible="{Binding HasNoLanguageMatch}" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <ComboBox x:Name="SortBox" Classes="toolbar" MinWidth="190" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSort}"
+                          AutomationProperties.Name="{l:Loc Packs_Sort_Label}" ToolTip.Tip="{l:Loc Packs_Sort_Label}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="gp:PackSortOption">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconSort}" Stroke="{DynamicResource AppMutedBrush}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding Display}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- List + details -->
+        <Grid x:Name="PackSplit" ColumnDefinitions="340,*" ColumnSpacing="16" IsVisible="{Binding ShowList}">
+            <StackPanel Classes.staleList="{Binding IsStale}" Spacing="6">
+                <TextBlock Classes="capsLabel" Margin="4,6,0,2" Text="{l:Loc Packs_Section_Registry}" />
+                <ItemsControl x:Name="PackList" ItemsSource="{Binding Rows}" AutomationProperties.Name="{l:Loc Packs_List_Label}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gp:PackRowViewModel">
+                            <Button Classes="packRow" Classes.on="{Binding IsSelected}" Classes.dim="{Binding IsDimmed}"
+                                    Command="{Binding SelectCommand}" AutomationProperties.Name="{Binding Title}">
+                                <StackPanel Spacing="4">
+                                    <DockPanel>
+                                        <Border DockPanel.Dock="Right" Classes="packTag" Classes.warn="{Binding IsInstalledBroken}" Margin="8,0,0,0"
+                                                IsVisible="{Binding IsInstalled}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <Viewbox Classes="icon" Width="12" Height="12">
+                                                    <Panel>
+                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" IsVisible="{Binding !IsInstalledBroken}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding IsInstalledBroken}" />
+                                                    </Panel>
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding InstalledTag}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock Classes="packTitle" FontWeight="Bold" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                    <WrapPanel ItemSpacing="6" LineSpacing="4">
+                                        <TextBlock Classes="packMeta" Text="{Binding AuthorText}" />
+                                        <TextBlock Classes="packMeta" Text="·" />
+                                        <StackPanel Classes="tone" Classes.ok="{Binding IsVerified}" Classes.warn="{Binding !IsVerified}" Orientation="Horizontal" Spacing="4">
+                                            <Viewbox Classes="icon" Width="12" Height="12">
+                                                <Panel>
+                                                    <Path Classes="icon" Data="{StaticResource IconCheckCircle}" IsVisible="{Binding IsVerified}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding !IsVerified}" />
+                                                </Panel>
+                                            </Viewbox>
+                                            <TextBlock FontSize="12" Text="{Binding StatusText}" />
+                                        </StackPanel>
+                                        <TextBlock Classes="packMeta" Text="·" />
+                                        <StackPanel Classes="likes" Orientation="Horizontal" Spacing="4" ToolTip.Tip="{l:Loc Packs_Likes_Tip}">
+                                            <Viewbox Classes="icon" Width="12" Height="12"><Path Classes="icon" Data="{StaticResource IconThumbsUp}" /></Viewbox>
+                                            <TextBlock FontSize="12" Text="{Binding LikesText}" />
+                                        </StackPanel>
+                                        <TextBlock Classes="packMeta" Text="·" IsVisible="{Binding HasCompat}" />
+                                        <StackPanel Classes="tone" Classes.ok="{Binding IsCompatOk}" Classes.warn="{Binding IsCompatWarn}"
+                                                    Classes.bad="{Binding IsCompatBad}" Classes.muted="{Binding IsChecking}"
+                                                    Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasCompat}">
+                                            <Viewbox Classes="icon" Width="12" Height="12">
+                                                <Path Classes="icon" Data="{Binding CompatIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                            </Viewbox>
+                                            <TextBlock FontSize="12" Text="{Binding CompatText}" />
+                                        </StackPanel>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <ContentControl x:Name="PackDetails" Grid.Column="1" Content="{Binding Selected}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate x:DataType="gp:PackRowViewModel">
+                        <Border Classes="packDetails">
+                            <StackPanel Spacing="14">
+                                <StackPanel Spacing="4">
+                                    <TextBlock x:Name="DetailsTitle" Classes="h2" FontSize="19" Text="{Binding Title}" TextWrapping="Wrap" />
+                                    <WrapPanel ItemSpacing="8" LineSpacing="4">
+                                        <StackPanel Classes="tone" Classes.ok="{Binding IsVerified}" Classes.warn="{Binding !IsVerified}" Orientation="Horizontal" Spacing="4">
+                                            <Viewbox Classes="icon" Width="13" Height="13">
+                                                <Panel>
+                                                    <Path Classes="icon" Data="{StaticResource IconCheckCircle}" IsVisible="{Binding IsVerified}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding !IsVerified}" />
+                                                </Panel>
+                                            </Viewbox>
+                                            <TextBlock FontSize="13" Text="{Binding StatusText}" />
+                                        </StackPanel>
+                                        <TextBlock Classes="muted" FontSize="13" Text="·" VerticalAlignment="Center" />
+                                        <TextBlock Classes="muted" FontSize="13" Text="{Binding RevisionText}" VerticalAlignment="Center" />
+                                        <TextBlock Classes="muted" FontSize="13" Text="·" VerticalAlignment="Center" />
+                                        <StackPanel Classes="likes" Orientation="Horizontal" Spacing="4" ToolTip.Tip="{l:Loc Packs_Likes_Tip}">
+                                            <Viewbox Classes="icon" Width="13" Height="13"><Path Classes="icon" Data="{StaticResource IconThumbsUp}" /></Viewbox>
+                                            <TextBlock FontSize="13" Text="{Binding LikesText}" />
+                                        </StackPanel>
+                                    </WrapPanel>
+                                </StackPanel>
+
+                                <!-- Compatibility (checking / verdict) -->
+                                <Border x:Name="CompatBox" Classes="compatBox" Classes.ok="{Binding IsCompatOk}" Classes.warn="{Binding IsCompatWarn}"
+                                        Classes.bad="{Binding IsCompatBad}" IsVisible="{Binding !IsFailed}">
+                                    <DockPanel>
+                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
+                                            <Path Classes="icon" Data="{Binding CompatIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                        </Viewbox>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock x:Name="CompatTitle" FontWeight="Bold" Text="{Binding CompatTitle}" TextWrapping="Wrap" />
+                                            <TextBlock x:Name="CompatExplanation" Classes="muted" Text="{Binding CompatExplanation}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                                <!-- The manifest couldn't be read -->
+                                <Border x:Name="FailureBox" Classes="compatBox bad" IsVisible="{Binding IsFailed}">
+                                    <DockPanel>
+                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
+                                            <Path Classes="icon" Data="{StaticResource IconAlert}" />
+                                        </Viewbox>
+                                        <Button DockPanel.Dock="Right" Classes="ghost sm" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}">
+                                            <TextBlock Text="{l:Loc Packs_Retry}" />
+                                        </Button>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock FontWeight="Bold" Text="{l:Loc Packs_Box_Failed}" TextWrapping="Wrap" />
+                                            <TextBlock x:Name="FailureText" Classes="muted" Text="{Binding FailureText}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <!-- Key–value list -->
+                                <StackPanel Spacing="7" Grid.IsSharedSizeScope="True">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Author}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding AuthorText}" />
+                                    </Grid>
+                                    <Grid IsVisible="{Binding HasAgent}">
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Agent}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding AgentText}" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Coverage}" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Classes="kvValue" Text="{Binding CoverageText}" />
+                                            <ProgressBar Classes="coverage" Minimum="0" Maximum="100" Value="{Binding CoveragePercent}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Reports}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding ReportsText}" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Updated}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding UpdatedText}" />
+                                    </Grid>
+                                    <Grid IsVisible="{Binding HasFonts}">
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Fonts}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding FontsText}" />
+                                    </Grid>
+                                    <Grid IsVisible="{Binding HasDependencies}">
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Requires}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding DependenciesText}" />
+                                    </Grid>
+                                    <Grid IsVisible="{Binding HasRevisions}">
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Revisions}" VerticalAlignment="Top" Margin="0,2,18,0" />
+                                        <StackPanel Grid.Column="1" Spacing="4">
+                                            <Button x:Name="RevisionsToggle" Classes="link" Padding="2,0" HorizontalAlignment="Left" Command="{Binding ToggleRevisionsCommand}"
+                                                    AutomationProperties.Name="{l:Loc Packs_Kv_Revisions}">
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock FontSize="13" Text="{Binding RevisionCount}" VerticalAlignment="Center" />
+                                                    <Viewbox Classes="icon" Width="12" Height="12">
+                                                        <Path Classes="icon" Data="{Binding RevisionsToggleIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                </StackPanel>
+                                            </Button>
+                                            <ItemsControl x:Name="RevisionList" ItemsSource="{Binding RevisionLines}" IsVisible="{Binding IsRevisionsOpen}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <TextBlock Classes="muted" FontSize="13" Margin="0,0,0,3" Text="{Binding}" TextWrapping="Wrap" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+
+                                <!-- Actions -->
+                                <StackPanel Spacing="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button x:Name="InstallButton" Classes="accent" Command="{Binding InstallCommand}" AutomationProperties.Name="{Binding InstallText}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{Binding InstallIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                                          Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="TranslateMissing" Classes="ghost" Command="{Binding TranslateMissingCommand}" IsVisible="{Binding ShowTranslateMissing}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Packs_TranslateMissing}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                    <TextBlock x:Name="InstallHint" Classes="muted" FontSize="12" Text="{Binding InstallHint}" IsVisible="{Binding HasInstallHint}" TextWrapping="Wrap" />
+                                </StackPanel>
+
+                                <Button x:Name="ReviewsLink" Classes="link" Padding="2,0" HorizontalAlignment="Left" Command="{Binding OpenDiscussionCommand}"
+                                        IsVisible="{Binding HasDiscussion}" ToolTip.Tip="{l:Loc Packs_Reviews_Tip}" AutomationProperties.Name="{l:Loc Packs_Reviews}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{l:Loc Packs_Reviews}" VerticalAlignment="Center" />
+                                        <Viewbox Classes="icon" Width="13" Height="13">
+                                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        </Viewbox>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </Grid>
+
+        <!-- No packs for this language -->
+        <Panel x:Name="NoPacks" IsVisible="{Binding ShowEmpty}">
+            <Rectangle Classes="dropzone" StrokeThickness="1" />
+            <StackPanel Margin="16,36" Spacing="10" HorizontalAlignment="Center" MaxWidth="560">
+                <Border Classes="illustration">
+                    <Viewbox Classes="icon" Width="40" Height="40">
+                        <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{DynamicResource AppFaintBrush}" StrokeThickness="1.5" />
+                    </Viewbox>
+                </Border>
+                <TextBlock x:Name="NoPacksTitle" Classes="h2" FontSize="18" Text="{Binding EmptyTitle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                <TextBlock Classes="muted" Text="{l:Loc Game_Packs_NoneText}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                <Button Classes="accent" HorizontalAlignment="Center" Margin="0,6,0,0" Command="{Binding OpenGenerationCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Viewbox Classes="icon" Width="16" Height="16">
+                            <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                        <TextBlock Text="{l:Loc Game_Packs_Generate}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <WrapPanel x:Name="OtherLanguages" HorizontalAlignment="Center" ItemSpacing="4" IsVisible="{Binding HasOtherLanguages}">
+                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Packs_OtherLanguages}" VerticalAlignment="Center" />
+                    <ItemsControl ItemsSource="{Binding OtherLanguages}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel ItemSpacing="2" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="gp:PackLanguageOption">
+                                <Button Classes="link" FontSize="13" Command="{Binding SelectCommand}" Content="{Binding NameWithCount}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </WrapPanel>
+            </StackPanel>
+        </Panel>
+    </StackPanel>
+</UserControl>

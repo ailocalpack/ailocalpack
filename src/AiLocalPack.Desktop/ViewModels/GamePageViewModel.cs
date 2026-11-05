@@ -80,6 +80,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         ICoverLoader covers,
         ISystemShell shell,
         AntiCheatDetector antiCheats,
+        PackManifests manifests,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -103,6 +104,8 @@ public sealed partial class GamePageViewModel : PageViewModel
             : GamePrimaryActions.OpensOnGeneration(Status) ? GamePageTab.Generation
             : GamePageTab.Packs;
         UpdateTabs();
+        Packs = new PacksTabViewModel(game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, _logger);
+        ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
         _packIndex.Changed += OnPackIndexChanged;
@@ -127,6 +130,9 @@ public sealed partial class GamePageViewModel : PageViewModel
     public string Language => _statuses.Language;
 
     public IReadOnlyList<GameTabViewModel> Tabs { get; }
+
+    /// <summary>The Packs tab (design §4): list, details, language and sort.</summary>
+    public PacksTabViewModel Packs { get; }
 
     // ---------- Cover and backdrop ----------
 
@@ -314,18 +320,6 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     public string SoonIcon => SelectedTab == GamePageTab.Textures ? "IconImage" : "IconMusic";
 
-    /// <summary>The registry has packs for the game and language.</summary>
-    public bool HasPacks => Status.Packs.Count > 0;
-
-    /// <summary>"3 packs into Русский" (Packs tab until its list comes, task 24).</summary>
-    public string PacksSummary => _localizer.Plural(nameof(Strings.Game_Packs_Count_One), Status.Packs.Count, LanguageName);
-
-    /// <summary>The empty Packs tab ("No translation into Русский yet"): no packs, the list is known and the game isn't blocked (task 23 explains that).</summary>
-    public bool ShowNoPacks => !HasPacks && !IsStatusUnknown && !Status.IsBlocked;
-
-    /// <summary>"No translation into Русский yet".</summary>
-    public string NoPacksTitle => _localizer.Format(nameof(Strings.Game_Packs_None), LanguageName);
-
     /// <summary>The pack list isn't known (first fetch running, registry never answered).</summary>
     public bool IsStatusUnknown => Status.Kind == LocalizationStatusKind.Unknown;
 
@@ -346,6 +340,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _settings.Changed -= OnSettingsChanged;
         _localizer.CultureChanged -= OnCultureChanged;
         _closed.Cancel();
+        Packs.Close();
     }
 
     /// <summary>"Generate with AI" on the empty Packs tab, "Translate new strings" on the banner: the Generation tab.</summary>
@@ -372,6 +367,17 @@ public sealed partial class GamePageViewModel : PageViewModel
         {
             tab.IsSelected = tab.Tab == value;
         }
+
+        ActivateTab();
+    }
+
+    /// <summary>The Packs tab fetches manifests only once shown (never for a blocked game).</summary>
+    private void ActivateTab()
+    {
+        if (SelectedTab == GamePageTab.Packs && !IsBlocked && Packs is not null)
+        {
+            Packs.Activate();
+        }
     }
 
     private void OnCatalogChanged(object? sender, GameCatalogChangedEventArgs e) => _ui.Post(() =>
@@ -387,7 +393,11 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     private void OnSettingsChanged(object? sender, AppSettings settings) => _ui.Post(Refresh);
 
-    private void OnCultureChanged(object? sender, EventArgs e) => Refresh();
+    private void OnCultureChanged(object? sender, EventArgs e)
+    {
+        Refresh();
+        Packs.RefreshTexts();
+    }
 
     /// <summary>Recomputes the status and action and re-raises every text (catalog, pack list, language, UI language).</summary>
     private void Refresh()
@@ -395,6 +405,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         Status = _statuses.Resolve(Game);
         Action = GamePrimaryActions.Resolve(Status);
         UpdateTabs();
+        Packs.Update(Game, Status, Language);
+        ActivateTab();
         OnPropertyChanged(string.Empty);
         PrimaryCommand.NotifyCanExecuteChanged();
     }

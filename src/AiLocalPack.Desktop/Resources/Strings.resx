@@ -1106,9 +1106,6 @@
   <data name="Game_Packs_Count_Other" xml:space="preserve">
     <value>{1}: {0} packs</value>
   </data>
-  <data name="Game_Packs_Soon" xml:space="preserve">
-    <value>The pack list with details and install comes in a later version.</value>
-  </data>
   <data name="Game_Packs_None" xml:space="preserve">
     <value>No translation into {0} yet</value>
   </data>
@@ -1162,5 +1159,206 @@
   </data>
   <data name="Game_Blocked_Report_Tip" xml:space="preserve">
     <value>Opens a prefilled issue in the pack registry on GitHub</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>Show packs in another language</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>Search languages</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>Packs for this game</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>No language matches the search.</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>Sort packs</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>Status, rating</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>Newest</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>Registry</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>Packs</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>compatible</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>probably compatible</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>incompatible</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>checking…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>not checked</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>rev {0} · rev {1} available</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>Likes in GitHub Discussions</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>rev {0}</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>Compatible with your version</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>Probably compatible</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>Incompatible with your version</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>Checking compatibility…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>Reading the pack's manifest and comparing the files it changes with your copy.</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>Couldn't read the pack's details</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>The registry didn't answer. Check the connection and retry.</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>The registry has no manifest for this pack. It may have been removed since the list was saved.</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>The pack's manifest in the registry is damaged, so the pack can't be checked or installed.</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>The pack is in a newer format. Update the app to install it.</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>Made for build {0}, the one you have.</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>All files it changes ({0}) match your copy.</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>Made for build {0}, you have {1}. Changed files: {2} of {3}; strings the update added stay untranslated.</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>Changed files since the version it was made for: {0} of {1}; strings the update added stay untranslated.</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>This pack is for another game.</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>The game folder can't be reached. Connect the drive and retry.</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>Files it changes are missing from the game folder ({0}), e.g. {1}.</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>Can't read {0} in the game folder.</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>A binary patch needs the exact files it was made from; changed files: {0} of {1}.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>It needs the toolkit tool «{0}», which this app doesn't have. Update the app.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>It needs «{0}» {1}, newer than this app has. Update the app.</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>Made with</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>Fonts</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>Requires</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>Revisions</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>By hand</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>{0}% of strings</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>works for {0} · doesn't work for {1}</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0} (downloaded from the official release)</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>rev {0} · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>rev {0} · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>Install is unavailable. You can translate the missing strings with AI instead.</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>Install becomes available once the registry is reachable.</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>Replaces the installed «{0}».</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>Translate with AI</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>Reviews on GitHub</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>Opens the pack's discussion in the browser</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>Can't reach the registry. Showing the list saved on {0}; installing is unavailable until you're back online.</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>Available in other languages:</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0} ({1})</value>
   </data>
 </root>

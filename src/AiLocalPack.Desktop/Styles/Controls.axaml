@@ -859,4 +859,152 @@
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
+    <!-- Packs tab (design §4): toolbar, list rows, details panel -->
+    <Style Selector="Button.langPicker">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.langPicker Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Button.langItem">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.langItem.on">
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="Button.langItem TextBlock.count">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="TextBlock.capsLabel">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="LetterSpacing" Value="0.6" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="Button.packRow">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="Margin" Value="0,0,0,6" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Button.packRow:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+    </Style>
+    <Style Selector="Button.packRow.on">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.packRow.on:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.packRow.dim TextBlock.packTitle">
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="TextBlock.packMeta">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <!-- Icon + text in a status tone: .ok (verified, compatible), .warn (alpha, probably), .bad (incompatible), .muted -->
+    <Style Selector="StackPanel.tone TextBlock">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="StackPanel.tone.ok TextBlock"><Setter Property="Foreground" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.tone.ok Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.tone.warn TextBlock"><Setter Property="Foreground" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="StackPanel.tone.warn Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="StackPanel.tone.bad TextBlock"><Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="StackPanel.tone.bad Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="StackPanel.tone.muted TextBlock"><Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" /></Style>
+    <Style Selector="StackPanel.tone.muted Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppFaintBrush}" /></Style>
+    <Style Selector="StackPanel.likes TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="StackPanel.likes Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <!-- Installed tag on a row (green), amber when an update broke the pack -->
+    <Style Selector="Border.packTag">
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Padding" Value="7,0" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+        <Setter Property="TextElement.FontSize" Value="11" />
+        <Setter Property="TextElement.FontWeight" Value="Bold" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.packTag Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Border.packTag.warn">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.packTag.warn Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Border.packDetails">
+        <Setter Property="Padding" Value="20,18" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <!-- Tinted compatibility box: green / amber / red; neutral while checking -->
+    <Style Selector="Border.compatBox">
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="TextElement.FontSize" Value="13" />
+    </Style>
+    <Style Selector="Border.compatBox Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppFaintBrush}" /></Style>
+    <Style Selector="Border.compatBox.ok"><Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" /></Style>
+    <Style Selector="Border.compatBox.ok Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Border.compatBox.warn"><Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" /></Style>
+    <Style Selector="Border.compatBox.warn Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Border.compatBox.bad"><Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" /></Style>
+    <Style Selector="Border.compatBox.bad Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="TextBlock.kvLabel">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="Margin" Value="0,0,18,0" />
+    </Style>
+    <Style Selector="TextBlock.kvValue">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="ProgressBar.coverage">
+        <Setter Property="MinWidth" Value="90" />
+        <Setter Property="Width" Value="90" />
+        <Setter Property="Height" Value="4" />
+        <Setter Property="MinHeight" Value="4" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOkBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="StackPanel.staleList">
+        <Setter Property="Opacity" Value="0.78" />
+    </Style>
 </Styles>

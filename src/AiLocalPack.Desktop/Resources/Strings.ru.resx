@@ -1135,9 +1135,6 @@
   <data name="Game_Packs_Count_Many" xml:space="preserve">
     <value>{1}: {0} паков</value>
   </data>
-  <data name="Game_Packs_Soon" xml:space="preserve">
-    <value>Список паков с подробностями и установкой появится в следующей версии.</value>
-  </data>
   <data name="Game_Packs_None" xml:space="preserve">
     <value>Перевода на язык «{0}» пока нет</value>
   </data>
@@ -1191,5 +1188,206 @@
   </data>
   <data name="Game_Blocked_Report_Tip" xml:space="preserve">
     <value>Откроет на GitHub заполненное обращение в реестр паков</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>Показать паки на другом языке</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>Поиск языка</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>Паки для этой игры</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>Такого языка нет.</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>Сортировка паков</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>Статус, рейтинг</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>Сначала новые</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>Полнота перевода</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>Реестр</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>Паки</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>совместим</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>вероятно совместим</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>несовместим</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>проверка…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>не проверен</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>Установлен</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>rev {0} · есть rev {1}</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>Лайки в GitHub Discussions</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>rev {0}</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>Совместим с вашей версией</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>Вероятно совместим</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>Несовместим с вашей версией</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>Проверяем совместимость…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>Читаем манифест пака и сравниваем файлы, которые он меняет, с вашей копией игры.</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>Не удалось прочитать данные пака</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>Реестр не ответил. Проверьте подключение и повторите.</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>В реестре нет манифеста этого пака. Возможно, его удалили после того, как список был сохранён.</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>Манифест пака в реестре повреждён, поэтому пак нельзя проверить и установить.</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>Пак в более новом формате. Обновите приложение, чтобы установить его.</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>Сделан для сборки {0} — она у вас и стоит.</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>Все файлы, которые он меняет ({0}), совпадают с вашими.</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>Сделан для сборки {0}, у вас {1}. Изменилось файлов: {2} из {3}; строки, добавленные обновлением, останутся без перевода.</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>С версии, для которой он сделан, изменилось файлов: {0} из {1}; строки, добавленные обновлением, останутся без перевода.</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>Этот пак для другой игры.</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>Папка игры недоступна. Подключите диск и повторите.</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>В папке игры нет файлов, которые он меняет ({0}), например {1}.</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>Не удаётся прочитать {0} в папке игры.</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>Бинарному патчу нужны ровно те файлы, из которых он сделан; изменилось файлов: {0} из {1}.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>Ему нужен инструмент «{0}», которого нет в этой версии приложения. Обновите приложение.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>Ему нужен «{0}» {1} — новее, чем в этой версии приложения. Обновите приложение.</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>Сделан с помощью</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>Полнота</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>Отзывы</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>Обновлён</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>Шрифты</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>Требует</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>Ревизии</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>Вручную</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>{0}% строк</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>работает у {0} · не работает у {1}</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0} (скачивается из официального релиза)</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>rev {0} · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>rev {0} · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>Установлен</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>Установка недоступна. Вместо этого можно перевести недостающие строки с помощью ИИ.</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>Установка станет доступна, когда реестр ответит.</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>Заменит установленный «{0}».</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>Перевести с ИИ</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>Отзывы на GitHub</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>Открывает обсуждение пака в браузере</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>Реестр недоступен. Показан список, сохранённый {0}; установка недоступна, пока нет связи.</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>Есть на других языках:</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0} ({1})</value>
   </data>
 </root>

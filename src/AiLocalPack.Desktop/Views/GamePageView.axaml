@@ -175,33 +175,10 @@
 
                 <!-- Tab content -->
                 <Panel x:Name="TabContent" Margin="24,20,24,40" IsVisible="{Binding ShowTabs}">
-                    <!-- Packs: the list and details come with task 24 -->
-                    <StackPanel x:Name="PacksPanel" IsVisible="{Binding IsPacksTab}" Spacing="8">
-                        <TextBlock Classes="muted" Text="{l:Loc Game_Packs_Unknown}" IsVisible="{Binding IsStatusUnknown}" TextWrapping="Wrap" />
-                        <StackPanel Spacing="4" IsVisible="{Binding HasPacks}">
-                            <TextBlock x:Name="PacksSummary" Classes="h2" Text="{Binding PacksSummary}" />
-                            <TextBlock Classes="muted" Text="{l:Loc Game_Packs_Soon}" TextWrapping="Wrap" />
-                        </StackPanel>
-                        <StackPanel x:Name="NoPacks" MaxWidth="520" Margin="0,32,0,0" Spacing="10" HorizontalAlignment="Center"
-                                    IsVisible="{Binding ShowNoPacks}">
-                            <Border Classes="illustration">
-                                <Viewbox Classes="icon" Width="40" Height="40">
-                                    <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{DynamicResource AppFaintBrush}" StrokeThickness="1.5" />
-                                </Viewbox>
-                            </Border>
-                            <TextBlock Classes="h2" FontSize="19" Text="{Binding NoPacksTitle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-                            <TextBlock Classes="muted" Text="{l:Loc Game_Packs_NoneText}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-                            <Button Classes="accent" HorizontalAlignment="Center" Margin="0,6,0,0" Command="{Binding OpenGenerationCommand}"
-                                    IsVisible="{Binding HasPrimaryAction}">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <Viewbox Classes="icon" Width="16" Height="16">
-                                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
-                                    </Viewbox>
-                                    <TextBlock Text="{l:Loc Game_Packs_Generate}" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </StackPanel>
+                    <!-- Packs (§4): list, details, language and sort -->
+                    <Panel x:Name="PacksPanel" IsVisible="{Binding IsPacksTab}">
+                        <views:PacksTabView DataContext="{Binding Packs}" />
+                    </Panel>
 
                     <!-- Generation: start form, progress and result come with tasks 52–55 -->
                     <StackPanel x:Name="GenerationPanel" IsVisible="{Binding IsGenerationTab}" MaxWidth="520" Margin="0,32,0,0"

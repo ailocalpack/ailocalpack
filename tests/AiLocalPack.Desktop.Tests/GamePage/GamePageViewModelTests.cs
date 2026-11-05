@@ -78,7 +78,7 @@ public sealed class GamePageViewModelTests : IDisposable
     }
 
     [Fact]
-    public async Task Blocked_game_does_not_invite_to_generate_on_the_packs_tab()
+    public async Task Blocked_game_shows_no_packs_tab()
     {
         // Arrange
         using var services = await BuildAsync(r => r.OptOut(10));
@@ -87,7 +87,7 @@ public sealed class GamePageViewModelTests : IDisposable
         var page = Open(services, 10);
 
         // Assert
-        page.ShowNoPacks.Should().BeFalse();
+        page.ShowTabs.Should().BeFalse();
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed class GamePageViewModelTests : IDisposable
         var page = Open(services, 20);
 
         // Assert
-        page.ShowNoPacks.Should().BeTrue();
+        page.Packs.ShowEmpty.Should().BeTrue();
     }
 
     [Fact]
