@@ -62,6 +62,13 @@ internal static class Composition
         services.AddSingleton(sp => new PackManifestClient(sp.GetRequiredService<HttpClient>(), logger: sp.GetRequiredService<ILogger<PackManifestClient>>()));
         services.AddSingleton(sp => new PackCompatibilityChecker(sp.GetRequiredService<FileHashCache>()));
         services.AddSingleton<PackManifests>();
+        services.AddSingleton(sp => new PackCache(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<PackCache>>()));
+        services.AddSingleton(sp => new PackFetcher(
+            sp.GetRequiredService<PackManifestClient>(),
+            PackFetcher.CreateHttpClient(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0")),
+            sp.GetRequiredService<PackCache>(),
+            sp.GetRequiredService<TimeProvider>(),
+            sp.GetRequiredService<ILogger<PackFetcher>>()));
         services.AddSingleton<IInstalledPacks, NoInstalledPacks>();
         services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();

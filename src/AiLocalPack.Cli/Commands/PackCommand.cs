@@ -78,7 +78,7 @@ internal static class PackCommand
             return Task.FromResult(compatibility.CanInstall ? 0 : IncompatibleExitCode);
         });
 
-        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate() };
+        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate(), PackFetchCommand.Build(env) };
     }
 
     private static Command BuildValidate()

@@ -35,11 +35,15 @@ public enum PackManifestProblem
 
 /// <summary>A pack's manifest, or why it couldn't be read.</summary>
 /// <param name="Detail">Plain English for logs ("HTTP 404 Not Found", "timed out after 15 s").</param>
+/// <param name="Bytes">The manifest file as read, when <see cref="Manifest"/> is set (what the pack cache keeps).</param>
+/// <param name="Uri">Where the manifest was read from; the pack's other files resolve against it.</param>
 public sealed record PackManifestFetch(
     PackManifest? Manifest,
     PackManifestProblem Problem,
     string? Detail = null,
-    IReadOnlyList<PackFormatError>? FormatErrors = null)
+    IReadOnlyList<PackFormatError>? FormatErrors = null,
+    byte[]? Bytes = null,
+    Uri? Uri = null)
 {
     public bool IsLoaded => Manifest is not null;
 
@@ -100,7 +104,8 @@ public sealed class PackManifestClient
             return Fail(pack, problem.Problem, problem.Detail);
         }
 
-        return Check(pack, bytes!);
+        var fetch = Check(pack, bytes!);
+        return fetch.IsLoaded ? fetch with { Bytes = bytes, Uri = uri } : fetch;
     }
 
     private PackManifestFetch Check(RegistryPack pack, byte[] bytes)

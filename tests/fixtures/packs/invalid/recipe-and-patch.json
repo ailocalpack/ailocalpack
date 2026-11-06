@@ -80,7 +80,7 @@
   "updated": "2026-11-01T06:30:00Z",
   "patch": {
     "format": "vcdiff",
-    "url": "https://github.com/ailocalpack/registry/releases/download/packs/steam-620-ru-patched-2.vcdiff",
+    "url": "https://github.com/ailocalpack/registry/releases/download/packs/steam-620-ru-patched-2.zip",
     "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
     "size": 2048,
     "files": {

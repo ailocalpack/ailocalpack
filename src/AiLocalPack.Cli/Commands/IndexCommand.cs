@@ -200,7 +200,7 @@ internal static class IndexCommand
         GitHubAnnotations.Format(level, problem.File.Length > 0 ? Path.Combine(root, problem.File) : null, problem.Field, problem.Message);
 
     /// <summary>Same settings as the app's client: decompression, a user agent, no overall timeout (the index client times each try).</summary>
-    private static HttpClient CreateHttpClient()
+    internal static HttpClient CreateHttpClient()
     {
         var http = new HttpClient(new SocketsHttpHandler { AutomaticDecompression = DecompressionMethods.All })
         {

@@ -57,6 +57,12 @@ public sealed record AppPaths
     /// </summary>
     public string RegistryCache => Path.Combine(Cache, "registry");
 
+    /// <summary>
+    /// Downloaded packs (<see cref="Packs.PackCache"/>): manifest, string table and binary patch per pack revision
+    /// (safe to delete: downloaded again).
+    /// </summary>
+    public string Packs => Path.Combine(Cache, "packs");
+
     /// <summary>Remembered SHA-256 of game files (<see cref="FileHashCache"/>; safe to delete: files are hashed again).</summary>
     public string FileHashes => Path.Combine(Cache, "file-hashes.json");
 

@@ -43,6 +43,9 @@ public sealed record PackManifest(
     /// <summary>The only license registry content is published under.</summary>
     public const string License = "CC-BY-SA-4.0";
 
+    /// <summary>Whether <paramref name="id"/> is a valid pack ID (lowercase letters, digits, single '-', at most 64).</summary>
+    public static bool IsValidId(string? id) => PackFormat.IsSlug(id);
+
     /// <summary>Current revision number (the last of <see cref="Revisions"/>).</summary>
     public int Revision => Revisions[^1].Number;
 
