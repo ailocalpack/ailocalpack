@@ -120,6 +120,9 @@
                             </Button>
                             <TextBlock x:Name="PrimaryCaption" Classes="muted" FontSize="12" MaxWidth="260" TextAlignment="Right"
                                        TextWrapping="Wrap" HorizontalAlignment="Right" Text="{Binding PrimaryCaption}" />
+                            <TextBlock x:Name="LaunchError" Foreground="{DynamicResource AppWarnBrush}" FontSize="12" MaxWidth="260" TextAlignment="Right"
+                                       TextWrapping="Wrap" HorizontalAlignment="Right" Text="{Binding LaunchError}"
+                                       IsVisible="{Binding HasLaunchError}" />
                         </StackPanel>
                     </Grid>
                 </Panel>

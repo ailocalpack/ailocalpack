@@ -286,7 +286,8 @@ public sealed class GameCatalog
                 entry.Engine,
                 entry.AntiCheat,
                 entry.LastPlayed,
-                entry.Available);
+                entry.Available,
+                source == GameSource.Manual ? entry.MainExecutable : null);
         }
         catch (Exception e) when (e is FormatException or ArgumentException)
         {
@@ -305,7 +306,8 @@ public sealed class GameCatalog
         game.Engine,
         game.AntiCheat,
         game.LastPlayed?.ToUniversalTime(),
-        game.IsAvailable);
+        game.IsAvailable,
+        game.MainExecutable);
 
     private string? BackUpCorrupted()
     {

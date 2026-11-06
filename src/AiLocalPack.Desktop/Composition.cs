@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
@@ -61,6 +62,7 @@ internal static class Composition
         services.AddSingleton(sp => new PackManifestClient(sp.GetRequiredService<HttpClient>(), logger: sp.GetRequiredService<ILogger<PackManifestClient>>()));
         services.AddSingleton(sp => new PackCompatibilityChecker(sp.GetRequiredService<FileHashCache>()));
         services.AddSingleton<PackManifests>();
+        services.AddSingleton<IInstalledPacks, NoInstalledPacks>();
         services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
@@ -82,6 +84,9 @@ internal static class Composition
         services.AddSingleton(sp => AntiCheatPolicy.Bundled);
         services.AddSingleton(sp => new AntiCheatDetector(sp.GetRequiredService<AntiCheatPolicy>(), sp.GetService<ILogger<AntiCheatDetector>>()));
         services.AddSingleton<GameLibrary>();
+        services.AddSingleton<IProcessList, SystemProcessList>();
+        services.AddSingleton<IProcessStarter, SystemProcessStarter>();
+        services.AddSingleton<GameSessions>();
         services.AddSingleton(_ =>
         {
             // GitHub Pages serves index.json compressed when asked.

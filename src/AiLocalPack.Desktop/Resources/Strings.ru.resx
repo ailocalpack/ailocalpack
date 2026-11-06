@@ -1057,6 +1057,36 @@
   <data name="Game_Action_Play" xml:space="preserve">
     <value>Играть</value>
   </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>Запуск…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>Запущена</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>идёт с {0}</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>Не удалось запустить игру: {0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>Папка игры недоступна. Подключите диск или проверьте, что папка на месте.</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>В папке игры не нашлось программы для запуска.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>Это сборка для Windows. Чтобы играть в Linux, добавьте её в Steam как стороннюю игру и включите Proton.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>Это сборка для Windows, на этой системе она не запускается.</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>Это сборка для Linux, на этой системе она не запускается.</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>Это сборка для macOS, на этой системе она не запускается.</value>
+  </data>
   <data name="Game_Action_Update" xml:space="preserve">
     <value>Обновить до ред. {0}</value>
   </data>

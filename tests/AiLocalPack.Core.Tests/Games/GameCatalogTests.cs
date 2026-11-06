@@ -70,6 +70,21 @@ public sealed class GameCatalogTests : IDisposable
     }
 
     [Fact]
+    public void Main_executable_of_a_manual_game_survives_a_restart()
+    {
+        // Arrange
+        var first = CreateCatalog();
+        first.Load();
+        first.AddManual(Manual() with { MainExecutable = "bin/x64/Moss.exe" });
+
+        // Act
+        var games = CreateCatalog().Load();
+
+        // Assert
+        games.Single().MainExecutable.Should().Be("bin/x64/Moss.exe");
+    }
+
+    [Fact]
     public void Refresh_returns_and_raises_the_changes()
     {
         // Arrange

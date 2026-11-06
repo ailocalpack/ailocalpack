@@ -15,7 +15,8 @@ internal sealed record GameEntryJson(
     string? Engine,
     string? AntiCheat,
     DateTimeOffset? LastPlayed,
-    bool Available = true);
+    bool Available = true,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? MainExecutable = null);
 
 /// <summary>Exactly one of <see cref="BuildId"/> and <see cref="Files"/> is set.</summary>
 internal sealed record GameVersionJson(

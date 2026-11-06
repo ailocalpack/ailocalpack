@@ -31,6 +31,11 @@ public enum GameSource
 /// <c>false</c> while the game folder can't be reached (Steam library on an unplugged drive or SD card, Steam not found,
 /// manual folder missing). The game stays in the catalog with everything known about it.
 /// </param>
+/// <param name="MainExecutable">
+/// A manual game's main executable (relative to <paramref name="InstallPath"/>, '/'-separated), as detected or chosen
+/// when it was added: the one launched first when it runs on this OS. <c>null</c> for Steam games (Steam starts them)
+/// and when unknown.
+/// </param>
 public sealed record Game(
     GameId Id,
     string Name,
@@ -41,7 +46,8 @@ public sealed record Game(
     string? Engine,
     string? AntiCheat,
     DateTimeOffset? LastPlayed,
-    bool IsAvailable);
+    bool IsAvailable,
+    string? MainExecutable = null);
 
 /// <summary>Something that happened to a game when the catalog changed.</summary>
 public abstract record GameChange(Game Game);

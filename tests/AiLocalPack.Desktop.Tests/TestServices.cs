@@ -1,3 +1,6 @@
+using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Launch;
+using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
@@ -14,8 +17,8 @@ namespace AiLocalPack.Desktop.Tests;
 /// (never the player's real ones), deleted when the provider is disposed. Steam is never the player's: by default it
 /// is "not found" (an empty folder), or the <see cref="SteamFixture"/> a test builds. The registry is never the real
 /// one: by default a local folder without an index (unavailable), or the address a test passes. No covers are loaded (no
-/// network), UI updates run at once on the calling thread, folders are "opened" into <see cref="FakeShell"/> and the
-/// OS pickers are <see cref="FakeFilePicker"/>.
+/// network), UI updates run at once on the calling thread, folders are "opened" into <see cref="FakeShell"/>, the
+/// OS pickers are <see cref="FakeFilePicker"/> and games are "started" into <see cref="FakeProcesses"/>.
 /// </summary>
 internal static class TestServices
 {
@@ -56,6 +59,9 @@ internal static class TestServices
             services.AddSingleton<ISystemShell>(sp => sp.GetRequiredService<FakeShell>());
             services.AddSingleton<FakeFilePicker>();
             services.AddSingleton<IFilePicker>(sp => sp.GetRequiredService<FakeFilePicker>());
+            services.AddSingleton<FakeProcesses>();
+            services.AddSingleton<IProcessList>(sp => sp.GetRequiredService<FakeProcesses>());
+            services.AddSingleton<IProcessStarter>(sp => sp.GetRequiredService<FakeProcesses>());
             configure?.Invoke(services);
         });
         provider.GetRequiredService<TempDir>();
@@ -104,4 +110,72 @@ internal sealed class FakeFilePicker : IFilePicker
     public Task<string?> PickFolderAsync(string title) => Task.FromResult(Folder);
 
     public Task<string?> PickImageAsync(string title) => Task.FromResult(Image);
+}
+
+/// <summary>A process list the test fills, recording what the app started instead of starting it.</summary>
+internal sealed class FakeProcesses : IProcessList, IProcessStarter
+{
+    private readonly Lock _lock = new();
+    private readonly List<RunningProcess> _running = [];
+
+    public List<Uri> OpenedUrls { get; } = [];
+
+    public List<(string FileName, IReadOnlyList<string> Arguments, string WorkingDirectory)> Started { get; } = [];
+
+    /// <summary>Thrown by the next start, as the OS refusing it.</summary>
+    public Exception? Refuse { get; set; }
+
+    public void Run(string path)
+    {
+        lock (_lock)
+        {
+            _running.Add(new RunningProcess(_running.Count + 100, path));
+        }
+    }
+
+    public void ExitAll()
+    {
+        lock (_lock)
+        {
+            _running.Clear();
+        }
+    }
+
+    public IReadOnlyList<RunningProcess> Snapshot()
+    {
+        lock (_lock)
+        {
+            return [.. _running];
+        }
+    }
+
+    public void OpenUrl(Uri url)
+    {
+        ThrowIfRefused();
+        OpenedUrls.Add(url);
+    }
+
+    public void Start(string fileName, IReadOnlyList<string> arguments, string workingDirectory)
+    {
+        ThrowIfRefused();
+        Started.Add((fileName, arguments, workingDirectory));
+    }
+
+    private void ThrowIfRefused()
+    {
+        if (Refuse is { } e)
+        {
+            Refuse = null;
+            throw e;
+        }
+    }
+}
+
+/// <summary>Installed packs the test sets (until task 29 brings the real store).</summary>
+internal sealed class FakeInstalledPacks : IInstalledPacks
+{
+    public Dictionary<(GameId Game, string Language), InstalledPackState> Packs { get; } = [];
+
+    public InstalledPackState? Find(GameId game, string language) =>
+        Packs.GetValueOrDefault((game, language));
 }

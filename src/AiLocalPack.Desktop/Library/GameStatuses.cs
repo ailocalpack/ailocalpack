@@ -13,7 +13,7 @@ namespace AiLocalPack.Desktop.Library;
 /// from the anti-cheat policy and the latest pack list. The library cards and the game page read the same answer;
 /// installed packs (task 29), broken ones (task 33) and generation jobs (task 47) join here.
 /// </summary>
-public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings)
+public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings, IInstalledPacks installed)
 {
     /// <summary>The target language: an exact <see cref="GameLanguages.Tags"/> tag (setting, else the OS language).</summary>
     public string Language => GameLanguages.Resolve(settings.Current.GameLanguage, UiLanguages.Os);
@@ -29,6 +29,6 @@ public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, Se
     public LocalizationStatus Resolve(Game game, string language)
     {
         ArgumentNullException.ThrowIfNull(game);
-        return LocalizationStatuses.Resolve(game, language, policy.Resolve(game), packIndex.Current?.Index);
+        return LocalizationStatuses.Resolve(game, language, policy.Resolve(game), packIndex.Current?.Index, installed.Find(game.Id, language));
     }
 }

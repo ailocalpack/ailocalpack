@@ -257,7 +257,8 @@ public sealed partial class GameSummaryViewModel : ObservableObject
             (SelectedEngine?.Kind ?? EngineKind.Unknown).ToString(),
             Analysis.AntiCheat.StoredId,
             LastPlayed: null,
-            IsAvailable: true);
+            IsAvailable: true,
+            SelectedExecutable);
         if (_cover is { } cover)
         {
             // Before the game enters the catalog, so its library card finds the cover right away.

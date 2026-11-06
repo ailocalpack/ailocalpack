@@ -1031,6 +1031,36 @@
   <data name="Game_Action_Play" xml:space="preserve">
     <value>Play</value>
   </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>Starting…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>running since {0}</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>Couldn't start the game: {0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>The game folder can't be reached. Connect the drive or check that the folder is still there.</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>No program to start was found in the game folder.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>This is a Windows build. To play it on Linux, add it to Steam as a non-Steam game and turn on Proton.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>This is a Windows build; it doesn't run on this system.</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>This is a Linux build; it doesn't run on this system.</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>This is a macOS build; it doesn't run on this system.</value>
+  </data>
   <data name="Game_Action_Update" xml:space="preserve">
     <value>Update to rev {0}</value>
   </data>

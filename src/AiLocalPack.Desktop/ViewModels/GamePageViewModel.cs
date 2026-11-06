@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
+using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
@@ -46,11 +47,21 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly IUiDispatcher _ui;
     private readonly ISystemShell _shell;
     private readonly AntiCheatDetector _antiCheats;
+    private readonly GameSessions _sessions;
+    private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
     private IBrush? _placeholderBrush;
     private IBrush? _greyPlaceholderBrush;
     private (IBrush Base, IBrush Glow, IBrush SecondGlow, bool Grey)? _backdrop;
+
+    /// <summary>Play was pressed and the launch (finding the executable, asking the OS) hasn't answered yet.</summary>
+    private bool _launching;
+
+    /// <summary>Why the last Play failed: the line under the caption; empty when it didn't.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasLaunchError))]
+    private string _launchError = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Cover), nameof(HasCover), nameof(Icon), nameof(HasIcon))]
@@ -81,6 +92,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         ISystemShell shell,
         AntiCheatDetector antiCheats,
         PackManifests manifests,
+        GameSessions sessions,
+        TimeProvider time,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -94,6 +107,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         _ui = ui;
         _shell = shell;
         _antiCheats = antiCheats;
+        _sessions = sessions;
+        _time = time;
         _logger = logger ?? NullLogger<GamePageViewModel>.Instance;
         Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Generation, GamePageTab.Audio, GamePageTab.Textures }
             .Select(t => new GameTabViewModel(t, tab => SelectedTab = tab))];
@@ -111,6 +126,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _packIndex.Changed += OnPackIndexChanged;
         _settings.Changed += OnSettingsChanged;
         _localizer.CultureChanged += OnCultureChanged;
+        _sessions.Changed += OnSessionChanged;
         _ = LoadCoverAsync(covers);
     }
 
@@ -202,11 +218,31 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     public bool HasPrimaryAction => Action.Kind != GamePrimaryActionKind.None;
 
-    /// <summary>"Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "View progress"…</summary>
-    public string PrimaryText => PrimaryActionTexts.Label(Action, _localizer);
+    /// <summary>
+    /// "Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "View progress"…; Play reads
+    /// "Starting…" from the press until the game's process shows up, then "Running" until it ends.
+    /// </summary>
+    public string PrimaryText => PlayPhase switch
+    {
+        GameSessionPhase.Starting => _localizer[nameof(Strings.Game_Action_Starting)],
+        GameSessionPhase.Running => _localizer[nameof(Strings.Game_Action_Running)],
+        _ => PrimaryActionTexts.Label(Action, _localizer),
+    };
 
-    /// <summary>What exactly happens (<see cref="PrimaryActionTexts.Caption"/>).</summary>
-    public string PrimaryCaption => PrimaryActionTexts.Caption(Action, Game, _localizer);
+    /// <summary>What exactly happens (<see cref="PrimaryActionTexts.Caption"/>); "Running since 21:04" while the game runs.</summary>
+    public string PrimaryCaption => PlayPhase == GameSessionPhase.Running && Session?.StartedAt is { } started
+        ? _localizer.Format(nameof(Strings.Game_Caption_RunningSince), TimeZoneInfo.ConvertTime(started, _time.LocalTimeZone).ToString("t", _localizer.Culture))
+        : PrimaryActionTexts.Caption(Action, Game, _localizer);
+
+    public bool HasLaunchError => LaunchError.Length > 0;
+
+    /// <summary>The game launched from the app, while it is starting or running.</summary>
+    private GameSessionState? Session => _sessions.Find(Game.Id);
+
+    /// <summary>Where the launched game is, shown only on the Play action; <c>null</c> when it isn't launched.</summary>
+    private GameSessionPhase? PlayPhase => Action.Kind != GamePrimaryActionKind.Play ? null
+        : _launching ? GameSessionPhase.Starting
+        : Session?.Phase;
 
     /// <summary>Resource key of the button's icon.</summary>
     public string PrimaryIcon => Action.Kind switch
@@ -221,8 +257,8 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>View progress is teal (generation), the others the accent.</summary>
     public bool IsPrimaryGen => Action.Kind == GamePrimaryActionKind.ViewProgress;
 
-    /// <summary>Play waits for launching (task 25); the others work.</summary>
-    public bool CanRunPrimary => Action.Kind is not (GamePrimaryActionKind.None or GamePrimaryActionKind.Play) && Game.IsAvailable;
+    /// <summary>Not while the game is starting or running (Play), nor for an unreachable folder.</summary>
+    public bool CanRunPrimary => Action.Kind != GamePrimaryActionKind.None && PlayPhase is null && Game.IsAvailable;
 
     public IRelayCommand PrimaryCommand { get; }
 
@@ -339,6 +375,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _packIndex.Changed -= OnPackIndexChanged;
         _settings.Changed -= OnSettingsChanged;
         _localizer.CultureChanged -= OnCultureChanged;
+        _sessions.Changed -= OnSessionChanged;
         _closed.Cancel();
         Packs.Close();
     }
@@ -348,17 +385,74 @@ public sealed partial class GamePageViewModel : PageViewModel
     private void OpenGeneration() => SelectedTab = GamePageTab.Generation;
 
     /// <summary>
-    /// Install and Update open the Packs tab until their flows exist (tasks 29, 33); Generate, Translate new strings and
-    /// View progress open the Generation tab (its content comes with tasks 52, 53, 56).
+    /// Play launches the game (<see cref="GameSessions"/>). Install and Update open the Packs tab until their flows exist
+    /// (tasks 29, 33); Generate, Translate new strings and View progress open the Generation tab (its content comes with
+    /// tasks 52, 53, 56).
     /// </summary>
     private void RunPrimary()
     {
+        if (Action.Kind == GamePrimaryActionKind.Play)
+        {
+            _ = PlayAsync();
+            return;
+        }
+
         SelectedTab = Action.Kind switch
         {
             GamePrimaryActionKind.InstallBestPack or GamePrimaryActionKind.UpdatePack => GamePageTab.Packs,
             GamePrimaryActionKind.Generate or GamePrimaryActionKind.TranslateNewStrings or GamePrimaryActionKind.ViewProgress => GamePageTab.Generation,
             _ => SelectedTab,
         };
+    }
+
+    private async Task PlayAsync()
+    {
+        _launching = true;
+        LaunchError = string.Empty;
+        RaisePlayState();
+        GameLaunchResult result;
+        try
+        {
+            result = await _sessions.LaunchAsync(Game);
+        }
+        finally
+        {
+            _launching = false;
+        }
+
+        _ui.Post(() =>
+        {
+            LaunchError = LaunchErrorText(result);
+            RaisePlayState();
+        });
+    }
+
+    /// <summary>The plain reason a launch failed, for this OS; empty when it worked.</summary>
+    private string LaunchErrorText(GameLaunchResult result) => result switch
+    {
+        { Error: { } error } => _localizer.Format(nameof(Strings.Game_Launch_Failed), error),
+        { Problem: LaunchProblem.GameUnavailable } => _localizer[nameof(Strings.Game_Launch_Unavailable)],
+        { Problem: LaunchProblem.NoExecutable } => _localizer[nameof(Strings.Game_Launch_NoExecutable)],
+        { Problem: LaunchProblem.WindowsOnly } => _localizer[OperatingSystem.IsLinux() ? nameof(Strings.Game_Launch_WindowsOnlyLinux) : nameof(Strings.Game_Launch_WindowsOnly)],
+        { Problem: LaunchProblem.LinuxOnly } => _localizer[nameof(Strings.Game_Launch_LinuxOnly)],
+        { Problem: LaunchProblem.MacOnly } => _localizer[nameof(Strings.Game_Launch_MacOnly)],
+        _ => string.Empty,
+    };
+
+    private void OnSessionChanged(object? sender, GameSessionEvent change)
+    {
+        if (change.Game == Game.Id)
+        {
+            _ui.Post(RaisePlayState);
+        }
+    }
+
+    private void RaisePlayState()
+    {
+        OnPropertyChanged(nameof(PrimaryText));
+        OnPropertyChanged(nameof(PrimaryCaption));
+        OnPropertyChanged(nameof(CanRunPrimary));
+        PrimaryCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnSelectedTabChanged(GamePageTab value)
