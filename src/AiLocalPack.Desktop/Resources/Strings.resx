@@ -1415,4 +1415,280 @@
   <data name="Packs_OtherLanguage" xml:space="preserve">
     <value>{0} ({1})</value>
   </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>Uninstalled the previous pack «{0}» rev {1}.</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>Compatibility with your files: {0}.</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>Pack rev {0} taken from the cache.</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>Pack rev {0} downloaded: {1} bytes.</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>Original files restored: {0}; added files removed: {1}.</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>Kept (changed since the install): {0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>Game files rebuilt: {0}; strings applied: {1}.</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>Strings not found in this version of the game: {0}.</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>Files replaced: {0}; files added: {1}.</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>Stopped: {0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>The game files were restored from the backup.</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>Restoring the game files failed; the app retries on the next start.</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>Installing «{0}» · step {1} of {2}</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>Re-applying «{0}» · step {1} of {2}</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>Uninstalling «{0}»</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>Downloading the pack</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>Uninstalling the previous pack</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>Checking your game files</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>Rebuilding game files from the strings</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>Backing up the original files</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>Writing the new files</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>Verifying</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>Restoring the original files</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>Another install or uninstall is running. Wait for it to finish and retry.</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>Installing is unavailable for this game (anti-cheat, or the studio asked not to).</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>The pack is no longer in the registry's list.</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>Couldn't download the pack: no connection to the registry.</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>Couldn't download the pack: the registry didn't answer in time.</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>Couldn't download the pack: the registry answered with an error.</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>The pack's files are gone from the registry.</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>The pack needs a newer version of ailocalpack. Update the app.</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>The download was damaged (hash check failed) and was deleted.</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>Couldn't save the download: the cache folder can't be written.</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>The pack in the registry is damaged.</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>The pack doesn't fit your version of the game. {0}</value>
+  </data>
+  <data name="Install_Why_PatchUnsupported" xml:space="preserve">
+    <value>This pack is a binary patch, which this version of the app can't install yet.</value>
+  </data>
+  <data name="Install_Why_DependenciesUnsupported" xml:space="preserve">
+    <value>This pack needs {0}, which this version of the app can't install yet.</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>The pack's string table can't be read.</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>Couldn't rebuild {0} from the strings: the game file can't be read or has an unexpected format.</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>Something went wrong. The details are in the log.</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>The game is running. Close it and retry.</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} is in use; the game seems to be running. Close it and retry.</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>Not enough free space on the game's drive.</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>No permission to change {0}.</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} is read-only.</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>The game folder can't be reached (drive unplugged or folder moved).</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>A pack is already installed for this game.</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>No pack is installed for this game.</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>An earlier install was interrupted and couldn't be finished yet. Restart the app to finish it.</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>{0} didn't have the expected content after writing.</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>The backup of {0} is missing or damaged.</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>Couldn't read or write {0}.</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>Alpha: not yet confirmed by other players.</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>Probably compatible. {0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>Downloads {0} {1} from its official release (hash checked).</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>Replaces the installed «{0}» rev {1}.</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>Install «{0}»?</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>Original files are backed up; you can uninstall.</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>Installed: «{0}».</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>Re-applied: «{0}».</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>Uninstalled «{0}»; original files restored.</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>Couldn't install; files restored.</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>Couldn't re-apply; files restored.</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>Couldn't install, and restoring files failed. The app retries on the next start.</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>Couldn't uninstall.</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>Couldn't install «{0}»</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>Couldn't re-apply «{0}»</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>Couldn't uninstall «{0}»</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>The game files are as they were before.</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>Some files may still be the pack's; uninstalling again finishes the job.</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>Restoring some files failed; the app retries on the next start.</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>Uninstall «{0}»?</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>The game's original files are restored from the backup. The pack stays in the registry and can be installed again; your game and its saves are untouched.</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>installing</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>Installing…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>Uninstall (restore originals)</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>Installing · {0}%</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>Uninstalling…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>Installed pack actions</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>Re-apply</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>Show in Packs</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>Uninstall (restore originals)</value>
+  </data>
 </root>

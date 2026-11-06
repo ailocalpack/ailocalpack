@@ -2,6 +2,7 @@ using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
+using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -17,8 +18,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IDialogService _dialogs;
 
     public MainWindowViewModel(
-        INavigationService navigation, IPageFactory pages, Localizer localizer, IDialogService dialogs, StartupProgress startup)
+        INavigationService navigation, IPageFactory pages, Localizer localizer, IDialogService dialogs, StartupProgress startup, ToastService toasts)
     {
+        Toasts = toasts;
         Startup = startup;
         Startup.PropertyChanged += (_, e) =>
         {
@@ -49,6 +51,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     public PageViewModel? CurrentPage => _navigation.Current;
+
+    /// <summary>Toasts in the bottom right corner (install done / failed).</summary>
+    public ToastService Toasts { get; }
 
     /// <summary>Startup checks: "Checking for changes…" and the ring on 🔔 while background checks run, their list under 🔔.</summary>
     public StartupProgress Startup { get; }

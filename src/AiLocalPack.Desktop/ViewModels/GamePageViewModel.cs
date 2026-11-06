@@ -8,6 +8,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
@@ -48,6 +49,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly ISystemShell _shell;
     private readonly AntiCheatDetector _antiCheats;
     private readonly GameSessions _sessions;
+    private readonly InstallFlow _install;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
@@ -93,6 +95,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         AntiCheatDetector antiCheats,
         PackManifests manifests,
         GameSessions sessions,
+        InstallFlow install,
         TimeProvider time,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
@@ -108,6 +111,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _shell = shell;
         _antiCheats = antiCheats;
         _sessions = sessions;
+        _install = install;
         _time = time;
         _logger = logger ?? NullLogger<GamePageViewModel>.Instance;
         Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Generation, GamePageTab.Audio, GamePageTab.Textures }
@@ -120,6 +124,9 @@ public sealed partial class GamePageViewModel : PageViewModel
             : GamePageTab.Packs;
         UpdateTabs();
         Packs = new PacksTabViewModel(game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, _logger);
+        Packs.InstallRequested += OnInstallRequested;
+        Packs.UninstallRequested += OnUninstallRequested;
+        Packs.SetInstallState(_install.IsBusy, InstallingPackId);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -127,6 +134,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         _settings.Changed += OnSettingsChanged;
         _localizer.CultureChanged += OnCultureChanged;
         _sessions.Changed += OnSessionChanged;
+        _install.Changed += OnInstallChanged;
+        _statuses.InstalledChanged += OnInstalledChanged;
         _ = LoadCoverAsync(covers);
     }
 
@@ -257,14 +266,42 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>View progress is teal (generation), the others the accent.</summary>
     public bool IsPrimaryGen => Action.Kind == GamePrimaryActionKind.ViewProgress;
 
-    /// <summary>Not while the game is starting or running (Play), nor for an unreachable folder.</summary>
-    public bool CanRunPrimary => Action.Kind != GamePrimaryActionKind.None && PlayPhase is null && Game.IsAvailable;
+    /// <summary>
+    /// Not while the game is starting or running (Play), nor for an unreachable folder, nor while an install, re-apply or
+    /// uninstall runs (one at a time, design §4a).
+    /// </summary>
+    public bool CanRunPrimary => Action.Kind != GamePrimaryActionKind.None && PlayPhase is null && Game.IsAvailable && !_install.IsBusy;
 
     public IRelayCommand PrimaryCommand { get; }
 
     // ---------- Installed pack block and update banner ----------
 
-    public bool ShowInstalled => Status.Installed is not null && !Status.IsBlocked;
+    /// <summary>The installed pack, or the progress of an operation on this game (installing, re-applying, uninstalling).</summary>
+    public bool ShowInstalled => (Status.Installed is not null || IsOperating) && !Status.IsBlocked;
+
+    /// <summary>The operation running on this game, if any.</summary>
+    public InstallOperation? Operation => _install.Current is { } operation && operation.Game == Game.Id ? operation : null;
+
+    /// <summary>The installed block shows a spinner, "Installing «…» · step N of M", the step and a bar.</summary>
+    public bool IsOperating => Operation is not null;
+
+    /// <summary>The installed pack's line, while nothing runs on the game.</summary>
+    public bool ShowInstalledPack => Status.Installed is not null && !IsOperating;
+
+    /// <summary>"Installing «Фонарщики» · step 2 of 6".</summary>
+    public string OperationTitle => Operation is { } operation ? InstallTexts.Title(operation, _localizer) : string.Empty;
+
+    /// <summary>"Rebuilding game files from the strings".</summary>
+    public string OperationStep => Operation is { } operation ? InstallTexts.Step(operation.Step, _localizer) : string.Empty;
+
+    /// <summary>The whole operation, 0–100, for the bar.</summary>
+    public double OperationPercent => Operation?.Percent ?? 0;
+
+    /// <summary>The ⋯ menu's items are off while any operation runs.</summary>
+    public bool CanChangeInstalled => !_install.IsBusy && Status.Installed is not null && Game.IsAvailable;
+
+    /// <summary>The pack being installed here, for the Packs tab's <c>installing</c> tag.</summary>
+    private string? InstallingPackId => Operation is { Kind: InstallOperationKind.Install } operation ? operation.PackId : null;
 
     /// <summary>A game update broke the installed pack: the block is amber with ⚠.</summary>
     public bool IsInstalledBroken => Status.Installed is { BrokenByUpdate: true };
@@ -376,18 +413,39 @@ public sealed partial class GamePageViewModel : PageViewModel
         _settings.Changed -= OnSettingsChanged;
         _localizer.CultureChanged -= OnCultureChanged;
         _sessions.Changed -= OnSessionChanged;
+        _install.Changed -= OnInstallChanged;
+        _statuses.InstalledChanged -= OnInstalledChanged;
         _closed.Cancel();
         Packs.Close();
     }
+
+    /// <summary>⋯ → <c>Re-apply</c>: writes the installed pack's files again (after a game update or a file check reverted them).</summary>
+    [RelayCommand(CanExecute = nameof(CanChangeInstalled))]
+    private Task ReapplyAsync() => _install.ReapplyAsync(Game);
+
+    /// <summary>⋯ → <c>Show in Packs</c>: the Packs tab on the installed pack.</summary>
+    [RelayCommand]
+    private void ShowInPacks()
+    {
+        SelectedTab = GamePageTab.Packs;
+        if (Status.Installed is { } installed)
+        {
+            Packs.ShowPack(Language, installed.PackId);
+        }
+    }
+
+    /// <summary>⋯ → <c>Uninstall (restore originals)</c>: asks, then restores the original files.</summary>
+    [RelayCommand(CanExecute = nameof(CanChangeInstalled))]
+    private void Uninstall() => _install.Uninstall(Game);
 
     /// <summary>"Generate with AI" on the empty Packs tab, "Translate new strings" on the banner: the Generation tab.</summary>
     [RelayCommand]
     private void OpenGeneration() => SelectedTab = GamePageTab.Generation;
 
     /// <summary>
-    /// Play launches the game (<see cref="GameSessions"/>). Install and Update open the Packs tab until their flows exist
-    /// (tasks 29, 33); Generate, Translate new strings and View progress open the Generation tab (its content comes with
-    /// tasks 52, 53, 56).
+    /// Play launches the game (<see cref="GameSessions"/>); Install installs the best compatible pack (the install flow;
+    /// when none can be installed the Packs tab says why). Update opens the Packs tab until its flow exists (task 33);
+    /// Generate, Translate new strings and View progress open the Generation tab (its content comes with tasks 52, 53, 56).
     /// </summary>
     private void RunPrimary()
     {
@@ -397,9 +455,15 @@ public sealed partial class GamePageViewModel : PageViewModel
             return;
         }
 
+        if (Action.Kind == GamePrimaryActionKind.InstallBestPack)
+        {
+            _ = _install.InstallBestAsync(Game, () => SelectedTab = GamePageTab.Packs);
+            return;
+        }
+
         SelectedTab = Action.Kind switch
         {
-            GamePrimaryActionKind.InstallBestPack or GamePrimaryActionKind.UpdatePack => GamePageTab.Packs,
+            GamePrimaryActionKind.UpdatePack => GamePageTab.Packs,
             GamePrimaryActionKind.Generate or GamePrimaryActionKind.TranslateNewStrings or GamePrimaryActionKind.ViewProgress => GamePageTab.Generation,
             _ => SelectedTab,
         };
@@ -422,22 +486,41 @@ public sealed partial class GamePageViewModel : PageViewModel
 
         _ui.Post(() =>
         {
-            LaunchError = LaunchErrorText(result);
+            LaunchError = LaunchTexts.Problem(result, _localizer);
             RaisePlayState();
         });
     }
 
-    /// <summary>The plain reason a launch failed, for this OS; empty when it worked.</summary>
-    private string LaunchErrorText(GameLaunchResult result) => result switch
+    private void OnInstallRequested(object? sender, PackRowViewModel row) =>
+        _ = _install.InstallAsync(Game, row.Pack, row.Manifest, row.Compatibility);
+
+    private void OnUninstallRequested(object? sender, EventArgs e) => _install.Uninstall(Game);
+
+    /// <summary>An operation started, moved on or ended (any game: the buttons are off meanwhile). Raised on the UI thread.</summary>
+    private void OnInstallChanged(object? sender, EventArgs e)
     {
-        { Error: { } error } => _localizer.Format(nameof(Strings.Game_Launch_Failed), error),
-        { Problem: LaunchProblem.GameUnavailable } => _localizer[nameof(Strings.Game_Launch_Unavailable)],
-        { Problem: LaunchProblem.NoExecutable } => _localizer[nameof(Strings.Game_Launch_NoExecutable)],
-        { Problem: LaunchProblem.WindowsOnly } => _localizer[OperatingSystem.IsLinux() ? nameof(Strings.Game_Launch_WindowsOnlyLinux) : nameof(Strings.Game_Launch_WindowsOnly)],
-        { Problem: LaunchProblem.LinuxOnly } => _localizer[nameof(Strings.Game_Launch_LinuxOnly)],
-        { Problem: LaunchProblem.MacOnly } => _localizer[nameof(Strings.Game_Launch_MacOnly)],
-        _ => string.Empty,
-    };
+        Packs.SetInstallState(_install.IsBusy, InstallingPackId);
+        OnPropertyChanged(nameof(ShowInstalled));
+        OnPropertyChanged(nameof(ShowInstalledPack));
+        OnPropertyChanged(nameof(Operation));
+        OnPropertyChanged(nameof(IsOperating));
+        OnPropertyChanged(nameof(OperationTitle));
+        OnPropertyChanged(nameof(OperationStep));
+        OnPropertyChanged(nameof(OperationPercent));
+        OnPropertyChanged(nameof(CanChangeInstalled));
+        OnPropertyChanged(nameof(CanRunPrimary));
+        PrimaryCommand.NotifyCanExecuteChanged();
+        ReapplyCommand.NotifyCanExecuteChanged();
+        UninstallCommand.NotifyCanExecuteChanged();
+    }
+
+    private void OnInstalledChanged(object? sender, GameId game)
+    {
+        if (game == Game.Id)
+        {
+            _ui.Post(Refresh);
+        }
+    }
 
     private void OnSessionChanged(object? sender, GameSessionEvent change)
     {
@@ -503,6 +586,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         ActivateTab();
         OnPropertyChanged(string.Empty);
         PrimaryCommand.NotifyCanExecuteChanged();
+        ReapplyCommand.NotifyCanExecuteChanged();
+        UninstallCommand.NotifyCanExecuteChanged();
     }
 
     private void UpdateTabs()

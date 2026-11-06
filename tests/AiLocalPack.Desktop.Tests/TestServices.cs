@@ -171,11 +171,35 @@ internal sealed class FakeProcesses : IProcessList, IProcessStarter
     }
 }
 
-/// <summary>Installed packs the test sets (until task 29 brings the real store).</summary>
+/// <summary>Installed packs the test sets (a broken pack, which the real store can't say until task 33).</summary>
 internal sealed class FakeInstalledPacks : IInstalledPacks
 {
+    public event EventHandler<GameId>? Changed;
+
     public Dictionary<(GameId Game, string Language), InstalledPackState> Packs { get; } = [];
+
+    /// <summary>Tells the statuses a pack changed, as the store does after an install.</summary>
+    public void Raise(GameId game) => Changed?.Invoke(this, game);
 
     public InstalledPackState? Find(GameId game, string language) =>
         Packs.GetValueOrDefault((game, language));
+}
+
+/// <summary>Waits for work the app runs in the background (fire-and-forget commands).</summary>
+internal static class Wait
+{
+    /// <summary>Polls <paramref name="condition"/> until it holds; fails the test after <paramref name="timeout"/> (10 s).</summary>
+    public static async Task UntilAsync(Func<bool> condition, TimeSpan? timeout = null)
+    {
+        var deadline = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(10));
+        while (!condition())
+        {
+            if (DateTime.UtcNow > deadline)
+            {
+                throw new TimeoutException("The condition didn't hold in time.");
+            }
+
+            await Task.Delay(10);
+        }
+    }
 }

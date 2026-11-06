@@ -534,7 +534,7 @@ public sealed class PacksTabViewModelTests : IDisposable
         using var services = await BuildAsync(ThreePacks);
         var packs = await PacksAsync(services);
         RegistryPack? requested = null;
-        packs.InstallRequested += (_, pack) => requested = pack;
+        packs.InstallRequested += (_, row) => requested = row.Pack;
 
         // Act
         packs.Selected!.InstallCommand.Execute(null);

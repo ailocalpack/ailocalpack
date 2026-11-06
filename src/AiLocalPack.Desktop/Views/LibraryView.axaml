@@ -185,7 +185,7 @@
                                                         <TextBlock Text="{Binding BadgeText}" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Border>
-                                                <ProgressBar Classes="coverProgress" Classes.paused="{Binding IsPaused}" IsVisible="{Binding ShowProgress}"
+                                                <ProgressBar Classes="coverProgress" Classes.paused="{Binding IsPaused}" Classes.install="{Binding IsInstalling}" IsVisible="{Binding ShowProgress}"
                                                              Minimum="0" Maximum="100" Value="{Binding Percent}" />
                                                 <Button Classes="quick" Classes.has="{Binding HasQuickAction}" Classes.primary="{Binding IsQuickPrimary}"
                                                         Classes.warn="{Binding IsQuickWarn}" Classes.gen="{Binding IsQuickGen}"

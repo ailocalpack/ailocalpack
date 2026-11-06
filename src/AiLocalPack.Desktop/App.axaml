@@ -4,6 +4,7 @@
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:add="using:AiLocalPack.Desktop.ViewModels.AddGame"
              xmlns:dialogs="using:AiLocalPack.Desktop.Dialogs"
+             xmlns:install="using:AiLocalPack.Desktop.Install"
              xmlns:startup="using:AiLocalPack.Desktop.Startup"
              x:Class="AiLocalPack.Desktop.App"
              RequestedThemeVariant="Default">
@@ -34,6 +35,8 @@
         <!-- Dialogs, shown over the window by IDialogService -->
         <DataTemplate DataType="add:AddGameDialogViewModel"><views:AddGameDialogView /></DataTemplate>
         <DataTemplate DataType="dialogs:ConfirmDialogViewModel"><views:ConfirmDialogView /></DataTemplate>
+        <DataTemplate DataType="install:InstallConfirmDialogViewModel"><views:InstallConfirmDialogView /></DataTemplate>
+        <DataTemplate DataType="install:InstallDetailsDialogViewModel"><views:InstallDetailsDialogView /></DataTemplate>
         <!-- Startup checklist rows (splash details, startup checks under the bell) -->
         <DataTemplate DataType="startup:StartupStep"><views:StartupStepView /></DataTemplate>
     </Application.DataTemplates>

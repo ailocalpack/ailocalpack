@@ -59,7 +59,9 @@ public sealed class PackLanguageOption(string tag, string name, int count, bool 
 /// rest of the list one at a time, and each is checked against the player's files (<see cref="PackManifests"/>), so
 /// the rows fill in their compatibility. States: pack list unknown, no packs in the language (with the other
 /// languages that have some), the saved list while offline (banner with <c>Retry</c>, list faded, install off).
-/// The Mine section joins with task 55; <c>Install</c> raises <see cref="InstallRequested"/> (wired in task 29).
+/// The Mine section joins with task 55. <c>Install</c> raises <see cref="InstallRequested"/> and the installed pack's
+/// <c>Uninstall</c> <see cref="UninstallRequested"/> (the page runs the install flow); while an operation runs the rows
+/// show it (<see cref="SetInstallState"/>).
 /// </summary>
 public sealed partial class PacksTabViewModel : ObservableObject
 {
@@ -79,6 +81,8 @@ public sealed partial class PacksTabViewModel : ObservableObject
     private bool _active;
     private PackSort _sort = PackSort.StatusRating;
     private bool _pumping;
+    private bool _busy;
+    private string? _installingPackId;
     private Task _pump = Task.CompletedTask;
 
     [ObservableProperty]
@@ -120,8 +124,11 @@ public sealed partial class PacksTabViewModel : ObservableObject
         Rebuild();
     }
 
-    /// <summary><c>Install</c> on a pack (the install flow of task 29 listens).</summary>
-    public event EventHandler<RegistryPack>? InstallRequested;
+    /// <summary><c>Install</c> on a pack, with its manifest and check (the install flow listens).</summary>
+    public event EventHandler<PackRowViewModel>? InstallRequested;
+
+    /// <summary><c>Uninstall (restore originals)</c> on the installed pack.</summary>
+    public event EventHandler? UninstallRequested;
 
     /// <summary>The language the list shows (exact tag).</summary>
     public string Language { get; private set; }
@@ -236,6 +243,33 @@ public sealed partial class PacksTabViewModel : ObservableObject
 
     public void Close() => _closed.Cancel();
 
+    /// <summary>An operation runs (any game: every <c>Install</c> is off), and the pack of this language being installed here.</summary>
+    public void SetInstallState(bool busy, string? installingPackId)
+    {
+        if (busy == _busy && installingPackId == _installingPackId)
+        {
+            return;
+        }
+
+        _busy = busy;
+        _installingPackId = installingPackId;
+        var context = Context(Rows.Select(r => r.Pack).ToList());
+        foreach (var row in Rows)
+        {
+            row.SetContext(context);
+        }
+    }
+
+    /// <summary>The installed block's <c>Show in Packs</c>: the pack's language, the pack selected.</summary>
+    public void ShowPack(string language, string packId)
+    {
+        SelectLanguage(language);
+        if (Rows.FirstOrDefault(r => r.Pack.Id == packId) is { } row)
+        {
+            Selected = row;
+        }
+    }
+
     [RelayCommand]
     private void SelectLanguage(string tag)
     {
@@ -306,7 +340,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             _ => packs,
         };
 
-        var context = new PackRowContext(IsStale, _status.Installed, InstalledTitle(packs));
+        var context = Context(packs);
         var rows = new List<PackRowViewModel>();
         foreach (var pack in ordered)
         {
@@ -317,7 +351,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             }
             else
             {
-                row = new PackRowViewModel(pack, _localizer, r => Selected = r, Retry, Install, _openGeneration, OpenUrl);
+                row = new PackRowViewModel(pack, _localizer, r => Selected = r, Retry, Install, Uninstall, _openGeneration, OpenUrl);
                 _rowsByKey[key] = row;
             }
 
@@ -346,6 +380,9 @@ public sealed partial class PacksTabViewModel : ObservableObject
 
         OnPropertyChanged(string.Empty);
     }
+
+    private PackRowContext Context(IReadOnlyList<RegistryPack> packs) =>
+        new(IsStale, _status.Installed, InstalledTitle(packs), _busy, _installingPackId);
 
     private string? InstalledTitle(IReadOnlyList<RegistryPack> packs) => _status.Installed is { } installed
         ? packs.FirstOrDefault(p => p.Id == installed.PackId)?.Title ?? installed.PackId
@@ -388,7 +425,15 @@ public sealed partial class PacksTabViewModel : ObservableObject
     {
         if (row.CanInstall)
         {
-            InstallRequested?.Invoke(this, row.Pack);
+            InstallRequested?.Invoke(this, row);
+        }
+    }
+
+    private void Uninstall(PackRowViewModel row)
+    {
+        if (row.ShowUninstall)
+        {
+            UninstallRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 

@@ -28,7 +28,14 @@ public enum PackCheckState
 /// <param name="IsStale">The pack list is the saved copy (registry unreachable): install is unavailable.</param>
 /// <param name="Installed">The installed pack of this game and language, if any.</param>
 /// <param name="InstalledTitle">Its title («…», or the pack ID when it is gone from the registry).</param>
-public sealed record PackRowContext(bool IsStale, Core.Library.InstalledPackState? Installed, string? InstalledTitle)
+/// <param name="IsBusy">An install, re-apply or uninstall runs (for any game): every <c>Install</c> is off.</param>
+/// <param name="InstallingPackId">The pack of this language being installed into this game, if any.</param>
+public sealed record PackRowContext(
+    bool IsStale,
+    Core.Library.InstalledPackState? Installed,
+    string? InstalledTitle,
+    bool IsBusy = false,
+    string? InstallingPackId = null)
 {
     public static PackRowContext None { get; } = new(false, null, null);
 }
@@ -58,6 +65,7 @@ public sealed partial class PackRowViewModel : ObservableObject
         Action<PackRowViewModel> select,
         Action<PackRowViewModel> retry,
         Action<PackRowViewModel> install,
+        Action<PackRowViewModel> uninstall,
         Action translateMissing,
         Action<Uri> openUrl)
     {
@@ -67,6 +75,7 @@ public sealed partial class PackRowViewModel : ObservableObject
         SelectCommand = new RelayCommand(() => select(this));
         RetryCommand = new RelayCommand(() => retry(this));
         InstallCommand = new RelayCommand(() => install(this), () => CanInstall);
+        UninstallCommand = new RelayCommand(() => uninstall(this), () => ShowUninstall && !_context.IsBusy);
         TranslateMissingCommand = new RelayCommand(translateMissing);
         OpenDiscussionCommand = new RelayCommand(() => openUrl(Pack.Discussion!), () => Pack.Discussion is not null);
         ToggleRevisionsCommand = new RelayCommand(() => IsRevisionsOpen = !IsRevisionsOpen);
@@ -89,8 +98,11 @@ public sealed partial class PackRowViewModel : ObservableObject
 
     public IRelayCommand RetryCommand { get; }
 
-    /// <summary>Raises the tab's <c>InstallRequested</c>; the install flow comes with task 29.</summary>
+    /// <summary>Raises the tab's <c>InstallRequested</c> (the install flow).</summary>
     public IRelayCommand InstallCommand { get; }
+
+    /// <summary><c>Uninstall (restore originals)</c> under the installed pack's <c>Installed ✓</c>.</summary>
+    public IRelayCommand UninstallCommand { get; }
 
     public IRelayCommand TranslateMissingCommand { get; }
 
@@ -154,6 +166,12 @@ public sealed partial class PackRowViewModel : ObservableObject
 
     /// <summary>A game update broke the installed pack: the tag is amber.</summary>
     public bool IsInstalledBroken => IsInstalled && _context.Installed!.BrokenByUpdate;
+
+    /// <summary>This pack is being installed: the row's <c>installing</c> tag, the button's <c>Installing…</c>.</summary>
+    public bool IsInstalling => _context.InstallingPackId == Pack.Id;
+
+    /// <summary>"installing".</summary>
+    public string InstallingTag => _localizer[nameof(Strings.Packs_Tag_Installing)];
 
     /// <summary>"Installed", or "rev 3 · rev 4 available" when an update broke it.</summary>
     public string InstalledTag => IsInstalledBroken && Pack.Revision > _context.Installed!.Revision
@@ -242,17 +260,20 @@ public sealed partial class PackRowViewModel : ObservableObject
     /// <c>Install</c> runs for a checked, installable pack while the list is current and the pack isn't the installed one;
     /// otherwise it is disabled with <see cref="InstallHint"/>.
     /// </summary>
-    public bool CanInstall => State == PackCheckState.Checked && Compatibility!.CanInstall && !_context.IsStale && !IsInstalled;
+    public bool CanInstall => State == PackCheckState.Checked && Compatibility!.CanInstall && !_context.IsStale && !IsInstalled && !_context.IsBusy;
 
-    /// <summary>"Install", or "Installed" for the installed pack.</summary>
-    public string InstallText => _localizer[IsInstalled ? nameof(Strings.Packs_Installed) : nameof(Strings.Packs_Install)];
+    /// <summary>"Install", "Installing…", or "Installed" for the installed pack.</summary>
+    public string InstallText => _localizer[IsInstalling ? nameof(Strings.Packs_Installing) : IsInstalled ? nameof(Strings.Packs_Installed) : nameof(Strings.Packs_Install)];
 
-    public string InstallIcon => IsInstalled ? "IconCheck" : "IconDownload";
+    public string InstallIcon => IsInstalling ? "IconLoader" : IsInstalled ? "IconCheck" : "IconDownload";
+
+    /// <summary>The installed pack offers <c>Uninstall (restore originals)</c>.</summary>
+    public bool ShowUninstall => IsInstalled && !IsInstalling;
 
     /// <summary>Why Install is off, or what it will do ("Replaces the installed «…»").</summary>
     public string InstallHint => this switch
     {
-        { IsInstalled: true } => string.Empty,
+        { IsInstalled: true } or { IsInstalling: true } => string.Empty,
         { Compatibility.CanInstall: false } => _localizer[nameof(Strings.Packs_Hint_Incompatible)],
         _ when _context.IsStale => _localizer[nameof(Strings.Packs_Hint_Offline)],
         _ when _context.Installed is not null => _localizer.Format(nameof(Strings.Packs_Hint_Replaces), _context.InstalledTitle ?? _context.Installed.PackId),
@@ -294,6 +315,7 @@ public sealed partial class PackRowViewModel : ObservableObject
     {
         OnPropertyChanged(string.Empty);
         InstallCommand.NotifyCanExecuteChanged();
+        UninstallCommand.NotifyCanExecuteChanged();
         OpenDiscussionCommand.NotifyCanExecuteChanged();
     }
 

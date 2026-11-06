@@ -87,20 +87,46 @@
                                 </Border>
                             </WrapPanel>
 
-                            <!-- Installed pack block; its ⋯ menu (update, re-apply, rate, uninstall) comes with task 29 -->
+                            <!-- Installed pack block (⋯: Re-apply, Show in Packs, Uninstall); while an install, re-apply or uninstall
+                                 runs on the game it shows the progress instead (design §4a) -->
                             <Border x:Name="InstalledPack" Classes="installedPack" Classes.broken="{Binding IsInstalledBroken}"
-                                    IsVisible="{Binding ShowInstalled}">
+                                    Classes.operating="{Binding IsOperating}" IsVisible="{Binding ShowInstalled}">
                                 <DockPanel>
-                                    <Viewbox DockPanel.Dock="Left" Classes="icon" Width="18" Height="18" Margin="0,0,12,0" VerticalAlignment="Center">
+                                    <Viewbox DockPanel.Dock="Left" Classes="icon" Width="18" Height="18" Margin="0,0,12,0" VerticalAlignment="Center"
+                                             IsVisible="{Binding !IsOperating}">
                                         <Panel>
                                             <Path Classes="icon" Data="{StaticResource IconCheck}" IsVisible="{Binding !IsInstalledBroken}" />
                                             <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding IsInstalledBroken}" />
                                         </Panel>
                                     </Viewbox>
-                                    <StackPanel Spacing="1">
-                                        <TextBlock Classes="muted" FontSize="12" FontWeight="SemiBold" Text="{Binding InstalledLabel}" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock FontWeight="Bold" Text="{Binding InstalledText}" TextTrimming="CharacterEllipsis" />
-                                    </StackPanel>
+                                    <Viewbox DockPanel.Dock="Left" Classes="icon spin" Width="18" Height="18" Margin="0,0,12,0" VerticalAlignment="Center"
+                                             IsVisible="{Binding IsOperating}">
+                                        <Path Classes="icon" Data="{StaticResource IconLoader}" />
+                                    </Viewbox>
+                                    <Button x:Name="InstalledMenu" DockPanel.Dock="Right" Classes="installedMenu" Margin="10,0,0,0" VerticalAlignment="Center"
+                                            IsVisible="{Binding ShowInstalledPack}" ToolTip.Tip="{l:Loc Game_Installed_Menu}"
+                                            AutomationProperties.Name="{l:Loc Game_Installed_Menu}">
+                                        <Viewbox Classes="icon" Width="18" Height="18"><Path Classes="icon" Data="{StaticResource IconMore}" /></Viewbox>
+                                        <Button.Flyout>
+                                            <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                                <MenuItem x:Name="ReapplyItem" Header="{l:Loc Game_Installed_Reapply}" Command="{Binding ReapplyCommand}" />
+                                                <MenuItem x:Name="ShowInPacksItem" Header="{l:Loc Game_Installed_ShowInPacks}" Command="{Binding ShowInPacksCommand}" />
+                                                <Separator />
+                                                <MenuItem x:Name="UninstallItem" Header="{l:Loc Game_Installed_Uninstall}" Command="{Binding UninstallCommand}" />
+                                            </MenuFlyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                    <Panel>
+                                        <StackPanel Spacing="1" IsVisible="{Binding ShowInstalledPack}">
+                                            <TextBlock Classes="muted" FontSize="12" FontWeight="SemiBold" Text="{Binding InstalledLabel}" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock FontWeight="Bold" Text="{Binding InstalledText}" TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                        <StackPanel x:Name="InstallProgress" Spacing="1" IsVisible="{Binding IsOperating}">
+                                            <TextBlock x:Name="OperationTitle" FontWeight="Bold" Text="{Binding OperationTitle}" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock x:Name="OperationStep" Classes="muted" FontSize="12" Text="{Binding OperationStep}" TextTrimming="CharacterEllipsis" />
+                                            <ProgressBar Classes="installProgress" Minimum="0" Maximum="100" Value="{Binding OperationPercent}" />
+                                        </StackPanel>
+                                    </Panel>
                                 </DockPanel>
                             </Border>
                         </StackPanel>

@@ -112,6 +112,15 @@
                                                 <TextBlock Text="{Binding InstalledTag}" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Border>
+                                        <Border x:Name="InstallingTag" DockPanel.Dock="Right" Classes="packTag installing" Margin="8,0,0,0"
+                                                IsVisible="{Binding IsInstalling}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <Viewbox Classes="icon" Width="12" Height="12">
+                                                    <Path Classes="icon" Data="{StaticResource IconLoader}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding InstallingTag}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Border>
                                         <TextBlock Classes="packTitle" FontWeight="Bold" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
                                     </DockPanel>
                                     <WrapPanel ItemSpacing="6" LineSpacing="4">
@@ -280,6 +289,15 @@
                                                           Stroke="{Binding $parent[Button].Foreground}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="UninstallButton" Classes="ghost" Command="{Binding UninstallCommand}" IsVisible="{Binding ShowUninstall}"
+                                                AutomationProperties.Name="{l:Loc Packs_Uninstall}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Packs_Uninstall}" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Button>
                                         <Button x:Name="TranslateMissing" Classes="ghost" Command="{Binding TranslateMissingCommand}" IsVisible="{Binding ShowTranslateMissing}">

@@ -2,6 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
         xmlns:l="using:AiLocalPack.Desktop.Localization"
+        xmlns:svc="using:AiLocalPack.Desktop.Services"
+        xmlns:views="using:AiLocalPack.Desktop.Views"
         x:Class="AiLocalPack.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="ailocalpack"
@@ -67,6 +69,51 @@
 
             <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}" />
         </DockPanel>
+
+        <!-- Toasts: bottom right, over the page (install done / failed, design §4a); off while a dialog is open -->
+        <ItemsControl x:Name="ToastHost" ItemsSource="{Binding Toasts.Items}" IsEnabled="{Binding !HasDialog}"
+                      HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0" Padding="40,40,20,20" ClipToBounds="False">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><StackPanel Spacing="10" /></ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="svc:ToastViewModel">
+                    <Border Classes="toast" Classes.ok="{Binding IsOk}" Classes.bad="{Binding IsBad}">
+                        <DockPanel>
+                            <Viewbox DockPanel.Dock="Left" Classes="icon" Width="20" Height="20" Margin="0,0,12,0" VerticalAlignment="Top">
+                                <Path Classes="icon toastIcon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                            </Viewbox>
+                            <Button DockPanel.Dock="Right" Classes="icon" Width="28" Height="28" Margin="8,-4,-6,0" VerticalAlignment="Top"
+                                    Command="{Binding CloseCommand}" ToolTip.Tip="{l:Loc Install_Toast_Close}" AutomationProperties.Name="{l:Loc Install_Toast_Close}">
+                                <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconX}" /></Viewbox>
+                            </Button>
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                <ItemsControl ItemsSource="{Binding Actions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="8" /></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="svc:ToastButton">
+                                            <Button Classes="sm" Classes.accent="{Binding IsPrimary}" Classes.ghost="{Binding !IsPrimary}"
+                                                    Command="{Binding Command}" AutomationProperties.Name="{Binding Text}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding HasIcon}">
+                                                        <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
         <!-- Modal dialog: scrim over the whole window (chrome included), the dialog's view in the middle -->
         <Border x:Name="DialogScrim" Classes="scrim" IsVisible="{Binding HasDialog}">

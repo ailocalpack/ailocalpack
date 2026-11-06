@@ -5,6 +5,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
@@ -36,6 +37,7 @@ public sealed partial class LibraryViewModel : PageViewModel
     private readonly GameLibrary _library;
     private readonly ICoverLoader _covers;
     private readonly GameStatuses _statuses;
+    private readonly InstallFlow _install;
     private readonly INavigationService _navigation;
     private readonly IPageFactory _pages;
     private readonly Localizer _localizer;
@@ -92,8 +94,10 @@ public sealed partial class LibraryViewModel : PageViewModel
         IDialogService dialogs,
         ManualCoverStore manualCovers,
         PackIndex packIndex,
-        SettingsStore settings)
+        SettingsStore settings,
+        InstallFlow install)
     {
+        _install = install;
         _library = library;
         _covers = covers;
         _statuses = statuses;
@@ -117,6 +121,8 @@ public sealed partial class LibraryViewModel : PageViewModel
         _library.StateChanged += (_, _) => _ui.Post(OnScanStateChanged);
         _packIndex.Changed += (_, snapshot) => _ui.Post(() => OnPackIndexChanged(snapshot));
         _settings.Changed += (_, s) => _ui.Post(() => OnSettingsChanged(s));
+        _statuses.InstalledChanged += (_, _) => _ui.Post(ApplyStatuses);
+        _install.Changed += (_, _) => ApplyOperations();
         UpdateChipLabels();
         SyncCards();
     }
@@ -323,6 +329,7 @@ public sealed partial class LibraryViewModel : PageViewModel
             else
             {
                 card = new GameCardViewModel(game, _localizer, OpenGame, OpenFolder, Remove, QuickAction);
+                card.ApplyOperation(_install.Current, _install.IsBusy);
                 _cards.Add(game.Id, card);
                 _ = card.LoadCoverAsync(_covers);
             }
@@ -355,12 +362,32 @@ public sealed partial class LibraryViewModel : PageViewModel
     }
 
     /// <summary>
-    /// The card's quick action: View / Resume / Generate open the game page on the Generation tab, Install and Update
-    /// on Packs, until their flows exist (Install: task 29, Update: 33, Generate: 52).
+    /// The card's quick action: Install installs the best compatible pack in place (progress in the badge; the game
+    /// page's Packs tab when none can be installed); Update opens the Packs tab until its flow exists (task 33); View /
+    /// Resume / Generate open the Generation tab (task 52).
     /// </summary>
-    private void QuickAction(GameCardViewModel card) => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(
-        card.Game,
-        card.StatusKind is LocalizationStatusKind.PackAvailable or LocalizationStatusKind.NeedsUpdate ? GamePageTab.Packs : GamePageTab.Generation));
+    private void QuickAction(GameCardViewModel card)
+    {
+        if (card.StatusKind == LocalizationStatusKind.PackAvailable)
+        {
+            _ = _install.InstallBestAsync(card.Game, () => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(card.Game, GamePageTab.Packs)));
+            return;
+        }
+
+        _navigation.NavigateTo(_pages.Create<GamePageViewModel>(
+            card.Game,
+            card.StatusKind == LocalizationStatusKind.NeedsUpdate ? GamePageTab.Packs : GamePageTab.Generation));
+    }
+
+    /// <summary>Every card shows the running operation (its own in the badge) and whether one runs (quick actions off).</summary>
+    private void ApplyOperations()
+    {
+        var operation = _install.Current;
+        foreach (var card in _cards.Values)
+        {
+            card.ApplyOperation(operation, _install.IsBusy);
+        }
+    }
 
     private void OpenGame(GameCardViewModel card) => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(card.Game));
 

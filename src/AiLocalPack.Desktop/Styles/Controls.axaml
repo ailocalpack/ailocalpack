@@ -388,6 +388,9 @@
         <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
         <Setter Property="Background" Value="#40ffffff" />
     </Style>
+    <Style Selector="ProgressBar.coverProgress.install">
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
     <Style Selector="ProgressBar.coverProgress.paused">
         <Setter Property="Opacity" Value="0.6" />
     </Style>
@@ -776,6 +779,80 @@
     <Style Selector="Border.installedPack.broken Path.icon">
         <Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" />
     </Style>
+    <!-- While installing / uninstalling: accent tint, spinner, "step N of M", the step and a bar (design §4a) -->
+    <Style Selector="Border.installedPack.operating">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="MinWidth" Value="340" />
+    </Style>
+    <Style Selector="Border.installedPack.operating Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="ProgressBar.installProgress">
+        <Setter Property="MinHeight" Value="4" />
+        <Setter Property="Height" Value="4" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Margin" Value="0,4,0,0" />
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppBorderBrush}" />
+    </Style>
+    <Style Selector="Button.installedMenu">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.installedMenu Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+
+    <!-- Toasts: bottom right of the window, over the page (design §4a) -->
+    <Style Selector="Border.toast">
+        <Setter Property="Width" Value="380" />
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BoxShadow" Value="0 12 32 0 #66000000" />
+    </Style>
+    <Style Selector="Border.toast Path.toastIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.toast.ok Path.toastIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.toast.bad">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="Border.toast.bad Path.toastIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+
+    <!-- Install confirmation: one line per risk; alpha / probably compatible in amber -->
+    <Style Selector="Border.riskLine">
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="Border.riskLine Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.riskLine.warn">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+    </Style>
+    <Style Selector="Border.riskLine.warn Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="TextBox.log">
+        <Setter Property="FontFamily" Value="Menlo, Consolas, DejaVu Sans Mono, monospace" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="MaxHeight" Value="200" />
+    </Style>
     <!-- Primary action: large accent button; teal while generating -->
     <Style Selector="Button.primaryAction">
         <Setter Property="MinHeight" Value="48" />
@@ -961,6 +1038,11 @@
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppWarnBrush}" />
     </Style>
     <Style Selector="Border.packTag.warn Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Border.packTag.installing">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Border.packTag.installing Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" /></Style>
     <Style Selector="Border.packDetails">
         <Setter Property="Padding" Value="20,18" />
         <Setter Property="CornerRadius" Value="14" />

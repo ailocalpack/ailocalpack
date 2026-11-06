@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="using:AiLocalPack.Desktop.Install"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.InstallDetailsDialogView"
+             x:DataType="i:InstallDetailsDialogViewModel"
+             Width="560">
+    <!-- Design §4a: the failure toast's Details: the reason in plain words, whether files were restored, the log, Retry. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,22,24,20" Spacing="12">
+            <DockPanel>
+                <Viewbox DockPanel.Dock="Left" Classes="icon" Width="22" Height="22" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <Path Classes="icon" Data="{StaticResource IconXCircle}" Stroke="{DynamicResource AppBadBrush}" />
+                </Viewbox>
+                <TextBlock x:Name="DetailsTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            </DockPanel>
+            <TextBlock x:Name="DetailsReason" Text="{Binding Reason}" TextWrapping="Wrap" />
+            <TextBlock x:Name="DetailsRestored" Classes="muted" FontSize="13" Text="{Binding RestoredText}" TextWrapping="Wrap" />
+            <StackPanel Spacing="6" IsVisible="{Binding HasLog}">
+                <TextBlock Classes="capsLabel" Text="{l:Loc Install_Details_Log}" />
+                <TextBox x:Name="DetailsLog" Classes="log" Text="{Binding LogText, Mode=OneWay}" AutomationProperties.Name="{l:Loc Install_Details_Log}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,6,0,0">
+                <Button x:Name="CloseButton" Classes="ghost" Command="{Binding CloseCommand}" Content="{l:Loc Install_Details_Close}" />
+                <Button x:Name="RetryButton" Classes="accent" Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}"
+                        Content="{l:Loc Install_Details_Retry}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

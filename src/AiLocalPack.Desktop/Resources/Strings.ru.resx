@@ -1444,4 +1444,280 @@
   <data name="Packs_OtherLanguage" xml:space="preserve">
     <value>{0} ({1})</value>
   </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>Удалён прежний пак «{0}», ред. {1}.</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>Совместимость с вашими файлами: {0}.</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>Пак ред. {0} взят из кэша.</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>Пак ред. {0} скачан: {1} байт.</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>Восстановлено исходных файлов: {0}; удалено добавленных: {1}.</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>Оставлен (изменён после установки): {0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>Пересобрано файлов игры: {0}; применено строк: {1}.</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>Строк нет в этой версии игры: {0}.</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>Заменено файлов: {0}; добавлено: {1}.</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>Остановлено: {0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>Файлы игры восстановлены из резервной копии.</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>Восстановить файлы игры не удалось; приложение повторит при следующем запуске.</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>Установка «{0}» · шаг {1} из {2}</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>Повторное применение «{0}» · шаг {1} из {2}</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>Удаление «{0}»</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>Скачивание пака</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>Удаление прежнего пака</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>Проверка файлов игры</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>Сборка файлов игры из строк</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>Резервная копия исходных файлов</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>Запись новых файлов</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>Проверка записанного</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>Восстановление исходных файлов</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>Уже идёт другая установка или удаление. Дождитесь окончания и повторите.</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>Установка для этой игры недоступна (античит или просьба студии).</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>Пака больше нет в списке реестра.</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>Не удалось скачать пак: нет связи с реестром.</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>Не удалось скачать пак: реестр не ответил вовремя.</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>Не удалось скачать пак: реестр ответил ошибкой.</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>Файлов пака больше нет в реестре.</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>Паку нужна более новая версия ailocalpack. Обновите приложение.</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>Загрузка повреждена (не сошлась контрольная сумма) и удалена.</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>Не удалось сохранить загрузку: в папку кэша нельзя записать.</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>Пак в реестре повреждён.</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>Пак не подходит к вашей версии игры. {0}</value>
+  </data>
+  <data name="Install_Why_PatchUnsupported" xml:space="preserve">
+    <value>Этот пак — бинарный патч, такие эта версия приложения пока не устанавливает.</value>
+  </data>
+  <data name="Install_Why_DependenciesUnsupported" xml:space="preserve">
+    <value>Паку нужен {0}, а эта версия приложения пока не умеет его устанавливать.</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>Таблицу строк пака не удаётся прочитать.</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>Не удалось собрать {0} из строк: файл игры не читается или имеет неожиданный формат.</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>Что-то пошло не так. Подробности — в журнале.</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>Игра запущена. Закройте её и повторите.</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} занят другой программой — похоже, игра запущена. Закройте её и повторите.</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>На диске с игрой не хватает места.</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>Нет прав на изменение {0}.</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} доступен только для чтения.</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>Папка игры недоступна (диск отключён или папка перемещена).</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>Для этой игры уже установлен пак.</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>Для этой игры не установлен пак.</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>Прошлая установка прервалась и пока не завершена. Перезапустите приложение, чтобы завершить её.</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>После записи содержимое {0} не совпало с ожидаемым.</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>Резервная копия {0} отсутствует или повреждена.</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>Не удалось прочитать или записать {0}.</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>Альфа: другие игроки ещё не подтвердили, что пак работает.</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>Вероятно совместим. {0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>Скачает {0} {1} из официального релиза (с проверкой контрольной суммы).</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>Заменит установленный «{0}», ред. {1}.</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>Установить «{0}»?</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>Исходные файлы сохраняются в резервную копию; пак можно удалить.</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>Установлено: «{0}».</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>Применено повторно: «{0}».</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>«{0}» удалён; исходные файлы восстановлены.</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>Не удалось установить; файлы восстановлены.</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>Не удалось применить повторно; файлы восстановлены.</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>Не удалось установить, и восстановить файлы не вышло. Приложение повторит при следующем запуске.</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>Не удалось удалить.</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>Играть</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>Подробнее</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>Не удалось установить «{0}»</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>Не удалось повторно применить «{0}»</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>Не удалось удалить «{0}»</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>Файлы игры остались такими же, как до установки.</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>Часть файлов может остаться от пака; повторное удаление завершит работу.</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>Часть файлов восстановить не удалось; приложение повторит при следующем запуске.</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>Удалить «{0}»?</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>Исходные файлы игры восстановятся из резервной копии. Пак остаётся в реестре, его можно установить снова; игра и её сохранения не затрагиваются.</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>устанавливается</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>Установка…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>Удалить (вернуть оригиналы)</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>Установка · {0}%</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>Удаление…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>Действия с установленным паком</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>Применить повторно</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>Показать в паках</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>Удалить (вернуть оригиналы)</value>
+  </data>
 </root>

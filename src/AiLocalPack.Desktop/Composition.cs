@@ -12,6 +12,7 @@ using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.AddGame;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Dialogs;
+using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
@@ -83,7 +84,10 @@ internal static class Composition
             sp.GetRequiredService<OsEnvironment>(),
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<PackInstaller>>()));
-        services.AddSingleton<IInstalledPacks, NoInstalledPacks>();
+        services.AddSingleton<IInstalledPacks, StoreInstalledPacks>();
+        services.AddSingleton<PackInstallService>();
+        services.AddSingleton<ToastService>();
+        services.AddSingleton<InstallFlow>();
         services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);

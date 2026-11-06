@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="using:AiLocalPack.Desktop.Install"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.InstallConfirmDialogView"
+             x:DataType="i:InstallConfirmDialogViewModel"
+             Width="500">
+    <!-- Design §4a: the install confirmation lists only the risks that apply. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,22,24,20" Spacing="12">
+            <TextBlock x:Name="ConfirmTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" />
+            <ItemsControl x:Name="RiskList" ItemsSource="{Binding Lines}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="i:InstallRiskLine">
+                        <Border Classes="riskLine" Classes.warn="{Binding IsWarn}">
+                            <DockPanel>
+                                <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
+                                    <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Install_Confirm_Note}" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,6,0,0">
+                <Button x:Name="CancelButton" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc Confirm_Cancel}" />
+                <Button x:Name="InstallButton" Classes="accent" Command="{Binding ConfirmCommand}" Content="{l:Loc Install_Confirm_Install}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

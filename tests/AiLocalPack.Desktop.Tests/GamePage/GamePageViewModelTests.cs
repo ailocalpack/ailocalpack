@@ -171,9 +171,9 @@ public sealed class GamePageViewModelTests : IDisposable
     }
 
     [Fact]
-    public async Task Install_opens_the_packs_tab_until_the_install_flow_exists()
+    public async Task Install_opens_the_packs_tab_when_no_pack_can_be_installed()
     {
-        // Arrange
+        // Arrange: the pack's manifest is missing, so nothing can be checked
         using var services = await BuildAsync(r => r.Pack(10, "ru", "lanterns"));
         var page = Open(services, 10, GamePageTab.Audio);
 
@@ -181,6 +181,7 @@ public sealed class GamePageViewModelTests : IDisposable
         page.PrimaryCommand.Execute(null);
 
         // Assert
+        await Wait.UntilAsync(() => page.SelectedTab == GamePageTab.Packs);
         page.SelectedTab.Should().Be(GamePageTab.Packs);
     }
 

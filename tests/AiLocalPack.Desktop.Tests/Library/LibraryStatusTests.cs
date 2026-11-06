@@ -420,15 +420,16 @@ public sealed class LibraryStatusTests : IDisposable
         var vm = Create(services);
         var navigation = services.GetRequiredService<INavigationService>();
 
-        // Act
+        // Act: the pack has no manifest, so Install can't pick it and opens the page instead
         CardOf(vm, "Alpha").QuickActionCommand.Execute(null);
 
         // Assert
+        await Wait.UntilAsync(() => navigation.Current is GamePageViewModel);
         navigation.Current.Should().BeOfType<GamePageViewModel>().Which.Game.Name.Should().Be("Alpha");
     }
 
     [Fact]
-    public async Task Install_quick_action_opens_the_packs_tab()
+    public async Task Install_quick_action_opens_the_packs_tab_when_no_pack_can_be_installed()
     {
         // Arrange
         _registry.Pack(10, "ru", "full");
@@ -441,6 +442,7 @@ public sealed class LibraryStatusTests : IDisposable
         CardOf(vm, "Alpha").QuickActionCommand.Execute(null);
 
         // Assert
+        await Wait.UntilAsync(() => navigation.Current is GamePageViewModel);
         navigation.Current.Should().BeOfType<GamePageViewModel>().Which.SelectedTab.Should().Be(GamePageTab.Packs);
     }
 

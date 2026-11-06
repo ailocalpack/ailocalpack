@@ -15,6 +15,13 @@ namespace AiLocalPack.Desktop.Library;
 /// </summary>
 public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings, IInstalledPacks installed)
 {
+    /// <summary>Raised (on any thread) when a game's installed pack changed: its status may have.</summary>
+    public event EventHandler<GameId>? InstalledChanged
+    {
+        add => installed.Changed += value;
+        remove => installed.Changed -= value;
+    }
+
     /// <summary>The target language: an exact <see cref="GameLanguages.Tags"/> tag (setting, else the OS language).</summary>
     public string Language => GameLanguages.Resolve(settings.Current.GameLanguage, UiLanguages.Os);
 

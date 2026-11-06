@@ -2,6 +2,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Toolkit.Engines;
@@ -48,7 +49,7 @@ public sealed partial class GameCardViewModel : ObservableObject
         OpenCommand = new RelayCommand(() => open(this));
         OpenFolderCommand = new RelayCommand(() => openFolder(this), () => IsAvailable);
         RemoveCommand = new RelayCommand(() => remove?.Invoke(this), () => remove is not null && IsManual);
-        QuickActionCommand = new RelayCommand(() => (quickAction ?? open)(this), () => HasQuickAction);
+        QuickActionCommand = new RelayCommand(() => (quickAction ?? open)(this), () => HasQuickAction && !IsInstallBusy);
         _localizer = localizer;
     }
 
@@ -61,6 +62,15 @@ public sealed partial class GameCardViewModel : ObservableObject
 
     /// <summary>The status comes from the saved pack list (registry unreachable): the badge is faded.</summary>
     public bool IsStale { get; private set; }
+
+    /// <summary>The install, re-apply or uninstall running on this game (<see cref="ApplyOperation"/>), if any.</summary>
+    public InstallOperation? Operation { get; private set; }
+
+    /// <summary>An operation runs on this game: the badge reads "Installing 40%" with a bar along the cover.</summary>
+    public bool IsInstalling => Operation is not null;
+
+    /// <summary>An operation runs on some game (one at a time): the quick action is off.</summary>
+    public bool IsInstallBusy { get; private set; }
 
     /// <summary>On the card itself (not the page) so the context menu, which lives in its own popup, can reach it.</summary>
     public IRelayCommand OpenCommand { get; }
@@ -104,10 +114,17 @@ public sealed partial class GameCardViewModel : ObservableObject
     public bool IsDimmed => !IsBlocked && !IsAvailable;
 
     /// <summary>No badge until the pack list is known (blocked games have theirs at once).</summary>
-    public bool ShowBadge => StatusKind != LocalizationStatusKind.Unknown;
+    public bool ShowBadge => StatusKind != LocalizationStatusKind.Unknown || IsInstalling;
 
-    /// <summary>Badge text: "Pack available", "Generating · 42%", "Anti-cheat"…</summary>
-    public string BadgeText => StatusKind switch
+    /// <summary>Badge text: "Pack available", "Generating · 42%", "Installing 40%", "Anti-cheat"…</summary>
+    public string BadgeText => Operation switch
+    {
+        { Kind: InstallOperationKind.Uninstall } => _localizer[nameof(Strings.Library_Badge_Uninstalling)],
+        { } operation => _localizer.Format(nameof(Strings.Library_Badge_Installing), operation.Percent),
+        _ => StatusBadgeText,
+    };
+
+    private string StatusBadgeText => StatusKind switch
     {
         LocalizationStatusKind.Installed => _localizer[nameof(Strings.Library_Status_Installed)],
         LocalizationStatusKind.PackAvailable => _localizer[nameof(Strings.Library_Status_PackAvailable)],
@@ -121,7 +138,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     };
 
     /// <summary>Resource key of the badge icon geometry.</summary>
-    public string BadgeIcon => StatusKind switch
+    public string BadgeIcon => IsInstalling ? "IconLoader" : StatusKind switch
     {
         LocalizationStatusKind.Installed => "IconCheck",
         LocalizationStatusKind.PackAvailable => "IconDownload",
@@ -132,27 +149,28 @@ public sealed partial class GameCardViewModel : ObservableObject
         _ => "IconCircleDashed",
     };
 
-    public bool IsToneOk => StatusKind == LocalizationStatusKind.Installed;
+    public bool IsToneOk => !IsInstalling && StatusKind == LocalizationStatusKind.Installed;
 
-    public bool IsToneAccent => StatusKind == LocalizationStatusKind.PackAvailable;
+    public bool IsToneAccent => IsInstalling || StatusKind == LocalizationStatusKind.PackAvailable;
 
-    public bool IsToneNone => StatusKind == LocalizationStatusKind.NoPack;
+    public bool IsToneNone => !IsInstalling && StatusKind == LocalizationStatusKind.NoPack;
 
-    public bool IsToneWarn => StatusKind == LocalizationStatusKind.NeedsUpdate;
+    public bool IsToneWarn => !IsInstalling && StatusKind == LocalizationStatusKind.NeedsUpdate;
 
-    public bool IsToneGen => StatusKind is LocalizationStatusKind.Generating or LocalizationStatusKind.Paused;
+    public bool IsToneGen => !IsInstalling && StatusKind is LocalizationStatusKind.Generating or LocalizationStatusKind.Paused;
 
     public bool IsToneBad => IsBlocked;
 
-    /// <summary>Generation progress, 0–100.</summary>
-    public int Percent => Math.Clamp(Status.Job?.Percent ?? 0, 0, 100);
+    /// <summary>Install progress while installing, else generation progress, 0–100.</summary>
+    public int Percent => Operation?.Percent ?? Math.Clamp(Status.Job?.Percent ?? 0, 0, 100);
 
-    /// <summary>A progress bar along the bottom of the cover while a job exists (striped when paused).</summary>
-    public bool ShowProgress => IsToneGen;
+    /// <summary>A progress bar along the bottom of the cover while installing or while a job exists (striped when paused).</summary>
+    public bool ShowProgress => IsInstalling || IsToneGen;
 
-    public bool IsPaused => StatusKind == LocalizationStatusKind.Paused;
+    public bool IsPaused => !IsInstalling && StatusKind == LocalizationStatusKind.Paused;
 
-    public bool HasQuickAction => QuickActionText.Length > 0;
+    /// <summary>None while an operation runs on this game.</summary>
+    public bool HasQuickAction => !IsInstalling && QuickActionText.Length > 0;
 
     /// <summary>"Install", "Update", "View", "Resume", "Generate with AI"; empty for installed, blocked and unknown.</summary>
     public string QuickActionText => StatusKind switch
@@ -290,6 +308,21 @@ public sealed partial class GameCardViewModel : ObservableObject
 
         Status = status;
         IsStale = stale;
+        OnPropertyChanged(string.Empty);
+        QuickActionCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>Shows the operation running now (<paramref name="operation"/> when it is on this game) and whether any runs.</summary>
+    public void ApplyOperation(InstallOperation? operation, bool busy)
+    {
+        var mine = operation is not null && operation.Game == Game.Id ? operation : null;
+        if (mine == Operation && busy == IsInstallBusy)
+        {
+            return;
+        }
+
+        Operation = mine;
+        IsInstallBusy = busy;
         OnPropertyChanged(string.Empty);
         QuickActionCommand.NotifyCanExecuteChanged();
     }
