@@ -6,6 +6,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
@@ -62,7 +63,7 @@ internal static class PackCommand
             }
 
             var hashes = FileHashCache.Load(paths.FileHashes);
-            var compatibility = new PackCompatibilityChecker(hashes).Check(pack, game, cancellationToken);
+            var compatibility = new PackCompatibilityChecker(hashes, RecipeTools.Builtin).Check(pack, game, cancellationToken);
             hashes.Save();
 
             var output = result.InvocationConfiguration.Output;

@@ -79,6 +79,17 @@ public static class EngineFixture
     public static TempDir RpgMakerMz(this TempDir dir, string root = "", string exe = "Game.exe") =>
         dir.File(P(root, exe), "MZ").File(P(root, "js/rmmz_core.js"), "//").File(P(root, "data/System.json"), "{}");
 
+    /// <summary>
+    /// A small but complete RPG Maker game with real data files (every kind of text the <c>rpgmaker</c> tool reads, and
+    /// things it must leave alone), from <see cref="AiLocalPack.Toolkit.Recipes.RpgMaker.RpgMakerFixture"/>.
+    /// </summary>
+    /// <param name="mv">MV layout (<c>www/</c>) instead of MZ.</param>
+    public static TempDir RpgMakerGame(this TempDir dir, string root = "", bool mv = false)
+    {
+        AiLocalPack.Toolkit.Recipes.RpgMaker.RpgMakerFixture.Create(root.Length == 0 ? dir.Path : dir.Combine(root), mv);
+        return dir;
+    }
+
     public static TempDir RpgMakerMac(this TempDir dir, string root = "", bool mz = true) =>
         dir.File(P(root, "Game.app/Contents/MacOS/nwjs"), "macho")
             .File(P(root, $"Game.app/Contents/Resources/app.nw/js/{(mz ? "rmmz_core.js" : "rpg_core.js")}"), "//");

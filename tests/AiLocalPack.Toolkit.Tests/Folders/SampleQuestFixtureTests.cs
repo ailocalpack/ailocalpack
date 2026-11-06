@@ -1,4 +1,5 @@
 using AiLocalPack.Toolkit.Folders;
+using AiLocalPack.Toolkit.Recipes.RpgMaker;
 
 namespace AiLocalPack.Toolkit.Tests.Folders;
 
@@ -43,5 +44,29 @@ public sealed class SampleQuestFixtureTests
             ["data/Map001.json"] = "9d597eff8184514083fe724623c8d09cc08caa0dcce5178b9581cecd7e61cf96",
             ["data/System.json"] = "16630e8c150320ca7f723b23c6f152878ca92b489410a4a8136ef116c344cb8b",
         });
+    }
+
+    [Fact]
+    public void Extract_gives_the_keys_and_total_of_the_registry_sample_pack()
+    {
+        // Arrange
+        var recipe = new RpgMakerRecipe();
+
+        // Act
+        var strings = recipe.Extract(Folder, Ct).Strings;
+
+        // Assert
+        strings.Select(s => s.Key).Should().HaveCount(28).And.Contain(
+        [
+            "data/Map001.json:/displayName",
+            "data/Map001.json:/events/1/pages/0/list/0/parameters/4",
+            "data/Map001.json:/events/1/pages/0/list/1/parameters/0",
+            "data/Map001.json:/events/1/pages/0/list/2/parameters/0",
+            "data/System.json:/gameTitle",
+            "data/System.json:/terms/commands/0",
+            "data/System.json:/terms/commands/1",
+            "data/System.json:/terms/commands/18",
+            "data/System.json:/terms/commands/19",
+        ]);
     }
 }

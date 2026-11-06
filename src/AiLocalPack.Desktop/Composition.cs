@@ -25,6 +25,7 @@ using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Folders;
+using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -61,7 +62,9 @@ internal static class Composition
             sp.GetRequiredService<ILogger<RegistryIndexClient>>()));
         services.AddSingleton<PackIndex>();
         services.AddSingleton(sp => new PackManifestClient(sp.GetRequiredService<HttpClient>(), logger: sp.GetRequiredService<ILogger<PackManifestClient>>()));
-        services.AddSingleton(sp => new PackCompatibilityChecker(sp.GetRequiredService<FileHashCache>()));
+        services.AddSingleton(RecipeTools.Builtin);
+        services.AddSingleton<IRecipeTools>(sp => sp.GetRequiredService<RecipeTools>());
+        services.AddSingleton(sp => new PackCompatibilityChecker(sp.GetRequiredService<FileHashCache>(), sp.GetRequiredService<IRecipeTools>()));
         services.AddSingleton<PackManifests>();
         services.AddSingleton(sp => new PackCache(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<PackCache>>()));
         services.AddSingleton(sp => new PackFetcher(

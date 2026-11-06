@@ -7,6 +7,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
@@ -15,6 +16,7 @@ namespace AiLocalPack.Cli.Commands;
 /// Developer commands for checking the install transaction by hand (task 27): <c>dev apply-files &lt;game&gt; &lt;dir&gt;</c>
 /// installs the files of a folder (laid out like the game folder) as a pack, <c>dev uninstall &lt;game&gt;</c> undoes it.
 /// Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
+/// <c>dev fixture rpgmaker &lt;dir&gt;</c> writes a synthetic game (task 28).
 /// </summary>
 internal static class DevCommand
 {
@@ -24,6 +26,7 @@ internal static class DevCommand
         {
             BuildApply(env),
             BuildUninstall(env),
+            BuildFixture(),
         };
     }
 
@@ -96,6 +99,29 @@ internal static class DevCommand
             return Task.FromResult(0);
         });
         return apply;
+    }
+
+    /// <summary><c>dev fixture rpgmaker &lt;dir&gt; [--mv]</c>: a synthetic game for checking the toolkit by hand.</summary>
+    private static Command BuildFixture()
+    {
+        var dirArgument = new Argument<string>("dir") { Description = "Folder to create the game in (missing or empty)." };
+        var mv = new Option<bool>("--mv") { Description = "RPG Maker MV layout (www/) instead of MZ." };
+        var rpgMaker = new Command("rpgmaker", "Write a tiny synthetic RPG Maker MZ (or MV) game with every kind of text the toolkit reads.") { dirArgument, mv };
+        rpgMaker.SetAction(result =>
+        {
+            var dir = Path.GetFullPath(result.GetValue(dirArgument)!);
+            if (File.Exists(dir) || (Directory.Exists(dir) && Directory.EnumerateFileSystemEntries(dir).Any()))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"{dir} already exists and isn't an empty folder.");
+                return 1;
+            }
+
+            var files = RpgMakerFixture.Create(dir, result.GetValue(mv));
+            result.InvocationConfiguration.Output.WriteLine(
+                $"Wrote a synthetic RPG Maker {(result.GetValue(mv) ? "MV" : "MZ")} game into {dir} ({files.Count} files).");
+            return 0;
+        });
+        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker };
     }
 
     private static Command BuildUninstall(OsEnvironment env)
