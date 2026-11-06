@@ -297,7 +297,7 @@ public sealed class PackInstallService
             RebuildResult rebuilt;
             try
             {
-                rebuilt = tool.Rebuild(game.InstallPath, table.Strings, new DirectoryRebuildOutput(staging), cancellationToken);
+                rebuilt = tool.Rebuild(game.InstallPath, table.Language, table.Strings, new DirectoryRebuildOutput(staging), cancellationToken);
             }
             catch (RecipeException e)
             {
@@ -314,7 +314,7 @@ public sealed class PackInstallService
             var files = rebuilt.ChangedFiles
                 .Select(path => new InstallFile(path, Path.Combine(staging, path.Replace('/', Path.DirectorySeparatorChar))))
                 .ToList();
-            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files);
+            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = rebuilt.GeneratedFiles };
             run.Step(InstallStep.BackUp);
             var result = reapply
                 ? _installer.Reapply(request, index, run.TransactionProgress(), cancellationToken)

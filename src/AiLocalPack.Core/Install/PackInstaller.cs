@@ -237,6 +237,14 @@ public sealed class PackInstaller
             throw new ArgumentException("An install writes at least one file.", nameof(request));
         }
 
+        foreach (var generated in request.GeneratedFiles)
+        {
+            if (!InstallPaths.IsValid(generated))
+            {
+                throw new ArgumentException($"'{generated}' is not a relative '/'-separated path.", nameof(request));
+            }
+        }
+
         var seen = new HashSet<string>(PathNames.Comparer);
         foreach (var file in request.Files)
         {
@@ -336,7 +344,12 @@ public sealed class PackInstaller
             root,
             transaction,
             [.. entries.Select(e => new InstalledFile(e.Path, e.Original, e.Installed))],
-            [.. (old?.AddedFolders ?? []).Union(created, PathNames.Comparer)]);
+            [.. (old?.AddedFolders ?? []).Union(created, PathNames.Comparer)])
+        {
+            // A generated file already there belongs to the game (or to the pack being re-applied, which recorded it).
+            GeneratedFiles = [.. (old?.GeneratedFiles ?? [])
+                .Union(request.GeneratedFiles.Where(g => !File.Exists(InstallPaths.Resolve(root, g))), PathNames.Comparer)],
+        };
         var journal = new InstallJournalFile(
             1,
             OperationInstall,
@@ -686,6 +699,20 @@ public sealed class PackInstaller
             else if (current is not null)
             {
                 kept.Add(file.Path);
+            }
+        }
+
+        foreach (var generated in record.GeneratedFiles)
+        {
+            var full = InstallPaths.Resolve(root, generated);
+            if (File.Exists(full))
+            {
+                Guard(generated, full, () =>
+                {
+                    File.Delete(full);
+                    return true;
+                });
+                removed.Add(generated);
             }
         }
 

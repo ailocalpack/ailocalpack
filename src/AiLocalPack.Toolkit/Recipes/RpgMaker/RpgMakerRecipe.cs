@@ -51,7 +51,7 @@ public sealed class RpgMakerRecipe : IRecipeTool
             [.. files.Order(StringComparer.Ordinal)]);
     }
 
-    public RebuildResult Rebuild(string gameDir, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+    public RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(translations);
         ArgumentNullException.ThrowIfNull(output);

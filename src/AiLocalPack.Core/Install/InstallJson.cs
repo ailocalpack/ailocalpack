@@ -14,7 +14,8 @@ internal sealed record InstalledPackJson(
     string? InstallPath,
     string? Backup,
     IReadOnlyList<InstalledFileJson?>? Files,
-    IReadOnlyList<string>? AddedFolders);
+    IReadOnlyList<string>? AddedFolders,
+    IReadOnlyList<string>? GeneratedFiles = null);
 
 /// <param name="Original">SHA-256 of the original; <c>null</c> = the pack added the file.</param>
 internal sealed record InstalledFileJson(string? Path, string? Original, string? Installed);

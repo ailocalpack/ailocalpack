@@ -209,6 +209,8 @@ public sealed class GameFingerprinter(FileHashCache? cache = null, ILogger<GameF
                 && ((parts[^2] == "data" && name.EndsWith(".json", StringComparison.Ordinal)) || (parts[^2] == "js" && name == "plugins.js")),
             GameEngine.RenPy => Array.FindIndex(parts, p => p == "game") is var game && game >= 0 && game < parts.Length - 1
                 && !parts.Take(game).Contains("renpy")
+                // Translations (packs install there; Ren'Py compiles them on start) and Ren'Py's cache aren't the game's version.
+                && (game + 1 == parts.Length - 1 || parts[game + 1] is not ("tl" or "cache"))
                 && (name.EndsWith(".rpa", StringComparison.Ordinal) || name.EndsWith(".rpyc", StringComparison.Ordinal)
                     || name.EndsWith(".rpy", StringComparison.Ordinal)),
             GameEngine.Godot => name.EndsWith(".pck", StringComparison.Ordinal),

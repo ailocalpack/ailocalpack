@@ -7,6 +7,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -16,7 +17,7 @@ namespace AiLocalPack.Cli.Commands;
 /// Developer commands for checking the install transaction by hand (task 27): <c>dev apply-files &lt;game&gt; &lt;dir&gt;</c>
 /// installs the files of a folder (laid out like the game folder) as a pack, <c>dev uninstall &lt;game&gt;</c> undoes it.
 /// Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
-/// <c>dev fixture rpgmaker &lt;dir&gt;</c> writes a synthetic game (task 28).
+/// <c>dev fixture rpgmaker &lt;dir&gt;</c> and <c>dev fixture renpy &lt;dir&gt;</c> write synthetic games (tasks 28, 30).
 /// </summary>
 internal static class DevCommand
 {
@@ -121,7 +122,24 @@ internal static class DevCommand
                 $"Wrote a synthetic RPG Maker {(result.GetValue(mv) ? "MV" : "MZ")} game into {dir} ({files.Count} files).");
             return 0;
         });
-        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker };
+        var renPyDir = new Argument<string>("dir") { Description = "Folder to create the game in (missing or empty)." };
+        var archived = new Option<bool>("--archived") { Description = "Compiled scripts packed into game/scripts.rpa instead of loose .rpyc files." };
+        var renPy = new Command("renpy", "Write a tiny synthetic Ren'Py game (compiled scripts, no engine) with every kind of text the toolkit reads.") { renPyDir, archived };
+        renPy.SetAction(result =>
+        {
+            var dir = Path.GetFullPath(result.GetValue(renPyDir)!);
+            if (File.Exists(dir) || (Directory.Exists(dir) && Directory.EnumerateFileSystemEntries(dir).Any()))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"{dir} already exists and isn't an empty folder.");
+                return 1;
+            }
+
+            var files = RenPyFixture.Create(dir, result.GetValue(archived));
+            result.InvocationConfiguration.Output.WriteLine(
+                $"Wrote a synthetic Ren'Py game{(result.GetValue(archived) ? " (scripts in game/scripts.rpa)" : string.Empty)} into {dir} ({files.Count} files).");
+            return 0;
+        });
+        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy };
     }
 
     private static Command BuildUninstall(OsEnvironment env)

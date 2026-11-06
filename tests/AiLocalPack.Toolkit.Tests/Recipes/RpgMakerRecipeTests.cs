@@ -226,7 +226,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         var identity = _recipe.Extract(Game, Ct).Strings.ToDictionary(s => s.Key, s => s.Original);
 
         // Act
-        var result = _recipe.Rebuild(Game, identity, new DirectoryRebuildOutput(Out), Ct);
+        var result = _recipe.Rebuild(Game, "ru", identity, new DirectoryRebuildOutput(Out), Ct);
 
         // Assert
         (result.ChangedFiles.Count, result.Applied, Directory.Exists(Out)).Should().Be((0, 0, false));
@@ -268,7 +268,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         };
 
         // Act
-        _recipe.Rebuild(Game, translations, new DirectoryRebuildOutput(Out), Ct);
+        _recipe.Rebuild(Game, "ru", translations, new DirectoryRebuildOutput(Out), Ct);
 
         // Assert
         File.ReadAllText(Path.Combine(Out, "data/Map001.json")).Should().Be(original
@@ -282,7 +282,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         // Arrange
         _dir.RpgMakerGame("game");
         var translations = _recipe.Extract(Game, Ct).Strings.ToDictionary(s => s.Key, s => $"[ru] {s.Original}\n«ok»");
-        _recipe.Rebuild(Game, translations, new DirectoryRebuildOutput(Out), Ct);
+        _recipe.Rebuild(Game, "ru", translations, new DirectoryRebuildOutput(Out), Ct);
         CopyInto(Out, Game);
 
         // Act
@@ -306,7 +306,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         };
 
         // Act
-        var result = _recipe.Rebuild(Game, translations, new DirectoryRebuildOutput(Out), Ct);
+        var result = _recipe.Rebuild(Game, "ru", translations, new DirectoryRebuildOutput(Out), Ct);
 
         // Assert
         (result.ChangedFiles, result.Applied, result.UnknownKeys).Should().BeEquivalentTo(
@@ -329,7 +329,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         };
 
         // Act
-        var result = _recipe.Rebuild(Game, translations, new DirectoryRebuildOutput(Out), Ct);
+        var result = _recipe.Rebuild(Game, "ru", translations, new DirectoryRebuildOutput(Out), Ct);
 
         // Assert
         (result.ChangedFiles.Count, result.UnknownKeys.Count, Directory.Exists(Out)).Should().Be((0, 6, false));
@@ -344,7 +344,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         File.WriteAllBytes(path, [0xEF, 0xBB, 0xBF, .. File.ReadAllBytes(path)]);
 
         // Act
-        _recipe.Rebuild(Game, new Dictionary<string, string> { ["data/Enemies.json:/1/name"] = "Слизень" }, new DirectoryRebuildOutput(Out), Ct);
+        _recipe.Rebuild(Game, "ru", new Dictionary<string, string> { ["data/Enemies.json:/1/name"] = "Слизень" }, new DirectoryRebuildOutput(Out), Ct);
 
         // Assert
         var rebuilt = File.ReadAllBytes(Path.Combine(Out, "data/Enemies.json"));
@@ -360,7 +360,7 @@ public sealed class RpgMakerRecipeTests : IDisposable
         var before = File.ReadAllBytes(Path.Combine(Game, "data/System.json"));
 
         // Act
-        _recipe.Rebuild(Game, new Dictionary<string, string> { ["data/System.json:/gameTitle"] = "Квест" }, new DirectoryRebuildOutput(Out), Ct);
+        _recipe.Rebuild(Game, "ru", new Dictionary<string, string> { ["data/System.json:/gameTitle"] = "Квест" }, new DirectoryRebuildOutput(Out), Ct);
 
         // Assert
         File.ReadAllBytes(Path.Combine(Game, "data/System.json")).Should().Equal(before);

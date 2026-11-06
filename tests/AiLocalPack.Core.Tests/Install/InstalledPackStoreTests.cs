@@ -42,6 +42,33 @@ public sealed class InstalledPackStoreTests : IDisposable
     }
 
     [Fact]
+    public void Generated_files_read_back_in_a_new_store()
+    {
+        // Arrange
+        new InstalledPackStore(_paths).Put(Pack() with { GeneratedFiles = ["tl/ru/script.rpyc"] });
+
+        // Act
+        var read = new InstalledPackStore(_paths).Find(GameId.Steam(620));
+
+        // Assert
+        read!.GeneratedFiles.Should().Equal("tl/ru/script.rpyc");
+    }
+
+    [Fact]
+    public void Entry_with_a_generated_file_leaving_the_game_folder_is_skipped()
+    {
+        // Arrange
+        new InstalledPackStore(_paths).Put(Pack() with { GeneratedFiles = ["tl/ru/script.rpyc"] });
+        File.WriteAllText(_paths.InstalledPacksFile, File.ReadAllText(_paths.InstalledPacksFile).Replace("tl/ru/script.rpyc", "../script.rpyc", StringComparison.Ordinal));
+
+        // Act
+        var read = new InstalledPackStore(_paths).Find(GameId.Steam(620));
+
+        // Assert
+        read.Should().BeNull();
+    }
+
+    [Fact]
     public void Removed_record_is_gone_in_a_new_store()
     {
         // Arrange

@@ -447,6 +447,79 @@ public sealed class PackInstallerTests : IDisposable
     }
 
     [Fact]
+    public void Install_records_generated_files_that_are_not_in_the_game_folder()
+    {
+        // Arrange
+        _fx.GameFolder.File("tl/x/old.rpyc", "the game's own");
+        var request = _fx.Request(("tl/x/new.rpy", "translation")) with { GeneratedFiles = ["tl/x/new.rpyc", "tl/x/old.rpyc"] };
+
+        // Act
+        var result = _fx.Installer().Install(request, null, cancellationToken: Ct);
+
+        // Assert
+        (result.Installed!.GeneratedFiles, new InstalledPackStore(_fx.Paths).Find(InstallFixture.Id)!.GeneratedFiles)
+            .Should().BeEquivalentTo((new[] { "tl/x/new.rpyc" }, new[] { "tl/x/new.rpyc" }));
+    }
+
+    [Fact]
+    public void Uninstall_deletes_the_files_the_game_generated_and_the_folders_the_pack_created()
+    {
+        // Arrange
+        var before = _fx.Snapshot();
+        var installer = _fx.Installer();
+        installer.Install(_fx.Request(("tl/ru/script.rpy", "translation")) with { GeneratedFiles = ["tl/ru/script.rpyc"] }, null, cancellationToken: Ct);
+        _fx.GameFolder.File("tl/ru/script.rpyc", "compiled by the game on start");
+
+        // Act
+        var result = installer.Uninstall(_fx.Game, cancellationToken: Ct);
+
+        // Assert
+        (result.Removed, _fx.Snapshot()).Should().BeEquivalentTo((new[] { "tl/ru/script.rpy", "tl/ru/script.rpyc" }, before));
+    }
+
+    [Fact]
+    public void Uninstall_skips_generated_files_the_game_never_made()
+    {
+        // Arrange
+        var installer = _fx.Installer();
+        installer.Install(_fx.Request(("tl/ru/script.rpy", "translation")) with { GeneratedFiles = ["tl/ru/script.rpyc"] }, null, cancellationToken: Ct);
+
+        // Act
+        var result = installer.Uninstall(_fx.Game, cancellationToken: Ct);
+
+        // Assert
+        (result.Succeeded, result.Removed).Should().BeEquivalentTo((true, new[] { "tl/ru/script.rpy" }));
+    }
+
+    [Fact]
+    public void Reapply_keeps_the_generated_files_of_the_installed_pack()
+    {
+        // Arrange
+        var installer = _fx.Installer();
+        installer.Install(_fx.Request(("tl/ru/script.rpy", "translation")) with { GeneratedFiles = ["tl/ru/script.rpyc"] }, null, cancellationToken: Ct);
+        _fx.GameFolder.File("tl/ru/script.rpyc", "compiled by the game on start");
+
+        // Act
+        var result = installer.Reapply(_fx.Request(2, ("tl/ru/script.rpy", "translation 2")) with { GeneratedFiles = ["tl/ru/script.rpyc"] }, null, cancellationToken: Ct);
+
+        // Assert
+        result.Installed!.GeneratedFiles.Should().Equal("tl/ru/script.rpyc");
+    }
+
+    [Fact]
+    public void Install_refuses_a_generated_file_outside_the_game_folder()
+    {
+        // Arrange
+        var request = _fx.Request(("tl/ru/script.rpy", "translation")) with { GeneratedFiles = ["../outside.rpyc"] };
+
+        // Act
+        var act = () => _fx.Installer().Install(request, null, cancellationToken: Ct);
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
     public void Uninstall_leaves_a_file_the_game_rewrote_since()
     {
         // Arrange

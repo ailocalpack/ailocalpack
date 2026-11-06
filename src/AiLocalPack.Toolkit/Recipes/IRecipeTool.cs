@@ -24,12 +24,13 @@ public interface IRecipeTool
     RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Writes each game file that the translations change to <paramref name="output"/> (by its path relative to the
-    /// game folder). Only keys the extractor gives are applied; others are reported in <see cref="RebuildResult.UnknownKeys"/>.
+    /// Writes each game file that the translations change (or add) to <paramref name="output"/> (by its path relative
+    /// to the game folder). Only keys the extractor gives are applied; others are reported in <see cref="RebuildResult.UnknownKeys"/>.
     /// An empty translation, or one equal to the original, leaves the string as it is.
     /// </summary>
+    /// <param name="language">The translations' language tag (the string table's); engines with their own translation system install under it.</param>
     /// <exception cref="RecipeException">Not a game of this engine, or a file can't be read, parsed or written.</exception>
-    RebuildResult Rebuild(string gameDir, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default);
+    RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// The game files (relative, <c>/</c>-separated) holding <paramref name="keys"/>: what a pack with these keys
@@ -56,7 +57,14 @@ public sealed record RecipeExtraction(string Tool, Version Version, IReadOnlyLis
 /// <param name="ChangedFiles">Files written to the output (relative to the game folder, ordinal order).</param>
 /// <param name="Applied">Translations that changed a string.</param>
 /// <param name="UnknownKeys">Translation keys the game doesn't have (left out; ordinal order).</param>
-public sealed record RebuildResult(IReadOnlyList<string> ChangedFiles, int Applied, IReadOnlyList<string> UnknownKeys);
+public sealed record RebuildResult(IReadOnlyList<string> ChangedFiles, int Applied, IReadOnlyList<string> UnknownKeys)
+{
+    /// <summary>
+    /// Files the game itself makes from the written ones when it runs (Ren'Py compiles <c>x.rpy</c> into <c>x.rpyc</c>),
+    /// relative to the game folder: uninstalling the pack deletes them too.
+    /// </summary>
+    public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+}
 
 /// <summary>Where <see cref="IRecipeTool.Rebuild"/> puts the rebuilt files.</summary>
 public interface IRebuildOutput

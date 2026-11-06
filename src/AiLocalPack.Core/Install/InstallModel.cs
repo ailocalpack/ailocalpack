@@ -13,7 +13,14 @@ public sealed record InstallFile(string Path, string Source);
 /// <param name="PackId">The pack's ID.</param>
 /// <param name="Revision">The pack revision installed.</param>
 /// <param name="Files">The files to write (each path once).</param>
-public sealed record InstallRequest(Game Game, string Language, string PackId, int Revision, IReadOnlyList<InstallFile> Files);
+public sealed record InstallRequest(Game Game, string Language, string PackId, int Revision, IReadOnlyList<InstallFile> Files)
+{
+    /// <summary>
+    /// Files the game makes from the written ones when it runs (Ren'Py's <c>.rpyc</c> of a translation file); those not
+    /// in the game folder before the install are recorded and deleted on uninstall.
+    /// </summary>
+    public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+}
 
 /// <summary>A game file the installed pack touched.</summary>
 /// <param name="Path">Relative to the game folder, <c>/</c>-separated.</param>
@@ -34,7 +41,11 @@ public sealed record InstalledPack(
     string InstallPath,
     string Backup,
     IReadOnlyList<InstalledFile> Files,
-    IReadOnlyList<string> AddedFolders);
+    IReadOnlyList<string> AddedFolders)
+{
+    /// <summary>Files the game makes from the pack's files (relative, <c>/</c>-separated), deleted on uninstall when present.</summary>
+    public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+}
 
 /// <summary>Why an install, re-apply or uninstall failed, as the player is told (the UI and CLI word it).</summary>
 public enum InstallProblem

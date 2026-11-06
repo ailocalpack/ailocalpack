@@ -54,7 +54,8 @@ public sealed class GameFingerprinterTests : IDisposable
                 RpgMaker("");
                 return RpgMakerMv;
             case "renpy":
-                _dir.RenPy().File("game/scripts/day1.rpyc", "x").File("renpy/common/00start.rpy", "x");
+                _dir.RenPy().File("game/scripts/day1.rpyc", "x").File("renpy/common/00start.rpy", "x")
+                    .File("game/tl/ailocalpack_ru/script.rpyc", "x").File("game/cache/bytecode.rpyb", "x").File("game/tl.rpy", "x");
                 return new EngineKind(GameEngine.RenPy);
             case "godot":
                 _dir.GodotWindows();
@@ -168,7 +169,7 @@ public sealed class GameFingerprinterTests : IDisposable
     [InlineData("unity-mac", "Game.app", "Game.app/Contents/MacOS/Game|Game.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll|Game.app/Contents/Resources/Data/globalgamemanagers")]
     [InlineData("unreal", "Game/Binaries/Win64/Game-Win64-Shipping.exe", "Game/Binaries/Win64/Game-Win64-Shipping.exe|Game/Content/Paks/Game-Windows.pak")]
     [InlineData("rpgmaker", "Game.exe", "Game.exe|www/data/Map001.json|www/data/System.json|www/js/plugins.js")]
-    [InlineData("renpy", "Game.exe", "Game.exe|game/archive.rpa|game/scripts/day1.rpyc")]
+    [InlineData("renpy", "Game.exe", "Game.exe|game/archive.rpa|game/scripts/day1.rpyc|game/tl.rpy")]
     [InlineData("godot", "Game.exe", "Game.exe|Game.pck")]
     [InlineData("unknown", "Game.exe", "Game.exe")]
     public void Version_files_are_the_executable_and_the_files_packs_touch(string layout, string exe, string expected)

@@ -131,7 +131,7 @@ internal static class RecipeCommands
             RebuildResult rebuilt;
             try
             {
-                rebuilt = tool.Rebuild(path, translations.Strings, new DirectoryRebuildOutput(target), cancellationToken);
+                rebuilt = tool.Rebuild(path, translations.Language, translations.Strings, new DirectoryRebuildOutput(target), cancellationToken);
             }
             catch (RecipeException e)
             {

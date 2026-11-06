@@ -90,6 +90,13 @@ public static class EngineFixture
         return dir;
     }
 
+    /// <summary>The synthetic Ren'Py game of <c>RenPyFixture</c> (compiled scripts; <paramref name="archived"/> = in <c>game/scripts.rpa</c>).</summary>
+    public static TempDir RenPyGame(this TempDir dir, string root = "", bool archived = false)
+    {
+        AiLocalPack.Toolkit.Recipes.RenPy.RenPyFixture.Create(root.Length == 0 ? dir.Path : dir.Combine(root), archived);
+        return dir;
+    }
+
     public static TempDir RpgMakerMac(this TempDir dir, string root = "", bool mz = true) =>
         dir.File(P(root, "Game.app/Contents/MacOS/nwjs"), "macho")
             .File(P(root, $"Game.app/Contents/Resources/app.nw/js/{(mz ? "rmmz_core.js" : "rpg_core.js")}"), "//");

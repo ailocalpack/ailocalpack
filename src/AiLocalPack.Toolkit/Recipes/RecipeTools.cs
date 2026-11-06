@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 
 namespace AiLocalPack.Toolkit.Recipes;
@@ -17,7 +18,7 @@ public sealed class RecipeTools : IRecipeTools
     }
 
     /// <summary>Every tool this app ships.</summary>
-    public static RecipeTools Builtin { get; } = new([new RpgMakerRecipe()]);
+    public static RecipeTools Builtin { get; } = new([new RpgMakerRecipe(), new RenPyRecipe()]);
 
     public IReadOnlyList<IRecipeTool> All { get; }
 

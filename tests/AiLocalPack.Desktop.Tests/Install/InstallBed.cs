@@ -5,6 +5,8 @@ using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Tests.Library;
+using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,14 +28,18 @@ internal sealed class InstallBed : IDisposable
 
     public ServiceProvider Services { get; private set; } = null!;
 
+    private IRecipeTool _tool = new RpgMakerRecipe();
+
     public string GameDir { get; private set; } = string.Empty;
 
     /// <summary>A file the packs translate (relative to the game folder).</summary>
     public const string SystemFile = "data/System.json";
 
-    public static async Task<InstallBed> CreateAsync(Action<InstallBed>? packs = null, Action<IServiceCollection>? configure = null)
+    /// <param name="renPy">Game 10 is the synthetic Ren'Py game instead of the RPG Maker one.</param>
+    public static async Task<InstallBed> CreateAsync(Action<InstallBed>? packs = null, Action<IServiceCollection>? configure = null, bool renPy = false)
     {
         var bed = new InstallBed();
+        bed._tool = renPy ? new RenPyRecipe() : new RpgMakerRecipe();
         string? gameDir = null;
         bed.Services = TestServices.Build(
             configure,
@@ -41,7 +47,14 @@ internal sealed class InstallBed : IDisposable
             {
                 steam.AddGame(10, "Alpha").AddGame(20, "Beta");
                 gameDir = Path.Combine(steam.Root, "steamapps", "common", "Alpha");
-                RpgMakerFixture.Create(gameDir);
+                if (renPy)
+                {
+                    RenPyFixture.Create(gameDir);
+                }
+                else
+                {
+                    RpgMakerFixture.Create(gameDir);
+                }
             },
             registry: bed._registry.Path);
         bed.GameDir = gameDir!;
@@ -70,7 +83,7 @@ internal sealed class InstallBed : IDisposable
         IReadOnlyList<PackDependency>? dependencies = null,
         bool writeStrings = true)
     {
-        var recipe = new RpgMakerRecipe();
+        var recipe = _tool;
         var strings = recipe.Extract(GameDir).Strings.ToDictionary(s => s.Key, s => "RU " + s.Original, StringComparer.Ordinal);
         using var table = new MemoryStream();
         StringTableSerializer.Write(new StringTable(language, strings, new Dictionary<string, string>()), table);
@@ -88,7 +101,7 @@ internal sealed class InstallBed : IDisposable
             status,
             new PackAgent("claude-code"),
             [new PackBuild(buildId, files)],
-            new PackRecipe("rpgmaker", "1.0.0"),
+            new PackRecipe(recipe.Id, recipe.Version.ToString(3)),
             new PackStringsFile(PackStringsFile.DefaultPath, Convert.ToHexStringLower(SHA256.HashData(tableBytes)), tableBytes.Length),
             null,
             dependencies ?? [],

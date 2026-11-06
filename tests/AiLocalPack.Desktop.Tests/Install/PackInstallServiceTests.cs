@@ -29,6 +29,40 @@ public sealed class PackInstallServiceTests
     }
 
     [Fact]
+    public async Task Install_of_a_Renpy_pack_adds_translation_files_and_records_what_Renpy_compiles()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"), renPy: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+
+        // Act
+        var outcome = await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
+
+        // Assert
+        (outcome.Succeeded, bed.Read("game/tl/ailocalpack_ru/script.rpy").Contains("    s \"RU Hi there! How was class?\"", StringComparison.Ordinal),
+            bed.Services.GetRequiredService<InstalledPackStore>().Find(InstallBed.Alpha)!.GeneratedFiles.Contains("game/tl/ailocalpack_ru/script.rpyc"))
+            .Should().Be((true, true, true));
+    }
+
+    [Fact]
+    public async Task Uninstall_of_a_Renpy_pack_leaves_the_game_folder_as_it_was()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"), renPy: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+        var before = Directory.GetFileSystemEntries(bed.GameDir, "*", SearchOption.AllDirectories).Order().ToList();
+        await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
+        File.WriteAllText(Path.Combine(bed.GameDir, "game/tl/ailocalpack_ru/script.rpyc"), "compiled by Ren'Py on start");
+
+        // Act
+        var outcome = await service.UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
+
+        // Assert
+        (outcome.Succeeded, Directory.GetFileSystemEntries(bed.GameDir, "*", SearchOption.AllDirectories).Order().ToList())
+            .Should().BeEquivalentTo((true, before));
+    }
+
+    [Fact]
     public async Task Install_saves_the_record()
     {
         // Arrange
