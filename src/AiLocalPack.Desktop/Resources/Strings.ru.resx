@@ -895,6 +895,30 @@
   <data name="Startup_Index_BadAddress" xml:space="preserve">
     <value>Адрес реестра пакетов неверен: подробности в журнале</value>
   </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>Завершаем прерванную установку</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>Не закрывайте приложение</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>Установка отменена: файлы игры такие же, как были</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>Установка завершена</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>Удаление завершено: исходные файлы восстановлены</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>Пока не удалось завершить: повторим при следующем запуске (подробности в журнале)</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>Идёт другая установка</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>Завершать нечего</value>
+  </data>
   <data name="Splash_Version" xml:space="preserve">
     <value>Версия {0}</value>
   </data>

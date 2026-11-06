@@ -875,6 +875,30 @@
   <data name="Startup_Index_BadAddress" xml:space="preserve">
     <value>The pack registry address is not valid: details are in the log</value>
   </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>Finishing an interrupted install</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>Don't close the app</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>The install was undone: game files are as they were</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>The install was completed</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>The uninstall was finished: original files restored</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>Couldn't finish it yet: retried on the next start (details in the log)</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>Another install is running</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>Nothing to finish</value>
+  </data>
   <data name="Splash_Version" xml:space="preserve">
     <value>Version {0}</value>
   </data>

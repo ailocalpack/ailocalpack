@@ -39,6 +39,18 @@ public sealed record AppPaths
     /// <summary>Originals of game files overwritten by installed packs (what makes uninstall possible).</summary>
     public string Backups => Path.Combine(Data, "backups");
 
+    /// <summary>The installed packs: per game the pack, revision, touched files with their original and new hashes, backup folder.</summary>
+    public string InstalledPacksFile => Path.Combine(Data, "installed-packs.json");
+
+    /// <summary>
+    /// The install transaction in progress (<see cref="Install.PackInstaller"/>); one left behind by a crash is finished
+    /// on the next start.
+    /// </summary>
+    public string InstallJournal => Path.Combine(Data, "install-journal.json");
+
+    /// <summary>Held while an install, re-apply or uninstall runs, so only one runs at a time across app and CLI.</summary>
+    public string InstallLock => Path.Combine(Data, "install.lock");
+
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 

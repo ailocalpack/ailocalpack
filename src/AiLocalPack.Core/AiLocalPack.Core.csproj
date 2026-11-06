@@ -14,5 +14,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="AiLocalPack.Core.Tests" />
+        <!-- Install crash simulation hooks (PackInstaller) for the start-up recovery tests. -->
+        <InternalsVisibleTo Include="AiLocalPack.Desktop.Tests" />
     </ItemGroup>
 </Project>

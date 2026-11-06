@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
@@ -20,6 +21,7 @@ namespace AiLocalPack.Desktop.Startup;
 public sealed class AppStartup
 {
     public const string SettingsStep = "settings";
+    public const string RecoveryStep = "install-recovery";
     public const string CatalogStep = "catalog";
     public const string SteamStep = "steam";
     public const string DetectionStep = "detect";
@@ -30,6 +32,7 @@ public sealed class AppStartup
 
     private readonly SettingsStore _settings;
     private readonly SettingsApplier _applier;
+    private readonly PackInstaller _installer;
     private readonly GameCatalog _catalog;
     private readonly GameLibrary _library;
     private readonly PackIndex _index;
@@ -37,6 +40,7 @@ public sealed class AppStartup
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
     private readonly StartupStep _settingsStep;
+    private readonly StartupStep? _recoveryStep;
     private readonly StartupStep _catalogStep;
     private readonly StartupStep _steamStep;
     private readonly StartupStep _detectionStep;
@@ -46,6 +50,7 @@ public sealed class AppStartup
     public AppStartup(
         SettingsStore settings,
         SettingsApplier applier,
+        PackInstaller installer,
         GameCatalog catalog,
         GameLibrary library,
         PackIndex index,
@@ -56,6 +61,7 @@ public sealed class AppStartup
     {
         _settings = settings;
         _applier = applier;
+        _installer = installer;
         _catalog = catalog;
         _library = library;
         _index = index;
@@ -63,22 +69,30 @@ public sealed class AppStartup
         _ui = ui;
         _logger = logger;
         _settingsStep = new(SettingsStep, StartupPhase.Blocking, nameof(Strings.Startup_Step_Settings), localizer, time);
+        // Shown only when a journal survived a crash (design §9): one file check, cheap enough for the UI thread.
+        _recoveryStep = installer.HasInterruptedTransaction
+            ? new(RecoveryStep, StartupPhase.Blocking, nameof(Strings.Startup_Step_Recovery), localizer, time)
+            : null;
         _catalogStep = new(CatalogStep, StartupPhase.Blocking, nameof(Strings.Startup_Step_Catalog), localizer, time);
         _steamStep = new(SteamStep, StartupPhase.Background, nameof(Strings.Startup_Step_Steam), localizer, time);
         _detectionStep = new(DetectionStep, StartupPhase.Background, nameof(Strings.Startup_Step_Detection), localizer, time);
         _indexStep = new(IndexStep, StartupPhase.Background, nameof(Strings.Startup_Step_Index), localizer, time);
-        Progress = new StartupProgress([_settingsStep, _catalogStep, _steamStep, _detectionStep, _indexStep], localizer);
+        Progress = new StartupProgress(
+            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep],
+            localizer);
     }
 
     public StartupProgress Progress { get; }
 
     /// <summary>
-    /// Loads settings (then applies language and theme) and the saved game catalog, one after the other. Call it on
+    /// Loads settings (then applies language and theme), finishes an install a crash interrupted (task 27) and loads the
+    /// saved game catalog, one after the other. Call it on
     /// the UI thread: the files are read on the thread pool, the steps change back on the caller's context.
     /// </summary>
     public async Task RunBlockingAsync()
     {
         await LoadSettingsAsync();
+        await RecoverInstallAsync();
         await LoadCatalogAsync();
     }
 
@@ -128,6 +142,46 @@ public sealed class AppStartup
             _logger.LogError(e, "Loading settings at startup failed");
             Fail(_settingsStep);
             _applier.Start();
+        }
+    }
+
+    private async Task RecoverInstallAsync()
+    {
+        if (_recoveryStep is not { } step)
+        {
+            return;
+        }
+
+        step.Start(() => _localizer[nameof(Strings.Startup_Recovery_Running)]);
+        try
+        {
+            var result = await Task.Run(() => _installer.Recover());
+            switch (result.Outcome)
+            {
+                case RecoveryOutcome.RolledBack:
+                    step.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Recovery_RolledBack)]);
+                    break;
+                case RecoveryOutcome.Completed:
+                    step.Complete(StartupTone.Ok, () => _localizer[nameof(Strings.Startup_Recovery_Completed)]);
+                    break;
+                case RecoveryOutcome.UninstallFinished:
+                    step.Complete(StartupTone.Ok, () => _localizer[nameof(Strings.Startup_Recovery_UninstallFinished)]);
+                    break;
+                case RecoveryOutcome.Failed:
+                    step.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Recovery_Failed)]);
+                    break;
+                case RecoveryOutcome.Busy:
+                    step.Skip(() => _localizer[nameof(Strings.Startup_Recovery_Busy)]);
+                    break;
+                default:
+                    step.Skip(() => _localizer[nameof(Strings.Startup_Recovery_Nothing)]);
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Finishing an interrupted install at startup failed");
+            Fail(step);
         }
     }
 

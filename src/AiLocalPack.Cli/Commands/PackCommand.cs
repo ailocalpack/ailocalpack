@@ -159,7 +159,7 @@ internal static class PackCommand
     }
 
     /// <summary>The game from the catalog, after a Steam scan so the build ID is the installed one.</summary>
-    private static Game? FindGame(OsEnvironment env, AppPaths paths, GameId id)
+    internal static Game? FindGame(OsEnvironment env, AppPaths paths, GameId id)
     {
         var settings = new SettingsStore(paths, NullLogger<SettingsStore>.Instance, TimeProvider.System).Load();
         var catalog = new GameCatalog(paths, NullLogger<GameCatalog>.Instance, TimeProvider.System);

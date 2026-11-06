@@ -1,4 +1,6 @@
 using System.Net;
+using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
@@ -301,5 +303,81 @@ public sealed class AppStartupTests
 
         // Assert
         (step.IsWarn, step.Detail).Should().Be((true, "The pack registry address is not valid: details are in the log"));
+    }
+
+    /// <summary>Installs one file into a temp game folder and crashes while writing it, leaving the journal behind.</summary>
+    private static void CrashAnInstall(ServiceProvider services, TempDir game)
+    {
+        game.File("data/Map001.json", "map original");
+        var staged = game.Combine("staged.json");
+        File.WriteAllText(staged, "map ru");
+        var installer = services.GetRequiredService<PackInstaller>();
+        installer.BeforeFile = (stage, _) =>
+        {
+            if (stage == InstallStage.Writing)
+            {
+                File.WriteAllText(game.Combine("data/Map001.json"), "half-written");
+                throw new IOException("Simulated crash.");
+            }
+        };
+        installer.RollBackOnFailure = false;
+        var gameRecord = new Game(GameId.Steam(620), "Sample", GameSource.Steam, game.Path, null, null, null, "none", null, true);
+        try
+        {
+            installer.Install(new InstallRequest(gameRecord, "ru", "full", 1, [new InstallFile("data/Map001.json", staged)]), null);
+        }
+        catch (IOException)
+        {
+            // The simulated crash.
+        }
+
+        installer.BeforeFile = null;
+        installer.RollBackOnFailure = true;
+    }
+
+    [Fact]
+    public void Recovery_step_is_absent_without_an_interrupted_install()
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var progress = services.GetRequiredService<AppStartup>().Progress;
+
+        // Assert
+        progress.Find(AppStartup.RecoveryStep).Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Recovery_step_rolls_back_an_interrupted_install()
+    {
+        // Arrange
+        using var services = Build();
+        using var game = new TempDir();
+        CrashAnInstall(services, game);
+
+        // Act
+        await services.GetRequiredService<AppStartup>().RunBlockingAsync();
+
+        // Assert
+        var step = Step(services, AppStartup.RecoveryStep);
+        (step.IsWarn, step.Detail, File.ReadAllText(game.Combine("data/Map001.json")))
+            .Should().Be((true, "The install was undone: game files are as they were", "map original"));
+    }
+
+    [Fact]
+    public async Task Recovery_step_runs_before_the_catalog()
+    {
+        // Arrange
+        using var services = Build();
+        using var game = new TempDir();
+        CrashAnInstall(services, game);
+
+        // Act
+        await services.GetRequiredService<AppStartup>().RunBlockingAsync();
+
+        // Assert
+        services.GetRequiredService<AppStartup>().Progress.Blocking.Select(s => s.Id)
+            .Should().Equal(AppStartup.SettingsStep, AppStartup.RecoveryStep, AppStartup.CatalogStep);
     }
 }

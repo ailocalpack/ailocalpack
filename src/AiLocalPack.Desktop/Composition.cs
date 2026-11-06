@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
@@ -69,6 +70,16 @@ internal static class Composition
             sp.GetRequiredService<PackCache>(),
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<PackFetcher>>()));
+        services.AddSingleton(sp => new InstalledPackStore(
+            sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<InstalledPackStore>>(), sp.GetRequiredService<TimeProvider>()));
+        services.AddSingleton(sp => new PackInstaller(
+            sp.GetRequiredService<AppPaths>(),
+            sp.GetRequiredService<InstalledPackStore>(),
+            sp.GetRequiredService<AntiCheatPolicy>(),
+            sp.GetRequiredService<IProcessList>(),
+            sp.GetRequiredService<OsEnvironment>(),
+            sp.GetRequiredService<TimeProvider>(),
+            sp.GetRequiredService<ILogger<PackInstaller>>()));
         services.AddSingleton<IInstalledPacks, NoInstalledPacks>();
         services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();
