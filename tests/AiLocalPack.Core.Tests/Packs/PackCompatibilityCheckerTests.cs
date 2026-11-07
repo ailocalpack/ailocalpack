@@ -332,6 +332,7 @@ public sealed class PackCompatibilityCheckerTests : IDisposable
     [Theory]
     [InlineData(RecipeToolSupport.UnknownTool, PackCompatibilityReason.RecipeToolUnknown)]
     [InlineData(RecipeToolSupport.TooNew, PackCompatibilityReason.RecipeToolTooNew)]
+    [InlineData(RecipeToolSupport.EngineUnsupported, PackCompatibilityReason.EngineUnsupported)]
     public void A_recipe_the_toolkit_cannot_run_is_incompatible(RecipeToolSupport support, PackCompatibilityReason expected)
     {
         // Arrange
@@ -349,6 +350,22 @@ public sealed class PackCompatibilityCheckerTests : IDisposable
             Reason = expected,
             RecipeTool = new { Tool = "rpgmaker", Version = "1.0.0" },
         });
+    }
+
+    [Fact]
+    public void The_game_engine_is_asked_about_and_named_in_the_result()
+    {
+        // Arrange
+        GameFile(Map, "map v1");
+        var pack = Pack(SteamGame, Build("100", (Map, "map v1")));
+        var tools = new FakeRecipeTools(RecipeToolSupport.EngineUnsupported);
+        var checker = new PackCompatibilityChecker(new FileHashCache(), tools);
+
+        // Act
+        var result = checker.Check(pack, Game(SteamGame, "100"), Ct);
+
+        // Assert
+        (tools.Engine, result.Engine).Should().Be(("rpgmaker:mv", "rpgmaker:mv"));
     }
 
     [Fact]
@@ -466,6 +483,13 @@ public sealed class PackCompatibilityCheckerTests : IDisposable
 
     private sealed class FakeRecipeTools(RecipeToolSupport support) : IRecipeTools
     {
-        public RecipeToolSupport Check(PackRecipe recipe) => support;
+        /// <summary>The engine of the last check.</summary>
+        public string? Engine { get; private set; }
+
+        public RecipeToolSupport Check(PackRecipe recipe, string? engine = null)
+        {
+            Engine = engine;
+            return support;
+        }
     }
 }

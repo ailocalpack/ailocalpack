@@ -53,6 +53,35 @@ public sealed class PackValidatorTests : IDisposable
     }
 
     [Fact]
+    public void A_whitelisted_font_is_valid()
+    {
+        // Arrange
+        var folder = CopyPack();
+        EditManifest(folder, "\"license\":", "\"fonts\": [\"noto-sans\", \"noto-sans-jp\"],\n  \"license\":");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        (result.IsValid, result.Manifest?.Fonts).Should().BeEquivalentTo((true, new[] { "noto-sans", "noto-sans-jp" }));
+    }
+
+    [Fact]
+    public void A_font_missing_from_the_whitelist_is_a_problem()
+    {
+        // Arrange
+        var folder = CopyPack();
+        EditManifest(folder, "\"license\":", "\"fonts\": [\"noto-sans\", \"comic-sans\"],\n  \"license\":");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().ContainSingle().Which.Should().Match<PackProblem>(p =>
+            p.File == "manifest.json" && p.Field == "fonts[1]" && p.Message.StartsWith("'comic-sans' is not on the font whitelist", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Missing_folder_is_a_problem()
     {
         // Act

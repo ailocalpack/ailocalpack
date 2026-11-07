@@ -3,6 +3,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
+using AiLocalPack.Toolkit.Engines;
 
 namespace AiLocalPack.Desktop.ViewModels.GamePage;
 
@@ -61,6 +62,9 @@ public static class PackCompatibilityTexts
             PackCompatibilityReason.FileUnreadable => localizer.Format(nameof(Strings.Packs_Why_FileUnreadable), compatibility.UnreadableFile ?? string.Empty),
             PackCompatibilityReason.PatchFilesChanged => localizer.Format(nameof(Strings.Packs_Why_PatchFilesChanged), changed, touched),
             PackCompatibilityReason.RecipeToolUnknown => localizer.Format(nameof(Strings.Packs_Why_RecipeToolUnknown), compatibility.RecipeTool?.Tool ?? string.Empty),
+            PackCompatibilityReason.EngineUnsupported => localizer.Format(
+                nameof(Strings.Packs_Why_EngineUnsupported),
+                EngineKind.TryParse(compatibility.Engine, out var engine) ? engine.DisplayName : compatibility.Engine ?? string.Empty),
             _ => localizer.Format(nameof(Strings.Packs_Why_RecipeToolTooNew), compatibility.RecipeTool?.Tool ?? string.Empty, compatibility.RecipeTool?.Version ?? string.Empty),
         };
     }

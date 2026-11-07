@@ -10,6 +10,9 @@
 
     <ItemGroup>
         <EmbeddedResource Include="AntiCheat/anti-cheat.json" LogicalName="AiLocalPack.Core.AntiCheat.anti-cheat.json" />
+        <EmbeddedResource Include="Fonts/fonts.json" LogicalName="AiLocalPack.Core.Fonts.fonts.json" />
+        <!-- Whitelisted OFL fonts shipped inside the app (task 31); the CJK ones are downloaded on demand. -->
+        <EmbeddedResource Include="Fonts/Files/*.ttf;Fonts/Files/*.otf" LogicalName="AiLocalPack.Core.Fonts.Files.%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>

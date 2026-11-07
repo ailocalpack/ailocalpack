@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace AiLocalPack.Desktop.Tests.Install;
 
 /// <summary>
-/// A real install end to end: Steam game 10 "Alpha" (build 1000) holding the synthetic RPG Maker MZ game, Steam game 20
+/// A real install end to end: Steam game 10 "Alpha" (build 1000) holding the synthetic RPG Maker MV game, Steam game 20
 /// "Beta" (no files), target Russian, and a local registry whose packs are real: a gzip string table translating every
 /// string of the game ("RU " + the original) and a manifest with the hashes of the files it touches.
 /// </summary>
@@ -33,7 +33,7 @@ internal sealed class InstallBed : IDisposable
     public string GameDir { get; private set; } = string.Empty;
 
     /// <summary>A file the packs translate (relative to the game folder).</summary>
-    public const string SystemFile = "data/System.json";
+    public const string SystemFile = "www/data/System.json";
 
     /// <param name="renPy">Game 10 is the synthetic Ren'Py game instead of the RPG Maker one.</param>
     public static async Task<InstallBed> CreateAsync(Action<InstallBed>? packs = null, Action<IServiceCollection>? configure = null, bool renPy = false)
@@ -53,7 +53,7 @@ internal sealed class InstallBed : IDisposable
                 }
                 else
                 {
-                    RpgMakerFixture.Create(gameDir);
+                    RpgMakerFixture.Create(gameDir, mv: true);
                 }
             },
             registry: bed._registry.Path);
@@ -71,8 +71,9 @@ internal sealed class InstallBed : IDisposable
     public string Read(string relativePath) => File.ReadAllText(Path.Combine(GameDir, relativePath));
 
     /// <summary>
-    /// Adds a recipe pack of game 10 to the index and writes its files: every string translated as "RU " + the original,
-    /// made for <paramref name="buildId"/> with the current hashes of the touched files.
+    /// Adds a recipe pack of game 10 to the index and writes its files: every string translated as <paramref name="prefix"/>
+    /// + the original ("RU ": letters every font has; "РУ " needs a font with Cyrillic), made for <paramref name="buildId"/>
+    /// with the current hashes of the touched files.
     /// </summary>
     public InstallBed RecipePack(
         string id,
@@ -81,10 +82,12 @@ internal sealed class InstallBed : IDisposable
         string language = "ru",
         int likes = 0,
         IReadOnlyList<PackDependency>? dependencies = null,
-        bool writeStrings = true)
+        bool writeStrings = true,
+        string prefix = "RU ",
+        IReadOnlyList<string>? fonts = null)
     {
         var recipe = _tool;
-        var strings = recipe.Extract(GameDir).Strings.ToDictionary(s => s.Key, s => "RU " + s.Original, StringComparer.Ordinal);
+        var strings = recipe.Extract(GameDir).Strings.ToDictionary(s => s.Key, s => prefix + s.Original, StringComparer.Ordinal);
         using var table = new MemoryStream();
         StringTableSerializer.Write(new StringTable(language, strings, new Dictionary<string, string>()), table);
         var tableBytes = table.ToArray();
@@ -105,7 +108,7 @@ internal sealed class InstallBed : IDisposable
             new PackStringsFile(PackStringsFile.DefaultPath, Convert.ToHexStringLower(SHA256.HashData(tableBytes)), tableBytes.Length),
             null,
             dependencies ?? [],
-            [],
+            fonts ?? [],
             new PackCoverage(strings.Count, strings.Count),
             date,
             date);

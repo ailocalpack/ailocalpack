@@ -501,6 +501,21 @@ public sealed class PacksTabViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task Details_name_the_fonts_and_whether_they_ship_with_the_app()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r
+            .Pack(10, "ru", "lanterns", buildId: "1000")
+            .Manifest(10, "ru", "lanterns", "1000", new Dictionary<string, string> { ["data/a.json"] = AlphaHash }, fonts: ["noto-sans", "noto-sans-jp", "future-font"]));
+
+        // Act
+        var row = (await PacksAsync(services)).Selected!;
+
+        // Assert
+        (row.HasFonts, row.FontsText).Should().Be((true, "Noto Sans (bundled), Noto Sans JP (downloaded when installing), future-font"));
+    }
+
+    [Fact]
     public async Task Revision_history_lists_the_newest_first()
     {
         // Arrange

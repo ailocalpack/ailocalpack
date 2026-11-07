@@ -1,5 +1,8 @@
+using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Fonts;
 
 namespace AiLocalPack.Toolkit.Recipes.RpgMaker;
 
@@ -10,12 +13,19 @@ namespace AiLocalPack.Toolkit.Recipes.RpgMaker;
 /// <c>data/Map001.json:/events/1/pages/0/list/1/parameters/0</c>: the project folder is the one holding <c>js/</c> and
 /// <c>data/</c>, so the same game has the same keys in its Windows, Linux and macOS builds. Rebuilding replaces only
 /// the translated string values, keeping the rest of each file byte for byte.
+/// Fonts (<see cref="IGameFonts"/>): the text font only, MZ's <c>advanced.mainFontFilename</c> of <c>System.json</c>
+/// (the number font draws digits) and MV's <c>GameFont</c> face of <c>fonts/gamefont.css</c>; a swap adds the
+/// replacement as <c>fonts/ailocalpack-&lt;file&gt;</c> and points that setting at it.
 /// </summary>
-public sealed class RpgMakerRecipe : IRecipeTool
+public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
 {
     public const string ToolId = "rpgmaker";
 
     private const string DataFolder = "data";
+    private const string FontsFolder = "fonts";
+    private const string MvFontCss = "gamefont.css";
+    private const string MzFontPointer = "/advanced/mainFontFilename";
+    private const string SwapPrefix = "ailocalpack-";
 
     private readonly EngineDetector _engines = new();
 
@@ -131,6 +141,163 @@ public sealed class RpgMakerRecipe : IRecipeTool
             .Order(StringComparer.Ordinal)];
     }
 
+    /// <summary>The canvas draws bold by itself: one face is enough.</summary>
+    public bool UsesBold => false;
+
+    public IReadOnlyList<GameFont> Fonts(string gameDir)
+    {
+        var project = FindProject(gameDir);
+        var name = project.IsMz ? MzFontName(project, ReadText(project, project.Path(DataFolder, "System.json"))) : MvFontName(project);
+        if (name is null)
+        {
+            return [];
+        }
+
+        var file = project.Path(FontsFolder, name);
+        return File.Exists(Path.Combine(project.GameDir, file)) ? [new GameFont(name, file)] : [];
+    }
+
+    public byte[] ReadFont(string gameDir, GameFont font)
+    {
+        ArgumentNullException.ThrowIfNull(font);
+        var path = Path.Combine(Path.GetFullPath(gameDir), font.File);
+        try
+        {
+            return File.ReadAllBytes(path);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            throw new RecipeException($"Can't read the font {font.File}: {e.Message}", font.File, e);
+        }
+    }
+
+    public IReadOnlyList<string> Placeholders(string text) => RpgMakerStrings.Placeholders(text);
+
+    public FontSwapFiles Swap(string gameDir, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
+    {
+        ArgumentNullException.ThrowIfNull(swaps);
+        ArgumentNullException.ThrowIfNull(output);
+        if (swaps.Count == 0)
+        {
+            return new FontSwapFiles([], []);
+        }
+
+        // One text font per game.
+        var swap = swaps[0];
+        var project = FindProject(gameDir);
+        var fileName = SwapPrefix + swap.Replacement.File(Core.Fonts.FontFace.Regular)!.FileName;
+        var fontPath = project.Path(FontsFolder, fileName);
+        var files = new List<string> { fontPath };
+        Write(output, fontPath, swap.Regular);
+        if (project.IsMz)
+        {
+            var system = project.Path(DataFolder, "System.json");
+            var bytes = Current(project, output, system);
+            byte[] edited;
+            try
+            {
+                edited = JsonStrings.Replace(bytes, new Dictionary<string, string> { [MzFontPointer] = fileName });
+            }
+            catch (JsonException e)
+            {
+                throw new RecipeException($"{system} is not valid JSON: {e.Message}", system, e);
+            }
+
+            Write(output, system, edited);
+            files.Add(system);
+        }
+        else
+        {
+            var css = project.Path(FontsFolder, MvFontCss);
+            var text = Encoding.UTF8.GetString(Current(project, output, css));
+            var face = GameFontFace().Match(text);
+            if (!face.Success)
+            {
+                throw new RecipeException($"{css} has no GameFont face to point at the new font.", css);
+            }
+
+            var url = FontUrl().Match(face.Value);
+            var edited = text[..(face.Index + url.Index)] + $"url(\"{fileName}\")" + text[(face.Index + url.Index + url.Length)..];
+            Write(output, css, Encoding.UTF8.GetBytes(edited));
+            files.Add(css);
+        }
+
+        return new FontSwapFiles([.. files.Order(StringComparer.Ordinal)], []);
+    }
+
+    /// <summary>MZ: the main font file named in <c>System.json</c>, or <c>null</c>.</summary>
+    private static string? MzFontName(Project project, byte[] system)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(JsonStrings.WithoutBom(system), JsonStrings.DocumentOptions);
+            return document.RootElement.ValueKind == JsonValueKind.Object
+                && document.RootElement.TryGetProperty("advanced", out var advanced)
+                && advanced.ValueKind == JsonValueKind.Object
+                && advanced.TryGetProperty("mainFontFilename", out var name)
+                && name.ValueKind == JsonValueKind.String
+                && SafeName(name.GetString()) is { } file
+                ? file
+                : null;
+        }
+        catch (JsonException e)
+        {
+            var path = project.Path(DataFolder, "System.json");
+            throw new RecipeException($"{path} is not valid JSON: {e.Message}", path, e);
+        }
+    }
+
+    /// <summary>MV: the file of the <c>GameFont</c> face in <c>fonts/gamefont.css</c>, or <c>null</c>.</summary>
+    private static string? MvFontName(Project project)
+    {
+        var css = project.Path(FontsFolder, MvFontCss);
+        if (!File.Exists(Path.Combine(project.GameDir, css)))
+        {
+            return null;
+        }
+
+        var face = GameFontFace().Match(Encoding.UTF8.GetString(ReadText(project, css)));
+        return face.Success && FontUrl().Match(face.Value) is { Success: true } url ? SafeName(Uri.UnescapeDataString(url.Groups["url"].Value)) : null;
+    }
+
+    /// <summary>A file name in <c>fonts/</c> (no folders, no query), else <c>null</c>.</summary>
+    private static string? SafeName(string? name) =>
+        name is { Length: > 0 } && name.IndexOfAny(['/', '\\', '?', '#', ':']) < 0 && name is not ("." or "..") ? name : null;
+
+    private static byte[] ReadText(Project project, string path)
+    {
+        try
+        {
+            return File.ReadAllBytes(Path.Combine(project.GameDir, path));
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            throw new RecipeException($"Can't read {path}: {e.Message}", path, e);
+        }
+    }
+
+    /// <summary>The file as the rebuild wrote it, else the game's copy.</summary>
+    private static byte[] Current(Project project, IRebuildOutput output, string path) => output.Read(path) ?? ReadText(project, path);
+
+    private static void Write(IRebuildOutput output, string path, byte[] content)
+    {
+        try
+        {
+            output.Write(path, content);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            throw new RecipeException($"Can't write {path}: {e.Message}", path, e);
+        }
+    }
+
+    /// <summary>An <c>@font-face</c> block whose family is <c>GameFont</c>.</summary>
+    [GeneratedRegex(@"@font-face\s*\{[^}]*font-family\s*:\s*[""']?GameFont[""']?\s*;[^}]*\}", RegexOptions.IgnoreCase)]
+    private static partial Regex GameFontFace();
+
+    [GeneratedRegex(@"url\(\s*[""']?(?<url>[^""')]+?)[""']?\s*\)", RegexOptions.IgnoreCase)]
+    private static partial Regex FontUrl();
+
     private static string Key(DataFile file, string pointer) => $"{file.ProjectPath}:{pointer}";
 
     /// <summary>Keys by their file part (before the first <c>:</c>); keys without a pointer go under an empty file.</summary>
@@ -210,7 +377,7 @@ public sealed class RpgMakerRecipe : IRecipeTool
             throw new RecipeException($"Can't list {Prefix(project)}{dataName}: {e.Message}", null, e);
         }
 
-        return new Project(root, files);
+        return new Project(root, files, Prefix(project), match.Kind.Variant == EngineVariants.RpgMakerMz);
     }
 
     private static string Prefix(string project) => project.Length == 0 ? string.Empty : project + "/";
@@ -232,8 +399,18 @@ public sealed class RpgMakerRecipe : IRecipeTool
     /// <param name="GamePath">Path from the game folder (<c>www/data/Map001.json</c> on MV).</param>
     private sealed record DataFile(string Name, string ProjectPath, string GamePath);
 
-    private sealed record Project(string GameDir, IReadOnlyList<DataFile> Files)
+    /// <param name="Prefix">The project folder relative to the game folder, with a trailing <c>/</c> (empty at the root).</param>
+    /// <param name="IsMz">RPG Maker MZ (else MV).</param>
+    private sealed record Project(string GameDir, IReadOnlyList<DataFile> Files, string Prefix, bool IsMz)
     {
         public DataFile? Find(string projectPath) => Files.FirstOrDefault(f => f.ProjectPath == projectPath);
+
+        /// <summary>A file of the project, relative to the game folder (the folder name as on disk when it exists).</summary>
+        public string Path(string folder, string name)
+        {
+            var dir = System.IO.Path.Combine(GameDir, Prefix, folder);
+            var actual = Directory.Exists(dir) ? folder : FindChild(System.IO.Path.Combine(GameDir, Prefix), folder) is { } found ? System.IO.Path.GetFileName(found) : folder;
+            return $"{Prefix}{actual}/{name}";
+        }
     }
 }

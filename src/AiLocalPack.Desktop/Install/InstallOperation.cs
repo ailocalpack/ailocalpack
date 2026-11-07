@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Packs;
@@ -98,6 +99,12 @@ public enum InstallErrorKind
     /// <summary>The recipe couldn't rebuild a game file (<see cref="InstallError.File"/>, <see cref="InstallError.Detail"/>).</summary>
     Recipe,
 
+    /// <summary>
+    /// The game's font lacks the translation's letters and the whitelisted font that has them couldn't be had
+    /// (<see cref="InstallError.Font"/>, <see cref="InstallError.FontName"/>; e.g. Noto Sans JP offline). Nothing was touched.
+    /// </summary>
+    Font,
+
     /// <summary>The transaction failed (<see cref="InstallError.Transaction"/>); the game files were restored unless it says otherwise.</summary>
     Transaction,
 
@@ -113,7 +120,9 @@ public sealed record InstallError(
     PackFetchProblem Fetch = PackFetchProblem.None,
     PackCompatibility? Compatibility = null,
     InstallFailure? Transaction = null,
-    IReadOnlyList<PackDependency>? Dependencies = null)
+    IReadOnlyList<PackDependency>? Dependencies = null,
+    FontFetchProblem Font = FontFetchProblem.None,
+    string? FontName = null)
 {
     /// <summary>The game folder is as it was before (always unless restoring itself failed; the next start retries).</summary>
     public bool FilesRestored => Transaction?.FilesRestored ?? true;
@@ -124,6 +133,7 @@ public sealed record InstallError(
         InstallErrorKind.Busy or InstallErrorKind.Transaction or InstallErrorKind.Unexpected or InstallErrorKind.Recipe => true,
         InstallErrorKind.Fetch => Fetch is PackFetchProblem.Offline or PackFetchProblem.Timeout or PackFetchProblem.HttpError
             or PackFetchProblem.HashMismatch or PackFetchProblem.DiskError,
+        InstallErrorKind.Font => Font is not FontFetchProblem.FileMissing,
         _ => false,
     };
 }

@@ -75,6 +75,12 @@ public sealed record AppPaths
     /// </summary>
     public string Packs => Path.Combine(Cache, "packs");
 
+    /// <summary>
+    /// Whitelisted fonts downloaded on demand (<see cref="Fonts.FontStore"/>: the CJK ones; safe to delete: downloaded
+    /// again when a pack needs them).
+    /// </summary>
+    public string Fonts => Path.Combine(Cache, "fonts");
+
     /// <summary>Remembered SHA-256 of game files (<see cref="FileHashCache"/>; safe to delete: files are hashed again).</summary>
     public string FileHashes => Path.Combine(Cache, "file-hashes.json");
 

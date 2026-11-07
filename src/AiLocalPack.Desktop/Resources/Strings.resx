@@ -1691,4 +1691,37 @@
   <data name="Game_Installed_Uninstall" xml:space="preserve">
     <value>Uninstall (restore originals)</value>
   </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>Fonts: the game's fonts have every letter of the translation.</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>Fonts: «{0}» lacks letters of the translation (missing: {1}; {2}); replaced with {3} (open font).</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>Fonts: «{0}» lacks letters of the translation (missing: {1}; {2}).</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>{0} lacks some of them too (missing: {1}; {2}); those may show as boxes.</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>Fonts: {0} can't be read; left as it is.</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>The pack names a font this app doesn't know: {0} (ignored; update the app).</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>The game's font lacks letters of this translation, and the open font {0} that has them couldn't be prepared.</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>The game's font lacks letters of this translation, and the open font {0} that has them couldn't be downloaded. Check the connection and retry.</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0} (bundled)</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0} (downloaded when installing)</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>This app's toolkit doesn't handle {0} games on this system for now, so it can't install this pack.</value>
+  </data>
 </root>

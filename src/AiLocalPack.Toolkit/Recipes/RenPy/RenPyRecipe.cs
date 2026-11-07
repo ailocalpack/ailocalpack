@@ -1,6 +1,9 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Fonts;
 
 namespace AiLocalPack.Toolkit.Recipes.RenPy;
 
@@ -14,8 +17,14 @@ namespace AiLocalPack.Toolkit.Recipes.RenPy;
 /// <c>game/tl/ailocalpack_&lt;tag&gt;/&lt;script&gt;.rpy</c> (dialogue blocks per script), <c>…/strings.rpy</c> and
 /// <c>game/tl/None/ailocalpack_language.rpy</c>, which starts the game in that language (<c>config.language</c>); Ren'Py
 /// compiles each into a <c>.rpyc</c> next to it on start (<see cref="RebuildResult.GeneratedFiles"/>).
+/// Fonts (<see cref="IGameFonts"/>): every font file of the game (loose under <c>game/</c>, in its archives, and
+/// Ren'Py's own <c>renpy/common</c> ones such as <c>DejaVuSans.ttf</c>), named as scripts name them. A swap puts the
+/// replacement under <c>game/tl/&lt;language&gt;/ailocalpack_fonts/</c> and writes
+/// <c>game/tl/&lt;language&gt;/ailocalpack_fonts.rpy</c>, a <c>translate &lt;language&gt; python</c> block that maps each
+/// swapped font (all four bold / italic combinations) to it in <c>config.font_replacement_map</c>: only in that
+/// language, and for every style and screen whatever variable named the font.
 /// </summary>
-public sealed class RenPyRecipe : IRecipeTool
+public sealed class RenPyRecipe : IRecipeTool, IGameFonts
 {
     public const string ToolId = "renpy";
 
@@ -25,6 +34,11 @@ public sealed class RenPyRecipe : IRecipeTool
     private const string SayPrefix = "say:";
     private const string StringPrefix = "string:";
     private const string StringsFile = "strings.rpy";
+
+    /// <summary>Folder (under the language's <c>tl/</c> folder) of swapped-in fonts, and the name of the script mapping them.</summary>
+    private const string FontsName = "ailocalpack_fonts";
+
+    private static readonly string[] FontExtensions = [".ttf", ".otf", ".ttc"];
 
     /// <summary>Folders of <c>game/</c> whose scripts aren't the game's text (translations, Ren'Py's cache, saves).</summary>
     private static readonly string[] SkippedFolders = ["tl", "cache", "saves"];
@@ -164,6 +178,158 @@ public sealed class RenPyRecipe : IRecipeTool
         return [.. sources];
     }
 
+    /// <summary>Ren'Py picks bold faces by file (<c>config.font_replacement_map</c>), so swaps bring the bold face too.</summary>
+    public bool UsesBold => true;
+
+    public IReadOnlyList<GameFont> Fonts(string gameDir)
+    {
+        var (root, gamePath, projectPath) = FindGameFolder(gameDir);
+        var gameFolder = Path.Combine(root, gamePath);
+        var fonts = new SortedDictionary<string, GameFont>(StringComparer.Ordinal);
+
+        // Ren'Py's search order: loose files of game/, its archives, then renpy/common.
+        foreach (var file in List(() => Directory.EnumerateFiles(gameFolder, "*", SearchOption.AllDirectories), gamePath))
+        {
+            var entry = Path.GetRelativePath(gameFolder, file).Replace('\\', '/');
+            if (IsFont(entry) && !IsSkipped(entry))
+            {
+                fonts.TryAdd(entry, new GameFont(entry, $"{gamePath}/{entry}"));
+            }
+        }
+
+        foreach (var archivePath in List(() => Directory.EnumerateFiles(gameFolder, "*.rpa"), gamePath))
+        {
+            var relative = $"{gamePath}/{Path.GetFileName(archivePath)}";
+            RenPyArchive archive;
+            try
+            {
+                archive = RenPyArchive.Open(archivePath);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException or RenPyFormatException)
+            {
+                throw new RecipeException($"Can't read the archive {relative}: {e.Message}", relative, e);
+            }
+
+            foreach (var entry in archive.Names.Where(n => IsFont(n) && !IsSkipped(n)))
+            {
+                fonts.TryAdd(entry, new GameFont(entry, relative, entry));
+            }
+        }
+
+        var common = Path.Combine(root, projectPath, "renpy", "common");
+        if (Directory.Exists(common))
+        {
+            var commonPath = (projectPath.Length == 0 ? string.Empty : projectPath + "/") + "renpy/common";
+            foreach (var file in List(() => Directory.EnumerateFiles(common), commonPath))
+            {
+                var name = Path.GetFileName(file);
+                if (IsFont(name))
+                {
+                    fonts.TryAdd(name, new GameFont(name, $"{commonPath}/{name}"));
+                }
+            }
+        }
+
+        return [.. fonts.Values];
+    }
+
+    public byte[] ReadFont(string gameDir, GameFont font)
+    {
+        ArgumentNullException.ThrowIfNull(font);
+        var path = Path.Combine(Path.GetFullPath(gameDir), font.File);
+        return font.Entry is { } entry
+            ? Guard(font.File, () => RenPyArchive.Open(path).Read(entry))
+            : Guard(font.File, () => File.ReadAllBytes(path));
+    }
+
+    public IReadOnlyList<string> Placeholders(string text) => RenPyTranslation.Placeholders(text);
+
+    public FontSwapFiles Swap(string gameDir, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(language);
+        ArgumentNullException.ThrowIfNull(swaps);
+        ArgumentNullException.ThrowIfNull(output);
+        if (swaps.Count == 0)
+        {
+            return new FontSwapFiles([], []);
+        }
+
+        var (_, gamePath, _) = FindGameFolder(gameDir);
+        var name = RenPyTranslation.LanguageName(language);
+        var folder = $"tl/{name}/{FontsName}";
+        var files = new List<string>();
+        var written = new Dictionary<string, string>(StringComparer.Ordinal);
+        string Put(WhitelistFont font, FontFace face, byte[] content)
+        {
+            var path = $"{folder}/{font.File(face)!.FileName}";
+            if (written.TryAdd(path, path))
+            {
+                Write(output, $"{gamePath}/{path}", content);
+                files.Add($"{gamePath}/{path}");
+            }
+
+            return path;
+        }
+
+        var script = new StringBuilder()
+            .Append("# Written by ailocalpack: the game's fonts lack letters of this translation, so its text is drawn with\n")
+            .Append("# open fonts (SIL Open Font License) in this language only. Uninstalling the pack removes this file.\n")
+            .Append("translate ").Append(name).Append(" python:\n");
+        foreach (var swap in swaps)
+        {
+            var regular = Put(swap.Replacement, FontFace.Regular, swap.Regular);
+            var bold = swap.Bold is { } boldBytes ? Put(swap.Replacement, FontFace.Bold, boldBytes) : null;
+            foreach (var (isBold, isItalic) in new[] { (false, false), (true, false), (false, true), (true, true) })
+            {
+                // With a bold file the face is real; without one Ren'Py makes it bold, as it does italics.
+                var (target, makeBold) = isBold && bold is not null ? (bold, false) : (regular, isBold);
+                script.Append("    config.font_replacement_map[").Append(PythonString(swap.Font.Name)).Append(", ").Append(Bool(isBold)).Append(", ").Append(Bool(isItalic))
+                    .Append("] = (").Append(PythonString(target)).Append(", ").Append(Bool(makeBold)).Append(", ").Append(Bool(isItalic)).Append(")\n");
+            }
+        }
+
+        var scriptPath = $"{gamePath}/tl/{name}/{FontsName}.rpy";
+        Write(output, scriptPath, Encoding.UTF8.GetBytes(script.ToString()));
+        files.Add(scriptPath);
+        return new FontSwapFiles([.. files.Order(StringComparer.Ordinal)], [scriptPath + "c"]);
+    }
+
+    private static bool IsFont(string entry) => FontExtensions.Any(e => entry.EndsWith(e, StringComparison.OrdinalIgnoreCase));
+
+    private static bool IsSkipped(string entry) => SkippedFolders.Any(f => entry.StartsWith(f + "/", StringComparison.OrdinalIgnoreCase));
+
+    private static string Bool(bool value) => value ? "True" : "False";
+
+    /// <summary>A Python string literal (double quotes; backslashes, quotes and non-printable characters escaped).</summary>
+    private static string PythonString(string text)
+    {
+        var builder = new StringBuilder("\"");
+        foreach (var c in text)
+        {
+            _ = c switch
+            {
+                '\\' => builder.Append("\\\\"),
+                '"' => builder.Append("\\\""),
+                < ' ' => builder.Append(CultureInfo.InvariantCulture, $"\\x{(int)c:x2}"),
+                _ => builder.Append(c),
+            };
+        }
+
+        return builder.Append('"').ToString();
+    }
+
+    private static void Write(IRebuildOutput output, string path, byte[] content)
+    {
+        try
+        {
+            output.Write(path, content);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            throw new RecipeException($"Can't write {path}: {e.Message}", path, e);
+        }
+    }
+
     private const string Header = "# Translation installed by ailocalpack, rebuilt from the game's own scripts. Uninstalling the pack removes this file.\n\n";
 
     private static void WriteBlock(StringBuilder file, string language, RenPyDialogue dialogue, string translation)
@@ -193,7 +359,7 @@ public sealed class RenPyRecipe : IRecipeTool
     /// <summary>Every script of the game in Ren'Py's load order, read into dialogue blocks and strings by key.</summary>
     private Game Load(string gameDir, CancellationToken cancellationToken)
     {
-        var (root, gamePath) = FindGameFolder(gameDir);
+        var (root, gamePath, _) = FindGameFolder(gameDir);
         var gameFolder = Path.Combine(root, gamePath);
         var scripts = new SortedDictionary<string, Func<byte[]>>(StringComparer.Ordinal);
         var sources = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -309,9 +475,7 @@ public sealed class RenPyRecipe : IRecipeTool
     }
 
     /// <summary>A game script (<c>.rpyc</c>) outside translations, the cache and saves.</summary>
-    private static bool IsScript(string entry) =>
-        entry.EndsWith(".rpyc", StringComparison.OrdinalIgnoreCase)
-        && !SkippedFolders.Any(f => entry.StartsWith(f + "/", StringComparison.OrdinalIgnoreCase));
+    private static bool IsScript(string entry) => entry.EndsWith(".rpyc", StringComparison.OrdinalIgnoreCase) && !IsSkipped(entry);
 
     /// <summary><c>dir/name.rpyc</c> → <c>dir/name.rpy</c>.</summary>
     private static string Script(string entry) => entry[..^1];
@@ -319,7 +483,7 @@ public sealed class RenPyRecipe : IRecipeTool
     private static string Stem(string script) => script[..^".rpy".Length];
 
     /// <summary>The folder holding <c>renpy/</c> and <c>game/</c> (from the engine marker) and <c>game/</c> relative to the game folder.</summary>
-    private (string Root, string GamePath) FindGameFolder(string gameDir)
+    private (string Root, string GamePath, string ProjectPath) FindGameFolder(string gameDir)
     {
         ArgumentException.ThrowIfNullOrEmpty(gameDir);
         var root = Path.GetFullPath(gameDir);
@@ -338,7 +502,7 @@ public sealed class RenPyRecipe : IRecipeTool
         var projectDir = project.Length == 0 ? root : Path.Combine(root, project);
         var game = FindChild(projectDir, "game") ?? throw new RecipeException($"{root} has no game folder.");
         var gamePath = (project.Length == 0 ? string.Empty : project + "/") + Path.GetFileName(game);
-        return (root, gamePath);
+        return (root, gamePath, project);
     }
 
     private static string? FindChild(string dir, string name)

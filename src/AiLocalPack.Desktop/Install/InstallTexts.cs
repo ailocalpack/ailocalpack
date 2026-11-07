@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
@@ -73,6 +74,11 @@ public static class InstallTexts
                 string.Join(", ", (error.Dependencies ?? []).Select(d => $"{d.Id} {d.Version}"))),
             InstallErrorKind.InvalidStrings => localizer[nameof(Strings.Install_Why_InvalidStrings)],
             InstallErrorKind.Recipe => localizer.Format(nameof(Strings.Install_Why_Recipe), file),
+            InstallErrorKind.Font => localizer.Format(
+                error.Font is FontFetchProblem.Offline or FontFetchProblem.Timeout or FontFetchProblem.HttpError
+                    ? nameof(Strings.Install_Why_FontOffline)
+                    : nameof(Strings.Install_Why_Font),
+                error.FontName ?? string.Empty),
             InstallErrorKind.Transaction when error.Transaction is { } failure => Transaction(failure, localizer),
             _ => localizer[nameof(Strings.Install_Why_Unexpected)],
         };

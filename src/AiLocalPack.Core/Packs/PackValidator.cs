@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Registry;
 
 namespace AiLocalPack.Core.Packs;
@@ -23,7 +24,8 @@ public sealed record PackValidation(string Folder, PackManifest? Manifest, IRead
 /// The checks registry CI runs on a pack folder (<c>games/&lt;game&gt;/&lt;language&gt;/&lt;pack id&gt;/</c>): the
 /// manifest reads, the folder sits where its manifest says, the string table matches its size and hash and reads, and the
 /// folder holds nothing else: no executable, script or archive (by extension and content), no links, no file over
-/// <see cref="MaxFileSize"/>, no more than <see cref="MaxPackSize"/> in all. Never throws for disk state.
+/// <see cref="MaxFileSize"/>, no more than <see cref="MaxPackSize"/> in all; every font it names is on the app's font
+/// whitelist (<see cref="FontWhitelist"/>). Never throws for disk state.
 /// </summary>
 public static class PackValidator
 {
@@ -46,6 +48,7 @@ public static class PackValidator
         var files = CheckFiles(full, problems, cancellationToken);
         var manifest = ReadManifest(full, files, problems);
         CheckLayout(full, manifest, problems);
+        CheckFonts(manifest, problems);
         if (manifest?.Strings is { } strings)
         {
             CheckStrings(full, manifest, strings, files, problems);
@@ -183,6 +186,22 @@ public static class PackValidator
         if (!string.Equals(actual, expected, StringComparison.Ordinal))
         {
             problems.Add(new PackProblem("", "", $"The pack folder must be {expected}/ (game, language and ID from its manifest), not {actual}/."));
+        }
+    }
+
+    /// <summary>Packs reference whitelisted fonts by ID, never ship them.</summary>
+    private static void CheckFonts(PackManifest? manifest, List<PackProblem> problems)
+    {
+        for (var i = 0; i < (manifest?.Fonts.Count ?? 0); i++)
+        {
+            var id = manifest!.Fonts[i];
+            if (FontWhitelist.Bundled.Find(id) is null)
+            {
+                problems.Add(new PackProblem(
+                    RegistryLayout.ManifestFileName,
+                    $"fonts[{i}]",
+                    $"'{id}' is not on the font whitelist ({string.Join(", ", FontWhitelist.Bundled.Fonts.Select(f => f.Id))})."));
+            }
         }
     }
 

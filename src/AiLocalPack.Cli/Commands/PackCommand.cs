@@ -6,6 +6,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -63,7 +64,7 @@ internal static class PackCommand
             }
 
             var hashes = FileHashCache.Load(paths.FileHashes);
-            var compatibility = new PackCompatibilityChecker(hashes, RecipeTools.Builtin).Check(pack, game, cancellationToken);
+            var compatibility = new PackCompatibilityChecker(hashes, RecipeTools.Create(env)).Check(pack, game, cancellationToken);
             hashes.Save();
 
             var output = result.InvocationConfiguration.Output;
@@ -232,6 +233,8 @@ internal static class PackCommand
                 $"{builtFor}; {yours}. The binary patch needs the exact files it was made from, "
                 + $"and {result.ChangedFiles.Count} of {Count(result.TouchedFileCount, "file")} differ.",
             PackCompatibilityReason.RecipeToolUnknown => $"this app has no '{result.RecipeTool?.Tool}' tool; update the app.",
+            PackCompatibilityReason.EngineUnsupported =>
+                $"the toolkit doesn't handle {(EngineKind.TryParse(result.Engine, out var engine) ? engine.DisplayName : result.Engine)} games on this system for now.",
             PackCompatibilityReason.RecipeToolTooNew =>
                 $"the pack needs '{result.RecipeTool?.Tool}' {result.RecipeTool?.Version}, newer than this app has; update the app.",
             _ => result.Reason.ToString(),

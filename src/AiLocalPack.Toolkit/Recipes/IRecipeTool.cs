@@ -71,6 +71,12 @@ public interface IRebuildOutput
 {
     /// <param name="relativePath">Path relative to the game folder, <c>/</c>-separated.</param>
     void Write(string relativePath, ReadOnlySpan<byte> content);
+
+    /// <summary>
+    /// What was written to <paramref name="relativePath"/> so far, or <c>null</c>: a later step (the font swap) edits a
+    /// file the rebuild already changed instead of the game's copy.
+    /// </summary>
+    byte[]? Read(string relativePath);
 }
 
 /// <summary>Writes rebuilt files into a folder laid out like the game folder (the staging folder of an install).</summary>
@@ -80,6 +86,20 @@ public sealed class DirectoryRebuildOutput(string root) : IRebuildOutput
 
     public void Write(string relativePath, ReadOnlySpan<byte> content)
     {
+        var full = FullPath(relativePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+        using var stream = new FileStream(full, FileMode.Create, FileAccess.Write, FileShare.None);
+        stream.Write(content);
+    }
+
+    public byte[]? Read(string relativePath)
+    {
+        var full = FullPath(relativePath);
+        return File.Exists(full) ? File.ReadAllBytes(full) : null;
+    }
+
+    private string FullPath(string relativePath)
+    {
         ArgumentException.ThrowIfNullOrEmpty(relativePath);
         var full = Path.GetFullPath(Path.Combine(Root, relativePath));
         if (!full.StartsWith(Path.TrimEndingDirectorySeparator(Root) + Path.DirectorySeparatorChar, StringComparison.Ordinal))
@@ -87,9 +107,7 @@ public sealed class DirectoryRebuildOutput(string root) : IRebuildOutput
             throw new ArgumentException($"Path escapes the output folder: '{relativePath}'.", nameof(relativePath));
         }
 
-        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
-        using var stream = new FileStream(full, FileMode.Create, FileAccess.Write, FileShare.None);
-        stream.Write(content);
+        return full;
     }
 }
 

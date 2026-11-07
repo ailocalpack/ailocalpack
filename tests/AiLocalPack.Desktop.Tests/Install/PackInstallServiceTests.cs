@@ -4,6 +4,7 @@ using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Install;
@@ -60,6 +61,24 @@ public sealed class PackInstallServiceTests
         // Assert
         (outcome.Succeeded, Directory.GetFileSystemEntries(bed.GameDir, "*", SearchOption.AllDirectories).Order().ToList())
             .Should().BeEquivalentTo((true, before));
+    }
+
+    [Fact]
+    public async Task An_rpgmaker_pack_is_refused_where_the_toolkit_leaves_rpg_maker_alone_and_touches_nothing()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(
+            b => b.RecipePack("lanterns"),
+            services => services.AddSingleton(new RecipeTools(RecipeTools.BuiltinTools(), RecipeTools.DisabledOn(OsKind.MacOS))));
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+        var before = bed.Read(InstallBed.SystemFile);
+
+        // Act
+        var outcome = await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
+
+        // Assert
+        (outcome.Error?.Compatibility?.Reason, bed.Read(InstallBed.SystemFile))
+            .Should().Be(((PackCompatibilityReason?)PackCompatibilityReason.EngineUnsupported, before));
     }
 
     [Fact]
@@ -120,7 +139,7 @@ public sealed class PackInstallServiceTests
     {
         // Arrange
         using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"));
-        var file = Path.Combine(bed.GameDir, "data", "Map001.json");
+        var file = Path.Combine(bed.GameDir, "www", "data", "Map001.json");
         var before = bed.Read(InstallBed.SystemFile);
         File.SetAttributes(file, FileAttributes.ReadOnly);
         var service = bed.Services.GetRequiredService<PackInstallService>();
@@ -188,7 +207,7 @@ public sealed class PackInstallServiceTests
     {
         // Arrange: made for build 900 and its files; the game's file then changes
         using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns", buildId: "900"));
-        File.Delete(Path.Combine(bed.GameDir, "data", "Map001.json"));
+        File.Delete(Path.Combine(bed.GameDir, "www", "data", "Map001.json"));
         var service = bed.Services.GetRequiredService<PackInstallService>();
 
         // Act

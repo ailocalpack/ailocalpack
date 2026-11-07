@@ -48,6 +48,12 @@ public enum PackCompatibilityReason
 
     /// <summary>Incompatible: the recipe needs a newer version of the toolkit tool than this app has.</summary>
     RecipeToolTooNew,
+
+    /// <summary>
+    /// Incompatible: the toolkit has the recipe's tool but doesn't handle games of this engine (variant) for now
+    /// (<see cref="PackCompatibility.Engine"/>; RPG Maker MZ until it can be checked on a real game).
+    /// </summary>
+    EngineUnsupported,
 }
 
 /// <summary>
@@ -66,7 +72,8 @@ public enum PackCompatibilityReason
 /// <param name="ChangedFiles">Touched files whose hash differs from the reference build, ordinal order.</param>
 /// <param name="MissingFiles">Touched files not in the game folder, ordinal order.</param>
 /// <param name="UnreadableFile">The file that couldn't be read (<see cref="PackCompatibilityReason.FileUnreadable"/>).</param>
-/// <param name="RecipeTool">Recipe tool and version (<see cref="PackCompatibilityReason.RecipeToolUnknown"/> / <see cref="PackCompatibilityReason.RecipeToolTooNew"/>).</param>
+/// <param name="RecipeTool">Recipe tool and version (<see cref="PackCompatibilityReason.RecipeToolUnknown"/> / <see cref="PackCompatibilityReason.RecipeToolTooNew"/> / <see cref="PackCompatibilityReason.EngineUnsupported"/>).</param>
+/// <param name="Engine">The game's engine ID (<see cref="PackCompatibilityReason.EngineUnsupported"/>).</param>
 public sealed record PackCompatibility(
     PackCompatibilityVerdict Verdict,
     PackCompatibilityReason Reason,
@@ -77,7 +84,8 @@ public sealed record PackCompatibility(
     IReadOnlyList<string> ChangedFiles,
     IReadOnlyList<string> MissingFiles,
     string? UnreadableFile = null,
-    PackRecipe? RecipeTool = null)
+    PackRecipe? RecipeTool = null,
+    string? Engine = null)
 {
     /// <summary>Compatible or probably compatible.</summary>
     public bool CanInstall => Verdict != PackCompatibilityVerdict.Incompatible;
@@ -93,10 +101,14 @@ public enum RecipeToolSupport
 
     /// <summary>The tool exists in an older major version, or an older minor version than the recipe needs.</summary>
     TooNew,
+
+    /// <summary>The tool exists, but the toolkit doesn't handle games of this engine (variant) for now.</summary>
+    EngineUnsupported,
 }
 
 /// <summary>The toolkit's recipe tools as Core sees them (implemented in Toolkit from task 28).</summary>
 public interface IRecipeTools
 {
-    RecipeToolSupport Check(PackRecipe recipe);
+    /// <param name="engine">The game's engine ID (<c>Game.Engine</c>), or <c>null</c> when not detected (not held against the pack).</param>
+    RecipeToolSupport Check(PackRecipe recipe, string? engine = null);
 }

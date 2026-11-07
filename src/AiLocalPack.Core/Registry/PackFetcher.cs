@@ -85,14 +85,10 @@ public sealed record PackFetchOptions(TimeSpan Timeout, int Attempts = 3, TimeSp
 /// </summary>
 public sealed class PackFetcher
 {
-    private const int BufferSize = 81920;
-
     private readonly PackManifestClient _manifests;
-    private readonly HttpClient _http;
+    private readonly VerifiedDownloader _downloader;
     private readonly PackCache _cache;
-    private readonly TimeProvider _time;
     private readonly ILogger _logger;
-    private readonly PackFetchOptions _options;
 
     public PackFetcher(
         PackManifestClient manifests,
@@ -106,12 +102,11 @@ public sealed class PackFetcher
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(cache);
         _manifests = manifests;
-        _http = http;
         _cache = cache;
-        _time = time ?? TimeProvider.System;
         _logger = logger ?? (ILogger)NullLogger.Instance;
-        _options = options ?? PackFetchOptions.Default;
-        ArgumentOutOfRangeException.ThrowIfLessThan(_options.Attempts, 1, nameof(options));
+        options ??= PackFetchOptions.Default;
+        ArgumentOutOfRangeException.ThrowIfLessThan(options.Attempts, 1, nameof(options));
+        _downloader = new VerifiedDownloader(http, time ?? TimeProvider.System, _logger, options);
     }
 
     /// <summary>
@@ -158,7 +153,7 @@ public sealed class PackFetcher
         }
 
         var entry = new CachedPack(manifest, _cache.EntryFolder(manifest, PackCache.Sha256Hex(manifestBytes)), PackCache.Sha256Hex(manifestBytes));
-        var counter = new Counter(progress, (manifest.Strings?.Size ?? 0) + (manifest.Patch?.Size ?? 0));
+        var counter = new DownloadCounter((manifest.Strings?.Size ?? 0) + (manifest.Patch?.Size ?? 0), progress is null ? null : (done, total) => progress.Report(new PackFetchProgress(done, total)));
         try
         {
             Directory.CreateDirectory(entry.Folder);
@@ -185,7 +180,7 @@ public sealed class PackFetcher
                 return Fail(pack, PackFetchProblem.InvalidManifest, $"The string table address {source} is outside the registry.", counter);
             }
 
-            if (await DownloadAsync(source, entry.StringsFile!, strings.Size, strings.Sha256, counter, cancellationToken).ConfigureAwait(false) is { } failure)
+            if (await _downloader.DownloadAsync(source, entry.StringsFile!, strings.Size, strings.Sha256, counter, cancellationToken).ConfigureAwait(false) is { } failure)
             {
                 return Fail(pack, failure.Problem, failure.Detail, counter);
             }
@@ -204,7 +199,7 @@ public sealed class PackFetcher
                 return Fail(pack, PackFetchProblem.InvalidManifest, $"The patch address {patch.Url} is not https.", counter);
             }
 
-            if (await DownloadAsync(patch.Url, entry.PatchFile!, patch.Size, patch.Sha256, counter, cancellationToken).ConfigureAwait(false) is { } failure)
+            if (await _downloader.DownloadAsync(patch.Url, entry.PatchFile!, patch.Size, patch.Sha256, counter, cancellationToken).ConfigureAwait(false) is { } failure)
             {
                 return Fail(pack, failure.Problem, failure.Detail, counter);
             }
@@ -244,272 +239,6 @@ public sealed class PackFetcher
         }
     }
 
-    /// <summary>Gets <paramref name="source"/> into <paramref name="target"/> verified, or says why not.</summary>
-    private async Task<Failure?> DownloadAsync(Uri source, string target, long size, string sha256, Counter counter, CancellationToken cancellationToken)
-    {
-        if (File.Exists(target) && new FileInfo(target).Length == size)
-        {
-            // Verified by an earlier call that stopped before the manifest was written.
-            counter.Set(target, size);
-            return null;
-        }
-
-        var part = target + PackCache.PartSuffix;
-        try
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-        }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-        {
-            return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-        }
-
-        Failure? failure = null;
-        if (source.IsFile)
-        {
-            failure = CopyLocal(source.LocalPath, part, size);
-            if (failure is null)
-            {
-                counter.Add(target, size);
-            }
-        }
-        else
-        {
-            for (var attempt = 1; attempt <= _options.Attempts; attempt++)
-            {
-                if (attempt > 1)
-                {
-                    var wait = _options.RetryDelay * Math.Pow(2, attempt - 2);
-                    _logger.LogInformation("Download of {Uri}: {Problem} ({Detail}); try {Attempt} of {Attempts} in {Wait}", source, failure!.Value.Problem, failure.Value.Detail, attempt, _options.Attempts, wait);
-                    if (wait > TimeSpan.Zero)
-                    {
-                        await Task.Delay(wait, _time, cancellationToken).ConfigureAwait(false);
-                    }
-                }
-
-                failure = await TryDownloadAsync(source, target, size, counter, cancellationToken).ConfigureAwait(false);
-                if (failure is not { MayPass: true })
-                {
-                    break;
-                }
-            }
-        }
-
-        if (failure is not null)
-        {
-            return failure;
-        }
-
-        return Verify(part, target, size, sha256);
-    }
-
-    private Failure? Verify(string part, string target, long size, string sha256)
-    {
-        try
-        {
-            string actual;
-            long length;
-            using (var stream = File.OpenRead(part))
-            {
-                length = stream.Length;
-                actual = Convert.ToHexStringLower(SHA256.HashData(stream));
-            }
-
-            if (length != size || actual != sha256)
-            {
-                File.Delete(part);
-                return new Failure(PackFetchProblem.HashMismatch, $"{Path.GetFileName(target)}: expected {size} bytes with SHA-256 {sha256}, got {length} bytes with {actual}; deleted.", MayPass: false);
-            }
-
-            File.Move(part, target, overwrite: true);
-            return null;
-        }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-        {
-            return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-        }
-    }
-
-    private static Failure? CopyLocal(string path, string part, long size)
-    {
-        FileStream input;
-        try
-        {
-            input = File.OpenRead(path);
-        }
-        catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
-        {
-            return new Failure(PackFetchProblem.FileMissing, $"There is no file at {path}.", MayPass: false);
-        }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-        {
-            return new Failure(PackFetchProblem.FileMissing, $"Can't read {path}: {e.Message}", MayPass: false);
-        }
-
-        using (input)
-        {
-            if (input.Length != size)
-            {
-                return new Failure(PackFetchProblem.HashMismatch, $"{path}: expected {size} bytes, the file has {input.Length}.", MayPass: false);
-            }
-
-            try
-            {
-                using var output = new FileStream(part, FileMode.Create, FileAccess.Write, FileShare.None);
-                input.CopyTo(output);
-                return null;
-            }
-            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-            {
-                return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-            }
-        }
-    }
-
-    /// <summary>One request: from the start, or the rest of the target's <c>.part</c> file with a range request.</summary>
-    private async Task<Failure?> TryDownloadAsync(Uri source, string target, long size, Counter counter, CancellationToken cancellationToken)
-    {
-        var part = target + PackCache.PartSuffix;
-        long existing;
-        try
-        {
-            existing = File.Exists(part) ? new FileInfo(part).Length : 0;
-            if (existing > size)
-            {
-                File.Delete(part);
-                existing = 0;
-            }
-        }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-        {
-            return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-        }
-
-        counter.Set(target, existing);
-        if (existing == size)
-        {
-            return null;
-        }
-
-        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        timeout.CancelAfter(_options.Timeout);
-        try
-        {
-            using var request = new HttpRequestMessage(HttpMethod.Get, source);
-            if (existing > 0)
-            {
-                request.Headers.Range = new RangeHeaderValue(existing, null);
-            }
-
-            using var response = await _http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, timeout.Token).ConfigureAwait(false);
-            if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)
-            {
-                // The part doesn't fit the file the server has: start over.
-                File.Delete(part);
-                return new Failure(PackFetchProblem.HttpError, "HTTP 416: the partial download doesn't fit; starting over", MayPass: true);
-            }
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var code = (int)response.StatusCode;
-                if (response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
-                {
-                    return new Failure(PackFetchProblem.FileMissing, $"HTTP {code} {response.ReasonPhrase}".TrimEnd(), MayPass: false);
-                }
-
-                var mayPass = code >= 500 || response.StatusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests;
-                return new Failure(PackFetchProblem.HttpError, $"HTTP {code} {response.ReasonPhrase}".TrimEnd(), mayPass);
-            }
-
-            var resumes = existing > 0
-                && response.StatusCode == HttpStatusCode.PartialContent
-                && response.Content.Headers.ContentRange is { From: { } from } && from == existing;
-            if (!resumes && response.StatusCode == HttpStatusCode.PartialContent)
-            {
-                // Another range than asked: start over.
-                TryDelete(part);
-                return new Failure(PackFetchProblem.HttpError, "HTTP 206 with another range than asked; starting over", MayPass: true);
-            }
-
-            if (!resumes && existing > 0)
-            {
-                // A full answer (the server ignored the range): replace the part.
-                existing = 0;
-                counter.Set(target, 0);
-            }
-
-            if (existing + response.Content.Headers.ContentLength > size)
-            {
-                TryDelete(part);
-                return new Failure(PackFetchProblem.HashMismatch, $"The server sends {existing + response.Content.Headers.ContentLength} bytes, the manifest gives {size}.", MayPass: false);
-            }
-
-            FileStream output;
-            try
-            {
-                output = new FileStream(part, resumes ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.None, BufferSize, useAsync: true);
-            }
-            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-            {
-                return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-            }
-
-            await using (output.ConfigureAwait(false))
-            {
-                var stream = await response.Content.ReadAsStreamAsync(timeout.Token).ConfigureAwait(false);
-                await using (stream.ConfigureAwait(false))
-                {
-                    var buffer = new byte[BufferSize];
-                    var written = existing;
-                    while (true)
-                    {
-                        timeout.CancelAfter(_options.Timeout);
-                        var read = await stream.ReadAsync(buffer, timeout.Token).ConfigureAwait(false);
-                        if (read == 0)
-                        {
-                            break;
-                        }
-
-                        if (written + read > size)
-                        {
-                            await output.DisposeAsync().ConfigureAwait(false);
-                            TryDelete(part);
-                            return new Failure(PackFetchProblem.HashMismatch, $"The server sends more than the {size} bytes the manifest gives.", MayPass: false);
-                        }
-
-                        try
-                        {
-                            await output.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
-                        }
-                        catch (IOException e)
-                        {
-                            return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-                        }
-
-                        written += read;
-                        counter.Add(target, read);
-                    }
-
-                    return written == size
-                        ? null
-                        : new Failure(PackFetchProblem.Offline, $"The connection closed after {written} of {size} bytes.", MayPass: true);
-                }
-            }
-        }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
-        {
-            return new Failure(PackFetchProblem.Timeout, $"No data within {_options.Timeout.TotalSeconds:0.#} s", MayPass: true);
-        }
-        catch (Exception e) when (e is HttpRequestException or IOException)
-        {
-            return new Failure(PackFetchProblem.Offline, e.Message, MayPass: true);
-        }
-        catch (UnauthorizedAccessException e)
-        {
-            return new Failure(PackFetchProblem.DiskError, e.Message, MayPass: false);
-        }
-    }
-
     private static PackFetchProblem Map(PackManifestProblem problem) => problem switch
     {
         PackManifestProblem.Offline => PackFetchProblem.Offline,
@@ -527,7 +256,7 @@ public sealed class PackFetcher
         progress?.Report(new PackFetchProgress(total, total));
     }
 
-    private PackFetchResult Fail(RegistryPack pack, PackFetchProblem problem, string? detail, Counter counter)
+    private PackFetchResult Fail(RegistryPack pack, PackFetchProblem problem, string? detail, DownloadCounter counter)
     {
         _logger.LogWarning("Pack {Pack}: {Problem} ({Detail})", Key(pack), problem, detail);
         return new PackFetchResult(null, problem, detail, Downloaded: counter.Downloaded);
@@ -549,34 +278,7 @@ public sealed class PackFetcher
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            // Left as a part: the next try checks its length and hash again.
+            // Left behind: the next fetch checks the file again.
         }
-    }
-
-    private readonly record struct Failure(PackFetchProblem Problem, string Detail, bool MayPass);
-
-    /// <summary>Progress over every file of the pack: bytes in place per file, so a resumed part counts once.</summary>
-    private sealed class Counter(IProgress<PackFetchProgress>? progress, long total)
-    {
-        private readonly Dictionary<string, long> _files = new(StringComparer.Ordinal);
-
-        public long Downloaded { get; private set; }
-
-        /// <summary><paramref name="file"/> now holds <paramref name="bytes"/> (a request starting, a file already there).</summary>
-        public void Set(string file, long bytes)
-        {
-            _files[file] = bytes;
-            Report();
-        }
-
-        /// <summary><paramref name="bytes"/> more received into <paramref name="file"/>.</summary>
-        public void Add(string file, long bytes)
-        {
-            _files[file] = _files.GetValueOrDefault(file) + bytes;
-            Downloaded += bytes;
-            Report();
-        }
-
-        private void Report() => progress?.Report(new PackFetchProgress(_files.Values.Sum(), total));
     }
 }

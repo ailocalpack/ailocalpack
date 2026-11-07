@@ -1720,4 +1720,37 @@
   <data name="Game_Installed_Uninstall" xml:space="preserve">
     <value>Удалить (вернуть оригиналы)</value>
   </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>Шрифты: в шрифтах игры есть все буквы перевода.</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>Шрифты: в «{0}» нет букв перевода (не хватает: {1}; {2}); заменён на {3} (открытый шрифт).</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>Шрифты: в «{0}» нет букв перевода (не хватает: {1}; {2}).</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>В {0} тоже нет части из них (не хватает: {1}; {2}); они могут отображаться квадратиками.</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>Шрифты: {0} не читается; оставлен как есть.</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>Пак называет шрифт, неизвестный этой версии приложения: {0} (пропущен; обновите приложение).</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>В шрифте игры нет букв этого перевода, а открытый шрифт {0}, в котором они есть, подготовить не удалось.</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>В шрифте игры нет букв этого перевода, а открытый шрифт {0}, в котором они есть, не скачался. Проверьте подключение и повторите.</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0} (встроен)</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0} (скачивается при установке)</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>Тулкит приложения пока не работает с играми на {0} на этой системе, поэтому этот пак установить нельзя.</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 using System.Text;
+using AiLocalPack.Toolkit.Fonts;
 
 namespace AiLocalPack.Toolkit.Recipes.RenPy;
 
@@ -11,6 +12,8 @@ namespace AiLocalPack.Toolkit.Recipes.RenPy;
 /// the tool handles: speakers with attributes, <c>with</c>, <c>nointeract</c>, a repeated line (<c>_1</c> suffix), a
 /// <c>voice</c> statement in the block, text tags and interpolation, menus, <c>if</c> branches, a hidden label,
 /// <c>_()</c> texts in Python and a screen, and things to leave alone (other statements, an existing translation).
+/// Fonts: <see cref="TextFont"/> (synthetic, Latin-only: ASCII and Latin-1; inside the archive when archived) and
+/// Ren'Py's own <c>renpy/common/DejaVuSans.ttf</c> (synthetic too, with Latin, Greek and Cyrillic like the real one).
 /// </summary>
 public static class RenPyFixture
 {
@@ -22,6 +25,9 @@ public static class RenPyFixture
         ["rightaway_8cb5deeb"] = "Sure, but what's a \"visual novel?\"",
         ["marry_2ad49007"] = "{b}Good Ending{/b}.",
     };
+
+    /// <summary>The game's text font, as scripts name it (relative to <c>game/</c>).</summary>
+    public const string TextFont = "gui/font/FixtureSans.ttf";
 
     /// <summary>Writes the game into <paramref name="dir"/> (created if missing; files of the same name are replaced).</summary>
     /// <param name="archived">Compiled scripts in <c>game/scripts.rpa</c> instead of loose <c>.rpyc</c> files.</param>
@@ -35,6 +41,7 @@ public static class RenPyFixture
             ["Game.sh"] = Encoding.UTF8.GetBytes("#!/bin/sh\necho 'Ren'Py launcher stub'\n"),
             ["Game.py"] = Encoding.UTF8.GetBytes("# Ren'Py launcher script (stub)\n"),
             ["renpy/__init__.py"] = Encoding.UTF8.GetBytes("# Ren'Py engine (stub)\n"),
+            ["renpy/common/DejaVuSans.ttf"] = FontWriter.TrueType("DejaVu Sans", [.. FontWriter.Ascii, .. Enumerable.Range(0xA0, 0x60), .. Enumerable.Range(0x370, 0x90), .. Enumerable.Range(0x400, 0x100)]),
             ["game/script.rpy"] = Encoding.UTF8.GetBytes(ScriptSource),
             ["game/screens.rpy"] = Encoding.UTF8.GetBytes(ScreensSource),
         };
@@ -42,6 +49,7 @@ public static class RenPyFixture
         {
             ["script.rpyc"] = Compile(ScriptStatements()),
             ["screens.rpyc"] = Compile(ScreensStatements()),
+            [TextFont] = FontWriter.TrueType("Fixture Sans", [.. FontWriter.Ascii, .. Enumerable.Range(0xA0, 0x60)]),
         };
         if (archived)
         {

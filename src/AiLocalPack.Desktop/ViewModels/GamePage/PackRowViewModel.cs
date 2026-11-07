@@ -1,4 +1,5 @@
 using System.Globalization;
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Localization;
@@ -227,8 +228,15 @@ public sealed partial class PackRowViewModel : ObservableObject
 
     public string UpdatedText => Date(Pack.Updated);
 
-    /// <summary>The whitelisted fonts the pack swaps in (IDs until task 31 names them).</summary>
-    public string FontsText => Manifest is { Fonts.Count: > 0 } manifest ? string.Join(", ", manifest.Fonts) : string.Empty;
+    /// <summary>
+    /// The whitelisted fonts the pack swaps in when the game's font lacks its letters: "Noto Sans (bundled)",
+    /// "Noto Sans JP (downloaded when installing)"; an ID this app's whitelist lacks as is.
+    /// </summary>
+    public string FontsText => Manifest is { Fonts.Count: > 0 } manifest
+        ? string.Join(", ", manifest.Fonts.Select(id => FontWhitelist.Bundled.Find(id) is { } font
+            ? _localizer.Format(font.IsBundled ? nameof(Strings.Packs_Font_Bundled) : nameof(Strings.Packs_Font_Download), font.Name)
+            : id))
+        : string.Empty;
 
     public bool HasFonts => FontsText.Length > 0;
 

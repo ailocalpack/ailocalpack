@@ -1,10 +1,15 @@
+using System.Text;
+using AiLocalPack.Toolkit.Fonts;
+
 namespace AiLocalPack.Toolkit.Recipes.RpgMaker;
 
 /// <summary>
 /// A tiny synthetic RPG Maker MV / MZ game (no real game files; the executable is a text stub) for tests and manual
 /// checks (<c>ailocalpack dev fixture rpgmaker</c>). Every kind of text the <c>rpgmaker</c> tool reads is in it, with
 /// escape codes, non-ASCII text, and things it must leave alone (plugin command, script, note, comment, editor names).
-/// Data files are written the way the editors write them: one line per database entry.
+/// Data files are written the way the editors write them: one line per database entry. The text font is a synthetic
+/// Latin-only font (<see cref="FontWriter"/>: ASCII and Latin-1, family <see cref="FontFamily"/>): MZ names it in
+/// <c>System.json</c> (<c>advanced.mainFontFilename</c>, WOFF as MZ ships its fonts), MV in <c>fonts/gamefont.css</c>.
 /// </summary>
 public static class RpgMakerFixture
 {
@@ -15,12 +20,25 @@ public static class RpgMakerFixture
     {
         ArgumentException.ThrowIfNullOrEmpty(dir);
         var project = mv ? "www/" : string.Empty;
+        var latin = FontWriter.TrueType(FontFamily, [.. FontWriter.Ascii, .. Enumerable.Range(0xA0, 0x60)]);
+        var binary = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+        if (mv)
+        {
+            binary["www/fonts/fixture-sans.ttf"] = latin;
+            binary["www/fonts/gamefont.css"] = Encoding.UTF8.GetBytes(MvFontCss);
+        }
+        else
+        {
+            binary[$"fonts/{MainFont}"] = FontWriter.Woff(latin);
+            binary["fonts/fixture-numbers.woff"] = FontWriter.Woff(FontWriter.TrueType("Fixture Numbers", Enumerable.Range('0', 10)));
+        }
+
         var files = new Dictionary<string, string>
         {
             ["Game.exe"] = "MZ stub: not a real executable",
             [mv ? "www/js/rpg_core.js" : "js/rmmz_core.js"] = "// RPG Maker core (stub)\n",
             [$"{project}js/plugins.js"] = "var $plugins =\n[\n{\"name\":\"TextPop\",\"status\":true,\"parameters\":{\"Greeting\":\"Hello from a plugin\"}}\n];\n",
-            [$"{project}data/System.json"] = System,
+            [$"{project}data/System.json"] = mv ? System : System.Replace("\"airship\":", MzAdvanced, StringComparison.Ordinal),
             [$"{project}data/Actors.json"] = Actors,
             [$"{project}data/Classes.json"] = "[\nnull,\n{\"id\":1,\"name\":\"Swordsman\",\"note\":\"\"}\n]",
             [$"{project}data/Items.json"] = Items,
@@ -42,8 +60,33 @@ public static class RpgMakerFixture
             File.WriteAllText(full, content);
         }
 
-        return [.. files.Keys.Order(StringComparer.Ordinal)];
+        foreach (var (path, content) in binary)
+        {
+            var full = Path.Combine(dir, path);
+            Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+            File.WriteAllBytes(full, content);
+        }
+
+        return [.. files.Keys.Concat(binary.Keys).Order(StringComparer.Ordinal)];
     }
+
+    /// <summary>Family name of the fixture's text font (Latin-only).</summary>
+    public const string FontFamily = "Fixture Sans";
+
+    /// <summary>MZ: the text font's file in <c>fonts/</c>, as <c>System.json</c> names it.</summary>
+    public const string MainFont = "fixture-sans.woff";
+
+    private const string MzAdvanced = """
+        "advanced":{"gameId":12345678,"screenWidth":816,"screenHeight":624,"uiAreaWidth":816,"uiAreaHeight":624,"numberFontFilename":"fixture-numbers.woff","fallbackFonts":"Verdana, sans-serif","fontSize":26,"mainFontFilename":"fixture-sans.woff","windowOpacity":192},"airship":
+        """;
+
+    private const string MvFontCss = """
+        @font-face {
+            font-family: GameFont;
+            src: url("fixture-sans.ttf");
+        }
+
+        """;
 
     private const string System = """
         {"airship":{"bgm":{"name":"Ship3","pan":0,"pitch":100,"volume":90},"characterIndex":3},"armorTypes":["","General Armor","Magic Armor"],"currencyUnit":"G","elements":["","Physical","Fire"],"equipTypes":["","Weapon","Shield","Head"],"gameTitle":"Fixture Quest","locale":"en_US","skillTypes":["","Magic","Special"],"terms":{"basic":["Level","Lv","HP","HP"],"commands":["Fight","Escape","Attack","Guard","Item","Skill",null,"New Game",""],"params":["Max HP","Max MP"],"messages":{"actionFailure":"There was no effect on %1!","obtainGold":"%1\\G found!","possession":"Possession"}},"versionId":12345678,"weaponTypes":["","Dagger","Sword"]}

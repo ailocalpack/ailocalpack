@@ -1,4 +1,5 @@
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Library;
@@ -9,6 +10,7 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.ViewModels.GamePage;
+using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -19,7 +21,8 @@ namespace AiLocalPack.Desktop.Install;
 /// Installs, re-applies and uninstalls packs (design §4a; task 29), one operation at a time: download into the cache
 /// (<see cref="PackFetcher"/>), uninstall the game's other pack, compatibility check against the player's files
 /// (<see cref="PackCompatibilityChecker"/>), rebuild of the touched files from the strings into a staging folder (the
-/// recipe tool, reading the player's own files), then the transaction (<see cref="PackInstaller"/>: backup, write,
+/// recipe tool, reading the player's own files; then the font swap when the game's font lacks the translation's letters,
+/// <see cref="FontFixer"/>, downloading a whitelisted font that isn't bundled), then the transaction (<see cref="PackInstaller"/>: backup, write,
 /// verify, rollback on failure). Only the app's own code runs; nothing from the pack executes. <see cref="Current"/>
 /// and <see cref="Changed"/> give the step for the progress block, the list row and the library card. Never throws:
 /// every failure is an <see cref="InstallOutcome.Error"/> with a log in the UI language.
@@ -31,6 +34,7 @@ public sealed class PackInstallService
     private readonly PackCache _cache;
     private readonly PackCompatibilityChecker _checker;
     private readonly RecipeTools _recipes;
+    private readonly FontFixer _fonts;
     private readonly PackInstaller _installer;
     private readonly InstalledPackStore _store;
     private readonly AntiCheatPolicy _policy;
@@ -48,6 +52,7 @@ public sealed class PackInstallService
         PackCache cache,
         PackCompatibilityChecker checker,
         RecipeTools recipes,
+        FontFixer fonts,
         PackInstaller installer,
         InstalledPackStore store,
         AntiCheatPolicy policy,
@@ -62,6 +67,7 @@ public sealed class PackInstallService
         _cache = cache;
         _checker = checker;
         _recipes = recipes;
+        _fonts = fonts;
         _installer = installer;
         _store = store;
         _policy = policy;
@@ -185,7 +191,7 @@ public sealed class PackInstallService
         }
 
         run.LogFetch(fetch, pack.Revision);
-        if (Unsupported(run, cached.Manifest) is { } unsupported)
+        if (Unsupported(run, cached.Manifest, game) is { } unsupported)
         {
             return unsupported;
         }
@@ -211,7 +217,7 @@ public sealed class PackInstallService
             return run.Fail(new InstallError(InstallErrorKind.Incompatible, Compatibility: compatibility));
         }
 
-        return Apply(run, game, cached, reapply: false, index, cancellationToken);
+        return await ApplyAsync(run, game, cached, reapply: false, index, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<InstallOutcome> RunReapply(Run run, Game game, InstalledPack? record, CancellationToken cancellationToken)
@@ -253,12 +259,12 @@ public sealed class PackInstallService
             run.Log(nameof(Strings.Install_Log_FromCache), record.Revision);
         }
 
-        if (Unsupported(run, cached.Manifest) is { } unsupported)
+        if (Unsupported(run, cached.Manifest, game) is { } unsupported)
         {
             return unsupported;
         }
 
-        return Apply(run, game, cached, reapply: true, index, cancellationToken);
+        return await ApplyAsync(run, game, cached, reapply: true, index, cancellationToken).ConfigureAwait(false);
     }
 
     private Task<InstallOutcome> RunUninstall(Run run, Game game, CancellationToken cancellationToken)
@@ -279,8 +285,8 @@ public sealed class PackInstallService
         return Task.FromResult(run.Done(uninstall: result));
     }
 
-    /// <summary>Rebuilds the touched files on a copy, then installs (or re-applies) them as one transaction.</summary>
-    private InstallOutcome Apply(Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, CancellationToken cancellationToken)
+    /// <summary>Rebuilds the touched files on a copy (fonts swapped when needed), then installs (or re-applies) them as one transaction.</summary>
+    private async Task<InstallOutcome> ApplyAsync(Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, CancellationToken cancellationToken)
     {
         var manifest = cached.Manifest;
         run.Step(InstallStep.Rebuild);
@@ -295,9 +301,18 @@ public sealed class PackInstallService
         try
         {
             RebuildResult rebuilt;
+            FontFixResult fonts;
+            var output = new DirectoryRebuildOutput(staging);
             try
             {
-                rebuilt = tool.Rebuild(game.InstallPath, table.Language, table.Strings, new DirectoryRebuildOutput(staging), cancellationToken);
+                rebuilt = tool.Rebuild(game.InstallPath, table.Language, table.Strings, output, cancellationToken);
+                run.Log(nameof(Strings.Install_Log_Rebuilt), rebuilt.ChangedFiles.Count, rebuilt.Applied);
+                if (rebuilt.UnknownKeys.Count > 0)
+                {
+                    run.Log(nameof(Strings.Install_Log_UnknownKeys), rebuilt.UnknownKeys.Count);
+                }
+
+                fonts = await _fonts.ApplyAsync(tool, game.InstallPath, table.Language, table.Strings, manifest.Fonts, output, run.FontProgress(), cancellationToken).ConfigureAwait(false);
             }
             catch (RecipeException e)
             {
@@ -305,16 +320,18 @@ public sealed class PackInstallService
                 return run.Fail(new InstallError(InstallErrorKind.Recipe, e.File, e.Message));
             }
 
-            run.Log(nameof(Strings.Install_Log_Rebuilt), rebuilt.ChangedFiles.Count, rebuilt.Applied);
-            if (rebuilt.UnknownKeys.Count > 0)
+            run.LogFonts(fonts);
+            if (fonts.Failure is { } fontFailure)
             {
-                run.Log(nameof(Strings.Install_Log_UnknownKeys), rebuilt.UnknownKeys.Count);
+                return run.Fail(new InstallError(InstallErrorKind.Font, Detail: fontFailure.Detail, Font: fontFailure.Problem, FontName: fonts.FailedFont?.Name));
             }
 
-            var files = rebuilt.ChangedFiles
+            var files = rebuilt.ChangedFiles.Union(fonts.Files.Files, StringComparer.Ordinal)
+                .Order(StringComparer.Ordinal)
                 .Select(path => new InstallFile(path, Path.Combine(staging, path.Replace('/', Path.DirectorySeparatorChar))))
                 .ToList();
-            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = rebuilt.GeneratedFiles };
+            var generated = rebuilt.GeneratedFiles.Union(fonts.Files.GeneratedFiles, StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
+            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = generated };
             run.Step(InstallStep.BackUp);
             var result = reapply
                 ? _installer.Reapply(request, index, run.TransactionProgress(), cancellationToken)
@@ -352,7 +369,7 @@ public sealed class PackInstallService
     }
 
     /// <summary>Patch packs (task 34) and packs with dependencies (task 32) aren't installed yet; a recipe the toolkit lacks never.</summary>
-    private InstallOutcome? Unsupported(Run run, PackManifest manifest)
+    private InstallOutcome? Unsupported(Run run, PackManifest manifest, Game game)
     {
         if (manifest.Patch is not null || manifest.Recipe is null)
         {
@@ -364,20 +381,27 @@ public sealed class PackInstallService
             return run.Fail(new InstallError(InstallErrorKind.DependenciesUnsupported, Dependencies: manifest.Dependencies));
         }
 
-        if (_recipes.Check(manifest.Recipe) != RecipeToolSupport.Supported || _recipes.Find(manifest.Recipe.Tool) is null)
+        var support = _recipes.Check(manifest.Recipe, game.Engine);
+        if (support != RecipeToolSupport.Supported || _recipes.Find(manifest.Recipe.Tool) is null)
         {
             return run.Fail(new InstallError(
                 InstallErrorKind.Incompatible,
                 Compatibility: new PackCompatibility(
                     PackCompatibilityVerdict.Incompatible,
-                    _recipes.Check(manifest.Recipe) == RecipeToolSupport.TooNew ? PackCompatibilityReason.RecipeToolTooNew : PackCompatibilityReason.RecipeToolUnknown,
+                    support switch
+                    {
+                        RecipeToolSupport.TooNew => PackCompatibilityReason.RecipeToolTooNew,
+                        RecipeToolSupport.EngineUnsupported => PackCompatibilityReason.EngineUnsupported,
+                        _ => PackCompatibilityReason.RecipeToolUnknown,
+                    },
                     [],
                     null,
                     null,
                     0,
                     [],
                     [],
-                    RecipeTool: manifest.Recipe)));
+                    RecipeTool: manifest.Recipe,
+                    Engine: game.Engine)));
         }
 
         return null;
@@ -452,6 +476,58 @@ public sealed class PackInstallService
                 service.Report(_operation);
             }
         });
+
+        /// <summary>A whitelisted font downloaded during the rebuild step.</summary>
+        public IProgress<PackFetchProgress> FontProgress() => new Callback<PackFetchProgress>(p =>
+        {
+            if (p.Total > 0 && _operation.Step == InstallStep.Rebuild)
+            {
+                _operation = _operation with { Fraction = (double)p.Done / p.Total };
+                service.Report(_operation);
+            }
+        });
+
+        /// <summary>What the font check found and did, a line each.</summary>
+        public void LogFonts(FontFixResult fonts)
+        {
+            foreach (var id in fonts.UnknownFonts)
+            {
+                Log(nameof(Strings.Install_Log_FontUnknown), id);
+            }
+
+            if (fonts.Check is not { } check)
+            {
+                return;
+            }
+
+            foreach (var font in check.Fonts.Where(f => f.Problem is not null))
+            {
+                Log(nameof(Strings.Install_Log_FontUnreadable), font.Font.Name);
+            }
+
+            if (!check.NeedsSwap)
+            {
+                Log(nameof(Strings.Install_Log_FontsOk));
+                return;
+            }
+
+            foreach (var font in check.ToSwap)
+            {
+                if (fonts.Replacement is { } replacement)
+                {
+                    Log(nameof(Strings.Install_Log_FontSwapped), font.DisplayName, font.MissingLetters.Count, FontFixer.Sample(font.MissingLetters), replacement.Name);
+                }
+                else
+                {
+                    Log(nameof(Strings.Install_Log_FontMissing), font.DisplayName, font.MissingLetters.Count, FontFixer.Sample(font.MissingLetters));
+                }
+            }
+
+            if (fonts.Replacement is { } chosen && fonts.Uncovered.Count > 0)
+            {
+                Log(nameof(Strings.Install_Log_FontUncovered), chosen.Name, fonts.Uncovered.Count, FontFixer.Sample(fonts.Uncovered));
+            }
+        }
 
         /// <summary>The transaction's own stages, mapped onto the steps (a rollback keeps the step it failed in).</summary>
         public IProgress<InstallProgress> TransactionProgress() => new Callback<InstallProgress>(p =>

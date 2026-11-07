@@ -13,7 +13,8 @@ internal static class CliRunner
 
     /// <summary>
     /// Runs the CLI with extra environment variables (e.g. <c>AILOCALPACK_STEAM_ROOT</c>). Without <c>AILOCALPACK_HOME</c>
-    /// the run gets a throwaway app home, so the CLI never touches the real app folders.
+    /// the run gets a throwaway app home, so the CLI never touches the real app folders. Every toolkit engine is on
+    /// (<c>AILOCALPACK_TOOLKIT_ALL_ENGINES=1</c>, so RPG Maker runs on a Mac too) unless the test sets that variable.
     /// </summary>
     public static async Task<CliResult> RunAsync(IReadOnlyDictionary<string, string> environment, params string[] args)
     {
@@ -36,6 +37,8 @@ internal static class CliRunner
         {
             start.Environment["AILOCALPACK_HOME"] = home.Path;
         }
+
+        start.Environment["AILOCALPACK_TOOLKIT_ALL_ENGINES"] = "1";
 
         foreach (var (name, value) in environment)
         {

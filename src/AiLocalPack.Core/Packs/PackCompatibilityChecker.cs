@@ -48,7 +48,8 @@ public sealed class PackCompatibilityChecker
             IReadOnlyList<string>? changed = null,
             IReadOnlyList<string>? missing = null,
             string? unreadable = null,
-            PackRecipe? recipe = null) =>
+            PackRecipe? recipe = null,
+            string? engine = null) =>
             new(
                 verdict,
                 reason,
@@ -59,7 +60,8 @@ public sealed class PackCompatibilityChecker
                 changed ?? [],
                 missing ?? [],
                 unreadable,
-                recipe);
+                recipe,
+                engine);
 
         if (pack.Game != game.Id)
         {
@@ -71,12 +73,15 @@ public sealed class PackCompatibilityChecker
             return Result(PackCompatibilityVerdict.Incompatible, PackCompatibilityReason.GameNotAvailable);
         }
 
-        if (pack.Recipe is { } recipe && _recipes?.Check(recipe) is { } support and not RecipeToolSupport.Supported)
+        if (pack.Recipe is { } recipe && _recipes?.Check(recipe, game.Engine) is { } support and not RecipeToolSupport.Supported)
         {
-            var reason = support == RecipeToolSupport.UnknownTool
-                ? PackCompatibilityReason.RecipeToolUnknown
-                : PackCompatibilityReason.RecipeToolTooNew;
-            return Result(PackCompatibilityVerdict.Incompatible, reason, recipe: recipe);
+            var reason = support switch
+            {
+                RecipeToolSupport.UnknownTool => PackCompatibilityReason.RecipeToolUnknown,
+                RecipeToolSupport.EngineUnsupported => PackCompatibilityReason.EngineUnsupported,
+                _ => PackCompatibilityReason.RecipeToolTooNew,
+            };
+            return Result(PackCompatibilityVerdict.Incompatible, reason, recipe: recipe, engine: game.Engine);
         }
 
         var root = Path.GetFullPath(game.InstallPath);

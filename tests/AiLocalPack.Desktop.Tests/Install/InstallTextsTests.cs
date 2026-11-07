@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Install;
@@ -30,6 +31,16 @@ public sealed class InstallTextsTests
 
         // Assert
         reason.Should().Be("Couldn't download the pack: no connection to the registry.");
+    }
+
+    [Fact]
+    public void A_font_that_couldnt_be_downloaded_is_named_with_the_way_out()
+    {
+        // Act
+        var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.Font, Font: FontFetchProblem.Offline, FontName: "Noto Sans JP"), En);
+
+        // Assert
+        reason.Should().Be("The game's font lacks letters of this translation, and the open font Noto Sans JP that has them couldn't be downloaded. Check the connection and retry.");
     }
 
     [Fact]

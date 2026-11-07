@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
@@ -7,6 +8,7 @@ using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Services;
+using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -47,6 +49,9 @@ internal static class TestServices
             {
                 SteamLocator.RootVariable => steamRoot,
                 RegistryLocation.IndexUrlVariable => registry ?? home.Combine("no-registry"),
+
+                // Every toolkit engine on, whatever the OS the tests run on (RPG Maker is off on macOS).
+                RecipeTools.AllEnginesVariable => "1",
                 _ => null,
             });
         var provider = Composition.BuildServices(NullLoggerFactory.Instance, AppPaths.UnderHome(home.Path), env, services =>
@@ -62,6 +67,13 @@ internal static class TestServices
             services.AddSingleton<FakeProcesses>();
             services.AddSingleton<IProcessList>(sp => sp.GetRequiredService<FakeProcesses>());
             services.AddSingleton<IProcessStarter>(sp => sp.GetRequiredService<FakeProcesses>());
+
+            // Whitelisted fonts that aren't bundled come from a fake server (no route = the test fails loudly).
+            services.AddSingleton<FontDownloads>();
+            services.AddSingleton(sp => new FontStore(
+                sp.GetRequiredService<AppPaths>().Fonts,
+                sp.GetRequiredService<FontDownloads>().Http.CreateClient(),
+                options: new PackFetchOptions(TimeSpan.FromSeconds(5), Attempts: 1)));
             configure?.Invoke(services);
         });
         provider.GetRequiredService<TempDir>();
@@ -72,6 +84,14 @@ internal static class TestServices
 
         return provider;
     }
+}
+
+/// <summary>The fake server whitelisted fonts are downloaded from in tests.</summary>
+internal sealed class FontDownloads : IDisposable
+{
+    public FakeHttpHandler Http { get; } = new();
+
+    public void Dispose() => Http.Dispose();
 }
 
 /// <summary>Runs UI updates right away on the calling thread.</summary>

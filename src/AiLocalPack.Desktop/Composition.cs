@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
@@ -26,6 +27,7 @@ using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Folders;
+using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -63,7 +65,7 @@ internal static class Composition
             sp.GetRequiredService<ILogger<RegistryIndexClient>>()));
         services.AddSingleton<PackIndex>();
         services.AddSingleton(sp => new PackManifestClient(sp.GetRequiredService<HttpClient>(), logger: sp.GetRequiredService<ILogger<PackManifestClient>>()));
-        services.AddSingleton(RecipeTools.Builtin);
+        services.AddSingleton(RecipeTools.Create(env));
         services.AddSingleton<IRecipeTools>(sp => sp.GetRequiredService<RecipeTools>());
         services.AddSingleton(sp => new PackCompatibilityChecker(sp.GetRequiredService<FileHashCache>(), sp.GetRequiredService<IRecipeTools>()));
         services.AddSingleton<PackManifests>();
@@ -74,6 +76,13 @@ internal static class Composition
             sp.GetRequiredService<PackCache>(),
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<PackFetcher>>()));
+        services.AddSingleton(FontWhitelist.Bundled);
+        services.AddSingleton(sp => new FontStore(
+            sp.GetRequiredService<AppPaths>(),
+            PackFetcher.CreateHttpClient(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0")),
+            sp.GetRequiredService<TimeProvider>(),
+            sp.GetRequiredService<ILogger<FontStore>>()));
+        services.AddSingleton(sp => new FontFixer(sp.GetRequiredService<FontWhitelist>(), sp.GetRequiredService<FontStore>(), sp.GetRequiredService<ILogger<FontFixer>>()));
         services.AddSingleton(sp => new InstalledPackStore(
             sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<InstalledPackStore>>(), sp.GetRequiredService<TimeProvider>()));
         services.AddSingleton(sp => new PackInstaller(

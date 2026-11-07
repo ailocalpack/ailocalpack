@@ -86,6 +86,19 @@ public sealed class PackCompatibilityTextsTests
     }
 
     [Fact]
+    public void An_engine_the_toolkit_leaves_alone_is_named()
+    {
+        // Arrange
+        var result = Result(PackCompatibilityVerdict.Incompatible, PackCompatibilityReason.EngineUnsupported, recipe: new PackRecipe("rpgmaker", "1.0.0")) with { Engine = "rpgmaker:mz" };
+
+        // Act
+        var text = PackCompatibilityTexts.Explain(result, L);
+
+        // Assert
+        text.Should().Be("This app's toolkit doesn't handle RPG Maker MZ games on this system for now, so it can't install this pack.");
+    }
+
+    [Fact]
     public void Server_error_reads_as_no_answer()
     {
         // Arrange

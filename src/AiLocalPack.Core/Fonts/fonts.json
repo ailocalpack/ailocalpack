@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "fonts": [
+    {
+      "id": "noto-sans",
+      "name": "Noto Sans",
+      "license": "OFL-1.1",
+      "default": true,
+      "files": {
+        "regular": {
+          "file": "NotoSans-Regular.ttf",
+          "size": 621572,
+          "sha256": "478c558ea716033cd60c03438f628dfa75694dcf6b5f6d505a2f05fd2b4f3823"
+        },
+        "bold": {
+          "file": "NotoSans-Bold.ttf",
+          "size": 631484,
+          "sha256": "1df075a380fc7cb898acf64c1f7b3b4dd780de3caa860178bf929de35817a913"
+        }
+      }
+    },
+    {
+      "id": "noto-sans-arabic",
+      "name": "Noto Sans Arabic",
+      "license": "OFL-1.1",
+      "languages": [
+        "ar"
+      ],
+      "files": {
+        "regular": {
+          "file": "NotoSansArabic-Regular.ttf",
+          "size": 234892,
+          "sha256": "bdff3e5659d67e67def05b33f749683b9376ae819d65d3dd62ac4640b3aaef48"
+        },
+        "bold": {
+          "file": "NotoSansArabic-Bold.ttf",
+          "size": 261460,
+          "sha256": "4e5462d2e8be880317b9f49b5b2da109ddb6a3563d91cc604b67f3535832a555"
+        }
+      }
+    },
+    {
+      "id": "noto-sans-thai",
+      "name": "Noto Sans Thai",
+      "license": "OFL-1.1",
+      "languages": [
+        "th"
+      ],
+      "files": {
+        "regular": {
+          "file": "NotoSansThai-Regular.ttf",
+          "size": 37780,
+          "sha256": "61cf814eec46b294d6ea4401ac295d0cecd5207bd2331dcc5a15e7301d30ee44"
+        },
+        "bold": {
+          "file": "NotoSansThai-Bold.ttf",
+          "size": 37824,
+          "sha256": "2ac6c6e8a478e23b15f76e4894af1fa2210f8f350e4e6e54aad530bec03efbfb"
+        }
+      }
+    },
+    {
+      "id": "noto-sans-jp",
+      "name": "Noto Sans JP",
+      "license": "OFL-1.1",
+      "languages": [
+        "ja"
+      ],
+      "files": {
+        "regular": {
+          "file": "NotoSansJP-Regular.otf",
+          "size": 4533028,
+          "sha256": "dff723ba59d57d136764a04b9b2d03205544f7cd785a711442d6d2d085ac5073",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/JP/NotoSansJP-Regular.otf"
+        },
+        "bold": {
+          "file": "NotoSansJP-Bold.otf",
+          "size": 4656448,
+          "sha256": "1b0edfb500b73a4fa8a4fcaae1bbbd403994e08e73e3e0da37e70d3853f42c5f",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/JP/NotoSansJP-Bold.otf"
+        }
+      }
+    },
+    {
+      "id": "noto-sans-kr",
+      "name": "Noto Sans KR",
+      "license": "OFL-1.1",
+      "languages": [
+        "ko"
+      ],
+      "files": {
+        "regular": {
+          "file": "NotoSansKR-Regular.otf",
+          "size": 4644748,
+          "sha256": "69975a0ac8472717870aefeab0a4d52739308d90856b9955313b2ad5e0148d68",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/KR/NotoSansKR-Regular.otf"
+        },
+        "bold": {
+          "file": "NotoSansKR-Bold.otf",
+          "size": 4816044,
+          "sha256": "5a6ceb287ed2fc6cfc6213144ebea68cbd94b20fc9eb873d8486493bf02d9bda",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/KR/NotoSansKR-Bold.otf"
+        }
+      }
+    },
+    {
+      "id": "noto-sans-sc",
+      "name": "Noto Sans SC",
+      "license": "OFL-1.1",
+      "languages": [
+        "zh-Hans"
+      ],
+      "files": {
+        "regular": {
+          "file": "NotoSansSC-Regular.otf",
+          "size": 8331336,
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/SC/NotoSansSC-Regular.otf"
+        },
+        "bold": {
+          "file": "NotoSansSC-Bold.otf",
+          "size": 8543168,
+          "sha256": "c6cb5a93abaa9edc8ee7463b7ebb7f42d618d40e6ed2f7a5371c97b0b64767c0",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/SC/NotoSansSC-Bold.otf"
+        }
+      }
+    },
+    {
+      "id": "noto-sans-tc",
+      "name": "Noto Sans TC",
+      "license": "OFL-1.1",
+      "languages": [
+        "zh-Hant"
+      ],
+      "files": {
+        "regular": {
+          "file": "NotoSansTC-Regular.otf",
+          "size": 5683368,
+          "sha256": "5bab0cb3c1cf89dde07c4a95a4054b195afbcfe784d69d75c340780712237537",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/TC/NotoSansTC-Regular.otf"
+        },
+        "bold": {
+          "file": "NotoSansTC-Bold.otf",
+          "size": 5839972,
+          "sha256": "55420b259eb119bf5f2a0aadba10cf9d736c12d64ab93e78546d69ef5f43558b",
+          "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/TC/NotoSansTC-Bold.otf"
+        }
+      }
+    }
+  ]
+}
