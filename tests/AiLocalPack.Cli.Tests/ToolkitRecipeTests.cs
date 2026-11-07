@@ -3,7 +3,7 @@ using AiLocalPack.Core.Packs;
 
 namespace AiLocalPack.Cli.Tests;
 
-/// <summary><c>toolkit extract</c>, <c>toolkit rebuild</c> and <c>dev fixture rpgmaker</c> / <c>renpy</c> (tasks 28, 30).</summary>
+/// <summary><c>toolkit extract</c>, <c>toolkit rebuild</c> and <c>dev fixture rpgmaker</c> / <c>renpy</c> / <c>godot</c> (tasks 28, 30, 35).</summary>
 public sealed class ToolkitRecipeTests : IDisposable
 {
     private readonly TempDir _dir = new();
@@ -321,5 +321,45 @@ public sealed class ToolkitRecipeTests : IDisposable
         // Assert
         (result.ExitCode, File.ReadAllText(_dir.Combine("out/game/tl/ailocalpack_ru/script.rpy")).Contains("    s \"Привет! Как занятия?\"\n", StringComparison.Ordinal))
             .Should().Be((0, true));
+    }
+
+    [Fact]
+    public async Task Dev_fixture_godot_writes_a_game_whose_strings_extract()
+    {
+        // Arrange
+        await CliRunner.RunAsync("dev", "fixture", "godot", Game, "--major", "4", "--embedded");
+        var target = _dir.Combine("strings.json");
+
+        // Act
+        var result = await CliRunner.RunAsync("toolkit", "extract", Game, "--out", target);
+
+        // Assert
+        (result.StdOut.Trim(), StringTableSerializer.Read(File.ReadAllBytes(target)).Value!.Strings["tr:MENU_PLAY"]).Should().Be((
+            $"Extracted 8 strings from 1 files of Godot 4 (godot 1.0.0) into {target}.",
+            "Play"));
+    }
+
+    [Fact]
+    public async Task Dev_fixture_godot_refuses_another_major_version()
+    {
+        // Act
+        var result = await CliRunner.RunAsync("dev", "fixture", "godot", Game, "--major", "2");
+
+        // Assert
+        (result.ExitCode, result.StdErr.Trim()).Should().Be((1, "--major must be 3 or 4, not 2."));
+    }
+
+    [Fact]
+    public async Task Rebuild_of_a_Godot_game_writes_the_whole_pack()
+    {
+        // Arrange
+        _dir.GodotGame("game").File("strings.json", "{\"schemaVersion\": 1, \"language\": \"ru\", \"strings\": {\"tr:MENU_PLAY\": \"Играть\"}}");
+
+        // Act
+        var result = await CliRunner.RunAsync("toolkit", "rebuild", Game, "--strings", _dir.Combine("strings.json"), "--out", _dir.Combine("out"));
+
+        // Assert
+        (result.ExitCode, result.StdOut.Contains("Rebuilt 1 files (1 strings translated)", StringComparison.Ordinal), File.Exists(_dir.Combine("out/Game.pck")))
+            .Should().Be((0, true, true));
     }
 }

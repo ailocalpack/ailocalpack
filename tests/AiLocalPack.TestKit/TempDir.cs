@@ -74,7 +74,7 @@ public sealed class TempDir : IDisposable
         return this;
     }
 
-    /// <summary>Copies the folder <paramref name="source"/> (absolute) with everything inside to <paramref name="relativePath"/>.</summary>
+    /// <summary>Copies the folder <paramref name="source"/> (absolute) with everything inside to <paramref name="relativePath"/> (files of the same name are replaced).</summary>
     public TempDir CopyFolder(string source, string relativePath)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -83,7 +83,7 @@ public sealed class TempDir : IDisposable
         {
             var to = System.IO.Path.Combine(target, System.IO.Path.GetRelativePath(source, file));
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(to)!);
-            System.IO.File.Copy(file, to);
+            System.IO.File.Copy(file, to, overwrite: true);
         }
 
         Directory.CreateDirectory(target);
@@ -131,9 +131,16 @@ public sealed class TempDir : IDisposable
     {
         foreach (var entry in new DirectoryInfo(folder).EnumerateFileSystemInfos("*", SearchOption.AllDirectories))
         {
-            if (entry.Attributes.HasFlag(FileAttributes.ReadOnly))
+            // A file a background task deletes meanwhile reads as -1 (every flag set): skip it.
+            try
             {
-                entry.Attributes &= ~FileAttributes.ReadOnly;
+                if (entry.Exists && (int)entry.Attributes != -1 && entry.Attributes.HasFlag(FileAttributes.ReadOnly))
+                {
+                    entry.Attributes &= ~FileAttributes.ReadOnly;
+                }
+            }
+            catch (Exception e) when (e is IOException or ArgumentException)
+            {
             }
         }
     }

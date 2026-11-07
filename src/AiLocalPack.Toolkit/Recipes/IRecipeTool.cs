@@ -73,6 +73,12 @@ public interface IRebuildOutput
     void Write(string relativePath, ReadOnlySpan<byte> content);
 
     /// <summary>
+    /// A stream to write <paramref name="relativePath"/> into, for a file too large to hold in memory (a Godot pack is
+    /// written whole); disposing it finishes the file.
+    /// </summary>
+    Stream Create(string relativePath);
+
+    /// <summary>
     /// What was written to <paramref name="relativePath"/> so far, or <c>null</c>: a later step (the font swap) edits a
     /// file the rebuild already changed instead of the game's copy.
     /// </summary>
@@ -90,6 +96,13 @@ public sealed class DirectoryRebuildOutput(string root) : IRebuildOutput
         Directory.CreateDirectory(Path.GetDirectoryName(full)!);
         using var stream = new FileStream(full, FileMode.Create, FileAccess.Write, FileShare.None);
         stream.Write(content);
+    }
+
+    public Stream Create(string relativePath)
+    {
+        var full = FullPath(relativePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+        return new FileStream(full, FileMode.Create, FileAccess.Write, FileShare.None, 1 << 16);
     }
 
     public byte[]? Read(string relativePath)

@@ -97,6 +97,13 @@ public static class EngineFixture
         return dir;
     }
 
+    /// <summary>The synthetic Godot game of <c>GodotFixture</c> (<c>Game.exe</c> + <c>Game.pck</c>, or the pack embedded).</summary>
+    public static TempDir GodotGame(this TempDir dir, string root = "", uint major = 3, bool embedded = false, bool translated = true)
+    {
+        AiLocalPack.Toolkit.Recipes.Godot.GodotFixture.Create(root.Length == 0 ? dir.Path : dir.Combine(root), major, embedded, translated);
+        return dir;
+    }
+
     public static TempDir RpgMakerMac(this TempDir dir, string root = "", bool mz = true) =>
         dir.File(P(root, "Game.app/Contents/MacOS/nwjs"), "macho")
             .File(P(root, $"Game.app/Contents/Resources/app.nw/js/{(mz ? "rmmz_core.js" : "rpg_core.js")}"), "//");

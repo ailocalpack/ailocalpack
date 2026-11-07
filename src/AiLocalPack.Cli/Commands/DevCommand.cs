@@ -11,6 +11,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Dependencies;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Recipes.Godot;
 using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -21,7 +22,7 @@ namespace AiLocalPack.Cli.Commands;
 /// Developer commands for checking the install transaction by hand (task 27): <c>dev apply-files &lt;game&gt; &lt;dir&gt;</c>
 /// installs the files of a folder (laid out like the game folder) as a pack, <c>dev uninstall &lt;game&gt;</c> undoes it.
 /// <c>--dependency id@version</c> installs whitelisted dependencies with them (task 32). Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
-/// <c>dev fixture rpgmaker &lt;dir&gt;</c> and <c>dev fixture renpy &lt;dir&gt;</c> write synthetic games (tasks 28, 30).
+/// <c>dev fixture rpgmaker &lt;dir&gt;</c>, <c>dev fixture renpy &lt;dir&gt;</c> and <c>dev fixture godot &lt;dir&gt;</c> write synthetic games (tasks 28, 30, 35).
 /// </summary>
 internal static class DevCommand
 {
@@ -254,7 +255,33 @@ internal static class DevCommand
                 $"Wrote a synthetic Ren'Py game{(result.GetValue(archived) ? " (scripts in game/scripts.rpa)" : string.Empty)} into {dir} ({files.Count} files).");
             return 0;
         });
-        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy };
+        var godotDir = new Argument<string>("dir") { Description = "Folder to create the game in (missing or empty)." };
+        var major = new Option<int>("--major") { Description = "Godot major version: 3 (pack format 1) or 4 (pack format 2).", DefaultValueFactory = _ => 3 };
+        var embedded = new Option<bool>("--embedded") { Description = "Pack embedded at the end of Game.exe instead of Game.pck." };
+        var untranslated = new Option<bool>("--untranslated") { Description = "No translation resources: the scenes hold the texts." };
+        var godot = new Command("godot", "Write a tiny synthetic Godot game (a pack, no engine) with every kind of text the toolkit reads.") { godotDir, major, embedded, untranslated };
+        godot.SetAction(result =>
+        {
+            var dir = Path.GetFullPath(result.GetValue(godotDir)!);
+            if (File.Exists(dir) || (Directory.Exists(dir) && Directory.EnumerateFileSystemEntries(dir).Any()))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"{dir} already exists and isn't an empty folder.");
+                return 1;
+            }
+
+            if (result.GetValue(major) is not (3 or 4) and var version)
+            {
+                result.InvocationConfiguration.Error.WriteLine($"--major must be 3 or 4, not {version}.");
+                return 1;
+            }
+
+            var files = GodotFixture.Create(dir, (uint)result.GetValue(major), result.GetValue(embedded), !result.GetValue(untranslated));
+            result.InvocationConfiguration.Output.WriteLine(
+                $"Wrote a synthetic Godot {result.GetValue(major)} game{(result.GetValue(embedded) ? " (pack embedded in Game.exe)" : string.Empty)}"
+                + $"{(result.GetValue(untranslated) ? " without translations" : string.Empty)} into {dir} ({files.Count} files).");
+            return 0;
+        });
+        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot };
     }
 
     private static Command BuildUninstall(OsEnvironment env)
