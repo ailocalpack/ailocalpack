@@ -20,6 +20,38 @@ public sealed record InstallRequest(Game Game, string Language, string PackId, i
     /// in the game folder before the install are recorded and deleted on uninstall.
     /// </summary>
     public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+
+    /// <summary>
+    /// Whitelisted executables the pack needs (task 32), installed in the same transaction. One already installed for
+    /// the game in the same version is shared (its files aren't written again, so they may be left out; the pack joins
+    /// its users); re-apply writes the files given again.
+    /// </summary>
+    public IReadOnlyList<InstallDependency> Dependencies { get; init; } = [];
+}
+
+/// <summary>A whitelisted dependency to install with a pack: its unpacked files, laid out as in the game folder.</summary>
+/// <param name="Id">The whitelist ID (<c>bepinex</c>).</param>
+/// <param name="Files">Its files (paths unique, none also written by the pack); empty only for one installed already in the version.</param>
+public sealed record InstallDependency(string Id, string Version, IReadOnlyList<InstallFile> Files)
+{
+    /// <summary>
+    /// What it makes in the game folder when the game runs (a folder ends with <c>/</c>, <c>*</c> / <c>?</c> only in a
+    /// file's last part); those not there before are deleted on uninstall.
+    /// </summary>
+    public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+}
+
+/// <summary>The files a pack or a dependency put into a game folder: what uninstall needs to undo it.</summary>
+public interface IInstalledFiles
+{
+    /// <summary>The backup folder holding the originals (<c>&lt;data&gt;/backups/&lt;game folder&gt;/&lt;name&gt;</c>), shared by what one transaction installed.</summary>
+    string Backup { get; }
+
+    IReadOnlyList<InstalledFile> Files { get; }
+
+    IReadOnlyList<string> AddedFolders { get; }
+
+    IReadOnlyList<string> GeneratedFiles { get; }
 }
 
 /// <summary>A game file the installed pack touched.</summary>
@@ -41,11 +73,35 @@ public sealed record InstalledPack(
     string InstallPath,
     string Backup,
     IReadOnlyList<InstalledFile> Files,
-    IReadOnlyList<string> AddedFolders)
+    IReadOnlyList<string> AddedFolders) : IInstalledFiles
 {
     /// <summary>Files the game makes from the pack's files (relative, <c>/</c>-separated), deleted on uninstall when present.</summary>
     public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
 }
+
+/// <summary>
+/// A whitelisted dependency installed into a game (task 32), shared by the packs in <see cref="UsedBy"/>: uninstalling
+/// a pack removes it only when no other pack uses it. Stored next to the packs in <c>installed-packs.json</c> and
+/// saved with them in one write.
+/// </summary>
+/// <param name="UsedBy">IDs of the game's packs that need it; empty only between the two halves of a pack replacement.</param>
+public sealed record InstalledDependency(
+    GameId Game,
+    string Id,
+    string Version,
+    IReadOnlyList<string> UsedBy,
+    DateTimeOffset InstalledAt,
+    string InstallPath,
+    string Backup,
+    IReadOnlyList<InstalledFile> Files,
+    IReadOnlyList<string> AddedFolders) : IInstalledFiles
+{
+    /// <summary>What it makes when the game runs (see <see cref="InstallDependency.GeneratedFiles"/>), not there before the install.</summary>
+    public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+}
+
+/// <summary>A dependency (ID and version) a pack replacement keeps for the next pack.</summary>
+public sealed record DependencyKey(string Id, string Version);
 
 /// <summary>Why an install, re-apply or uninstall failed, as the player is told (the UI and CLI word it).</summary>
 public enum InstallProblem
@@ -86,6 +142,12 @@ public enum InstallProblem
     /// <summary>The backup of an original file is missing or damaged, so it can't be restored.</summary>
     BackupDamaged,
 
+    /// <summary>
+    /// The dependency is installed for the game in another version (used by another pack), or a dependency and the pack
+    /// write the same file (<see cref="InstallFailure.File"/>).
+    /// </summary>
+    DependencyConflict,
+
     /// <summary>Any other read or write error (its message is in <see cref="InstallFailure.Detail"/>).</summary>
     IoError,
 }
@@ -102,12 +164,18 @@ public sealed record InstallFailure(InstallProblem Problem, string? File = null,
 /// <summary>An install or re-apply: the record written, or why nothing was installed.</summary>
 public sealed record InstallResult(InstalledPack? Installed, InstallFailure? Failure)
 {
+    /// <summary>The game's dependency records the pack uses after the install.</summary>
+    public IReadOnlyList<InstalledDependency> Dependencies { get; init; } = [];
+
+    /// <summary>IDs of the dependencies that were installed already and are now shared (nothing written for them).</summary>
+    public IReadOnlyList<string> SharedDependencies { get; init; } = [];
+
     public bool Succeeded => Installed is not null;
 
     public static InstallResult Fail(InstallFailure failure) => new(null, failure);
 }
 
-/// <summary>An uninstall.</summary>
+/// <summary>An uninstall (of a pack, or of dependencies no pack uses any more).</summary>
 /// <param name="Restored">Original files put back.</param>
 /// <param name="Removed">Files the pack added, deleted.</param>
 /// <param name="Kept">
@@ -121,7 +189,13 @@ public sealed record UninstallResult(
     IReadOnlyList<string> Kept,
     InstallFailure? Failure)
 {
-    public bool Succeeded => Uninstalled is not null;
+    public bool Succeeded => Failure is null;
+
+    /// <summary>Dependencies removed with it: no other pack uses them.</summary>
+    public IReadOnlyList<InstalledDependency> RemovedDependencies { get; init; } = [];
+
+    /// <summary>Dependencies left installed: another pack uses them, or the next pack of a replacement will.</summary>
+    public IReadOnlyList<InstalledDependency> KeptDependencies { get; init; } = [];
 
     public static UninstallResult Fail(InstallFailure failure) => new(null, [], [], [], failure);
 }

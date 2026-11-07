@@ -119,7 +119,7 @@ public sealed class InstallFlow
         }
 
         var installed = _store.Find(game.Id);
-        var risks = InstallRisks.For(pack, manifest, compatibility, installed, _service.TitleOf(game.Id, installed));
+        var risks = InstallRisks.For(pack, manifest, compatibility, installed, _service.TitleOf(game.Id, installed), _packIndex.Current?.Index?.Dependencies);
         if (risks.Count == 0)
         {
             await RunInstallAsync(game, pack);

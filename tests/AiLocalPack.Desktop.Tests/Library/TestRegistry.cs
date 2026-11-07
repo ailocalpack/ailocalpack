@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
@@ -55,9 +56,10 @@ internal sealed class TestRegistry : IDisposable
         string buildId,
         IReadOnlyDictionary<string, string> files,
         int revisions = 1,
-        IReadOnlyList<string>? fonts = null)
+        IReadOnlyList<string>? fonts = null,
+        IReadOnlyList<PackDependency>? dependencies = null)
     {
-        WriteFile($"games/steam-{appId}/{language}/{id}/manifest.json", PackManifestSerializer.Write(ManifestModel(appId, language, id, buildId, files, revisions, fonts)));
+        WriteFile($"games/steam-{appId}/{language}/{id}/manifest.json", PackManifestSerializer.Write(ManifestModel(appId, language, id, buildId, files, revisions, fonts, dependencies)));
         return this;
     }
 
@@ -69,7 +71,8 @@ internal sealed class TestRegistry : IDisposable
         string buildId,
         IReadOnlyDictionary<string, string> files,
         int revisions = 1,
-        IReadOnlyList<string>? fonts = null)
+        IReadOnlyList<string>? fonts = null,
+        IReadOnlyList<PackDependency>? dependencies = null)
     {
         var date = new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
         return new PackManifest(
@@ -85,7 +88,7 @@ internal sealed class TestRegistry : IDisposable
             new PackRecipe("rpgmaker", "1.0.0"),
             new PackStringsFile(PackStringsFile.DefaultPath, new string('0', 64), 10),
             null,
-            [],
+            dependencies ?? [],
             fonts ?? [],
             new PackCoverage(10, 10),
             date,
@@ -113,6 +116,9 @@ internal sealed class TestRegistry : IDisposable
         return this;
     }
 
+    /// <summary>The dependency whitelist published with the index.</summary>
+    public DependencyWhitelist Dependencies { get; set; } = DependencyWhitelist.Empty;
+
     public string Json() => RegistryIndexSerializer.Write(new RegistryIndex(
         new DateTimeOffset(2026, 11, 4, 12, 0, 0, TimeSpan.Zero),
         _games.ToDictionary(
@@ -121,7 +127,10 @@ internal sealed class TestRegistry : IDisposable
                 g.Key,
                 g.Value.OptOut,
                 g.Value.AntiCheatAllowed,
-                g.Value.Packs.GroupBy(p => p.Language).ToDictionary(l => l.Key, l => (IReadOnlyList<RegistryPack>)[.. l])))));
+                g.Value.Packs.GroupBy(p => p.Language).ToDictionary(l => l.Key, l => (IReadOnlyList<RegistryPack>)[.. l]))))
+    {
+        Dependencies = Dependencies,
+    });
 
     public TestRegistry Write()
     {

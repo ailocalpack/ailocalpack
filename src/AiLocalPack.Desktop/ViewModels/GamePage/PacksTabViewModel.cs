@@ -382,7 +382,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
     }
 
     private PackRowContext Context(IReadOnlyList<RegistryPack> packs) =>
-        new(IsStale, _status.Installed, InstalledTitle(packs), _busy, _installingPackId);
+        new(IsStale, _status.Installed, InstalledTitle(packs), _busy, _installingPackId, _packIndex.Current?.Index?.Dependencies);
 
     private string? InstalledTitle(IReadOnlyList<RegistryPack> packs) => _status.Installed is { } installed
         ? packs.FirstOrDefault(p => p.Id == installed.PackId)?.Title ?? installed.PackId

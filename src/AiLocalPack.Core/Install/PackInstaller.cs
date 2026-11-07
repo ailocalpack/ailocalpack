@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
@@ -92,8 +93,12 @@ public sealed class PackInstaller
     public InstallResult Reapply(InstallRequest request, RegistryIndex? index, IProgress<InstallProgress>? progress = null, CancellationToken cancellationToken = default) =>
         RunInstall(request, index, reapply: true, progress, cancellationToken);
 
-    /// <summary>Restores the originals, deletes the files the pack added and the backup, forgets the record. Allowed for blocked games.</summary>
-    public UninstallResult Uninstall(Game game, IProgress<InstallProgress>? progress = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Restores the originals, deletes the files the pack added and the backup, forgets the record. Dependencies no other
+    /// pack uses go too, except those in <paramref name="keep"/> (a replacement whose next pack needs them: they stay,
+    /// unused, until it is installed). Allowed for blocked games.
+    /// </summary>
+    public UninstallResult Uninstall(Game game, IProgress<InstallProgress>? progress = null, CancellationToken cancellationToken = default, IReadOnlyCollection<DependencyKey>? keep = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         using var gate = TryLock();
@@ -117,31 +122,105 @@ public sealed class PackInstaller
             return UninstallResult.Fail(refused);
         }
 
+        return RunUninstall(game, record, removesPack: true, keep ?? [], progress, cancellationToken);
+    }
+
+    /// <summary>
+    /// Removes the game's dependencies that no installed pack uses (left by a replacement whose next pack failed), except
+    /// those in <paramref name="keep"/>. Nothing to remove → success with nothing done.
+    /// </summary>
+    public UninstallResult RemoveUnusedDependencies(Game game, IReadOnlyCollection<DependencyKey>? keep = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        using var gate = TryLock();
+        if (gate is null)
+        {
+            return UninstallResult.Fail(new InstallFailure(InstallProblem.Busy));
+        }
+
+        if (RecoverLocked(cancellationToken) is { Outcome: RecoveryOutcome.Failed } stuck)
+        {
+            return UninstallResult.Fail(new InstallFailure(InstallProblem.InterruptedInstall, stuck.Failure?.File, stuck.Failure?.Detail));
+        }
+
+        var record = _store.Find(game.Id);
+        var (removed, _) = SplitDependencies(game.Id, record, removesPack: false, keep ?? []);
+        if (removed.Count == 0)
+        {
+            return new UninstallResult(null, [], [], [], null) { KeptDependencies = _store.DependenciesOf(game.Id) };
+        }
+
+        if (CheckGame(game) is { } refused)
+        {
+            return UninstallResult.Fail(refused);
+        }
+
+        return RunUninstall(game, record, removesPack: false, keep ?? [], null, cancellationToken);
+    }
+
+    private UninstallResult RunUninstall(Game game, InstalledPack? record, bool removesPack, IReadOnlyCollection<DependencyKey> keep, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
+    {
         var root = game.InstallPath;
+        var (removed, kept) = SplitDependencies(game.Id, record, removesPack, keep);
+        IReadOnlyList<IInstalledFiles> parts = removesPack ? [record!, .. removed] : [.. removed];
         try
         {
-            foreach (var file in record.Files)
+            foreach (var file in parts.SelectMany(p => p.Files))
             {
                 Preflight(file.Path, InstallPaths.Resolve(root, file.Path));
             }
 
-            WriteJournal(new InstallJournalFile(1, OperationUninstall, PhaseApply, game.Id.ToString(), root, record.Backup, null, null, [], []));
-            var (restored, removed, kept) = RestoreOriginals(record, root, progress, cancellationToken);
-            FinishUninstall(record);
+            WriteJournal(new InstallJournalFile(
+                1, OperationUninstall, PhaseApply, game.Id.ToString(), root, parts[0].Backup, null, null, [], [],
+                RemovesPack: removesPack, KeepDependencies: [.. keep.Select(KeyText)]));
+            var (restored, deleted, changed) = RestoreOriginals(game.Id, parts, root, progress, cancellationToken);
+            FinishUninstall(game.Id, removesPack ? null : record, kept);
             _logger.LogInformation(
-                "Uninstalled {Pack} rev {Revision} from {Game}: {Restored} restored, {Removed} removed, {Kept} kept (changed since)",
-                record.PackId, record.Revision, game.Id, restored.Count, removed.Count, kept.Count);
-            return new UninstallResult(record, restored, removed, kept, null);
+                "Uninstalled {Pack} from {Game}: {Restored} restored, {Removed} removed, {Kept} kept (changed since); dependencies removed: {Dependencies}",
+                removesPack ? $"{record!.PackId} rev {record.Revision}" : "unused dependencies", game.Id, restored.Count, deleted.Count, changed.Count,
+                string.Join(", ", removed.Select(d => $"{d.Id} {d.Version}")));
+            return new UninstallResult(removesPack ? record : null, restored, deleted, changed, null) { RemovedDependencies = removed, KeptDependencies = kept };
         }
         catch (Exception e) when (IsTransactionError(e) && RollBackOnFailure)
         {
-            // Restoring is idempotent: the record stays, so retrying the uninstall finishes what is left.
+            // Restoring is idempotent: the records stay, so retrying the uninstall finishes what is left.
             TryDeleteJournal();
             var failure = Describe(e, filesRestored: false);
-            _logger.LogError(e, "Uninstalling {Pack} from {Game} failed at {File}: {Problem}", record.PackId, game.Id, failure.File, failure.Problem);
+            _logger.LogError(e, "Uninstalling from {Game} failed at {File}: {Problem}", game.Id, failure.File, failure.Problem);
             return UninstallResult.Fail(failure);
         }
     }
+
+    /// <summary>
+    /// The game's dependencies that go with an uninstall (no installed pack uses them, not kept) and the records that
+    /// stay (users updated). With <paramref name="removesPack"/>, the pack leaves every list of users; otherwise only
+    /// dependencies that no installed pack uses go.
+    /// </summary>
+    private (List<InstalledDependency> Removed, List<InstalledDependency> Kept) SplitDependencies(GameId game, InstalledPack? pack, bool removesPack, IReadOnlyCollection<DependencyKey> keep)
+    {
+        // Users are the game's installed packs (one per game): none once its pack goes.
+        string?[] installed = removesPack ? [] : [pack?.PackId];
+        List<InstalledDependency> removed = [], kept = [];
+        foreach (var dependency in _store.DependenciesOf(game))
+        {
+            var users = dependency.UsedBy.Where(u => installed.Contains(u)).ToList();
+            if (users.Count == 0 && !keep.Contains(new DependencyKey(dependency.Id, dependency.Version)))
+            {
+                removed.Add(dependency);
+            }
+            else
+            {
+                kept.Add(dependency with { UsedBy = users });
+            }
+        }
+
+        return (removed, kept);
+    }
+
+    private static string KeyText(DependencyKey key) => $"{key.Id}@{key.Version}";
+
+    private static DependencyKey? ParseKey(string? text) =>
+        text?.Split('@') is [{ Length: > 0 } id, { Length: > 0 } version] ? new DependencyKey(id, version) : null;
 
     /// <summary>
     /// Finishes a transaction a crash left behind (start-up, and before every transaction): an install is rolled back,
@@ -186,10 +265,16 @@ public sealed class PackInstaller
             return InstallResult.Fail(refused);
         }
 
+        var (parts, shared, conflict) = PlanParts(request, old, reapply);
+        if (conflict is not null)
+        {
+            return InstallResult.Fail(conflict);
+        }
+
         InstallJournalFile? journal = null;
         try
         {
-            var plan = PlanInstall(request, old, progress, cancellationToken);
+            var plan = PlanInstall(request, parts, shared, progress, cancellationToken);
             foreach (var entry in plan.Entries.Where(e => e.Write))
             {
                 Preflight(entry.Path, entry.Full);
@@ -203,13 +288,15 @@ public sealed class PackInstaller
             WriteJournal(journal);
             Apply(plan, progress, cancellationToken);
             Verify(plan, progress, cancellationToken);
-            _store.Put(plan.Record);
+            _store.Commit(game.Id, plan.Record, plan.Dependencies);
             AfterCommit?.Invoke();
             FinishInstall(journal);
             _logger.LogInformation(
-                "Installed {Pack} rev {Revision} ({Language}) into {Game}: {Written} files written, backup {Backup}",
-                request.PackId, request.Revision, request.Language, game.Id, plan.Entries.Count(e => e.Write), plan.Record.Backup);
-            return new InstallResult(plan.Record, null);
+                "Installed {Pack} rev {Revision} ({Language}) into {Game}: {Written} files written, backup {Backup}; dependencies {Dependencies}",
+                request.PackId, request.Revision, request.Language, game.Id, plan.Entries.Count(e => e.Write), plan.Record.Backup,
+                string.Join(", ", request.Dependencies.Select(d => $"{d.Id} {d.Version}{(shared.Contains(d.Id) ? " (shared)" : string.Empty)}")));
+            var used = plan.Dependencies.Where(d => d.UsedBy.Contains(request.PackId, StringComparer.Ordinal)).ToList();
+            return new InstallResult(plan.Record, null) { Dependencies = used, SharedDependencies = [.. shared] };
         }
         catch (Exception e) when (IsTransactionError(e) && RollBackOnFailure)
         {
@@ -223,6 +310,62 @@ public sealed class PackInstaller
 
             return InstallResult.Fail(failure);
         }
+    }
+
+    /// <summary>
+    /// What the transaction writes, dependencies first and the pack last: a dependency installed in the same version is
+    /// shared (nothing written; re-apply writes it again), one in another version is a conflict, as is a file written by
+    /// two of them.
+    /// </summary>
+    private (List<Part> Parts, HashSet<string> Shared, InstallFailure? Conflict) PlanParts(InstallRequest request, InstalledPack? old, bool reapply)
+    {
+        var installed = _store.DependenciesOf(request.Game.Id);
+        var parts = new List<Part>();
+        var shared = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var dependency in request.Dependencies)
+        {
+            var existing = installed.FirstOrDefault(d => d.Id == dependency.Id);
+            if (existing is not null && existing.Version != dependency.Version)
+            {
+                return (parts, shared, new InstallFailure(InstallProblem.DependencyConflict,
+                    Detail: $"{existing.Id} {existing.Version} is installed for the game; this pack needs {dependency.Version}."));
+            }
+
+            if (existing is not null && !reapply)
+            {
+                shared.Add(dependency.Id);
+                continue;
+            }
+
+            if (dependency.Files.Count == 0)
+            {
+                // Only one already installed in the version can be named without its files (shared).
+                throw new ArgumentException($"The dependency '{dependency.Id}' has no files and isn't installed for the game.", nameof(request));
+            }
+
+            parts.Add(new Part(dependency.Id, dependency.Version, dependency.Files, dependency.GeneratedFiles, existing, existing));
+        }
+
+        parts.Add(new Part(null, null, request.Files, request.GeneratedFiles, old, null));
+
+        // A file is owned by one part: the pack's files and every dependency's (shared ones as installed).
+        var owners = new Dictionary<string, string>(PathNames.Comparer);
+        var sources = parts.Select(p => (Name: p.DependencyId ?? request.PackId, Paths: p.Files.Select(f => f.Path)))
+            .Concat(installed.Where(d => shared.Contains(d.Id)).Select(d => (Name: d.Id, Paths: d.Files.Select(f => f.Path))));
+        foreach (var (name, paths) in sources)
+        {
+            foreach (var path in paths)
+            {
+                if (owners.TryGetValue(path, out var other) && other != name)
+                {
+                    return (parts, shared, new InstallFailure(InstallProblem.DependencyConflict, path, $"{path} is written by both {other} and {name}."));
+                }
+
+                owners[path] = name;
+            }
+        }
+
+        return (parts, shared, null);
     }
 
     private static void Validate(InstallRequest request)
@@ -245,17 +388,38 @@ public sealed class PackInstaller
             }
         }
 
-        var seen = new HashSet<string>(PathNames.Comparer);
-        foreach (var file in request.Files)
+        CheckFiles(request.Files);
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var dependency in request.Dependencies)
         {
-            if (!InstallPaths.IsValid(file.Path))
+            ArgumentException.ThrowIfNullOrWhiteSpace(dependency.Id);
+            ArgumentException.ThrowIfNullOrWhiteSpace(dependency.Version);
+            if (!ids.Add(dependency.Id))
             {
-                throw new ArgumentException($"'{file.Path}' is not a relative '/'-separated path.", nameof(request));
+                throw new ArgumentException($"The dependency '{dependency.Id}' is listed twice.", nameof(request));
             }
 
-            if (!seen.Add(file.Path))
+            CheckFiles(dependency.Files);
+            if (dependency.GeneratedFiles.FirstOrDefault(g => !DependencyWhitelist.IsGeneratedPath(g)) is { } bad)
             {
-                throw new ArgumentException($"'{file.Path}' is listed twice.", nameof(request));
+                throw new ArgumentException($"'{bad}' is not a generated path.", nameof(request));
+            }
+        }
+
+        static void CheckFiles(IReadOnlyList<InstallFile> files)
+        {
+            var seen = new HashSet<string>(PathNames.Comparer);
+            foreach (var file in files)
+            {
+                if (!InstallPaths.IsValid(file.Path))
+                {
+                    throw new ArgumentException($"'{file.Path}' is not a relative '/'-separated path.", nameof(request));
+                }
+
+                if (!seen.Add(file.Path))
+                {
+                    throw new ArgumentException($"'{file.Path}' is listed twice.", nameof(request));
+                }
             }
         }
     }
@@ -284,72 +448,100 @@ public sealed class PackInstaller
         return null;
     }
 
-    private InstallPlan PlanInstall(InstallRequest request, InstalledPack? old, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
+    private InstallPlan PlanInstall(InstallRequest request, List<Part> parts, HashSet<string> shared, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
         var root = request.Game.InstallPath;
         var transaction = NewTransactionName();
-        var oldBackup = old is null ? null : BackupFolder(request.Game.Id, old.Backup);
-        var oldFiles = (old?.Files ?? []).ToDictionary(f => f.Path, PathNames.Comparer);
         var entries = new List<PlanEntry>();
+        var total = parts.Sum(p => p.Files.Count);
         var done = 0;
-        foreach (var file in request.Files)
+        for (var index = 0; index < parts.Count; index++)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            Report(progress, InstallStage.Checking, done++, request.Files.Count);
-            var full = InstallPaths.Resolve(root, file.Path);
-            var (installed, size) = Guard(file.Path, file.Source, () =>
+            var part = parts[index];
+            var oldBackup = part.Old is null ? null : BackupFolder(request.Game.Id, part.Old.Backup);
+            var oldFiles = (part.Old?.Files ?? []).ToDictionary(f => f.Path, PathNames.Comparer);
+            foreach (var file in part.Files)
             {
-                using var source = new FileStream(file.Source, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
-                return (InstallPaths.Hash(source, cancellationToken), source.Length);
-            });
-            if (Directory.Exists(full))
-            {
-                throw new InstallFileException(file.Path, full, InstallProblem.IoError, new IOException($"{full} is a folder."));
+                cancellationToken.ThrowIfCancellationRequested();
+                Report(progress, InstallStage.Checking, done++, total);
+                var full = InstallPaths.Resolve(root, file.Path);
+                var (installed, size) = Guard(file.Path, file.Source, () =>
+                {
+                    using var source = new FileStream(file.Source, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
+                    return (InstallPaths.Hash(source, cancellationToken), source.Length);
+                });
+                if (Directory.Exists(full))
+                {
+                    throw new InstallFileException(file.Path, full, InstallProblem.IoError, new IOException($"{full} is a folder."));
+                }
+
+                var current = Guard(file.Path, full, () => InstallPaths.HashOrNull(full, cancellationToken));
+                PlanEntry entry;
+                if (oldFiles.Remove(file.Path, out var ours) && current == ours.InstalledSha256)
+                {
+                    // Still the pack's file: its original is in the old backup; a rollback needs a copy of what is there now.
+                    entry = new PlanEntry(index, file.Path, full, file.Source, current != installed, current, current == installed ? null : CopyBefore,
+                        ours.OriginalSha256, ours.OriginalSha256 is null ? null : InstallPaths.Resolve(Path.Combine(oldBackup!, FilesFolder), file.Path), installed, size);
+                }
+                else
+                {
+                    // The game's own file (or none): it is the original.
+                    entry = new PlanEntry(index, file.Path, full, file.Source, current != installed, current, current is null ? null : CopyBackup,
+                        current, current is null ? null : full, installed, size);
+                }
+
+                entries.Add(entry);
             }
 
-            var current = Guard(file.Path, full, () => InstallPaths.HashOrNull(full, cancellationToken));
-            PlanEntry entry;
-            if (oldFiles.Remove(file.Path, out var ours) && current == ours.InstalledSha256)
+            // Files of the old record this request doesn't write: carried into the new record (their originals copied over).
+            foreach (var carried in oldFiles.Values)
             {
-                // Still the pack's file: its original is in the old backup; a rollback needs a copy of what is there now.
-                entry = new PlanEntry(file.Path, full, file.Source, current != installed, current, current == installed ? null : CopyBefore,
-                    ours.OriginalSha256, ours.OriginalSha256 is null ? null : InstallPaths.Resolve(Path.Combine(oldBackup!, FilesFolder), file.Path), installed, size);
+                entries.Add(new PlanEntry(index, carried.Path, InstallPaths.Resolve(root, carried.Path), null, false, null, null, carried.OriginalSha256,
+                    carried.OriginalSha256 is null ? null : InstallPaths.Resolve(Path.Combine(oldBackup!, FilesFolder), carried.Path), carried.InstalledSha256, 0));
+            }
+        }
+
+        Report(progress, InstallStage.Checking, done, total);
+
+        var seen = new HashSet<string>(PathNames.Comparer);
+        var created = parts.Select((_, index) => CreatedFolders(root, entries.Where(e => e.Part == index && e.Write).Select(e => e.Path), seen)).ToList();
+        InstalledPack? record = null;
+        var replaced = new Dictionary<string, InstalledDependency>(StringComparer.Ordinal);
+        var now = _time.GetUtcNow();
+        for (var index = 0; index < parts.Count; index++)
+        {
+            var part = parts[index];
+            var files = entries.Where(e => e.Part == index).Select(e => new InstalledFile(e.Path, e.Original, e.Installed)).ToList();
+            var folders = (part.Old?.AddedFolders ?? []).Union(created[index], PathNames.Comparer).ToList();
+
+            // A generated file already there belongs to the game (or to what is being re-applied, which recorded it).
+            var generated = (part.Old?.GeneratedFiles ?? []).Union(part.Generated.Where(g => !GeneratedExists(root, g)), PathNames.Comparer).ToList();
+            if (part.DependencyId is null)
+            {
+                record = new InstalledPack(request.Game.Id, request.Language, request.PackId, request.Revision, now, root, transaction, files, folders)
+                {
+                    GeneratedFiles = generated,
+                };
             }
             else
             {
-                // The game's own file (or none): it is the original.
-                entry = new PlanEntry(file.Path, full, file.Source, current != installed, current, current is null ? null : CopyBackup,
-                    current, current is null ? null : full, installed, size);
+                var users = (part.OldDependency?.UsedBy ?? []).Union([request.PackId], StringComparer.Ordinal).ToList();
+                replaced[part.DependencyId] = new InstalledDependency(request.Game.Id, part.DependencyId, part.Version!, users, now, root, transaction, files, folders)
+                {
+                    GeneratedFiles = generated,
+                };
             }
-
-            entries.Add(entry);
         }
 
-        Report(progress, InstallStage.Checking, done, request.Files.Count);
-
-        // Files of the old record this request doesn't write: carried into the new record (their originals copied over).
-        foreach (var carried in oldFiles.Values)
+        var dependencies = new List<InstalledDependency>();
+        foreach (var existing in _store.DependenciesOf(request.Game.Id))
         {
-            entries.Add(new PlanEntry(carried.Path, InstallPaths.Resolve(root, carried.Path), null, false, null, null, carried.OriginalSha256,
-                carried.OriginalSha256 is null ? null : InstallPaths.Resolve(Path.Combine(oldBackup!, FilesFolder), carried.Path), carried.InstalledSha256, 0));
+            dependencies.Add(replaced.Remove(existing.Id, out var updated) ? updated
+                : shared.Contains(existing.Id) ? existing with { UsedBy = [.. existing.UsedBy.Union([request.PackId], StringComparer.Ordinal)] }
+                : existing);
         }
 
-        var created = CreatedFolders(root, entries.Where(e => e.Write).Select(e => e.Path));
-        var record = new InstalledPack(
-            request.Game.Id,
-            request.Language,
-            request.PackId,
-            request.Revision,
-            _time.GetUtcNow(),
-            root,
-            transaction,
-            [.. entries.Select(e => new InstalledFile(e.Path, e.Original, e.Installed))],
-            [.. (old?.AddedFolders ?? []).Union(created, PathNames.Comparer)])
-        {
-            // A generated file already there belongs to the game (or to the pack being re-applied, which recorded it).
-            GeneratedFiles = [.. (old?.GeneratedFiles ?? [])
-                .Union(request.GeneratedFiles.Where(g => !File.Exists(InstallPaths.Resolve(root, g))), PathNames.Comparer)],
-        };
+        dependencies.AddRange(replaced.Values);
         var journal = new InstallJournalFile(
             1,
             OperationInstall,
@@ -357,18 +549,50 @@ public sealed class PackInstaller
             request.Game.Id.ToString(),
             root,
             transaction,
-            old?.Backup,
-            InstalledPackStore.ToJson(record),
+            parts[^1].Old?.Backup,
+            InstalledPackStore.ToJson(record!),
             [.. entries.Where(e => e.Write).Select(e => new JournalEntryJson(e.Path, true, e.Before, e.BeforeCopy))],
-            created);
-        return new InstallPlan(entries, record, journal, BackupFolder(request.Game.Id, transaction));
+            [.. created.SelectMany(c => c)]);
+        return new InstallPlan(entries, record!, dependencies, journal, BackupFolder(request.Game.Id, transaction));
+    }
+
+    /// <summary>A generated path is there already: the file, the folder, or a file matching the pattern.</summary>
+    private static bool GeneratedExists(string root, string generated)
+    {
+        if (generated.EndsWith('/'))
+        {
+            return Directory.Exists(InstallPaths.Resolve(root, generated[..^1]));
+        }
+
+        if (generated.IndexOfAny(['*', '?']) < 0)
+        {
+            return File.Exists(InstallPaths.Resolve(root, generated));
+        }
+
+        return GeneratedMatches(root, generated).Any();
+    }
+
+    /// <summary>Files matching a generated pattern (wildcards in the last part only).</summary>
+    private static IEnumerable<string> GeneratedMatches(string root, string pattern)
+    {
+        var slash = pattern.LastIndexOf('/');
+        var folder = slash < 0 ? root : InstallPaths.Resolve(root, pattern[..slash]);
+        var name = pattern[(slash + 1)..];
+        if (!Directory.Exists(folder))
+        {
+            return [];
+        }
+
+        return Directory.EnumerateFiles(folder)
+            .Where(f => System.IO.Enumeration.FileSystemName.MatchesSimpleExpression(name, Path.GetFileName(f), ignoreCase: true))
+            .Order(StringComparer.Ordinal)
+            .ToList();
     }
 
     /// <summary>Parents of the written files that don't exist yet, shallowest first.</summary>
-    private static List<string> CreatedFolders(string root, IEnumerable<string> paths)
+    private static List<string> CreatedFolders(string root, IEnumerable<string> paths, HashSet<string> seen)
     {
         var created = new List<string>();
-        var seen = new HashSet<string>(PathNames.Comparer);
         foreach (var path in paths)
         {
             var parts = path.Split('/');
@@ -531,25 +755,49 @@ public sealed class PackInstaller
         Report(progress, InstallStage.Verifying, files.Count, files.Count);
     }
 
-    /// <summary>After the record is saved: the replaced backup, the rollback copies and the journal go (best effort).</summary>
+    /// <summary>After the records are saved: backups no record uses any more, the rollback copies and the journal go (best effort).</summary>
     private void FinishInstall(InstallJournalFile journal)
     {
         var game = GameId.Parse(journal.Game!);
-        if (journal.Replaces is { } replaced && replaced != journal.Transaction)
-        {
-            TryDeleteTree(BackupFolder(game, replaced));
-        }
-
         TryDeleteTree(Path.Combine(BackupFolder(game, journal.Transaction!), BeforeFolder));
+        DeleteUnusedBackups(game);
         TryDeleteJournal();
     }
 
-    private void FinishUninstall(InstalledPack record)
+    /// <summary>The records after an uninstall are saved (<paramref name="pack"/> = the pack that stays, if any), unused backups deleted.</summary>
+    private void FinishUninstall(GameId game, InstalledPack? pack, IReadOnlyList<InstalledDependency> kept)
     {
-        _store.Remove(record.Game);
-        TryDeleteTree(BackupFolder(record.Game, record.Backup));
-        InstallPaths.DeleteIfEmpty(Path.Combine(_paths.Backups, RegistryLayout.GameFolder(record.Game)));
+        _store.Commit(game, pack, kept);
+        DeleteUnusedBackups(game);
         TryDeleteJournal();
+    }
+
+    /// <summary>
+    /// Deletes the game's backup folders no record points at (one transaction's backup is shared by the pack and the
+    /// dependencies it installed, so a dependency kept after its pack keeps the folder). Runs under the lock.
+    /// </summary>
+    private void DeleteUnusedBackups(GameId game)
+    {
+        var folder = Path.Combine(_paths.Backups, RegistryLayout.GameFolder(game));
+        var used = _store.DependenciesOf(game).Select(d => d.Backup).Append(_store.Find(game)?.Backup).OfType<string>().ToHashSet(StringComparer.Ordinal);
+        try
+        {
+            if (!Directory.Exists(folder))
+            {
+                return;
+            }
+
+            foreach (var backup in Directory.EnumerateDirectories(folder).Where(b => !used.Contains(Path.GetFileName(b))).ToList())
+            {
+                TryDeleteTree(backup);
+            }
+
+            InstallPaths.DeleteIfEmpty(folder);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogWarning(e, "Can't clean the backups of {Game}", game);
+        }
     }
 
     /// <summary>Puts every file back as the journal says it was, then drops the transaction's backup and the journal.</summary>
@@ -644,84 +892,97 @@ public sealed class PackInstaller
     }
 
     private (List<string> Restored, List<string> Removed, List<string> Kept) RestoreOriginals(
-        InstalledPack record, string root, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
+        GameId game, IReadOnlyList<IInstalledFiles> parts, string root, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
-        var backup = Path.Combine(BackupFolder(record.Game, record.Backup), FilesFolder);
         List<string> restored = [], removed = [], kept = [];
-        for (var i = 0; i < record.Files.Count; i++)
+        var total = parts.Sum(p => p.Files.Count);
+        var done = 0;
+        foreach (var part in parts)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            Report(progress, InstallStage.Restoring, i, record.Files.Count);
-            var file = record.Files[i];
-            var full = InstallPaths.Resolve(root, file.Path);
-            RemoveTempFiles(full);
-            var current = Guard(file.Path, full, () =>
+            var backup = Path.Combine(BackupFolder(game, part.Backup), FilesFolder);
+            foreach (var file in part.Files)
             {
-                BeforeFile?.Invoke(InstallStage.Restoring, file.Path);
-                return InstallPaths.HashOrNull(full, cancellationToken);
-            });
-            if (file.OriginalSha256 is { } original)
-            {
-                if (current == original)
+                cancellationToken.ThrowIfCancellationRequested();
+                Report(progress, InstallStage.Restoring, done++, total);
+                var full = InstallPaths.Resolve(root, file.Path);
+                RemoveTempFiles(full);
+                var current = Guard(file.Path, full, () =>
                 {
-                    continue;
-                }
+                    BeforeFile?.Invoke(InstallStage.Restoring, file.Path);
+                    return InstallPaths.HashOrNull(full, cancellationToken);
+                });
+                if (file.OriginalSha256 is { } original)
+                {
+                    if (current == original)
+                    {
+                        continue;
+                    }
 
-                if (current is not null && current != file.InstalledSha256)
+                    if (current is not null && current != file.InstalledSha256)
+                    {
+                        kept.Add(file.Path);
+                        continue;
+                    }
+
+                    var copy = InstallPaths.Resolve(backup, file.Path);
+                    if (!File.Exists(copy))
+                    {
+                        throw new InstallFileException(file.Path, copy, InstallProblem.BackupDamaged, new FileNotFoundException($"{copy} is missing.", copy));
+                    }
+
+                    Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+                    if (Guard(file.Path, full, () => InstallPaths.CopyAtomically(copy, full, cancellationToken)) != original)
+                    {
+                        throw new InstallFileException(file.Path, copy, InstallProblem.BackupDamaged, new IOException($"{copy} doesn't have the expected content."));
+                    }
+
+                    restored.Add(file.Path);
+                }
+                else if (current == file.InstalledSha256)
+                {
+                    Guard(file.Path, full, () =>
+                    {
+                        File.Delete(full);
+                        return true;
+                    });
+                    removed.Add(file.Path);
+                }
+                else if (current is not null)
                 {
                     kept.Add(file.Path);
-                    continue;
                 }
-
-                var copy = InstallPaths.Resolve(backup, file.Path);
-                if (!File.Exists(copy))
-                {
-                    throw new InstallFileException(file.Path, copy, InstallProblem.BackupDamaged, new FileNotFoundException($"{copy} is missing.", copy));
-                }
-
-                Directory.CreateDirectory(Path.GetDirectoryName(full)!);
-                if (Guard(file.Path, full, () => InstallPaths.CopyAtomically(copy, full, cancellationToken)) != original)
-                {
-                    throw new InstallFileException(file.Path, copy, InstallProblem.BackupDamaged, new IOException($"{copy} doesn't have the expected content."));
-                }
-
-                restored.Add(file.Path);
-            }
-            else if (current == file.InstalledSha256)
-            {
-                Guard(file.Path, full, () =>
-                {
-                    File.Delete(full);
-                    return true;
-                });
-                removed.Add(file.Path);
-            }
-            else if (current is not null)
-            {
-                kept.Add(file.Path);
             }
         }
 
-        foreach (var generated in record.GeneratedFiles)
+        var folders = new List<string>();
+        foreach (var generated in parts.SelectMany(p => p.GeneratedFiles))
         {
-            var full = InstallPaths.Resolve(root, generated);
-            if (File.Exists(full))
+            if (generated.EndsWith('/'))
+            {
+                folders.Add(generated[..^1]);
+                continue;
+            }
+
+            var matches = generated.IndexOfAny(['*', '?']) < 0
+                ? [InstallPaths.Resolve(root, generated)]
+                : GeneratedMatches(root, generated);
+            foreach (var full in matches.Where(File.Exists))
             {
                 Guard(generated, full, () =>
                 {
                     File.Delete(full);
                     return true;
                 });
-                removed.Add(generated);
+                removed.Add(Path.GetRelativePath(root, full).Replace('\\', '/'));
             }
         }
 
-        foreach (var folder in record.AddedFolders.OrderByDescending(f => f.Count(c => c == '/')))
+        foreach (var folder in parts.SelectMany(p => p.AddedFolders).Concat(folders).Distinct(PathNames.Comparer).OrderByDescending(f => f.Count(c => c == '/')))
         {
             InstallPaths.DeleteIfEmpty(InstallPaths.Resolve(root, folder));
         }
 
-        Report(progress, InstallStage.Restoring, record.Files.Count, record.Files.Count);
+        Report(progress, InstallStage.Restoring, total, total);
         return (restored, removed, kept);
     }
 
@@ -757,15 +1018,21 @@ public sealed class PackInstaller
         {
             if (journal.Operation == OperationUninstall)
             {
-                if (_store.Find(game) is { } record && record.Backup == transaction)
+                var removesPack = journal.RemovesPack ?? true;
+                var record = _store.Find(game);
+                var keep = (journal.KeepDependencies ?? []).Select(ParseKey).OfType<DependencyKey>().ToList();
+                if (removesPack && record?.Backup != transaction)
                 {
-                    RestoreOriginals(record, journal.InstallPath!, null, cancellationToken);
-                    FinishUninstall(record);
+                    // The records were saved before the crash: only the clean-up was left.
+                    DeleteUnusedBackups(game);
+                    DeleteJournal();
                 }
                 else
                 {
-                    TryDeleteTree(BackupFolder(game, transaction));
-                    DeleteJournal();
+                    var (removed, kept) = SplitDependencies(game, record, removesPack, keep);
+                    IReadOnlyList<IInstalledFiles> parts = removesPack ? [record!, .. removed] : [.. removed];
+                    RestoreOriginals(game, parts, journal.InstallPath!, null, cancellationToken);
+                    FinishUninstall(game, removesPack ? null : record, kept);
                 }
 
                 _logger.LogWarning("Finished the interrupted uninstall of {Pack} from {Game}", packId, game);
@@ -881,6 +1148,7 @@ public sealed class PackInstaller
     /// <param name="BeforeCopy">Where a rollback finds it (<see cref="CopyBackup"/>, <see cref="CopyBefore"/>).</param>
     /// <param name="OriginalFrom">Where the original is copied into the backup from: the game file or the old backup.</param>
     private sealed record PlanEntry(
+        int Part,
         string Path,
         string Full,
         string? Source,
@@ -892,7 +1160,13 @@ public sealed class PackInstaller
         string Installed,
         long Size);
 
-    private sealed record InstallPlan(IReadOnlyList<PlanEntry> Entries, InstalledPack Record, InstallJournalFile Journal, string BackupFolder);
+    private sealed record InstallPlan(IReadOnlyList<PlanEntry> Entries, InstalledPack Record, IReadOnlyList<InstalledDependency> Dependencies, InstallJournalFile Journal, string BackupFolder);
+
+    /// <summary>
+    /// What one transaction installs: a dependency (<see cref="DependencyId"/>) or the pack (<c>null</c>), with the record
+    /// it installs over (re-apply), whose originals stay.
+    /// </summary>
+    private sealed record Part(string? DependencyId, string? Version, IReadOnlyList<InstallFile> Files, IReadOnlyList<string> Generated, IInstalledFiles? Old, InstalledDependency? OldDependency);
 }
 
 /// <summary>A file operation of a transaction failed: the file and the problem.</summary>

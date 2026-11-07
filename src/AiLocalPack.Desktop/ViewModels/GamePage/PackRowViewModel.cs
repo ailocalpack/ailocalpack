@@ -36,7 +36,8 @@ public sealed record PackRowContext(
     Core.Library.InstalledPackState? Installed,
     string? InstalledTitle,
     bool IsBusy = false,
-    string? InstallingPackId = null)
+    string? InstallingPackId = null,
+    Core.Dependencies.DependencyWhitelist? Dependencies = null)
 {
     public static PackRowContext None { get; } = new(false, null, null);
 }
@@ -240,9 +241,14 @@ public sealed partial class PackRowViewModel : ObservableObject
 
     public bool HasFonts => FontsText.Length > 0;
 
-    /// <summary>"bepinex 5.4.22 (downloaded from the official release)".</summary>
+    /// <summary>
+    /// "BepInEx 5.4.23.2 (downloaded from the official release)", by the whitelist's name; one not on the whitelist
+    /// "x 1.0 (not on the registry's list of allowed components)".
+    /// </summary>
     public string DependenciesText => Manifest is { Dependencies.Count: > 0 } manifest
-        ? _localizer.Format(nameof(Strings.Packs_Requires), string.Join(", ", manifest.Dependencies.Select(d => $"{d.Id} {d.Version}")))
+        ? string.Join(", ", manifest.Dependencies.Select(d => _context.Dependencies?.Find(d.Id) is { } known && known.Find(d.Version) is not null
+            ? _localizer.Format(nameof(Strings.Packs_Requires), $"{known.Name} {d.Version}")
+            : _localizer.Format(nameof(Strings.Packs_RequiresUnknown), $"{d.Id} {d.Version}")))
         : string.Empty;
 
     public bool HasDependencies => DependenciesText.Length > 0;

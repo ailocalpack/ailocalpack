@@ -3,13 +3,25 @@ using System.Text.Json.Serialization;
 namespace AiLocalPack.Core.Install;
 
 /// <summary>On-disk shape of <c>installed-packs.json</c>, kept apart from the domain types.</summary>
-internal sealed record InstalledPacksFile(int SchemaVersion, IReadOnlyList<InstalledPackJson?>? Packs);
+internal sealed record InstalledPacksFile(int SchemaVersion, IReadOnlyList<InstalledPackJson?>? Packs, IReadOnlyList<InstalledDependencyJson?>? Dependencies = null);
 
 internal sealed record InstalledPackJson(
     string? Game,
     string? Language,
     string? Pack,
     int Revision,
+    DateTimeOffset InstalledAt,
+    string? InstallPath,
+    string? Backup,
+    IReadOnlyList<InstalledFileJson?>? Files,
+    IReadOnlyList<string>? AddedFolders,
+    IReadOnlyList<string>? GeneratedFiles = null);
+
+internal sealed record InstalledDependencyJson(
+    string? Game,
+    string? Id,
+    string? Version,
+    IReadOnlyList<string>? UsedBy,
     DateTimeOffset InstalledAt,
     string? InstallPath,
     string? Backup,
@@ -33,6 +45,8 @@ internal sealed record InstalledFileJson(string? Path, string? Original, string?
 /// <param name="Replaces">The backup folder of the record it replaces (re-apply), deleted on commit.</param>
 /// <param name="Pack">The record committed at the end (install only).</param>
 /// <param name="CreatedFolders">Folders the transaction creates, deepest last (removed on rollback when empty).</param>
+/// <param name="RemovesPack">Uninstall: the game's pack goes (<c>false</c>: only dependencies no pack uses).</param>
+/// <param name="KeepDependencies">Uninstall: dependencies (<c>id@version</c>) kept for the next pack of a replacement.</param>
 internal sealed record InstallJournalFile(
     int SchemaVersion,
     string? Operation,
@@ -43,7 +57,9 @@ internal sealed record InstallJournalFile(
     string? Replaces,
     InstalledPackJson? Pack,
     IReadOnlyList<JournalEntryJson?>? Entries,
-    IReadOnlyList<string>? CreatedFolders);
+    IReadOnlyList<string>? CreatedFolders,
+    bool? RemovesPack = null,
+    IReadOnlyList<string>? KeepDependencies = null);
 
 /// <summary>How to put one file back as it was before the transaction.</summary>
 /// <param name="Write">The transaction writes this file (others are only carried into the record).</param>

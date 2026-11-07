@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/dependency-whitelist.schema.json",
+  "title": "ailocalpack dependency whitelist",
+  "description": "policy/dependencies.json of the registry: the executable components (mod loaders such as BepInEx) a pack may require, with the official release file per game platform and its SHA-256. Maintainers only. `ailocalpack index build` copies the entries into index.json (`dependencies`), so the app reads them with the pack list. Unknown properties are allowed (forward compatibility); a breaking change raises schemaVersion.",
+  "type": "object",
+  "required": ["schemaVersion", "dependencies"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "dependencies": { "type": "array", "items": { "$ref": "#/$defs/dependency" } }
+  },
+  "$defs": {
+    "dependency": {
+      "type": "object",
+      "required": ["id", "name", "homepage", "versions"],
+      "properties": {
+        "id": { "description": "What a manifest's dependencies[].id names; unique.", "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64 },
+        "name": { "description": "Shown to the player.", "type": "string", "minLength": 1, "maxLength": 80, "pattern": "\\S" },
+        "homepage": { "description": "The project's official page.", "type": "string", "pattern": "^https://" },
+        "layout": {
+          "description": "Where the release archive goes: the content of `from` (a folder inside the archive; default its root) into `into` (a folder of the game; default the game folder).",
+          "type": "object",
+          "properties": {
+            "from": { "$ref": "#/$defs/folder" },
+            "into": { "$ref": "#/$defs/folder" }
+          }
+        },
+        "generated": {
+          "description": "Files and folders the component makes in the game folder when the game runs, deleted on uninstall when they weren't there before the install: a folder ends with '/' (removed when empty), '*' / '?' only in the last part of a file inside a folder.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^([^/\\\\:*?]+/)*([^/\\\\:]+/?)$",
+            "not": { "pattern": "(^|/)\\.\\.?(/|$)|^[^/]*[*?]|[*?][^/]*/$" }
+          }
+        },
+        "versions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["version", "assets"],
+            "properties": {
+              "version": { "description": "What a manifest's dependencies[].version names; unique per dependency.", "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9.+\\-]{0,63}$" },
+              "assets": {
+                "description": "The official release file per platform of the game build (a Windows build under Proton takes the Windows file).",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["platform", "url", "size", "sha256"],
+                  "properties": {
+                    "platform": { "enum": ["windows-x86", "windows-x64", "windows-arm64", "linux-x86", "linux-x64", "linux-arm64", "macos-x86", "macos-x64", "macos-arm64"] },
+                    "url": { "description": "The official release file: a ZIP archive.", "type": "string", "pattern": "^https://" },
+                    "size": { "type": "integer", "minimum": 1 },
+                    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "folder": {
+      "type": "string",
+      "pattern": "^([^/\\\\:]+/)*[^/\\\\:]+$",
+      "not": { "pattern": "(^|/)\\.\\.?(/|$)" }
+    }
+  }
+}

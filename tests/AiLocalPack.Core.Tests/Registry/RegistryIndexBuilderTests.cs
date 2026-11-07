@@ -131,6 +131,45 @@ public sealed class RegistryIndexBuilderTests : IDisposable
     }
 
     [Fact]
+    public void Dependency_whitelist_is_published_in_the_index()
+    {
+        // Act
+        var result = RegistryIndexBuilder.Build(RegistryFixtures.Folder, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Index!.Dependencies.Dependencies.Select(d => d.Id).Should().Equal("bepinex");
+    }
+
+    [Fact]
+    public void Pack_needing_a_dependency_off_the_whitelist_is_left_out()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        var manifest = Path.Combine(root, "games/steam-620/ru/menus/manifest.json");
+        File.WriteAllText(manifest, File.ReadAllText(manifest).Replace("\"coverage\": {", "\"dependencies\": [{\"id\": \"melonloader\", \"version\": \"0.6.1\"}],\n  \"coverage\": {", StringComparison.Ordinal));
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        (result.Index!.PackCount, result.Problems.Single().Field).Should().Be((3, "dependencies[0]"));
+    }
+
+    [Fact]
+    public void Broken_dependency_whitelist_stops_the_build()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/dependencies.json", """{"schemaVersion": 1, "dependencies": [{"id": "x"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        (result.Index, result.Problems.Select(p => p.File).Distinct()).Should().BeEquivalentTo(((RegistryIndex?)null, new[] { "policy/dependencies.json" }));
+    }
+
+    [Fact]
     public void Broken_anti_cheat_policy_stops_the_build()
     {
         // Arrange

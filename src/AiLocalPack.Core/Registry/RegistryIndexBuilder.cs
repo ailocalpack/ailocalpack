@@ -1,4 +1,5 @@
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 
@@ -22,7 +23,8 @@ public sealed record RegistryBuildResult(RegistryIndex? Index, IReadOnlyList<Reg
 /// <summary>
 /// Builds <c>index.json</c> from a registry checkout: every pack under <c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;/</c>
 /// that passes <see cref="PackValidator"/> (a failing one is left out, the rest published), game flags from
-/// <see cref="RegistryOptOuts.Path"/> and the <c>allowed</c> list of <see cref="AntiCheatPolicyPath"/>, ratings and
+/// <see cref="RegistryOptOuts.Path"/> and the <c>allowed</c> list of <see cref="AntiCheatPolicyPath"/>, the dependency
+/// whitelist from <see cref="DependencyWhitelist.PolicyPath"/> (packs naming anything else are left out), ratings and
 /// discussion links from the ratings file. Manifest paths are relative to the root, where <c>index.json</c> is published.
 /// </summary>
 public static class RegistryIndexBuilder
@@ -48,6 +50,11 @@ public static class RegistryIndexBuilder
             return new RegistryBuildResult(null, problems);
         }
 
+        if (!ReadDependencies(root, problems, out var dependencies))
+        {
+            return new RegistryBuildResult(null, problems);
+        }
+
         var packs = new List<RegistryPack>();
         var games = Path.Combine(root, RegistryLayout.GamesFolder);
         if (Directory.Exists(games))
@@ -55,7 +62,7 @@ public static class RegistryIndexBuilder
             foreach (var folder in PackFolders(root, games, problems))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var validation = PackValidator.Validate(folder, cancellationToken);
+                var validation = PackValidator.Validate(folder, dependencies, cancellationToken);
                 var relative = Relative(root, folder);
                 if (!validation.IsValid)
                 {
@@ -89,7 +96,33 @@ public static class RegistryIndexBuilder
                     allowed!.Contains(id),
                     packs.Where(p => p.Game == id).GroupBy(p => p.Language, StringComparer.Ordinal)
                         .ToDictionary(g => g.Key, IReadOnlyList<RegistryPack> (g) => [.. g.OrderBy(p => p.Id, StringComparer.Ordinal)]))));
-        return new RegistryBuildResult(index, problems);
+        return new RegistryBuildResult(index with { Dependencies = dependencies! }, problems);
+    }
+
+    /// <summary><see cref="DependencyWhitelist.PolicyPath"/>: missing = empty; unreadable or invalid stops the build.</summary>
+    private static bool ReadDependencies(string root, List<RegistryBuildProblem> problems, out DependencyWhitelist? whitelist)
+    {
+        whitelist = DependencyWhitelist.Empty;
+        var file = Path.Combine(root, DependencyWhitelist.PolicyPath);
+        if (!File.Exists(file))
+        {
+            return true;
+        }
+
+        string text;
+        try
+        {
+            text = File.ReadAllText(file);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            problems.Add(new RegistryBuildProblem(DependencyWhitelist.PolicyPath, "", $"can't be read: {e.Message}"));
+            return false;
+        }
+
+        (whitelist, var errors) = DependencyWhitelist.Parse(text);
+        problems.AddRange(errors.Select(e => new RegistryBuildProblem(DependencyWhitelist.PolicyPath, e.Field, e.Message)));
+        return whitelist is not null;
     }
 
     private static RegistryPack ToIndexPack(PackManifest manifest, string manifestPath, RegistryPackRating? rating) => new(

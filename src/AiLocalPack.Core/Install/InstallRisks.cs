@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 
@@ -22,6 +23,7 @@ public enum InstallRiskKind
 /// <summary>One line of the install confirmation.</summary>
 /// <param name="Compatibility">The check result (<see cref="InstallRiskKind.ProbablyCompatible"/>).</param>
 /// <param name="Dependency">The dependency (<see cref="InstallRiskKind.Dependency"/>).</param>
+/// <param name="DependencyName">Its name on the registry's whitelist (<c>BepInEx</c>), or <c>null</c> when it isn't there.</param>
 /// <param name="Replaced">The installed pack (<see cref="InstallRiskKind.Replaces"/>).</param>
 /// <param name="ReplacedTitle">Its title from the registry, or its ID when the registry no longer lists it.</param>
 public sealed record InstallRisk(
@@ -29,7 +31,8 @@ public sealed record InstallRisk(
     PackCompatibility? Compatibility = null,
     PackDependency? Dependency = null,
     InstalledPack? Replaced = null,
-    string? ReplacedTitle = null);
+    string? ReplacedTitle = null,
+    string? DependencyName = null);
 
 /// <summary>Builds the install confirmation's list (design §4a). Pure.</summary>
 public static class InstallRisks
@@ -39,13 +42,15 @@ public static class InstallRisks
     /// install starts at once) for a <c>verified</c>, compatible pack without dependencies when nothing is installed.
     /// </summary>
     /// <param name="manifest">The pack's manifest (its dependencies); <c>null</c> = not read, no dependency listed.</param>
+    /// <param name="dependencies">The registry's dependency whitelist, for the dependencies' names.</param>
     /// <param name="installed">The game's installed pack, whatever its language; the pack itself (same ID and language) doesn't count.</param>
     public static IReadOnlyList<InstallRisk> For(
         RegistryPack pack,
         PackManifest? manifest,
         PackCompatibility compatibility,
         InstalledPack? installed,
-        string? installedTitle = null)
+        string? installedTitle = null,
+        DependencyWhitelist? dependencies = null)
     {
         ArgumentNullException.ThrowIfNull(pack);
         ArgumentNullException.ThrowIfNull(compatibility);
@@ -62,7 +67,7 @@ public static class InstallRisks
 
         foreach (var dependency in manifest?.Dependencies ?? [])
         {
-            risks.Add(new InstallRisk(InstallRiskKind.Dependency, Dependency: dependency));
+            risks.Add(new InstallRisk(InstallRiskKind.Dependency, Dependency: dependency, DependencyName: dependencies?.Find(dependency.Id)?.Name));
         }
 
         if (installed is not null && (installed.PackId != pack.Id || installed.Language != pack.Language))

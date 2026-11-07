@@ -31,6 +31,7 @@ public static class InstallTexts
         return localizer[step switch
         {
             InstallStep.Download => nameof(Strings.Install_Step_Download),
+            InstallStep.Dependency => nameof(Strings.Install_Step_Dependency),
             InstallStep.RemovePrevious => nameof(Strings.Install_Step_RemovePrevious),
             InstallStep.Check => nameof(Strings.Install_Step_Check),
             InstallStep.Rebuild => nameof(Strings.Install_Step_Rebuild),
@@ -69,9 +70,21 @@ public static class InstallTexts
                 localizer.Format(nameof(Strings.Install_Why_Incompatible), PackCompatibilityTexts.Explain(compatibility, localizer)),
             InstallErrorKind.Incompatible => localizer.Format(nameof(Strings.Install_Why_Incompatible), string.Empty).TrimEnd(),
             InstallErrorKind.PatchUnsupported => localizer[nameof(Strings.Install_Why_PatchUnsupported)],
-            InstallErrorKind.DependenciesUnsupported => localizer.Format(
-                nameof(Strings.Install_Why_DependenciesUnsupported),
+            InstallErrorKind.DependencyUnknown => localizer.Format(
+                nameof(Strings.Install_Why_DependencyUnknown),
                 string.Join(", ", (error.Dependencies ?? []).Select(d => $"{d.Id} {d.Version}"))),
+            InstallErrorKind.DependencyPlatform when error.Platform is null => localizer.Format(nameof(Strings.Install_Why_DependencyPlatformUnknown), Dependency(error)),
+            InstallErrorKind.DependencyPlatform => localizer.Format(nameof(Strings.Install_Why_DependencyPlatform), Dependency(error), error.Platform),
+            InstallErrorKind.DependencyFetch => localizer.Format(
+                error.Fetch switch
+                {
+                    PackFetchProblem.Offline or PackFetchProblem.Timeout or PackFetchProblem.HttpError => nameof(Strings.Install_Why_DependencyOffline),
+                    PackFetchProblem.FileMissing => nameof(Strings.Install_Why_DependencyMissing),
+                    PackFetchProblem.HashMismatch => nameof(Strings.Install_Why_DependencyHash),
+                    _ => nameof(Strings.Install_Why_CacheError),
+                },
+                Dependency(error)),
+            InstallErrorKind.DependencyArchive => localizer.Format(nameof(Strings.Install_Why_DependencyArchive), Dependency(error)),
             InstallErrorKind.InvalidStrings => localizer[nameof(Strings.Install_Why_InvalidStrings)],
             InstallErrorKind.Recipe => localizer.Format(nameof(Strings.Install_Why_Recipe), file),
             InstallErrorKind.Font => localizer.Format(
@@ -83,6 +96,10 @@ public static class InstallTexts
             _ => localizer[nameof(Strings.Install_Why_Unexpected)],
         };
     }
+
+    /// <summary>"BepInEx 5.4.23.2": the whitelist's name, else the ID.</summary>
+    private static string Dependency(InstallError error) =>
+        $"{error.DependencyName ?? error.Dependencies?.FirstOrDefault()?.Id} {error.Dependencies?.FirstOrDefault()?.Version}".Trim();
 
     /// <summary>A transaction's problem in plain words, naming the file when there is one.</summary>
     public static string Transaction(InstallFailure failure, Localizer localizer)
@@ -105,6 +122,7 @@ public static class InstallTexts
             InstallProblem.InterruptedInstall => localizer[nameof(Strings.Install_Why_Interrupted)],
             InstallProblem.VerifyFailed => localizer.Format(nameof(Strings.Install_Why_VerifyFailed), file),
             InstallProblem.BackupDamaged => localizer.Format(nameof(Strings.Install_Why_BackupDamaged), file),
+            InstallProblem.DependencyConflict => localizer[nameof(Strings.Install_Why_DependencyConflict)],
             _ => localizer.Format(nameof(Strings.Install_Why_IoError), file),
         };
     }
@@ -120,7 +138,8 @@ public static class InstallTexts
             InstallRiskKind.ProbablyCompatible => localizer.Format(
                 nameof(Strings.Install_Risk_Probably),
                 risk.Compatibility is { } compatibility ? PackCompatibilityTexts.Explain(compatibility, localizer) : string.Empty).TrimEnd(),
-            InstallRiskKind.Dependency => localizer.Format(nameof(Strings.Install_Risk_Dependency), risk.Dependency?.Id ?? string.Empty, risk.Dependency?.Version ?? string.Empty),
+            InstallRiskKind.Dependency => localizer.Format(
+                nameof(Strings.Install_Risk_Dependency), risk.DependencyName ?? risk.Dependency?.Id ?? string.Empty, risk.Dependency?.Version ?? string.Empty),
             _ => localizer.Format(nameof(Strings.Install_Risk_Replaces), risk.ReplacedTitle ?? string.Empty, risk.Replaced?.Revision ?? 0),
         };
     }

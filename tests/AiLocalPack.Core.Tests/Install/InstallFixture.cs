@@ -57,6 +57,33 @@ internal sealed class InstallFixture : IDisposable
         return new InstallRequest(Game, "ru", "full", revision, [.. files.Select(f => new InstallFile(f.Path, Staging.Combine($"{folder}/{f.Path}")))]);
     }
 
+    /// <summary>The request of pack <paramref name="packId"/> (Russian, rev 1) with whitelisted dependencies.</summary>
+    public InstallRequest PackWith(string packId, IReadOnlyList<InstallDependency> dependencies, params (string Path, string Content)[] files) =>
+        Request(files) with { PackId = packId, Dependencies = dependencies };
+
+    /// <summary>A dependency's unpacked files, staged.</summary>
+    public InstallDependency Dependency(string id, string version, IReadOnlyList<string>? generated = null, params (string Path, string Content)[] files)
+    {
+        var folder = $"{id}-{version}-{Guid.NewGuid():N}";
+        foreach (var (path, content) in files)
+        {
+            Staging.File($"{folder}/{path}", content);
+        }
+
+        return new InstallDependency(id, version, [.. files.Select(f => new InstallFile(f.Path, Staging.Combine($"{folder}/{f.Path}")))])
+        {
+            GeneratedFiles = generated ?? [],
+        };
+    }
+
+    /// <summary>BepInEx-like: a loader in the game folder and its core folder.</summary>
+    public InstallDependency Loader(string version = "5.4.23.2", IReadOnlyList<string>? generated = null) => Dependency(
+        "bepinex",
+        version,
+        generated,
+        ("winhttp.dll", $"loader {version}"),
+        ("BepInEx/core/BepInEx.dll", $"core {version}"));
+
     /// <summary>Five files: three overwritten, two added (one in a new folder).</summary>
     public InstallRequest FiveFiles() => Request(
         ("data/Map001.json", "map 1 ru"),

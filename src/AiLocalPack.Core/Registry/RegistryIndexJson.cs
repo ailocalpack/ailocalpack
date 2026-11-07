@@ -5,7 +5,11 @@ namespace AiLocalPack.Core.Registry;
 // On-disk shapes of index.json and the client's cache record, apart from the domain types: everything nullable so a
 // damaged entry can be skipped with a reason. Unknown properties are ignored (forward compatibility).
 
-internal sealed record RegistryIndexJson(int? SchemaVersion, string? Generated, IReadOnlyDictionary<string, RegistryGameJson?>? Games);
+internal sealed record RegistryIndexJson(
+    int? SchemaVersion,
+    string? Generated,
+    IReadOnlyDictionary<string, RegistryGameJson?>? Games,
+    IReadOnlyList<DependencyJson?>? Dependencies = null);
 
 internal sealed record RegistryGameJson(bool? OptOut, bool? AntiCheatAllowed, IReadOnlyDictionary<string, IReadOnlyList<RegistryPackJson?>?>? Packs);
 
@@ -30,6 +34,23 @@ internal sealed record RegistryCoverageJson(int? Translated, int? Total);
 
 internal sealed record RegistryRatingJson(int? Likes, int? Works, int? DoesNotWork);
 
+/// <summary><c>policy/dependencies.json</c> of the registry (the same entries go into <c>index.json</c>).</summary>
+internal sealed record DependencyPolicyFileJson(int? SchemaVersion, IReadOnlyList<DependencyJson?>? Dependencies);
+
+internal sealed record DependencyJson(
+    string? Id,
+    string? Name,
+    string? Homepage,
+    DependencyLayoutJson? Layout,
+    IReadOnlyList<string?>? Generated,
+    IReadOnlyList<DependencyVersionJson?>? Versions);
+
+internal sealed record DependencyLayoutJson(string? From, string? Into);
+
+internal sealed record DependencyVersionJson(string? Version, IReadOnlyList<DependencyAssetJson?>? Assets);
+
+internal sealed record DependencyAssetJson(string? Platform, string? Url, long? Size, string? Sha256);
+
 /// <summary>What the client remembers about the cached <c>index.json</c> (<c>index.meta.json</c> next to it).</summary>
 /// <param name="Source">The index URL the copy came from; a copy from another source is not used.</param>
 /// <param name="ETag">Validator for <c>If-None-Match</c>, as the server sent it.</param>
@@ -51,4 +72,5 @@ internal sealed record RegistryCacheMetaJson(
     AllowDuplicateProperties = false)]
 [JsonSerializable(typeof(RegistryIndexJson))]
 [JsonSerializable(typeof(RegistryCacheMetaJson))]
+[JsonSerializable(typeof(DependencyPolicyFileJson))]
 internal sealed partial class RegistryJsonContext : JsonSerializerContext;

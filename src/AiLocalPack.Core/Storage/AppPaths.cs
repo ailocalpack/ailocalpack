@@ -81,6 +81,12 @@ public sealed record AppPaths
     /// </summary>
     public string Fonts => Path.Combine(Cache, "fonts");
 
+    /// <summary>
+    /// Downloaded release archives of whitelisted dependencies (<c>&lt;id&gt;/&lt;version&gt;/&lt;first 16 hex of the SHA-256&gt;-&lt;file&gt;</c>;
+    /// safe to delete: downloaded again when an install needs them).
+    /// </summary>
+    public string Dependencies => Path.Combine(Cache, "dependencies");
+
     /// <summary>Remembered SHA-256 of game files (<see cref="FileHashCache"/>; safe to delete: files are hashed again).</summary>
     public string FileHashes => Path.Combine(Cache, "file-hashes.json");
 

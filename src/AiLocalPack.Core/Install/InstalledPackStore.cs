@@ -8,20 +8,22 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace AiLocalPack.Core.Install;
 
 /// <summary>
-/// The installed packs (<c>&lt;data&gt;/installed-packs.json</c>), one per game. Loaded on first use. A corrupted
+/// The installed packs (<c>&lt;data&gt;/installed-packs.json</c>), one per game, and the whitelisted dependencies
+/// installed with them (task 32; schema 2), saved together in one write so a transaction commits both. Loaded on first use. A corrupted
 /// file is moved aside as <c>installed-packs.json.&lt;utc&gt;.bak</c> (the backups stay on disk); an unreadable one gives
 /// an empty list that is never written this session (<see cref="Put"/> and <see cref="Remove"/> throw, so a transaction
 /// rolls back instead of losing records). Writes are atomic. Thread-safe.
 /// </summary>
 public sealed class InstalledPackStore
 {
-    public const int CurrentSchemaVersion = 1;
+    public const int CurrentSchemaVersion = 2;
 
     private readonly Lock _lock = new();
     private readonly string _file;
     private readonly ILogger _logger;
     private readonly TimeProvider _time;
     private Dictionary<GameId, InstalledPack>? _packs;
+    private Dictionary<GameId, IReadOnlyList<InstalledDependency>> _dependencies = [];
     private bool _canSave = true;
 
     public InstalledPackStore(AppPaths paths, ILogger<InstalledPackStore>? logger = null, TimeProvider? time = null)
@@ -55,21 +57,75 @@ public sealed class InstalledPackStore
         }
     }
 
-    /// <summary>Adds or replaces the game's record and saves. Throws <see cref="IOException"/> when it can't be saved.</summary>
+    /// <summary>The dependencies installed into the game (by ID).</summary>
+    public IReadOnlyList<InstalledDependency> DependenciesOf(GameId game)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        lock (_lock)
+        {
+            Loaded();
+            return _dependencies.GetValueOrDefault(game) ?? [];
+        }
+    }
+
+    /// <summary>
+    /// Sets the game's pack (<c>null</c> = none) and its dependency records in one save: a transaction's commit point.
+    /// Throws <see cref="IOException"/> when it can't be saved (nothing changes then).
+    /// </summary>
+    public void Commit(GameId game, InstalledPack? pack, IReadOnlyList<InstalledDependency> dependencies)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(dependencies);
+        if (pack is not null && pack.Game != game || dependencies.Any(d => d.Game != game))
+        {
+            throw new ArgumentException("Every record must be of the game committed.", nameof(dependencies));
+        }
+
+        lock (_lock)
+        {
+            var packs = new Dictionary<GameId, InstalledPack>(Loaded());
+            if (pack is null)
+            {
+                packs.Remove(game);
+            }
+            else
+            {
+                packs[game] = pack;
+            }
+
+            var all = new Dictionary<GameId, IReadOnlyList<InstalledDependency>>(_dependencies);
+            if (dependencies.Count == 0)
+            {
+                all.Remove(game);
+            }
+            else
+            {
+                all[game] = [.. dependencies.OrderBy(d => d.Id, StringComparer.Ordinal)];
+            }
+
+            Save(packs, all);
+            _packs = packs;
+            _dependencies = all;
+        }
+
+        Changed?.Invoke(this, game);
+    }
+
+    /// <summary>Adds or replaces the game's record and saves (its dependency records stay). Throws <see cref="IOException"/> when it can't be saved.</summary>
     public void Put(InstalledPack pack)
     {
         ArgumentNullException.ThrowIfNull(pack);
         lock (_lock)
         {
             var packs = new Dictionary<GameId, InstalledPack>(Loaded()) { [pack.Game] = pack };
-            Save(packs);
+            Save(packs, _dependencies);
             _packs = packs;
         }
 
         Changed?.Invoke(this, pack.Game);
     }
 
-    /// <summary>Removes the game's record and saves. Throws <see cref="IOException"/> when it can't be saved.</summary>
+    /// <summary>Removes the game's pack record and saves (its dependency records stay). Throws <see cref="IOException"/> when it can't be saved.</summary>
     public void Remove(GameId game)
     {
         ArgumentNullException.ThrowIfNull(game);
@@ -82,7 +138,7 @@ public sealed class InstalledPackStore
 
             var packs = new Dictionary<GameId, InstalledPack>(Loaded());
             packs.Remove(game);
-            Save(packs);
+            Save(packs, _dependencies);
             _packs = packs;
         }
 
@@ -134,7 +190,29 @@ public sealed class InstalledPackStore
             _canSave = false;
         }
 
+        _dependencies = DependencyEntries(file);
         return Entries(file);
+    }
+
+    private Dictionary<GameId, IReadOnlyList<InstalledDependency>> DependencyEntries(InstalledPacksFile file)
+    {
+        var result = new Dictionary<GameId, IReadOnlyList<InstalledDependency>>();
+        foreach (var entry in file.Dependencies ?? [])
+        {
+            if (FromJson(entry) is not { } dependency)
+            {
+                _logger.LogWarning("Skipping a broken installed dependency entry in {File}", _file);
+                continue;
+            }
+
+            var list = result.GetValueOrDefault(dependency.Game) ?? [];
+            if (list.All(d => d.Id != dependency.Id))
+            {
+                result[dependency.Game] = [.. list, dependency];
+            }
+        }
+
+        return result;
     }
 
     private Dictionary<GameId, InstalledPack> Entries(InstalledPacksFile file)
@@ -170,7 +248,7 @@ public sealed class InstalledPackStore
         }
     }
 
-    private void Save(Dictionary<GameId, InstalledPack> packs)
+    private void Save(Dictionary<GameId, InstalledPack> packs, Dictionary<GameId, IReadOnlyList<InstalledDependency>> dependencies)
     {
         if (!_canSave)
         {
@@ -179,7 +257,9 @@ public sealed class InstalledPackStore
 
         var file = new InstalledPacksFile(
             CurrentSchemaVersion,
-            [.. packs.Values.OrderBy(p => p.Game.ToString(), StringComparer.Ordinal).Select(ToJson)]);
+            [.. packs.Values.OrderBy(p => p.Game.ToString(), StringComparer.Ordinal).Select(ToJson)],
+            dependencies.Count == 0 ? null
+                : [.. dependencies.OrderBy(d => d.Key.ToString(), StringComparer.Ordinal).SelectMany(d => d.Value).Select(ToJson)]);
         AtomicFile.WriteAllBytes(_file, JsonSerializer.SerializeToUtf8Bytes(file, InstallJsonContext.Default.InstalledPacksFile));
     }
 
@@ -222,6 +302,55 @@ public sealed class InstalledPackStore
         return folders.All(InstallPaths.IsValid) && generated.All(InstallPaths.IsValid)
             ? new InstalledPack(game, language, packId, json.Revision, json.InstalledAt, installPath, backup, files, [.. folders]) { GeneratedFiles = [.. generated] }
             : null;
+    }
+
+    internal static InstalledDependencyJson ToJson(InstalledDependency dependency) => new(
+        dependency.Game.ToString(),
+        dependency.Id,
+        dependency.Version,
+        dependency.UsedBy,
+        dependency.InstalledAt.ToUniversalTime(),
+        dependency.InstallPath,
+        dependency.Backup,
+        [.. dependency.Files.Select(f => new InstalledFileJson(f.Path, f.OriginalSha256, f.InstalledSha256))],
+        dependency.AddedFolders,
+        dependency.GeneratedFiles.Count > 0 ? dependency.GeneratedFiles : null);
+
+    internal static InstalledDependency? FromJson(InstalledDependencyJson? json)
+    {
+        if (json is not { Game: { } gameText, Id: { Length: > 0 } id, Version: { Length: > 0 } version, InstallPath: { Length: > 0 } installPath, Backup: { Length: > 0 } backup }
+            || !GameId.TryParse(gameText, out var game)
+            || !InstallPaths.IsSafeName(backup)
+            || Files(json.Files) is not { } files)
+        {
+            return null;
+        }
+
+        var folders = json.AddedFolders ?? [];
+        var generated = json.GeneratedFiles ?? [];
+        return folders.All(InstallPaths.IsValid) && generated.All(Dependencies.DependencyWhitelist.IsGeneratedPath)
+            ? new InstalledDependency(game, id, version, [.. (json.UsedBy ?? []).Where(u => u.Length > 0)], json.InstalledAt, installPath, backup, files, [.. folders])
+            {
+                GeneratedFiles = [.. generated],
+            }
+            : null;
+    }
+
+    private static List<InstalledFile>? Files(IReadOnlyList<InstalledFileJson?>? list)
+    {
+        var files = new List<InstalledFile>();
+        foreach (var file in list ?? [])
+        {
+            if (file is not { Path: { } path, Installed: { } installed } || !InstallPaths.IsValid(path) || !IsSha(installed)
+                || (file.Original is { } original && !IsSha(original)))
+            {
+                return null;
+            }
+
+            files.Add(new InstalledFile(path, file.Original, installed));
+        }
+
+        return files;
     }
 
     private static bool IsSha(string text) => text.Length == 64 && text.All(c => char.IsAsciiDigit(c) || c is >= 'a' and <= 'f');

@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
@@ -96,7 +97,8 @@ public static class RegistryIndexSerializer
             games[id] = ReadGame(id, field, entry, skipped);
         }
 
-        return new RegistryIndexReadResult(new RegistryIndex(generated, games), skipped.List);
+        var dependencies = DependencyWhitelist.Read(file.Dependencies, "dependencies", skipped);
+        return new RegistryIndexReadResult(new RegistryIndex(generated, games) { Dependencies = dependencies }, skipped.List);
     }
 
     public static RegistryIndexReadResult Read(Stream stream)
@@ -108,7 +110,8 @@ public static class RegistryIndexSerializer
 
     /// <summary>
     /// The index as indented JSON: games, languages and packs in ordinal order (the same index always gives the same
-    /// bytes), defaults left out (<c>false</c> flags, no rating, no discussion).
+    /// bytes), defaults left out (<c>false</c> flags, no rating, no discussion, no dependency whitelist); the whitelist's
+    /// entries by ID.
     /// </summary>
     public static string Write(RegistryIndex index)
     {
@@ -128,7 +131,11 @@ public static class RegistryIndexSerializer
                 packs.Count > 0 ? packs : null);
         }
 
-        var file = new RegistryIndexJson(RegistryIndex.CurrentSchemaVersion, PackFormat.FormatDate(index.Generated), games);
+        var file = new RegistryIndexJson(
+            RegistryIndex.CurrentSchemaVersion,
+            PackFormat.FormatDate(index.Generated),
+            games,
+            index.Dependencies.Dependencies.Count > 0 ? index.Dependencies.ToJson() : null);
         return JsonSerializer.Serialize(file, Writer.RegistryIndexJson);
     }
 

@@ -1523,9 +1523,6 @@
   <data name="Install_Why_PatchUnsupported" xml:space="preserve">
     <value>This pack is a binary patch, which this version of the app can't install yet.</value>
   </data>
-  <data name="Install_Why_DependenciesUnsupported" xml:space="preserve">
-    <value>This pack needs {0}, which this version of the app can't install yet.</value>
-  </data>
   <data name="Install_Why_InvalidStrings" xml:space="preserve">
     <value>The pack's string table can't be read.</value>
   </data>
@@ -1723,5 +1720,50 @@
   </data>
   <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
     <value>This app's toolkit doesn't handle {0} games on this system for now, so it can't install this pack.</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>Downloading required components</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>This pack needs {0}, which isn't on the registry's list of allowed components, so it can't be installed.</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>This pack needs {0}, and its official release has no build for this game's version ({1}).</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>This pack needs {0}, but the app couldn't tell which system this game's build is for (its main executable can't be read).</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>Couldn't download {0} from its official release. Check the connection and retry.</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>The official release of {0} is no longer at the address on the registry's list.</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>The downloaded {0} doesn't match the hash on the registry's list; it was deleted and nothing was installed.</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>The release archive of {0} can't be unpacked safely; nothing was installed.</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>Another version of a component this pack needs is installed for the game, or the component would overwrite the pack's own files.</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1} ({2}): downloaded {3} bytes from its official release ({4}), hash checked.</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1} ({2}): taken from the cache (hash checked when it was downloaded).</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>{0} {1} is already installed for this game; the pack shares it.</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} installed with the pack: {2} files.</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>{0} {1} removed: no other pack uses it.</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0} (not on the registry's list of allowed components)</value>
   </data>
 </root>

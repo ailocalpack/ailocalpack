@@ -39,6 +39,73 @@ public sealed class PackValidatorTests : IDisposable
         (folders.Count, problems.Count).Should().Be((4, 0));
     }
 
+    private void RequireDependency(string folder, string id, string version) =>
+        EditManifest(folder, "\"coverage\": {", $"\"dependencies\": [{{\"id\": \"{id}\", \"version\": \"{version}\"}}],\n  \"coverage\": {{");
+
+    [Fact]
+    public void Dependency_on_the_registry_whitelist_is_accepted()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.CopyFolder(Path.Combine(RegistryFixtures.Folder, "policy"), "policy");
+        RequireDependency(folder, "bepinex", "5.4.23.2");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Unknown_dependency_is_refused()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.CopyFolder(Path.Combine(RegistryFixtures.Folder, "policy"), "policy");
+        RequireDependency(folder, "melonloader", "0.6.1");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+        {
+            File = "manifest.json",
+            Field = "dependencies[0]",
+            Message = "'melonloader' is not on the registry's dependency whitelist (policy/dependencies.json: bepinex).",
+        });
+    }
+
+    [Fact]
+    public void Unlisted_version_of_a_known_dependency_is_refused()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.CopyFolder(Path.Combine(RegistryFixtures.Folder, "policy"), "policy");
+        RequireDependency(folder, "bepinex", "5.4.21");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Single().Message.Should().Be("BepInEx 5.4.21 is not on the registry's dependency whitelist (listed versions: 5.4.23.2).");
+    }
+
+    [Fact]
+    public void Dependency_outside_a_registry_with_a_whitelist_is_refused()
+    {
+        // Arrange
+        var folder = CopyPack();
+        RequireDependency(folder, "bepinex", "5.4.23.2");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Single().Field.Should().Be("dependencies[0]");
+    }
+
     [Fact]
     public void Valid_pack_returns_its_manifest()
     {

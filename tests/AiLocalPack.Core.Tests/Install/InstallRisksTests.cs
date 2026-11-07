@@ -1,7 +1,9 @@
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Tests.Registry;
 
 namespace AiLocalPack.Core.Tests.Install;
 
@@ -93,6 +95,20 @@ public sealed class InstallRisksTests
         risks.Should().Equal(
             new InstallRisk(InstallRiskKind.Dependency, Dependency: bepinex),
             new InstallRisk(InstallRiskKind.Dependency, Dependency: xunity));
+    }
+
+    [Fact]
+    public void Dependency_risk_carries_its_whitelist_name()
+    {
+        // Arrange
+        var bepinex = new PackDependency("bepinex", "5.4.23.2");
+        var whitelist = DependencyWhitelist.Parse(File.ReadAllText(Path.Combine(RegistryFixtures.Folder, "policy", "dependencies.json"))).Whitelist;
+
+        // Act
+        var risks = InstallRisks.For(Pack(), Manifest(bepinex), Compatibility(PackCompatibilityVerdict.Compatible), null, dependencies: whitelist);
+
+        // Assert
+        risks.Single().DependencyName.Should().Be("BepInEx");
     }
 
     [Fact]

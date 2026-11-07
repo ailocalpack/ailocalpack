@@ -1,12 +1,16 @@
 using System.CommandLine;
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Dependencies;
+using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -16,7 +20,7 @@ namespace AiLocalPack.Cli.Commands;
 /// <summary>
 /// Developer commands for checking the install transaction by hand (task 27): <c>dev apply-files &lt;game&gt; &lt;dir&gt;</c>
 /// installs the files of a folder (laid out like the game folder) as a pack, <c>dev uninstall &lt;game&gt;</c> undoes it.
-/// Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
+/// <c>--dependency id@version</c> installs whitelisted dependencies with them (task 32). Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
 /// <c>dev fixture rpgmaker &lt;dir&gt;</c> and <c>dev fixture renpy &lt;dir&gt;</c> write synthetic games (tasks 28, 30).
 /// </summary>
 internal static class DevCommand
@@ -39,26 +43,31 @@ internal static class DevCommand
         var lang = new Option<string>("--lang") { Description = "Language to record.", DefaultValueFactory = _ => "en" };
         var revision = new Option<int>("--revision") { Description = "Revision to record.", DefaultValueFactory = _ => 1 };
         var reapply = new Option<bool>("--reapply") { Description = "Install over the game's installed pack (as after a game update wiped it)." };
+        var dependency = new Option<string[]>("--dependency")
+        {
+            Description = "A whitelisted dependency to install with the files, as <id>@<version> (from the registry's list; repeatable).",
+            AllowMultipleArgumentsPerToken = false,
+        };
         var apply = new Command(
             "apply-files",
             "Install the files of a folder into a game as one transaction: originals backed up, new files written and checked, everything restored on failure.")
         {
-            gameArgument, dirArgument, pack, lang, revision, reapply,
+            gameArgument, dirArgument, pack, lang, revision, reapply, dependency,
         };
-        apply.SetAction((result, cancellationToken) =>
+        apply.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
             var error = result.InvocationConfiguration.Error;
             if (Open(env, result.GetValue(gameArgument)!, error) is not var (installer, game, index))
             {
-                return Task.FromResult(1);
+                return 1;
             }
 
             var dir = Path.GetFullPath(result.GetValue(dirArgument)!);
             if (!Directory.Exists(dir))
             {
                 error.WriteLine($"{dir} is not a folder.");
-                return Task.FromResult(1);
+                return 1;
             }
 
             var files = Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories)
@@ -68,38 +77,144 @@ internal static class DevCommand
             if (files.Count == 0)
             {
                 error.WriteLine($"{dir} has no files.");
-                return Task.FromResult(1);
+                return 1;
             }
 
             WriteRecovery(output, installer.Recover(cancellationToken));
-            var request = new InstallRequest(game, result.GetValue(lang)!, result.GetValue(pack)!, result.GetValue(revision), files);
-            InstallResult installed;
+            var dependencies = new List<InstallDependency>();
+            var staging = Path.Combine(Path.GetTempPath(), "ailocalpack-dev-" + Path.GetRandomFileName());
             try
             {
-                installed = result.GetValue(reapply)
-                    ? installer.Reapply(request, index, cancellationToken: cancellationToken)
-                    : installer.Install(request, index, cancellationToken: cancellationToken);
-            }
-            catch (GameBlockedException e)
-            {
-                error.WriteLine(e.Message);
-                return Task.FromResult(1);
-            }
+                if (result.GetValue(dependency) is { Length: > 0 } wanted)
+                {
+                    if (await PrepareDependenciesAsync(env, game, wanted, index, result.GetValue(reapply), staging, output, error, cancellationToken) is not { } prepared)
+                    {
+                        return 1;
+                    }
 
-            if (installed.Failure is { } failure)
-            {
-                error.WriteLine($"Couldn't install into {game.Id} \"{game.Name}\": {Explain(failure)}");
-                return Task.FromResult(1);
-            }
+                    dependencies.AddRange(prepared);
+                }
 
-            var record = installed.Installed!;
-            var added = record.Files.Count(f => f.OriginalSha256 is null);
-            output.WriteLine($"Installed {record.PackId} rev {record.Revision} ({record.Language}) into {game.Id} \"{game.Name}\": "
-                + $"{Count(record.Files.Count - added, "file")} replaced, {added} added.");
-            output.WriteLine($"Backup: {Path.Combine(AppPaths.Resolve(env).Backups, RegistryLayout.GameFolder(game.Id), record.Backup)}");
-            return Task.FromResult(0);
+                return Install(installer, game, index, new InstallRequest(game, result.GetValue(lang)!, result.GetValue(pack)!, result.GetValue(revision), files)
+                {
+                    Dependencies = dependencies,
+                }, result.GetValue(reapply), env, output, error, cancellationToken);
+            }
+            finally
+            {
+                try
+                {
+                    if (Directory.Exists(staging))
+                    {
+                        Directory.Delete(staging, recursive: true);
+                    }
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+                {
+                    // A temp folder: left for the OS to clean.
+                }
+            }
         });
         return apply;
+    }
+
+    private static int Install(PackInstaller installer, Game game, RegistryIndex? index, InstallRequest request, bool reapply, OsEnvironment env, TextWriter output, TextWriter error, CancellationToken cancellationToken)
+    {
+        InstallResult installed;
+        try
+        {
+            installed = reapply
+                ? installer.Reapply(request, index, cancellationToken: cancellationToken)
+                : installer.Install(request, index, cancellationToken: cancellationToken);
+        }
+        catch (GameBlockedException e)
+        {
+            error.WriteLine(e.Message);
+            return 1;
+        }
+
+        if (installed.Failure is { } failure)
+        {
+            error.WriteLine($"Couldn't install into {game.Id} \"{game.Name}\": {Explain(failure)}");
+            return 1;
+        }
+
+        var record = installed.Installed!;
+        var added = record.Files.Count(f => f.OriginalSha256 is null);
+        output.WriteLine($"Installed {record.PackId} rev {record.Revision} ({record.Language}) into {game.Id} \"{game.Name}\": "
+            + $"{Count(record.Files.Count - added, "file")} replaced, {added} added.");
+        output.WriteLine($"Backup: {Path.Combine(AppPaths.Resolve(env).Backups, RegistryLayout.GameFolder(game.Id), record.Backup)}");
+        var whitelist = index?.Dependencies ?? DependencyWhitelist.Empty;
+        foreach (var used in installed.Dependencies)
+        {
+            var name = whitelist.Find(used.Id)?.Name ?? used.Id;
+            output.WriteLine(installed.SharedDependencies.Contains(used.Id)
+                ? $"Dependency {name} {used.Version}: already installed, shared (used by {string.Join(", ", used.UsedBy)})."
+                : $"Dependency {name} {used.Version}: {Count(used.Files.Count, "file")} installed.");
+        }
+
+        return 0;
+    }
+
+    /// <summary>Looks up <c>id@version</c> in the registry's whitelist, downloads and unpacks each for the game; <c>null</c> after printing why not.</summary>
+    private static async Task<List<InstallDependency>?> PrepareDependenciesAsync(
+        OsEnvironment env, Game game, string[] wanted, RegistryIndex? index, bool reapply, string staging, TextWriter output, TextWriter error, CancellationToken cancellationToken)
+    {
+        var dependencies = new List<PackDependency>();
+        foreach (var text in wanted)
+        {
+            if (text.Split('@') is not [{ Length: > 0 } id, { Length: > 0 } version])
+            {
+                error.WriteLine($"'{text}' is not <id>@<version>.");
+                return null;
+            }
+
+            dependencies.Add(new PackDependency(id, version));
+        }
+
+        var whitelist = index?.Dependencies ?? DependencyWhitelist.Empty;
+        var paths = AppPaths.Resolve(env);
+        using var http = PackFetcher.CreateHttpClient(new System.Net.Http.Headers.ProductInfoHeaderValue("ailocalpack-cli", "0"));
+        var preparer = new DependencyPreparer(new DependencyStore(paths, http), new EngineDetector());
+        var resolution = preparer.Resolve(game, dependencies, whitelist, reapply ? null : new InstalledPackStore(paths).DependenciesOf(game.Id));
+        switch (resolution.Problem)
+        {
+            case DependencyProblem.Unknown:
+                error.WriteLine($"{resolution.Failed!.Id} {resolution.Failed.Version} is not on the registry's dependency whitelist"
+                    + (whitelist.Dependencies.Count > 0 ? $" ({string.Join(", ", whitelist.Dependencies.SelectMany(d => d.Versions.Select(v => $"{d.Id}@{v.Version}")))})." : " (empty)."));
+                return null;
+            case DependencyProblem.PlatformUnknown:
+                error.WriteLine($"Can't tell which system the build of {game.Id} \"{game.Name}\" is for: no readable main executable.");
+                return null;
+            case DependencyProblem.NoAsset:
+                error.WriteLine($"{resolution.Failed!.Id} {resolution.Failed.Version} has no release file for {resolution.Platform}.");
+                return null;
+        }
+
+        foreach (var shared in resolution.Shared)
+        {
+            output.WriteLine($"Dependency {shared.Dependency.Name} {shared.Version.Version}: already installed for the game; shared.");
+        }
+
+        var prepared = await preparer.PrepareAsync(resolution.Choices, staging, cancellationToken: cancellationToken).ConfigureAwait(false);
+        foreach (var done in prepared.Prepared)
+        {
+            var asset = done.Choice.Asset;
+            output.WriteLine(done.Fetch.FromCache
+                ? $"Dependency {done.Choice.Dependency.Name} {done.Choice.Version.Version} ({asset.Platform}): from the cache."
+                : $"Dependency {done.Choice.Dependency.Name} {done.Choice.Version.Version} ({asset.Platform}): downloaded {asset.Size:N0} bytes from {asset.Url.Host}, hash checked.");
+        }
+
+        if (!prepared.Succeeded)
+        {
+            var failed = prepared.Failed!;
+            error.WriteLine($"Couldn't get {failed.Dependency.Name} {failed.Version.Version} from {failed.Asset.Url}: "
+                + (prepared.Problem == DependencyProblem.Archive ? "the archive can't be unpacked safely" : $"{prepared.Fetch?.Problem}")
+                + (prepared.Detail is { Length: > 0 } detail ? $" ({detail})." : "."));
+            return null;
+        }
+
+        return [.. resolution.Shared.Select(c => new InstallDependency(c.Dependency.Id, c.Version.Version, [])), .. prepared.Prepared.Select(p => p.Install)];
     }
 
     /// <summary><c>dev fixture rpgmaker &lt;dir&gt; [--mv]</c>: a synthetic game for checking the toolkit by hand.</summary>
@@ -169,6 +284,11 @@ internal static class DevCommand
             foreach (var kept in removed.Kept)
             {
                 output.WriteLine($"  kept (changed since the install): {kept}");
+            }
+
+            foreach (var gone in removed.RemovedDependencies)
+            {
+                output.WriteLine($"  removed dependency {gone.Id} {gone.Version} (no other pack uses it)");
             }
 
             return Task.FromResult(0);
@@ -243,6 +363,7 @@ internal static class DevCommand
                 + (failure.File is null ? "." : $" ({failure.File})."),
             InstallProblem.VerifyFailed => $"{file} didn't have the expected content after writing.",
             InstallProblem.BackupDamaged => $"the backup of {file} is missing or damaged.",
+            InstallProblem.DependencyConflict => "a dependency conflicts with what is installed (another version, or a file the pack also writes).",
             _ => $"a read or write error on {file}.",
         };
         var restored = failure.FilesRestored ? string.Empty : " Not every file could be restored yet; run the command again.";

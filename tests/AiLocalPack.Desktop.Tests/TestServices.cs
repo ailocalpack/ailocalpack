@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Launch;
@@ -74,6 +75,13 @@ internal static class TestServices
                 sp.GetRequiredService<AppPaths>().Fonts,
                 sp.GetRequiredService<FontDownloads>().Http.CreateClient(),
                 options: new PackFetchOptions(TimeSpan.FromSeconds(5), Attempts: 1)));
+
+            // Whitelisted dependencies' release files come from a fake server too.
+            services.AddSingleton<DependencyDownloads>();
+            services.AddSingleton(sp => new DependencyStore(
+                sp.GetRequiredService<AppPaths>().Dependencies,
+                sp.GetRequiredService<DependencyDownloads>().Http.CreateClient(),
+                options: new PackFetchOptions(TimeSpan.FromSeconds(5), Attempts: 1)));
             configure?.Invoke(services);
         });
         provider.GetRequiredService<TempDir>();
@@ -88,6 +96,14 @@ internal static class TestServices
 
 /// <summary>The fake server whitelisted fonts are downloaded from in tests.</summary>
 internal sealed class FontDownloads : IDisposable
+{
+    public FakeHttpHandler Http { get; } = new();
+
+    public void Dispose() => Http.Dispose();
+}
+
+/// <summary>The fake server whitelisted dependencies are downloaded from in tests.</summary>
+internal sealed class DependencyDownloads : IDisposable
 {
     public FakeHttpHandler Http { get; } = new();
 

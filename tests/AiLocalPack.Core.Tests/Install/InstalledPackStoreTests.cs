@@ -118,7 +118,7 @@ public sealed class InstalledPackStoreTests : IDisposable
     {
         // Arrange
         new InstalledPackStore(_paths).Put(Pack());
-        File.WriteAllText(_paths.InstalledPacksFile, File.ReadAllText(_paths.InstalledPacksFile).Replace("\"schemaVersion\": 1", "\"schemaVersion\": 2", StringComparison.Ordinal));
+        File.WriteAllText(_paths.InstalledPacksFile, File.ReadAllText(_paths.InstalledPacksFile).Replace("\"schemaVersion\": 2", "\"schemaVersion\": 3", StringComparison.Ordinal));
         var store = new InstalledPackStore(_paths);
 
         // Act

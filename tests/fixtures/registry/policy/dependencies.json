@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "dependencies": [
+    {
+      "id": "bepinex",
+      "name": "BepInEx",
+      "homepage": "https://github.com/BepInEx/BepInEx",
+      "generated": [
+        "BepInEx/LogOutput.log",
+        "BepInEx/config/BepInEx.cfg",
+        "BepInEx/cache/*",
+        "BepInEx/cache/",
+        "BepInEx/config/",
+        "BepInEx/patchers/",
+        "BepInEx/plugins/"
+      ],
+      "versions": [
+        {
+          "version": "5.4.23.2",
+          "assets": [
+            {
+              "platform": "windows-x64",
+              "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip",
+              "size": 637157,
+              "sha256": "f752ce4e838f4c305b9da1404b6745f2cff23b8bfd494f79f0c84d0a01f59b46"
+            },
+            {
+              "platform": "windows-x86",
+              "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x86_5.4.23.2.zip",
+              "size": 636585,
+              "sha256": "7dd51193587a86c11a58530aeeb4789b15763cc6cf2c55e71785cef4ef214253"
+            },
+            {
+              "platform": "linux-x64",
+              "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_linux_x64_5.4.23.2.zip",
+              "size": 640773,
+              "sha256": "ddc446143a0a277ed92eb7a1f5bf794ff4fdd0023bddc0491f85eafd1898225b"
+            },
+            {
+              "platform": "linux-x86",
+              "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_linux_x86_5.4.23.2.zip",
+              "size": 640541,
+              "sha256": "d44f7ab07c80083946b265b6380ac396f864fc362b923fd0f83a2eb5f13c1a2f"
+            },
+            {
+              "platform": "macos-x64",
+              "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_macos_x64_5.4.23.2.zip",
+              "size": 639118,
+              "sha256": "bc724642ae54c31b9ab8e7d5b2ae5daffef0201a7349d78fcd43a7d4cbb8dbbf"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

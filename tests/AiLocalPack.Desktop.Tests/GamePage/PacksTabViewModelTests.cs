@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Dependencies;
 using System.Security.Cryptography;
 using System.Text;
 using AiLocalPack.Core.Games;
@@ -498,6 +499,29 @@ public sealed class PacksTabViewModelTests : IDisposable
         // Assert
         (row.AuthorText, row.AgentText, row.CoverageText, row.ReportsText, row.RevisionCount, row.RevisionText).Should().Be(
             ("alice", "Claude Code", "90% of strings", "works for 0 · doesn't work for 0", "3", "rev 1"));
+    }
+
+    [Fact]
+    public async Task Details_name_the_dependencies_by_the_whitelist()
+    {
+        // Arrange
+        using var services = await BuildAsync(r =>
+        {
+            r.Dependencies = DependencyWhitelist.Parse("""
+                {"schemaVersion": 1, "dependencies": [{"id": "bepinex", "name": "BepInEx", "homepage": "https://github.com/BepInEx/BepInEx", "versions": [{"version": "5.4.23.2",
+                  "assets": [{"platform": "windows-x64", "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip", "size": 637157,
+                  "sha256": "f752ce4e838f4c305b9da1404b6745f2cff23b8bfd494f79f0c84d0a01f59b46"}]}]}]}
+                """).Whitelist!;
+            r.Pack(10, "ru", "lanterns", buildId: "1000")
+                .Manifest(10, "ru", "lanterns", "1000", new Dictionary<string, string> { ["data/a.json"] = AlphaHash },
+                    dependencies: [new PackDependency("bepinex", "5.4.23.2"), new PackDependency("melonloader", "0.6.1")]);
+        });
+
+        // Act
+        var row = (await PacksAsync(services)).Selected!;
+
+        // Assert
+        row.DependenciesText.Should().Be("BepInEx 5.4.23.2 (downloaded from the official release), melonloader 0.6.1 (not on the registry's list of allowed components)");
     }
 
     [Fact]

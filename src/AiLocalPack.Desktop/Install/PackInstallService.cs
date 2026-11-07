@@ -1,4 +1,5 @@
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
@@ -10,6 +11,7 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.ViewModels.GamePage;
+using AiLocalPack.Toolkit.Dependencies;
 using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.Logging;
@@ -19,7 +21,9 @@ namespace AiLocalPack.Desktop.Install;
 
 /// <summary>
 /// Installs, re-applies and uninstalls packs (design §4a; task 29), one operation at a time: download into the cache
-/// (<see cref="PackFetcher"/>), uninstall the game's other pack, compatibility check against the player's files
+/// (<see cref="PackFetcher"/>), the whitelisted dependencies it needs from their official releases (task 32:
+/// <see cref="DependencyPreparer"/>, hash checked, unpacked on a copy; installed in the same transaction and shared
+/// with other packs), uninstall the game's other pack (keeping the dependencies the new one shares), compatibility check against the player's files
 /// (<see cref="PackCompatibilityChecker"/>), rebuild of the touched files from the strings into a staging folder (the
 /// recipe tool, reading the player's own files; then the font swap when the game's font lacks the translation's letters,
 /// <see cref="FontFixer"/>, downloading a whitelisted font that isn't bundled), then the transaction (<see cref="PackInstaller"/>: backup, write,
@@ -35,6 +39,7 @@ public sealed class PackInstallService
     private readonly PackCompatibilityChecker _checker;
     private readonly RecipeTools _recipes;
     private readonly FontFixer _fonts;
+    private readonly DependencyPreparer _dependencies;
     private readonly PackInstaller _installer;
     private readonly InstalledPackStore _store;
     private readonly AntiCheatPolicy _policy;
@@ -53,6 +58,7 @@ public sealed class PackInstallService
         PackCompatibilityChecker checker,
         RecipeTools recipes,
         FontFixer fonts,
+        DependencyPreparer dependencies,
         PackInstaller installer,
         InstalledPackStore store,
         AntiCheatPolicy policy,
@@ -68,6 +74,7 @@ public sealed class PackInstallService
         _checker = checker;
         _recipes = recipes;
         _fonts = fonts;
+        _dependencies = dependencies;
         _installer = installer;
         _store = store;
         _policy = policy;
@@ -196,28 +203,120 @@ public sealed class PackInstallService
             return unsupported;
         }
 
-        if (_store.Find(game.Id) is { } previous)
+        var staging = Path.Combine(StagingRoot, Path.GetRandomFileName());
+        var removedPrevious = false;
+        try
         {
-            run.Step(InstallStep.RemovePrevious);
-            var removed = _installer.Uninstall(game, run.TransactionProgress(), cancellationToken);
-            if (removed.Failure is { } failure)
+            // Dependencies before the previous pack goes: a download that fails leaves the game as it was.
+            var prepared = await PrepareDependenciesAsync(run, game, cached.Manifest, index, shareInstalled: true, staging, cancellationToken).ConfigureAwait(false);
+            if (prepared.Failure is { } failed)
             {
-                return run.Fail(new InstallError(InstallErrorKind.Transaction, failure.File, failure.Detail, Transaction: failure));
+                return failed;
             }
 
-            run.Log(nameof(Strings.Install_Log_Removed), TitleOf(game.Id, previous), previous.Revision);
-        }
+            if (_store.Find(game.Id) is { } previous)
+            {
+                run.Step(InstallStep.RemovePrevious);
+                var keep = cached.Manifest.Dependencies.Select(d => new DependencyKey(d.Id, d.Version)).ToList();
+                var removed = _installer.Uninstall(game, run.TransactionProgress(), cancellationToken, keep);
+                if (removed.Failure is { } failure)
+                {
+                    return run.Fail(new InstallError(InstallErrorKind.Transaction, failure.File, failure.Detail, Transaction: failure));
+                }
 
-        run.Step(InstallStep.Check);
-        var compatibility = _checker.Check(cached.Manifest, game, cancellationToken);
-        _hashes.Save();
-        run.Log(nameof(Strings.Install_Log_Checked), PackCompatibilityTexts.Short(compatibility.Verdict, _localizer));
-        if (!compatibility.CanInstall)
+                removedPrevious = true;
+                run.Log(nameof(Strings.Install_Log_Removed), TitleOf(game.Id, previous), previous.Revision);
+                run.LogRemovedDependencies(removed);
+            }
+
+            run.Step(InstallStep.Check);
+            var compatibility = _checker.Check(cached.Manifest, game, cancellationToken);
+            _hashes.Save();
+            run.Log(nameof(Strings.Install_Log_Checked), PackCompatibilityTexts.Short(compatibility.Verdict, _localizer));
+            if (!compatibility.CanInstall)
+            {
+                return run.Fail(new InstallError(InstallErrorKind.Incompatible, Compatibility: compatibility));
+            }
+
+            var outcome = await ApplyAsync(run, game, cached, reapply: false, index, prepared.Dependencies, cancellationToken).ConfigureAwait(false);
+            if (!outcome.Succeeded && removedPrevious)
+            {
+                // The previous pack is gone and the new one didn't come: the dependencies kept for it go too.
+                CleanUpDependencies(game);
+            }
+
+            return outcome;
+        }
+        finally
         {
-            return run.Fail(new InstallError(InstallErrorKind.Incompatible, Compatibility: compatibility));
+            TryDelete(staging);
+        }
+    }
+
+    /// <summary>Dependencies no pack uses any more (after a failed replacement) are removed; a failure is only logged.</summary>
+    private void CleanUpDependencies(Game game)
+    {
+        var result = _installer.RemoveUnusedDependencies(game);
+        if (result.Failure is { } failure)
+        {
+            _logger.LogWarning("Couldn't remove the unused dependencies of {Game}: {Problem} {File} {Detail}", game.Id, failure.Problem, failure.File, failure.Detail);
+        }
+    }
+
+    /// <summary>
+    /// The pack's dependencies looked up in the whitelist (an unknown one refuses the pack), their release files for the
+    /// game's platform downloaded (step <see cref="InstallStep.Dependency"/>, added when the pack has one) and unpacked
+    /// under <paramref name="staging"/>. With <paramref name="shareInstalled"/>, one installed in the same version is shared, not downloaded.
+    /// </summary>
+    private async Task<(IReadOnlyList<InstallDependency> Dependencies, InstallOutcome? Failure)> PrepareDependenciesAsync(
+        Run run, Game game, PackManifest manifest, RegistryIndex? index, bool shareInstalled, string staging, CancellationToken cancellationToken)
+    {
+        if (manifest.Dependencies.Count == 0)
+        {
+            return ([], null);
         }
 
-        return await ApplyAsync(run, game, cached, reapply: false, index, cancellationToken).ConfigureAwait(false);
+        run.AddStep(InstallStep.Dependency, after: InstallStep.Download);
+        run.Step(InstallStep.Dependency);
+        var whitelist = index?.Dependencies ?? DependencyWhitelist.Empty;
+        var resolution = _dependencies.Resolve(game, manifest.Dependencies, whitelist, shareInstalled ? _store.DependenciesOf(game.Id) : null);
+        string? Name(PackDependency? dependency) => dependency is null ? null : whitelist.Find(dependency.Id)?.Name;
+        switch (resolution.Problem)
+        {
+            case DependencyProblem.Unknown:
+                return ([], run.Fail(new InstallError(InstallErrorKind.DependencyUnknown, Dependencies: [resolution.Failed!])));
+            case DependencyProblem.PlatformUnknown:
+            case DependencyProblem.NoAsset:
+                return ([], run.Fail(new InstallError(
+                    InstallErrorKind.DependencyPlatform, Dependencies: [resolution.Failed!], DependencyName: Name(resolution.Failed), Platform: resolution.Platform?.ToString())));
+        }
+
+        foreach (var shared in resolution.Shared)
+        {
+            run.Log(nameof(Strings.Install_Log_DependencyShared), shared.Dependency.Name, shared.Version.Version);
+        }
+
+        var prepared = await _dependencies.PrepareAsync(resolution.Choices, Path.Combine(staging, "dependencies"), run.StepProgress(InstallStep.Dependency), cancellationToken).ConfigureAwait(false);
+        foreach (var done in prepared.Prepared)
+        {
+            run.LogDependencyFetch(done);
+        }
+
+        if (!prepared.Succeeded)
+        {
+            var choice = prepared.Failed!;
+            var dependency = new PackDependency(choice.Dependency.Id, choice.Version.Version);
+            _logger.LogWarning("Dependency {Id} {Version} for {Game}: {Problem} {Detail}", dependency.Id, dependency.Version, game.Id, prepared.Problem, prepared.Detail);
+            return ([], run.Fail(new InstallError(
+                prepared.Problem == DependencyProblem.Archive ? InstallErrorKind.DependencyArchive : InstallErrorKind.DependencyFetch,
+                Detail: prepared.Detail,
+                Fetch: prepared.Fetch?.Problem ?? PackFetchProblem.None,
+                Dependencies: [dependency],
+                DependencyName: choice.Dependency.Name)));
+        }
+
+        // Shared ones are named without files: the transaction adds the pack to their users.
+        return ([.. resolution.Shared.Select(c => new InstallDependency(c.Dependency.Id, c.Version.Version, [])), .. prepared.Prepared.Select(p => p.Install)], null);
     }
 
     private async Task<InstallOutcome> RunReapply(Run run, Game game, InstalledPack? record, CancellationToken cancellationToken)
@@ -264,7 +363,16 @@ public sealed class PackInstallService
             return unsupported;
         }
 
-        return await ApplyAsync(run, game, cached, reapply: true, index, cancellationToken).ConfigureAwait(false);
+        var staging = Path.Combine(StagingRoot, Path.GetRandomFileName());
+        try
+        {
+            var prepared = await PrepareDependenciesAsync(run, game, cached.Manifest, index, shareInstalled: false, staging, cancellationToken).ConfigureAwait(false);
+            return prepared.Failure ?? await ApplyAsync(run, game, cached, reapply: true, index, prepared.Dependencies, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            TryDelete(staging);
+        }
     }
 
     private Task<InstallOutcome> RunUninstall(Run run, Game game, CancellationToken cancellationToken)
@@ -282,11 +390,14 @@ public sealed class PackInstallService
             run.Log(nameof(Strings.Install_Log_Kept), kept);
         }
 
+        run.LogRemovedDependencies(result);
+
         return Task.FromResult(run.Done(uninstall: result));
     }
 
     /// <summary>Rebuilds the touched files on a copy (fonts swapped when needed), then installs (or re-applies) them as one transaction.</summary>
-    private async Task<InstallOutcome> ApplyAsync(Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, CancellationToken cancellationToken)
+    private async Task<InstallOutcome> ApplyAsync(
+        Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, IReadOnlyList<InstallDependency> dependencies, CancellationToken cancellationToken)
     {
         var manifest = cached.Manifest;
         run.Step(InstallStep.Rebuild);
@@ -331,7 +442,7 @@ public sealed class PackInstallService
                 .Select(path => new InstallFile(path, Path.Combine(staging, path.Replace('/', Path.DirectorySeparatorChar))))
                 .ToList();
             var generated = rebuilt.GeneratedFiles.Union(fonts.Files.GeneratedFiles, StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = generated };
+            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = generated, Dependencies = dependencies };
             run.Step(InstallStep.BackUp);
             var result = reapply
                 ? _installer.Reapply(request, index, run.TransactionProgress(), cancellationToken)
@@ -343,6 +454,12 @@ public sealed class PackInstallService
 
             var added = result.Installed!.Files.Count(f => f.OriginalSha256 is null);
             run.Log(nameof(Strings.Install_Log_Installed), result.Installed.Files.Count - added, added);
+            var whitelist = index?.Dependencies ?? DependencyWhitelist.Empty;
+            foreach (var dependency in result.Dependencies.Where(d => !result.SharedDependencies.Contains(d.Id)))
+            {
+                run.Log(nameof(Strings.Install_Log_DependencyInstalled), whitelist.Find(dependency.Id)?.Name ?? dependency.Id, dependency.Version, dependency.Files.Count);
+            }
+
             return run.Done(installed: result.Installed);
         }
         catch (GameBlockedException e)
@@ -368,17 +485,12 @@ public sealed class PackInstallService
         }
     }
 
-    /// <summary>Patch packs (task 34) and packs with dependencies (task 32) aren't installed yet; a recipe the toolkit lacks never.</summary>
+    /// <summary>Patch packs (task 34) aren't installed yet; a recipe the toolkit lacks never.</summary>
     private InstallOutcome? Unsupported(Run run, PackManifest manifest, Game game)
     {
         if (manifest.Patch is not null || manifest.Recipe is null)
         {
             return run.Fail(new InstallError(InstallErrorKind.PatchUnsupported));
-        }
-
-        if (manifest.Dependencies.Count > 0)
-        {
-            return run.Fail(new InstallError(InstallErrorKind.DependenciesUnsupported, Dependencies: manifest.Dependencies));
         }
 
         var support = _recipes.Check(manifest.Recipe, game.Engine);
@@ -443,6 +555,20 @@ public sealed class PackInstallService
         private readonly List<string> _log = [];
         private InstallOperation _operation = operation;
 
+        /// <summary>Adds a step the operation turned out to need (a dependency download, once the manifest is known).</summary>
+        public void AddStep(InstallStep step, InstallStep after)
+        {
+            if (_operation.Steps.Contains(step))
+            {
+                return;
+            }
+
+            var steps = _operation.Steps.ToList();
+            steps.Insert(steps.IndexOf(after) + 1, step);
+            _operation = _operation with { Steps = steps };
+            service.Report(_operation);
+        }
+
         public void Step(InstallStep step)
         {
             var index = Math.Max(0, _operation.Steps.ToList().IndexOf(step));
@@ -478,14 +604,42 @@ public sealed class PackInstallService
         });
 
         /// <summary>A whitelisted font downloaded during the rebuild step.</summary>
-        public IProgress<PackFetchProgress> FontProgress() => new Callback<PackFetchProgress>(p =>
+        public IProgress<PackFetchProgress> FontProgress() => StepProgress(InstallStep.Rebuild);
+
+        /// <summary>A download moving the bar of <paramref name="step"/>.</summary>
+        public IProgress<PackFetchProgress> StepProgress(InstallStep step) => new Callback<PackFetchProgress>(p =>
         {
-            if (p.Total > 0 && _operation.Step == InstallStep.Rebuild)
+            if (p.Total > 0 && _operation.Step == step)
             {
                 _operation = _operation with { Fraction = (double)p.Done / p.Total };
                 service.Report(_operation);
             }
         });
+
+        /// <summary>"BepInEx 5.4.23.2: downloaded 637,157 bytes from its official release, hash checked." / taken from the cache.</summary>
+        public void LogDependencyFetch(PreparedDependency prepared)
+        {
+            var choice = prepared.Choice;
+            if (prepared.Fetch.FromCache)
+            {
+                Log(nameof(Strings.Install_Log_DependencyCached), choice.Dependency.Name, choice.Version.Version, choice.Asset.Platform.ToString());
+            }
+            else
+            {
+                Log(nameof(Strings.Install_Log_DependencyDownloaded), choice.Dependency.Name, choice.Version.Version, choice.Asset.Platform.ToString(),
+                    choice.Asset.Size.ToString("N0", service._localizer.Culture), choice.Asset.Url.Host);
+            }
+        }
+
+        /// <summary>The dependencies an uninstall removed, and those it kept for the next pack.</summary>
+        public void LogRemovedDependencies(UninstallResult result)
+        {
+            var whitelist = service._packIndex.Current?.Index?.Dependencies ?? DependencyWhitelist.Empty;
+            foreach (var dependency in result.RemovedDependencies)
+            {
+                Log(nameof(Strings.Install_Log_DependencyRemoved), whitelist.Find(dependency.Id)?.Name ?? dependency.Id, dependency.Version);
+            }
+        }
 
         /// <summary>What the font check found and did, a line each.</summary>
         public void LogFonts(FontFixResult fonts)

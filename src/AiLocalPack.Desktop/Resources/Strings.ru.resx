@@ -1552,9 +1552,6 @@
   <data name="Install_Why_PatchUnsupported" xml:space="preserve">
     <value>Этот пак — бинарный патч, такие эта версия приложения пока не устанавливает.</value>
   </data>
-  <data name="Install_Why_DependenciesUnsupported" xml:space="preserve">
-    <value>Паку нужен {0}, а эта версия приложения пока не умеет его устанавливать.</value>
-  </data>
   <data name="Install_Why_InvalidStrings" xml:space="preserve">
     <value>Таблицу строк пака не удаётся прочитать.</value>
   </data>
@@ -1752,5 +1749,50 @@
   </data>
   <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
     <value>Тулкит приложения пока не работает с играми на {0} на этой системе, поэтому этот пак установить нельзя.</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>Скачивание нужных компонентов</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>Паку нужен {0}, которого нет в списке разрешённых компонентов реестра, поэтому его нельзя установить.</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>Паку нужен {0}, но в его официальном релизе нет сборки для этой версии игры ({1}).</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>Паку нужен {0}, но приложение не смогло понять, для какой системы эта сборка игры (не читается её основной исполняемый файл).</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>Не удалось скачать {0} из официального релиза. Проверьте подключение и повторите.</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>Официального релиза {0} больше нет по адресу из списка реестра.</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>Скачанный {0} не совпал с контрольной суммой из списка реестра; он удалён, ничего не установлено.</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>Архив релиза {0} нельзя безопасно распаковать; ничего не установлено.</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>Для игры уже установлена другая версия нужного паку компонента, или компонент перезаписал бы файлы самого пака.</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1} ({2}): скачано {3} байт из официального релиза ({4}), контрольная сумма сошлась.</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1} ({2}): взят из кеша (контрольная сумма проверена при скачивании).</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>{0} {1} уже установлен для этой игры; пак использует его.</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} установлен вместе с паком: файлов — {2}.</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>{0} {1} удалён: другие паки его не используют.</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0} (нет в списке разрешённых компонентов реестра)</value>
   </data>
 </root>

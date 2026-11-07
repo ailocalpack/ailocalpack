@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 
@@ -12,6 +13,9 @@ namespace AiLocalPack.Core.Registry;
 public sealed record RegistryIndex(DateTimeOffset Generated, IReadOnlyDictionary<GameId, RegistryGame> Games)
 {
     public const int CurrentSchemaVersion = 1;
+
+    /// <summary>The executable components packs may require (<c>policy/dependencies.json</c>), published with the packs.</summary>
+    public DependencyWhitelist Dependencies { get; init; } = DependencyWhitelist.Empty;
 
     /// <summary>Every pack, game by game.</summary>
     public IEnumerable<RegistryPack> Packs => Games.Values.SelectMany(g => g.AllPacks);

@@ -189,20 +189,6 @@ public sealed class PackInstallServiceTests
     }
 
     [Fact]
-    public async Task Pack_with_dependencies_is_refused_until_they_can_be_installed()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns", dependencies: [new PackDependency("bepinex", "5.4.22")]));
-        var service = bed.Services.GetRequiredService<PackInstallService>();
-
-        // Act
-        var outcome = await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
-
-        // Assert
-        outcome.Error?.Kind.Should().Be(InstallErrorKind.DependenciesUnsupported);
-    }
-
-    [Fact]
     public async Task Pack_for_changed_files_of_a_manual_build_is_refused_as_incompatible()
     {
         // Arrange: made for build 900 and its files; the game's file then changes

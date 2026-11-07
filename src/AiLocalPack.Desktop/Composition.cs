@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
@@ -25,6 +26,7 @@ using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Toolkit.AntiCheat;
+using AiLocalPack.Toolkit.Dependencies;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Folders;
 using AiLocalPack.Toolkit.Fonts;
@@ -83,6 +85,12 @@ internal static class Composition
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<FontStore>>()));
         services.AddSingleton(sp => new FontFixer(sp.GetRequiredService<FontWhitelist>(), sp.GetRequiredService<FontStore>(), sp.GetRequiredService<ILogger<FontFixer>>()));
+        services.AddSingleton(sp => new DependencyStore(
+            sp.GetRequiredService<AppPaths>(),
+            PackFetcher.CreateHttpClient(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0")),
+            sp.GetRequiredService<TimeProvider>(),
+            sp.GetRequiredService<ILogger<DependencyStore>>()));
+        services.AddSingleton(sp => new DependencyPreparer(sp.GetRequiredService<DependencyStore>(), sp.GetRequiredService<EngineDetector>()));
         services.AddSingleton(sp => new InstalledPackStore(
             sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<InstalledPackStore>>(), sp.GetRequiredService<TimeProvider>()));
         services.AddSingleton(sp => new PackInstaller(

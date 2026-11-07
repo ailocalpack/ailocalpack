@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Registry;
 
@@ -25,7 +26,8 @@ public sealed record PackValidation(string Folder, PackManifest? Manifest, IRead
 /// manifest reads, the folder sits where its manifest says, the string table matches its size and hash and reads, and the
 /// folder holds nothing else: no executable, script or archive (by extension and content), no links, no file over
 /// <see cref="MaxFileSize"/>, no more than <see cref="MaxPackSize"/> in all; every font it names is on the app's font
-/// whitelist (<see cref="FontWhitelist"/>). Never throws for disk state.
+/// whitelist (<see cref="FontWhitelist"/>), every dependency on the registry's dependency whitelist
+/// (<see cref="DependencyWhitelist.PolicyPath"/> of the registry the folder sits in). Never throws for disk state.
 /// </summary>
 public static class PackValidator
 {
@@ -34,7 +36,14 @@ public static class PackValidator
 
     public const long MaxPackSize = 100L * 1024 * 1024;
 
-    public static PackValidation Validate(string folder, CancellationToken cancellationToken = default)
+    public static PackValidation Validate(string folder, CancellationToken cancellationToken = default) =>
+        Validate(folder, null, cancellationToken);
+
+    /// <param name="dependencies">
+    /// The registry's dependency whitelist; <c>null</c> = read from <c>policy/dependencies.json</c> of the registry
+    /// checkout holding the folder (<c>&lt;root&gt;/games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c>), none when it isn't in one.
+    /// </param>
+    public static PackValidation Validate(string folder, DependencyWhitelist? dependencies, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(folder);
         var problems = new List<PackProblem>();
@@ -49,6 +58,7 @@ public static class PackValidator
         var manifest = ReadManifest(full, files, problems);
         CheckLayout(full, manifest, problems);
         CheckFonts(manifest, problems);
+        CheckDependencies(full, manifest, dependencies, problems);
         if (manifest?.Strings is { } strings)
         {
             CheckStrings(full, manifest, strings, files, problems);
@@ -202,6 +212,65 @@ public static class PackValidator
                     $"fonts[{i}]",
                     $"'{id}' is not on the font whitelist ({string.Join(", ", FontWhitelist.Bundled.Fonts.Select(f => f.Id))})."));
             }
+        }
+    }
+
+    /// <summary>Packs name whitelisted executables (ID and version), never ship them.</summary>
+    private static void CheckDependencies(string folder, PackManifest? manifest, DependencyWhitelist? whitelist, List<PackProblem> problems)
+    {
+        if (manifest is not { Dependencies.Count: > 0 })
+        {
+            return;
+        }
+
+        if (whitelist is null)
+        {
+            var root = new DirectoryInfo(folder).Parent?.Parent?.Parent?.Parent;
+            var file = root is null ? null : Path.Combine(root.FullName, DependencyWhitelist.PolicyPath.Replace('/', Path.DirectorySeparatorChar));
+            if (file is null || !File.Exists(file))
+            {
+                whitelist = DependencyWhitelist.Empty;
+            }
+            else
+            {
+                string text;
+                try
+                {
+                    text = File.ReadAllText(file);
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+                {
+                    problems.Add(new PackProblem(RegistryLayout.ManifestFileName, "dependencies", $"can't be checked: {DependencyWhitelist.PolicyPath} can't be read ({e.Message})."));
+                    return;
+                }
+
+                var (parsed, errors) = DependencyWhitelist.Parse(text);
+                if (parsed is null)
+                {
+                    problems.Add(new PackProblem(RegistryLayout.ManifestFileName, "dependencies", $"can't be checked: {DependencyWhitelist.PolicyPath} is invalid ({errors[0]})."));
+                    return;
+                }
+
+                whitelist = parsed;
+            }
+        }
+
+        for (var i = 0; i < manifest.Dependencies.Count; i++)
+        {
+            var dependency = manifest.Dependencies[i];
+            if (whitelist.Contains(dependency))
+            {
+                continue;
+            }
+
+            var known = whitelist.Find(dependency.Id);
+            problems.Add(new PackProblem(
+                RegistryLayout.ManifestFileName,
+                $"dependencies[{i}]",
+                known is null
+                    ? $"'{dependency.Id}' is not on the registry's dependency whitelist ({DependencyWhitelist.PolicyPath}"
+                        + (whitelist.Dependencies.Count > 0 ? $": {string.Join(", ", whitelist.Dependencies.Select(d => d.Id))})." : ", empty).")
+                    : $"{known.Name} {dependency.Version} is not on the registry's dependency whitelist (listed versions: {string.Join(", ", known.Versions.Select(v => v.Version))})."));
         }
     }
 

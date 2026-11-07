@@ -44,13 +44,45 @@ public sealed class InstallTextsTests
     }
 
     [Fact]
-    public void Dependencies_are_named()
+    public void Unknown_dependency_is_named()
     {
         // Act
-        var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.DependenciesUnsupported, Dependencies: [new("bepinex", "5.4.22")]), En);
+        var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.DependencyUnknown, Dependencies: [new("bepinex", "5.4.22")]), En);
 
         // Assert
-        reason.Should().Be("This pack needs bepinex 5.4.22, which this version of the app can't install yet.");
+        reason.Should().Be("This pack needs bepinex 5.4.22, which isn't on the registry's list of allowed components, so it can't be installed.");
+    }
+
+    [Fact]
+    public void Dependency_hash_mismatch_says_nothing_was_installed()
+    {
+        // Act
+        var reason = InstallTexts.Reason(
+            new InstallError(InstallErrorKind.DependencyFetch, Fetch: PackFetchProblem.HashMismatch, Dependencies: [new("bepinex", "5.4.23.2")], DependencyName: "BepInEx"), En);
+
+        // Assert
+        reason.Should().Be("The downloaded BepInEx 5.4.23.2 doesn't match the hash on the registry's list; it was deleted and nothing was installed.");
+    }
+
+    [Fact]
+    public void Dependency_without_a_build_for_the_game_names_the_platform()
+    {
+        // Act
+        var reason = InstallTexts.Reason(
+            new InstallError(InstallErrorKind.DependencyPlatform, Dependencies: [new("bepinex", "5.4.23.2")], DependencyName: "BepInEx", Platform: "linux-arm64"), En);
+
+        // Assert
+        reason.Should().Be("This pack needs BepInEx 5.4.23.2, and its official release has no build for this game's version (linux-arm64).");
+    }
+
+    [Fact]
+    public void Dependency_risk_uses_the_whitelist_name()
+    {
+        // Act
+        var line = InstallTexts.Risk(new InstallRisk(InstallRiskKind.Dependency, Dependency: new("bepinex", "5.4.23.2"), DependencyName: "BepInEx"), En);
+
+        // Assert
+        line.Should().Be("Downloads BepInEx 5.4.23.2 from its official release (hash checked).");
     }
 
     [Fact]

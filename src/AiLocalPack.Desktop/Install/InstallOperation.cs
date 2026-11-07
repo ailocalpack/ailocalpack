@@ -25,6 +25,9 @@ public enum InstallStep
     /// <summary>Downloading the pack into the cache (instant when cached).</summary>
     Download,
 
+    /// <summary>Downloading the whitelisted dependencies from their official releases (only when the pack needs one).</summary>
+    Dependency,
+
     /// <summary>Uninstalling the pack it replaces.</summary>
     RemovePrevious,
 
@@ -90,8 +93,20 @@ public enum InstallErrorKind
     /// <summary>A binary patch pack: installed from task 34 on.</summary>
     PatchUnsupported,
 
-    /// <summary>The pack needs whitelisted executables: installed from task 32 on.</summary>
-    DependenciesUnsupported,
+    /// <summary>A dependency the pack names isn't on the registry's whitelist (<see cref="InstallError.Dependencies"/>).</summary>
+    DependencyUnknown,
+
+    /// <summary>
+    /// The whitelist has no release file of the dependency for the game build's platform (<see cref="InstallError.Platform"/>),
+    /// or the platform can't be told (<c>null</c>).
+    /// </summary>
+    DependencyPlatform,
+
+    /// <summary>The dependency couldn't be downloaded from its official release or failed its hash check (<see cref="InstallError.Fetch"/>).</summary>
+    DependencyFetch,
+
+    /// <summary>The dependency's release archive can't be unpacked safely.</summary>
+    DependencyArchive,
 
     /// <summary>The downloaded string table doesn't read.</summary>
     InvalidStrings,
@@ -122,7 +137,9 @@ public sealed record InstallError(
     InstallFailure? Transaction = null,
     IReadOnlyList<PackDependency>? Dependencies = null,
     FontFetchProblem Font = FontFetchProblem.None,
-    string? FontName = null)
+    string? FontName = null,
+    string? DependencyName = null,
+    string? Platform = null)
 {
     /// <summary>The game folder is as it was before (always unless restoring itself failed; the next start retries).</summary>
     public bool FilesRestored => Transaction?.FilesRestored ?? true;
@@ -131,7 +148,7 @@ public sealed record InstallError(
     public bool CanRetry => Kind switch
     {
         InstallErrorKind.Busy or InstallErrorKind.Transaction or InstallErrorKind.Unexpected or InstallErrorKind.Recipe => true,
-        InstallErrorKind.Fetch => Fetch is PackFetchProblem.Offline or PackFetchProblem.Timeout or PackFetchProblem.HttpError
+        InstallErrorKind.Fetch or InstallErrorKind.DependencyFetch => Fetch is PackFetchProblem.Offline or PackFetchProblem.Timeout or PackFetchProblem.HttpError
             or PackFetchProblem.HashMismatch or PackFetchProblem.DiskError,
         InstallErrorKind.Font => Font is not FontFetchProblem.FileMissing,
         _ => false,
@@ -141,7 +158,7 @@ public sealed record InstallError(
 /// <summary>How an operation ended.</summary>
 /// <param name="Log">What happened, line by line, in the UI language (the failure details dialog shows it).</param>
 /// <param name="Installed">The record written (install, re-apply).</param>
-/// <param name="Uninstall">What uninstall did (restored, removed, kept files).</param>
+/// <param name="Uninstall">What uninstall did (restored, removed, kept files; dependencies removed).</param>
 public sealed record InstallOutcome(
     InstallOperationKind Kind,
     Game Game,
