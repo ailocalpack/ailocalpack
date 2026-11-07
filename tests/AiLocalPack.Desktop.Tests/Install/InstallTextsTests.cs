@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Install;
+using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Localization;
@@ -41,6 +42,36 @@ public sealed class InstallTextsTests
 
         // Assert
         reason.Should().Be("The game's font lacks letters of this translation, and the open font Noto Sans JP that has them couldn't be downloaded. Check the connection and retry.");
+    }
+
+    [Fact]
+    public void A_patch_that_doesnt_decode_names_the_file()
+    {
+        // Act
+        var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.Patch, "data/level.bin", Patch: PatchProblem.Decode), En);
+
+        // Assert
+        reason.Should().Be("Couldn't apply the binary patch to data/level.bin: the patch is damaged or made in a way this app can't read.");
+    }
+
+    [Fact]
+    public void A_damaged_patch_archive_says_so()
+    {
+        // Act
+        var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.Patch, Patch: PatchProblem.ArchiveInvalid), En);
+
+        // Assert
+        reason.Should().Be("The pack's patch archive is damaged.");
+    }
+
+    [Fact]
+    public void The_patch_step_has_its_own_words()
+    {
+        // Act
+        var step = InstallTexts.Step(InstallStep.Patch, En);
+
+        // Assert
+        step.Should().Be("Applying the binary patch to a copy of the game files");
     }
 
     [Fact]

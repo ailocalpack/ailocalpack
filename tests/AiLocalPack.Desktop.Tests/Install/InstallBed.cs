@@ -125,6 +125,54 @@ internal sealed class InstallBed : IDisposable
         return this;
     }
 
+    /// <summary>The text <see cref="PatchPack"/> puts into <see cref="SystemFile"/>.</summary>
+    public const string PatchedTitle = "Патч: Фонарщики";
+
+    /// <summary>
+    /// Adds a binary patch pack of game 10 (task 34): a VCDIFF delta turning the current <see cref="SystemFile"/> into one
+    /// whose game title is <see cref="PatchedTitle"/>, in the registry's <c>releases/</c> folder (standing in for the
+    /// Release asset), and a manifest with the original and patched hashes.
+    /// </summary>
+    /// <param name="delta">Archived instead of the real delta (a damaged patch whose archive still has the manifest's hash).</param>
+    public InstallBed PatchPack(string id, string buildId = "1000", string language = "ru", byte[]? delta = null)
+    {
+        var path = Path.Combine(GameDir, SystemFile);
+        var original = File.ReadAllBytes(path);
+        var patched = System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(path).Replace("\"gameTitle\":", $"\"gameTitle\":\"{PatchedTitle}\",\"oldTitle\":", StringComparison.Ordinal));
+        var asset = $"steam-10-{language}-{id}-1.zip";
+        var archive = Path.Combine(_registry.Path, "releases", asset);
+        VcdiffFixture.Archive(archive, new Dictionary<string, byte[]> { [SystemFile] = delta ?? VcdiffFixture.Encode(original, patched) });
+        var archiveBytes = File.ReadAllBytes(archive);
+        string Sha(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
+        var date = new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
+        var manifest = new PackManifest(
+            id,
+            Alpha,
+            language,
+            id,
+            [new PackAuthor("alice")],
+            [new PackRevision(1, date, "alice")],
+            PackStatus.Verified,
+            new PackAgent("claude-code"),
+            [new PackBuild(buildId, new Dictionary<string, string> { [SystemFile] = Sha(original) })],
+            null,
+            null,
+            new PackPatch(
+                PackPatch.VcdiffFormat,
+                new Uri($"https://github.com/ailocalpack/registry/releases/download/packs/{asset}"),
+                Sha(archiveBytes),
+                archiveBytes.Length,
+                new Dictionary<string, string> { [SystemFile] = Sha(patched) }),
+            [],
+            [],
+            new PackCoverage(1, 1),
+            date,
+            date);
+        _registry.Pack(10, language, id, PackStatus.Verified, 0, buildId);
+        _registry.WriteFile($"games/steam-10/{language}/{id}/manifest.json", PackManifestSerializer.Write(manifest));
+        return this;
+    }
+
     public void Dispose()
     {
         Services?.Dispose();

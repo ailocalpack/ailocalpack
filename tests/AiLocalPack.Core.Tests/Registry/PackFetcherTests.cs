@@ -344,6 +344,45 @@ public sealed class PackFetcherTests : IDisposable
         (Path.GetFileName(result.Pack!.PatchFile), Sha256(File.ReadAllBytes(result.Pack.PatchFile!))).Should().Be((PackCache.PatchFileName, Sha256(patch)));
     }
 
+    /// <summary>A copy of the fixture registry whose pack is a patch pack; returns its folder.</summary>
+    private string LocalPatchRegistry(byte[] patch)
+    {
+        var root = _home.CopyFolder(RegistryFixtures.Folder, "registry").Combine("registry");
+        var pack = Path.Combine(root, "games", "steam-620", "ru", "full");
+        File.WriteAllText(Path.Combine(pack, "manifest.json"), ManifestFor(File.ReadAllBytes(Path.Combine(pack, "strings", "strings.json.gz")), patch));
+        return root;
+    }
+
+    [Fact]
+    public async Task Local_registry_takes_the_patch_archive_from_its_releases_folder()
+    {
+        // Arrange
+        var patch = RandomNumberGenerator.GetBytes(10_000);
+        var root = LocalPatchRegistry(patch);
+        _home.File($"registry/{PackFetcher.LocalReleasesFolder}/steam-620-ru-full-2.zip", patch);
+
+        // Act
+        var result = await FetchAsync(root);
+
+        // Assert
+        (result.Problem, Sha256(File.ReadAllBytes(result.Pack!.PatchFile!)), _http.Requests.Count).Should().Be((PackFetchProblem.None, Sha256(patch), 0));
+    }
+
+    [Fact]
+    public async Task Local_registry_without_the_archive_downloads_it_from_its_release_url()
+    {
+        // Arrange
+        var patch = RandomNumberGenerator.GetBytes(10_000);
+        var root = LocalPatchRegistry(patch);
+        _http.OnGet(PatchUrl, patch);
+
+        // Act
+        var result = await FetchAsync(root);
+
+        // Assert
+        Sha256(File.ReadAllBytes(result.Pack!.PatchFile!)).Should().Be(Sha256(patch));
+    }
+
     [Fact]
     public async Task Patch_with_the_wrong_hash_leaves_no_complete_entry()
     {

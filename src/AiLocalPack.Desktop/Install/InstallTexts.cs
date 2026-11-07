@@ -1,6 +1,7 @@
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
@@ -35,6 +36,7 @@ public static class InstallTexts
             InstallStep.RemovePrevious => nameof(Strings.Install_Step_RemovePrevious),
             InstallStep.Check => nameof(Strings.Install_Step_Check),
             InstallStep.Rebuild => nameof(Strings.Install_Step_Rebuild),
+            InstallStep.Patch => nameof(Strings.Install_Step_Patch),
             InstallStep.BackUp => nameof(Strings.Install_Step_BackUp),
             InstallStep.Write => nameof(Strings.Install_Step_Write),
             InstallStep.Verify => nameof(Strings.Install_Step_Verify),
@@ -69,7 +71,13 @@ public static class InstallTexts
             InstallErrorKind.Incompatible when error.Compatibility is { } compatibility =>
                 localizer.Format(nameof(Strings.Install_Why_Incompatible), PackCompatibilityTexts.Explain(compatibility, localizer)),
             InstallErrorKind.Incompatible => localizer.Format(nameof(Strings.Install_Why_Incompatible), string.Empty).TrimEnd(),
-            InstallErrorKind.PatchUnsupported => localizer[nameof(Strings.Install_Why_PatchUnsupported)],
+            InstallErrorKind.Patch => error.Patch switch
+            {
+                PatchProblem.ArchiveInvalid => localizer[nameof(Strings.Install_Why_PatchArchive)],
+                PatchProblem.SourceUnreadable => localizer.Format(nameof(Strings.Install_Why_PatchUnreadable), file),
+                PatchProblem.DiskError => localizer[nameof(Strings.Install_Why_StagingError)],
+                _ => localizer.Format(nameof(Strings.Install_Why_Patch), file),
+            },
             InstallErrorKind.DependencyUnknown => localizer.Format(
                 nameof(Strings.Install_Why_DependencyUnknown),
                 string.Join(", ", (error.Dependencies ?? []).Select(d => $"{d.Id} {d.Version}"))),

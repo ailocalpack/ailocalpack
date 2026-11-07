@@ -77,7 +77,7 @@ public sealed record PackFetchOptions(TimeSpan Timeout, int Attempts = 3, TimeSp
 /// <summary>
 /// Downloads one pack the index lists into the <see cref="PackCache"/>: its manifest (<see cref="PackManifestClient"/>),
 /// then only the files it needs: the gzip string table (next to the manifest, local registry or https) and the binary
-/// patch archive (its https Release asset URL). Each file is checked against the size and SHA-256 the manifest gives;
+/// patch archive (its https Release asset URL; for a local registry the file of that name in its <c>releases/</c> folder when present). Each file is checked against the size and SHA-256 the manifest gives;
 /// a mismatch deletes it. Downloads go to <c>*.part</c> files and resume with an HTTP range request after a dropped
 /// connection, within this call (a few tries) and in the next one. A revision already cached is not downloaded again;
 /// when the manifest can't be fetched (offline, timeout, server error) the cached copy of the index's revision is used.
@@ -85,6 +85,9 @@ public sealed record PackFetchOptions(TimeSpan Timeout, int Attempts = 3, TimeSp
 /// </summary>
 public sealed class PackFetcher
 {
+    /// <summary>Folder of a local registry (next to <c>index.json</c>) holding the patch archives its packs name, as Release assets would.</summary>
+    public const string LocalReleasesFolder = "releases";
+
     private readonly PackManifestClient _manifests;
     private readonly VerifiedDownloader _downloader;
     private readonly PackCache _cache;
@@ -199,7 +202,7 @@ public sealed class PackFetcher
                 return Fail(pack, PackFetchProblem.InvalidManifest, $"The patch address {patch.Url} is not https.", counter);
             }
 
-            if (await _downloader.DownloadAsync(patch.Url, entry.PatchFile!, patch.Size, patch.Sha256, counter, cancellationToken).ConfigureAwait(false) is { } failure)
+            if (await _downloader.DownloadAsync(PatchSource(location, patch), entry.PatchFile!, patch.Size, patch.Sha256, counter, cancellationToken).ConfigureAwait(false) is { } failure)
             {
                 return Fail(pack, failure.Problem, failure.Detail, counter);
             }
@@ -217,6 +220,22 @@ public sealed class PackFetcher
 
         _logger.LogInformation("Pack {Pack} revision {Revision} fetched into {Folder} ({Bytes} bytes downloaded)", Key(pack), manifest.Revision, entry.Folder, counter.Downloaded);
         return new PackFetchResult(entry, PackFetchProblem.None, Downloaded: counter.Downloaded);
+    }
+
+    /// <summary>
+    /// Where the patch archive comes from: its Release asset URL; a local registry (dev, tests) has no Releases, so the
+    /// file of the same name in its <see cref="LocalReleasesFolder"/> stands in for the asset when it is there.
+    /// </summary>
+    private static Uri PatchSource(RegistryLocation location, PackPatch patch)
+    {
+        var name = Uri.UnescapeDataString(patch.Url.Segments[^1]);
+        if (!location.IsLocal || name.Length == 0 || name is "." or ".." || name.IndexOfAny(['/', '\\', ':']) >= 0)
+        {
+            return patch.Url;
+        }
+
+        var local = location.Resolve(LocalReleasesFolder + "/" + Uri.EscapeDataString(name));
+        return File.Exists(local.LocalPath) ? local : patch.Url;
     }
 
     private static string? CheckStrings(CachedPack entry)

@@ -133,7 +133,7 @@ internal static class PackCommand
         return validate;
     }
 
-    private static PackManifest? ReadManifest(string path, TextWriter error)
+    internal static PackManifest? ReadManifest(string path, TextWriter error)
     {
         var file = Directory.Exists(path) ? Path.Combine(path, "manifest.json") : path;
         string text;

@@ -1549,9 +1549,6 @@
   <data name="Install_Why_Incompatible" xml:space="preserve">
     <value>Пак не подходит к вашей версии игры. {0}</value>
   </data>
-  <data name="Install_Why_PatchUnsupported" xml:space="preserve">
-    <value>Этот пак — бинарный патч, такие эта версия приложения пока не устанавливает.</value>
-  </data>
   <data name="Install_Why_InvalidStrings" xml:space="preserve">
     <value>Таблицу строк пака не удаётся прочитать.</value>
   </data>
@@ -1839,5 +1836,26 @@
   </data>
   <data name="Install_Toast_AutoReapplyFailed" xml:space="preserve">
     <value>{1}: после обновления игры не удалось заново применить «{0}»; файлы восстановлены.</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>Применение бинарного патча к копии файлов игры</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>Пропатчено файлов: {0}.</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>Уже пропатчены, оставлены как есть: {0}.</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>Архив патча в паке повреждён.</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>Не удаётся прочитать {0}, чтобы пропатчить его.</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>Не удалось записать пропатченные файлы: в папку кэша нельзя записать.</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>Не удалось применить бинарный патч к {0}: патч повреждён или сделан так, что приложение не может его прочитать.</value>
   </data>
 </root>

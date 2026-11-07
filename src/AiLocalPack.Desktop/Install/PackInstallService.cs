@@ -5,6 +5,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Localization;
@@ -26,7 +27,8 @@ namespace AiLocalPack.Desktop.Install;
 /// with other packs), uninstall the game's other pack (keeping the dependencies the new one shares), compatibility check against the player's files
 /// (<see cref="PackCompatibilityChecker"/>), rebuild of the touched files from the strings into a staging folder (the
 /// recipe tool, reading the player's own files; then the font swap when the game's font lacks the translation's letters,
-/// <see cref="FontFixer"/>, downloading a whitelisted font that isn't bundled), then the transaction (<see cref="PackInstaller"/>: backup, write,
+/// <see cref="FontFixer"/>, downloading a whitelisted font that isn't bundled; for a binary patch pack, task 34, the
+/// patch applied to the player's exact files instead, <see cref="PatchApplier"/>), then the transaction (<see cref="PackInstaller"/>: backup, write,
 /// verify, rollback on failure). Only the app's own code runs; nothing from the pack executes. <see cref="Current"/>
 /// and <see cref="Changed"/> give the step for the progress block, the list row and the library card. Never throws:
 /// every failure is an <see cref="InstallOutcome.Error"/> with a log in the UI language.
@@ -395,54 +397,30 @@ public sealed class PackInstallService
         return Task.FromResult(run.Done(uninstall: result));
     }
 
-    /// <summary>Rebuilds the touched files on a copy (fonts swapped when needed), then installs (or re-applies) them as one transaction.</summary>
+    /// <summary>
+    /// Makes the touched files on a copy (the recipe's rebuild with the font swap, or the binary patch), then installs (or
+    /// re-applies) them as one transaction.
+    /// </summary>
     private async Task<InstallOutcome> ApplyAsync(
         Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, IReadOnlyList<InstallDependency> dependencies, CancellationToken cancellationToken)
     {
         var manifest = cached.Manifest;
-        run.Step(InstallStep.Rebuild);
-        var strings = cached.ReadStrings();
-        if (strings.Value is not { } table)
-        {
-            return run.Fail(new InstallError(InstallErrorKind.InvalidStrings, Detail: string.Join("; ", strings.Errors.Select(e => $"{e.Field}: {e.Message}"))));
-        }
-
-        var tool = _recipes.Find(manifest.Recipe!.Tool)!;
         var staging = Path.Combine(StagingRoot, Path.GetRandomFileName());
         try
         {
-            RebuildResult rebuilt;
-            FontFixResult fonts;
-            var output = new DirectoryRebuildOutput(staging);
-            try
+            var staged = manifest.Patch is null
+                ? await RebuildAsync(run, game, cached, staging, cancellationToken).ConfigureAwait(false)
+                : Patch(run, game, cached, staging, cancellationToken);
+            if (staged.Failure is { } stagingFailure)
             {
-                rebuilt = tool.Rebuild(game.InstallPath, table.Language, table.Strings, output, cancellationToken);
-                run.Log(nameof(Strings.Install_Log_Rebuilt), rebuilt.ChangedFiles.Count, rebuilt.Applied);
-                if (rebuilt.UnknownKeys.Count > 0)
-                {
-                    run.Log(nameof(Strings.Install_Log_UnknownKeys), rebuilt.UnknownKeys.Count);
-                }
-
-                fonts = await _fonts.ApplyAsync(tool, game.InstallPath, table.Language, table.Strings, manifest.Fonts, output, run.FontProgress(), cancellationToken).ConfigureAwait(false);
-            }
-            catch (RecipeException e)
-            {
-                _logger.LogWarning(e, "Rebuilding {Pack} for {Game} failed at {File}", manifest.Id, game.Id, e.File);
-                return run.Fail(new InstallError(InstallErrorKind.Recipe, e.File, e.Message));
+                return stagingFailure;
             }
 
-            run.LogFonts(fonts);
-            if (fonts.Failure is { } fontFailure)
-            {
-                return run.Fail(new InstallError(InstallErrorKind.Font, Detail: fontFailure.Detail, Font: fontFailure.Problem, FontName: fonts.FailedFont?.Name));
-            }
-
-            var files = rebuilt.ChangedFiles.Union(fonts.Files.Files, StringComparer.Ordinal)
+            var files = staged.Files
                 .Order(StringComparer.Ordinal)
                 .Select(path => new InstallFile(path, Path.Combine(staging, path.Replace('/', Path.DirectorySeparatorChar))))
                 .ToList();
-            var generated = rebuilt.GeneratedFiles.Union(fonts.Files.GeneratedFiles, StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = generated, Dependencies = dependencies };
+            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = staged.Generated, Dependencies = dependencies };
             run.Step(InstallStep.BackUp);
             var result = reapply
                 ? _installer.Reapply(request, index, run.TransactionProgress(), cancellationToken)
@@ -472,6 +450,105 @@ public sealed class PackInstallService
         }
     }
 
+    /// <summary>The touched files written into <paramref name="staging"/>, or the failure.</summary>
+    private sealed record Staged(IReadOnlyList<string> Files, IReadOnlyList<string> Generated, InstallOutcome? Failure)
+    {
+        public static Staged Failed(InstallOutcome failure) => new([], [], failure);
+    }
+
+    /// <summary>The recipe rebuilds the touched files from the strings, then the font swap when the game's font lacks letters.</summary>
+    private async Task<Staged> RebuildAsync(Run run, Game game, CachedPack cached, string staging, CancellationToken cancellationToken)
+    {
+        var manifest = cached.Manifest;
+        run.Step(InstallStep.Rebuild);
+        var strings = cached.ReadStrings();
+        if (strings.Value is not { } table)
+        {
+            return Staged.Failed(run.Fail(new InstallError(InstallErrorKind.InvalidStrings, Detail: string.Join("; ", strings.Errors.Select(e => $"{e.Field}: {e.Message}")))));
+        }
+
+        var tool = _recipes.Find(manifest.Recipe!.Tool)!;
+        RebuildResult rebuilt;
+        FontFixResult fonts;
+        var output = new DirectoryRebuildOutput(staging);
+        try
+        {
+            rebuilt = tool.Rebuild(game.InstallPath, table.Language, table.Strings, output, cancellationToken);
+            run.Log(nameof(Strings.Install_Log_Rebuilt), rebuilt.ChangedFiles.Count, rebuilt.Applied);
+            if (rebuilt.UnknownKeys.Count > 0)
+            {
+                run.Log(nameof(Strings.Install_Log_UnknownKeys), rebuilt.UnknownKeys.Count);
+            }
+
+            fonts = await _fonts.ApplyAsync(tool, game.InstallPath, table.Language, table.Strings, manifest.Fonts, output, run.FontProgress(), cancellationToken).ConfigureAwait(false);
+        }
+        catch (RecipeException e)
+        {
+            _logger.LogWarning(e, "Rebuilding {Pack} for {Game} failed at {File}", manifest.Id, game.Id, e.File);
+            return Staged.Failed(run.Fail(new InstallError(InstallErrorKind.Recipe, e.File, e.Message)));
+        }
+
+        run.LogFonts(fonts);
+        if (fonts.Failure is { } fontFailure)
+        {
+            return Staged.Failed(run.Fail(new InstallError(InstallErrorKind.Font, Detail: fontFailure.Detail, Font: fontFailure.Problem, FontName: fonts.FailedFont?.Name)));
+        }
+
+        return new Staged(
+            [.. rebuilt.ChangedFiles.Union(fonts.Files.Files, StringComparer.Ordinal)],
+            [.. rebuilt.GeneratedFiles.Union(fonts.Files.GeneratedFiles, StringComparer.Ordinal).Order(StringComparer.Ordinal)],
+            null);
+    }
+
+    /// <summary>
+    /// A binary patch pack (task 34): each touched file must be exactly the one the patch was made from (else
+    /// incompatible), the delta is decoded into staging and the result checked against the manifest's hash.
+    /// </summary>
+    private Staged Patch(Run run, Game game, CachedPack cached, string staging, CancellationToken cancellationToken)
+    {
+        var manifest = cached.Manifest;
+        run.ReplaceStep(InstallStep.Rebuild, InstallStep.Patch);
+        run.Step(InstallStep.Patch);
+        var result = new PatchApplier(_hashes).Apply(manifest, cached.PatchFile!, game.InstallPath, staging, run.PatchProgress(), cancellationToken);
+        _hashes.Save();
+        if (result.Failure is { } failure)
+        {
+            _logger.LogWarning("Patching {Pack} for {Game} failed: {Problem} {File} {Detail}", manifest.Id, game.Id, failure.Problem, failure.File, failure.Detail);
+            return Staged.Failed(run.Fail(PatchError(failure, manifest, game)));
+        }
+
+        run.Log(nameof(Strings.Install_Log_Patched), result.Files.Count - result.AlreadyPatched.Count);
+        if (result.AlreadyPatched.Count > 0)
+        {
+            run.Log(nameof(Strings.Install_Log_AlreadyPatched), result.AlreadyPatched.Count);
+        }
+
+        return new Staged(result.Files, [], null);
+    }
+
+    /// <summary>A file other than the one the patch was made from (or a missing one) makes the pack incompatible; anything else is a patch error.</summary>
+    private static InstallError PatchError(PatchFailure failure, PackManifest manifest, Game game)
+    {
+        var build = manifest.Builds[0];
+        PackCompatibility Incompatible(PackCompatibilityReason reason, IReadOnlyList<string> changed, IReadOnlyList<string> missing) => new(
+            PackCompatibilityVerdict.Incompatible,
+            reason,
+            [.. manifest.Builds.Select(b => b.BuildId).OfType<string>()],
+            game.Version?.BuildId,
+            build.BuildId,
+            build.Files.Count,
+            changed,
+            missing);
+        return failure.Problem switch
+        {
+            PatchProblem.SourceMismatch => new InstallError(
+                InstallErrorKind.Incompatible, failure.File, Compatibility: Incompatible(PackCompatibilityReason.PatchFilesChanged, [failure.File!], [])),
+            PatchProblem.SourceMissing => new InstallError(
+                InstallErrorKind.Incompatible, failure.File, Compatibility: Incompatible(PackCompatibilityReason.FilesMissing, [], [failure.File!])),
+            _ => new InstallError(InstallErrorKind.Patch, failure.File, failure.Detail, Patch: failure.Problem),
+        };
+    }
+
     private InstallOutcome? Blocked(Run run, Game game, RegistryIndex? index)
     {
         try
@@ -485,12 +562,12 @@ public sealed class PackInstallService
         }
     }
 
-    /// <summary>Patch packs (task 34) aren't installed yet; a recipe the toolkit lacks never.</summary>
+    /// <summary>A recipe the toolkit lacks (or has switched off for the game's engine on this OS) is never installed; a binary patch needs no tool.</summary>
     private InstallOutcome? Unsupported(Run run, PackManifest manifest, Game game)
     {
-        if (manifest.Patch is not null || manifest.Recipe is null)
+        if (manifest.Recipe is null)
         {
-            return run.Fail(new InstallError(InstallErrorKind.PatchUnsupported));
+            return null;
         }
 
         var support = _recipes.Check(manifest.Recipe, game.Engine);
@@ -555,6 +632,14 @@ public sealed class PackInstallService
         private readonly List<string> _log = [];
         private InstallOperation _operation = operation;
 
+        /// <summary>Swaps a step for another one once the manifest is known (a binary patch instead of the rebuild).</summary>
+        public void ReplaceStep(InstallStep step, InstallStep with)
+        {
+            var steps = _operation.Steps.Select(s => s == step ? with : s).ToList();
+            _operation = _operation with { Steps = steps };
+            service.Report(_operation);
+        }
+
         /// <summary>Adds a step the operation turned out to need (a dependency download, once the manifest is known).</summary>
         public void AddStep(InstallStep step, InstallStep after)
         {
@@ -597,6 +682,16 @@ public sealed class PackInstallService
         public IProgress<PackFetchProgress> DownloadProgress() => new Callback<PackFetchProgress>(p =>
         {
             if (p.Total > 0 && _operation.Step == InstallStep.Download)
+            {
+                _operation = _operation with { Fraction = (double)p.Done / p.Total };
+                service.Report(_operation);
+            }
+        });
+
+        /// <summary>Files patched, moving the patch step's bar.</summary>
+        public IProgress<PatchProgress> PatchProgress() => new Callback<PatchProgress>(p =>
+        {
+            if (p.Total > 0 && _operation.Step == InstallStep.Patch)
             {
                 _operation = _operation with { Fraction = (double)p.Done / p.Total };
                 service.Report(_operation);

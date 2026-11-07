@@ -13,6 +13,7 @@
         <None Include="..\..\schemas\*.json" LinkBase="schemas" CopyToOutputDirectory="PreserveNewest" />
         <None Include="..\fixtures\packs\**\*" LinkBase="fixtures\packs" CopyToOutputDirectory="PreserveNewest" />
         <None Include="..\fixtures\registry\**\*" LinkBase="fixtures\registry" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="..\fixtures\vcdiff\**\*" LinkBase="fixtures\vcdiff" CopyToOutputDirectory="PreserveNewest" />
         <None Include="..\fixtures\registry-ratings.json" Link="fixtures\registry-ratings.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

@@ -1520,9 +1520,6 @@
   <data name="Install_Why_Incompatible" xml:space="preserve">
     <value>The pack doesn't fit your version of the game. {0}</value>
   </data>
-  <data name="Install_Why_PatchUnsupported" xml:space="preserve">
-    <value>This pack is a binary patch, which this version of the app can't install yet.</value>
-  </data>
   <data name="Install_Why_InvalidStrings" xml:space="preserve">
     <value>The pack's string table can't be read.</value>
   </data>
@@ -1807,5 +1804,26 @@
   </data>
   <data name="Install_Toast_AutoReapplyFailed" xml:space="preserve">
     <value>{1}: couldn't re-apply «{0}» after the game update; files restored.</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>Applying the binary patch to a copy of the game files</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>Files patched: {0}.</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>Already patched, left as they are: {0}.</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>The pack's patch archive is damaged.</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>Can't read {0} to patch it.</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>Couldn't write the patched files: the cache folder can't be written.</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>Couldn't apply the binary patch to {0}: the patch is damaged or made in a way this app can't read.</value>
   </data>
 </root>

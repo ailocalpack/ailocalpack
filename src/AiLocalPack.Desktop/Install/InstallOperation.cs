@@ -2,6 +2,7 @@ using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Registry;
 
 namespace AiLocalPack.Desktop.Install;
@@ -36,6 +37,9 @@ public enum InstallStep
 
     /// <summary>Rebuilding the game files from the strings, on a copy (the recipe).</summary>
     Rebuild,
+
+    /// <summary>Applying a binary patch to the game files, on a copy (patch packs, in place of <see cref="Rebuild"/>).</summary>
+    Patch,
 
     /// <summary>Copying the originals into the backup.</summary>
     BackUp,
@@ -90,8 +94,12 @@ public enum InstallErrorKind
     /// <summary>The pack doesn't fit the player's files (<see cref="InstallError.Compatibility"/>).</summary>
     Incompatible,
 
-    /// <summary>A binary patch pack: installed from task 34 on.</summary>
-    PatchUnsupported,
+    /// <summary>
+    /// The binary patch couldn't be applied (<see cref="InstallError.Patch"/>, <see cref="InstallError.File"/>): its archive
+    /// or a delta is damaged or made with options this app doesn't read, or a result has the wrong hash. A game file other
+    /// than the one the patch was made from is <see cref="Incompatible"/> instead.
+    /// </summary>
+    Patch,
 
     /// <summary>A dependency the pack names isn't on the registry's whitelist (<see cref="InstallError.Dependencies"/>).</summary>
     DependencyUnknown,
@@ -139,7 +147,8 @@ public sealed record InstallError(
     FontFetchProblem Font = FontFetchProblem.None,
     string? FontName = null,
     string? DependencyName = null,
-    string? Platform = null)
+    string? Platform = null,
+    PatchProblem? Patch = null)
 {
     /// <summary>The game folder is as it was before (always unless restoring itself failed; the next start retries).</summary>
     public bool FilesRestored => Transaction?.FilesRestored ?? true;
@@ -151,6 +160,7 @@ public sealed record InstallError(
         InstallErrorKind.Fetch or InstallErrorKind.DependencyFetch => Fetch is PackFetchProblem.Offline or PackFetchProblem.Timeout or PackFetchProblem.HttpError
             or PackFetchProblem.HashMismatch or PackFetchProblem.DiskError,
         InstallErrorKind.Font => Font is not FontFetchProblem.FileMissing,
+        InstallErrorKind.Patch => Patch is PatchProblem.DiskError or PatchProblem.SourceUnreadable,
         _ => false,
     };
 }
