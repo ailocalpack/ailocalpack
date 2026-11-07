@@ -24,8 +24,8 @@ public sealed class GamePagePlayTests : IDisposable
 
     public GamePagePlayTests()
     {
-        _installed.Packs[(GameId.Steam(10), "ru")] = new InstalledPackState("lanterns", false, 4);
-        _installed.Packs[(Manual, "ru")] = new InstalledPackState("lanterns", false, 4);
+        _installed.Packs[(GameId.Steam(10), "ru")] = new InstalledPackState("lanterns", InstalledPackProblem.None, 4);
+        _installed.Packs[(Manual, "ru")] = new InstalledPackState("lanterns", InstalledPackProblem.None, 4);
         _services = TestServices.Build(
             services =>
             {

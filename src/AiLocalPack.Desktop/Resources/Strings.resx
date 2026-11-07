@@ -1766,4 +1766,46 @@
   <data name="Packs_RequiresUnknown" xml:space="preserve">
     <value>{0} (not on the registry's list of allowed components)</value>
   </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>Checking installed packs</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>No installed packs to check</value>
+  </data>
+  <data name="Startup_Packs_Done_One" xml:space="preserve">
+    <value>{0} pack in place</value>
+  </data>
+  <data name="Startup_Packs_Done_Other" xml:space="preserve">
+    <value>{0} packs in place</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>Re-applied after a game update: {0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>A game update broke the pack: {0}</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>Re-apply</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>Writes «{0}» rev {1} again from your files</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>Installed · not applied after the game update</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>The game update put back the original files: «{0}» rev {1} still fits but isn't applied, so the game shows its original text.</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>The game update put back the original files, and re-applying «{0}» rev {1} failed. {2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>Re-apply</value>
+  </data>
+  <data name="Install_Toast_AutoReapplied" xml:space="preserve">
+    <value>{1}: re-applied «{0}» after the game update.</value>
+  </data>
+  <data name="Install_Toast_AutoReapplyFailed" xml:space="preserve">
+    <value>{1}: couldn't re-apply «{0}» after the game update; files restored.</value>
+  </data>
 </root>

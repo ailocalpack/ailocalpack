@@ -75,7 +75,7 @@ public sealed class PrimaryActionTextsTests
     public void Play_of_a_steam_game_goes_through_steam()
     {
         // Arrange
-        var action = new GamePrimaryAction(GamePrimaryActionKind.Play, Pack(), new InstalledPackState("lanterns", false, 4));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.Play, Pack(), new InstalledPackState("lanterns", InstalledPackProblem.None, 4));
 
         // Act
         var texts = Texts(action);
@@ -88,7 +88,7 @@ public sealed class PrimaryActionTextsTests
     public void Play_of_a_manual_game_names_only_the_pack()
     {
         // Arrange
-        var action = new GamePrimaryAction(GamePrimaryActionKind.Play, null, new InstalledPackState("lanterns", false, 4));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.Play, null, new InstalledPackState("lanterns", InstalledPackProblem.None, 4));
 
         // Act
         var texts = Texts(action, TestGames.Manual("Lantern"));
@@ -101,7 +101,7 @@ public sealed class PrimaryActionTextsTests
     public void Update_names_both_revisions()
     {
         // Arrange
-        var action = new GamePrimaryAction(GamePrimaryActionKind.UpdatePack, Pack(revision: 4), new InstalledPackState("lanterns", true, 3));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.UpdatePack, Pack(revision: 4), new InstalledPackState("lanterns", InstalledPackProblem.Incompatible, 3));
 
         // Act
         var texts = Texts(action);
@@ -114,7 +114,7 @@ public sealed class PrimaryActionTextsTests
     public void Translate_new_strings_says_no_revision_exists()
     {
         // Arrange
-        var action = new GamePrimaryAction(GamePrimaryActionKind.TranslateNewStrings, Pack(), new InstalledPackState("lanterns", true, 4));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.TranslateNewStrings, Pack(), new InstalledPackState("lanterns", InstalledPackProblem.Incompatible, 4));
 
         // Act
         var texts = Texts(action);

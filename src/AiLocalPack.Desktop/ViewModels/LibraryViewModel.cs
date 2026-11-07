@@ -363,8 +363,9 @@ public sealed partial class LibraryViewModel : PageViewModel
 
     /// <summary>
     /// The card's quick action: Install installs the best compatible pack in place (progress in the badge; the game
-    /// page's Packs tab when none can be installed); Update opens the Packs tab until its flow exists (task 33); View /
-    /// Resume / Generate open the Generation tab (task 52).
+    /// page's Packs tab when none can be installed); Update does what the game page's header would (task 33): installs
+    /// the later revision of the installed pack or re-applies one that still fits, in place, else opens the Generation
+    /// tab (translate the new strings, task 56); View / Resume / Generate open the Generation tab (task 52).
     /// </summary>
     private void QuickAction(GameCardViewModel card)
     {
@@ -374,9 +375,20 @@ public sealed partial class LibraryViewModel : PageViewModel
             return;
         }
 
-        _navigation.NavigateTo(_pages.Create<GamePageViewModel>(
-            card.Game,
-            card.StatusKind == LocalizationStatusKind.NeedsUpdate ? GamePageTab.Packs : GamePageTab.Generation));
+        if (card.StatusKind == LocalizationStatusKind.NeedsUpdate)
+        {
+            switch (GamePrimaryActions.Resolve(card.Status))
+            {
+                case { Kind: GamePrimaryActionKind.UpdatePack, Pack: { } newer }:
+                    _ = _install.InstallAsync(card.Game, newer);
+                    return;
+                case { Kind: GamePrimaryActionKind.Reapply }:
+                    _ = _install.ReapplyAsync(card.Game);
+                    return;
+            }
+        }
+
+        _navigation.NavigateTo(_pages.Create<GamePageViewModel>(card.Game, GamePageTab.Generation));
     }
 
     /// <summary>Every card shows the running operation (its own in the badge) and whether one runs (quick actions off).</summary>

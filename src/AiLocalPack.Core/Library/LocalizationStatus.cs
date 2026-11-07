@@ -45,10 +45,36 @@ public enum LocalizationBlock
     OptOut,
 }
 
+/// <summary>What a game update did to the installed pack (task 33), as the re-check after it found.</summary>
+public enum InstalledPackProblem
+{
+    /// <summary>In place (or not checked yet).</summary>
+    None,
+
+    /// <summary>The game changed so that the installed revision no longer fits it.</summary>
+    Incompatible,
+
+    /// <summary>
+    /// The update (or a Steam file check) put files back, the pack still fits, but it wasn't re-applied: automatic
+    /// re-apply is off, another operation was running, or the pack can't be checked (its manifest is gone).
+    /// </summary>
+    Wiped,
+
+    /// <summary>The pack still fits and the automatic re-apply failed (the game running, a file in use…).</summary>
+    ReapplyFailed,
+}
+
 /// <summary>A pack installed for the game and language (task 29), as the library needs it.</summary>
-/// <param name="BrokenByUpdate">The game updated and the pack no longer fits (task 33).</param>
+/// <param name="Problem">What a game update did to it (task 33); anything but <see cref="InstalledPackProblem.None"/> = needs update.</param>
 /// <param name="Revision">The installed revision (the game page offers <c>Update to rev N</c> when the registry has a later one).</param>
-public sealed record InstalledPackState(string PackId, bool BrokenByUpdate, int Revision = 1);
+public sealed record InstalledPackState(string PackId, InstalledPackProblem Problem = InstalledPackProblem.None, int Revision = 1)
+{
+    /// <summary>A game update broke the pack: the status is <see cref="LocalizationStatusKind.NeedsUpdate"/>.</summary>
+    public bool BrokenByUpdate => Problem != InstalledPackProblem.None;
+
+    /// <summary>The pack still fits the game and only needs its files written again (<c>Re-apply</c>).</summary>
+    public bool NeedsReapply => Problem is InstalledPackProblem.Wiped or InstalledPackProblem.ReapplyFailed;
+}
 
 /// <summary>A generation job for the game and language (task 47), as the library needs it.</summary>
 /// <param name="Percent">Progress, 0–100.</param>

@@ -1795,4 +1795,49 @@
   <data name="Packs_RequiresUnknown" xml:space="preserve">
     <value>{0} (нет в списке разрешённых компонентов реестра)</value>
   </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>Проверяем установленные пакеты</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>Установленных пакетов нет</value>
+  </data>
+  <data name="Startup_Packs_Done_One" xml:space="preserve">
+    <value>{0} пакет на месте</value>
+  </data>
+  <data name="Startup_Packs_Done_Few" xml:space="preserve">
+    <value>{0} пакета на месте</value>
+  </data>
+  <data name="Startup_Packs_Done_Many" xml:space="preserve">
+    <value>{0} пакетов на месте</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>Применены заново после обновления игры: {0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>Обновление игры сломало пакет: {0}</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>Применить заново</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>Заново запишет «{0}» ред. {1} из ваших файлов</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>Установлен · не применён после обновления игры</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>Обновление игры вернуло оригинальные файлы: «{0}» ред. {1} подходит, но не применён, поэтому игра показывает исходный текст.</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>Обновление игры вернуло оригинальные файлы, а применить «{0}» ред. {1} заново не удалось. {2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Install_Toast_AutoReapplied" xml:space="preserve">
+    <value>{1}: после обновления игры «{0}» применён заново.</value>
+  </data>
+  <data name="Install_Toast_AutoReapplyFailed" xml:space="preserve">
+    <value>{1}: после обновления игры не удалось заново применить «{0}»; файлы восстановлены.</value>
+  </data>
 </root>

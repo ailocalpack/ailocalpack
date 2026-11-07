@@ -172,11 +172,13 @@ public sealed partial class GameCardViewModel : ObservableObject
     /// <summary>None while an operation runs on this game.</summary>
     public bool HasQuickAction => !IsInstalling && QuickActionText.Length > 0;
 
-    /// <summary>"Install", "Update", "View", "Resume", "Generate with AI"; empty for installed, blocked and unknown.</summary>
+    /// <summary>"Install", "Update" ("Re-apply" for a pack that still fits), "View", "Resume", "Generate with AI"; empty for installed, blocked and unknown.</summary>
     public string QuickActionText => StatusKind switch
     {
         LocalizationStatusKind.PackAvailable => _localizer[nameof(Strings.Library_Action_Install)],
-        LocalizationStatusKind.NeedsUpdate => _localizer[nameof(Strings.Library_Action_Update)],
+        LocalizationStatusKind.NeedsUpdate => _localizer[GamePrimaryActions.Resolve(Status).Kind == GamePrimaryActionKind.Reapply
+            ? nameof(Strings.Library_Action_Reapply)
+            : nameof(Strings.Library_Action_Update)],
         LocalizationStatusKind.Generating => _localizer[nameof(Strings.Library_Action_View)],
         LocalizationStatusKind.Paused => _localizer[nameof(Strings.Library_Action_Resume)],
         LocalizationStatusKind.NoPack => _localizer[nameof(Strings.Library_Action_Generate)],

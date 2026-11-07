@@ -78,7 +78,7 @@ public sealed class MainWindowTests
         var flyout = (Flyout)Find<Button>(window, "ActivityButton").Flyout!;
         flyout.IsOpen.Should().BeTrue();
         var list = ((Control)flyout.Content!).GetLogicalDescendants().OfType<ItemsControl>().Single(c => c.Name == "StartupCheckList");
-        list.ItemCount.Should().Be(3);
+        list.ItemCount.Should().Be(4);
         window.Close();
     });
 

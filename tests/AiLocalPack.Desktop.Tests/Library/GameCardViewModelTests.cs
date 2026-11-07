@@ -190,6 +190,16 @@ public sealed class GameCardStatusTests
     }
 
     [Fact]
+    public void Pack_that_only_needs_reapplying_offers_reapply()
+    {
+        // Act
+        var card = Card(new LocalizationStatus(LocalizationStatusKind.NeedsUpdate, LocalizationBlock.None, [], Installed: new InstalledPackState("mine", InstalledPackProblem.Wiped)));
+
+        // Assert
+        (card.BadgeText, card.QuickActionText).Should().Be(("Needs update", "Re-apply"));
+    }
+
+    [Fact]
     public void Generating_shows_its_percent_a_progress_bar_and_view()
     {
         // Act

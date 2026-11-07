@@ -50,6 +50,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly AntiCheatDetector _antiCheats;
     private readonly GameSessions _sessions;
     private readonly InstallFlow _install;
+    private readonly InstalledPackMonitor _monitor;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
@@ -96,6 +97,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         PackManifests manifests,
         GameSessions sessions,
         InstallFlow install,
+        InstalledPackMonitor monitor,
         TimeProvider time,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
@@ -112,6 +114,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _antiCheats = antiCheats;
         _sessions = sessions;
         _install = install;
+        _monitor = monitor;
         _time = time;
         _logger = logger ?? NullLogger<GamePageViewModel>.Instance;
         Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Generation, GamePageTab.Audio, GamePageTab.Textures }
@@ -258,7 +261,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     {
         GamePrimaryActionKind.InstallBestPack => "IconDownload",
         GamePrimaryActionKind.Play => "IconPlay",
-        GamePrimaryActionKind.UpdatePack => "IconRefresh",
+        GamePrimaryActionKind.UpdatePack or GamePrimaryActionKind.Reapply => "IconRefresh",
         GamePrimaryActionKind.ViewProgress => "IconLoader",
         _ => "IconSparkles",
     };
@@ -306,7 +309,12 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>A game update broke the installed pack: the block is amber with ⚠.</summary>
     public bool IsInstalledBroken => Status.Installed is { BrokenByUpdate: true };
 
-    public string InstalledLabel => _localizer[IsInstalledBroken ? nameof(Strings.Game_Installed_Broken) : nameof(Strings.Game_Installed_Label)];
+    public string InstalledLabel => _localizer[Status.Installed?.Problem switch
+    {
+        InstalledPackProblem.Incompatible => nameof(Strings.Game_Installed_Broken),
+        InstalledPackProblem.Wiped or InstalledPackProblem.ReapplyFailed => nameof(Strings.Game_Installed_Wiped),
+        _ => nameof(Strings.Game_Installed_Label),
+    }];
 
     /// <summary>"«Фонарщики» · alice · rev 4" (title and author from the registry, the pack ID when it's gone from it).</summary>
     public string InstalledText => Status.Installed is { } installed
@@ -318,16 +326,46 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>The amber banner between header and tabs when an update broke the installed pack.</summary>
     public bool ShowUpdateBanner => Status.Kind == LocalizationStatusKind.NeedsUpdate;
 
-    public string UpdateBannerText => Status.Installed is { } installed
-        ? _localizer.Format(
-            nameof(Strings.Game_UpdateBanner),
-            Game.Version?.BuildId is { } build ? _localizer.Format(nameof(Strings.Game_Chip_Build), build) : VersionText,
+    /// <summary>
+    /// Incompatible: "The game updated (build N). The installed «…» rev 3 is incompatible…"; files put back and not
+    /// re-applied: "The game update put back the original files…"; the automatic re-apply failed: why.
+    /// </summary>
+    public string UpdateBannerText => Status.Installed switch
+    {
+        { Problem: InstalledPackProblem.Wiped } installed => _localizer.Format(nameof(Strings.Game_UpdateBanner_Wiped), InstalledTitle, installed.Revision),
+        { Problem: InstalledPackProblem.ReapplyFailed } installed => _localizer.Format(
+            nameof(Strings.Game_UpdateBanner_ReapplyFailed),
             InstalledTitle,
-            installed.Revision)
-        : string.Empty;
+            installed.Revision,
+            ReapplyFailure?.Error is { } error ? InstallTexts.Reason(error, _localizer) : string.Empty),
+        { } installed => _localizer.Format(
+            nameof(Strings.Game_UpdateBanner),
+            VersionText,
+            InstalledTitle,
+            installed.Revision),
+        _ => string.Empty,
+    };
 
     /// <summary>The banner's <c>Translate new strings</c>: only when the header offers the update (else it is the header's action).</summary>
-    public bool ShowBannerTranslate => Action.Kind == GamePrimaryActionKind.UpdatePack;
+    public bool ShowBannerTranslate => Action.Kind == GamePrimaryActionKind.UpdatePack && Status.Installed is { NeedsReapply: false };
+
+    /// <summary>The banner's <c>Re-apply</c> for a pack that still fits, when the header offers the newer revision instead.</summary>
+    public bool ShowBannerReapply => Action.Kind == GamePrimaryActionKind.UpdatePack && Status.Installed is { NeedsReapply: true };
+
+    /// <summary>The automatic re-apply that failed (the banner's <c>Details</c>).</summary>
+    private InstallOutcome? ReapplyFailure => Status.Installed is { Problem: InstalledPackProblem.ReapplyFailed } ? _monitor.Find(Game.Id)?.Failure : null;
+
+    public bool ShowBannerDetails => ReapplyFailure is not null;
+
+    /// <summary>The banner's <c>Details</c>: the failed re-apply's reason and log.</summary>
+    [RelayCommand]
+    private void ShowReapplyDetails()
+    {
+        if (ReapplyFailure is { } outcome)
+        {
+            _install.ShowDetails(outcome);
+        }
+    }
 
     // ---------- Blocked game (design §3a) ----------
 
@@ -444,7 +482,8 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     /// <summary>
     /// Play launches the game (<see cref="GameSessions"/>); Install installs the best compatible pack (the install flow;
-    /// when none can be installed the Packs tab says why). Update opens the Packs tab until its flow exists (task 33);
+    /// when none can be installed the Packs tab says why); Update installs the registry's later revision of the installed
+    /// pack (the install flow checks it and asks when a risk applies) and Re-apply writes the installed one again (task 33);
     /// Generate, Translate new strings and View progress open the Generation tab (its content comes with tasks 52, 53, 56).
     /// </summary>
     private void RunPrimary()
@@ -461,9 +500,20 @@ public sealed partial class GamePageViewModel : PageViewModel
             return;
         }
 
+        if (Action is { Kind: GamePrimaryActionKind.UpdatePack, Pack: { } newer })
+        {
+            _ = _install.InstallAsync(Game, newer);
+            return;
+        }
+
+        if (Action.Kind == GamePrimaryActionKind.Reapply)
+        {
+            _ = _install.ReapplyAsync(Game);
+            return;
+        }
+
         SelectedTab = Action.Kind switch
         {
-            GamePrimaryActionKind.UpdatePack => GamePageTab.Packs,
             GamePrimaryActionKind.Generate or GamePrimaryActionKind.TranslateNewStrings or GamePrimaryActionKind.ViewProgress => GamePageTab.Generation,
             _ => SelectedTab,
         };

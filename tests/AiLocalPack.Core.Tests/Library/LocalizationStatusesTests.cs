@@ -155,8 +155,8 @@ public sealed class LocalizationStatusesTests
         };
         var installed = localCase switch
         {
-            LocalCase.Installed or LocalCase.InstalledAndGenerating => new InstalledPackState("full", false),
-            LocalCase.InstalledBroken => new InstalledPackState("full", true),
+            LocalCase.Installed or LocalCase.InstalledAndGenerating => new InstalledPackState("full", InstalledPackProblem.None),
+            LocalCase.InstalledBroken => new InstalledPackState("full", InstalledPackProblem.Incompatible),
             _ => null,
         };
         var job = localCase switch

@@ -153,7 +153,7 @@
                     </Grid>
                 </Panel>
 
-                <!-- Update banner (task 33 fills it); the rating prompt (task 63) goes in the same place -->
+                <!-- Update banner (task 33): incompatible / files put back / re-apply failed; the rating prompt (task 63) goes in the same place -->
                 <Border x:Name="UpdateBanner" Classes="banner warn" Margin="24,0" IsVisible="{Binding ShowUpdateBanner}">
                     <DockPanel>
                         <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center">
@@ -168,7 +168,19 @@
                                 <TextBlock Text="{l:Loc Game_Action_TranslateNew}" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
-                        <TextBlock Text="{Binding UpdateBannerText}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                        <Button x:Name="BannerDetails" DockPanel.Dock="Right" Classes="ghost sm" Margin="8,0,0,0" VerticalAlignment="Center"
+                                Command="{Binding ShowReapplyDetailsCommand}" IsVisible="{Binding ShowBannerDetails}"
+                                Content="{l:Loc Install_Toast_Details}" />
+                        <Button x:Name="BannerReapply" DockPanel.Dock="Right" Classes="ghost sm" Margin="12,0,0,0" VerticalAlignment="Center"
+                                Command="{Binding ReapplyCommand}" IsVisible="{Binding ShowBannerReapply}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{l:Loc Game_Action_Reapply}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <TextBlock x:Name="UpdateBannerText" Text="{Binding UpdateBannerText}" VerticalAlignment="Center" TextWrapping="Wrap" />
                     </DockPanel>
                 </Border>
 

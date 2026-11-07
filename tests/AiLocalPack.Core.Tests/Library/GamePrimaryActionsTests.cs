@@ -66,7 +66,7 @@ public sealed class GamePrimaryActionsTests
     {
         // Arrange
         var installedPack = Pack("mine", revision: 4);
-        var installed = new InstalledPackState("mine", false, 4);
+        var installed = new InstalledPackState("mine", InstalledPackProblem.None, 4);
         var status = Status(LocalizationStatusKind.Installed, [Pack("best"), installedPack], installed);
 
         // Act
@@ -81,7 +81,7 @@ public sealed class GamePrimaryActionsTests
     {
         // Arrange
         var newer = Pack("mine", revision: 4);
-        var installed = new InstalledPackState("mine", true, 3);
+        var installed = new InstalledPackState("mine", InstalledPackProblem.Incompatible, 3);
         var status = Status(LocalizationStatusKind.NeedsUpdate, [newer], installed);
 
         // Act
@@ -95,7 +95,7 @@ public sealed class GamePrimaryActionsTests
     public void Broken_pack_without_a_later_revision_offers_translating_the_new_strings()
     {
         // Arrange
-        var installed = new InstalledPackState("mine", true, 4);
+        var installed = new InstalledPackState("mine", InstalledPackProblem.Incompatible, 4);
         var status = Status(LocalizationStatusKind.NeedsUpdate, [Pack("mine", revision: 4)], installed);
 
         // Act
@@ -109,13 +109,43 @@ public sealed class GamePrimaryActionsTests
     public void Broken_pack_gone_from_the_registry_offers_translating_the_new_strings()
     {
         // Arrange
-        var status = Status(LocalizationStatusKind.NeedsUpdate, [], new InstalledPackState("mine", true, 2));
+        var status = Status(LocalizationStatusKind.NeedsUpdate, [], new InstalledPackState("mine", InstalledPackProblem.Incompatible, 2));
 
         // Act
         var action = GamePrimaryActions.Resolve(status);
 
         // Assert
         action.Kind.Should().Be(GamePrimaryActionKind.TranslateNewStrings);
+    }
+
+    [Theory]
+    [InlineData(InstalledPackProblem.Wiped)]
+    [InlineData(InstalledPackProblem.ReapplyFailed)]
+    public void Pack_that_still_fits_offers_reapply(InstalledPackProblem problem)
+    {
+        // Arrange
+        var installed = new InstalledPackState("mine", problem, 4);
+        var status = Status(LocalizationStatusKind.NeedsUpdate, [Pack("mine", revision: 4)], installed);
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.Reapply);
+    }
+
+    [Fact]
+    public void Pack_that_still_fits_with_a_later_revision_offers_the_update()
+    {
+        // Arrange
+        var installed = new InstalledPackState("mine", InstalledPackProblem.Wiped, 3);
+        var status = Status(LocalizationStatusKind.NeedsUpdate, [Pack("mine", revision: 4)], installed);
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.UpdatePack);
     }
 
     [Theory]

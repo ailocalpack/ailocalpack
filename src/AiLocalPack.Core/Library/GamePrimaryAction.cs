@@ -23,6 +23,12 @@ public enum GamePrimaryActionKind
     /// <summary>An update broke the installed pack and no later revision exists: generation in update mode.</summary>
     TranslateNewStrings,
 
+    /// <summary>
+    /// An update put back the files of the installed pack, which still fits, and it wasn't re-applied (automatic re-apply
+    /// off or failed) and no later revision exists: writes it again.
+    /// </summary>
+    Reapply,
+
     /// <summary>A generation job exists (running or paused): opens the Generation tab.</summary>
     ViewProgress,
 }
@@ -45,7 +51,7 @@ public static class GamePrimaryActions
 {
     /// <summary>
     /// Blocked or unknown → none; a job → view progress; a pack broken by an update → update to the registry's later
-    /// revision of the same pack, else translate the new strings; installed → play; packs → install the best; else
+    /// revision of the same pack, else re-apply a pack that still fits, else translate the new strings; installed → play; packs → install the best; else
     /// generate.
     /// </summary>
     public static GamePrimaryAction Resolve(LocalizationStatus status)
@@ -61,6 +67,7 @@ public static class GamePrimaryActions
                 new(GamePrimaryActionKind.ViewProgress, Installed: status.Installed, Job: status.Job),
             LocalizationStatusKind.NeedsUpdate when installedPack is not null && installedPack.Revision > status.Installed!.Revision =>
                 new(GamePrimaryActionKind.UpdatePack, installedPack, status.Installed),
+            LocalizationStatusKind.NeedsUpdate when status.Installed is { NeedsReapply: true } => new(GamePrimaryActionKind.Reapply, installedPack, status.Installed),
             LocalizationStatusKind.NeedsUpdate => new(GamePrimaryActionKind.TranslateNewStrings, installedPack, status.Installed),
             LocalizationStatusKind.Installed => new(GamePrimaryActionKind.Play, installedPack, status.Installed),
             LocalizationStatusKind.PackAvailable => new(GamePrimaryActionKind.InstallBestPack, status.BestPack),

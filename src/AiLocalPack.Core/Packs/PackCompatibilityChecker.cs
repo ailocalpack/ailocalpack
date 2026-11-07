@@ -32,7 +32,15 @@ public sealed class PackCompatibilityChecker
         _recipes = recipes;
     }
 
-    public PackCompatibility Check(PackManifest pack, Game game, CancellationToken cancellationToken = default)
+    public PackCompatibility Check(PackManifest pack, Game game, CancellationToken cancellationToken = default) =>
+        Check(pack, game, null, cancellationToken);
+
+    /// <param name="knownHashes">
+    /// Hashes to take for these paths instead of hashing the files (which must exist): the originals of files an
+    /// installed pack still holds, so the re-check after a game update (task 33) compares the game as it is without the
+    /// pack.
+    /// </param>
+    public PackCompatibility Check(PackManifest pack, Game game, IReadOnlyDictionary<string, string>? knownHashes, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(pack);
         ArgumentNullException.ThrowIfNull(game);
@@ -109,6 +117,12 @@ public sealed class PackCompatibilityChecker
         var hashes = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var file in complete.SelectMany(b => b.Files.Keys).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal))
         {
+            if (knownHashes is not null && knownHashes.TryGetValue(file, out var known))
+            {
+                hashes[file] = known;
+                continue;
+            }
+
             try
             {
                 hashes[file] = _hashes.Hash(GamePath(root, file), cancellationToken);

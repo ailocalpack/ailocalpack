@@ -10,7 +10,7 @@ namespace AiLocalPack.Desktop.ViewModels.GamePage;
 /// <summary>The words of the game page's primary action: the button label and the caption under it (design §3).</summary>
 public static class PrimaryActionTexts
 {
-    /// <summary>"Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "Translate new strings", "View progress"; empty for none.</summary>
+    /// <summary>"Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "Translate new strings", "Re-apply", "View progress"; empty for none.</summary>
     public static string Label(GamePrimaryAction action, Localizer localizer)
     {
         ArgumentNullException.ThrowIfNull(action);
@@ -22,6 +22,7 @@ public static class PrimaryActionTexts
             GamePrimaryActionKind.Play => localizer[nameof(Strings.Game_Action_Play)],
             GamePrimaryActionKind.UpdatePack => localizer.Format(nameof(Strings.Game_Action_Update), action.Pack?.Revision ?? 0),
             GamePrimaryActionKind.TranslateNewStrings => localizer[nameof(Strings.Game_Action_TranslateNew)],
+            GamePrimaryActionKind.Reapply => localizer[nameof(Strings.Game_Action_Reapply)],
             GamePrimaryActionKind.ViewProgress => localizer[nameof(Strings.Game_Action_ViewProgress)],
             _ => string.Empty,
         };
@@ -45,6 +46,8 @@ public static class PrimaryActionTexts
                 action.Pack?.Title ?? action.Installed?.PackId),
             { Kind: GamePrimaryActionKind.UpdatePack, Installed: { } installed } => localizer.Format(nameof(Strings.Game_Caption_Update), installed.Revision),
             { Kind: GamePrimaryActionKind.TranslateNewStrings } => localizer[nameof(Strings.Game_Caption_TranslateNew)],
+            { Kind: GamePrimaryActionKind.Reapply, Installed: { } installed } => localizer.Format(
+                nameof(Strings.Game_Caption_Reapply), action.Pack?.Title ?? installed.PackId, installed.Revision),
             { Kind: GamePrimaryActionKind.ViewProgress, Job: { } job } => JobCaption(job, localizer),
             _ => string.Empty,
         };

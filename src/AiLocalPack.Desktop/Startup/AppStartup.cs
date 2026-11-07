@@ -1,8 +1,10 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Languages;
+using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
@@ -15,7 +17,8 @@ namespace AiLocalPack.Desktop.Startup;
 /// <summary>
 /// Runs what the app does on start (design §9) and reports it as <see cref="Progress"/>. Blocking steps (settings,
 /// the saved game catalog) run off the UI thread before the library is shown, so the splash stays live; background
-/// checks (Steam scan, engine and anti-cheat detection, the registry's pack list) run while the library is in use. Never throws: a failed step
+/// checks (Steam scan, engine and anti-cheat detection, the registry's pack list, then the re-check of installed packs
+/// after game updates once both are in) run while the library is in use. Never throws: a failed step
 /// is logged and shown as a warning, and the app goes on with what it has.
 /// </summary>
 public sealed class AppStartup
@@ -26,6 +29,7 @@ public sealed class AppStartup
     public const string SteamStep = "steam";
     public const string DetectionStep = "detect";
     public const string IndexStep = "index";
+    public const string PacksStep = "packs";
 
     /// <summary>New games named in the Steam step's result; more are counted ("+3").</summary>
     private const int NamedNewGames = 3;
@@ -36,6 +40,7 @@ public sealed class AppStartup
     private readonly GameCatalog _catalog;
     private readonly GameLibrary _library;
     private readonly PackIndex _index;
+    private readonly InstalledPackMonitor _monitor;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
@@ -45,7 +50,10 @@ public sealed class AppStartup
     private readonly StartupStep _steamStep;
     private readonly StartupStep _detectionStep;
     private readonly StartupStep _indexStep;
+    private readonly StartupStep _packsStep;
     private bool _backgroundStarted;
+    private bool _libraryDone;
+    private bool _indexDone;
 
     public AppStartup(
         SettingsStore settings,
@@ -54,6 +62,7 @@ public sealed class AppStartup
         GameCatalog catalog,
         GameLibrary library,
         PackIndex index,
+        InstalledPackMonitor monitor,
         Localizer localizer,
         IUiDispatcher ui,
         TimeProvider time,
@@ -65,6 +74,7 @@ public sealed class AppStartup
         _catalog = catalog;
         _library = library;
         _index = index;
+        _monitor = monitor;
         _localizer = localizer;
         _ui = ui;
         _logger = logger;
@@ -77,8 +87,9 @@ public sealed class AppStartup
         _steamStep = new(SteamStep, StartupPhase.Background, nameof(Strings.Startup_Step_Steam), localizer, time);
         _detectionStep = new(DetectionStep, StartupPhase.Background, nameof(Strings.Startup_Step_Detection), localizer, time);
         _indexStep = new(IndexStep, StartupPhase.Background, nameof(Strings.Startup_Step_Index), localizer, time);
+        _packsStep = new(PacksStep, StartupPhase.Background, nameof(Strings.Startup_Step_Packs), localizer, time);
         Progress = new StartupProgress(
-            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep],
+            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep, _packsStep],
             localizer);
     }
 
@@ -110,7 +121,12 @@ public sealed class AppStartup
         _ = _library.RefreshAsync();
         _indexStep.Start();
         _ = _index.RefreshAsync().ContinueWith(
-            t => _ui.Post(() => CompleteIndex(t.Result)),
+            t => _ui.Post(() =>
+            {
+                CompleteIndex(t.Result);
+                _indexDone = true;
+                StartPackCheck();
+            }),
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
@@ -235,6 +251,8 @@ public sealed class AppStartup
                 }
 
                 _library.Progressed -= OnLibraryProgressed;
+                _libraryDone = true;
+                StartPackCheck();
                 break;
             case GameLibraryRefreshFailed:
                 foreach (var step in new[] { _steamStep, _detectionStep }.Where(s => !s.IsFinished))
@@ -243,6 +261,8 @@ public sealed class AppStartup
                 }
 
                 _library.Progressed -= OnLibraryProgressed;
+                _libraryDone = true;
+                StartPackCheck();
                 break;
         }
     }
@@ -297,6 +317,61 @@ public sealed class AppStartup
             default:
                 _indexStep.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Index_Unavailable)]);
                 break;
+        }
+    }
+
+    /// <summary>
+    /// The re-check of installed packs (task 33) needs the games' new build IDs and the pack list (blocks, the installed
+    /// revision's manifest), so it starts once the Steam scan and the pack list are both in.
+    /// </summary>
+    private void StartPackCheck()
+    {
+        if (!_libraryDone || !_indexDone || _packsStep.IsRunning || _packsStep.IsFinished)
+        {
+            return;
+        }
+
+        _packsStep.Start();
+        _ = _monitor.CheckAllAsync().ContinueWith(
+            t => _ui.Post(() =>
+            {
+                if (t.IsCompletedSuccessfully)
+                {
+                    CompletePacks(t.Result);
+                }
+                else
+                {
+                    _logger.LogError(t.Exception, "Re-checking installed packs at startup failed");
+                    Fail(_packsStep);
+                }
+            }),
+            CancellationToken.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
+    }
+
+    /// <summary>Packs needing the player come first (warning), then those re-applied, else how many are in place.</summary>
+    private void CompletePacks(IReadOnlyList<PackRecheckResult> results)
+    {
+        if (results.Count == 0)
+        {
+            _packsStep.Skip(() => _localizer[nameof(Strings.Startup_Packs_None)]);
+            return;
+        }
+
+        var attention = results.Where(r => r.Problem != InstalledPackProblem.None).Select(r => r.Game.Name).ToList();
+        var reapplied = results.Where(r => r.Reapplied).Select(r => r.Game.Name).ToList();
+        if (attention.Count > 0)
+        {
+            _packsStep.Complete(StartupTone.Warn, () => _localizer.Format(nameof(Strings.Startup_Packs_Attention), string.Join(", ", attention)));
+        }
+        else if (reapplied.Count > 0)
+        {
+            _packsStep.Complete(StartupTone.Ok, () => _localizer.Format(nameof(Strings.Startup_Packs_Reapplied), string.Join(", ", reapplied)));
+        }
+        else
+        {
+            _packsStep.Complete(StartupTone.Ok, () => _localizer.Plural(nameof(Strings.Startup_Packs_Done_One), results.Count));
         }
     }
 

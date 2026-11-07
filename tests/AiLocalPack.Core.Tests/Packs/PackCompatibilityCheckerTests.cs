@@ -211,6 +211,22 @@ public sealed class PackCompatibilityCheckerTests : IDisposable
     }
 
     [Fact]
+    public void Known_hashes_stand_in_for_files_an_installed_pack_holds()
+    {
+        // Arrange
+        GameFile(Map, "map translated by the pack");
+        var pack = PatchPack(Build("100", (Map, "map v1")));
+        var checker = new PackCompatibilityChecker(new FileHashCache());
+        var originals = new Dictionary<string, string>(StringComparer.Ordinal) { [Map] = Sha256("map v1") };
+
+        // Act
+        var result = checker.Check(pack, Game(SteamGame, "300"), originals, Ct);
+
+        // Assert
+        (result.Verdict, result.Reason).Should().Be((PackCompatibilityVerdict.Compatible, PackCompatibilityReason.FilesMatch));
+    }
+
+    [Fact]
     public void Changed_files_of_a_binary_patch_are_incompatible()
     {
         // Arrange

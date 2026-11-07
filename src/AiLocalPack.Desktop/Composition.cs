@@ -103,6 +103,7 @@ internal static class Composition
             sp.GetRequiredService<ILogger<PackInstaller>>()));
         services.AddSingleton<IInstalledPacks, StoreInstalledPacks>();
         services.AddSingleton<PackInstallService>();
+        services.AddSingleton<InstalledPackMonitor>();
         services.AddSingleton<ToastService>();
         services.AddSingleton<InstallFlow>();
         services.AddSingleton<GameStatuses>();
