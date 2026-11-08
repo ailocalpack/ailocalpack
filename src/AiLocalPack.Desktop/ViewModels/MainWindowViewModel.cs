@@ -1,3 +1,4 @@
+using AiLocalPack.Desktop.Activity;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
@@ -18,17 +19,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IDialogService _dialogs;
 
     public MainWindowViewModel(
-        INavigationService navigation, IPageFactory pages, Localizer localizer, IDialogService dialogs, StartupProgress startup, ToastService toasts)
+        INavigationService navigation,
+        IPageFactory pages,
+        Localizer localizer,
+        IDialogService dialogs,
+        StartupProgress startup,
+        ToastService toasts,
+        ActivityPanelViewModel? activity = null)
     {
         Toasts = toasts;
         Startup = startup;
-        Startup.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(StartupProgress.IsBackgroundRunning))
-            {
-                OnPropertyChanged(nameof(ActivityName));
-            }
-        };
+        Activity = activity;
         _navigation = navigation;
         _pages = pages;
         _localizer = localizer;
@@ -38,7 +39,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _localizer.CultureChanged += (_, _) =>
         {
             OnPropertyChanged(nameof(BackLabel));
-            OnPropertyChanged(nameof(ActivityName));
         };
         if (_navigation.Current is null)
         {
@@ -55,11 +55,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     /// <summary>Toasts in the bottom right corner (install done / failed).</summary>
     public ToastService Toasts { get; }
 
-    /// <summary>Startup checks: "Checking for changes…" and the ring on 🔔 while background checks run, their list under 🔔.</summary>
+    /// <summary>Startup checks: "Checking for changes…" and the ring on 🔔 while background checks run, their list in the Activity panel.</summary>
     public StartupProgress Startup { get; }
 
-    /// <summary>Screen reader name of 🔔: says when startup checks are running.</summary>
-    public string ActivityName => _localizer[Startup.IsBackgroundRunning ? nameof(Strings.Chrome_Activity_Checking) : nameof(Strings.Chrome_Activity)];
+    /// <summary>The Activity panel under 🔔 and its badge (task 38).</summary>
+    public ActivityPanelViewModel? Activity { get; }
 
     public bool CanGoBack => _navigation.CanGoBack && !HasDialog;
 

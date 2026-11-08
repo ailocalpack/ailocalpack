@@ -99,6 +99,12 @@ public sealed class InstalledPackMonitor
     /// <summary>Raised (on a pool thread) after an automatic re-apply, done or failed (the done / failure toast).</summary>
     public event EventHandler<PackRecheckResult>? Reapplied;
 
+    /// <summary>
+    /// Raised (on a pool thread) for every game re-checked, whatever was found (the Activity panel's decisions and events,
+    /// task 38).
+    /// </summary>
+    public event EventHandler<PackRecheckResult>? Rechecked;
+
     /// <summary>The last re-check's finding for the game's current record; <c>null</c> when none applies (intact, not checked).</summary>
     public InstalledPackHealth? Find(GameId game)
     {
@@ -136,6 +142,7 @@ public sealed class InstalledPackMonitor
                     if (await CheckAsync(record, game, cancellationToken).ConfigureAwait(false) is { } result)
                     {
                         results.Add(result);
+                        Rechecked?.Invoke(this, result);
                     }
                 }
                 catch (Exception e) when (e is not OperationCanceledException)

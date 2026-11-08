@@ -1,0 +1,174 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:a="using:AiLocalPack.Desktop.Activity"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             x:Class="AiLocalPack.Desktop.Views.ActivityPanelView"
+             x:DataType="a:ActivityPanelViewModel"
+             Width="432">
+    <!-- Design §5: Activity popover under 🔔. Sections: needs your decision, running, the feed by day; header and footer stay while the body scrolls. -->
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="a:ActivityRowViewModel">
+            <!-- The row: the open button (thumbnail, texts) with its side buttons and actions next to it, not inside, so each stays its own control for keyboard and screen readers -->
+            <Border Classes="activityRow" Classes.decision="{Binding IsDecision}" Classes.attention="{Binding IsAttention}"
+                    Classes.bad="{Binding IsBad}" Classes.ok="{Binding IsOk}" Classes.read="{Binding IsRead}" Classes.unread="{Binding IsUnread}">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                    <Button Classes="activityRowOpen" Command="{Binding OpenCommand}" AutomationProperties.Name="{Binding Title}"
+                            AutomationProperties.HelpText="{Binding ToneText}">
+                        <DockPanel>
+                            <Panel DockPanel.Dock="Left" Width="36" Height="48" Margin="0,0,14,0" VerticalAlignment="Top">
+                                <Border Classes="activityThumb" Background="{Binding PlaceholderBrush}">
+                                    <Panel>
+                                        <TextBlock Text="{Binding Initial}" FontWeight="ExtraBold" Foreground="White" Opacity="0.85"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <Image Source="{Binding Cover}" Stretch="UniformToFill" IsVisible="{Binding HasCover}" />
+                                    </Panel>
+                                </Border>
+                                <Border Classes="activityTone" IsVisible="{Binding !IsRunning}" ToolTip.Tip="{Binding ToneText}">
+                                    <Viewbox Classes="icon" Width="11" Height="11">
+                                        <Path Classes="icon toneIcon" Data="{Binding ToneIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" StrokeThickness="2.6" />
+                                    </Viewbox>
+                                </Border>
+                            </Panel>
+                            <StackPanel Spacing="3">
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Right" Classes="activityTime" Text="{Binding Time}" Margin="8,0,0,0" />
+                                    <Ellipse DockPanel.Dock="Left" Classes="unreadDot" IsVisible="{Binding IsUnread}" Margin="0,0,6,0"
+                                             ToolTip.Tip="{l:Loc Activity_Unread}" />
+                                    <TextBlock Classes="activityGame" Text="{Binding GameName}" TextTrimming="CharacterEllipsis" />
+                                </DockPanel>
+                                <TextBlock Classes="activityTitle" Text="{Binding Title}" TextWrapping="Wrap" />
+                                <TextBlock Classes="activityDetail" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" TextWrapping="Wrap" />
+                                <ProgressBar Classes="installProgress" IsVisible="{Binding IsRunning}" Minimum="0" Maximum="100" Value="{Binding Percent}" />
+                                <TextBlock Classes="activityDetail" Text="{Binding Step}" IsVisible="{Binding IsRunning}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Button>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,6,4,0">
+                        <Button Classes="icon sm" IsVisible="{Binding CanDecideLater}" Command="{Binding DecideLaterCommand}"
+                                ToolTip.Tip="{l:Loc Activity_DecideLater}" AutomationProperties.Name="{l:Loc Activity_DecideLater}">
+                            <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconClock}" /></Viewbox>
+                        </Button>
+                        <Button Classes="icon sm hideOnRest" IsVisible="{Binding CanHide}" Command="{Binding HideCommand}"
+                                ToolTip.Tip="{l:Loc Activity_Hide}" AutomationProperties.Name="{l:Loc Activity_Hide}">
+                            <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconX}" /></Viewbox>
+                        </Button>
+                        <Button Classes="icon sm" IsVisible="{Binding CanCancel}" Command="{Binding CancelCommand}"
+                                AutomationProperties.Name="{l:Loc Activity_Hide}">
+                            <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconX}" /></Viewbox>
+                        </Button>
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Actions}" IsVisible="{Binding HasActions}" Margin="60,0,10,10">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel ItemSpacing="8" LineSpacing="6" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="a:ActivityActionViewModel">
+                                <Button Classes="sm" Classes.accent="{Binding IsPrimary}" Classes.ghost="{Binding !IsPrimary}"
+                                        Command="{Binding Command}" AutomationProperties.Name="{Binding Text}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding HasIcon}">
+                                            <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                                  Stroke="{Binding $parent[Button].Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="10,4,0,6">
+            <Button x:Name="ActivitySettings" DockPanel.Dock="Right" Classes="icon sm" Command="{Binding OpenSettingsCommand}"
+                    ToolTip.Tip="{l:Loc Activity_Settings}" AutomationProperties.Name="{l:Loc Activity_Settings}">
+                <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconSettings}" /></Viewbox>
+            </Button>
+            <Button x:Name="ReadAllButton" DockPanel.Dock="Right" Classes="link" Command="{Binding ReadAllCommand}" IsVisible="{Binding HasUnread}"
+                    VerticalAlignment="Center" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Viewbox Classes="icon" Width="14" Height="14">
+                        <Path Classes="icon" Data="{StaticResource IconChecks}" Stroke="{DynamicResource AppAccentBrush}" />
+                    </Viewbox>
+                    <TextBlock Text="{l:Loc Activity_ReadAll}" FontSize="13" />
+                </StackPanel>
+            </Button>
+            <TextBlock Text="{l:Loc Activity_Title}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" />
+        </DockPanel>
+
+        <Border DockPanel.Dock="Bottom" Classes="activityFooter">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Viewbox Classes="icon" Width="14" Height="14">
+                    <Path Classes="icon" Data="{StaticResource IconLaptop}" Stroke="{DynamicResource AppMutedBrush}" />
+                </Viewbox>
+                <TextBlock Text="{l:Loc Activity_Footer}" FontSize="12" Foreground="{DynamicResource AppMutedBrush}" TextWrapping="Wrap" MaxWidth="380" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer x:Name="ActivityScroll" MaxHeight="560" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="ActivityBody" Margin="0,0,0,6">
+                <!-- Empty: "All quiet" + what will appear here -->
+                <StackPanel x:Name="ActivityEmpty" IsVisible="{Binding IsEmpty}" Spacing="6" Margin="24,28,24,28" HorizontalAlignment="Center">
+                    <Border Classes="activityEmptyIcon" HorizontalAlignment="Center">
+                        <Viewbox Classes="icon" Width="22" Height="22">
+                            <Path Classes="icon" Data="{StaticResource IconBell}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <TextBlock Text="{l:Loc Activity_Empty_Title}" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" />
+                    <TextBlock Text="{l:Loc Activity_Empty_Text}" TextAlignment="Center" TextWrapping="Wrap" FontSize="13"
+                               Foreground="{DynamicResource AppMutedBrush}" />
+                </StackPanel>
+
+                <!-- Needs your decision -->
+                <StackPanel IsVisible="{Binding HasDecisions}">
+                    <StackPanel Classes="activitySection" Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="13" Height="13">
+                            <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" StrokeThickness="2.6" />
+                        </Viewbox>
+                        <TextBlock Classes="capsLabel" Text="{l:Loc Activity_Section_Decisions}" Foreground="{DynamicResource AppWarnBrush}" />
+                        <TextBlock Classes="capsLabel sectionCount" Text="{Binding DecisionCount}" />
+                    </StackPanel>
+                    <ItemsControl x:Name="DecisionList" ItemsSource="{Binding Decisions}" />
+                </StackPanel>
+
+                <!-- Running: the install in progress, the startup checks while they run -->
+                <StackPanel IsVisible="{Binding HasRunning}">
+                    <StackPanel Classes="activitySection" Orientation="Horizontal" Spacing="6">
+                        <TextBlock Classes="capsLabel" Text="{l:Loc Activity_Section_Running}" />
+                        <TextBlock Classes="capsLabel sectionCount" Text="{Binding RunningCount}" />
+                    </StackPanel>
+                    <ItemsControl x:Name="RunningList" ItemsSource="{Binding Running}" />
+                    <StackPanel x:Name="StartupChecks" IsVisible="{Binding ShowStartupChecks}" Spacing="2" Margin="0,0,0,4">
+                        <DockPanel Margin="10,6,10,2">
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding Startup.BackgroundSummary}" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource AppFaintBrush}" />
+                            <TextBlock Text="{l:Loc Startup_Checks_Title}" FontSize="13" FontWeight="Bold" />
+                        </DockPanel>
+                        <ItemsControl x:Name="StartupCheckList" ItemsSource="{Binding Startup.Background}" Focusable="False" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- The feed by day -->
+                <ItemsControl x:Name="FeedDays" ItemsSource="{Binding Days}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="a:ActivityDayViewModel">
+                            <StackPanel>
+                                <StackPanel Classes="activitySection" Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Classes="capsLabel" Text="{Binding Heading}" />
+                                    <TextBlock Classes="capsLabel sectionCount" IsVisible="{Binding HasNew}" Text="{Binding NewText, StringFormat='· {0}'}" />
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding Rows}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button x:Name="ShowOlderButton" Classes="sm ghost" HorizontalAlignment="Center" Margin="0,6,0,4"
+                        IsVisible="{Binding HasOlder}" Command="{Binding ShowOlderCommand}" Content="{Binding ShowMoreText}" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

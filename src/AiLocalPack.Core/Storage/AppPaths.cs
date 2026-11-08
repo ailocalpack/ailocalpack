@@ -51,6 +51,9 @@ public sealed record AppPaths
     /// <summary>Held while an install, re-apply or uninstall runs, so only one runs at a time across app and CLI.</summary>
     public string InstallLock => Path.Combine(Data, "install.lock");
 
+    /// <summary>The Activity panel's events: decisions waiting for the player and the feed (<see cref="Activity.ActivityStore"/>).</summary>
+    public string ActivityFile => Path.Combine(Data, "activity.json");
+
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 

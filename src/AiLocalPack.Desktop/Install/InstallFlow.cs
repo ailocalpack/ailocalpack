@@ -3,6 +3,7 @@ using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Desktop.Activity;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
@@ -21,8 +22,8 @@ namespace AiLocalPack.Desktop.Install;
 /// compatible pack without dependencies, with nothing installed, starts at once), runs the operation through
 /// <see cref="PackInstallService"/>, then shows the done toast (<c>▶ Play</c> · <c>Undo</c>) or the failure toast
 /// (<c>Retry</c> · <c>Details</c>). One operation at a time: <see cref="IsBusy"/> covers the check before it too.
-/// Uninstall asks first (it is destructive); <c>Undo</c> on the done toast doesn't. An automatic re-apply after a game
-/// update (<see cref="InstalledPackMonitor"/>, task 33) gets its toast here too.
+/// Uninstall asks first (it is destructive); <c>Undo</c> on the done toast doesn't. Every outcome also goes to the
+/// Activity panel (<see cref="ActivityRecorder"/>, task 38), which also takes the automatic re-apply after a game update.
 /// </summary>
 public sealed class InstallFlow
 {
@@ -37,6 +38,7 @@ public sealed class InstallFlow
     private readonly GameSessions _sessions;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
+    private readonly ActivityRecorder? _activity;
     private readonly ILogger _logger;
     private GameId? _preparing;
 
@@ -52,7 +54,7 @@ public sealed class InstallFlow
         GameSessions sessions,
         Localizer localizer,
         IUiDispatcher ui,
-        InstalledPackMonitor? monitor = null,
+        ActivityRecorder? activity = null,
         ILogger<InstallFlow>? logger = null)
     {
         _service = service;
@@ -66,12 +68,9 @@ public sealed class InstallFlow
         _sessions = sessions;
         _localizer = localizer;
         _ui = ui;
+        _activity = activity;
         _logger = logger ?? NullLogger<InstallFlow>.Instance;
         _service.Changed += (_, _) => _ui.Post(RaiseChanged);
-        if (monitor is not null)
-        {
-            monitor.Reapplied += (_, result) => _ui.Post(() => ShowAutoReapply(result));
-        }
     }
 
     /// <summary>Raised on the UI thread when an operation starts, moves on or ends, or a check before one starts or ends.</summary>
@@ -113,14 +112,14 @@ public sealed class InstallFlow
 
             if (manifest is null || compatibility is null)
             {
-                ShowFailure(new InstallOutcome(InstallOperationKind.Install, game, pack.Id, pack.Title, new InstallError(InstallErrorKind.Fetch, Fetch: PackFetchProblem.InvalidManifest), []));
+                ShowFailure(Recorded(new InstallOutcome(InstallOperationKind.Install, game, pack.Id, pack.Title, new InstallError(InstallErrorKind.Fetch, Fetch: PackFetchProblem.InvalidManifest), [])));
                 return;
             }
         }
 
         if (!compatibility.CanInstall)
         {
-            ShowFailure(new InstallOutcome(InstallOperationKind.Install, game, pack.Id, pack.Title, new InstallError(InstallErrorKind.Incompatible, Compatibility: compatibility), []));
+            ShowFailure(Recorded(new InstallOutcome(InstallOperationKind.Install, game, pack.Id, pack.Title, new InstallError(InstallErrorKind.Incompatible, Compatibility: compatibility), [])));
             return;
         }
 
@@ -207,6 +206,7 @@ public sealed class InstallFlow
         }
 
         var outcome = await _service.ReapplyAsync(Fresh(game));
+        _activity?.Record(outcome);
         _ui.Post(() =>
         {
             if (outcome.Succeeded)
@@ -220,33 +220,10 @@ public sealed class InstallFlow
         });
     }
 
-    /// <summary>
-    /// After a game update: "Hollow Lantern updated; «…» was applied again." or the failure toast (<c>Retry</c> re-applies
-    /// by hand, <c>Details</c>).
-    /// </summary>
-    private void ShowAutoReapply(PackRecheckResult result)
-    {
-        if (result.Reapply is not { } outcome)
-        {
-            return;
-        }
-
-        if (outcome.Succeeded)
-        {
-            Toast(new ToastViewModel(
-                ToastTone.Ok,
-                _localizer.Format(nameof(Strings.Install_Toast_AutoReapplied), outcome.Title, result.Game.Name),
-                [new ToastAction(_localizer[nameof(Strings.Install_Toast_Play)], () => _ = PlayAsync(result.Game), "IconPlay", IsPrimary: true)],
-                ToastKey(result.Game)));
-            return;
-        }
-
-        ShowFailure(outcome, () => _ = ReapplyAsync(result.Game), _localizer.Format(nameof(Strings.Install_Toast_AutoReapplyFailed), outcome.Title, result.Game.Name));
-    }
-
     private async Task RunInstallAsync(Game game, RegistryPack pack)
     {
         var outcome = await _service.InstallAsync(Fresh(game), pack);
+        _activity?.Record(outcome);
         _ui.Post(() =>
         {
             if (!outcome.Succeeded)
@@ -270,6 +247,7 @@ public sealed class InstallFlow
     private async Task RunUninstallAsync(Game game)
     {
         var outcome = await _service.UninstallAsync(Fresh(game));
+        _activity?.Record(outcome);
         _ui.Post(() =>
         {
             if (outcome.Succeeded)
@@ -296,11 +274,11 @@ public sealed class InstallFlow
     public void ShowDetails(InstallOutcome outcome)
     {
         ArgumentNullException.ThrowIfNull(outcome);
-        _dialogs.Show<InstallDetailsDialogViewModel>(new InstallDetailsRequest(outcome, () => _ = ReapplyAsync(outcome.Game)));
+        _dialogs.Show<InstallDetailsDialogViewModel>(new InstallDetailsRequest(InstallDetails.Of(outcome, _localizer), () => _ = ReapplyAsync(outcome.Game)));
     }
 
     /// <summary>The failure toast: <c>Retry</c> (when another try may help) and <c>Details</c>.</summary>
-    private void ShowFailure(InstallOutcome outcome, Action? retry = null, string? message = null)
+    private void ShowFailure(InstallOutcome outcome, Action? retry = null)
     {
         var actions = new List<ToastAction>();
         if (retry is not null && outcome.Error!.CanRetry)
@@ -310,8 +288,8 @@ public sealed class InstallFlow
 
         actions.Add(new ToastAction(
             _localizer[nameof(Strings.Install_Toast_Details)],
-            () => _dialogs.Show<InstallDetailsDialogViewModel>(new InstallDetailsRequest(outcome, retry))));
-        _ui.Post(() => Toast(new ToastViewModel(ToastTone.Bad, message ?? InstallTexts.Toast(outcome, _localizer), actions, ToastKey(outcome.Game))));
+            () => _dialogs.Show<InstallDetailsDialogViewModel>(new InstallDetailsRequest(InstallDetails.Of(outcome, _localizer), retry))));
+        _ui.Post(() => Toast(new ToastViewModel(ToastTone.Bad, InstallTexts.Toast(outcome, _localizer), actions, ToastKey(outcome.Game))));
     }
 
     /// <summary>Fetches the manifest and checks it against the player's files; <c>(null, null)</c> when it can't be read.</summary>
@@ -343,6 +321,12 @@ public sealed class InstallFlow
     private Game Fresh(Game game) => _library.Catalog.Find(game.Id) ?? game;
 
     private void Toast(ToastViewModel toast) => _toasts.Show(toast);
+
+    private InstallOutcome Recorded(InstallOutcome outcome)
+    {
+        _activity?.Record(outcome);
+        return outcome;
+    }
 
     private void SetPreparing(GameId? game)
     {

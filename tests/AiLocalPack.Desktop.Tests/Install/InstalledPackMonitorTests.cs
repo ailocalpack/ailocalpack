@@ -7,7 +7,6 @@ using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Registry;
-using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -93,24 +92,6 @@ public sealed class InstalledPackMonitorTests
     }
 
     [Fact]
-    public async Task Automatic_reapply_shows_a_done_toast()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"));
-        PutBack(bed, await InstallAsync(bed));
-        _ = bed.Services.GetRequiredService<InstallFlow>();
-        var toasts = bed.Services.GetRequiredService<ToastService>();
-        toasts.Items.Clear();
-
-        // Act
-        await Monitor(bed).CheckAllAsync(TestContext.Current.CancellationToken);
-        await Wait.UntilAsync(() => toasts.Items.Count > 0);
-
-        // Assert
-        toasts.Items.Single().Should().BeEquivalentTo(new { Tone = ToastTone.Ok, Text = "Alpha: re-applied «lanterns» after the game update." });
-    }
-
-    [Fact]
     public async Task With_reapply_off_the_pack_waits_for_the_player()
     {
         // Arrange
@@ -155,30 +136,6 @@ public sealed class InstalledPackMonitorTests
         // Assert
         (Installed(bed)!.Problem, Monitor(bed).Find(InstallBed.Alpha)?.Failure?.Error?.Transaction?.Problem)
             .Should().Be((InstalledPackProblem.ReapplyFailed, (InstallProblem?)InstallProblem.GameRunning));
-    }
-
-    [Fact]
-    public async Task Failed_reapply_shows_retry_and_details()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"));
-        PutBack(bed, await InstallAsync(bed));
-        bed.Services.GetRequiredService<FakeProcesses>().Run(Path.Combine(PathNames.RealPath(bed.GameDir), "Game.exe"));
-        _ = bed.Services.GetRequiredService<InstallFlow>();
-        var toasts = bed.Services.GetRequiredService<ToastService>();
-        toasts.Items.Clear();
-
-        // Act
-        await Monitor(bed).CheckAllAsync(TestContext.Current.CancellationToken);
-        await Wait.UntilAsync(() => toasts.Items.Count > 0);
-
-        // Assert
-        toasts.Items.Single().Should().BeEquivalentTo(new
-        {
-            Tone = ToastTone.Bad,
-            Text = "Alpha: couldn't re-apply «lanterns» after the game update; files restored.",
-            Actions = new[] { new { Text = "Retry" }, new { Text = "Details" } },
-        });
     }
 
     [Fact]

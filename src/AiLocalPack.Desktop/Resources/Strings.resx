@@ -1805,12 +1805,6 @@
   <data name="Library_Action_Reapply" xml:space="preserve">
     <value>Re-apply</value>
   </data>
-  <data name="Install_Toast_AutoReapplied" xml:space="preserve">
-    <value>{1}: re-applied «{0}» after the game update.</value>
-  </data>
-  <data name="Install_Toast_AutoReapplyFailed" xml:space="preserve">
-    <value>{1}: couldn't re-apply «{0}» after the game update; files restored.</value>
-  </data>
   <data name="Install_Step_Patch" xml:space="preserve">
     <value>Applying the binary patch to a copy of the game files</value>
   </data>
@@ -1831,5 +1825,137 @@
   </data>
   <data name="Install_Why_Patch" xml:space="preserve">
     <value>Couldn't apply the binary patch to {0}: the patch is damaged or made in a way this app can't read.</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>Read all</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>Notification settings</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>When the window is closed, events arrive as system notifications.</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>Needs your decision</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="Activity_Day_New_One" xml:space="preserve">
+    <value>{0} new</value>
+  </data>
+  <data name="Activity_Day_New_Other" xml:space="preserve">
+    <value>{0} new</value>
+  </data>
+  <data name="Activity_ShowMore_One" xml:space="preserve">
+    <value>Show {0} more</value>
+  </data>
+  <data name="Activity_ShowMore_Other" xml:space="preserve">
+    <value>Show {0} more</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>All quiet</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>Installs, pack generation, publishing and automatic re-applies after game updates show up here.</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>Decide later: move to the feed</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>ailocalpack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>Needs your decision</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · {1} %</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>Installed «{0}»</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>Uninstalled «{0}»; original files restored</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>Re-applied «{0}»</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>«{0}» re-applied after the game update</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>Couldn't install «{0}»</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>Couldn't uninstall «{0}»</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>Couldn't re-apply «{0}»</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>The game updated; re-applying «{0}» failed</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>The game updated; «{0}» rev {1} is incompatible now</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>The game updated; «{0}» isn't applied</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>Restoring some files failed; the app retries on the next start.</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>Revision {0} of the pack is available.</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>No newer revision yet: translate the new strings with AI.</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>The game put its original files back. The pack still fits this version: apply it again.</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>Re-apply</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>Update to rev {0}</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>Translate new strings</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_One" xml:space="preserve">
+    <value>Activity: {0} needs your decision</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Other" xml:space="preserve">
+    <value>Activity: {0} need your decision</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>Activity: {0}</value>
   </data>
 </root>

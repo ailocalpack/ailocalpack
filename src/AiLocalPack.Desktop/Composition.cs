@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Activity;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
@@ -11,6 +12,7 @@ using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Desktop.Activity;
 using AiLocalPack.Desktop.AddGame;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Dialogs;
@@ -105,7 +107,10 @@ internal static class Composition
         services.AddSingleton<PackInstallService>();
         services.AddSingleton<InstalledPackMonitor>();
         services.AddSingleton<ToastService>();
+        services.AddSingleton(sp => new ActivityStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<ActivityStore>>()));
+        services.AddSingleton<ActivityRecorder>();
         services.AddSingleton<InstallFlow>();
+        services.AddSingleton<ActivityPanelViewModel>();
         services.AddSingleton<GameStatuses>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);

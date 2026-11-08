@@ -45,7 +45,26 @@ public sealed partial class InstallConfirmDialogViewModel(InstallConfirmRequest 
 }
 
 /// <summary>A failed operation and how to run it again (<c>null</c> = no <c>Retry</c> button).</summary>
-public sealed record InstallDetailsRequest(InstallOutcome Outcome, Action? Retry);
+public sealed record InstallDetailsRequest(InstallDetails Details, Action? Retry);
+
+/// <summary>What the details dialog shows: from an outcome now, or as the Activity panel saved it.</summary>
+/// <param name="Title">The pack's title.</param>
+/// <param name="Reason">The reason in plain words, in the UI language.</param>
+public sealed record InstallDetails(InstallOperationKind Kind, string Title, string Reason, bool FilesRestored, IReadOnlyList<string> Log, bool CanRetry)
+{
+    /// <summary>A failed operation's details; <paramref name="outcome"/> must have failed.</summary>
+    public static InstallDetails Of(InstallOutcome outcome, Localizer localizer)
+    {
+        ArgumentNullException.ThrowIfNull(outcome);
+        ArgumentNullException.ThrowIfNull(localizer);
+        if (outcome.Error is not { } error)
+        {
+            throw new ArgumentException("Only a failed operation has details.", nameof(outcome));
+        }
+
+        return new InstallDetails(outcome.Kind, outcome.Title, InstallTexts.Reason(error, localizer), error.FilesRestored, outcome.Log, error.CanRetry);
+    }
+}
 
 /// <summary>
 /// A failed install, re-apply or uninstall (design §4a, the failure toast's <c>Details</c>): the reason in plain words,
@@ -60,42 +79,36 @@ public sealed partial class InstallDetailsDialogViewModel : DialogViewModel
     public InstallDetailsDialogViewModel(InstallDetailsRequest request, IDialogService dialogs, Localizer localizer)
     {
         ArgumentNullException.ThrowIfNull(request);
-        var (outcome, retry) = request;
-        if (outcome.Error is null)
-        {
-            throw new ArgumentException("Only a failed operation has details.", nameof(outcome));
-        }
-
-        Outcome = outcome;
-        _retry = outcome.Error.CanRetry ? retry : null;
+        Details = request.Details;
+        _retry = Details.CanRetry ? request.Retry : null;
         _dialogs = dialogs;
         _localizer = localizer;
     }
 
-    public InstallOutcome Outcome { get; }
+    public InstallDetails Details { get; }
 
     /// <summary>"Couldn't install «…»", "Couldn't uninstall «…»"…</summary>
     public string Title => _localizer.Format(
-        Outcome.Kind switch
+        Details.Kind switch
         {
             InstallOperationKind.Uninstall => nameof(Strings.Install_Details_TitleUninstall),
             InstallOperationKind.Reapply => nameof(Strings.Install_Details_TitleReapply),
             _ => nameof(Strings.Install_Details_TitleInstall),
         },
-        Outcome.Title);
+        Details.Title);
 
-    public string Reason => InstallTexts.Reason(Outcome.Error!, _localizer);
+    public string Reason => Details.Reason;
 
     /// <summary>"The game files are as they were before." / "Restoring some files failed; the app retries on the next start."</summary>
-    public string RestoredText => _localizer[Outcome.Error!.FilesRestored
-        ? Outcome.Kind == InstallOperationKind.Uninstall ? nameof(Strings.Install_Details_UninstallStopped) : nameof(Strings.Install_Details_Restored)
+    public string RestoredText => _localizer[Details.FilesRestored
+        ? Details.Kind == InstallOperationKind.Uninstall ? nameof(Strings.Install_Details_UninstallStopped) : nameof(Strings.Install_Details_Restored)
         : nameof(Strings.Install_Details_NotRestored)];
 
-    public bool IsRestored => Outcome.Error!.FilesRestored;
+    public bool IsRestored => Details.FilesRestored;
 
-    public string LogText => string.Join(Environment.NewLine, Outcome.Log);
+    public string LogText => string.Join(Environment.NewLine, Details.Log);
 
-    public bool HasLog => Outcome.Log.Count > 0;
+    public bool HasLog => Details.Log.Count > 0;
 
     public bool CanRetry => _retry is not null;
 

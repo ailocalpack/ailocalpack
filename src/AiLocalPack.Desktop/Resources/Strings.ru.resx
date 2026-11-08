@@ -1837,12 +1837,6 @@
   <data name="Library_Action_Reapply" xml:space="preserve">
     <value>Применить</value>
   </data>
-  <data name="Install_Toast_AutoReapplied" xml:space="preserve">
-    <value>{1}: после обновления игры «{0}» применён заново.</value>
-  </data>
-  <data name="Install_Toast_AutoReapplyFailed" xml:space="preserve">
-    <value>{1}: после обновления игры не удалось заново применить «{0}»; файлы восстановлены.</value>
-  </data>
   <data name="Install_Step_Patch" xml:space="preserve">
     <value>Применение бинарного патча к копии файлов игры</value>
   </data>
@@ -1863,5 +1857,146 @@
   </data>
   <data name="Install_Why_Patch" xml:space="preserve">
     <value>Не удалось применить бинарный патч к {0}: патч повреждён или сделан так, что приложение не может его прочитать.</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>Активность</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>Прочитать все</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>Настройки уведомлений</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>Когда окно закрыто, события приходят системными уведомлениями.</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>Нужно ваше решение</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>Выполняется</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>Вчера</value>
+  </data>
+  <data name="Activity_Day_New_One" xml:space="preserve">
+    <value>{0} новое</value>
+  </data>
+  <data name="Activity_Day_New_Few" xml:space="preserve">
+    <value>{0} новых</value>
+  </data>
+  <data name="Activity_Day_New_Many" xml:space="preserve">
+    <value>{0} новых</value>
+  </data>
+  <data name="Activity_ShowMore_One" xml:space="preserve">
+    <value>Показать ещё {0}</value>
+  </data>
+  <data name="Activity_ShowMore_Few" xml:space="preserve">
+    <value>Показать ещё {0}</value>
+  </data>
+  <data name="Activity_ShowMore_Many" xml:space="preserve">
+    <value>Показать ещё {0}</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>Всё спокойно</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>Здесь появятся установки, генерация пакетов, публикация и автоматическое повторное применение после обновлений игр.</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>Решить позже: перенести в ленту</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>Новое</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>ailocalpack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>Нужно ваше решение</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>Сведения</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · {1} %</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>Установлен «{0}»</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>«{0}» удалён, оригинальные файлы восстановлены</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>«{0}» применён заново</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>«{0}» применён заново после обновления игры</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>Не удалось установить «{0}»</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>Не удалось удалить «{0}»</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>Не удалось заново применить «{0}»</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>Игра обновилась; заново применить «{0}» не удалось</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>Игра обновилась; «{0}» ред. {1} теперь несовместим</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>Игра обновилась; «{0}» не применён</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>Часть файлов восстановить не удалось; приложение повторит при следующем запуске.</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>Доступна редакция {0} пакета.</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>Новой редакции пока нет: переведите новые строки с ИИ.</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>Игра вернула свои оригинальные файлы. Пакет по-прежнему подходит к этой версии: примените его заново.</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>Применить заново</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>Обновить до ред. {0}</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>Перевести новые строки</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_One" xml:space="preserve">
+    <value>Активность: {0} ждёт вашего решения</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Few" xml:space="preserve">
+    <value>Активность: {0} ждут вашего решения</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Many" xml:space="preserve">
+    <value>Активность: {0} ждут вашего решения</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>Активность: {0}</value>
   </data>
 </root>

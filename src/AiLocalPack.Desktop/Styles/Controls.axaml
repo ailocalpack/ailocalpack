@@ -711,12 +711,163 @@
             </Animation>
         </Style.Animations>
     </Style>
-    <Style Selector="FlyoutPresenter.startupChecks">
-        <Setter Property="Padding" Value="8" />
+
+    <!-- Activity panel under 🔔 (design §5) -->
+    <Style Selector="FlyoutPresenter.activity">
+        <Setter Property="Padding" Value="6,8,6,0" />
         <Setter Property="CornerRadius" Value="14" />
-        <Setter Property="MaxWidth" Value="420" />
+        <Setter Property="MaxWidth" Value="460" />
         <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+    </Style>
+    <Style Selector="Border.bellBadge">
+        <Setter Property="MinWidth" Value="17" />
+        <Setter Property="Height" Value="17" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,-8,-12,0" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+    <Style Selector="Border.bellBadge.attention">
+        <Setter Property="Background" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.bellBadge TextBlock">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.bellBadge.attention TextBlock">
+        <Setter Property="Foreground" Value="#1b1408" />
+    </Style>
+    <Style Selector="StackPanel.activitySection">
+        <Setter Property="Margin" Value="10,10,10,6" />
+    </Style>
+    <Style Selector="TextBlock.sectionCount">
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow">
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Border.activityRow:pointerover, Border.activityRow:focus-within">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="Button.activityRowOpen">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.activityRowOpen:pointerover /template/ ContentPresenter, Button.activityRowOpen:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <!-- A decision: a card with a tone stripe (amber decision, red error); icon + text carry the meaning too -->
+    <Style Selector="Border.activityRow.decision">
+        <Setter Property="Margin" Value="0,0,0,6" />
+        <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppWarnBrush}" />
+        <Setter Property="BorderThickness" Value="4,1,1,1" />
+    </Style>
+    <Style Selector="Border.activityRow.decision.bad">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.decision:pointerover, Border.activityRow.decision:focus-within">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="Border.activityThumb">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+    <Style Selector="Border.activityTone">
+        <Setter Property="Width" Value="22" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="CornerRadius" Value="11" />
+        <Setter Property="Margin" Value="0,0,-9,-6" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="Border.activityTone Path.toneIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.attention Border.activityTone">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.attention Path.toneIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.bad Border.activityTone">
+        <Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.bad Path.toneIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="Ellipse.unreadDot">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Fill" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="TextBlock.activityGame">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="TextBlock.activityTime">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="TextBlock.activityTitle">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Border.activityRow.unread TextBlock.activityTitle">
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="Border.activityRow.read TextBlock.activityTitle">
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="TextBlock.activityDetail">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <!-- ✕ on a feed row: only on hover or keyboard focus -->
+    <Style Selector="Border.activityRow.ok Border.activityTone">
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.ok Path.toneIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow Button.hideOnRest">
+        <Setter Property="Opacity" Value="0" />
+    </Style>
+    <Style Selector="Border.activityRow:pointerover Button.hideOnRest, Border.activityRow:focus-within Button.hideOnRest">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="Border.activityFooter">
+        <Setter Property="Padding" Value="10,10" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+    </Style>
+    <Style Selector="Border.activityEmptyIcon">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="Margin" Value="0,0,0,6" />
     </Style>
 
     <!-- Spinner: a rotating loader icon -->

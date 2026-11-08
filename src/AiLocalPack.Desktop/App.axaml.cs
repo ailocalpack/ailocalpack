@@ -105,6 +105,8 @@ public sealed class App : Application
         main.Show();
         main.Activate();
         splash?.Close();
+        // Before the background checks: what they find (re-applied or broken packs) goes to the Activity panel.
+        services.GetRequiredService<AiLocalPack.Desktop.Activity.ActivityRecorder>();
         startup.StartBackground();
     }
 }
