@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <Description>The fake agent: replays a recorded JSONL file as an agent's output, for agent and pipeline tests (task 40).</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\AiLocalPack.Agents\AiLocalPack.Agents.csproj" />
+    </ItemGroup>
+</Project>

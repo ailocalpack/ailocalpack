@@ -2,5 +2,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\AiLocalPack.Agents\AiLocalPack.Agents.csproj" />
+        <!-- The fake agent program, run as a real child process by the runner and adapter tests -->
+        <ProjectReference Include="..\AiLocalPack.FakeAgent\AiLocalPack.FakeAgent.csproj" />
     </ItemGroup>
 </Project>

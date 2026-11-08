@@ -21,6 +21,7 @@
     <Project Path="tests/AiLocalPack.Cli.Tests/AiLocalPack.Cli.Tests.csproj" />
     <Project Path="tests/AiLocalPack.Core.Tests/AiLocalPack.Core.Tests.csproj" />
     <Project Path="tests/AiLocalPack.Desktop.Tests/AiLocalPack.Desktop.Tests.csproj" />
+    <Project Path="tests/AiLocalPack.FakeAgent/AiLocalPack.FakeAgent.csproj" />
     <Project Path="tests/AiLocalPack.Mcp.Tests/AiLocalPack.Mcp.Tests.csproj" />
     <Project Path="tests/AiLocalPack.TestKit/AiLocalPack.TestKit.csproj" />
     <Project Path="tests/AiLocalPack.TestKit.Tests/AiLocalPack.TestKit.Tests.csproj" />

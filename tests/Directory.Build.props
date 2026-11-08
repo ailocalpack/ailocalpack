@@ -1,9 +1,9 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
-  <!-- Shared test helpers: a plain library, not a test project -->
+  <!-- Shared test helpers (TestKit, the FakeAgent program): not test projects -->
   <PropertyGroup>
-    <IsTestKit Condition="'$(MSBuildProjectName)' == 'AiLocalPack.TestKit'">true</IsTestKit>
+    <IsTestKit Condition="'$(MSBuildProjectName)' == 'AiLocalPack.TestKit' Or '$(MSBuildProjectName)' == 'AiLocalPack.FakeAgent'">true</IsTestKit>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestKit)' != 'true'">
