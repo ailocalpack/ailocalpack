@@ -6,6 +6,8 @@
         <Description>Avalonia desktop app.</Description>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <!-- OS notifications call the Objective-C runtime (macOS) and WinRT (Windows) through function pointers. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <!-- English strings live in the main assembly (Strings.resx); other languages in satellite assemblies. -->
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
@@ -21,6 +23,7 @@
         <PackageReference Include="Serilog" />
         <PackageReference Include="Serilog.Extensions.Logging" />
         <PackageReference Include="Serilog.Sinks.File" />
+        <PackageReference Include="Tmds.DBus.Protocol" />
     </ItemGroup>
 
     <!-- UI strings: Strings.resx (English, neutral) + Strings.<lang>.resx. The build generates the typed Strings class. -->
@@ -32,6 +35,10 @@
             <StronglyTypedFileName>$(IntermediateOutputPath)Strings.Designer.cs</StronglyTypedFileName>
             <PublicClass>false</PublicClass>
         </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>

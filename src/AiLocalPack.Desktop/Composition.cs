@@ -13,7 +13,9 @@ using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Activity;
+using AiLocalPack.Core.Background;
 using AiLocalPack.Desktop.AddGame;
+using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Install;
@@ -112,6 +114,7 @@ internal static class Composition
         services.AddSingleton<InstallFlow>();
         services.AddSingleton<ActivityPanelViewModel>();
         services.AddSingleton<GameStatuses>();
+        AddBackground(services, env, paths, loggerFactory);
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
         services.AddTransient<SplashViewModel>();
@@ -120,6 +123,24 @@ internal static class Composition
         services.AddSingleton<SettingsPreloader>();
         configure?.Invoke(services);
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+    }
+
+    /// <summary>Tray, start with the system, background re-checks, OS notifications (task 39).</summary>
+    private static void AddBackground(IServiceCollection services, OsEnvironment env, AppPaths paths, ILoggerFactory loggerFactory)
+    {
+        services.AddSingleton<IWindowsRegistryWriter>(WindowsRegistry.Instance);
+        services.AddSingleton(sp => Autostart.For(env, sp.GetRequiredService<IWindowsRegistryWriter>()));
+        // A throwaway or portable home (AILOCALPACK_HOME: dev, tests) never registers itself at sign-in.
+        services.AddSingleton(_ => new AutostartTarget(env.GetVariable(AppPaths.HomeVariable) is null
+            ? AutostartCommand.ForCurrentProcess(env, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
+            : null));
+        services.AddSingleton(sp => new SteamManifestWatcher(sp.GetRequiredService<ILogger<SteamManifestWatcher>>()));
+        services.AddSingleton<BackgroundChecks>();
+        services.AddSingleton<AppWindowHost>();
+        services.AddSingleton<IAppWindow>(sp => sp.GetRequiredService<AppWindowHost>());
+        services.AddSingleton(_ => SystemNotifications.Create(env, paths, loggerFactory));
+        services.AddSingleton<ActivityNotifier>();
+        services.AddSingleton<TrayHost>();
     }
 
     /// <summary>Game catalog, Steam scan, detection and covers.</summary>

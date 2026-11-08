@@ -6,6 +6,8 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Core.Background;
+using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Services;
@@ -77,6 +79,14 @@ internal static class TestServices
                 options: new PackFetchOptions(TimeSpan.FromSeconds(5), Attempts: 1)));
 
             // Whitelisted dependencies' release files come from a fake server too.
+            // The OS never sees tests: no autostart entry, no notification, no window.
+            services.AddSingleton<FakeAutostart>();
+            services.AddSingleton<IAutostart>(sp => sp.GetRequiredService<FakeAutostart>());
+            services.AddSingleton<FakeNotifications>();
+            services.AddSingleton<ISystemNotifications>(sp => sp.GetRequiredService<FakeNotifications>());
+            services.AddSingleton<FakeAppWindow>();
+            services.AddSingleton<IAppWindow>(sp => sp.GetRequiredService<FakeAppWindow>());
+
             services.AddSingleton<DependencyDownloads>();
             services.AddSingleton(sp => new DependencyStore(
                 sp.GetRequiredService<AppPaths>().Dependencies,
@@ -237,5 +247,61 @@ internal static class Wait
 
             await Task.Delay(10);
         }
+    }
+}
+
+/// <summary>An autostart entry kept in memory.</summary>
+internal sealed class FakeAutostart : IAutostart
+{
+    public string? Content { get; private set; }
+
+    public int Writes { get; private set; }
+
+    public string Location => "fake";
+
+    public string? Read() => Content;
+
+    public string Render(AutostartCommand command) => string.Join(' ', [command.Executable, .. command.Arguments]);
+
+    public void Write(string content)
+    {
+        Content = content;
+        Writes++;
+    }
+
+    public void Remove() => Content = null;
+}
+
+/// <summary>Records the OS notifications the app sent; <see cref="Click"/> plays the player clicking one.</summary>
+internal sealed class FakeNotifications : ISystemNotifications
+{
+    public List<SystemNotification> Shown { get; } = [];
+
+    public event EventHandler<string>? Activated;
+
+    public Task ShowAsync(SystemNotification notification)
+    {
+        Shown.Add(notification);
+        return Task.CompletedTask;
+    }
+
+    public void Click(string id) => Activated?.Invoke(this, id);
+
+    public void Dispose()
+    {
+    }
+}
+
+/// <summary>The main window as the test sets it (in front or not), counting the times the app brought it back.</summary>
+internal sealed class FakeAppWindow : IAppWindow
+{
+    public bool IsActive { get; set; }
+
+    public int Shows { get; private set; }
+
+    public void Show()
+    {
+        Shows++;
+        IsActive = true;
     }
 }

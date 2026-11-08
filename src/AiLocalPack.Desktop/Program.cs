@@ -1,4 +1,6 @@
+using AiLocalPack.Core.Background;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Logging;
 using Avalonia;
 using Microsoft.Extensions.Logging;
@@ -24,8 +26,18 @@ internal static class Program
         logger.LogInformation(
             "Starting ailocalpack on {Os}; config {Config}, data {Data}, cache {Cache}",
             System.Runtime.InteropServices.RuntimeInformation.OSDescription, paths.Config, paths.Data, paths.Cache);
+        var background = args.Contains(AutostartCommand.BackgroundArgument, StringComparer.Ordinal);
+        using var instance = SingleInstance.TryAcquire(paths.Data, show: !background, logger);
+        if (instance is null)
+        {
+            logger.LogInformation("ailocalpack already runs for this data folder; {Action}", background ? "nothing to do" : "asked it to show its window");
+            return 0;
+        }
+
         App.LoggerFactory = loggerFactory;
         App.Paths = paths;
+        App.StartInBackground = background;
+        App.Instance = instance;
         try
         {
             return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);

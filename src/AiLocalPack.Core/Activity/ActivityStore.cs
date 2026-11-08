@@ -41,6 +41,9 @@ public sealed class ActivityStore
     /// <summary>Raised after any change of events or tasks.</summary>
     public event EventHandler? Changed;
 
+    /// <summary>Raised after <see cref="Add"/> added a new event (before <see cref="Changed"/>), on the adding thread.</summary>
+    public event EventHandler<ActivityEvent>? Added;
+
     /// <summary>Every visible event (decisions and feed, not hidden), newest first.</summary>
     public IReadOnlyList<ActivityEvent> Events
     {
@@ -113,6 +116,7 @@ public sealed class ActivityStore
             Save();
         }
 
+        Added?.Invoke(this, activity);
         RaiseChanged();
         return true;
     }

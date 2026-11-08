@@ -1999,4 +1999,13 @@
   <data name="Chrome_Activity_Count" xml:space="preserve">
     <value>Активность: {0}</value>
   </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Открыть ailocalpack</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>Проверить обновления игр</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
 </root>

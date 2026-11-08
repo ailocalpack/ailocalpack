@@ -385,6 +385,22 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             retry));
     }
 
+    /// <summary>Opens an event like a click on its row (an OS notification clicked, task 39); nothing for an unknown ID.</summary>
+    public void OpenEvent(string id)
+    {
+        if (_store.Find(id) is { } activity)
+        {
+            Open(activity);
+        }
+    }
+
+    /// <summary>The registry's newer revision of an incompatible pack's event, for its detail line.</summary>
+    public int? LaterRevisionOf(ActivityEvent activity)
+    {
+        ArgumentNullException.ThrowIfNull(activity);
+        return activity.Kind == ActivityEventKind.PackIncompatible ? LaterRevision(activity)?.Revision : null;
+    }
+
     private void Open(ActivityEvent activity)
     {
         _store.MarkRead(activity.Id);

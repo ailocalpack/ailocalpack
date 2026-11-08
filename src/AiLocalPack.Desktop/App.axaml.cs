@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
@@ -30,6 +31,12 @@ public sealed class App : Application
     /// <summary>Set by <see cref="Program"/> before start; otherwise resolved for this machine.</summary>
     internal static AppPaths? Paths { get; set; }
 
+    /// <summary>Started at sign-in (<c>--background</c>): the window stays in the tray until opened.</summary>
+    internal static bool StartInBackground { get; set; }
+
+    /// <summary>The single-instance guard of this run; a second start asks it to show the window.</summary>
+    internal static AiLocalPack.Desktop.Background.SingleInstance? Instance { get; set; }
+
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
@@ -43,7 +50,7 @@ public sealed class App : Application
             // No window is the main one until the library opens: closing the splash quits, the app doesn't stop before.
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             desktop.Exit += (_, _) => _services.Dispose();
-            _ = StartAsync(desktop, _services, logger);
+            _ = StartAsync(this, desktop, _services, logger);
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -53,7 +60,7 @@ public sealed class App : Application
     /// Design §9: the blocking steps run off the UI thread behind a splash window (shown only if they take a moment),
     /// then the main window opens on the library and the background checks start.
     /// </summary>
-    private static async Task StartAsync(IClassicDesktopStyleApplicationLifetime desktop, ServiceProvider services, ILogger logger)
+    private static async Task StartAsync(Application app, IClassicDesktopStyleApplicationLifetime desktop, ServiceProvider services, ILogger logger)
     {
         var startup = services.GetRequiredService<AppStartup>();
         SplashWindow? splash = null;
@@ -61,7 +68,7 @@ public sealed class App : Application
         try
         {
             var blocking = startup.RunBlockingAsync();
-            if (await Task.WhenAny(blocking, Task.Delay(SplashDelay)) != blocking)
+            if (!StartInBackground && await Task.WhenAny(blocking, Task.Delay(SplashDelay)) != blocking)
             {
                 splash = new SplashWindow { DataContext = services.GetRequiredService<SplashViewModel>() };
                 splash.Closed += (_, _) =>
@@ -102,11 +109,38 @@ public sealed class App : Application
         mainOpened = true;
         // Once the window is up, so the first frame isn't delayed: Settings then opens without a pause.
         main.Opened += (_, _) => _ = services.GetRequiredService<SettingsPreloader>().PreloadAsync();
-        main.Show();
-        main.Activate();
+        var tray = services.GetRequiredService<TrayHost>();
+        if (OsEnvironment.Current.Os == OsKind.Linux)
+        {
+            tray.TrayAvailable = await FreeDesktopNotifications.HasTrayAsync(logger);
+        }
+
+        tray.Attach(app, desktop, main);
+        if (StartInBackground && tray.IsOn)
+        {
+            logger.LogInformation("Started in the background: the window stays in the tray");
+        }
+        else
+        {
+            main.Show();
+            main.Activate();
+            if (tray.IsOn)
+            {
+                services.GetRequiredService<ISystemNotifications>().Prepare();
+            }
+        }
+
         splash?.Close();
-        // Before the background checks: what they find (re-applied or broken packs) goes to the Activity panel.
+        if (Instance is { } instance)
+        {
+            instance.ShowRequested += (_, _) => services.GetRequiredService<AppWindowHost>().Show();
+        }
+
+        // Before the background checks: what they find (re-applied or broken packs) goes to the Activity panel, and
+        // from there to OS notifications while the window isn't in front.
         services.GetRequiredService<AiLocalPack.Desktop.Activity.ActivityRecorder>();
+        services.GetRequiredService<ActivityNotifier>();
         startup.StartBackground();
+        services.GetRequiredService<BackgroundChecks>().Start();
     }
 }

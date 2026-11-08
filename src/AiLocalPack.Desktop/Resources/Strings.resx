@@ -1958,4 +1958,13 @@
   <data name="Chrome_Activity_Count" xml:space="preserve">
     <value>Activity: {0}</value>
   </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Open ailocalpack</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>Check for game updates</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Quit</value>
+  </data>
 </root>
