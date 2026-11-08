@@ -49,5 +49,6 @@
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
         <ProjectReference Include="..\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
         <ProjectReference Include="..\AiLocalPack.Agents\AiLocalPack.Agents.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Mcp\AiLocalPack.Mcp.csproj" />
     </ItemGroup>
 </Project>

@@ -5,6 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="ModelContextProtocol.Core" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
         <ProjectReference Include="..\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
     </ItemGroup>

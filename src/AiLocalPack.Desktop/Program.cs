@@ -2,6 +2,7 @@ using AiLocalPack.Core.Background;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Logging;
+using AiLocalPack.Mcp;
 using Avalonia;
 using Microsoft.Extensions.Logging;
 
@@ -12,6 +13,13 @@ internal static class Program
     [STAThread]
     public static int Main(string[] args)
     {
+        // Hidden mode an agent starts (task 45): the toolkit MCP server on standard input / output, no window, no
+        // single-instance check (the app itself is usually running), no logging that could touch standard output.
+        if (ToolkitServerLaunch.IsRequested(args))
+        {
+            return ToolkitServerLaunch.Run(args, OsEnvironment.Current, Console.Error);
+        }
+
         var paths = AppPaths.Resolve(OsEnvironment.Current);
         using var loggerFactory = AppLogging.CreateFactory(paths.Logs);
         var logger = loggerFactory.CreateLogger("AiLocalPack");
