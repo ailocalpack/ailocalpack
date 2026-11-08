@@ -1436,6 +1436,9 @@
   <data name="Install_Log_Rebuilt" xml:space="preserve">
     <value>Game files rebuilt: {0}; strings applied: {1}.</value>
   </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>The game has no {1} of its own: the translation replaces its {0} texts. Choose {0} in the game's settings.</value>
+  </data>
   <data name="Install_Log_UnknownKeys" xml:space="preserve">
     <value>Strings not found in this version of the game: {0}.</value>
   </data>
@@ -1588,6 +1591,9 @@
   </data>
   <data name="Install_Toast_Installed" xml:space="preserve">
     <value>Installed: «{0}».</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>In the game, choose {0} as the language.</value>
   </data>
   <data name="Install_Toast_Reapplied" xml:space="preserve">
     <value>Re-applied: «{0}».</value>

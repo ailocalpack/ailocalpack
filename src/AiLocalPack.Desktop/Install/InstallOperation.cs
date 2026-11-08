@@ -180,4 +180,10 @@ public sealed record InstallOutcome(
     UninstallResult? Uninstall = null)
 {
     public bool Succeeded => Error is null;
+
+    /// <summary>
+    /// After an install or re-apply: the language the player has to choose in the game to see the translation, when the
+    /// game has no such language and the pack replaced the texts of its own (<c>RebuildResult.InGameLanguage</c>).
+    /// </summary>
+    public string? InGameLanguage { get; init; }
 }

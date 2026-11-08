@@ -43,9 +43,9 @@ The CLI ships as one self-contained file per OS: `dotnet publish src/AiLocalPack
 | `games list [--json]` | Your Steam games with engine, anti-cheat and build |
 | `toolkit detect <folder>` | Engine and anti-cheat of a game folder |
 | `toolkit scan-folder <folder>` | Every game in a folder, with its fingerprint and version |
-| `toolkit extract <folder> --out <file> [--lang <tag>]` | A game's strings as an editable string table (RPG Maker, Ren'Py, Godot, Unity) |
+| `toolkit extract <folder> --out <file> [--lang <tag>]` | A game's strings as an editable string table (RPG Maker, Ren'Py, Godot, Unity, Unreal) |
 | `toolkit rebuild <folder> --strings <table> --out <folder>` | Rebuilds translated files into a separate staging folder |
-| `dev fixture <rpgmaker\|renpy\|godot\|unity> <folder>` | Writes a synthetic game for manual checks |
+| `dev fixture <rpgmaker\|renpy\|godot\|unity\|unreal> <folder>` | Writes a synthetic game for manual checks |
 | `index show [--game <id>] [--lang <tag>]` | Packs in the registry index |
 | `pack check <pack> --game <id>` | Whether a pack fits your installed copy |
 | `pack validate <folder>…` | What registry CI checks for each pack |

@@ -15,6 +15,7 @@ using AiLocalPack.Toolkit.Recipes.Godot;
 using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using AiLocalPack.Toolkit.Recipes.Unity;
+using AiLocalPack.Toolkit.Recipes.Unreal;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
@@ -301,7 +302,30 @@ internal static class DevCommand
             result.InvocationConfiguration.Output.WriteLine($"Wrote a synthetic Unity game into {dir} ({files.Count} files).");
             return 0;
         });
-        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot, unity };
+        var unrealDir = new Argument<string>("dir") { Description = "Folder to create the game in (missing or empty)." };
+        var unrealMac = new Option<bool>("--mac-bundle") { Description = "macOS .app/Contents/UE4 layout." };
+        var locresVersion = new Option<int>("--locres-version") { Description = "Locres format version (0–3).", DefaultValueFactory = _ => 3 };
+        var unreal = new Command("unreal", "Write a synthetic Unreal game (pak, native English and French localization; no engine).") { unrealDir, unrealMac, locresVersion };
+        unreal.SetAction(result =>
+        {
+            var dir = Path.GetFullPath(result.GetValue(unrealDir)!);
+            if (File.Exists(dir) || (Directory.Exists(dir) && Directory.EnumerateFileSystemEntries(dir).Any()))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"{dir} already exists and isn't an empty folder.");
+                return 1;
+            }
+
+            if (result.GetValue(locresVersion) is < 0 or > 3)
+            {
+                result.InvocationConfiguration.Error.WriteLine("--locres-version must be 0, 1, 2 or 3.");
+                return 1;
+            }
+
+            var files = UnrealFixture.Create(dir, (byte)result.GetValue(locresVersion), result.GetValue(unrealMac));
+            result.InvocationConfiguration.Output.WriteLine($"Wrote a synthetic Unreal game into {dir} ({files.Count} files).");
+            return 0;
+        });
+        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot, unity, unreal };
     }
 
     private static Command BuildUninstall(OsEnvironment env)

@@ -6,6 +6,7 @@ using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Toolkit.Recipes.Unity;
+using AiLocalPack.Toolkit.Recipes.Unreal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Install;
@@ -13,6 +14,68 @@ namespace AiLocalPack.Desktop.Tests.Install;
 /// <summary>The install service (task 29) on a real RPG Maker game and a local registry: download, check, rebuild, transaction.</summary>
 public sealed class PackInstallServiceTests
 {
+    [Fact]
+    public async Task Unreal_pack_installs_as_a_mod_pak()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("unreal-text"), unreal: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+
+        // Act
+        await service.InstallAsync(bed.Game, PackOf(bed, "unreal-text"), TestContext.Current.CancellationToken);
+
+        // Assert
+        File.Exists(UnrealMod(bed)).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Unreal_pack_over_the_native_culture_says_which_language_to_choose_in_game()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("unreal-text"), unreal: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+
+        // Act
+        var outcome = await service.InstallAsync(bed.Game, PackOf(bed, "unreal-text"), TestContext.Current.CancellationToken);
+
+        // Assert
+        (outcome.InGameLanguage, outcome.Log.Any(l => l.Contains("Choose English in the game's settings", StringComparison.Ordinal))).Should().Be(("en", true));
+    }
+
+    [Fact]
+    public async Task Unreal_pack_reapplies_the_same_mod_pak()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("unreal-text"), unreal: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+        await service.InstallAsync(bed.Game, PackOf(bed, "unreal-text"), TestContext.Current.CancellationToken);
+        var first = File.ReadAllBytes(UnrealMod(bed));
+
+        // Act
+        await service.ReapplyAsync(bed.Game, TestContext.Current.CancellationToken);
+
+        // Assert
+        File.ReadAllBytes(UnrealMod(bed)).Should().Equal(first);
+    }
+
+    [Fact]
+    public async Task Unreal_pack_uninstall_removes_the_mod_pak()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("unreal-text"), unreal: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+        await service.InstallAsync(bed.Game, PackOf(bed, "unreal-text"), TestContext.Current.CancellationToken);
+
+        // Act
+        await service.UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
+
+        // Assert
+        Directory.EnumerateFiles(bed.GameDir, "*", SearchOption.AllDirectories).Select(f => Path.GetRelativePath(bed.GameDir, f).Replace('\\', '/'))
+            .Should().Equal(UnrealFixture.Pak);
+    }
+
+    private static string UnrealMod(InstallBed bed) => Path.Combine(bed.GameDir, UnrealFixture.Paks, "~mods", UnrealRecipe.ModName);
+
     private static RegistryPack PackOf(InstallBed bed, string id, string language = "ru") =>
         bed.Services.GetRequiredService<PackIndex>().Current!.Index!.PacksFor(InstallBed.Alpha, language).Single(p => p.Id == id);
 

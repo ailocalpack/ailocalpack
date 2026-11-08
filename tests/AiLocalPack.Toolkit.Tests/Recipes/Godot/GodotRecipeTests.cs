@@ -165,6 +165,32 @@ public sealed class GodotRecipeTests : IDisposable
     }
 
     [Fact]
+    public void Rebuild_into_the_translations_asks_for_their_source_language_in_game()
+    {
+        // Arrange
+        _dir.GodotGame("game");
+
+        // Act
+        var result = Rebuild(new() { ["tr:MENU_PLAY"] = "Играть" });
+
+        // Assert
+        result.InGameLanguage.Should().Be("en");
+    }
+
+    [Fact]
+    public void Rebuild_of_scene_texts_needs_no_language_change_in_game()
+    {
+        // Arrange
+        _dir.GodotGame("game", translated: false);
+
+        // Act
+        var result = Rebuild(new() { ["scene:ui/menu.tscn:Play:text"] = "Играть" });
+
+        // Assert
+        result.InGameLanguage.Should().BeNull();
+    }
+
+    [Fact]
     public void Rebuild_keeps_every_other_file_of_the_pack_byte_for_byte()
     {
         // Arrange

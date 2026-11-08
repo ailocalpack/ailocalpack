@@ -1,9 +1,12 @@
 using System.Text.Json.Nodes;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Toolkit.Recipes.Unreal;
+using CUE4Parse.FileProvider;
+using CUE4Parse.UE4.Versions;
 
 namespace AiLocalPack.Cli.Tests;
 
-/// <summary><c>toolkit extract</c>, <c>toolkit rebuild</c> and <c>dev fixture rpgmaker</c> / <c>renpy</c> / <c>godot</c> / <c>unity</c> (tasks 28, 30, 35, 36).</summary>
+/// <summary><c>toolkit extract</c>, <c>toolkit rebuild</c> and <c>dev fixture rpgmaker</c> / <c>renpy</c> / <c>godot</c> / <c>unity</c> / <c>unreal</c> (tasks 28, 30, 35, 36, 37).</summary>
 public sealed class ToolkitRecipeTests : IDisposable
 {
     private readonly TempDir _dir = new();
@@ -11,6 +14,104 @@ public sealed class ToolkitRecipeTests : IDisposable
     public void Dispose() => _dir.Dispose();
 
     private string Game => _dir.Combine("game");
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Unreal_fixture_extracts_with_the_unreal_tool(bool mac)
+    {
+        // Arrange
+        await CreateUnrealFixtureAsync(mac);
+        var tablePath = _dir.Combine("unreal-strings.json");
+
+        // Act
+        var extract = await CliRunner.RunAsync("toolkit", "extract", Game, "--out", tablePath, "--lang", "ru");
+
+        // Assert
+        (extract.ExitCode, JsonNode.Parse(File.ReadAllText(tablePath))!["tool"]!.GetValue<string>()).Should().Be((0, "unreal"));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Unreal_rebuild_writes_a_mod_pak(bool mac)
+    {
+        // Arrange
+        await CreateUnrealFixtureAsync(mac);
+        var tablePath = await TranslatedUnrealTableAsync();
+        var output = _dir.Combine("unreal-output");
+
+        // Act
+        var rebuild = await CliRunner.RunAsync("toolkit", "rebuild", Game, "--strings", tablePath, "--out", output);
+
+        // Assert
+        var mod = (mac ? "Sample.app/Contents/UE4/" : "") + UnrealFixture.Paks + "/~mods/" + UnrealRecipe.ModName;
+        (rebuild.ExitCode, rebuild.StdOut.Contains("Rebuilt 1 files (1 strings translated)", StringComparison.Ordinal), File.Exists(Path.Combine(output, mod)))
+            .Should().Be((0, true, true));
+    }
+
+    [Fact]
+    public async Task Unreal_rebuild_over_the_native_culture_says_which_language_to_choose_in_game()
+    {
+        // Arrange
+        await CreateUnrealFixtureAsync(mac: false);
+        var tablePath = await TranslatedUnrealTableAsync();
+
+        // Act
+        var rebuild = await CliRunner.RunAsync("toolkit", "rebuild", Game, "--strings", tablePath, "--out", _dir.Combine("unreal-output"));
+
+        // Assert
+        rebuild.StdOut.Should().Contain("in game: choose en; the game has no ru of its own");
+    }
+
+    [Fact]
+    public async Task Unreal_rebuild_refuses_localization_inside_IoStore()
+    {
+        // Arrange
+        UnrealFixture.Create(Game);
+        var paks = Path.Combine(Game, UnrealFixture.Paks);
+        Dictionary<string, byte[]> files;
+        using (var provider = new DefaultFileProvider(paks, SearchOption.TopDirectoryOnly, new VersionContainer(EGame.GAME_UE4_27)))
+        {
+            provider.Initialize();
+            provider.Mount();
+            files = provider.Files.ToDictionary(p => p.Key, p => p.Value.Read(), StringComparer.Ordinal);
+        }
+
+        File.Delete(Path.Combine(Game, UnrealFixture.Pak));
+        IoStoreFixture.Write(Path.Combine(paks, "pakchunk1.utoc"), files, partitioned: true, compression: "Zlib");
+        var tablePath = await TranslatedUnrealTableAsync();
+
+        // Act
+        var rebuild = await CliRunner.RunAsync("toolkit", "rebuild", Game, "--strings", tablePath, "--out", _dir.Combine("output"));
+
+        // Assert
+        (rebuild.ExitCode, rebuild.StdErr.Contains("inside IoStore containers", StringComparison.Ordinal), Directory.Exists(_dir.Combine("output")))
+            .Should().Be((1, true, false));
+    }
+
+    [Fact]
+    public async Task Unreal_fixture_refuses_a_future_locres_version()
+    {
+        // Act
+        var result = await CliRunner.RunAsync("dev", "fixture", "unreal", Game, "--locres-version", "4");
+
+        // Assert
+        (result.ExitCode, result.StdErr.Contains("must be 0, 1, 2 or 3", StringComparison.Ordinal), Directory.Exists(Game)).Should().Be((1, true, false));
+    }
+
+    [Fact]
+    public async Task Unreal_fixture_refuses_a_folder_that_is_not_empty()
+    {
+        // Arrange
+        await CreateUnrealFixtureAsync(mac: false);
+
+        // Act
+        var result = await CliRunner.RunAsync("dev", "fixture", "unreal", Game);
+
+        // Assert
+        (result.ExitCode, result.StdErr.Contains("isn't an empty folder", StringComparison.Ordinal)).Should().Be((1, true));
+    }
 
     [Theory]
     [InlineData(false)]
@@ -133,16 +234,37 @@ public sealed class ToolkitRecipeTests : IDisposable
     }
 
     [Fact]
-    public async Task Extract_refuses_a_game_the_toolkit_cannot_read_yet()
+    public async Task Extract_refuses_a_game_of_an_unknown_engine()
     {
         // Arrange
-        _dir.UnrealWindows("game");
+        Directory.CreateDirectory(Game);
+        File.WriteAllText(Path.Combine(Game, "readme.txt"), "not a game");
 
         // Act
         var result = await CliRunner.RunAsync("toolkit", "extract", Game, "--out", _dir.Combine("strings.json"));
 
         // Assert
-        (result.ExitCode, result.StdErr.Contains("can't read Unreal", StringComparison.Ordinal)).Should().Be((1, true));
+        (result.ExitCode, result.StdErr.Contains("the engine is unknown", StringComparison.Ordinal)).Should().Be((1, true));
+    }
+
+    private async Task CreateUnrealFixtureAsync(bool mac)
+    {
+        var create = mac
+            ? await CliRunner.RunAsync("dev", "fixture", "unreal", Game, "--mac-bundle", "--locres-version", "0")
+            : await CliRunner.RunAsync("dev", "fixture", "unreal", Game);
+        create.ExitCode.Should().Be(0);
+    }
+
+    /// <summary>The game's strings with «Play» translated, as a string table file.</summary>
+    private async Task<string> TranslatedUnrealTableAsync()
+    {
+        var tablePath = _dir.Combine("unreal-strings.json");
+        (await CliRunner.RunAsync("toolkit", "extract", Game, "--out", tablePath, "--lang", "ru")).ExitCode.Should().Be(0);
+        var json = JsonNode.Parse(File.ReadAllText(tablePath))!;
+        var strings = json["strings"]!.AsObject();
+        strings[strings.Single(p => p.Value!.GetValue<string>() == "Play").Key] = "Играть";
+        File.WriteAllText(tablePath, json.ToJsonString());
+        return tablePath;
     }
 
     private async Task CreateUnityFixtureAsync(bool bundled)

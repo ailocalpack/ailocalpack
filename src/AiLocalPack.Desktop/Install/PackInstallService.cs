@@ -3,6 +3,7 @@ using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
+using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Patches;
@@ -438,7 +439,7 @@ public sealed class PackInstallService
                 run.Log(nameof(Strings.Install_Log_DependencyInstalled), whitelist.Find(dependency.Id)?.Name ?? dependency.Id, dependency.Version, dependency.Files.Count);
             }
 
-            return run.Done(installed: result.Installed);
+            return run.Done(installed: result.Installed) with { InGameLanguage = staged.InGameLanguage };
         }
         catch (GameBlockedException e)
         {
@@ -451,7 +452,8 @@ public sealed class PackInstallService
     }
 
     /// <summary>The touched files written into <paramref name="staging"/>, or the failure.</summary>
-    private sealed record Staged(IReadOnlyList<string> Files, IReadOnlyList<string> Generated, InstallOutcome? Failure)
+    /// <param name="InGameLanguage">The language the player has to choose in the game (<see cref="RebuildResult.InGameLanguage"/>).</param>
+    private sealed record Staged(IReadOnlyList<string> Files, IReadOnlyList<string> Generated, InstallOutcome? Failure, string? InGameLanguage = null)
     {
         public static Staged Failed(InstallOutcome failure) => new([], [], failure);
     }
@@ -480,6 +482,11 @@ public sealed class PackInstallService
                 run.Log(nameof(Strings.Install_Log_UnknownKeys), rebuilt.UnknownKeys.Count);
             }
 
+            if (rebuilt.InGameLanguage is { } inGame)
+            {
+                run.Log(nameof(Strings.Install_Log_InGameLanguage), LanguageNames.Native(inGame), LanguageNames.Native(table.Language));
+            }
+
             fonts = await _fonts.ApplyAsync(tool, game.InstallPath, table.Language, table.Strings, manifest.Fonts, output, run.FontProgress(), cancellationToken).ConfigureAwait(false);
         }
         catch (RecipeException e)
@@ -497,7 +504,8 @@ public sealed class PackInstallService
         return new Staged(
             [.. rebuilt.ChangedFiles.Union(fonts.Files.Files, StringComparer.Ordinal)],
             [.. rebuilt.GeneratedFiles.Union(fonts.Files.GeneratedFiles, StringComparer.Ordinal).Order(StringComparer.Ordinal)],
-            null);
+            null,
+            rebuilt.InGameLanguage);
     }
 
     /// <summary>

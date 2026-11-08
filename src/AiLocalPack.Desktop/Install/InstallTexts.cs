@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Install;
+using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Registry;
@@ -167,7 +168,7 @@ public static class InstallTexts
         ArgumentNullException.ThrowIfNull(localizer);
         if (outcome.Succeeded)
         {
-            return localizer.Format(
+            var done = localizer.Format(
                 outcome.Kind switch
                 {
                     InstallOperationKind.Uninstall => nameof(Strings.Install_Toast_Uninstalled),
@@ -175,6 +176,9 @@ public static class InstallTexts
                     _ => nameof(Strings.Install_Toast_Installed),
                 },
                 outcome.Title);
+            return outcome is { Kind: InstallOperationKind.Install, InGameLanguage: { } inGame }
+                ? done + " " + localizer.Format(nameof(Strings.Install_Toast_InGameLanguage), LanguageNames.Native(inGame))
+                : done;
         }
 
         var key = (outcome.Kind, outcome.Error!.FilesRestored) switch

@@ -1465,6 +1465,9 @@
   <data name="Install_Log_Rebuilt" xml:space="preserve">
     <value>Пересобрано файлов игры: {0}; применено строк: {1}.</value>
   </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>В игре нет своего языка «{1}»: перевод заменяет её тексты на языке «{0}». Выберите «{0}» в настройках игры.</value>
+  </data>
   <data name="Install_Log_UnknownKeys" xml:space="preserve">
     <value>Строк нет в этой версии игры: {0}.</value>
   </data>
@@ -1617,6 +1620,9 @@
   </data>
   <data name="Install_Toast_Installed" xml:space="preserve">
     <value>Установлено: «{0}».</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>В игре выберите язык «{0}».</value>
   </data>
   <data name="Install_Toast_Reapplied" xml:space="preserve">
     <value>Применено повторно: «{0}».</value>

@@ -156,6 +156,11 @@ internal static class RecipeCommands
                 WriteFontLines(output, fixedFonts);
             }
 
+            if (rebuilt.InGameLanguage is { } inGame)
+            {
+                output.WriteLine($"in game: choose {inGame}; the game has no {translations.Language} of its own, so the translation replaces its {inGame} texts.");
+            }
+
             if (rebuilt.UnknownKeys.Count > 0)
             {
                 error.WriteLine($"warning: {rebuilt.UnknownKeys.Count} keys are not in this game (left out):");

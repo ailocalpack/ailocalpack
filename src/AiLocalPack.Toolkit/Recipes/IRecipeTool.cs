@@ -64,6 +64,14 @@ public sealed record RebuildResult(IReadOnlyList<string> ChangedFiles, int Appli
     /// relative to the game folder: uninstalling the pack deletes them too.
     /// </summary>
     public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+
+    /// <summary>
+    /// The language the player has to choose in the game's own settings to see the translation, when it isn't the
+    /// translation's language: the game ships no such language, so the translation replaces the texts of the one it
+    /// was written in (Unreal native culture, Godot source language). <c>null</c> = the translation's own language, or
+    /// the game has no language setting.
+    /// </summary>
+    public string? InGameLanguage { get; init; }
 }
 
 /// <summary>Where <see cref="IRecipeTool.Rebuild"/> puts the rebuilt files.</summary>

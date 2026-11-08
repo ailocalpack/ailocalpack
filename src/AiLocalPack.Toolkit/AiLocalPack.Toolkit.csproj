@@ -7,6 +7,7 @@
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" />
         <PackageReference Include="AssetsTools.NET.MonoCecil" />
+        <PackageReference Include="CUE4Parse" />
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
     </ItemGroup>
 

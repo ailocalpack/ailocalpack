@@ -9,6 +9,7 @@ using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 using AiLocalPack.Toolkit.Recipes.Unity;
+using AiLocalPack.Toolkit.Recipes.Unreal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Install;
@@ -38,10 +39,11 @@ internal sealed class InstallBed : IDisposable
 
     /// <param name="renPy">Game 10 is the synthetic Ren'Py game instead of the RPG Maker one.</param>
     /// <param name="unity">Game 10 is the synthetic Unity game instead of the RPG Maker one.</param>
-    public static async Task<InstallBed> CreateAsync(Action<InstallBed>? packs = null, Action<IServiceCollection>? configure = null, bool renPy = false, bool unity = false)
+    /// <param name="unreal">Game 10 is the synthetic Unreal game instead of the RPG Maker one.</param>
+    public static async Task<InstallBed> CreateAsync(Action<InstallBed>? packs = null, Action<IServiceCollection>? configure = null, bool renPy = false, bool unity = false, bool unreal = false)
     {
         var bed = new InstallBed();
-        bed._tool = unity ? new UnityRecipe() : renPy ? new RenPyRecipe() : new RpgMakerRecipe();
+        bed._tool = unreal ? new UnrealRecipe() : unity ? new UnityRecipe() : renPy ? new RenPyRecipe() : new RpgMakerRecipe();
         string? gameDir = null;
         bed.Services = TestServices.Build(
             configure,
@@ -49,7 +51,11 @@ internal sealed class InstallBed : IDisposable
             {
                 steam.AddGame(10, "Alpha").AddGame(20, "Beta");
                 gameDir = Path.Combine(steam.Root, "steamapps", "common", "Alpha");
-                if (unity)
+                if (unreal)
+                {
+                    UnrealFixture.Create(gameDir);
+                }
+                else if (unity)
                 {
                     UnityFixture.Create(gameDir);
                 }

@@ -28,6 +28,7 @@
   <ItemGroup Label="Game formats">
     <PackageVersion Include="AssetsTools.NET" Version="3.0.5" />
     <PackageVersion Include="AssetsTools.NET.MonoCecil" Version="3.0.4" />
+    <PackageVersion Include="CUE4Parse" Version="1.2.2.202611" />
   </ItemGroup>
 
   <ItemGroup Label="Tests">
@@ -39,5 +40,6 @@
 
   <!-- Transitive dependency pins (security fixes) -->
   <ItemGroup>
+    <PackageVersion Include="Microsoft.Bcl.Memory" Version="9.0.14" />
   </ItemGroup>
 </Project>

@@ -131,6 +131,19 @@ public sealed class InstallTextsTests
     }
 
     [Fact]
+    public void Done_toast_says_which_language_to_choose_in_game()
+    {
+        // Arrange
+        var outcome = new InstallOutcome(InstallOperationKind.Install, TestGames.Steam(10, "Alpha"), "p", "Lanterns", null, []) { InGameLanguage = "en" };
+
+        // Act
+        var text = InstallTexts.Toast(outcome, En);
+
+        // Assert
+        text.Should().Be("Installed: «Lanterns». In the game, choose English as the language.");
+    }
+
+    [Fact]
     public void Progress_title_counts_the_steps()
     {
         // Arrange

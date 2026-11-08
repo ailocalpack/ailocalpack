@@ -114,7 +114,10 @@ public sealed partial class GodotRecipe : IRecipeTool
             throw new RecipeException($"Can't read {game.PackPath}: {e.Message}", game.PackPath, e);
         }
 
-        return new RebuildResult([game.PackPath], chosen.Count, unknown);
+        // Translations go into the source language's resources: the game shows them while set to that language.
+        var source = game.Translations.Where(p => replacements.ContainsKey(p.Key)).Select(p => p.Value.Locale.Replace('_', '-')).FirstOrDefault();
+        var inGame = source is null || source.Equals(language, StringComparison.OrdinalIgnoreCase) ? null : source;
+        return new RebuildResult([game.PackPath], chosen.Count, unknown) { InGameLanguage = inGame };
     }
 
     public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
