@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.RpgMaker;
 
@@ -112,8 +113,10 @@ internal static partial class RpgMakerStrings
     }
 
     /// <summary>RPG Maker escape codes (<c>\C[2]</c>, <c>\N[1]</c>, <c>\G</c>, <c>\{</c>, plugin codes like <c>\FS[24]</c> or <c>\pop&lt;1&gt;</c>) and <c>%1</c>-style fields, in order.</summary>
-    public static IReadOnlyList<string> Placeholders(string text) =>
-        [.. Placeholder().Matches(text).Select(m => m.Value)];
+    public static IReadOnlyList<string> Placeholders(string text) => Markup.Placeholders(text);
+
+    /// <summary>RPG Maker's markup: escape codes and fields, no paired tags (<c>\C[n]</c> switches the color until the next one).</summary>
+    public static TextMarkup Markup { get; } = new(Placeholder(), TagBrackets.None);
 
     private static void System(JsonElement root, List<RpgMakerString> found)
     {

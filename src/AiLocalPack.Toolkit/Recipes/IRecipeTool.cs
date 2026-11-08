@@ -1,4 +1,5 @@
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes;
 
@@ -18,6 +19,12 @@ public interface IRecipeTool
 
     /// <summary>The engine whose games the tool handles.</summary>
     GameEngine Engine { get; }
+
+    /// <summary>
+    /// The engine's markup in game texts: the tokens <see cref="ExtractedString.Placeholders"/> lists and which are
+    /// paired tags, for <see cref="StringValidator"/>.
+    /// </summary>
+    TextMarkup Markup { get; }
 
     /// <summary>Every translatable string of the game, keys in ordinal order.</summary>
     /// <exception cref="RecipeException">Not a game of this engine, or a file can't be read or parsed.</exception>
@@ -44,9 +51,14 @@ public interface IRecipeTool
 /// <param name="Key">Stable key: the same text gets the same key on every run, OS and file order.</param>
 /// <param name="Original">The text in the game files.</param>
 /// <param name="Context">What the text is, in English, for the translator (e.g. <c>Item description</c>).</param>
-/// <param name="MaxLength">Length limit in characters when the engine has one, else <c>null</c>.</param>
-/// <param name="Placeholders">Escape codes and format tokens in the original, in order (a translation keeps each).</param>
-public sealed record ExtractedString(string Key, string Original, string? Context, int? MaxLength, IReadOnlyList<string> Placeholders);
+/// <param name="MaxLength">Length limit of the drawn text (in <see cref="MaxLengthUnit"/>) when the engine has one, else <c>null</c>.</param>
+/// <param name="Placeholders">Escape codes, format tokens and tags in the original, in order (a translation keeps each):
+/// <see cref="IRecipeTool.Markup"/>'s tokens.</param>
+public sealed record ExtractedString(string Key, string Original, string? Context, int? MaxLength, IReadOnlyList<string> Placeholders)
+{
+    /// <summary>What <see cref="MaxLength"/> counts.</summary>
+    public LengthUnit MaxLengthUnit { get; init; } = LengthUnit.Characters;
+}
 
 /// <summary>Result of <see cref="IRecipeTool.Extract"/>.</summary>
 /// <param name="Strings">Keys in ordinal order.</param>

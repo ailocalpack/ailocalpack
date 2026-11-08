@@ -8,6 +8,7 @@ using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Validation;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AiLocalPack.Cli.Commands;
@@ -16,6 +17,8 @@ namespace AiLocalPack.Cli.Commands;
 /// <c>pack check &lt;manifest&gt; --game &lt;id&gt; [--json]</c>: whether a pack fits the player's copy of a game.
 /// Exit code 0 = compatible or probably compatible, 2 = incompatible, 1 = the check couldn't run.
 /// <c>pack validate &lt;folder&gt;… [--github]</c>: the checks registry CI runs on a pack; exit code 1 = a pack is invalid.
+/// A valid recipe pack's translations are also checked for unbalanced tags of its engine (warnings: no game files
+/// to compare with, so they never fail the pack).
 /// </summary>
 internal static class PackCommand
 {
@@ -83,6 +86,48 @@ internal static class PackCommand
         return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate(), PackFetchCommand.Build(env) };
     }
 
+    private const int ListedStringWarnings = 20;
+
+    /// <summary>
+    /// Translations whose tags are closed without being opened or crossed (<see cref="StringValidator.ValidateAlone"/>),
+    /// as warning lines (the first <see cref="ListedStringWarnings"/>) or GitHub warning annotations on the string table.
+    /// </summary>
+    private static void WriteStringWarnings(TextWriter output, string folder, PackManifest pack, bool annotate)
+    {
+        if (pack.Recipe is not { } recipe || pack.Strings is not { } stringsFile || RecipeTools.Builtin.Find(recipe.Tool) is not { } tool)
+        {
+            return;
+        }
+
+        var file = Path.Combine(folder, stringsFile.Path);
+        StringTable? table;
+        try
+        {
+            table = StringTableSerializer.Read(File.ReadAllBytes(file)).Value;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return;
+        }
+
+        var warnings = (table?.Strings ?? new Dictionary<string, string>())
+            .OrderBy(e => e.Key, StringComparer.Ordinal)
+            .SelectMany(e => StringValidator.ValidateAlone(e.Value, tool.Markup).Select(i => (e.Key, Issue: i)))
+            .ToList();
+        var listed = annotate ? warnings : warnings.Take(ListedStringWarnings).ToList();
+        foreach (var (key, issue) in listed)
+        {
+            output.WriteLine(annotate
+                ? GitHubAnnotations.Format("warning", file, issue.Rule, $"{key}: {issue.Message}")
+                : $"  warning: {stringsFile.Path}: {key}: {issue.Rule}: {issue.Message}");
+        }
+
+        if (warnings.Count > listed.Count)
+        {
+            output.WriteLine($"  … and {warnings.Count - listed.Count} more warnings");
+        }
+    }
+
     private static Command BuildValidate()
     {
         var folders = new Argument<string[]>("folder")
@@ -112,6 +157,7 @@ internal static class PackCommand
                     var pack = validation.Manifest!;
                     output.WriteLine($"{name}: valid ({pack.Game}/{pack.Language}/{pack.Id} rev {pack.Revision}, "
                         + $"{pack.Coverage.Translated} of {pack.Coverage.Total} strings translated)");
+                    WriteStringWarnings(output, validation.Folder, pack, annotate);
                     continue;
                 }
 

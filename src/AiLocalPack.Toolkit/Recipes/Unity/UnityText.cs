@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.Unity;
 
@@ -11,7 +12,10 @@ internal static partial class UnityText
 
     internal static bool IsTextField(string name) => name is "m_Text" or "mText" or "text" or "Text" or "dialogue" or "Dialogue" or "description" or "Description" or "m_Localized";
 
-    public static IReadOnlyList<string> Placeholders(string text) => [.. Tokens().Matches(text).Select(m => m.Value)];
+    public static IReadOnlyList<string> Placeholders(string text) => Markup.Placeholders(text);
+
+    /// <summary>Unity's markup: rich text tags (<c>&lt;b&gt;</c> … <c>&lt;/b&gt;</c>) and NGUI ones (<c>[ff0000]</c> … <c>[-]</c>) pair up, format fields don't.</summary>
+    public static TextMarkup Markup { get; } = new(Tokens(), TagBrackets.Angle | TagBrackets.Square);
 
     [GeneratedRegex(@"</?[A-Za-z][^<>\r\n]*>|\[(?:[0-9a-fA-F]{6,8}|-|/?[bius])\]|\{[A-Za-z0-9_]+(?:,-?\d+)?(?::[^{}]+)?\}|%%|%[-+0#]*\d*(?:\.\d+)?[sdif]")]
     private static partial Regex Tokens();

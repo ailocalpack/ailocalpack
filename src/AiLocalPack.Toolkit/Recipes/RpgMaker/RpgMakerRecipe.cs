@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Fonts;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.RpgMaker;
 
@@ -34,6 +35,8 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
     public Version Version { get; } = new(1, 0, 0);
 
     public GameEngine Engine => GameEngine.RpgMaker;
+
+    public TextMarkup Markup => RpgMakerStrings.Markup;
 
     public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
     {

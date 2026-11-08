@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.Godot;
 
@@ -42,6 +43,9 @@ public sealed partial class GodotRecipe : IRecipeTool
     public Version Version { get; } = new(1, 0, 0);
 
     public GameEngine Engine => GameEngine.Godot;
+
+    /// <summary>Godot's markup: BBCode tags pair up (<c>[b]</c> … <c>[/b]</c>), format fields don't.</summary>
+    public TextMarkup Markup => GodotMarkup;
 
     public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
     {
@@ -134,8 +138,10 @@ public sealed partial class GodotRecipe : IRecipeTool
     public static IReadOnlyList<string> Placeholders(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        return [.. Placeholder().Matches(text).Select(m => m.Value)];
+        return GodotMarkup.Placeholders(text);
     }
+
+    private static readonly TextMarkup GodotMarkup = new(Placeholder(), TagBrackets.Square);
 
     [GeneratedRegex(@"\[/?[A-Za-z_][A-Za-z0-9_]*(?:[= ][^\[\]\n]*)?\]|\{[A-Za-z0-9_]*\}|%%|%[-+0#]*\d*(?:\.\d+)?[sdifcxXov]")]
     private static partial Regex Placeholder();

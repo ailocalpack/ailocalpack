@@ -10,6 +10,7 @@ using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Cli.Commands;
 
@@ -21,6 +22,8 @@ namespace AiLocalPack.Cli.Commands;
 /// game's font lacks the table's letters (<see cref="FontFixer"/>; <c>--no-fonts</c> leaves fonts alone).
 /// <c>toolkit fonts &lt;folder&gt; --strings strings.json [--json]</c>: the game's fonts against the table's letters and
 /// the whitelisted font a swap uses (a pack manifest's <c>fonts</c>).
+/// <c>toolkit validate &lt;strings.json&gt; --game &lt;folder&gt; [--json]</c>: each translation of a table checked against
+/// the game's originals (<see cref="StringValidator"/>); exit code 1 = an error.
 /// </summary>
 internal static class RecipeCommands
 {
@@ -264,6 +267,98 @@ internal static class RecipeCommands
         return command;
     }
 
+    public static Command BuildValidate(OsEnvironment env)
+    {
+        var strings = new Argument<string>("strings") { Description = "String table with the translations (JSON or gzip: a job's strings.json, an edited 'toolkit extract' file, a pack's table)." };
+        var game = new Option<string>("--game") { Description = "Game folder whose originals the translations are checked against (read only).", Required = true };
+        var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
+        var command = new Command("validate", "Check the translations of a string table against the game's originals: placeholders and tags, length limits, empty or untranslated texts, whitespace, line breaks. Exit code 1 = an error.")
+        {
+            strings, game, json,
+        };
+        command.SetAction((result, cancellationToken) =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            var error = result.InvocationConfiguration.Error;
+            if (ReadTable(result.GetValue(strings)!, error) is not { } table)
+            {
+                return Task.FromResult(1);
+            }
+
+            if (Tool(result.GetValue(game)!, error, env) is not var (tool, path, _))
+            {
+                return Task.FromResult(1);
+            }
+
+            Dictionary<string, ExtractedString> originals;
+            try
+            {
+                originals = tool.Extract(path, cancellationToken).Strings.ToDictionary(s => s.Key, StringComparer.Ordinal);
+            }
+            catch (RecipeException e)
+            {
+                error.WriteLine(e.Message);
+                return Task.FromResult(1);
+            }
+
+            var issues = new List<ValidateIssueJson>();
+            var unknown = new List<string>();
+            var checkedCount = 0;
+            foreach (var (key, text) in table.Strings.OrderBy(e => e.Key, StringComparer.Ordinal))
+            {
+                if (text.Length == 0)
+                {
+                    continue;
+                }
+
+                if (!originals.TryGetValue(key, out var source))
+                {
+                    unknown.Add(key);
+                    continue;
+                }
+
+                checkedCount++;
+                issues.AddRange(StringValidator.Validate(source, text, tool.Markup)
+                    .Select(i => new ValidateIssueJson(key, i.Severity == StringIssueSeverity.Error ? "error" : "warning", i.Rule, i.Message)));
+            }
+
+            var errors = issues.Count(i => i.Severity == "error");
+            var warnings = issues.Count - errors;
+            if (result.GetValue(json))
+            {
+                output.WriteLine(JsonSerializer.Serialize(
+                    new ValidateFileJson(checkedCount, errors, warnings, issues, unknown), WriteOptions.GetTypeInfo(typeof(ValidateFileJson))));
+            }
+            else
+            {
+                foreach (var issue in issues)
+                {
+                    output.WriteLine($"{issue.Key}: {issue.Severity} {issue.Rule}: {issue.Message}");
+                }
+
+                output.WriteLine($"Checked {checkedCount} translations: {Count(errors, "error")}, {Count(warnings, "warning")}.");
+                if (unknown.Count > 0)
+                {
+                    error.WriteLine($"warning: {unknown.Count} keys are not in this game (not checked):");
+                    foreach (var key in unknown.Take(ListedUnknownKeys))
+                    {
+                        error.WriteLine($"  {key}");
+                    }
+
+                    if (unknown.Count > ListedUnknownKeys)
+                    {
+                        error.WriteLine($"  … and {unknown.Count - ListedUnknownKeys} more");
+                    }
+                }
+            }
+
+            return Task.FromResult(errors > 0 ? 1 : 0);
+        });
+        return command;
+    }
+
+    private static string Count(int count, string noun) => $"{count} {noun}{(count == 1 ? "" : "s")}";
+
     private static Option<string[]> FontsOption() => new("--fonts")
     {
         Description = "Whitelisted font IDs to try first, as a pack manifest's fonts (e.g. noto-sans).",
@@ -444,6 +539,11 @@ internal sealed record ExtractFileJson(
     SortedDictionary<string, string> Context,
     SortedDictionary<string, ExtractDetailJson>? Details);
 
+/// <summary><c>toolkit validate --json</c>.</summary>
+internal sealed record ValidateFileJson(int Checked, int Errors, int Warnings, IReadOnlyList<ValidateIssueJson> Issues, IReadOnlyList<string> UnknownKeys);
+
+internal sealed record ValidateIssueJson(string Key, string Severity, string Rule, string Message);
+
 internal sealed record ExtractDetailJson(int? MaxLength, IReadOnlyList<string>? Placeholders);
 
 /// <summary><c>toolkit fonts --json</c>: each game font, the letters needed, the replacement and the manifest's <c>fonts</c>.</summary>
@@ -465,4 +565,5 @@ internal sealed record FontJson(string Name, string File, string? Entry, string?
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(ExtractFileJson))]
 [JsonSerializable(typeof(FontsFileJson))]
+[JsonSerializable(typeof(ValidateFileJson))]
 internal sealed partial class ExtractJsonContext : JsonSerializerContext;

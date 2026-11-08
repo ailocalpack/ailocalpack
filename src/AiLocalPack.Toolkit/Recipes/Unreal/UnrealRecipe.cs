@@ -5,6 +5,7 @@ using CUE4Parse.FileProvider.Objects;
 using CUE4Parse.UE4.IO.Objects;
 using CUE4Parse.UE4.Versions;
 using CUE4Parse.UE4.VirtualFileSystem;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.Unreal;
 
@@ -38,6 +39,9 @@ public sealed partial class UnrealRecipe : IRecipeTool
 
     public GameEngine Engine => GameEngine.Unreal;
 
+    /// <summary>Unreal's markup: rich text tags pair up (<c>&lt;Bold&gt;</c> … <c>&lt;/&gt;</c>), FText arguments and printf fields don't.</summary>
+    public TextMarkup Markup => UnrealMarkup;
+
     public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
     {
         using var game = Load(gameDir, cancellationToken);
@@ -47,7 +51,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
                 e.Text,
                 $"Unreal localization: {s.Path}; namespace {e.Namespace}; key {e.Key}. Native culture {s.Culture}.",
                 null,
-                [.. Placeholder().Matches(e.Text).Select(m => m.Value)])))
+                UnrealMarkup.Placeholders(e.Text))))
             .OrderBy(s => s.Key, StringComparer.Ordinal)
             .ToList();
         return new RecipeExtraction(Id, Version, strings, SourceFiles(game.Sources));
@@ -157,6 +161,8 @@ public sealed partial class UnrealRecipe : IRecipeTool
         "locres:" + Uri.EscapeDataString(path) + ":" + Uri.EscapeDataString(entry.Namespace) + ":" + Uri.EscapeDataString(entry.Key);
 
     /// <summary>FText arguments (<c>{Name}</c>, <c>{0}</c>), rich text tags (<c>&lt;b&gt;</c>, <c>&lt;/&gt;</c>), printf fields.</summary>
+    private static readonly TextMarkup UnrealMarkup = new(Placeholder(), TagBrackets.Angle);
+
     [GeneratedRegex(@"\{[^{}\r\n]+\}|</>|</?[A-Za-z_][^<>\r\n]*>|%%|%[-+0#]*\d*(?:\.\d+)?[sdif]")]
     private static partial Regex Placeholder();
 

@@ -11,7 +11,7 @@ namespace AiLocalPack.Cli.Commands;
 /// <summary>
 /// <c>toolkit detect &lt;folder&gt; [--json]</c>: what the toolkit finds in a game folder (engine, anti-cheat).
 /// <c>toolkit scan-folder &lt;folder&gt; [--json]</c>: the games in a folder, with fingerprint and version.
-/// <c>toolkit extract</c> / <c>toolkit rebuild</c> / <c>toolkit fonts</c>: see <see cref="RecipeCommands"/>; <c>toolkit patch</c>: <see cref="PatchCommand"/>.
+/// <c>toolkit extract</c> / <c>toolkit rebuild</c> / <c>toolkit fonts</c> / <c>toolkit validate</c>: see <see cref="RecipeCommands"/>; <c>toolkit patch</c>: <see cref="PatchCommand"/>.
 /// </summary>
 internal static class ToolkitCommand
 {
@@ -58,6 +58,7 @@ internal static class ToolkitCommand
             RecipeCommands.BuildExtract(env),
             RecipeCommands.BuildRebuild(env),
             RecipeCommands.BuildFonts(env),
+            RecipeCommands.BuildValidate(env),
             PatchCommand.Build(env),
         };
     }

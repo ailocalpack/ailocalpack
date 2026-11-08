@@ -3,6 +3,7 @@ using System.Text;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.Unity;
 
@@ -12,6 +13,8 @@ public sealed class UnityRecipe : IRecipeTool
     public string Id => "unity";
     public Version Version => new(1, 0, 0);
     public GameEngine Engine => GameEngine.Unity;
+
+    public TextMarkup Markup => UnityText.Markup;
 
     public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
     {

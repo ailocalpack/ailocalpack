@@ -241,7 +241,7 @@ public sealed class ToolkitTools(ToolkitSession session)
                     continue;
                 }
 
-                var issues = StringValidator.Validate(source, text);
+                var issues = StringValidator.Validate(source, text, extracted.Tool.Markup);
                 if (issues.Any(i => i.Severity == StringIssueSeverity.Error))
                 {
                     rejected.Add(new KeyIssues(key, [.. issues.Select(Issue)]));
@@ -272,7 +272,7 @@ public sealed class ToolkitTools(ToolkitSession session)
     }
 
     [McpServerTool(Name = "validate_strings", ReadOnly = true, Idempotent = true)]
-    [Description("Checks translations against the originals (placeholders, length limit, emptiness, whitespace, line breaks): the texts given, else the stored translations (all, or the keys given). Errors block a translation, warnings don't.")]
+    [Description("Checks translations against the originals (placeholders and tags kept, none added, printf fields in order, tags balanced, length limit, emptiness, whitespace, line breaks): the texts given, else the stored translations (all, or the keys given). Errors block a translation, warnings don't.")]
     public ValidateResult ValidateStrings(
         [Description("Key → text to check without storing it.")] Dictionary<string, string>? translations = null,
         [Description("Stored translations to check (default all).")] string[]? keys = null,
@@ -300,7 +300,7 @@ public sealed class ToolkitTools(ToolkitSession session)
                 }
 
                 checkedCount++;
-                issues.AddRange(StringValidator.Validate(source, text).Select(i => new KeyIssue(key, Severity(i.Severity), i.Rule, i.Message)));
+                issues.AddRange(StringValidator.Validate(source, text, extracted.Tool.Markup).Select(i => new KeyIssue(key, Severity(i.Severity), i.Rule, i.Message)));
             }
 
             var (start, count) = Window(offset, limit, MaxIssues, issues.Count);

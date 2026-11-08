@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.RenPy;
 
@@ -102,7 +103,10 @@ internal static partial class RenPyTranslation
     public static string LanguageName(string tag) => "ailocalpack_" + tag.Replace('-', '_');
 
     /// <summary>Escape codes a translation must keep: text tags <c>{b}</c>, interpolation <c>[name]</c>, their doubled escapes, <c>%%</c>, <c>%(name)s</c>.</summary>
-    public static IReadOnlyList<string> Placeholders(string text) => [.. PlaceholderPattern().Matches(text).Select(m => m.Value)];
+    public static IReadOnlyList<string> Placeholders(string text) => Markup.Placeholders(text);
+
+    /// <summary>Ren'Py's markup: text tags in braces pair up (<c>{b}</c> … <c>{/b}</c>), interpolation in square brackets doesn't.</summary>
+    public static TextMarkup Markup { get; } = new(PlaceholderPattern(), TagBrackets.Braces);
 
     /// <summary>
     /// The texts of <c>_("…")</c> / <c>__("…")</c> calls in Python code (Ren'Py's <c>scanstrings</c> pattern), decoded

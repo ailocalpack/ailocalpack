@@ -4,6 +4,7 @@ using System.Text;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Fonts;
+using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Toolkit.Recipes.RenPy;
 
@@ -50,6 +51,8 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
     public Version Version { get; } = new(1, 0, 0);
 
     public GameEngine Engine => GameEngine.RenPy;
+
+    public TextMarkup Markup => RenPyTranslation.Markup;
 
     public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
     {
