@@ -59,8 +59,16 @@ public sealed class GenerationStages
 {
     private readonly Dictionary<GenerationStage, IGenerationStage> _stages;
 
-    public GenerationStages(IEnumerable<IGenerationStage> stages)
+    /// <param name="stages">One handler per stage.</param>
+    /// <param name="pauseBefore">
+    /// The job pauses (as if by the player) once it reaches this stage, before running it: <c>gen run --until glossary</c>
+    /// pauses before Translate. <c>null</c> = runs on.
+    /// </param>
+    public GenerationStages(IEnumerable<IGenerationStage> stages, GenerationStage? pauseBefore = null)
     {
+        PauseBefore = pauseBefore is GenerationStage.Setup or GenerationStage.Done
+            ? throw new ArgumentOutOfRangeException(nameof(pauseBefore), pauseBefore, "A job can only pause before Extract, Glossary, Translate or Build.")
+            : pauseBefore;
         ArgumentNullException.ThrowIfNull(stages);
         _stages = [];
         foreach (var stage in stages)
@@ -71,6 +79,9 @@ public sealed class GenerationStages
             }
         }
     }
+
+    /// <summary>The stage the job pauses before, if any.</summary>
+    public GenerationStage? PauseBefore { get; }
 
     public IGenerationStage? For(GenerationStage stage) => _stages.GetValueOrDefault(stage);
 }
@@ -199,6 +210,13 @@ public sealed class GenerationRunner
             if (cancellationToken.IsCancellationRequested)
             {
                 job = Save(run, job, new GenerationTrigger.Interrupted());
+                break;
+            }
+
+            if (stages.PauseBefore is { } stop && job.Stage >= stop)
+            {
+                Log(run.Folder, $"Stopping before {stop}, as asked.");
+                job = Save(run, job, new GenerationTrigger.PausedByPlayer());
                 break;
             }
 

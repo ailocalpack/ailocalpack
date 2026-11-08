@@ -41,7 +41,18 @@ public sealed class GenJobTests : IDisposable
         return _dir.Combine(name);
     }
 
-    private string Success => Recording("ok.jsonl", new AgentDone(AgentOutcome.Succeeded, "ok"));
+    /// <summary>Saves a glossary as the real agent would through <c>put_glossary</c>, then succeeds.</summary>
+    private string Success
+    {
+        get
+        {
+            var glossary = System.Text.Json.JsonSerializer.Serialize("""{"schemaVersion":1,"language":"ru","tone":"informal","entries":[{"term":"Potion","translation":"Зелье"}]}""");
+            _dir.File("ok.jsonl", $$"""{"control":"write","path":"../glossary.json","text":{{glossary}}}""" + "\n" + AgentEventJson.Write(new AgentDone(AgentOutcome.Succeeded, "ok")) + "\n");
+            return _dir.Combine("ok.jsonl");
+        }
+    }
+
+    private string NoGlossary => Recording("no-glossary.jsonl", new AgentDone(AgentOutcome.Succeeded, "ok"));
 
     private string Limit => Recording(
         "limit.jsonl",
@@ -171,5 +182,90 @@ public sealed class GenJobTests : IDisposable
         // Assert
         new { result.ExitCode, Refused = result.StdErr.Contains("can't be generated", StringComparison.Ordinal), Work = Directory.Exists(Work) }
             .Should().Be(new { ExitCode = 1, Refused = true, Work = false });
+    }
+
+    [Fact]
+    public async Task Until_glossary_pauses_the_job_with_the_glossary_saved()
+    {
+        // Arrange
+        var recording = Success;
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru", "--until", "glossary");
+
+        // Assert
+        new
+        {
+            result.ExitCode,
+            Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim(),
+            Glossary = File.Exists(Path.Combine(JobFolder, "glossary.json")),
+            Source = File.Exists(Path.Combine(JobFolder, "source.json")),
+        }.Should().Be(new { ExitCode = 0, Last = "20% paused at Translate (chunk 1 of 2), 0 of 64 strings", Glossary = true, Source = true });
+    }
+
+    [Fact]
+    public async Task Resume_after_until_goes_on_to_completion()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru", "--until", "glossary");
+
+        // Act
+        var result = await RunAsync("gen", "resume", "steam:620", "--fake-agent", Success);
+
+        // Assert
+        new { result.ExitCode, Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim() }.Should().Be(new { ExitCode = 0, Last = "100% completed, 64 of 64 strings" });
+    }
+
+    [Fact]
+    public async Task An_agent_that_saves_no_glossary_fails_the_job()
+    {
+        // Arrange
+        var recording = NoGlossary;
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru");
+
+        // Assert
+        new { result.ExitCode, Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim() }
+            .Should().Be(new { ExitCode = 1, Last = "10% Glossary failed: Fake agent finished without saving a glossary., 0 of 64 strings" });
+    }
+
+    [Fact]
+    public async Task An_unknown_until_stage_is_refused()
+    {
+        // Arrange
+        var recording = Success;
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru", "--until", "build");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--until takes setup, extract, glossary or translate, not 'build'." + Environment.NewLine });
+    }
+
+    [Fact]
+    public async Task An_unknown_agent_is_refused()
+    {
+        // Arrange
+        var agent = "gpt";
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--agent", agent, "--lang", "ru");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "'gpt' is not an agent: use claude or codex." + Environment.NewLine });
+    }
+
+    [Fact]
+    public async Task Resuming_a_fake_agent_job_needs_its_recording()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Limit, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("gen", "resume", "steam:620");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "The job runs with the fake agent: give its recording with --fake-agent." + Environment.NewLine });
     }
 }

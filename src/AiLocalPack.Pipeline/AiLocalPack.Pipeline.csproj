@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>The generation pipeline's stages: the toolkit and an agent working on a copy of the game.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Prompts, versioned by file name (glossary.v1.md); snapshot-tested in AiLocalPack.Pipeline.Tests. -->
+        <EmbeddedResource Include="Prompts/*.md" LogicalName="AiLocalPack.Pipeline.Prompts.%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Agents\AiLocalPack.Agents.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Mcp\AiLocalPack.Mcp.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="AiLocalPack.Pipeline.Tests" />
+    </ItemGroup>
+</Project>

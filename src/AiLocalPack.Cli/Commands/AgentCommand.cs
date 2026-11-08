@@ -240,7 +240,7 @@ internal static class AgentCommand
     }
 
     /// <summary>The adapter of <paramref name="id"/>, looking in the app's own folder last.</summary>
-    private static IAgentAdapter? Adapter(OsEnvironment env, string id)
+    internal static IAgentAdapter? Adapter(OsEnvironment env, string id)
     {
         if (!AgentAdapters.Ids.Contains(id.ToLowerInvariant()))
         {

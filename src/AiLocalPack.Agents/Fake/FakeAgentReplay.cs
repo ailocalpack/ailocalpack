@@ -13,7 +13,10 @@ namespace AiLocalPack.Agents.Fake;
 /// else to test malformed output), except control lines, objects with a <c>control</c> property:
 /// <c>{"control":"delay","ms":100}</c> waits; <c>{"control":"stderr","text":"…"}</c> writes a line to standard error;
 /// <c>{"control":"prompt"}</c> writes a message event with the text read from standard input (the prompt);
-/// <c>{"control":"cwd"}</c> a message event with the working folder; <c>{"control":"exit","code":3}</c> stops with that exit
+/// <c>{"control":"cwd"}</c> a message event with the working folder;
+/// <c>{"control":"write","path":"../glossary.json","text":"…"}</c> writes a UTF-8 file at that path relative to the working
+/// folder (parent folders made), standing in for what a real agent stores through its MCP tools;
+/// <c>{"control":"exit","code":3}</c> stops with that exit
 /// code (the end of the file = 0); <c>{"control":"hang"}</c> waits until killed;
 /// <c>{"control":"child","recording":"…"}</c> starts another replayer on that recording (sharing this one's outputs) and
 /// writes <c>child-pid &lt;pid&gt;</c> to standard error, for process-tree tests.
@@ -96,6 +99,11 @@ public static class FakeAgentReplay
                     case "cwd":
                         await Write(output, new AgentMessage(Directory.GetCurrentDirectory()), cancellationToken);
                         break;
+                    case "write":
+                        var target = Path.GetFullPath(element.GetProperty("path").GetString()!, Directory.GetCurrentDirectory());
+                        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                        await File.WriteAllTextAsync(target, element.GetProperty("text").GetString(), new System.Text.UTF8Encoding(false), cancellationToken);
+                        break;
                     case "exit":
                         return element.GetProperty("code").GetInt32();
                     case "hang":
@@ -114,7 +122,7 @@ public static class FakeAgentReplay
                         throw new FormatException($"unknown control \"{name}\"");
                 }
             }
-            catch (Exception e) when (e is KeyNotFoundException or InvalidOperationException or FormatException or Win32Exception)
+            catch (Exception e) when (e is KeyNotFoundException or InvalidOperationException or FormatException or Win32Exception or IOException or UnauthorizedAccessException)
             {
                 await error.WriteLineAsync($"{recording}:{number}: {e.Message}");
                 return 2;

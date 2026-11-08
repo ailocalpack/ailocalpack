@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <None Include="Snapshots\**\*" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\AiLocalPack.Pipeline\AiLocalPack.Pipeline.csproj" />
+        <!-- The fake agent program, run as a real child process by the stage tests -->
+        <ProjectReference Include="..\AiLocalPack.FakeAgent\AiLocalPack.FakeAgent.csproj" />
+    </ItemGroup>
+</Project>

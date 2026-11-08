@@ -30,7 +30,10 @@ public sealed class GenerationRunnerTests : IDisposable
     private static AntiCheatPolicy Policy => new([new AntiCheatRule("eac", "Easy Anti-Cheat", ["EasyAntiCheat/"])], new Dictionary<GameId, string>(), new HashSet<GameId>());
 
     /// <summary>Setup, Extract (3 chunks of 10 strings), Glossary, Translate (<paramref name="translate"/>, else records the chunk), Build.</summary>
-    private GenerationStages Stages(Func<GenerationStepContext, CancellationToken, Task<GenerationStepResult>>? translate = null, Func<GenerationStepResult>? glossary = null) => new(
+    private GenerationStages Stages(
+        Func<GenerationStepContext, CancellationToken, Task<GenerationStepResult>>? translate = null,
+        Func<GenerationStepResult>? glossary = null,
+        GenerationStage? pauseBefore = null) => new(
     [
         new Step(GenerationStage.Setup, (_, _) => Done()),
         new Step(GenerationStage.Extract, (_, _) => Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone(new GenerationCounters(30, 0, 3, 0)))),
@@ -41,7 +44,8 @@ public sealed class GenerationRunnerTests : IDisposable
             return Task.FromResult<GenerationStepResult>(new GenerationStepResult.ChunkDone(10));
         })),
         new Step(GenerationStage.Build, (_, _) => Done()),
-    ]);
+    ],
+    pauseBefore);
 
     private static Task<GenerationStepResult> Done() => Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone());
 
@@ -69,6 +73,38 @@ public sealed class GenerationRunnerTests : IDisposable
             Counters = new GenerationCounters(30, 30, 3, 3),
             Chunks = new[] { 0, 1, 2 },
         });
+    }
+
+    [Fact]
+    public async Task A_job_pauses_before_the_stage_asked_without_running_it()
+    {
+        // Arrange
+        var run = Start(Stages(pauseBefore: GenerationStage.Translate));
+
+        // Act
+        var job = await run.Completion;
+
+        // Assert
+        new { job.Status, job.PauseReason, job.Stage, Chunks = _chunksRun }.Should().BeEquivalentTo(new
+        {
+            Status = GenerationJobStatus.Paused,
+            PauseReason = (GenerationPauseReason?)GenerationPauseReason.Player,
+            Stage = GenerationStage.Translate,
+            Chunks = Array.Empty<int>(),
+        });
+    }
+
+    [Fact]
+    public void A_job_cannot_pause_before_setup()
+    {
+        // Arrange
+        var stages = Array.Empty<IGenerationStage>();
+
+        // Act
+        var act = () => new GenerationStages(stages, GenerationStage.Setup);
+
+        // Assert
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]

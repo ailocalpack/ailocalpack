@@ -114,6 +114,35 @@ public sealed class FakeAgentReplayTests : IDisposable
     }
 
     [Fact]
+    public async Task The_write_control_writes_the_file_with_its_folders()
+    {
+        // Arrange
+        var target = _dir.Combine("job/nested/glossary.json");
+        var path = System.Text.Json.JsonSerializer.Serialize(target);
+        var text = System.Text.Json.JsonSerializer.Serialize("{\"a\":\"ё\"}");
+        var recording = Write(_dir, "r.jsonl", Control("write", $"\"path\":{path},\"text\":{text}"));
+
+        // Act
+        await ReplayAsync(recording);
+
+        // Assert
+        File.ReadAllText(target).Should().Be("{\"a\":\"ё\"}");
+    }
+
+    [Fact]
+    public async Task A_write_control_without_text_fails_the_replay()
+    {
+        // Arrange
+        var recording = Write(_dir, "r.jsonl", Control("write", "\"path\":\"x.json\""));
+
+        // Act
+        var (code, _, _) = await ReplayAsync(recording);
+
+        // Assert
+        code.Should().Be(2);
+    }
+
+    [Fact]
     public void A_replayer_starts_with_its_arguments_then_the_recording()
     {
         // Arrange

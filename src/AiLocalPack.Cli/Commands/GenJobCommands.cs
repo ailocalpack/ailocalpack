@@ -4,12 +4,14 @@ using AiLocalPack.Agents;
 using AiLocalPack.Agents.Fake;
 using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.AntiCheat;
+using AiLocalPack.Core.Background;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Pipeline;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Generation;
 using AiLocalPack.Toolkit.Recipes;
@@ -17,20 +19,37 @@ using AiLocalPack.Toolkit.Recipes;
 namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
-/// Generation jobs (task 47): <c>gen run &lt;game&gt; --fake-agent &lt;recording&gt; [--lang] [--review-glossary] [--wait]</c>
-/// starts one and follows it; <c>gen resume &lt;game&gt; --fake-agent &lt;recording&gt; [--wait]</c> goes on from the saved
-/// stage and chunk (or retries a failed stage, or approves a glossary under review); <c>gen status [&lt;game&gt;]</c> lists
-/// jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Until tasks 49–51 bring the real stages, jobs run the
-/// <see cref="RehearsalStages"/> and only with the fake agent. Ctrl+C / SIGTERM leaves the job interrupted.
+/// Generation jobs (tasks 47, 49): <c>gen run &lt;game&gt; [--agent claude|codex | --fake-agent &lt;recording&gt;] [--lang]
+/// [--review-glossary] [--until &lt;stage&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
+/// [--until] [--wait]</c> goes on from the saved stage and chunk (or retries a failed stage, or approves a glossary under
+/// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Setup, Extract and
+/// Glossary are the real stages (<see cref="GenerationPipeline"/>); Translate and Build are the
+/// <see cref="RehearsalStages"/> with the fake agent until tasks 50–51, so a real agent's job pauses before Translate.
+/// Ctrl+C / SIGTERM leaves the job interrupted.
 /// </summary>
 internal static class GenJobCommands
 {
     public static IEnumerable<Command> Build(OsEnvironment env) => [BuildRun(env), BuildResume(env), BuildStatus(env), BuildCancel(env)];
 
-    private static Option<string> FakeAgentOption() => new("--fake-agent")
+    private static Option<string?> FakeAgentOption() => new("--fake-agent")
     {
-        Description = "Run the stages with the fake agent replaying this JSONL recording (real agents come with tasks 49–51).",
-        Required = true,
+        Description = "Run the stages with the fake agent replaying this JSONL recording (development, tests).",
+    };
+
+    private static Option<string?> UntilOption() => new("--until")
+    {
+        Description = "Pause the job once this stage is done: setup, extract, glossary or translate ('gen resume' goes on).",
+    };
+
+    /// <summary>The stage to pause before for <c>--until &lt;stage&gt;</c>, or the reason the value is wrong.</summary>
+    internal static (GenerationStage? PauseBefore, string? Error) Until(string? text) => text?.ToLowerInvariant() switch
+    {
+        null => (null, null),
+        "setup" => (GenerationStage.Extract, null),
+        "extract" => (GenerationStage.Glossary, null),
+        "glossary" => (GenerationStage.Translate, null),
+        "translate" => (GenerationStage.Build, null),
+        _ => (null, $"--until takes setup, extract, glossary or translate, not '{text}'."),
     };
 
     private static Option<bool> WaitOption() => new("--wait")
@@ -41,12 +60,15 @@ internal static class GenJobCommands
     private static Command BuildRun(OsEnvironment env)
     {
         var game = GameArgument();
+        var agentOption = new Option<string?>("--agent") { Description = $"The agent ({string.Join(", ", AgentAdapters.Ids)}; default: the app's default agent, else claude)." };
         var fake = FakeAgentOption();
         var language = new Option<string?>("--lang") { Description = "Target language tag (default: the app's setting, else the OS language)." };
         var review = new Option<bool>("--review-glossary") { Description = "Wait for the player's review after the glossary." };
         var allFiles = new Option<bool>("--all-files") { Description = "Copy every file into the working copy." };
+        var model = new Option<string?>("--model") { Description = "The agent's model (default: the agent's own)." };
+        var until = UntilOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, fake, language, review, allFiles, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, until, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -63,8 +85,30 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            var options = new GenerationOptions(result.GetValue(review), result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null);
-            var recording = Path.GetFullPath(result.GetValue(fake)!);
+            var (pauseBefore, untilError) = Until(result.GetValue(until));
+            if (untilError is not null)
+            {
+                error.WriteLine(untilError);
+                return 1;
+            }
+
+            var recording = result.GetValue(fake) is { } path ? Path.GetFullPath(path) : null;
+            var agentId = recording is not null ? FakeAgentAdapter.AgentId : (result.GetValue(agentOption) ?? context.Settings.DefaultAgent ?? AgentAdapters.Ids[0]).ToLowerInvariant();
+            if (recording is not null && result.GetValue(agentOption) is not null)
+            {
+                error.WriteLine("Give either --agent or --fake-agent, not both.");
+                return 1;
+            }
+
+            if (recording is null && !AgentAdapters.Ids.Contains(agentId))
+            {
+                error.WriteLine($"'{agentId}' is not an agent: use {string.Join(" or ", AgentAdapters.Ids)}.");
+                return 1;
+            }
+
+            var options = new GenerationOptions(result.GetValue(review), result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null, result.GetValue(model));
+            var plan = new StagePlan(agentId, recording, pauseBefore);
+            WarnAboutStandIns(plan, output);
             GenerationRun run;
             try
             {
@@ -74,9 +118,9 @@ internal static class GenJobCommands
                     context.Policy,
                     context.Index,
                     tag,
-                    FakeAgentAdapter.AgentId,
+                    agentId,
                     options,
-                    entry => context.Stages(entry, recording),
+                    _ => context.Stages(plan),
                     (estimate.Work.TimeLow + estimate.Work.TimeHigh) / 2,
                     cancellationToken);
             }
@@ -86,8 +130,8 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            output.WriteLine($"Job {run.Job.Id} for {context.Game.Name} into {tag}: {run.Folder}");
-            return await FollowAsync(context, run, recording, result.GetValue(wait), output, cancellationToken);
+            output.WriteLine($"Job {run.Job.Id} for {context.Game.Name} into {tag} with {agentId}: {run.Folder}");
+            return await FollowAsync(context, run, plan, result.GetValue(wait), output, cancellationToken);
         });
         return command;
     }
@@ -96,10 +140,11 @@ internal static class GenJobCommands
     {
         var game = GameArgument();
         var fake = FakeAgentOption();
+        var until = UntilOption();
         var wait = WaitOption();
         var command = new Command("resume", "Resume the game's paused or interrupted job from its stage and chunk, retry a failed stage, or approve the glossary under review.")
         {
-            game, fake, wait,
+            game, fake, until, wait,
         };
         command.SetAction(async (result, cancellationToken) =>
         {
@@ -116,11 +161,32 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            var recording = Path.GetFullPath(result.GetValue(fake)!);
+            var (pauseBefore, untilError) = Until(result.GetValue(until));
+            if (untilError is not null)
+            {
+                error.WriteLine(untilError);
+                return 1;
+            }
+
+            var recording = result.GetValue(fake) is { } path ? Path.GetFullPath(path) : null;
+            if (recording is null && entry.Job.Agent == FakeAgentAdapter.AgentId)
+            {
+                error.WriteLine("The job runs with the fake agent: give its recording with --fake-agent.");
+                return 1;
+            }
+
+            if (recording is null && !AgentAdapters.Ids.Contains(entry.Job.Agent))
+            {
+                error.WriteLine($"The job's agent '{entry.Job.Agent}' is unknown to this version.");
+                return 1;
+            }
+
+            var plan = new StagePlan(recording is null ? entry.Job.Agent : FakeAgentAdapter.AgentId, recording, pauseBefore);
+            WarnAboutStandIns(plan, output);
             GenerationRun run;
             try
             {
-                run = Resume(context, entry, recording, cancellationToken);
+                run = Resume(context, entry, plan, cancellationToken);
             }
             catch (Exception e) when (e is GameBlockedException or GenerationJobException or IOException)
             {
@@ -129,7 +195,7 @@ internal static class GenJobCommands
             }
 
             output.WriteLine($"Job {run.Job.Id} resumed at {Stage(run.Job)}.");
-            return await FollowAsync(context, run, recording, result.GetValue(wait), output, cancellationToken);
+            return await FollowAsync(context, run, plan, result.GetValue(wait), output, cancellationToken);
         });
         return command;
     }
@@ -221,11 +287,19 @@ internal static class GenJobCommands
         return command;
     }
 
-    private static GenerationRun Resume(JobContext context, GenerationJobEntry entry, string recording, CancellationToken cancellationToken) =>
-        context.Jobs.Resume(entry.Folder, context.Game, context.Policy, context.Index, e => context.Stages(e, recording), cancellationToken);
+    private static GenerationRun Resume(JobContext context, GenerationJobEntry entry, StagePlan plan, CancellationToken cancellationToken) =>
+        context.Jobs.Resume(entry.Folder, context.Game, context.Policy, context.Index, _ => context.Stages(plan), cancellationToken);
+
+    private static void WarnAboutStandIns(StagePlan plan, TextWriter output)
+    {
+        if (plan.Recording is null && plan.PauseBefore is null or > GenerationStage.Translate)
+        {
+            output.WriteLine("Translate and Build don't run with a real agent in this version: the job pauses before Translate.");
+        }
+    }
 
     /// <summary>Prints each change; with <paramref name="wait"/> a limit pause is waited out and the job resumed.</summary>
-    private static async Task<int> FollowAsync(JobContext context, GenerationRun run, string recording, bool wait, TextWriter output, CancellationToken cancellationToken)
+    private static async Task<int> FollowAsync(JobContext context, GenerationRun run, StagePlan plan, bool wait, TextWriter output, CancellationToken cancellationToken)
     {
         while (true)
         {
@@ -251,7 +325,7 @@ internal static class GenJobCommands
                 context.Jobs.Store.List,
                 e =>
                 {
-                    run = Resume(context, e, recording, cancellationToken);
+                    run = Resume(context, e, plan, cancellationToken);
                     return Task.CompletedTask;
                 });
             while (true)
@@ -342,8 +416,12 @@ internal static class GenJobCommands
             tools,
             copies,
             AntiCheatPolicy.Bundled,
-            DevCommand.SavedIndex(env, paths));
+            DevCommand.SavedIndex(env, paths),
+            env);
     }
+
+    /// <summary>The agent of a run (<paramref name="Recording"/> = the fake agent's) and where it pauses.</summary>
+    private sealed record StagePlan(string AgentId, string? Recording, GenerationStage? PauseBefore);
 
     private sealed record JobContext(
         Game Game,
@@ -353,68 +431,36 @@ internal static class GenJobCommands
         RecipeTools Tools,
         WorkingCopies Copies,
         AntiCheatPolicy Policy,
-        RegistryIndex? Index)
+        RegistryIndex? Index,
+        OsEnvironment Env)
     {
-        public GenerationStages Stages(GenerationJobEntry entry, string recording) =>
-            RehearsalStages.Create(
-                Game,
-                Estimator,
-                Copies,
-                Tools,
-                new FakeAgentAdapter(new ProcessRunner(), FakeAgentReplayer.ForCurrentProcess("agent", "replay"), recording));
+        /// <summary>
+        /// The real Setup, Extract and Glossary; with the fake agent the rehearsal Translate and Build, with a real one
+        /// none yet, so the job pauses before Translate.
+        /// </summary>
+        public GenerationStages Stages(StagePlan plan)
+        {
+            IAgentAdapter adapter = plan.Recording is { } recording
+                ? new FakeAgentAdapter(new ProcessRunner(), FakeAgentReplayer.ForCurrentProcess("agent", "replay"), recording)
+                : AgentCommand.Adapter(Env, plan.AgentId)!;
+            var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
+                ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
+            var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies);
+            return plan.Recording is null
+                ? GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore is null or > GenerationStage.Translate ? GenerationStage.Translate : plan.PauseBefore)
+                : GenerationPipeline.Create(services, RehearsalStages.Create(adapter), plan.PauseBefore);
+        }
     }
 }
 
 /// <summary>
-/// Stand-ins for the stages of tasks 49–51, so a job can run end to end with the fake agent (task 47's check): Setup
-/// makes the working copy (a half-made one left by a crash is made again), Extract counts the toolkit's strings and
-/// plans chunks of <see cref="GenerationEstimateModel.StringsPerChunk"/>, Glossary runs the agent once, Translate once
-/// per chunk (the prompt names the chunk; nothing is stored), Build does nothing.
+/// Stand-ins for the stages of tasks 50–51, so a job can run end to end with the fake agent (task 47's check):
+/// Translate runs the agent once per chunk (the prompt names the chunk; nothing is stored), Build does nothing.
 /// </summary>
 internal static class RehearsalStages
 {
-    public static GenerationStages Create(Game game, GenerationEstimator estimator, WorkingCopies copies, RecipeTools tools, IAgentAdapter agent) => new(
+    public static IReadOnlyList<IGenerationStage> Create(IAgentAdapter agent) =>
     [
-        new Stage(GenerationStage.Setup, (context, ct) =>
-        {
-            try
-            {
-                var estimate = estimator.Estimate(game.InstallPath, EngineKind.TryParse(game.Engine, out var kind) ? kind : null, context.Job.Options.Scope, ct);
-                copies.DeleteCopy(context.Folder);
-                var copy = copies.Create(estimate.Copy, context.Folder, estimate.ReserveBytes, cancellationToken: ct);
-                context.Log($"Working copy: {copy.Files} files, {copy.ClonedBytes} bytes cloned, {copy.CopiedBytes} copied.");
-                return Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone());
-            }
-            catch (WorkingCopyException e)
-            {
-                return Task.FromResult<GenerationStepResult>(new GenerationStepResult.Failed(GenerationFailureKind.WorkingCopy, e.Message));
-            }
-        }),
-        new Stage(GenerationStage.Extract, (context, ct) =>
-        {
-            var detection = new EngineDetector().Detect(context.CopyFolder);
-            if (detection.Match is not { } match || tools.For(match.Kind) is not { } tool)
-            {
-                return Task.FromResult<GenerationStepResult>(new GenerationStepResult.Failed(
-                    GenerationFailureKind.Toolkit, "The toolkit doesn't read this game's engine; unknown engines come with task 57."));
-            }
-
-            int strings;
-            try
-            {
-                strings = tool.Extract(context.CopyFolder, ct).Strings.Count;
-            }
-            catch (RecipeException e)
-            {
-                return Task.FromResult<GenerationStepResult>(new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, e.Message));
-            }
-
-            var chunks = (strings + GenerationEstimateModel.StringsPerChunk - 1) / GenerationEstimateModel.StringsPerChunk;
-            context.Log($"Extracted {strings} strings with {tool.Id} {tool.Version.ToString(3)}: {chunks} chunks.");
-            return Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone(new GenerationCounters(strings, 0, chunks, 0)));
-        }),
-        new Stage(GenerationStage.Glossary, async (context, ct) =>
-            await RunAgentAsync(agent, context, "Glossary stage (rehearsal).", ct) ?? new GenerationStepResult.StageDone()),
         new Stage(GenerationStage.Translate, async (context, ct) =>
         {
             var counters = context.Job.Counters;
@@ -424,8 +470,7 @@ internal static class RehearsalStages
                 ?? new GenerationStepResult.ChunkDone(Math.Max(0, size));
         }),
         new Stage(GenerationStage.Build, (_, _) => Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone())),
-    ]);
-
+    ];
     private static async Task<GenerationStepResult?> RunAgentAsync(IAgentAdapter agent, GenerationStepContext context, string prompt, CancellationToken ct)
     {
         if (await agent.DetectAsync(ct) is not { } installation)

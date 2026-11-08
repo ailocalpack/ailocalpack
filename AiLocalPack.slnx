@@ -14,6 +14,7 @@
     <Project Path="src/AiLocalPack.Core/AiLocalPack.Core.csproj" />
     <Project Path="src/AiLocalPack.Desktop/AiLocalPack.Desktop.csproj" />
     <Project Path="src/AiLocalPack.Mcp/AiLocalPack.Mcp.csproj" />
+    <Project Path="src/AiLocalPack.Pipeline/AiLocalPack.Pipeline.csproj" />
     <Project Path="src/AiLocalPack.Toolkit/AiLocalPack.Toolkit.csproj" />
   </Folder>
   <Folder Name="/tests/">
@@ -23,6 +24,7 @@
     <Project Path="tests/AiLocalPack.Desktop.Tests/AiLocalPack.Desktop.Tests.csproj" />
     <Project Path="tests/AiLocalPack.FakeAgent/AiLocalPack.FakeAgent.csproj" />
     <Project Path="tests/AiLocalPack.Mcp.Tests/AiLocalPack.Mcp.Tests.csproj" />
+    <Project Path="tests/AiLocalPack.Pipeline.Tests/AiLocalPack.Pipeline.Tests.csproj" />
     <Project Path="tests/AiLocalPack.TestKit/AiLocalPack.TestKit.csproj" />
     <Project Path="tests/AiLocalPack.TestKit.Tests/AiLocalPack.TestKit.Tests.csproj" />
     <Project Path="tests/AiLocalPack.Toolkit.Tests/AiLocalPack.Toolkit.Tests.csproj" />
