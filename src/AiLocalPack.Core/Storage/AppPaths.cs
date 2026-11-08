@@ -54,6 +54,12 @@ public sealed record AppPaths
     /// <summary>The Activity panel's events: decisions waiting for the player and the feed (<see cref="Activity.ActivityStore"/>).</summary>
     public string ActivityFile => Path.Combine(Data, "activity.json");
 
+    /// <summary>
+    /// AI agents the app installed itself (task 43): <c>&lt;id&gt;/&lt;version&gt;/</c> with the official build,
+    /// <c>&lt;id&gt;/installed.json</c> naming the one in use, <c>&lt;id&gt;/downloads/</c> for a download in progress.
+    /// </summary>
+    public string Agents => Path.Combine(Data, "agents");
+
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 

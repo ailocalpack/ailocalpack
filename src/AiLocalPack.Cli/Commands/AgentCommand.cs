@@ -6,6 +6,7 @@ using System.Text.Json;
 using AiLocalPack.Agents;
 using AiLocalPack.Agents.Claude;
 using AiLocalPack.Agents.Fake;
+using AiLocalPack.Agents.Install;
 using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.Storage;
 
@@ -19,7 +20,11 @@ namespace AiLocalPack.Cli.Commands;
 /// (<c>--json</c>: <see cref="AgentEventJson"/> lines); exit 0 when the run succeeded, else 1; Ctrl+C kills the agent's
 /// process tree. <c>--allow</c> = the built-in tools the agent may use inside the folder (default <c>read</c>).
 /// <c>--fake</c> replays a recording through the CLI itself (hidden <c>agent replay &lt;recording&gt;</c>, the
-/// <see cref="FakeAgentReplay"/> program).
+/// <see cref="FakeAgentReplay"/> program). Task 43: <c>agent install &lt;agent&gt; [--version &lt;v&gt;] [--force]</c> installs the
+/// official build into the app's folder (or updates it; nothing to do when the player's own copy is found, unless
+/// <c>--force</c>), <c>agent uninstall &lt;agent&gt;</c> removes the app's copy, <c>agent login &lt;agent&gt;</c> runs the
+/// agent's own browser sign-in and waits for it, <c>agent logout &lt;agent&gt;</c> signs out. Every command finds the
+/// agent on <c>PATH</c>, in the installers' folders, then in the app's own folder.
 /// </summary>
 internal static class AgentCommand
 {
@@ -29,6 +34,10 @@ internal static class AgentCommand
         {
             BuildProbe(env),
             BuildRun(env),
+            BuildInstall(env),
+            BuildUninstall(env),
+            BuildLogin(env),
+            BuildLogout(env),
             BuildReplay(),
         };
     }
@@ -44,7 +53,7 @@ internal static class AgentCommand
         {
             var output = result.InvocationConfiguration.Output;
             var id = result.GetValue(agent)!;
-            if (AgentAdapters.Create(id, new ProcessRunner(), env) is not { } adapter)
+            if (Adapter(env, id) is not { } adapter)
             {
                 result.InvocationConfiguration.Error.WriteLine($"Unknown agent \"{id}\": known agents are {KnownAgents}.");
                 return 1;
@@ -75,7 +84,7 @@ internal static class AgentCommand
         output.WriteLine($"{adapter.DisplayName} ({adapter.Id})");
         if (installation is null)
         {
-            output.WriteLine("program:  not found (looked on PATH and in the installers' usual folders)");
+            output.WriteLine($"program:  not found (looked on PATH, in the installers' usual folders and the app's own; `ailocalpack agent install {adapter.Id}` installs it)");
             return;
         }
 
@@ -173,7 +182,7 @@ internal static class AgentCommand
                     return 1;
                 }
 
-                if (AgentAdapters.Create(given[0], new ProcessRunner(), env) is not { } real)
+                if (Adapter(env, given[0]) is not { } real)
                 {
                     error.WriteLine($"Unknown agent \"{given[0]}\": known agents are {KnownAgents}, or replay a recording with --fake.");
                     return 1;
@@ -204,7 +213,7 @@ internal static class AgentCommand
             var installation = await adapter.DetectAsync(cancellationToken);
             if (installation is null)
             {
-                error.WriteLine($"{adapter.DisplayName} isn't installed (looked on PATH and in the installers' usual folders).");
+                error.WriteLine($"{adapter.DisplayName} isn't installed (looked on PATH, in the installers' usual folders and the app's own): run `ailocalpack agent install {adapter.Id}`.");
                 return 1;
             }
 
@@ -228,6 +237,205 @@ internal static class AgentCommand
             return outcome == AgentOutcome.Succeeded ? 0 : 1;
         });
         return run;
+    }
+
+    /// <summary>The adapter of <paramref name="id"/>, looking in the app's own folder last.</summary>
+    private static IAgentAdapter? Adapter(OsEnvironment env, string id)
+    {
+        if (!AgentAdapters.Ids.Contains(id.ToLowerInvariant()))
+        {
+            return null;
+        }
+
+        var managed = ManagedFolder(env, id);
+        return AgentAdapters.Create(id, new ProcessRunner(), env, managed);
+    }
+
+    private static string? ManagedFolder(OsEnvironment env, string id)
+    {
+        using var http = new HttpClient();
+        return AgentInstaller.Create(AppPaths.Resolve(env), env, http).ManagedDirectory(id);
+    }
+
+    private static Command BuildInstall(OsEnvironment env)
+    {
+        var agent = new Argument<string>("agent") { Description = $"The agent ({KnownAgents})." };
+        var version = new Option<string?>("--version") { Description = "Install this version (default: the vendor's current release)." };
+        var force = new Option<bool>("--force") { Description = "Install the app's own copy even when one you installed is found." };
+        var install = new Command("install", "Install an agent's official build into the app's folder, or update it.") { agent, version, force };
+        install.SetAction(async (result, cancellationToken) =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            var error = result.InvocationConfiguration.Error;
+            var id = result.GetValue(agent)!.ToLowerInvariant();
+            if (Adapter(env, id) is not { } adapter)
+            {
+                error.WriteLine($"Unknown agent \"{id}\": known agents are {KnownAgents}.");
+                return 1;
+            }
+
+            if (!result.GetValue(force) && await adapter.DetectAsync(cancellationToken) is { Source: AgentSource.Path } own)
+            {
+                output.WriteLine($"{adapter.DisplayName} {own.Version ?? "(version unknown)"} is already installed by you at {own.Executable}; the app uses that one. Pass --force to install the app's own copy anyway.");
+                return 0;
+            }
+
+            using var http = AgentInstaller.CreateHttpClient();
+            var installer = AgentInstaller.Create(AppPaths.Resolve(env), env, http);
+            var reported = -1L;
+            var progress = new SyncProgress<AgentInstallProgress>(p =>
+            {
+                if (p.Stage == AgentInstallStage.Downloading && p.Total > 0)
+                {
+                    var tenth = p.Done * 10 / p.Total;
+                    if (tenth != reported)
+                    {
+                        reported = tenth;
+                        output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"downloading {p.Done / 1048576.0:0.0} of {p.Total / 1048576.0:0.0} MB"));
+                    }
+                }
+                else if (p.Stage == AgentInstallStage.Unpacking)
+                {
+                    output.WriteLine("unpacking");
+                }
+            });
+            output.WriteLine($"{adapter.DisplayName}: looking for the release for {installer.Platform?.ToString() ?? "this CPU"}…");
+            var outcome = await installer.InstallAsync(id, result.GetValue(version), progress, cancellationToken);
+            if (!outcome.Succeeded)
+            {
+                error.WriteLine($"{adapter.DisplayName} wasn't installed: {outcome.Detail}" + (outcome.MayPass ? " Try again later; a partial download resumes." : string.Empty));
+                return 1;
+            }
+
+            var installed = outcome.Installed!;
+            if (outcome.AlreadyInstalled)
+            {
+                output.WriteLine($"{adapter.DisplayName} {installed.Version} is already installed by the app at {installed.Executable}.");
+            }
+            else
+            {
+                output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"Installed {adapter.DisplayName} {installed.Version} into {installed.Folder}: downloaded {outcome.Downloaded} bytes, {outcome.Release!.Verification}, SHA-256 checked."));
+            }
+
+            output.WriteLine($"program: {installed.Executable}");
+            return 0;
+        });
+        return install;
+    }
+
+    private static Command BuildUninstall(OsEnvironment env)
+    {
+        var agent = new Argument<string>("agent") { Description = $"The agent ({KnownAgents})." };
+        var uninstall = new Command("uninstall", "Remove the app's own copy of an agent (one you installed is left alone).") { agent };
+        uninstall.SetAction(result =>
+        {
+            var id = result.GetValue(agent)!.ToLowerInvariant();
+            if (!AgentAdapters.Ids.Contains(id))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"Unknown agent \"{id}\": known agents are {KnownAgents}.");
+                return 1;
+            }
+
+            using var http = new HttpClient();
+            var installer = AgentInstaller.Create(AppPaths.Resolve(env), env, http);
+            var found = installer.Find(id);
+            if (installer.Uninstall(id) is { } problem)
+            {
+                result.InvocationConfiguration.Error.WriteLine($"The app's copy of {id} wasn't fully removed (is it running?): {problem}");
+                return 1;
+            }
+
+            result.InvocationConfiguration.Output.WriteLine(found is null
+                ? $"The app has no copy of {id} installed."
+                : $"Removed the app's copy of {id} {found.Version}.");
+            return 0;
+        });
+        return uninstall;
+    }
+
+    private static Command BuildLogin(OsEnvironment env)
+    {
+        var agent = new Argument<string>("agent") { Description = $"The agent ({KnownAgents})." };
+        var login = new Command("login", "Sign in with the agent's own login (opens the browser) and wait until it is done.") { agent };
+        login.SetAction(async (result, cancellationToken) =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            var error = result.InvocationConfiguration.Error;
+            if (await FindAccountAsync(env, result.GetValue(agent)!, error, cancellationToken) is not var (adapter, account, installation))
+            {
+                return 1;
+            }
+
+            output.WriteLine($"{adapter.DisplayName}: starting its sign-in; finish it in the browser (waiting up to {AgentSignInOptions.Default.Timeout.TotalMinutes:0} min, Ctrl+C stops).");
+            var signIn = await account.SignInAsync(installation, line => output.WriteLine($"  {line.Text}"), cancellationToken);
+            switch (signIn.Outcome)
+            {
+                case AgentSignInOutcome.AlreadySignedIn:
+                    output.WriteLine($"Already signed in{Account(signIn.Status)}; `ailocalpack agent logout {adapter.Id}` signs out.");
+                    return 0;
+                case AgentSignInOutcome.SignedIn:
+                    output.WriteLine($"Signed in{Account(signIn.Status)}.");
+                    return 0;
+                case AgentSignInOutcome.Cancelled:
+                    error.WriteLine("Sign-in stopped.");
+                    return 1;
+                default:
+                    error.WriteLine($"Not signed in: {signIn.Detail}");
+                    return 1;
+            }
+        });
+        return login;
+    }
+
+    private static Command BuildLogout(OsEnvironment env)
+    {
+        var agent = new Argument<string>("agent") { Description = $"The agent ({KnownAgents})." };
+        var logout = new Command("logout", "Sign out with the agent's own logout.") { agent };
+        logout.SetAction(async (result, cancellationToken) =>
+        {
+            var error = result.InvocationConfiguration.Error;
+            if (await FindAccountAsync(env, result.GetValue(agent)!, error, cancellationToken) is not var (adapter, account, installation))
+            {
+                return 1;
+            }
+
+            var status = await account.SignOutAsync(installation, cancellationToken);
+            if (status.State == AgentAuthState.SignedIn)
+            {
+                error.WriteLine($"{adapter.DisplayName} still reports being signed in{Account(status)}.");
+                return 1;
+            }
+
+            result.InvocationConfiguration.Output.WriteLine($"{adapter.DisplayName}: signed out.");
+            return 0;
+        });
+        return logout;
+    }
+
+    private static async Task<(IAgentAdapter Adapter, IAgentAccount Account, AgentInstallation Installation)?> FindAccountAsync(
+        OsEnvironment env, string id, TextWriter error, CancellationToken cancellationToken)
+    {
+        if (Adapter(env, id) is not { } adapter || adapter is not IAgentAccount account)
+        {
+            error.WriteLine($"Unknown agent \"{id}\": known agents are {KnownAgents}.");
+            return null;
+        }
+
+        if (await adapter.DetectAsync(cancellationToken) is not { } installation)
+        {
+            error.WriteLine($"{adapter.DisplayName} isn't installed: run `ailocalpack agent install {adapter.Id}`.");
+            return null;
+        }
+
+        return (adapter, account, installation);
+    }
+
+    private static string Account(AgentAuthStatus? status) => status?.Account is { } account ? $" ({account})" : string.Empty;
+
+    /// <summary>Reports on the reporting thread (console order kept).</summary>
+    private sealed class SyncProgress<T>(Action<T> report) : IProgress<T>
+    {
+        public void Report(T value) => report(value);
     }
 
     private static bool TryTools(string[]? given, out HashSet<AgentBuiltinTool> tools, out string? bad)

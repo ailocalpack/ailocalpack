@@ -17,6 +17,8 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="AiLocalPack.Core.Tests" />
+        <!-- The resumable verified download (VerifiedDownloader) for agent installs (task 43). -->
+        <InternalsVisibleTo Include="AiLocalPack.Agents" />
         <!-- Install crash simulation hooks (PackInstaller) for the start-up recovery tests. -->
         <InternalsVisibleTo Include="AiLocalPack.Desktop.Tests" />
     </ItemGroup>

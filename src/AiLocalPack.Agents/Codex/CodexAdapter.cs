@@ -13,6 +13,8 @@ namespace AiLocalPack.Agents.Codex;
 /// <item><b>Sign-in</b>: <c>codex login status</c> (15 s; local, no token read by the app), which writes to standard error:
 /// exit 0 + <c>Logged in using ChatGPT</c> / <c>…an API key…</c> = signed in (account = ChatGPT / API key),
 /// <c>Not logged in</c> = signed out, anything else = unknown.</item>
+/// <item><b>Sign in / out</b> (task 43): <c>codex login</c> (ChatGPT; opens the browser, local callback) with the status
+/// polled (<see cref="AgentSignIn"/>), <c>codex logout</c>.</item>
 /// </list>
 /// </summary>
 /// <param name="runner">Starts Codex.</param>
@@ -26,7 +28,7 @@ public sealed partial class CodexAdapter(
     string? managedDirectory = null,
     IReadOnlyList<string>? systemFolders = null,
     TimeProvider? clock = null)
-    : ProcessAgentAdapter(runner)
+    : ProcessAgentAdapter(runner), IAgentAccount
 {
     public const string AgentId = "codex";
 
@@ -94,6 +96,32 @@ public sealed partial class CodexAdapter(
             AgentAuthState.Unknown,
             Detail: $"The sign-in check exited with code {result.ExitCode}" + (said is null ? "." : $": {said}"));
     }
+
+    public Task<AgentSignInResult> SignInAsync(AgentInstallation installation, Action<ProcessLine>? output = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(installation);
+        var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, "login"], _environment);
+        return AgentSignIn.RunAsync(Runner, spec, ct => GetAuthStatusAsync(installation, ct), output, SignInOptions, cancellationToken);
+    }
+
+    public async Task<AgentAuthStatus> SignOutAsync(AgentInstallation installation, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(installation);
+        try
+        {
+            var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, "logout"], _environment);
+            await Runner.RunToEndAsync(spec, AuthTimeout, cancellationToken);
+        }
+        catch (ProcessStartException e)
+        {
+            return new AgentAuthStatus(AgentAuthState.Unknown, Detail: e.Message);
+        }
+
+        return await GetAuthStatusAsync(installation, cancellationToken);
+    }
+
+    /// <summary>The sign-in loop's timing (tests shorten it).</summary>
+    public AgentSignInOptions? SignInOptions { get; init; }
 
     protected override AgentRunProcess CreateRunProcess(AgentInstallation installation, AgentRunRequest request)
     {

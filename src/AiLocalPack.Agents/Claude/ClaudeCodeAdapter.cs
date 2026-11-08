@@ -14,6 +14,10 @@ namespace AiLocalPack.Agents.Claude;
 /// <item><b>Sign-in</b>: <c>claude auth status --json</c> (15 s): local, no API call, no token read by the app; exit 0 +
 /// <c>loggedIn</c> = signed in (account = e-mail, else the auth method), <c>loggedIn: false</c> = signed out, anything else
 /// (an older Claude Code without the command, a timeout) = unknown.</item>
+/// <item><b>Sign in / out</b> (task 43): <c>claude auth login</c> (Claude subscription by default; opens the browser) with
+/// the status polled (<see cref="AgentSignIn"/>), <c>claude auth logout</c>.</item>
+/// <item>The app's own copy (<see cref="AgentSource.Managed"/>) runs with <c>DISABLE_AUTOUPDATER=1</c>: the app updates
+/// it (task 43), and Claude Code's own updater would install itself elsewhere.</item>
 /// </list>
 /// </summary>
 /// <param name="runner">Starts Claude Code.</param>
@@ -25,9 +29,12 @@ public sealed class ClaudeCodeAdapter(
     OsEnvironment environment,
     string? managedDirectory = null,
     IReadOnlyList<string>? systemFolders = null)
-    : ProcessAgentAdapter(runner)
+    : ProcessAgentAdapter(runner), IAgentAccount
 {
     public const string AgentId = "claude";
+
+    /// <summary>Set for the app's own copy, so Claude Code doesn't update itself behind the app's back.</summary>
+    public const string DisableAutoUpdaterVariable = "DISABLE_AUTOUPDATER";
 
     private static readonly TimeSpan AuthTimeout = TimeSpan.FromSeconds(15);
 
@@ -50,7 +57,7 @@ public sealed class ClaudeCodeAdapter(
         ArgumentNullException.ThrowIfNull(installation);
         try
         {
-            var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, "auth", "status", "--json"], _environment);
+            var spec = Spec(installation, ["auth", "status", "--json"]);
             return ClaudeCodeAuth.Read(await Runner.RunToEndAsync(spec, AuthTimeout, cancellationToken));
         }
         catch (ProcessStartException e)
@@ -87,8 +94,41 @@ public sealed class ClaudeCodeAdapter(
             StandardInput = request.Prompt,
         };
         var arguments = ClaudeCodeCommandLine.Arguments(request, mcpConfig, systemPrompt);
-        var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, .. arguments], _environment, template);
+        var spec = Spec(installation, arguments, template);
         return new AgentRunProcess(spec) { ScratchDirectory = scratch };
+    }
+
+    public Task<AgentSignInResult> SignInAsync(AgentInstallation installation, Action<ProcessLine>? output = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(installation);
+        return AgentSignIn.RunAsync(Runner, Spec(installation, ["auth", "login"]), ct => GetAuthStatusAsync(installation, ct), output, SignInOptions, cancellationToken);
+    }
+
+    public async Task<AgentAuthStatus> SignOutAsync(AgentInstallation installation, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(installation);
+        try
+        {
+            await Runner.RunToEndAsync(Spec(installation, ["auth", "logout"]), AuthTimeout, cancellationToken);
+        }
+        catch (ProcessStartException e)
+        {
+            return new AgentAuthStatus(AgentAuthState.Unknown, Detail: e.Message);
+        }
+
+        return await GetAuthStatusAsync(installation, cancellationToken);
+    }
+
+    /// <summary>The sign-in loop's timing (tests shorten it).</summary>
+    public AgentSignInOptions? SignInOptions { get; init; }
+
+    /// <summary>The process running Claude Code with <paramref name="arguments"/>; the app's own copy never updates itself.</summary>
+    private ProcessSpec Spec(AgentInstallation installation, IReadOnlyList<string> arguments, ProcessSpec? template = null)
+    {
+        var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, .. arguments], _environment, template);
+        return installation.Source == AgentSource.Managed
+            ? spec with { Environment = new Dictionary<string, string?>(spec.Environment) { [DisableAutoUpdaterVariable] = "1" } }
+            : spec;
     }
 
     protected override IAgentOutputParser CreateParser(AgentRunRequest request) => new ClaudeCodeParser();

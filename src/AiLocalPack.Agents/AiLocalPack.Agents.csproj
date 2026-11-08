@@ -5,6 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Anthropic's release signing key, pinned (task 43; provenance in Claude/Files/README.md). -->
+        <EmbeddedResource Include="Claude/Files/claude-code-release-key.asc" LogicalName="AiLocalPack.Agents.Claude.claude-code-release-key.asc" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="AiLocalPack.Agents.Tests" />
     </ItemGroup>
 </Project>

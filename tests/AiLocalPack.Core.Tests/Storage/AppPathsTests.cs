@@ -156,6 +156,19 @@ public sealed class AppPathsTests
     }
 
     [Fact]
+    public void Agents_the_app_installs_live_in_data()
+    {
+        // Arrange
+        var home = Path.Combine(Home, "portable");
+
+        // Act
+        var paths = AppPaths.UnderHome(home);
+
+        // Assert
+        paths.Agents.Should().Be(Path.Combine(home, "data", "agents"));
+    }
+
+    [Fact]
     public void Resolving_creates_nothing_on_disk()
     {
         // Arrange
