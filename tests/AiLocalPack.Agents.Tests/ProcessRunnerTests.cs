@@ -108,6 +108,34 @@ public sealed class ProcessRunnerTests : IDisposable
     }
 
     [Fact]
+    public async Task A_raw_command_line_is_passed_as_is()
+    {
+        // Arrange
+        var recording = Write(_dir, "r.jsonl", "from a raw line");
+        var listed = Spec(recording);
+        var spec = listed with { Arguments = [], RawArguments = string.Join(' ', listed.Arguments.Select(a => "\"" + a + "\"")) };
+
+        // Act
+        var (lines, _) = await RunAsync(spec);
+
+        // Assert
+        lines.Should().Equal(new ProcessLine(ProcessStream.StandardOutput, "from a raw line"));
+    }
+
+    [Fact]
+    public void A_raw_command_line_and_an_argument_list_together_are_refused()
+    {
+        // Arrange
+        var spec = new ProcessSpec("agent", ["-p"]) { RawArguments = "-p" };
+
+        // Act
+        var act = () => new ProcessRunner().Start(spec, TestContext.Current.CancellationToken);
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
     public async Task Standard_error_lines_are_captured_apart()
     {
         // Arrange

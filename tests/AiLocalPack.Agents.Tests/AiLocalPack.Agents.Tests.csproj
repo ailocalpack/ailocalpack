@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
+        <None Include="..\fixtures\agents\**\*" LinkBase="fixtures\agents" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\src\AiLocalPack.Agents\AiLocalPack.Agents.csproj" />
         <!-- The fake agent program, run as a real child process by the runner and adapter tests -->
         <ProjectReference Include="..\AiLocalPack.FakeAgent\AiLocalPack.FakeAgent.csproj" />

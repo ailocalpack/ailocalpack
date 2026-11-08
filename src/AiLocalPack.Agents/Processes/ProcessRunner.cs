@@ -36,9 +36,21 @@ public sealed class ProcessRunner(ProcessRunnerOptions? options = null) : IProce
             StandardErrorEncoding = Utf8,
             WorkingDirectory = spec.WorkingDirectory ?? string.Empty,
         };
-        foreach (var argument in spec.Arguments)
+        if (spec.RawArguments is { } raw)
         {
-            info.ArgumentList.Add(argument);
+            if (spec.Arguments.Count > 0)
+            {
+                throw new ArgumentException("A process has either an argument list or a raw command line, not both.", nameof(spec));
+            }
+
+            info.Arguments = raw;
+        }
+        else
+        {
+            foreach (var argument in spec.Arguments)
+            {
+                info.ArgumentList.Add(argument);
+            }
         }
 
         foreach (var (name, value) in spec.Environment)

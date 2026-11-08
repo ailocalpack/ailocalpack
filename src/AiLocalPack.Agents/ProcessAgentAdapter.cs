@@ -37,8 +37,12 @@ public abstract class ProcessAgentAdapter(IProcessRunner runner) : IAgentAdapter
 
     public abstract Task<AgentAuthStatus> GetAuthStatusAsync(AgentInstallation installation, CancellationToken cancellationToken = default);
 
-    /// <summary>The command line (and standard input, environment) of a run.</summary>
-    protected abstract ProcessSpec CreateRunProcess(AgentInstallation installation, AgentRunRequest request);
+    /// <summary>
+    /// The command line (and standard input, environment) of a run, with the files made for it. May throw
+    /// <see cref="ProcessStartException"/>, <see cref="IOException"/> or <see cref="UnauthorizedAccessException"/>: the run
+    /// then ends as failed to start.
+    /// </summary>
+    protected abstract AgentRunProcess CreateRunProcess(AgentInstallation installation, AgentRunRequest request);
 
     /// <summary>A fresh parser of the agent's output for one run.</summary>
     protected abstract IAgentOutputParser CreateParser(AgentRunRequest request);
@@ -56,42 +60,79 @@ public abstract class ProcessAgentAdapter(IProcessRunner runner) : IAgentAdapter
             yield break;
         }
 
-        var process = TryStart(CreateRunProcess(installation, request), cancellationToken, out var startError);
-        if (process is null)
+        AgentRunProcess? run = null;
+        try
         {
-            yield return new AgentError(AgentErrorKind.StartFailed, startError!);
-            yield return new AgentDone(AgentOutcome.Failed, Message: startError);
-            yield break;
-        }
-
-        await using (process)
-        {
-            var parser = CreateParser(request);
-            var state = new RunState();
-            await foreach (var line in process.ReadLinesAsync(CancellationToken.None))
+            var process = TryStart(installation, request, cancellationToken, out run, out var startError);
+            if (process is null)
             {
-                foreach (var e in Parse(parser, line, state))
-                {
-                    yield return e;
-                }
+                yield return new AgentError(AgentErrorKind.StartFailed, startError!);
+                yield return new AgentDone(AgentOutcome.Failed, Message: startError);
+                yield break;
             }
 
-            var exit = await process.Exit;
-            yield return Finish(state, exit, cancellationToken.IsCancellationRequested);
+            await using (process)
+            {
+                var parser = CreateParser(request);
+                var state = new RunState();
+                await foreach (var line in process.ReadLinesAsync(CancellationToken.None))
+                {
+                    foreach (var e in Parse(parser, line, state))
+                    {
+                        yield return e;
+                    }
+                }
+
+                var exit = await process.Exit;
+                yield return Finish(state, exit, cancellationToken.IsCancellationRequested);
+            }
+        }
+        finally
+        {
+            DeleteScratch(run);
         }
     }
 
-    private IRunningProcess? TryStart(ProcessSpec spec, CancellationToken cancellationToken, out string? error)
+    private IRunningProcess? TryStart(
+        AgentInstallation installation,
+        AgentRunRequest request,
+        CancellationToken cancellationToken,
+        out AgentRunProcess? run,
+        out string? error)
     {
+        run = null;
         try
         {
+            run = CreateRunProcess(installation, request);
             error = null;
-            return Runner.Start(spec, cancellationToken);
+            return Runner.Start(run.Spec, cancellationToken);
         }
         catch (ProcessStartException e)
         {
             error = e.Message;
-            return null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            error = $"The run's files couldn't be written: {e.Message}";
+        }
+
+        return null;
+    }
+
+    private static void DeleteScratch(AgentRunProcess? run)
+    {
+        if (run?.ScratchDirectory is not { } folder)
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            // Best effort: a temp folder left behind is harmless.
         }
     }
 
@@ -199,4 +240,12 @@ public abstract class ProcessAgentAdapter(IProcessRunner runner) : IAgentAdapter
             return tail.Length <= StderrTailLength ? tail : "…" + tail[^StderrTailLength..];
         }
     }
+}
+
+/// <summary>The process of one agent run.</summary>
+/// <param name="Spec">What to start.</param>
+public sealed record AgentRunProcess(ProcessSpec Spec)
+{
+    /// <summary>A folder of files made for this run only (an MCP config, a system prompt), deleted once it ended.</summary>
+    public string? ScratchDirectory { get; init; }
 }

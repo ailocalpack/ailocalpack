@@ -16,6 +16,13 @@ public sealed record ProcessSpec(string FileName, IReadOnlyList<string> Argument
     /// closed at once. A long prompt goes here rather than on the command line (Windows caps it at 32 767 characters).
     /// </summary>
     public string? StandardInput { get; init; }
+
+    /// <summary>
+    /// Windows only: the whole command line after the program, passed as is instead of quoting <see cref="Arguments"/>
+    /// (which must then be empty). For <c>cmd.exe /d /s /c "…"</c>, whose quoting rules aren't the C runtime's
+    /// (<see cref="WindowsCommandLine.ForBatchFile"/>).
+    /// </summary>
+    public string? RawArguments { get; init; }
 }
 
 /// <summary>Which output a line came from.</summary>

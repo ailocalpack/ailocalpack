@@ -30,12 +30,12 @@ public sealed class FakeAgentAdapter(
     public override Task<AgentAuthStatus> GetAuthStatusAsync(AgentInstallation installation, CancellationToken cancellationToken = default) =>
         Task.FromResult(new AgentAuthStatus(authState, authState == AgentAuthState.SignedIn ? "fake@example.com" : null));
 
-    protected override ProcessSpec CreateRunProcess(AgentInstallation installation, AgentRunRequest request) =>
-        new(installation.Executable, [.. installation.Arguments, Path.GetFullPath(recording)])
+    protected override AgentRunProcess CreateRunProcess(AgentInstallation installation, AgentRunRequest request) =>
+        new(new ProcessSpec(installation.Executable, [.. installation.Arguments, Path.GetFullPath(recording)])
         {
             WorkingDirectory = request.WorkingDirectory,
             StandardInput = request.Prompt,
-        };
+        });
 
     protected override IAgentOutputParser CreateParser(AgentRunRequest request) => new FakeAgentParser();
 }

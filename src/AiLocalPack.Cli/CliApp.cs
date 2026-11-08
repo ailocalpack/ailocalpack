@@ -17,7 +17,7 @@ public static class CliApp
             ToolkitCommand.Build(env),
             IndexCommand.Build(env),
             PackCommand.Build(env),
-            AgentCommand.Build(),
+            AgentCommand.Build(env),
             DevCommand.Build(env),
         };
         root.SetAction(result =>
