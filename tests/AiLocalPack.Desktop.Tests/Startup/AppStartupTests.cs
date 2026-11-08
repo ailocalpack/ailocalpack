@@ -1,5 +1,6 @@
 using System.Net;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
@@ -379,5 +380,48 @@ public sealed class AppStartupTests
         // Assert
         services.GetRequiredService<AppStartup>().Progress.Blocking.Select(s => s.Id)
             .Should().Equal(AppStartup.SettingsStep, AppStartup.RecoveryStep, AppStartup.CatalogStep);
+    }
+
+    [Fact]
+    public async Task Jobs_step_is_skipped_without_generation_jobs()
+    {
+        // Arrange
+        using var services = Build();
+        var startup = services.GetRequiredService<AppStartup>();
+        await startup.RunBlockingAsync();
+
+        // Act
+        startup.StartBackground();
+
+        // Assert
+        var step = Step(services, AppStartup.JobsStep);
+        await WaitUntilFinished(step);
+        (step.Status, step.Detail).Should().Be((StartupStepStatus.Skipped, "No generation jobs"));
+    }
+
+    [Fact]
+    public async Task Jobs_step_marks_a_job_left_running_as_interrupted()
+    {
+        // Arrange
+        using var services = Build();
+        var store = services.GetRequiredService<GenerationJobStore>();
+        var game = new Game(GameId.Steam(620), "Sample Quest", GameSource.Steam, "/games/sample", null, null, null, "none", null, true);
+        var (entry, jobLock) = store.Create(game, "ru", "fake", GenerationOptions.Default);
+        jobLock.Dispose();
+        var startup = services.GetRequiredService<AppStartup>();
+        await startup.RunBlockingAsync();
+
+        // Act
+        startup.StartBackground();
+
+        // Assert
+        var step = Step(services, AppStartup.JobsStep);
+        await WaitUntilFinished(step);
+        new { step.IsOk, step.Detail, GenerationJobStore.Read(entry.Folder).Status }.Should().Be(new
+        {
+            IsOk = false,
+            Detail = "Interrupted while the app was closed: Sample Quest. Resume on the game page",
+            Status = GenerationJobStatus.Interrupted,
+        });
     }
 }

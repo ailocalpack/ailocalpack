@@ -387,7 +387,7 @@ internal static class DevCommand
     }
 
     /// <summary>The registry flags (opt-out, allowed anti-cheat) from a local registry or the saved copy, without network.</summary>
-    private static RegistryIndex? SavedIndex(OsEnvironment env, AppPaths paths)
+    internal static RegistryIndex? SavedIndex(OsEnvironment env, AppPaths paths)
     {
         var settings = new SettingsStore(paths, NullLogger<SettingsStore>.Instance, TimeProvider.System).Load();
         if (!RegistryLocation.TryResolve(env, settings.RegistryIndexUrl, out var location, out _))

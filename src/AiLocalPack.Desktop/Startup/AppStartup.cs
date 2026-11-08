@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
@@ -18,7 +19,8 @@ namespace AiLocalPack.Desktop.Startup;
 /// Runs what the app does on start (design §9) and reports it as <see cref="Progress"/>. Blocking steps (settings,
 /// the saved game catalog) run off the UI thread before the library is shown, so the splash stays live; background
 /// checks (Steam scan, engine and anti-cheat detection, the registry's pack list, then the re-check of installed packs
-/// after game updates once both are in) run while the library is in use. Never throws: a failed step
+/// after game updates once both are in, the recovery of generation jobs a crash interrupted) run while the library is
+/// in use. Never throws: a failed step
 /// is logged and shown as a warning, and the app goes on with what it has.
 /// </summary>
 public sealed class AppStartup
@@ -30,6 +32,7 @@ public sealed class AppStartup
     public const string DetectionStep = "detect";
     public const string IndexStep = "index";
     public const string PacksStep = "packs";
+    public const string JobsStep = "jobs";
 
     /// <summary>New games named in the Steam step's result; more are counted ("+3").</summary>
     private const int NamedNewGames = 3;
@@ -41,6 +44,7 @@ public sealed class AppStartup
     private readonly GameLibrary _library;
     private readonly PackIndex _index;
     private readonly InstalledPackMonitor _monitor;
+    private readonly GenerationJobStore _jobs;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
@@ -51,6 +55,7 @@ public sealed class AppStartup
     private readonly StartupStep _detectionStep;
     private readonly StartupStep _indexStep;
     private readonly StartupStep _packsStep;
+    private readonly StartupStep _jobsStep;
     private bool _backgroundStarted;
     private bool _libraryDone;
     private bool _indexDone;
@@ -63,6 +68,7 @@ public sealed class AppStartup
         GameLibrary library,
         PackIndex index,
         InstalledPackMonitor monitor,
+        GenerationJobStore jobs,
         Localizer localizer,
         IUiDispatcher ui,
         TimeProvider time,
@@ -75,6 +81,7 @@ public sealed class AppStartup
         _library = library;
         _index = index;
         _monitor = monitor;
+        _jobs = jobs;
         _localizer = localizer;
         _ui = ui;
         _logger = logger;
@@ -88,8 +95,9 @@ public sealed class AppStartup
         _detectionStep = new(DetectionStep, StartupPhase.Background, nameof(Strings.Startup_Step_Detection), localizer, time);
         _indexStep = new(IndexStep, StartupPhase.Background, nameof(Strings.Startup_Step_Index), localizer, time);
         _packsStep = new(PacksStep, StartupPhase.Background, nameof(Strings.Startup_Step_Packs), localizer, time);
+        _jobsStep = new(JobsStep, StartupPhase.Background, nameof(Strings.Startup_Step_Jobs), localizer, time);
         Progress = new StartupProgress(
-            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep, _packsStep],
+            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep, _packsStep, _jobsStep],
             localizer);
     }
 
@@ -130,6 +138,44 @@ public sealed class AppStartup
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
+        _jobsStep.Start();
+        _ = Task.Run(() => (Interrupted: _jobs.Recover(), Open: _jobs.List().Count(e => e.Job.IsOpen))).ContinueWith(
+            t => _ui.Post(() =>
+            {
+                if (t.IsCompletedSuccessfully)
+                {
+                    CompleteJobs(t.Result.Interrupted, t.Result.Open);
+                }
+                else
+                {
+                    _logger.LogError(t.Exception, "Checking the generation jobs failed");
+                    Fail(_jobsStep);
+                }
+            }),
+            CancellationToken.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// Crash recovery of generation jobs (task 47): a job left running when the app died is now interrupted; the
+    /// Generation tab offers <c>Resume</c> (task 53).
+    /// </summary>
+    private void CompleteJobs(IReadOnlyList<GenerationJobEntry> interrupted, int open)
+    {
+        if (interrupted.Count > 0)
+        {
+            var names = string.Join(", ", interrupted.Select(e => e.Job.GameName).Distinct(StringComparer.Ordinal));
+            _jobsStep.Complete(StartupTone.Warn, () => _localizer.Format(nameof(Strings.Startup_Jobs_Interrupted), names));
+        }
+        else if (open == 0)
+        {
+            _jobsStep.Skip(() => _localizer[nameof(Strings.Startup_Jobs_None)]);
+        }
+        else
+        {
+            _jobsStep.Complete(StartupTone.Ok, () => _localizer.Plural(nameof(Strings.Startup_Jobs_Done_One), open));
+        }
     }
 
     private async Task LoadSettingsAsync()

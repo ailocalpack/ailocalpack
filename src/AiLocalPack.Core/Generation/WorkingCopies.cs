@@ -362,6 +362,17 @@ public sealed class WorkingCopies
         RemoveEmptyParent(job);
     }
 
+    /// <summary>
+    /// Deletes only the working copy of a job folder (a copy half made when the app died: the Setup stage makes it
+    /// again); the job's files stay. Nothing to delete is fine.
+    /// </summary>
+    /// <exception cref="IOException">A file can't be deleted (in use).</exception>
+    public void DeleteCopy(string jobFolder)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
+        DeleteTree(CopyFolder(Path.GetFullPath(jobFolder)), throwOnFailure: true);
+    }
+
     private WorkingCopyResult Copy(WorkingCopyPlan plan, string copy, bool clone, IProgress<WorkingCopyProgress>? progress, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(copy);

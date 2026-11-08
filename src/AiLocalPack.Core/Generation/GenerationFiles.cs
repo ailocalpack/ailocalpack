@@ -7,7 +7,7 @@ namespace AiLocalPack.Core.Generation;
 /// The files a generation keeps in its job folder, next to (never inside) the working copy of the game:
 /// <c>strings.json</c> = the string store (a plain JSON <see cref="StringTable"/> of the translations so far, written
 /// after every change), <c>glossary.json</c> (<see cref="Glossary"/>) and <c>build/</c> = the latest rebuild, laid out
-/// like the game folder. Writes are atomic. Task 47 adds <c>job.json</c> and logs beside them.
+/// like the game folder. Writes are atomic. Beside them: <c>job.json</c> and <c>logs/job.log</c> (<see cref="GenerationJobStore"/>).
 /// </summary>
 public sealed class GenerationFiles
 {

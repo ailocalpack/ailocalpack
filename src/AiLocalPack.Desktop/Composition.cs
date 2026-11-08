@@ -5,6 +5,7 @@ using AiLocalPack.Core.Activity;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Packs;
@@ -121,6 +122,7 @@ internal static class Composition
         services.AddSingleton<GameStatuses>();
         AddBackground(services, env, paths, loggerFactory);
         AddAgents(services);
+        services.AddSingleton<GenerationJobStore>();
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
         services.AddTransient<SplashViewModel>();

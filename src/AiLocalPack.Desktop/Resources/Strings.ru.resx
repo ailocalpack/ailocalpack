@@ -1819,6 +1819,24 @@
   <data name="Startup_Packs_Attention" xml:space="preserve">
     <value>Обновление игры сломало пакет: {0}</value>
   </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>Проверка заданий генерации</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>Заданий генерации нет</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>Прервано, пока приложение было закрыто: {0}. Продолжите на странице игры</value>
+  </data>
+  <data name="Startup_Jobs_Done_One" xml:space="preserve">
+    <value>{0} задание генерации в работе</value>
+  </data>
+  <data name="Startup_Jobs_Done_Few" xml:space="preserve">
+    <value>{0} задания генерации в работе</value>
+  </data>
+  <data name="Startup_Jobs_Done_Many" xml:space="preserve">
+    <value>{0} заданий генерации в работе</value>
+  </data>
   <data name="Game_Action_Reapply" xml:space="preserve">
     <value>Применить заново</value>
   </data>

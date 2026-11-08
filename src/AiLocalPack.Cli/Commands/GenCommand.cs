@@ -24,11 +24,20 @@ internal static class GenCommand
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     });
 
-    public static Command Build(OsEnvironment env) => new("gen", "Generation: a new pack made by an AI agent on a copy of the game.")
+    public static Command Build(OsEnvironment env)
     {
-        BuildEstimate(env),
-        BuildCopy(env),
-    };
+        var command = new Command("gen", "Generation: a new pack made by an AI agent on a copy of the game.")
+        {
+            BuildEstimate(env),
+            BuildCopy(env),
+        };
+        foreach (var job in GenJobCommands.Build(env))
+        {
+            command.Subcommands.Add(job);
+        }
+
+        return command;
+    }
 
     private static Command BuildEstimate(OsEnvironment env)
     {

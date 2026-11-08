@@ -130,6 +130,9 @@ public enum ActivityTaskKind
     Install,
     Reapply,
     Uninstall,
+
+    /// <summary>A generation job (task 47; can be paused and cancelled).</summary>
+    Generation,
 }
 
 /// <summary>

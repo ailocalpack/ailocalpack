@@ -1787,6 +1787,21 @@
   <data name="Startup_Packs_Attention" xml:space="preserve">
     <value>A game update broke the pack: {0}</value>
   </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>Checking generation jobs</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>No generation jobs</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>Interrupted while the app was closed: {0}. Resume on the game page</value>
+  </data>
+  <data name="Startup_Jobs_Done_One" xml:space="preserve">
+    <value>{0} generation job in progress</value>
+  </data>
+  <data name="Startup_Jobs_Done_Other" xml:space="preserve">
+    <value>{0} generation jobs in progress</value>
+  </data>
   <data name="Game_Action_Reapply" xml:space="preserve">
     <value>Re-apply</value>
   </data>
