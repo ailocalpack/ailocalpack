@@ -5,7 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AssetsTools.NET" />
+        <PackageReference Include="AssetsTools.NET.MonoCecil" />
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Recipes/Unity/Files/classdata.tpk" />
     </ItemGroup>
 
     <ItemGroup>

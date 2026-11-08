@@ -14,7 +14,7 @@ public sealed class RecipeToolsTests
     [InlineData("rpgmaker", "2.0.0", RecipeToolSupport.TooNew)]
     [InlineData("rpgmaker", "0.9.0", RecipeToolSupport.UnknownTool)]
     [InlineData("rpgmaker", "one", RecipeToolSupport.UnknownTool)]
-    [InlineData("unity", "1.0.0", RecipeToolSupport.UnknownTool)]
+    [InlineData("unity", "1.0.0", RecipeToolSupport.Supported)]
     public void A_recipe_is_supported_by_a_tool_with_its_id_same_major_and_at_least_its_minor(string tool, string version, RecipeToolSupport expected)
     {
         // Arrange

@@ -3,7 +3,7 @@ using AiLocalPack.Core.Packs;
 
 namespace AiLocalPack.Cli.Tests;
 
-/// <summary><c>toolkit extract</c>, <c>toolkit rebuild</c> and <c>dev fixture rpgmaker</c> / <c>renpy</c> / <c>godot</c> (tasks 28, 30, 35).</summary>
+/// <summary><c>toolkit extract</c>, <c>toolkit rebuild</c> and <c>dev fixture rpgmaker</c> / <c>renpy</c> / <c>godot</c> / <c>unity</c> (tasks 28, 30, 35, 36).</summary>
 public sealed class ToolkitRecipeTests : IDisposable
 {
     private readonly TempDir _dir = new();
@@ -11,6 +11,66 @@ public sealed class ToolkitRecipeTests : IDisposable
     public void Dispose() => _dir.Dispose();
 
     private string Game => _dir.Combine("game");
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Unity_fixture_extracts_with_the_unity_tool(bool bundled)
+    {
+        // Arrange
+        await CreateUnityFixtureAsync(bundled);
+        var tablePath = _dir.Combine("unity-strings.json");
+
+        // Act
+        var extract = await CliRunner.RunAsync("toolkit", "extract", Game, "--out", tablePath, "--lang", "ru");
+
+        // Assert
+        (extract.ExitCode, JsonNode.Parse(File.ReadAllText(tablePath))!["tool"]!.GetValue<string>()).Should().Be((0, "unity"));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Unity_rebuild_reads_back_as_the_translation(bool bundled)
+    {
+        // Arrange
+        await CreateUnityFixtureAsync(bundled);
+        var tablePath = _dir.Combine("unity-strings.json");
+        await CliRunner.RunAsync("toolkit", "extract", Game, "--out", tablePath, "--lang", "ru");
+        var json = JsonNode.Parse(File.ReadAllText(tablePath))!;
+        var strings = json["strings"]!.AsObject();
+        var key = strings.First().Key;
+        strings[key] = "Привет!";
+        File.WriteAllText(tablePath, json.ToJsonString());
+        var output = _dir.Combine("unity-output");
+        await CliRunner.RunAsync("toolkit", "rebuild", Game, "--strings", tablePath, "--out", output);
+        _dir.CopyFolder(Game, "unity-rebuilt").CopyFolder(output, "unity-rebuilt");
+
+        // Act
+        var reread = await CliRunner.RunAsync("toolkit", "extract", _dir.Combine("unity-rebuilt"), "--out", tablePath);
+
+        // Assert
+        (reread.ExitCode, StringTableSerializer.Read(File.ReadAllBytes(tablePath)).Value!.Strings[key]).Should().Be((0, "Привет!"));
+    }
+
+    [Fact]
+    public async Task Unity_rebuild_reports_the_changed_file()
+    {
+        // Arrange
+        await CreateUnityFixtureAsync(bundled: false);
+        var tablePath = _dir.Combine("unity-strings.json");
+        await CliRunner.RunAsync("toolkit", "extract", Game, "--out", tablePath, "--lang", "ru");
+        var json = JsonNode.Parse(File.ReadAllText(tablePath))!;
+        var strings = json["strings"]!.AsObject();
+        strings[strings.First().Key] = "Привет!";
+        File.WriteAllText(tablePath, json.ToJsonString());
+
+        // Act
+        var rebuild = await CliRunner.RunAsync("toolkit", "rebuild", Game, "--strings", tablePath, "--out", _dir.Combine("unity-output"));
+
+        // Assert
+        (rebuild.ExitCode, rebuild.StdOut).Should().Match<(int Code, string Out)>(r => r.Code == 0 && r.Out.Contains("Rebuilt 1 files (1 strings translated)"));
+    }
 
     [Fact]
     public async Task Extract_writes_a_string_table_of_the_originals()
@@ -60,7 +120,7 @@ public sealed class ToolkitRecipeTests : IDisposable
     }
 
     [Fact]
-    public async Task Extract_refuses_a_game_the_toolkit_cannot_read_yet()
+    public async Task Extract_explains_when_a_Unity_game_has_no_supported_texts()
     {
         // Arrange
         _dir.UnityWindows("game");
@@ -69,7 +129,28 @@ public sealed class ToolkitRecipeTests : IDisposable
         var result = await CliRunner.RunAsync("toolkit", "extract", Game, "--out", _dir.Combine("strings.json"));
 
         // Assert
-        (result.ExitCode, result.StdErr.Trim()).Should().Be((1, $"{Game}: the toolkit can't read Unity (Mono) games yet."));
+        (result.ExitCode, result.StdErr.Contains("No supported Unity texts found", StringComparison.Ordinal)).Should().Be((1, true));
+    }
+
+    [Fact]
+    public async Task Extract_refuses_a_game_the_toolkit_cannot_read_yet()
+    {
+        // Arrange
+        _dir.UnrealWindows("game");
+
+        // Act
+        var result = await CliRunner.RunAsync("toolkit", "extract", Game, "--out", _dir.Combine("strings.json"));
+
+        // Assert
+        (result.ExitCode, result.StdErr.Contains("can't read Unreal", StringComparison.Ordinal)).Should().Be((1, true));
+    }
+
+    private async Task CreateUnityFixtureAsync(bool bundled)
+    {
+        var create = bundled
+            ? await CliRunner.RunAsync("dev", "fixture", "unity", Game, "--il2cpp", "--mac-bundle", "--bundled")
+            : await CliRunner.RunAsync("dev", "fixture", "unity", Game);
+        create.ExitCode.Should().Be(0);
     }
 
     public static bool IsMacOS => OperatingSystem.IsMacOS();

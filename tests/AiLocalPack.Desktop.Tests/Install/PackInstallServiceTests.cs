@@ -5,6 +5,7 @@ using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Recipes.Unity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Install;
@@ -14,6 +15,38 @@ public sealed class PackInstallServiceTests
 {
     private static RegistryPack PackOf(InstallBed bed, string id, string language = "ru") =>
         bed.Services.GetRequiredService<PackIndex>().Current!.Index!.PacksFor(InstallBed.Alpha, language).Single(p => p.Id == id);
+
+    [Fact]
+    public async Task Unity_pack_installs_its_translations_through_the_recipe()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("unity-text"), unity: true);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+
+        // Act
+        await service.InstallAsync(bed.Game, PackOf(bed, "unity-text"), TestContext.Current.CancellationToken);
+
+        // Assert
+        new UnityRecipe().Extract(bed.GameDir, TestContext.Current.CancellationToken).Strings
+            .Should().OnlyContain(s => s.Original.StartsWith("RU ", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task Unity_pack_uninstalls_to_the_original_bytes()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("unity-text"), unity: true);
+        var path = Path.Combine(bed.GameDir, "Game_Data/resources.assets");
+        var before = File.ReadAllBytes(path);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+        await service.InstallAsync(bed.Game, PackOf(bed, "unity-text"), TestContext.Current.CancellationToken);
+
+        // Act
+        await service.UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
+
+        // Assert
+        File.ReadAllBytes(path).Should().Equal(before);
+    }
 
     [Fact]
     public async Task Install_writes_the_translated_files()

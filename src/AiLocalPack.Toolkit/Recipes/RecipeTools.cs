@@ -4,6 +4,7 @@ using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Recipes.Godot;
 using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
+using AiLocalPack.Toolkit.Recipes.Unity;
 
 namespace AiLocalPack.Toolkit.Recipes;
 
@@ -31,7 +32,7 @@ public sealed class RecipeTools : IRecipeTools
     }
 
     /// <summary>Every tool this app ships, new instances.</summary>
-    public static IReadOnlyList<IRecipeTool> BuiltinTools() => [new RpgMakerRecipe(), new RenPyRecipe(), new GodotRecipe()];
+    public static IReadOnlyList<IRecipeTool> BuiltinTools() => [new RpgMakerRecipe(), new RenPyRecipe(), new GodotRecipe(), new UnityRecipe()];
 
     /// <summary>Every tool this app ships, nothing switched off (any OS; tests and tools that only read).</summary>
     public static RecipeTools Builtin { get; } = new(BuiltinTools());
