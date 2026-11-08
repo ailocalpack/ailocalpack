@@ -6,13 +6,14 @@ namespace AiLocalPack.Pipeline;
 
 /// <summary>
 /// Stage Extract (task 49): the toolkit's recipe tool reads the working copy's strings into <c>source.json</c>
-/// (<see cref="SourceStringsFile"/>) and the job's counters (strings, chunks of
-/// <see cref="GenerationEstimateModel.StringsPerChunk"/>, translations already stored). No agent runs for an engine the
-/// toolkit reads: its extraction is complete by construction, and the Glossary stage's agent reads every string anyway.
+/// (<see cref="SourceStringsFile"/>), cuts them into the Translate stage's chunks (<c>chunks.json</c>,
+/// <see cref="ChunkPlanner"/>) and sets the job's counters (strings, chunks, translations already stored). No agent
+/// runs for an engine the toolkit reads: its extraction is complete by construction, and the Glossary stage's agent
+/// reads every string anyway.
 /// An unknown engine, one switched off on this OS or without a tool fails the stage before any agent time is spent,
 /// until the agent can write its own extractor (task 57).
 /// </summary>
-public sealed class ExtractStage(RecipeTools tools) : IGenerationStage
+public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null) : IGenerationStage
 {
     public GenerationStage Stage => GenerationStage.Extract;
 
@@ -48,11 +49,13 @@ public sealed class ExtractStage(RecipeTools tools) : IGenerationStage
         }
 
         var source = SourceStrings.Of(kind, extraction);
+        var chunks = ChunkPlanner.Plan(tool.Id, source.Strings, budget);
         int translated;
         try
         {
             translated = Translated(context.Files, source);
             SourceStringsFile.Write(context.Files, source);
+            ChunkPlanFile.Write(context.Files, chunks);
         }
         catch (GenerationFileException e)
         {
@@ -63,10 +66,9 @@ public sealed class ExtractStage(RecipeTools tools) : IGenerationStage
             return new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"source.json can't be written: {e.Message}");
         }
 
-        var chunks = (source.Strings.Count + GenerationEstimateModel.StringsPerChunk - 1) / GenerationEstimateModel.StringsPerChunk;
-        context.Log($"Extracted {source.Strings.Count} strings from {source.Files.Count} files with {tool.Id} {tool.Version.ToString(3)} ({kind.DisplayName}): {chunks} chunks"
+        context.Log($"Extracted {source.Strings.Count} strings from {source.Files.Count} files with {tool.Id} {tool.Version.ToString(3)} ({kind.DisplayName}): {chunks.Count} chunks"
             + (translated > 0 ? $", {translated} already translated." : "."));
-        return new GenerationStepResult.StageDone(new GenerationCounters(source.Strings.Count, translated, chunks, 0));
+        return new GenerationStepResult.StageDone(new GenerationCounters(source.Strings.Count, translated, chunks.Count, 0));
     }
 
     /// <summary>Why the toolkit can't extract games of <paramref name="kind"/>, or <c>null</c>.</summary>

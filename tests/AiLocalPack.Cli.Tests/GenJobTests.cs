@@ -1,9 +1,13 @@
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using AiLocalPack.Agents;
+using AiLocalPack.Core.Packs;
+using AiLocalPack.Toolkit.Recipes;
 
 namespace AiLocalPack.Cli.Tests;
 
-/// <summary><c>gen run / resume / status / cancel</c> with the fake agent (task 47).</summary>
+/// <summary><c>gen run / resume / status / cancel</c> with the fake agent (tasks 47, 50).</summary>
 public sealed class GenJobTests : IDisposable
 {
     private readonly TempDir _dir = new();
@@ -41,15 +45,36 @@ public sealed class GenJobTests : IDisposable
         return _dir.Combine(name);
     }
 
-    /// <summary>Saves a glossary as the real agent would through <c>put_glossary</c>, then succeeds.</summary>
+    /// <summary>
+    /// Saves a glossary and a translation of every string, as the real agent would through <c>put_glossary</c> and
+    /// <c>put_translations</c>, then succeeds (so the first chunk stores them all and the later ones find them done).
+    /// </summary>
     private string Success
     {
         get
         {
-            var glossary = System.Text.Json.JsonSerializer.Serialize("""{"schemaVersion":1,"language":"ru","tone":"informal","entries":[{"term":"Potion","translation":"Зелье"}]}""");
-            _dir.File("ok.jsonl", $$"""{"control":"write","path":"../glossary.json","text":{{glossary}}}""" + "\n" + AgentEventJson.Write(new AgentDone(AgentOutcome.Succeeded, "ok")) + "\n");
+            var strings = JsonSerializer.Serialize(Translations());
+            _dir.File(
+                "ok.jsonl",
+                GlossaryLine
+                + $$"""{"control":"write","path":"../strings.json","text":{{strings}}}""" + "\n"
+                + AgentEventJson.Write(new AgentDone(AgentOutcome.Succeeded, "ok")) + "\n");
             return _dir.Combine("ok.jsonl");
         }
+    }
+
+    /// <summary>The fake agent's control line saving a glossary, as <c>put_glossary</c> would.</summary>
+    private static string GlossaryLine =>
+        $$"""{"control":"write","path":"../glossary.json","text":{{JsonSerializer.Serialize("""{"schemaVersion":1,"language":"ru","tone":"informal","entries":[{"term":"Potion","translation":"Зелье"}]}""")}}}""" + "\n";
+
+    /// <summary>The fixture's strings translated as <c>RU &lt;original&gt;</c>, as <c>strings.json</c> holds them.</summary>
+    private string Translations()
+    {
+        var game = _dir.Combine("Steam/steamapps/common/Sample Quest");
+        var strings = RecipeTools.Builtin.Find("rpgmaker")!.Extract(game).Strings.ToDictionary(s => s.Key, s => "RU " + s.Original);
+        using var stream = new MemoryStream();
+        StringTableSerializer.Write(new StringTable("ru", strings), stream, compress: false);
+        return Encoding.UTF8.GetString(stream.ToArray());
     }
 
     private string NoGlossary => Recording("no-glossary.jsonl", new AgentDone(AgentOutcome.Succeeded, "ok"));
@@ -70,6 +95,34 @@ public sealed class GenJobTests : IDisposable
 
         // Assert
         new { result.ExitCode, Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim() }.Should().Be(new { ExitCode = 0, Last = "100% completed, 64 of 64 strings" });
+    }
+
+    [Fact]
+    public async Task After_a_chunk_the_strings_just_translated_are_printed()
+    {
+        // Arrange
+        var glossary = Recording("glossary.jsonl", new AgentDone(AgentOutcome.Succeeded, "ok"));
+        File.WriteAllText(glossary, GlossaryLine + File.ReadAllText(glossary));
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", glossary, "--lang", "ru", "--until", "glossary");
+
+        // Act
+        var result = await RunAsync("gen", "resume", "steam:620", "--fake-agent", Success);
+
+        // Assert
+        result.StdOut.Split('\n').Count(l => l.StartsWith("  ", StringComparison.Ordinal) && l.Contains(" → RU ", StringComparison.Ordinal)).Should().Be(3);
+    }
+
+    [Fact]
+    public async Task The_job_stores_the_translations_of_every_chunk()
+    {
+        // Arrange
+        var recording = Success;
+
+        // Act
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru");
+
+        // Assert
+        StringTableSerializer.Read(File.ReadAllBytes(Path.Combine(JobFolder, "strings.json"))).Value!.Strings.Should().HaveCount(64);
     }
 
     [Fact]
@@ -123,8 +176,8 @@ public sealed class GenJobTests : IDisposable
         {
             result.ExitCode,
             Interrupted = JobLog.Contains("Interrupted at Translate (1 of 2 chunks done)", StringComparison.Ordinal),
-            Chunk1Again = afterResume.Contains("chunk 1 of 2", StringComparison.Ordinal),
-            Chunk2 = afterResume.Contains("chunk 2 of 2", StringComparison.Ordinal),
+            Chunk1Again = afterResume.Contains("Chunk 1 of 2:", StringComparison.Ordinal),
+            Chunk2 = afterResume.Contains("Chunk 2 of 2:", StringComparison.Ordinal),
             Completed = afterResume.Contains("Completed.", StringComparison.Ordinal),
         }.Should().Be(new { ExitCode = 0, Interrupted = true, Chunk1Again = false, Chunk2 = true, Completed = true });
     }

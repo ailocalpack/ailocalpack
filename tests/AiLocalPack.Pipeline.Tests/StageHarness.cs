@@ -40,9 +40,13 @@ internal sealed class StageHarness : IDisposable
         return this;
     }
 
-    public GenerationStepContext Context(GenerationStage stage, string language = "ru", GenerationOptions? options = null)
+    public GenerationStepContext Context(GenerationStage stage, string language = "ru", GenerationOptions? options = null, GenerationCounters? counters = null)
     {
-        var job = GenerationJobMachine.Create("job", Game.Id, Game.Name, language, "fake", options ?? GenerationOptions.Default, T0) with { Stage = stage };
+        var job = GenerationJobMachine.Create("job", Game.Id, Game.Name, language, "fake", options ?? GenerationOptions.Default, T0) with
+        {
+            Stage = stage,
+            Counters = counters ?? new GenerationCounters(),
+        };
         return new GenerationStepContext(new GenerationJobEntry(Folder, job), Clock);
     }
 

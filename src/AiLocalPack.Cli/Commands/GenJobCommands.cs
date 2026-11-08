@@ -22,10 +22,11 @@ namespace AiLocalPack.Cli.Commands;
 /// Generation jobs (tasks 47, 49): <c>gen run &lt;game&gt; [--agent claude|codex | --fake-agent &lt;recording&gt;] [--lang]
 /// [--review-glossary] [--until &lt;stage&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
 /// [--until] [--wait]</c> goes on from the saved stage and chunk (or retries a failed stage, or approves a glossary under
-/// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Setup, Extract and
-/// Glossary are the real stages (<see cref="GenerationPipeline"/>); Translate and Build are the
-/// <see cref="RehearsalStages"/> with the fake agent until tasks 50–51, so a real agent's job pauses before Translate.
-/// Ctrl+C / SIGTERM leaves the job interrupted.
+/// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Setup, Extract,
+/// Glossary and Translate are the real stages (<see cref="GenerationPipeline"/>); Build is the
+/// <see cref="RehearsalStages"/> stand-in with the fake agent until task 51, so a real agent's job pauses before Build.
+/// After each chunk the strings just translated and the agent's usage so far are printed. Ctrl+C / SIGTERM leaves the
+/// job interrupted.
 /// </summary>
 internal static class GenJobCommands
 {
@@ -292,9 +293,9 @@ internal static class GenJobCommands
 
     private static void WarnAboutStandIns(StagePlan plan, TextWriter output)
     {
-        if (plan.Recording is null && plan.PauseBefore is null or > GenerationStage.Translate)
+        if (plan.Recording is null && plan.PauseBefore is null)
         {
-            output.WriteLine("Translate and Build don't run with a real agent in this version: the job pauses before Translate.");
+            output.WriteLine("Build doesn't run with a real agent in this version: the job pauses before Build.");
         }
     }
 
@@ -304,6 +305,8 @@ internal static class GenJobCommands
         while (true)
         {
             var last = "";
+            var chunks = run.Job.Counters.ChunksDone;
+            IReadOnlyList<RecentTranslation> shown = [];
             run.Changed += (_, job) =>
             {
                 var line = Describe(job);
@@ -311,6 +314,14 @@ internal static class GenJobCommands
                 {
                     last = line;
                     output.WriteLine(line);
+                }
+
+                if (job.Counters.ChunksDone > chunks)
+                {
+                    chunks = job.Counters.ChunksDone;
+                    var progress = PipelineProgressFile.Read(new GenerationFiles(run.Folder));
+                    WriteProgress(progress, progress.Recent.SequenceEqual(shown) ? [] : progress.Recent, output);
+                    shown = progress.Recent;
                 }
             };
             var job = await run.Completion;
@@ -350,6 +361,30 @@ internal static class GenJobCommands
     }
 
     private static TimeSpan Min(TimeSpan a, TimeSpan b) => a < b ? a : b;
+
+    /// <summary>The "just translated" lines (when new) and the usage so far, after a chunk.</summary>
+    private static void WriteProgress(PipelineProgress progress, IReadOnlyList<RecentTranslation> recentLines, TextWriter output)
+    {
+        foreach (var recent in recentLines)
+        {
+            output.WriteLine($"  {Flat(recent.Original)} → {Flat(recent.Translation)}");
+        }
+
+        var usage = progress.Usage;
+        if (usage.Runs > 0)
+        {
+            output.WriteLine(string.Create(
+                CultureInfo.InvariantCulture,
+                $"  agent so far: {usage.Runs} runs, {usage.InputTokens:N0} input + {usage.CacheReadTokens:N0} cached, {usage.OutputTokens:N0} output tokens")
+                + (usage.CostUsd is { } cost ? string.Create(CultureInfo.InvariantCulture, $", ${cost:0.00}") : ""));
+        }
+    }
+
+    private static string Flat(string text)
+    {
+        var flat = text.ReplaceLineEndings(" ").Trim();
+        return flat.Length <= 80 ? flat : flat[..80] + "…";
+    }
 
     private static string Stage(GenerationJob job) => job.Stage == GenerationStage.Translate && job.Counters.ChunksDone < job.Counters.Chunks
         ? $"{job.Stage} (chunk {job.Counters.ChunksDone + 1} of {job.Counters.Chunks})"
@@ -435,8 +470,8 @@ internal static class GenJobCommands
         OsEnvironment Env)
     {
         /// <summary>
-        /// The real Setup, Extract and Glossary; with the fake agent the rehearsal Translate and Build, with a real one
-        /// none yet, so the job pauses before Translate.
+        /// The real Setup, Extract, Glossary and Translate; with the fake agent the rehearsal Build, with a real one none
+        /// yet, so the job pauses before Build.
         /// </summary>
         public GenerationStages Stages(StagePlan plan)
         {
@@ -447,57 +482,22 @@ internal static class GenJobCommands
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
             var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies);
             return plan.Recording is null
-                ? GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore is null or > GenerationStage.Translate ? GenerationStage.Translate : plan.PauseBefore)
-                : GenerationPipeline.Create(services, RehearsalStages.Create(adapter), plan.PauseBefore);
+                ? GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore ?? GenerationStage.Build)
+                : GenerationPipeline.Create(services, RehearsalStages.Create(), plan.PauseBefore);
         }
     }
 }
 
-/// <summary>
-/// Stand-ins for the stages of tasks 50–51, so a job can run end to end with the fake agent (task 47's check):
-/// Translate runs the agent once per chunk (the prompt names the chunk; nothing is stored), Build does nothing.
-/// </summary>
+/// <summary>The stand-in for the Build stage of task 51, so a job runs to its end with the fake agent: does nothing.</summary>
 internal static class RehearsalStages
 {
-    public static IReadOnlyList<IGenerationStage> Create(IAgentAdapter agent) =>
-    [
-        new Stage(GenerationStage.Translate, async (context, ct) =>
-        {
-            var counters = context.Job.Counters;
-            var chunk = counters.ChunksDone;
-            var size = Math.Min(GenerationEstimateModel.StringsPerChunk, counters.Strings - (chunk * GenerationEstimateModel.StringsPerChunk));
-            return await RunAgentAsync(agent, context, $"Translate stage (rehearsal): chunk {chunk + 1} of {counters.Chunks}.", ct)
-                ?? new GenerationStepResult.ChunkDone(Math.Max(0, size));
-        }),
-        new Stage(GenerationStage.Build, (_, _) => Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone())),
-    ];
-    private static async Task<GenerationStepResult?> RunAgentAsync(IAgentAdapter agent, GenerationStepContext context, string prompt, CancellationToken ct)
+    public static IReadOnlyList<IGenerationStage> Create() => [new BuildStandIn()];
+
+    private sealed class BuildStandIn : IGenerationStage
     {
-        if (await agent.DetectAsync(ct) is not { } installation)
-        {
-            return new GenerationStepResult.Failed(GenerationFailureKind.AgentMissing, $"{agent.DisplayName} isn't installed.");
-        }
+        public GenerationStage Stage => GenerationStage.Build;
 
-        context.Log($"Agent: {prompt}");
-        var outcome = await AgentStepRun.RunAsync(
-            agent,
-            installation,
-            new AgentRunRequest(prompt, context.CopyFolder),
-            e =>
-            {
-                if (e is AgentMessage message)
-                {
-                    context.Log($"Agent says: {message.Text}");
-                }
-            },
-            ct);
-        return outcome.Stop;
-    }
-
-    private sealed class Stage(GenerationStage stage, Func<GenerationStepContext, CancellationToken, Task<GenerationStepResult>> step) : IGenerationStage
-    {
-        GenerationStage IGenerationStage.Stage => stage;
-
-        public Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken) => step(context, cancellationToken);
+        public Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken) =>
+            Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone());
     }
 }

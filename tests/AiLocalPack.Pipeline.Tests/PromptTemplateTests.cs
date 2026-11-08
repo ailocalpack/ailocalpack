@@ -2,7 +2,7 @@ using AiLocalPack.Toolkit.Engines;
 
 namespace AiLocalPack.Pipeline.Tests;
 
-/// <summary>Prompts as versioned resources, rendered and snapshot-tested (task 49).</summary>
+/// <summary>Prompts as versioned resources, rendered and snapshot-tested (tasks 49, 50).</summary>
 public sealed class PromptTemplateTests
 {
     private static Dictionary<string, string> GlossaryValues =>
@@ -19,6 +19,55 @@ public sealed class PromptTemplateTests
 
         // Assert
         prompt.Should().Be(Snapshot.Text("glossary.v1.ru.txt", prompt));
+    }
+
+    private static Dictionary<string, string> TranslateValues(bool retry)
+    {
+        var source = new SourceStrings(new EngineKind(GameEngine.RpgMaker, "mz"), "rpgmaker", new Version(1, 0, 0), ["data/Map001.json"], []);
+        Toolkit.Recipes.ExtractedString[] strings =
+        [
+            new("data/Map001.json:/events/1/pages/0/list/1/parameters/0", "\\N[1], drink this Potion.", "Line said by Harold", null, ["\\N[1]"]),
+            new("data/Map001.json:/events/1/pages/0/list/2/parameters/0", "Thanks!", "Line said by Mira", 20, []),
+        ];
+        Dictionary<string, string?>? problems = retry
+            ? new() { [strings[0].Key] = null, [strings[1].Key] = "the stored translation \"Спасибо огромнейшее тебе!\" is refused: The text is 25 characters long; the limit is 20." }
+            : null;
+        return TranslateStage.Values(
+            "Sample Quest",
+            "ru",
+            source,
+            2,
+            7,
+            strings,
+            [new("Potion", "Зелье", "heals 50 HP", "noun", "neuter")],
+            "informal, ты",
+            problems);
+    }
+
+    [Fact]
+    public void The_translate_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = TranslateValues(retry: false);
+
+        // Act
+        var prompt = PromptTemplate.Translate.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("translate.v1.ru.txt", prompt));
+    }
+
+    [Fact]
+    public void The_translate_retry_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = TranslateValues(retry: true);
+
+        // Act
+        var prompt = PromptTemplate.TranslateRetry.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("translate-retry.v1.ru.txt", prompt));
     }
 
     [Fact]

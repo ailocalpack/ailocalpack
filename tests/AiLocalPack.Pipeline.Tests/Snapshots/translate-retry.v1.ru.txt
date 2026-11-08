@@ -1,0 +1,18 @@
+An earlier attempt at chunk 2 of 7 of the video game "Sample Quest" (RPG Maker MZ) left 2 strings without a valid translation into Russian. Each string below says why under `problem`. Translate them again.
+
+Tone and form of address: informal, ты
+
+Glossary entries these strings mention (use these translations, inflected as Russian needs them):
+- "Potion" → "Зелье" (noun, neuter): heals 50 HP
+
+Rules for every string:
+- Translate its `original` naturally; its `context` says where the text is shown and who says it.
+- Keep every token listed in `placeholders` exactly as written and as many times as the original has it. Don't add any the original doesn't have. Printf fields such as `%s` and `%d` keep their order.
+- When `maxLength` is given, the drawn text (markup not counted) must not be longer: shorten the wording, use common abbreviations if you must.
+- No spaces at the start or end the original doesn't have.
+
+Store them with `put_translations` (key → translation). If it refuses some, fix them as its reason says and store them again. Then reply with the number of strings stored.
+
+Strings (one JSON object per line):
+{"key":"data/Map001.json:/events/1/pages/0/list/1/parameters/0","original":"\\N[1], drink this Potion.","context":"Line said by Harold","placeholders":["\\N[1]"],"problem":"no translation was stored for it"}
+{"key":"data/Map001.json:/events/1/pages/0/list/2/parameters/0","original":"Thanks!","context":"Line said by Mira","maxLength":20,"problem":"the stored translation \"Спасибо огромнейшее тебе!\" is refused: The text is 25 characters long; the limit is 20."}

@@ -24,6 +24,12 @@ public sealed partial class PromptTemplate
     /// <summary>The Glossary stage's task.</summary>
     public static PromptTemplate Glossary { get; } = Load("glossary", 1);
 
+    /// <summary>The Translate stage's task for one chunk.</summary>
+    public static PromptTemplate Translate { get; } = Load("translate", 1);
+
+    /// <summary>The Translate stage's task for the strings an earlier attempt at the chunk left without a valid translation.</summary>
+    public static PromptTemplate TranslateRetry { get; } = Load("translate-retry", 1);
+
     public string Name { get; }
 
     public int Version { get; }

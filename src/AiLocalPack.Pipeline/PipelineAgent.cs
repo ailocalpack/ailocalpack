@@ -17,7 +17,8 @@ public sealed record PipelineAgentResult(GenerationStepResult? Stop, string? Rep
 /// a minute before saying so), then runs it headless in the working copy with the toolkit server as its only tools
 /// (no built-in file, edit or shell tools), the <see cref="PromptTemplate.System"/> prompt appended and the job's model.
 /// Every event goes to <c>logs/agent-&lt;stage&gt;.jsonl</c> (<see cref="AgentEventJson"/>) and a readable line of each
-/// message, tool call, tool error and the usage to the job log. A cancelled run throws <see cref="OperationCanceledException"/>.
+/// message, tool call, tool error and the usage to the job log; the usage is also summed into <c>progress.json</c>
+/// (<see cref="PipelineProgressFile"/>). A cancelled run throws <see cref="OperationCanceledException"/>.
 /// </summary>
 public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram server)
 {
@@ -61,8 +62,29 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         context.Log($"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {PromptTemplate.System.Label}"
             + (request.Model is { } model ? $", model {model}." : "."));
         var transcript = Transcript(context);
-        var outcome = await AgentStepRun.RunAsync(adapter, installation, request, e => Record(context, transcript, e), cancellationToken).ConfigureAwait(false);
-        return new PipelineAgentResult(outcome.Stop, outcome.Done.Result);
+        var usage = new List<AgentUsage>();
+        try
+        {
+            var outcome = await AgentStepRun.RunAsync(
+                adapter,
+                installation,
+                request,
+                e =>
+                {
+                    if (e is AgentUsage u)
+                    {
+                        usage.Add(u);
+                    }
+
+                    Record(context, transcript, e);
+                },
+                cancellationToken).ConfigureAwait(false);
+            return new PipelineAgentResult(outcome.Stop, outcome.Done.Result);
+        }
+        finally
+        {
+            PipelineProgressFile.Update(context.Files, p => p with { Usage = p.Usage.Add(usage) });
+        }
     }
 
     private static PipelineAgentResult Stop(GenerationStepContext context, GenerationStepResult.Failed failed)

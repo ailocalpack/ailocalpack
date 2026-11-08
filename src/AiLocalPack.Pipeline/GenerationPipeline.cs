@@ -11,11 +11,12 @@ namespace AiLocalPack.Pipeline;
 /// <param name="Tools">The machine's recipe tools (<see cref="RecipeTools.Create"/>).</param>
 /// <param name="Estimator">Plans the working copy.</param>
 /// <param name="Copies">Makes it.</param>
-public sealed record PipelineServices(Game Game, PipelineAgent Agent, RecipeTools Tools, GenerationEstimator Estimator, WorkingCopies Copies);
+/// <param name="Budget">The Translate stage's chunk size (<see cref="ChunkBudget.Default"/> when <c>null</c>).</param>
+public sealed record PipelineServices(Game Game, PipelineAgent Agent, RecipeTools Tools, GenerationEstimator Estimator, WorkingCopies Copies, ChunkBudget? Budget = null);
 
 /// <summary>
-/// The stage handlers of a generation job: Setup, Extract and Glossary (task 49), then the stages given by the caller
-/// (Translate and Build until tasks 50–51 bring theirs).
+/// The stage handlers of a generation job: Setup, Extract and Glossary (task 49), Translate (task 50), then the stages
+/// given by the caller (Build until task 51 brings its own).
 /// </summary>
 public static class GenerationPipeline
 {
@@ -28,8 +29,9 @@ public static class GenerationPipeline
         return new GenerationStages(
             [
                 new SetupStage(services.Game, services.Estimator, services.Copies),
-                new ExtractStage(services.Tools),
+                new ExtractStage(services.Tools, services.Budget),
                 new GlossaryStage(services.Agent, services.Game.Name),
+                new TranslateStage(services.Agent, services.Game.Name, services.Tools),
                 .. later ?? [],
             ],
             pauseBefore);

@@ -6,7 +6,8 @@ namespace AiLocalPack.Core.Generation;
 /// <summary>
 /// The files a generation keeps in its job folder, next to (never inside) the working copy of the game:
 /// <c>strings.json</c> = the string store (a plain JSON <see cref="StringTable"/> of the translations so far, written
-/// after every change), <c>glossary.json</c> (<see cref="Glossary"/>), <c>source.json</c> (the extracted strings) and <c>build/</c> = the latest rebuild, laid out
+/// after every change), <c>glossary.json</c> (<see cref="Glossary"/>), <c>source.json</c> (the extracted strings), <c>chunks.json</c> (the translate plan), <c>progress.json</c> (recent
+/// translations, agent usage) and <c>build/</c> = the latest rebuild, laid out
 /// like the game folder. Writes are atomic. Beside them: <c>job.json</c> and <c>logs/job.log</c> (<see cref="GenerationJobStore"/>).
 /// </summary>
 public sealed class GenerationFiles
@@ -25,6 +26,12 @@ public sealed class GenerationFiles
 
     /// <summary>The Extract stage's result: every string with its original, context and limits (task 49, read by the translate stage).</summary>
     public string SourcePath => Path.Combine(Folder, "source.json");
+
+    /// <summary>The Translate stage's chunks (task 50): the keys of each chunk, fixed by the Extract stage.</summary>
+    public string ChunksPath => Path.Combine(Folder, "chunks.json");
+
+    /// <summary>What a job shows while it runs (task 50): the strings just translated and the agent's usage so far.</summary>
+    public string ProgressPath => Path.Combine(Folder, "progress.json");
 
     public string BuildFolder => Path.Combine(Folder, "build");
 
