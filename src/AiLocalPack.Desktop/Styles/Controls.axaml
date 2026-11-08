@@ -613,6 +613,46 @@
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <!-- "Coming soon" pill -->
+    <!-- Settings → AI agents: logo tile and status badge (icon + text; green ready, amber warning, accent busy / to do) -->
+    <Style Selector="Border.agentLogo">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="TextElement.FontSize" Value="15" />
+        <Setter Property="TextElement.FontWeight" Value="Bold" />
+        <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Border.agentStatus">
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Padding" Value="7,0" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="TextElement.FontSize" Value="11" />
+        <Setter Property="TextElement.FontWeight" Value="Bold" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.agentStatus Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="Border.agentStatus.ok">
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.agentStatus.ok Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Border.agentStatus.warn">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.agentStatus.warn Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Border.agentStatus.accent">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Border.agentStatus.accent Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" /></Style>
+    <Style Selector="TextBlock.lead">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="21" />
+    </Style>
+
     <Style Selector="Border.soonPill">
         <Setter Property="Padding" Value="10,4" />
         <Setter Property="CornerRadius" Value="10" />

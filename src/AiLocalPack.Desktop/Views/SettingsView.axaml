@@ -3,6 +3,7 @@
              xmlns:vm="using:AiLocalPack.Desktop.ViewModels"
              xmlns:s="using:AiLocalPack.Desktop.ViewModels.Settings"
              xmlns:lib="using:AiLocalPack.Desktop.ViewModels.Settings.Libraries"
+             xmlns:ag="using:AiLocalPack.Desktop.ViewModels.Settings.Agents"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
@@ -55,6 +56,99 @@
                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
                     <ToggleSwitch Grid.Column="1" Classes="bare" VerticalAlignment="Center"
                                   IsChecked="{Binding IsOn}" AutomationProperties.Name="{Binding Label}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Settings → AI agents -->
+        <DataTemplate DataType="ag:AgentRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="agentLogo" VerticalAlignment="Top">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Offset="0" Color="{Binding Info.ColorFrom}" />
+                                <GradientStop Offset="1" Color="{Binding Info.ColorTo}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <TextBlock Text="{Binding Info.Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <WrapPanel>
+                            <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}" Margin="0,0,10,0" VerticalAlignment="Center"
+                                                      Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                            <Border x:Name="AgentStatus" Classes="agentStatus" Classes.ok="{Binding IsStatusOk}" Classes.warn="{Binding IsStatusWarn}"
+                                    Classes.accent="{Binding IsStatusTinted}" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                    <Viewbox Classes="icon" Width="12" Height="12" Classes.spin="{Binding IsStatusBusy}">
+                                        <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                        <Panel>
+                                            <Path Classes="icon" Data="{StaticResource IconCheckCircle}" IsVisible="{Binding IsStatusOk}" />
+                                            <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding IsStatusWarn}" />
+                                            <Path Classes="icon" Data="{StaticResource IconLoader}" IsVisible="{Binding IsStatusBusy}" />
+                                            <Path Classes="icon" Data="{StaticResource IconLock}" IsVisible="{Binding IsStatusAccent}" />
+                                            <Path Classes="icon" Data="{StaticResource IconCircleDashed}" IsVisible="{Binding CanInstall}" />
+                                        </Panel>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+                        <TextBlock Classes="rowHelp mono" Text="{Binding SourceText}" IsVisible="{Binding HasSource}" TextWrapping="Wrap" />
+                        <ProgressBar Classes="installProgress" Maximum="100" Value="{Binding Percent}" IsVisible="{Binding HasProgress}" MaxWidth="360" HorizontalAlignment="Left" Width="360" />
+                        <TextBlock Classes="rowHelp" Text="{Binding Help}" TextWrapping="Wrap"
+                                   IsVisible="{Binding Help, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <TextBlock x:Name="AgentError" Classes="error" Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button Classes="accent sm" Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding InstallText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="accent sm" Command="{Binding SignInCommand}" IsVisible="{Binding CanSignIn}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding SignInText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="ghost sm" Command="{Binding UpdateCommand}" IsVisible="{Binding CanUpdate}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding UpdateText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="ghost sm" Command="{Binding CheckAgainCommand}" IsVisible="{Binding CanCheckAgain}" Content="{Binding CheckAgainText}" />
+                        <Button Classes="bare sm" Command="{Binding SignOutCommand}" IsVisible="{Binding CanSignOut}" Content="{Binding SignOutText}" />
+                        <Button Classes="bare sm" Command="{Binding CancelCommand}" IsVisible="{Binding CanCancel}" Content="{Binding CancelText}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="ag:DefaultAgentRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <ListBox Grid.Column="1" Classes="segmented" VerticalAlignment="Center" IsVisible="{Binding HasReadyAgent}"
+                             ItemsSource="{Binding Choices}" SelectedItem="{Binding SelectedChoice}"
+                             AutomationProperties.Name="{Binding Label}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem" x:DataType="ag:AgentChoice">
+                                <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="ag:AgentChoice"><TextBlock Text="{Binding Display}" /></DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Grid.Column="1" Classes="hint" VerticalAlignment="Center" Text="{Binding NoAgentText}" IsVisible="{Binding !HasReadyAgent}" />
                 </Grid>
             </Border>
         </DataTemplate>
@@ -248,6 +342,8 @@
                         <TextBlock x:Name="SectionTitle" Classes="h1" FontSize="26" Text="{Binding SelectedSection.Title}" />
                         <TextBlock Classes="muted" Text="{Binding SelectedSection.Description}" TextWrapping="Wrap" />
                     </StackPanel>
+                    <TextBlock x:Name="SectionLead" Classes="lead" Text="{Binding SelectedSection.Lead}"
+                               IsVisible="{Binding SelectedSection.Lead, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                     <!-- The section's own alerts: tone card, the reason, the fixing button -->
                     <ItemsControl x:Name="Alerts" ItemsSource="{Binding SelectedSection.Alerts}"
                                   IsVisible="{Binding SelectedSection.Alerts.Count}">

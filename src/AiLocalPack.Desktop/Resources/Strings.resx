@@ -1967,4 +1967,172 @@
   <data name="Tray_Quit" xml:space="preserve">
     <value>Quit</value>
   </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>Agents are only used to generate new packs; installing packs never needs one. They run on your own subscription: the project pays for no AI.</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>Agents</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>AI agent</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai install sign in sign out login subscription update</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>Checking…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>Installing · {0}%</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>Updating to {0} · {1}%</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>Version {0} is too old</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>Installed · not signed in</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>Session expired</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>Sign-in not checked</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>Waiting for sign-in</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>Ready · signed in</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>Installed by ailocalpack</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>Found on your system: {0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>signed in as {0}</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>Downloads Anthropic's official build{0} into the app's folder and checks its signature. No Node.js, no admin rights.</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>Downloads OpenAI's official build{0} into the app's folder and checks its hash against the release's checksums. No Node.js, no admin rights.</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>Finding the official release and checking what vouches for it…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>Downloading from {0}…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>Hash checked, putting it into place…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>ailocalpack needs version {0} or later. Update the app's copy.</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>ailocalpack needs version {0} or later. Update your copy the way you installed it, then check again.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>Sign in with your Claude subscription. Claude Code's own login opens in the browser; ailocalpack never sees the token.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>Sign in with your ChatGPT subscription. Codex's own login opens in the browser; ailocalpack never sees the token.</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>Couldn't check the sign-in: {0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>Finish signing in in the browser window {0} opened.</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>Update to {0}</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>Check again</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>Couldn't install {0}: {1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>Couldn't reach {0}. Check the connection and try again; the download resumes where it stopped.</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>{0}'s server answered with an error. Try again later.</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>{0} has no official build for this system.</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>The download didn't pass the signature or hash check and was deleted. Nothing was installed.</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>The app's folder can't be written: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>Another install of {0} is running.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>The sign-in ended without signing in. Try again.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>Sign-in wasn't finished within 10 minutes and was stopped.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>Couldn't start the sign-in: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>The agent still reports being signed in.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>Default agent</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>Preselected in the generation form; you can switch per game.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>agent generation preselected claude codex</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>Install and sign in to an agent first</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>Own API key or local model</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>For players without a Claude or ChatGPT subscription.</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>api key local model ollama</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0} is signed out</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>The session expired. Sign in again to start or resume generation.</value>
+  </data>
 </root>

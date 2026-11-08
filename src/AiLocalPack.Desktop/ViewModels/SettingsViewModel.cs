@@ -34,6 +34,7 @@ public sealed partial class SettingsViewModel : PageViewModel
         Sections = [.. sections];
         ArgumentOutOfRangeException.ThrowIfZero(Sections.Count, nameof(sections));
         _selectedSection = Find(section);
+        _selectedSection.OnShown();
         _localizer.CultureChanged += (_, _) =>
         {
             OnPropertyChanged(nameof(NoResultsText));
@@ -99,6 +100,8 @@ public sealed partial class SettingsViewModel : PageViewModel
         SelectedSection = section;
         Query = string.Empty;
     }
+
+    partial void OnSelectedSectionChanged(SettingsSection value) => value.OnShown();
 
     partial void OnQueryChanged(string value) => Search();
 

@@ -7,7 +7,9 @@ using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Core.Background;
+using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Background;
+using AiLocalPack.Desktop.Tests.Settings;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Services;
@@ -23,7 +25,8 @@ namespace AiLocalPack.Desktop.Tests;
 /// is "not found" (an empty folder), or the <see cref="SteamFixture"/> a test builds. The registry is never the real
 /// one: by default a local folder without an index (unavailable), or the address a test passes. No covers are loaded (no
 /// network), UI updates run at once on the calling thread, folders are "opened" into <see cref="FakeShell"/>, the
-/// OS pickers are <see cref="FakeFilePicker"/> and games are "started" into <see cref="FakeProcesses"/>.
+/// OS pickers are <see cref="FakeFilePicker"/>, games are "started" into <see cref="FakeProcesses"/> and agents are
+/// <see cref="FakeAgentHost"/>.
 /// </summary>
 internal static class TestServices
 {
@@ -86,6 +89,10 @@ internal static class TestServices
             services.AddSingleton<ISystemNotifications>(sp => sp.GetRequiredService<FakeNotifications>());
             services.AddSingleton<FakeAppWindow>();
             services.AddSingleton<IAppWindow>(sp => sp.GetRequiredService<FakeAppWindow>());
+
+            // Agents are never the player's: none installed unless the test says so, nothing downloaded or started.
+            services.AddSingleton<FakeAgentHost>();
+            services.AddSingleton<IAgentHost>(sp => sp.GetRequiredService<FakeAgentHost>());
 
             services.AddSingleton<DependencyDownloads>();
             services.AddSingleton(sp => new DependencyStore(

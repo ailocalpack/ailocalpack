@@ -74,6 +74,24 @@ public sealed class SettingsViewTests
     });
 
     [Fact]
+    public Task Agents_section_shows_each_agent_with_its_status() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = TestServices.Build();
+        services.GetRequiredService<FakeAgentHost>().Probes["claude"] = FakeAgentHost.SignedIn("claude");
+
+        // Act
+        var window = Open(services, SettingsSectionId.Agents);
+
+        // Assert
+        window.GetVisualDescendants().OfType<Border>().Where(b => b.Name == "AgentStatus")
+            .Select(b => b.GetVisualDescendants().OfType<TextBlock>().Last().Text)
+            .Should().Equal("Ready · signed in", "Not installed");
+        Find<TextBlock>(window, "SectionLead").IsEffectivelyVisible.Should().BeTrue();
+        window.Close();
+    });
+
+    [Fact]
     public Task Searching_theme_shows_the_appearance_row_under_general() => HeadlessUi.RunAsync(() =>
     {
         // Arrange

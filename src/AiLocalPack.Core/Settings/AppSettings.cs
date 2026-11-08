@@ -29,6 +29,14 @@ namespace AiLocalPack.Core.Settings;
 /// <param name="IgnoredSteamLibraries">
 /// Library folders Steam lists that the player removed (a gone SD card); the scan leaves them out until added again.
 /// </param>
+/// <param name="DefaultAgent">
+/// The agent preselected in the generation form (Settings → AI agents), an agent ID (<c>claude</c>, <c>codex</c>);
+/// <c>null</c> or an agent that isn't ready = the first ready one.
+/// </param>
+/// <param name="SignedInAgents">
+/// Agents the app has seen signed in and the player didn't sign out of here: one found signed out later is shown as
+/// <em>Session expired</em> (a warning), not as never signed in. <c>null</c> = none.
+/// </param>
 /// <param name="RegistryIndexUrl">
 /// Hidden dev setting (no UI): another registry index, an <c>https://</c> URL or a local folder
 /// (<see cref="Registry.RegistryLocation.TryParse"/>); <c>AILOCALPACK_INDEX_URL</c> wins over it. <c>null</c> = the public registry.
@@ -45,7 +53,9 @@ public sealed record AppSettings(
     bool NotifyCommunity = true,
     IReadOnlyList<string>? SteamLibraryFolders = null,
     IReadOnlyList<string>? IgnoredSteamLibraries = null,
-    string? RegistryIndexUrl = null)
+    string? RegistryIndexUrl = null,
+    string? DefaultAgent = null,
+    IReadOnlyList<string>? SignedInAgents = null)
 {
     public const int CurrentSchemaVersion = 1;
 

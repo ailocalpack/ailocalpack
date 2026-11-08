@@ -28,6 +28,7 @@ using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
+using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Dependencies;
@@ -37,6 +38,10 @@ using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+using AiLocalPack.Agents.Install;
+using AiLocalPack.Agents.Processes;
+using AiLocalPack.Desktop.Agents;
 
 namespace AiLocalPack.Desktop;
 
@@ -115,6 +120,7 @@ internal static class Composition
         services.AddSingleton<ActivityPanelViewModel>();
         services.AddSingleton<GameStatuses>();
         AddBackground(services, env, paths, loggerFactory);
+        AddAgents(services);
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
         services.AddTransient<SplashViewModel>();
@@ -141,6 +147,20 @@ internal static class Composition
         services.AddSingleton(_ => SystemNotifications.Create(env, paths, loggerFactory));
         services.AddSingleton<ActivityNotifier>();
         services.AddSingleton<TrayHost>();
+    }
+
+    /// <summary>AI agents: their programs, the app's own copies, sign-in (tasks 40–44).</summary>
+    private static void AddAgents(IServiceCollection services)
+    {
+        services.AddSingleton<IProcessRunner>(_ => new ProcessRunner());
+        services.AddSingleton(sp =>
+        {
+            // Downloads keep the stored bytes (hashes are of them) and have their own timeouts.
+            var http = AgentInstaller.CreateHttpClient();
+            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
+            return AgentInstaller.Create(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<OsEnvironment>(), http, sp.GetRequiredService<ILogger<AgentInstaller>>());
+        });
+        services.AddSingleton<IAgentHost, AgentHost>();
     }
 
     /// <summary>Game catalog, Steam scan, detection and covers.</summary>
@@ -190,7 +210,8 @@ internal static class Composition
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<GeneralSettingsSection>());
         services.AddSingleton<LibrariesSettingsSection>();
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<LibrariesSettingsSection>());
-        AddPlaceholder(SettingsSectionId.Agents, "IconBot", nameof(Strings.Settings_Agents_Title), nameof(Strings.Settings_Agents_Description));
+        services.AddSingleton<AgentsSettingsSection>();
+        services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<AgentsSettingsSection>());
         AddPlaceholder(SettingsSectionId.GitHub, "IconGitHub", nameof(Strings.Settings_GitHub_Title), nameof(Strings.Settings_GitHub_Description));
         AddPlaceholder(SettingsSectionId.Storage, "IconHardDrive", nameof(Strings.Settings_Storage_Title), nameof(Strings.Settings_Storage_Description));
         AddPlaceholder(SettingsSectionId.About, "IconInfo", nameof(Strings.Settings_About_Title), nameof(Strings.Settings_About_Description));

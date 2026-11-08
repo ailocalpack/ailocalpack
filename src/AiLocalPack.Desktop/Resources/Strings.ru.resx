@@ -2008,4 +2008,172 @@
   <data name="Tray_Quit" xml:space="preserve">
     <value>Выйти</value>
   </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>Агенты нужны только для создания новых переводов; для установки они не требуются. Они работают по вашей собственной подписке: проект не платит за ИИ.</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>Агенты</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>Позже</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>ИИ-агент</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai установить войти выйти вход подписка обновить</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>Проверка…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>Не установлен</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>Установка · {0}%</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>Обновление до {0} · {1}%</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>Версия {0} устарела</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>Установлен · вход не выполнен</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>Сеанс истёк</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>Вход не проверен</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>Ожидание входа</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>Готов · вход выполнен</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>Установлен ailocalpack</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>Найден в системе: {0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>вход: {0}</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>Скачивает официальную сборку Anthropic{0} в папку приложения и проверяет её подпись. Без Node.js и прав администратора.</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>Скачивает официальную сборку OpenAI{0} в папку приложения и сверяет её хеш с контрольными суммами релиза. Без Node.js и прав администратора.</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>Поиск официального релиза и проверка его подписи…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>Загрузка с сервера {0}…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>Хеш проверен, установка файлов…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>ailocalpack нужна версия {0} или новее. Обновите копию приложения.</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>ailocalpack нужна версия {0} или новее. Обновите свою копию тем же способом, каким устанавливали, и проверьте снова.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>Войдите с подпиской Claude. Вход Claude Code откроется в браузере; ailocalpack не видит токен.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>Войдите с подпиской ChatGPT. Вход Codex откроется в браузере; ailocalpack не видит токен.</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>Не удалось проверить вход: {0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>Завершите вход в окне браузера, которое открыл {0}.</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>Обновить до {0}</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>Проверить снова</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>Не удалось установить {0}: {1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>Не удалось связаться с {0}. Проверьте подключение и повторите; загрузка продолжится с места остановки.</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>Сервер {0} ответил ошибкой. Повторите позже.</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>У {0} нет официальной сборки для этой системы.</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>Загрузка не прошла проверку подписи или хеша и удалена. Ничего не установлено.</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>Не удаётся записать в папку приложения: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>Уже идёт другая установка {0}.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>Вход завершился без авторизации. Попробуйте ещё раз.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>Вход не был завершён за 10 минут и остановлен.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>Не удалось начать вход: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>Агент всё ещё сообщает, что вход выполнен.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>Агент по умолчанию</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>Выбран в форме создания перевода; для каждой игры можно выбрать другой.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>агент создание перевод claude codex</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>Сначала установите агента и войдите</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>Свой API-ключ или локальная модель</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>Для тех, у кого нет подписки Claude или ChatGPT.</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>api ключ локальная модель ollama</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0}: выполнен выход</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>Сеанс истёк. Войдите снова, чтобы начать или продолжить создание перевода.</value>
+  </data>
 </root>

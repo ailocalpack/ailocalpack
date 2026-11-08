@@ -41,6 +41,14 @@ public class SettingsSection : ObservableObject, ISearchableSection
 
     public bool IsComingSoon => Groups.Count == 0;
 
+    /// <summary>A paragraph above the groups (AI agents: what agents are for); <c>null</c> for none.</summary>
+    public virtual string? Lead => null;
+
+    /// <summary>Called each time the section is opened (selected in the list, deep link), so it can check its state again.</summary>
+    public virtual void OnShown()
+    {
+    }
+
     /// <summary>The section's own problems, shown on top of its page; sections that track problems keep the badge in step.</summary>
     public ObservableCollection<SettingsAlert> Alerts { get; } = [];
 
