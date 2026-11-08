@@ -1,0 +1,5 @@
+{"type":"thread.started","thread_id":"01a1bb5f-c74b-75f2-84db-b03c527b26c6"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll list the files in the current directory.\n"}}
+{"type":"error","message":"You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Nov 9th, 2026 6:10 PM."}
+{"type":"turn.failed","error":{"message":"You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Nov 9th, 2026 6:10 PM."}}

@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1bb62-ae14-7630-98c3-95e360176436"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll find and run the `count_strings` tool.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"toolkit","tool":"count_strings","arguments":{},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"toolkit","tool":"count_strings","arguments":{},"result":{"content":[{"type":"text","text":"28 strings"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"28 strings."}}
+{"type":"turn.completed","usage":{"input_tokens":30827,"cached_input_tokens":28544,"cache_write_input_tokens":0,"output_tokens":102,"reasoning_output_tokens":0}}

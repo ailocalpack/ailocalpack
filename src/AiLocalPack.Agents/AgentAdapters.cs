@@ -1,14 +1,15 @@
 using AiLocalPack.Agents.Claude;
+using AiLocalPack.Agents.Codex;
 using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Agents;
 
-/// <summary>The real agents the app drives, by <see cref="IAgentAdapter.Id"/> (Claude Code; Codex joins with task 42).</summary>
+/// <summary>The real agents the app drives, by <see cref="IAgentAdapter.Id"/> (Claude Code, Codex).</summary>
 public static class AgentAdapters
 {
     /// <summary>Every real agent's ID, in the order the app offers them.</summary>
-    public static IReadOnlyList<string> Ids { get; } = [ClaudeCodeAdapter.AgentId];
+    public static IReadOnlyList<string> Ids { get; } = [ClaudeCodeAdapter.AgentId, CodexAdapter.AgentId];
 
     /// <summary>The adapter of <paramref name="id"/> (case-insensitive), or <c>null</c> for an unknown agent.</summary>
     /// <param name="id">The agent's ID.</param>
@@ -21,6 +22,7 @@ public static class AgentAdapters
         return id.ToLowerInvariant() switch
         {
             ClaudeCodeAdapter.AgentId => new ClaudeCodeAdapter(runner, environment, managedDirectory),
+            CodexAdapter.AgentId => new CodexAdapter(runner, environment, managedDirectory),
             _ => null,
         };
     }

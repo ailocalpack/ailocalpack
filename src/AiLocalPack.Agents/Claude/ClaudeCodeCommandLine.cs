@@ -152,43 +152,12 @@ public static partial class ClaudeCodeCommandLine
         return Encoding.UTF8.GetString(buffer.ToArray());
     }
 
-    /// <summary>
-    /// The process running <paramref name="executable"/> with <paramref name="arguments"/>: directly, or on Windows a batch
-    /// file (npm's <c>claude.cmd</c>) through <c>cmd.exe</c> with its own escaping (<see cref="WindowsCommandLine"/>).
-    /// </summary>
-    public static ProcessSpec Process(string executable, IReadOnlyList<string> arguments, OsKind os, ProcessSpec? template = null)
-    {
-        ArgumentNullException.ThrowIfNull(executable);
-        ArgumentNullException.ThrowIfNull(arguments);
-        var spec = (template ?? new ProcessSpec(executable, [])) with { FileName = executable, Arguments = arguments, RawArguments = null };
-        return os == OsKind.Windows && WindowsCommandLine.IsBatchFile(executable)
-            ? WindowsCommandLine.ForBatchFile(executable, arguments, spec)
-            : spec;
-    }
-
     /// <summary>The version in <c>claude --version</c> output (<c>2.1.319 (Claude Code)</c> → <c>2.1.319</c>), else <c>null</c>.</summary>
-    public static string? ParseVersion(string output)
-    {
-        ArgumentNullException.ThrowIfNull(output);
-        var match = VersionText().Match(output);
-        return match.Success ? match.Value : null;
-    }
+    public static string? ParseVersion(string output) => AgentPrograms.ParseVersion(output);
 
     /// <summary>Whether <paramref name="version"/> (as <see cref="ParseVersion"/> gives it) has every flag the app passes.</summary>
-    public static bool IsSupported(string? version)
-    {
-        if (version is null)
-        {
-            return false;
-        }
-
-        var core = version.Split('-', '+')[0];
-        return Version.TryParse(core, out var parsed) && parsed >= MinimumVersion;
-    }
+    public static bool IsSupported(string? version) => AgentPrograms.IsAtLeast(version, MinimumVersion);
 
     [GeneratedRegex("^[A-Za-z0-9_-]{1,64}$")]
     private static partial Regex ServerName();
-
-    [GeneratedRegex(@"\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?")]
-    private static partial Regex VersionText();
 }

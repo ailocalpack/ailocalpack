@@ -29,7 +29,6 @@ public sealed class ClaudeCodeAdapter(
 {
     public const string AgentId = "claude";
 
-    private static readonly TimeSpan VersionTimeout = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan AuthTimeout = TimeSpan.FromSeconds(15);
 
     private readonly OsEnvironment _environment = environment ?? throw new ArgumentNullException(nameof(environment));
@@ -38,47 +37,20 @@ public sealed class ClaudeCodeAdapter(
 
     public override string DisplayName => "Claude Code";
 
-    public override async Task<AgentInstallation?> DetectAsync(CancellationToken cancellationToken = default)
-    {
-        AgentInstallation? firstFound = null;
-        foreach (var (path, source) in ClaudeCodeLocations.Candidates(_environment, managedDirectory, systemFolders))
-        {
-            if (!ClaudeCodeLocations.IsProgram(path, _environment.Os))
-            {
-                continue;
-            }
-
-            var found = new AgentInstallation(AgentId, path, null, source);
-            firstFound ??= found;
-            var version = await TryVersionAsync(path, cancellationToken);
-            if (version is not null)
-            {
-                return found with { Version = version };
-            }
-        }
-
-        return firstFound;
-    }
-
-    private async Task<string?> TryVersionAsync(string executable, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var result = await Runner.RunToEndAsync(ClaudeCodeCommandLine.Process(executable, ["--version"], _environment.Os), VersionTimeout, cancellationToken);
-            return result.ExitCode == 0 ? ClaudeCodeCommandLine.ParseVersion(result.StandardOutput) : null;
-        }
-        catch (ProcessStartException)
-        {
-            return null;
-        }
-    }
+    public override Task<AgentInstallation?> DetectAsync(CancellationToken cancellationToken = default) =>
+        AgentPrograms.DetectAsync(
+            AgentId,
+            ClaudeCodeLocations.Candidates(_environment, managedDirectory, systemFolders),
+            Runner,
+            _environment,
+            cancellationToken);
 
     public override async Task<AgentAuthStatus> GetAuthStatusAsync(AgentInstallation installation, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(installation);
         try
         {
-            var spec = ClaudeCodeCommandLine.Process(installation.Executable, [.. installation.Arguments, "auth", "status", "--json"], _environment.Os);
+            var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, "auth", "status", "--json"], _environment);
             return ClaudeCodeAuth.Read(await Runner.RunToEndAsync(spec, AuthTimeout, cancellationToken));
         }
         catch (ProcessStartException e)
@@ -115,7 +87,7 @@ public sealed class ClaudeCodeAdapter(
             StandardInput = request.Prompt,
         };
         var arguments = ClaudeCodeCommandLine.Arguments(request, mcpConfig, systemPrompt);
-        var spec = ClaudeCodeCommandLine.Process(installation.Executable, [.. installation.Arguments, .. arguments], _environment.Os, template);
+        var spec = AgentPrograms.Process(installation.Executable, [.. installation.Arguments, .. arguments], _environment, template);
         return new AgentRunProcess(spec) { ScratchDirectory = scratch };
     }
 

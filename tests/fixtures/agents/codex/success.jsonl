@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1bb5f-c74b-75f2-84db-b03c527b26c6"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll list the files in the current directory.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc 'ls -la'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc 'ls -la'","aggregated_output":"total 8\ndrwxr-xr-x@  3 player  wheel   96 Nov  8 14:36 .\ndrwx------@ 18 player  wheel  576 Nov  8 14:36 ..\n-rw-r--r--@  1 player  wheel    6 Nov  8 14:36 a.txt\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"- a.txt\n\ndone."}}
+{"type":"turn.completed","usage":{"input_tokens":31291,"cached_input_tokens":27648,"cache_write_input_tokens":0,"output_tokens":56,"reasoning_output_tokens":0}}

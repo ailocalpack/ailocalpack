@@ -1,7 +1,6 @@
 using System.Text.Json;
 using AiLocalPack.Agents.Claude;
 using AiLocalPack.Agents.Processes;
-using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Agents.Tests.Claude;
 
@@ -163,49 +162,6 @@ public sealed class ClaudeCodeCommandLineTests
 
         // Assert
         act.Should().Throw<ProcessStartException>();
-    }
-
-    [Fact]
-    public void A_program_runs_directly_with_its_argument_list()
-    {
-        // Act
-        var spec = ClaudeCodeCommandLine.Process("/home/p/.local/bin/claude", ["-p", "a b"], OsKind.Linux);
-
-        // Assert
-        (spec.FileName, string.Join('|', spec.Arguments), spec.RawArguments).Should().Be(("/home/p/.local/bin/claude", "-p|a b", (string?)null));
-    }
-
-    [Fact]
-    public void A_windows_exe_runs_directly_with_its_argument_list()
-    {
-        // Act
-        var spec = ClaudeCodeCommandLine.Process(@"C:\Users\P\.local\bin\claude.exe", ["--tools", ""], OsKind.Windows);
-
-        // Assert
-        (spec.FileName, spec.RawArguments).Should().Be((@"C:\Users\P\.local\bin\claude.exe", (string?)null));
-    }
-
-    [Fact]
-    public void A_windows_batch_file_runs_through_cmd_with_its_own_escaping()
-    {
-        // Act
-        var spec = ClaudeCodeCommandLine.Process(@"C:\Users\P\AppData\Roaming\npm\claude.cmd", ["--tools", ""], OsKind.Windows);
-
-        // Assert
-        spec.RawArguments.Should().Be(@"/d /s /c ""C:\Users\P\AppData\Roaming\npm\claude.cmd ^^^""--tools^^^"" ^^^""^^^""""");
-    }
-
-    [Fact]
-    public void A_batch_file_keeps_the_runs_folder_and_standard_input()
-    {
-        // Arrange
-        var template = new ProcessSpec("x", []) { WorkingDirectory = @"C:\work", StandardInput = "Translate." };
-
-        // Act
-        var spec = ClaudeCodeCommandLine.Process(@"C:\npm\claude.cmd", ["-p"], OsKind.Windows, template);
-
-        // Assert
-        (spec.WorkingDirectory, spec.StandardInput, spec.Arguments.Count).Should().Be((@"C:\work", "Translate.", 0));
     }
 
     [Theory]
