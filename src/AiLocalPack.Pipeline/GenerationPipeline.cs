@@ -12,11 +12,19 @@ namespace AiLocalPack.Pipeline;
 /// <param name="Estimator">Plans the working copy.</param>
 /// <param name="Copies">Makes it.</param>
 /// <param name="Budget">The Translate stage's chunk size (<see cref="ChunkBudget.Default"/> when <c>null</c>).</param>
-public sealed record PipelineServices(Game Game, PipelineAgent Agent, RecipeTools Tools, GenerationEstimator Estimator, WorkingCopies Copies, ChunkBudget? Budget = null);
+/// <param name="Build">What the Build stage needs; <c>null</c> = no Build handler (tests that stop before it).</param>
+public sealed record PipelineServices(
+    Game Game,
+    PipelineAgent Agent,
+    RecipeTools Tools,
+    GenerationEstimator Estimator,
+    WorkingCopies Copies,
+    ChunkBudget? Budget = null,
+    BuildServices? Build = null);
 
 /// <summary>
-/// The stage handlers of a generation job: Setup, Extract and Glossary (task 49), Translate (task 50), then the stages
-/// given by the caller (Build until task 51 brings its own).
+/// The stage handlers of a generation job: Setup, Extract and Glossary (task 49), Translate (task 50), Build (task 51,
+/// when <see cref="PipelineServices.Build"/> is given), then the stages given by the caller.
 /// </summary>
 public static class GenerationPipeline
 {
@@ -32,6 +40,7 @@ public static class GenerationPipeline
                 new ExtractStage(services.Tools, services.Budget),
                 new GlossaryStage(services.Agent, services.Game.Name),
                 new TranslateStage(services.Agent, services.Game.Name, services.Tools),
+                .. services.Build is { } build ? [new BuildStage(services.Game, services.Agent, services.Tools, build)] : Array.Empty<IGenerationStage>(),
                 .. later ?? [],
             ],
             pauseBefore);

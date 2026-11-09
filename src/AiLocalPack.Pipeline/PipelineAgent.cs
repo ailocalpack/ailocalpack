@@ -63,6 +63,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             + (request.Model is { } model ? $", model {model}." : "."));
         var transcript = Transcript(context);
         var usage = new List<AgentUsage>();
+        var seenModel = request.Model;
         try
         {
             var outcome = await AgentStepRun.RunAsync(
@@ -75,6 +76,10 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                     {
                         usage.Add(u);
                     }
+                    else if (e is AgentSessionStarted { Model: { } started })
+                    {
+                        seenModel = started;
+                    }
 
                     Record(context, transcript, e);
                 },
@@ -83,7 +88,11 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         }
         finally
         {
-            PipelineProgressFile.Update(context.Files, p => p with { Usage = p.Usage.Add(usage) });
+            PipelineProgressFile.Update(context.Files, p => p with
+            {
+                Usage = p.Usage.Add(usage),
+                Agent = new AgentRunInfo(installation.Version ?? p.Agent?.Version, seenModel ?? p.Agent?.Model),
+            });
         }
     }
 

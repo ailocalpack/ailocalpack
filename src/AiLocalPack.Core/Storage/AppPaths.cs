@@ -64,6 +64,12 @@ public sealed record AppPaths
     public string WorkingCopies => Path.Combine(Data, "work");
 
     /// <summary>
+    /// Packs generated on this machine (task 51, <see cref="Packs.LocalPackStore"/>): laid out like the registry
+    /// (<c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;/</c>) with each pack's build report in <c>reports/</c>.
+    /// </summary>
+    public string LocalPacks => Path.Combine(Data, "local-packs");
+
+    /// <summary>
     /// Covers of manually added games: the image the player picked or the game's icon (in data, not cache: a picked
     /// image can't be fetched again).
     /// </summary>

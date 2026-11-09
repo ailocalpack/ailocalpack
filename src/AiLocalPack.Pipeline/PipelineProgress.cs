@@ -37,10 +37,14 @@ public sealed record UsageTotals(int Runs, long InputTokens, long OutputTokens, 
     }
 }
 
+/// <summary>The agent program's version and the model its last session used, when known.</summary>
+public sealed record AgentRunInfo(string? Version, string? Model);
+
 /// <summary>What a running job shows besides its counters (task 50; the Generation tab is task 53).</summary>
 /// <param name="Recent">The last strings the Translate stage stored (at most <see cref="PipelineProgressFile.RecentCount"/>), oldest first.</param>
 /// <param name="Usage">The agent's usage so far.</param>
-public sealed record PipelineProgress(IReadOnlyList<RecentTranslation> Recent, UsageTotals Usage)
+/// <param name="Agent">The agent's version and model as last seen (the Build stage puts them in the manifest, task 51).</param>
+public sealed record PipelineProgress(IReadOnlyList<RecentTranslation> Recent, UsageTotals Usage, AgentRunInfo? Agent = null)
 {
     public static PipelineProgress Empty { get; } = new([], UsageTotals.None);
 }
@@ -48,7 +52,7 @@ public sealed record PipelineProgress(IReadOnlyList<RecentTranslation> Recent, U
 /// <summary>
 /// <c>progress.json</c> in the job folder (<see cref="GenerationFiles.ProgressPath"/>): <c>{schemaVersion: 1, recent:
 /// [{key, original, translation}], usage: {runs, inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens,
-/// costUsd?}}</c>. Best effort both ways: it only feeds the display, so a missing or broken file reads as empty and a
+/// costUsd?}, agent?: {version?, model?}}</c>. Best effort both ways: it only feeds the display, so a missing or broken file reads as empty and a
 /// failed write is ignored.
 /// </summary>
 public static class PipelineProgressFile
@@ -88,7 +92,8 @@ public static class PipelineProgressFile
             var usage = u is null
                 ? UsageTotals.None
                 : new UsageTotals(u.Runs, u.InputTokens, u.OutputTokens, u.CacheReadTokens, u.CacheWriteTokens, u.CostUsd);
-            return new PipelineProgress(recent, usage);
+            var agent = json.Agent is { } a ? new AgentRunInfo(a.Version, a.Model) : null;
+            return new PipelineProgress(recent, usage, agent);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException)
         {
@@ -105,7 +110,8 @@ public static class PipelineProgressFile
         var json = new ProgressFileJson(
             CurrentSchemaVersion,
             [.. next.Recent.TakeLast(RecentCount).Select(r => new RecentJson(r.Key, r.Original, r.Translation))],
-            new UsageJson(usage.Runs, usage.InputTokens, usage.OutputTokens, usage.CacheReadTokens, usage.CacheWriteTokens, usage.CostUsd));
+            new UsageJson(usage.Runs, usage.InputTokens, usage.OutputTokens, usage.CacheReadTokens, usage.CacheWriteTokens, usage.CostUsd),
+            next.Agent is { } agent ? new AgentJson(agent.Version, agent.Model) : null);
         try
         {
             AtomicFile.WriteAllBytes(files.ProgressPath, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(ProgressFileJson))));
@@ -119,7 +125,9 @@ public static class PipelineProgressFile
     }
 }
 
-internal sealed record ProgressFileJson(int SchemaVersion, IReadOnlyList<RecentJson?>? Recent, UsageJson? Usage);
+internal sealed record ProgressFileJson(int SchemaVersion, IReadOnlyList<RecentJson?>? Recent, UsageJson? Usage, AgentJson? Agent = null);
+
+internal sealed record AgentJson(string? Version, string? Model);
 
 internal sealed record RecentJson(string? Key, string? Original, string? Translation);
 

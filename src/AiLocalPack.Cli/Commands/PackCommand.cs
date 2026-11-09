@@ -19,6 +19,7 @@ namespace AiLocalPack.Cli.Commands;
 /// <c>pack validate &lt;folder&gt;… [--github]</c>: the checks registry CI runs on a pack; exit code 1 = a pack is invalid.
 /// A valid recipe pack's translations are also checked for unbalanced tags of its engine (warnings: no game files
 /// to compare with, so they never fail the pack).
+/// <c>pack local [&lt;game&gt;]</c>: the packs generated on this machine (task 51) with their folder and build report.
 /// </summary>
 internal static class PackCommand
 {
@@ -83,7 +84,71 @@ internal static class PackCommand
             return Task.FromResult(compatibility.CanInstall ? 0 : IncompatibleExitCode);
         });
 
-        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate(), PackFetchCommand.Build(env) };
+        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate(), PackFetchCommand.Build(env), BuildLocal(env) };
+    }
+
+    private static Command BuildLocal(OsEnvironment env)
+    {
+        var game = new Argument<string?>("game") { Description = "Only this game's packs (steam:<app id> or fp:<fingerprint>).", Arity = ArgumentArity.ZeroOrOne };
+        var local = new Command("local", "List the packs generated on this machine (Local), with their folder, coverage, test run, fonts and warnings.") { game };
+        local.SetAction(result =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            GameId? only = null;
+            if (result.GetValue(game) is { } text)
+            {
+                if (!GameId.TryParse(text, out var id))
+                {
+                    result.InvocationConfiguration.Error.WriteLine($"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                    return 1;
+                }
+
+                only = id;
+            }
+
+            var packs = new LocalPackStore(AppPaths.Resolve(env)).List(only);
+            if (packs.Count == 0)
+            {
+                output.WriteLine("No local packs.");
+                return 0;
+            }
+
+            foreach (var pack in packs)
+            {
+                output.WriteLine($"{pack.Manifest.Game} {pack.Manifest.Language} {pack.Manifest.Id} (job {pack.Report.Job}): {pack.Folder}");
+                foreach (var line in DescribeLocal(pack))
+                {
+                    output.WriteLine("  " + line);
+                }
+            }
+
+            return 0;
+        });
+        return local;
+    }
+
+    /// <summary>A local pack's coverage, test run, fonts and warnings, one line each.</summary>
+    internal static IEnumerable<string> DescribeLocal(LocalPack pack)
+    {
+        var manifest = pack.Manifest;
+        var report = pack.Report;
+        yield return $"coverage: {manifest.Coverage.Translated} of {manifest.Coverage.Total} strings"
+            + (report.KeptAsIs > 0 ? $" ({report.KeptAsIs} kept as is)" : "")
+            + (report.Untranslated.Count > 0 ? $", {report.Untranslated.Count} stay untranslated" : "");
+        yield return $"test run: {report.TestRun.Outcome.ToString().ToLowerInvariant()}" + (report.TestRun.Detail is { } detail ? $" ({detail})" : "");
+        yield return report.Fonts switch
+        {
+            { Checked: false } => "fonts: not checked for this engine",
+            { Replacement: { } font } => $"fonts: {string.Join(", ", report.Fonts.Swapped)} swapped for {font}",
+            _ => "fonts: the game's fonts have every letter",
+        };
+        yield return $"validator: {report.Warnings.Count} warnings";
+        if (report.InGameLanguage is { } inGame)
+        {
+            yield return $"in game: choose the language '{inGame}' in the game's settings";
+        }
+
+        yield return $"size: {report.SizeBytes} bytes";
     }
 
     private const int ListedStringWarnings = 20;

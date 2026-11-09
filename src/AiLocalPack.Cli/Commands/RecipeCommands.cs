@@ -369,7 +369,7 @@ internal static class RecipeCommands
         [.. (ids ?? []).SelectMany(id => id.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))];
 
     /// <summary>A fixer over the bundled whitelist; downloaded fonts are cached like the app's (<c>&lt;cache&gt;/fonts</c>).</summary>
-    private static FontFixer CreateFixer(OsEnvironment env) => new(
+    internal static FontFixer CreateFixer(OsEnvironment env) => new(
         FontWhitelist.Bundled,
         new FontStore(
             AppPaths.Resolve(env),

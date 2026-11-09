@@ -75,11 +75,24 @@ public static class GameLaunchPlanner
             return new OpenUrlLaunch(new Uri("steam://rungameid/" + appId.ToString(CultureInfo.InvariantCulture)));
         }
 
+        return PlanProgram(game.InstallPath, os, candidates);
+    }
+
+    /// <summary>
+    /// The first of <paramref name="candidates"/> (relative to <paramref name="folder"/>) this OS runs, as for a manual
+    /// game; never through a store. <paramref name="watchable"/> (the Build stage's test run, task 51): a macOS bundle
+    /// starts its own binary (<see cref="MacBundles.Executable"/>) instead of going through <c>open</c>, which returns at
+    /// once, so the process can be watched and its exit code read.
+    /// </summary>
+    public static GameLaunchPlan PlanProgram(string folder, OsKind os, IReadOnlyList<LaunchCandidate> candidates, bool watchable = false)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(folder);
+        ArgumentNullException.ThrowIfNull(candidates);
         foreach (var candidate in candidates)
         {
-            if (Start(game.InstallPath, os, candidate) is { } plan)
+            if (Start(folder, os, candidate) is { } plan)
             {
-                return plan;
+                return watchable ? Watchable(plan) : plan;
             }
         }
 
@@ -91,6 +104,19 @@ public static class GameLaunchPlanner
             ExecutableFormat.MacMachO or ExecutableFormat.MacBundle => new CannotLaunch(LaunchProblem.MacOnly, known.RelativePath),
             _ => new CannotLaunch(LaunchProblem.NoExecutable),
         };
+    }
+
+    /// <summary>An <c>open &lt;bundle&gt;</c> launch as the bundle's binary started directly; anything else as is.</summary>
+    private static GameLaunchPlan Watchable(ProcessLaunch plan)
+    {
+        if (plan.FileName != MacOpen || plan.Arguments.Count != 1)
+        {
+            return plan;
+        }
+
+        return MacBundles.Executable(plan.Arguments[0]) is { } binary
+            ? new ProcessLaunch(binary, [], Path.GetDirectoryName(binary)!)
+            : new CannotLaunch(LaunchProblem.NoExecutable, Path.GetFileName(plan.Arguments[0]));
     }
 
     private static ProcessLaunch? Start(string folder, OsKind os, LaunchCandidate candidate)

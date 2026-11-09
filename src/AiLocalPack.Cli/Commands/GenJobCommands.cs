@@ -9,6 +9,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Languages;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Pipeline;
@@ -22,11 +23,10 @@ namespace AiLocalPack.Cli.Commands;
 /// Generation jobs (tasks 47, 49): <c>gen run &lt;game&gt; [--agent claude|codex | --fake-agent &lt;recording&gt;] [--lang]
 /// [--review-glossary] [--until &lt;stage&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
 /// [--until] [--wait]</c> goes on from the saved stage and chunk (or retries a failed stage, or approves a glossary under
-/// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Setup, Extract,
-/// Glossary and Translate are the real stages (<see cref="GenerationPipeline"/>); Build is the
-/// <see cref="RehearsalStages"/> stand-in with the fake agent until task 51, so a real agent's job pauses before Build.
-/// After each chunk the strings just translated and the agent's usage so far are printed. Ctrl+C / SIGTERM leaves the
-/// job interrupted.
+/// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Every stage is
+/// the real one (<see cref="GenerationPipeline"/>), with the fake agent too. After each chunk the strings just translated
+/// and the agent's usage so far are printed; a completed job prints its local pack (task 51). Ctrl+C / SIGTERM leaves
+/// the job interrupted.
 /// </summary>
 internal static class GenJobCommands
 {
@@ -109,7 +109,6 @@ internal static class GenJobCommands
 
             var options = new GenerationOptions(result.GetValue(review), result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null, result.GetValue(model));
             var plan = new StagePlan(agentId, recording, pauseBefore);
-            WarnAboutStandIns(plan, output);
             GenerationRun run;
             try
             {
@@ -183,7 +182,6 @@ internal static class GenJobCommands
             }
 
             var plan = new StagePlan(recording is null ? entry.Job.Agent : FakeAgentAdapter.AgentId, recording, pauseBefore);
-            WarnAboutStandIns(plan, output);
             GenerationRun run;
             try
             {
@@ -291,14 +289,6 @@ internal static class GenJobCommands
     private static GenerationRun Resume(JobContext context, GenerationJobEntry entry, StagePlan plan, CancellationToken cancellationToken) =>
         context.Jobs.Resume(entry.Folder, context.Game, context.Policy, context.Index, _ => context.Stages(plan), cancellationToken);
 
-    private static void WarnAboutStandIns(StagePlan plan, TextWriter output)
-    {
-        if (plan.Recording is null && plan.PauseBefore is null)
-        {
-            output.WriteLine("Build doesn't run with a real agent in this version: the job pauses before Build.");
-        }
-    }
-
     /// <summary>Prints each change; with <paramref name="wait"/> a limit pause is waited out and the job resumed.</summary>
     private static async Task<int> FollowAsync(JobContext context, GenerationRun run, StagePlan plan, bool wait, TextWriter output, CancellationToken cancellationToken)
     {
@@ -325,6 +315,11 @@ internal static class GenJobCommands
                 }
             };
             var job = await run.Completion;
+            if (job.Status == GenerationJobStatus.Completed)
+            {
+                WriteLocalPack(context, job, output);
+            }
+
             if (!wait || job is not { Status: GenerationJobStatus.Paused, PauseReason: GenerationPauseReason.Limit, ResumeAt: { } at })
             {
                 return job.Status is GenerationJobStatus.Failed or GenerationJobStatus.Interrupted ? 1 : 0;
@@ -361,6 +356,22 @@ internal static class GenJobCommands
     }
 
     private static TimeSpan Min(TimeSpan a, TimeSpan b) => a < b ? a : b;
+
+    /// <summary>The completed job's local pack: folder, coverage, test run, fonts, warnings.</summary>
+    private static void WriteLocalPack(JobContext context, GenerationJob job, TextWriter output)
+    {
+        if (context.LocalPacks.FindByJob(job.Game, job.Id) is not { } pack)
+        {
+            output.WriteLine("The job's local pack wasn't found.");
+            return;
+        }
+
+        output.WriteLine($"Local pack {pack.Manifest.Id}: {pack.Folder}");
+        foreach (var line in PackCommand.DescribeLocal(pack))
+        {
+            output.WriteLine("  " + line);
+        }
+    }
 
     /// <summary>The "just translated" lines (when new) and the usage so far, after a chunk.</summary>
     private static void WriteProgress(PipelineProgress progress, IReadOnlyList<RecentTranslation> recentLines, TextWriter output)
@@ -452,7 +463,8 @@ internal static class GenJobCommands
             copies,
             AntiCheatPolicy.Bundled,
             DevCommand.SavedIndex(env, paths),
-            env);
+            env,
+            new LocalPackStore(paths));
     }
 
     /// <summary>The agent of a run (<paramref name="Recording"/> = the fake agent's) and where it pauses.</summary>
@@ -467,12 +479,10 @@ internal static class GenJobCommands
         WorkingCopies Copies,
         AntiCheatPolicy Policy,
         RegistryIndex? Index,
-        OsEnvironment Env)
+        OsEnvironment Env,
+        LocalPackStore LocalPacks)
     {
-        /// <summary>
-        /// The real Setup, Extract, Glossary and Translate; with the fake agent the rehearsal Build, with a real one none
-        /// yet, so the job pauses before Build.
-        /// </summary>
+        /// <summary>Every stage, with the plan's agent.</summary>
         public GenerationStages Stages(StagePlan plan)
         {
             IAgentAdapter adapter = plan.Recording is { } recording
@@ -480,24 +490,9 @@ internal static class GenJobCommands
                 : AgentCommand.Adapter(Env, plan.AgentId)!;
             var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
-            var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies);
-            return plan.Recording is null
-                ? GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore ?? GenerationStage.Build)
-                : GenerationPipeline.Create(services, RehearsalStages.Create(), plan.PauseBefore);
+            var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, new GameTestRunner(new ProcessRunner(), Env.Os));
+            var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies, Build: build);
+            return GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore);
         }
-    }
-}
-
-/// <summary>The stand-in for the Build stage of task 51, so a job runs to its end with the fake agent: does nothing.</summary>
-internal static class RehearsalStages
-{
-    public static IReadOnlyList<IGenerationStage> Create() => [new BuildStandIn()];
-
-    private sealed class BuildStandIn : IGenerationStage
-    {
-        public GenerationStage Stage => GenerationStage.Build;
-
-        public Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken) =>
-            Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone());
     }
 }

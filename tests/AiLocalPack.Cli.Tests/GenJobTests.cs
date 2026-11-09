@@ -7,7 +7,7 @@ using AiLocalPack.Toolkit.Recipes;
 
 namespace AiLocalPack.Cli.Tests;
 
-/// <summary><c>gen run / resume / status / cancel</c> with the fake agent (tasks 47, 50).</summary>
+/// <summary><c>gen run / resume / status / cancel</c> with the fake agent (tasks 47, 50, 51).</summary>
 public sealed class GenJobTests : IDisposable
 {
     private readonly TempDir _dir = new();
@@ -94,7 +94,72 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru");
 
         // Assert
-        new { result.ExitCode, Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim() }.Should().Be(new { ExitCode = 0, Last = "100% completed, 64 of 64 strings" });
+        new { result.ExitCode, Completed = result.StdOut.Contains("100% completed, 64 of 64 strings", StringComparison.Ordinal) }.Should().Be(new { ExitCode = 0, Completed = true });
+    }
+
+    private string LocalPack => Path.Combine(Home, "data", "local-packs", "games", "steam-620", "ru", "fake");
+
+    [Fact]
+    public async Task A_completed_job_prints_its_local_pack()
+    {
+        // Arrange
+        var recording = Success;
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru");
+
+        // Assert
+        result.StdOut.Should().Contain($"Local pack fake: {LocalPack}").And.Contain("coverage: 64 of 64 strings");
+    }
+
+    [Fact]
+    public async Task The_local_pack_of_a_completed_job_passes_pack_validate()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("pack", "validate", LocalPack);
+
+        // Assert
+        new { result.ExitCode, Valid = result.StdOut.Contains("valid (steam:620/ru/fake rev 1, 64 of 64 strings translated)", StringComparison.Ordinal) }
+            .Should().Be(new { ExitCode = 0, Valid = true });
+    }
+
+    [Fact]
+    public async Task The_test_run_of_the_stub_game_is_skipped()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("pack", "local", "steam:620");
+
+        // Assert
+        result.StdOut.Should().Contain("test run: skipped");
+    }
+
+    [Fact]
+    public async Task Pack_local_lists_the_generated_pack()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("pack", "local");
+
+        // Assert
+        result.StdOut.Should().StartWith("steam:620 ru fake (job ");
+    }
+
+    [Fact]
+    public async Task Pack_local_without_packs_says_so()
+    {
+        // Act
+        var result = await RunAsync("pack", "local");
+
+        // Assert
+        result.StdOut.Trim().Should().Be("No local packs.");
     }
 
     [Fact]
@@ -266,7 +331,7 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "resume", "steam:620", "--fake-agent", Success);
 
         // Assert
-        new { result.ExitCode, Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim() }.Should().Be(new { ExitCode = 0, Last = "100% completed, 64 of 64 strings" });
+        new { result.ExitCode, Completed = result.StdOut.Contains("100% completed, 64 of 64 strings", StringComparison.Ordinal) }.Should().Be(new { ExitCode = 0, Completed = true });
     }
 
     [Fact]

@@ -79,6 +79,9 @@ public enum GenerationFailureKind
     /// <summary>A job file couldn't be read or written.</summary>
     Disk,
 
+    /// <summary>The translated game closed soon after its test run started, while the untranslated copy kept running (task 51).</summary>
+    TestRun,
+
     /// <summary>Anything else (a bug).</summary>
     Unexpected,
 }
