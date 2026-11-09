@@ -61,6 +61,7 @@ public sealed class InstalledPackMonitor
     private readonly PackInstallService _service;
     private readonly SettingsStore _settings;
     private readonly AntiCheatPolicy _policy;
+    private readonly LocalPackStore? _localPacks;
     private readonly ILogger _logger;
     private readonly ConcurrentDictionary<GameId, InstalledPackHealth> _health = new();
     private readonly SemaphoreSlim _gate = new(1, 1);
@@ -77,6 +78,7 @@ public sealed class InstalledPackMonitor
         PackInstallService service,
         SettingsStore settings,
         AntiCheatPolicy policy,
+        LocalPackStore? localPacks = null,
         ILogger<InstalledPackMonitor>? logger = null)
     {
         _store = store;
@@ -89,6 +91,7 @@ public sealed class InstalledPackMonitor
         _service = service;
         _settings = settings;
         _policy = policy;
+        _localPacks = localPacks;
         _logger = logger ?? NullLogger<InstalledPackMonitor>.Instance;
         _library.Progressed += OnLibraryProgressed;
     }
@@ -224,9 +227,17 @@ public sealed class InstalledPackMonitor
         return result;
     }
 
-    /// <summary>The installed revision's manifest: the pack cache keeps it since the install; else the registry while it lists the revision.</summary>
+    /// <summary>
+    /// The installed revision's manifest: a local pack's from its folder (task 55); the pack cache keeps a registry one
+    /// since the install; else the registry while it lists the revision.
+    /// </summary>
     private async Task<PackManifest?> ManifestOfAsync(InstalledPack record, CancellationToken cancellationToken)
     {
+        if (record.Local)
+        {
+            return _localPacks?.Find(record.Game, record.Language, record.PackId)?.Manifest;
+        }
+
         if (_cache.Find(record.Game, record.Language, record.PackId, record.Revision) is { } cached)
         {
             return cached.Manifest;

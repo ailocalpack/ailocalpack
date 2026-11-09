@@ -308,4 +308,30 @@ public sealed class LocalizationStatusesTests
         // Assert
         rank.Should().Be(LocalizationStatuses.Importance(LocalizationStatusKind.NoPack));
     }
+
+    [Fact]
+    public void Generation_result_is_kept_without_a_pack_list()
+    {
+        // Arrange
+        var result = new GenerationResultState("claude-code", "ru", "Claude Code translation", 1, true, false);
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, null, result: result);
+
+        // Assert
+        (status.Kind, status.Result).Should().Be((LocalizationStatusKind.Unknown, result));
+    }
+
+    [Fact]
+    public void Generation_result_is_kept_next_to_the_registry_packs()
+    {
+        // Arrange
+        var result = new GenerationResultState("claude-code", "ru", "Claude Code translation", 1, true, false);
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(packs: Pack("full")), result: result);
+
+        // Assert
+        (status.Kind, status.Result).Should().Be((LocalizationStatusKind.PackAvailable, result));
+    }
 }

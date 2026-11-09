@@ -1234,6 +1234,17 @@
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppAccentBrush}" />
     </Style>
     <Style Selector="Border.packTag.installing Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" /></Style>
+    <!-- Packs → Mine (task 55): a muted tag until tried, teal while creating -->
+    <Style Selector="Border.packTag.muted">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.packTag.muted Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="Border.packTag.gen">
+        <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Border.packTag.gen Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>
     <Style Selector="Border.packDetails">
         <Setter Property="Padding" Value="20,18" />
         <Setter Property="CornerRadius" Value="14" />
@@ -1403,6 +1414,26 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppBadBrush}" />
     </Style>
     <Style Selector="Border.genBanner.bad Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <!-- Generation result (task 55, design §6d) -->
+    <Style Selector="Border.genDoneIcon">
+        <Setter Property="Width" Value="52" />
+        <Setter Property="Height" Value="52" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+    </Style>
+    <Style Selector="Border.genBanner.share">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Border.genBanner.share Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" /></Style>
+    <Style Selector="TextBlock.resultValue">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="Path.resultIcon"><Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" /></Style>
+    <Style Selector="Path.resultIcon.ok"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Path.resultIcon.warn"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
     <!-- Teal (generation) buttons: the accent theme paints its template, so the template is restyled too -->
     <Style Selector="Button.genAction, Button.primaryAction.gen">
         <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />

@@ -67,7 +67,14 @@ public enum InstalledPackProblem
 /// <summary>A pack installed for the game and language (task 29), as the library needs it.</summary>
 /// <param name="Problem">What a game update did to it (task 33); anything but <see cref="InstalledPackProblem.None"/> = needs update.</param>
 /// <param name="Revision">The installed revision (the game page offers <c>Update to rev N</c> when the registry has a later one).</param>
-public sealed record InstalledPackState(string PackId, InstalledPackProblem Problem = InstalledPackProblem.None, int Revision = 1)
+/// <param name="Local">A pack generated on this machine (task 55), not the registry's pack of the same ID.</param>
+/// <param name="Title">The local pack's title; <c>null</c> for a registry pack (the list names it).</param>
+public sealed record InstalledPackState(
+    string PackId,
+    InstalledPackProblem Problem = InstalledPackProblem.None,
+    int Revision = 1,
+    bool Local = false,
+    string? Title = null)
 {
     /// <summary>A game update broke the pack: the status is <see cref="LocalizationStatusKind.NeedsUpdate"/>.</summary>
     public bool BrokenByUpdate => Problem != InstalledPackProblem.None;
@@ -118,18 +125,30 @@ public sealed record GenerationJobState(
 }
 
 /// <summary>
+/// The local pack the game's last generation made (task 55), shown as the Generation tab's result until the player
+/// discards it or starts over.
+/// </summary>
+/// <param name="Coverage">Share of the strings translated, 0–1.</param>
+/// <param name="TestPassed">The test run of the Build stage passed (not skipped).</param>
+/// <param name="Tried">The player has played the game with it installed.</param>
+/// <param name="Installed">It is the pack installed into the game (whatever the target language).</param>
+public sealed record GenerationResultState(string PackId, string Language, string Title, double Coverage, bool TestPassed, bool Tried, bool Installed = false);
+
+/// <summary>
 /// The status of one game for one language with the data the card's context line needs: the registry packs, the
 /// one the quick action would install, the anti-cheat name, the job.
 /// </summary>
 /// <param name="Packs">The registry's packs for the game and language (any status), best first.</param>
 /// <param name="AntiCheatName">Name of the blocking anti-cheat (<see cref="LocalizationBlock.AntiCheat"/>).</param>
+/// <param name="Result">The last generation's local pack (task 55), whatever the language; <c>null</c> when none waits.</param>
 public sealed record LocalizationStatus(
     LocalizationStatusKind Kind,
     LocalizationBlock Block,
     IReadOnlyList<RegistryPack> Packs,
     string? AntiCheatName = null,
     InstalledPackState? Installed = null,
-    GenerationJobState? Job = null)
+    GenerationJobState? Job = null,
+    GenerationResultState? Result = null)
 {
     public static LocalizationStatus Unknown { get; } = new(LocalizationStatusKind.Unknown, LocalizationBlock.None, []);
 
@@ -157,7 +176,8 @@ public static class LocalizationStatuses
         AntiCheatVerdict antiCheat,
         RegistryIndex? index,
         InstalledPackState? installed = null,
-        GenerationJobState? job = null)
+        GenerationJobState? job = null,
+        GenerationResultState? result = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
@@ -174,21 +194,21 @@ public static class LocalizationStatuses
         if (job is not null)
         {
             var kind = job.IsPaused ? LocalizationStatusKind.Paused : LocalizationStatusKind.Generating;
-            return new(kind, LocalizationBlock.None, packs, Installed: installed, Job: job);
+            return new(kind, LocalizationBlock.None, packs, Installed: installed, Job: job, Result: result);
         }
 
         if (installed is not null)
         {
             var kind = installed.BrokenByUpdate ? LocalizationStatusKind.NeedsUpdate : LocalizationStatusKind.Installed;
-            return new(kind, LocalizationBlock.None, packs, Installed: installed);
+            return new(kind, LocalizationBlock.None, packs, Installed: installed, Result: result);
         }
 
         if (index is null)
         {
-            return LocalizationStatus.Unknown;
+            return result is null ? LocalizationStatus.Unknown : LocalizationStatus.Unknown with { Result = result };
         }
 
-        return new(packs.Count > 0 ? LocalizationStatusKind.PackAvailable : LocalizationStatusKind.NoPack, LocalizationBlock.None, packs);
+        return new(packs.Count > 0 ? LocalizationStatusKind.PackAvailable : LocalizationStatusKind.NoPack, LocalizationBlock.None, packs, Result: result);
     }
 
     /// <summary>

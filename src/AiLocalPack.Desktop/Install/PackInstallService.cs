@@ -45,6 +45,7 @@ public sealed class PackInstallService
     private readonly DependencyPreparer _dependencies;
     private readonly PackInstaller _installer;
     private readonly InstalledPackStore _store;
+    private readonly LocalPackStore _localPacks;
     private readonly AntiCheatPolicy _policy;
     private readonly FileHashCache _hashes;
     private readonly AppPaths _paths;
@@ -64,6 +65,7 @@ public sealed class PackInstallService
         DependencyPreparer dependencies,
         PackInstaller installer,
         InstalledPackStore store,
+        LocalPackStore localPacks,
         AntiCheatPolicy policy,
         FileHashCache hashes,
         AppPaths paths,
@@ -80,6 +82,7 @@ public sealed class PackInstallService
         _dependencies = dependencies;
         _installer = installer;
         _store = store;
+        _localPacks = localPacks;
         _policy = policy;
         _hashes = hashes;
         _paths = paths;
@@ -119,6 +122,38 @@ public sealed class PackInstallService
         return RunAsync(operation, game, run => RunInstall(run, game, pack, cancellationToken));
     }
 
+    /// <summary>
+    /// Installs a pack generated on this machine (task 55) from its local folder, through the same steps as a registry
+    /// pack but the download: the game's other pack goes, the files are checked, rebuilt and written. The record is marked
+    /// local (<see cref="InstalledPack.Local"/>) with the pack's title.
+    /// </summary>
+    public Task<InstallOutcome> InstallLocalAsync(Game game, LocalPack pack, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(pack);
+        var replaces = _store.Find(game.Id) is not null;
+        InstallStep[] steps = replaces
+            ? [InstallStep.RemovePrevious, InstallStep.Check, InstallStep.Rebuild, InstallStep.BackUp, InstallStep.Write, InstallStep.Verify]
+            : [InstallStep.Check, InstallStep.Rebuild, InstallStep.BackUp, InstallStep.Write, InstallStep.Verify];
+        var operation = new InstallOperation(game.Id, InstallOperationKind.Install, pack.Manifest.Id, pack.Manifest.Title, steps);
+        return RunAsync(operation, game, async run =>
+        {
+            var index = _packIndex.Current?.Index;
+            if (Blocked(run, game, index) is { } blocked)
+            {
+                return blocked;
+            }
+
+            if (OpenLocal(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id) is not { } cached)
+            {
+                return run.Fail(new InstallError(InstallErrorKind.LocalMissing));
+            }
+
+            run.Log(nameof(Strings.Install_Log_Local), cached.Folder);
+            return await InstallCachedAsync(run, game, cached, index, local: true, cancellationToken).ConfigureAwait(false);
+        });
+    }
+
     /// <summary>Applies the installed pack again, its installed revision (task 33 calls it after a game update).</summary>
     public Task<InstallOutcome> ReapplyAsync(Game game, CancellationToken cancellationToken = default)
     {
@@ -129,7 +164,9 @@ public sealed class PackInstallService
             InstallOperationKind.Reapply,
             record?.PackId ?? string.Empty,
             TitleOf(game.Id, record),
-            [InstallStep.Download, InstallStep.Rebuild, InstallStep.BackUp, InstallStep.Write, InstallStep.Verify]);
+            record?.Local == true
+                ? [InstallStep.Rebuild, InstallStep.BackUp, InstallStep.Write, InstallStep.Verify]
+                : [InstallStep.Download, InstallStep.Rebuild, InstallStep.BackUp, InstallStep.Write, InstallStep.Verify]);
         return RunAsync(operation, game, run => RunReapply(run, game, record, cancellationToken));
     }
 
@@ -142,8 +179,9 @@ public sealed class PackInstallService
         return RunAsync(operation, game, run => RunUninstall(run, game, cancellationToken));
     }
 
-    /// <summary>The title of an installed pack from the pack list, else its ID.</summary>
+    /// <summary>The title of an installed pack: a local one's recorded title, else from the pack list, else its ID.</summary>
     public string TitleOf(GameId game, InstalledPack? record) => record is null ? string.Empty
+        : record.Local ? record.Title ?? record.PackId
         : _packIndex.Current?.Index?.PacksFor(game, record.Language).FirstOrDefault(p => p.Id == record.PackId)?.Title ?? record.PackId;
 
     private async Task<InstallOutcome> RunAsync(InstallOperation operation, Game game, Func<Run, Task<InstallOutcome>> body)
@@ -201,6 +239,15 @@ public sealed class PackInstallService
         }
 
         run.LogFetch(fetch, pack.Revision);
+        return await InstallCachedAsync(run, game, cached, index, local: false, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// The install after the pack is at hand (downloaded, or a local pack's folder): dependencies, the game's other pack
+    /// uninstalled, the check against the player's files, then the rebuild and the transaction.
+    /// </summary>
+    private async Task<InstallOutcome> InstallCachedAsync(Run run, Game game, CachedPack cached, RegistryIndex? index, bool local, CancellationToken cancellationToken)
+    {
         if (Unsupported(run, cached.Manifest, game) is { } unsupported)
         {
             return unsupported;
@@ -241,7 +288,7 @@ public sealed class PackInstallService
                 return run.Fail(new InstallError(InstallErrorKind.Incompatible, Compatibility: compatibility));
             }
 
-            var outcome = await ApplyAsync(run, game, cached, reapply: false, index, prepared.Dependencies, cancellationToken).ConfigureAwait(false);
+            var outcome = await ApplyAsync(run, game, cached, reapply: false, index, prepared.Dependencies, local, cancellationToken).ConfigureAwait(false);
             if (!outcome.Succeeded && removedPrevious)
             {
                 // The previous pack is gone and the new one didn't come: the dependencies kept for it go too.
@@ -335,10 +382,19 @@ public sealed class PackInstallService
             return blocked;
         }
 
-        run.Step(InstallStep.Download);
+        if (!record.Local)
+        {
+            run.Step(InstallStep.Download);
+        }
 
-        // The installed revision: the cache keeps it since the install; else the registry, while it still lists it.
-        var cached = _cache.Find(game.Id, record.Language, record.PackId, record.Revision);
+        // The installed revision: a local pack from its folder; the cache keeps a registry one since the install; else
+        // the registry, while it still lists it.
+        var cached = record.Local ? OpenLocal(game.Id, record.Language, record.PackId) : _cache.Find(game.Id, record.Language, record.PackId, record.Revision);
+        if (cached is null && record.Local)
+        {
+            return run.Fail(new InstallError(InstallErrorKind.LocalMissing));
+        }
+
         if (cached is null)
         {
             var pack = index?.PacksFor(game.Id, record.Language).FirstOrDefault(p => p.Id == record.PackId && p.Revision == record.Revision);
@@ -356,6 +412,10 @@ public sealed class PackInstallService
             run.LogFetch(fetch, pack.Revision);
             cached = fetch.Pack;
         }
+        else if (record.Local)
+        {
+            run.Log(nameof(Strings.Install_Log_Local), cached.Folder);
+        }
         else
         {
             run.Log(nameof(Strings.Install_Log_FromCache), record.Revision);
@@ -370,7 +430,7 @@ public sealed class PackInstallService
         try
         {
             var prepared = await PrepareDependenciesAsync(run, game, cached.Manifest, index, shareInstalled: false, staging, cancellationToken).ConfigureAwait(false);
-            return prepared.Failure ?? await ApplyAsync(run, game, cached, reapply: true, index, prepared.Dependencies, cancellationToken).ConfigureAwait(false);
+            return prepared.Failure ?? await ApplyAsync(run, game, cached, reapply: true, index, prepared.Dependencies, record.Local, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -403,7 +463,7 @@ public sealed class PackInstallService
     /// re-applies) them as one transaction.
     /// </summary>
     private async Task<InstallOutcome> ApplyAsync(
-        Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, IReadOnlyList<InstallDependency> dependencies, CancellationToken cancellationToken)
+        Run run, Game game, CachedPack cached, bool reapply, RegistryIndex? index, IReadOnlyList<InstallDependency> dependencies, bool local, CancellationToken cancellationToken)
     {
         var manifest = cached.Manifest;
         var staging = Path.Combine(StagingRoot, Path.GetRandomFileName());
@@ -421,7 +481,13 @@ public sealed class PackInstallService
                 .Order(StringComparer.Ordinal)
                 .Select(path => new InstallFile(path, Path.Combine(staging, path.Replace('/', Path.DirectorySeparatorChar))))
                 .ToList();
-            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files) { GeneratedFiles = staged.Generated, Dependencies = dependencies };
+            var request = new InstallRequest(game, manifest.Language, manifest.Id, manifest.Revision, files)
+            {
+                GeneratedFiles = staged.Generated,
+                Dependencies = dependencies,
+                Local = local,
+                Title = local ? manifest.Title : null,
+            };
             run.Step(InstallStep.BackUp);
             var result = reapply
                 ? _installer.Reapply(request, index, run.TransactionProgress(), cancellationToken)
@@ -555,6 +621,29 @@ public sealed class PackInstallService
                 InstallErrorKind.Incompatible, failure.File, Compatibility: Incompatible(PackCompatibilityReason.FilesMissing, [], [failure.File!])),
             _ => new InstallError(InstallErrorKind.Patch, failure.File, failure.Detail, Patch: failure.Problem),
         };
+    }
+
+    /// <summary>
+    /// A local pack (task 55) as a cache entry: its folder holds the manifest and the string table at the manifest's
+    /// path, as a cache entry does. <c>null</c> when it is gone or doesn't read.
+    /// </summary>
+    private CachedPack? OpenLocal(GameId game, string language, string id)
+    {
+        if (_localPacks.Find(game, language, id) is not { } pack)
+        {
+            return null;
+        }
+
+        try
+        {
+            var sha = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(Path.Combine(pack.Folder, RegistryLayout.ManifestFileName))));
+            return new CachedPack(pack.Manifest, pack.Folder, sha);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogWarning(e, "The local pack {Folder} can't be read", pack.Folder);
+            return null;
+        }
     }
 
     private InstallOutcome? Blocked(Run run, Game game, RegistryIndex? index)

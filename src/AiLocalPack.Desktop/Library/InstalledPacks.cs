@@ -39,6 +39,6 @@ public sealed class StoreInstalledPacks : IInstalledPacks
 
     public InstalledPackState? Find(GameId game, string language) =>
         _store.Find(game) is { } pack && pack.Language == language
-            ? new InstalledPackState(pack.PackId, _monitor?.ProblemOf(pack) ?? InstalledPackProblem.None, pack.Revision)
+            ? new InstalledPackState(pack.PackId, _monitor?.ProblemOf(pack) ?? InstalledPackProblem.None, pack.Revision, pack.Local, pack.Title)
             : null;
 }

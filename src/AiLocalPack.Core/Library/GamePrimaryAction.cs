@@ -40,17 +40,25 @@ public enum GamePrimaryActionKind
 
     /// <summary>The glossary waits for the player's review: opens the Generation tab.</summary>
     ReviewGlossary,
+
+    /// <summary>
+    /// The last generation's local pack (task 55) waits, nothing is installed and no job runs: installs it and launches
+    /// the game (<c>Install &amp; play</c>).
+    /// </summary>
+    InstallLocalPack,
 }
 
 /// <summary>The header's primary action with what its caption names.</summary>
 /// <param name="Pack">The pack it installs, plays with or updates to (from the registry); <c>null</c> when none or unknown.</param>
 /// <param name="Installed">The installed pack (<see cref="GamePrimaryActionKind.Play"/>, update kinds).</param>
 /// <param name="Job">The generation job (<see cref="GamePrimaryActionKind.ViewProgress"/> and the other job kinds).</param>
+/// <param name="Result">The local pack <see cref="GamePrimaryActionKind.InstallLocalPack"/> installs.</param>
 public sealed record GamePrimaryAction(
     GamePrimaryActionKind Kind,
     RegistryPack? Pack = null,
     InstalledPackState? Installed = null,
-    GenerationJobState? Job = null)
+    GenerationJobState? Job = null,
+    GenerationResultState? Result = null)
 {
     public static GamePrimaryAction None { get; } = new(GamePrimaryActionKind.None);
 }
@@ -59,16 +67,22 @@ public sealed record GamePrimaryAction(
 public static class GamePrimaryActions
 {
     /// <summary>
-    /// Blocked or unknown → none; a job → by its phase (<see cref="JobKind"/>); a pack broken by an update → update to the registry's later
+    /// Blocked or unknown → none (a waiting local pack with nothing installed and no job → install it and play, task 55); a job → by its phase (<see cref="JobKind"/>); a pack broken by an update → update to the registry's later
     /// revision of the same pack, else re-apply a pack that still fits, else translate the new strings; installed → play; packs → install the best; else
     /// generate.
     /// </summary>
     public static GamePrimaryAction Resolve(LocalizationStatus status)
     {
         ArgumentNullException.ThrowIfNull(status);
-        var installedPack = status.Installed is { } installed
+        var installedPack = status.Installed is { Local: false } installed
             ? status.Packs.FirstOrDefault(p => p.Id == installed.PackId)
             : null;
+        if (status.Result is { } result && status.Installed is null && status.Job is null && !status.IsBlocked)
+        {
+            // Installed in another language than the page's target: the status doesn't count it, the result does.
+            return new(result.Installed ? GamePrimaryActionKind.Play : GamePrimaryActionKind.InstallLocalPack, Result: result);
+        }
+
         return status.Kind switch
         {
             LocalizationStatusKind.Blocked or LocalizationStatusKind.Unknown => GamePrimaryAction.None,
@@ -93,10 +107,12 @@ public static class GamePrimaryActions
         _ => GamePrimaryActionKind.ViewProgress,
     };
 
-    /// <summary>The tab the page opens on: Generation while a job exists, otherwise Packs.</summary>
+    /// <summary>
+    /// The tab the page opens on: Generation while a job exists or its result waits to be tried (task 55), otherwise Packs.
+    /// </summary>
     public static bool OpensOnGeneration(LocalizationStatus status)
     {
         ArgumentNullException.ThrowIfNull(status);
-        return status.Job is not null && !status.IsBlocked;
+        return !status.IsBlocked && (status.Job is not null || status.Result is { Tried: false });
     }
 }

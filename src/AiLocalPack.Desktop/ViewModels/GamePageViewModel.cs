@@ -5,6 +5,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
@@ -54,6 +55,10 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly GameSessions _sessions;
     private readonly InstallFlow _install;
     private readonly InstalledPackMonitor _monitor;
+    private readonly GenerationService _jobs;
+    private readonly LocalPacks _localPacks;
+    private readonly IDialogService _dialogs;
+    private readonly ToastService _toasts;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
@@ -107,6 +112,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         AgentsSettingsSection agents,
         IDialogService dialogs,
         ToastService toasts,
+        LocalPacks localPacks,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -123,6 +129,10 @@ public sealed partial class GamePageViewModel : PageViewModel
         _sessions = sessions;
         _install = install;
         _monitor = monitor;
+        _jobs = jobs;
+        _localPacks = localPacks;
+        _dialogs = dialogs;
+        _toasts = toasts;
         _time = time;
         _logger = logger ?? NullLogger<GamePageViewModel>.Instance;
         Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Generation, GamePageTab.Audio, GamePageTab.Textures }
@@ -134,11 +144,13 @@ public sealed partial class GamePageViewModel : PageViewModel
             : GamePrimaryActions.OpensOnGeneration(Status) ? GamePageTab.Generation
             : GamePageTab.Packs;
         UpdateTabs();
-        Packs = new PacksTabViewModel(game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, _logger);
+        Packs = new PacksTabViewModel(
+            game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, localPacks, jobs,
+            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, _logger);
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, time, _logger);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, time, _logger);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -149,6 +161,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _install.Changed += OnInstallChanged;
         _statuses.InstalledChanged += OnInstalledChanged;
         _statuses.JobChanged += OnJobChanged;
+        _localPacks.Changed += OnLocalPacksChanged;
         _ = LoadCoverAsync(covers);
     }
 
@@ -275,7 +288,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     public string PrimaryIcon => Action.Kind switch
     {
         GamePrimaryActionKind.InstallBestPack => "IconDownload",
-        GamePrimaryActionKind.Play => "IconPlay",
+        GamePrimaryActionKind.Play or GamePrimaryActionKind.InstallLocalPack => "IconPlay",
         GamePrimaryActionKind.UpdatePack or GamePrimaryActionKind.Reapply => "IconRefresh",
         GamePrimaryActionKind.ViewProgress => "IconLoader",
         GamePrimaryActionKind.ResumeGeneration => "IconPlay",
@@ -337,9 +350,14 @@ public sealed partial class GamePageViewModel : PageViewModel
         _ => nameof(Strings.Game_Installed_Label),
     }];
 
-    /// <summary>"«Фонарщики» · alice · rev 4" (title and author from the registry, the pack ID when it's gone from it).</summary>
+    /// <summary>
+    /// "«Фонарщики» · alice · rev 4" (title and author from the registry, the pack ID when it's gone from it); "«…» · your
+    /// pack" for a pack generated here.
+    /// </summary>
     public string InstalledText => Status.Installed is { } installed
-        ? InstalledPack is { } pack
+        ? installed.Local
+            ? _localizer.Format(nameof(Strings.Game_Installed_TextLocal), installed.Title ?? installed.PackId)
+            : InstalledPack is { } pack
             ? _localizer.Format(nameof(Strings.Game_Installed_Text), pack.Title, pack.Author.GitHub, installed.Revision)
             : _localizer.Format(nameof(Strings.Game_Installed_TextNoAuthor), installed.PackId, installed.Revision)
         : string.Empty;
@@ -458,9 +476,9 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>The target language in its own name ("Русский").</summary>
     public string LanguageName => LanguageNames.Native(Language);
 
-    private RegistryPack? InstalledPack => Status.Installed is { } installed ? Status.Packs.FirstOrDefault(p => p.Id == installed.PackId) : null;
+    private RegistryPack? InstalledPack => Status.Installed is { Local: false } installed ? Status.Packs.FirstOrDefault(p => p.Id == installed.PackId) : null;
 
-    private string InstalledTitle => InstalledPack?.Title ?? Status.Installed?.PackId ?? string.Empty;
+    private string InstalledTitle => InstalledPack?.Title ?? Status.Installed?.Title ?? Status.Installed?.PackId ?? string.Empty;
 
     /// <summary>The page shows <paramref name="other"/> when it is for the same game (whatever the tab).</summary>
     public override bool IsSamePage(PageViewModel other) => other is GamePageViewModel page && page.Game.Id == Game.Id;
@@ -475,6 +493,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _install.Changed -= OnInstallChanged;
         _statuses.InstalledChanged -= OnInstalledChanged;
         _statuses.JobChanged -= OnJobChanged;
+        _localPacks.Changed -= OnLocalPacksChanged;
         _closed.Cancel();
         Packs.Close();
         Generation.Close();
@@ -489,10 +508,46 @@ public sealed partial class GamePageViewModel : PageViewModel
     private void ShowInPacks()
     {
         SelectedTab = GamePageTab.Packs;
-        if (Status.Installed is { } installed)
+        if (Status.Installed is { Local: true } local)
+        {
+            Packs.ShowLocal(Language, local.PackId);
+        }
+        else if (Status.Installed is { } installed)
         {
             Packs.ShowPack(Language, installed.PackId);
         }
+    }
+
+    /// <summary>The result's <c>Show in Packs</c>: the Packs tab with the local pack selected in Mine.</summary>
+    private void ShowLocalInPacks(LocalPack pack)
+    {
+        SelectedTab = GamePageTab.Packs;
+        Packs.ShowLocal(pack.Manifest.Language, pack.Manifest.Id);
+    }
+
+    /// <summary>Mine's <c>Delete</c>: asks, then deletes the local pack and the working copy of the job that made it.</summary>
+    private void AskDeleteLocal(LocalPack pack) =>
+        _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
+            _localizer.Format(nameof(Strings.Packs_Mine_Delete_Title), pack.Manifest.Title),
+            _localizer[nameof(Strings.Packs_Mine_Delete_Text)],
+            _localizer[nameof(Strings.Packs_Mine_Delete)],
+            () => _ = DeleteLocalAsync(pack)));
+
+    /// <summary>Deletes a local pack (after the player confirmed); the toast says how it went.</summary>
+    public async Task DeleteLocalAsync(LocalPack pack)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        var result = await _jobs.DeleteLocalPackAsync(pack);
+        _ui.Post(() =>
+        {
+            _toasts.Show(result.Problem switch
+            {
+                null => new ToastViewModel(ToastTone.Ok, _localizer.Format(nameof(Strings.Packs_Mine_Toast_Deleted), pack.Manifest.Title), []),
+                GenerationActionProblem.Installed => new ToastViewModel(ToastTone.Bad, _localizer[nameof(Strings.Gen_Result_Error_Installed)], []),
+                _ => new ToastViewModel(ToastTone.Bad, _localizer.Format(nameof(Strings.Gen_Result_Error_Disk), result.Detail), []),
+            });
+            Refresh();
+        });
     }
 
     /// <summary>⋯ → <c>Uninstall (restore originals)</c>: asks, then restores the original files.</summary>
@@ -527,6 +582,16 @@ public sealed partial class GamePageViewModel : PageViewModel
         if (Action is { Kind: GamePrimaryActionKind.UpdatePack, Pack: { } newer })
         {
             _ = _install.InstallAsync(Game, newer);
+            return;
+        }
+
+        if (Action.Kind == GamePrimaryActionKind.InstallLocalPack)
+        {
+            if (_jobs.ResultOf(Game.Id) is { } result)
+            {
+                _ = _install.InstallLocalAsync(Game, result.Pack, play: true);
+            }
+
             return;
         }
 
@@ -608,6 +673,15 @@ public sealed partial class GamePageViewModel : PageViewModel
     private void OnJobChanged(object? sender, Core.Generation.GenerationJob job)
     {
         if (job.Game == Game.Id)
+        {
+            _ui.Post(Refresh);
+        }
+    }
+
+    /// <summary>The game's local packs changed (deleted, tried in game, "Not now"): Mine and the result follow.</summary>
+    private void OnLocalPacksChanged(object? sender, GameId game)
+    {
+        if (game == Game.Id)
         {
             _ui.Post(Refresh);
         }

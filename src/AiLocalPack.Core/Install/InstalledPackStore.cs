@@ -273,7 +273,9 @@ public sealed class InstalledPackStore
         pack.Backup,
         [.. pack.Files.Select(f => new InstalledFileJson(f.Path, f.OriginalSha256, f.InstalledSha256))],
         pack.AddedFolders,
-        pack.GeneratedFiles.Count > 0 ? pack.GeneratedFiles : null);
+        pack.GeneratedFiles.Count > 0 ? pack.GeneratedFiles : null,
+        pack.Local ? true : null,
+        pack.Title);
 
     internal static InstalledPack? FromJson(InstalledPackJson? json)
     {
@@ -300,7 +302,7 @@ public sealed class InstalledPackStore
         var folders = json.AddedFolders ?? [];
         var generated = json.GeneratedFiles ?? [];
         return folders.All(InstallPaths.IsValid) && generated.All(InstallPaths.IsValid)
-            ? new InstalledPack(game, language, packId, json.Revision, json.InstalledAt, installPath, backup, files, [.. folders]) { GeneratedFiles = [.. generated] }
+            ? new InstalledPack(game, language, packId, json.Revision, json.InstalledAt, installPath, backup, files, [.. folders]) { GeneratedFiles = [.. generated], Local = json.Local == true, Title = json.Title }
             : null;
     }
 

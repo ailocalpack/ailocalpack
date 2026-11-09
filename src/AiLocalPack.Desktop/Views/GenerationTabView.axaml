@@ -6,7 +6,7 @@
              x:Class="AiLocalPack.Desktop.Views.GenerationTabView"
              x:DataType="gp:GenerationTabViewModel">
     <!-- Design §6: the five-step header and one centred card. Task 52: the start form (§6a); task 53: the state's banner
-         and the progress card (§6b); task 54: the glossary review (§6c). -->
+         and the progress card (§6b); task 54: the glossary review (§6c); task 55: the result (§6d). -->
     <StackPanel MaxWidth="860" Spacing="14" HorizontalAlignment="Stretch">
         <!-- Five-step header: Setup + the four pipeline stages -->
         <ItemsControl x:Name="GenerationSteps" ItemsSource="{Binding Steps}" AutomationProperties.Name="{l:Loc Gen_Steps_Label}">
@@ -378,6 +378,142 @@
                 </Border>
             </StackPanel>
         </Border>
+
+        <!-- Result (§6d, task 55): the share strip after playing, then the card with the four tiles and the actions -->
+        <Border x:Name="ShareStrip" Classes="genBanner share" IsVisible="{Binding Result.ShowShare, FallbackValue=False}">
+            <DockPanel>
+                <Viewbox DockPanel.Dock="Left" Classes="icon" Width="20" Height="20" Margin="0,0,12,0" VerticalAlignment="Top">
+                    <Path Classes="icon bannerIcon" Data="{StaticResource IconUpload}" />
+                </Viewbox>
+                <WrapPanel DockPanel.Dock="Right" ItemSpacing="8" LineSpacing="6" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <Button x:Name="ShareNotNow" Classes="ghost sm" Command="{Binding Result.NotNowCommand, FallbackValue={x:Null}}" Content="{l:Loc Gen_Result_NotNow}" />
+                    <Button x:Name="SharePublish" Classes="accent sm"
+                            IsEnabled="False" ToolTip.Tip="{l:Loc Gen_Result_PublishSoon}" ToolTip.ShowOnDisabled="True">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+                <StackPanel Spacing="2" VerticalAlignment="Center">
+                    <TextBlock FontWeight="Bold" Text="{l:Loc Gen_Result_Share_Title}" TextWrapping="Wrap" />
+                    <TextBlock FontSize="13" Text="{l:Loc Gen_Result_Share_Text}" TextWrapping="Wrap" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+        <Border x:Name="ResultCard" Classes="genCard" IsVisible="{Binding ShowResult}">
+            <StackPanel Spacing="16" DataContext="{Binding Result}" x:DataType="gp:GenerationResultViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="14">
+                    <Border Classes="genDoneIcon">
+                        <Viewbox Classes="icon" Width="28" Height="28">
+                            <Path Classes="icon" Data="{StaticResource IconCheckCircle}" Stroke="{DynamicResource AppOkBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                        <TextBlock x:Name="ResultTitle" Classes="genTitle" FontSize="22" Text="{l:Loc Gen_Result_Title}" />
+                        <TextBlock x:Name="ResultSubtitle" Classes="muted" FontSize="13" Text="{Binding Subtitle}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="ResultPackLine" Classes="faint" FontSize="12" Text="{Binding PackLine}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </StackPanel>
+
+                <ItemsControl x:Name="ResultTiles" ItemsSource="{Binding Tiles}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="10" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gp:ResultTile">
+                            <Border Classes="genTile" AutomationProperties.Name="{Binding Title}">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="muted" FontSize="12" Text="{Binding Title}" />
+                                    <DockPanel>
+                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,2,6,0" VerticalAlignment="Top">
+                                            <Path Classes="icon resultIcon" Classes.ok="{Binding IsOk}" Classes.warn="{Binding IsWarn}"
+                                                  Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                        </Viewbox>
+                                        <TextBlock Classes="resultValue" Text="{Binding Value}" />
+                                    </DockPanel>
+                                    <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock x:Name="ResultInGame" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
+                           Text="{Binding InGameNote}" IsVisible="{Binding HasInGameNote}" />
+
+                <Button x:Name="ResultWarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
+                        Content="{Binding WarningsToggleText}" IsVisible="{Binding HasWarnings}" />
+                <ItemsControl x:Name="ResultWarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gp:GenerationWarningRow">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4">
+                                <Border Classes="genWarnTag" VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding Rule}" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Classes="genKey" Text="{Binding Key}" />
+                                    <TextBlock FontSize="13" TextWrapping="Wrap">
+                                        <Run Text="{Binding Original}" Foreground="{DynamicResource AppMutedBrush}" FontStyle="Italic" />
+                                        <Run Text=" → " Foreground="{DynamicResource AppFaintBrush}" />
+                                        <Run Text="{Binding Translation}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Border Classes="genFoot">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="6" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding ShowCopyNote}">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{DynamicResource AppMutedBrush}" />
+                                </Viewbox>
+                                <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Result_CopyNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Button x:Name="ResultNewTranslation" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0"
+                                    Command="{Binding NewTranslationCommand}" ToolTip.Tip="{l:Loc Gen_Result_NewTranslationTip}"
+                                    Foreground="{DynamicResource AppMutedBrush}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconPlus}" Stroke="{DynamicResource AppMutedBrush}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Gen_Result_NewTranslation}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <WrapPanel Grid.Column="1" ItemSpacing="8" LineSpacing="6" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button x:Name="ResultPlay" Classes.ghost="{Binding !IsPlayPrimary}" Classes.accent="{Binding IsPlayPrimary}"
+                                    Command="{Binding PlayCommand}" AutomationProperties.Name="{Binding PlayText}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Viewbox Classes="icon" Width="16" Height="16">
+                                        <Path Classes="icon" Data="{Binding PlayIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding PlayText}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="ResultShowInPacks" Classes="ghost" Command="{Binding ShowInPacksCommand}" IsVisible="{Binding ShowInPacksAction}"
+                                    Content="{l:Loc Gen_Result_ShowInPacks}" />
+                            <Button x:Name="ResultDiscard" Classes="ghost" Command="{Binding DiscardCommand}" IsVisible="{Binding ShowDiscard}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Gen_Result_Discard}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </WrapPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Border>
+        <TextBlock x:Name="ResultError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
+                   Text="{Binding ActionError}" IsVisible="{Binding ShowResultError}" />
 
         <!-- Progress card (§6b) -->
         <Border x:Name="ProgressCard" Classes="genCard" IsVisible="{Binding ShowProgress}">

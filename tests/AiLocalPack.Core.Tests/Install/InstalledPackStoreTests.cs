@@ -127,4 +127,30 @@ public sealed class InstalledPackStoreTests : IDisposable
         // Assert
         act.Should().Throw<IOException>();
     }
+
+    [Fact]
+    public void Local_pack_record_reads_back_local_with_its_title()
+    {
+        // Arrange
+        new InstalledPackStore(_paths).Put(Pack() with { Local = true, Title = "Claude Code translation" });
+
+        // Act
+        var read = new InstalledPackStore(_paths).Find(GameId.Steam(620));
+
+        // Assert
+        (read!.Local, read.Title).Should().Be((true, "Claude Code translation"));
+    }
+
+    [Fact]
+    public void Record_without_the_local_flag_is_a_registry_pack()
+    {
+        // Arrange
+        new InstalledPackStore(_paths).Put(Pack());
+
+        // Act
+        var read = new InstalledPackStore(_paths).Find(GameId.Steam(620));
+
+        // Assert
+        (read!.Local, read.Title).Should().Be((false, (string?)null));
+    }
 }

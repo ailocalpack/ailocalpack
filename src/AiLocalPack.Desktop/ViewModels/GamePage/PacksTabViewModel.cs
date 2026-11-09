@@ -3,7 +3,9 @@ using System.Globalization;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
@@ -59,7 +61,9 @@ public sealed class PackLanguageOption(string tag, string name, int count, bool 
 /// rest of the list one at a time, and each is checked against the player's files (<see cref="PackManifests"/>), so
 /// the rows fill in their compatibility. States: pack list unknown, no packs in the language (with the other
 /// languages that have some), the saved list while offline (banner with <c>Retry</c>, list faded, install off).
-/// The Mine section joins with task 55. <c>Install</c> raises <see cref="InstallRequested"/> and the installed pack's
+/// The Mine section (task 55) on top: the game's generation job (<c>creating 42%</c>, opens the Generation tab) and the
+/// packs generated on this machine in any language (<see cref="MinePackRowViewModel"/>: install, uninstall, delete;
+/// publishing comes with task 61). <c>Install</c> raises <see cref="InstallRequested"/> and the installed pack's
 /// <c>Uninstall</c> <see cref="UninstallRequested"/> (the page runs the install flow); while an operation runs the rows
 /// show it (<see cref="SetInstallState"/>).
 /// </summary>
@@ -70,6 +74,10 @@ public sealed partial class PacksTabViewModel : ObservableObject
     private readonly Localizer _localizer;
     private readonly ISystemShell _shell;
     private readonly Action _openGeneration;
+    private readonly LocalPacks _localPacks;
+    private readonly GenerationService _jobs;
+    private readonly Action<LocalPack> _installLocal;
+    private readonly Action<LocalPack> _deleteLocal;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
     private readonly Lock _lock = new();
@@ -87,6 +95,11 @@ public sealed partial class PacksTabViewModel : ObservableObject
 
     [ObservableProperty]
     private PackRowViewModel? _selected;
+
+    /// <summary>The selected Mine row (its details replace the registry pack's), or <c>null</c>.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowMineDetails), nameof(ShowPackDetails))]
+    private MinePackRowViewModel? _selectedMine;
 
     [ObservableProperty]
     private PackSortOption _selectedSort;
@@ -107,6 +120,10 @@ public sealed partial class PacksTabViewModel : ObservableObject
         Localizer localizer,
         ISystemShell shell,
         Action openGeneration,
+        LocalPacks localPacks,
+        GenerationService jobs,
+        Action<LocalPack> installLocal,
+        Action<LocalPack> deleteLocal,
         ILogger logger)
     {
         _game = game;
@@ -118,6 +135,10 @@ public sealed partial class PacksTabViewModel : ObservableObject
         _localizer = localizer;
         _shell = shell;
         _openGeneration = openGeneration;
+        _localPacks = localPacks;
+        _jobs = jobs;
+        _installLocal = installLocal;
+        _deleteLocal = deleteLocal;
         _logger = logger;
         SortOptions = BuildSortOptions();
         _selectedSort = SortOptions[0];
@@ -137,6 +158,20 @@ public sealed partial class PacksTabViewModel : ObservableObject
     public string LanguageName => LanguageNames.Native(Language);
 
     public ObservableCollection<PackRowViewModel> Rows { get; } = [];
+
+    /// <summary>The Mine section: the game's open job, then its local packs (any language).</summary>
+    public ObservableCollection<MinePackRowViewModel> Mine { get; } = [];
+
+    public bool HasMine => Mine.Count > 0;
+
+    /// <summary>The details panel shows the selected Mine row.</summary>
+    public bool ShowMineDetails => SelectedMine is not null;
+
+    /// <summary>The details panel shows the selected registry pack.</summary>
+    public bool ShowPackDetails => SelectedMine is null && Selected is not null;
+
+    /// <summary>"No packs into Русский in the registry yet." under the Registry heading when only Mine has rows.</summary>
+    public string RegistryNoneText => _localizer.Format(nameof(Strings.Packs_Registry_None), LanguageName);
 
     public IReadOnlyList<PackSortOption> SortOptions { get; private set; }
 
@@ -167,10 +202,17 @@ public sealed partial class PacksTabViewModel : ObservableObject
 
     public bool HasRows => Rows.Count > 0;
 
-    public bool ShowList => !IsUnknown && HasRows;
+    /// <summary>The list with its details panel: registry packs of the language, or Mine rows.</summary>
+    public bool ShowList => (!IsUnknown && HasRows) || HasMine;
+
+    /// <summary>The Registry heading is shown above the registry rows when Mine has rows too.</summary>
+    public bool ShowRegistryHeading => HasMine;
+
+    /// <summary>Only Mine has rows: a line under the Registry heading says the registry has none.</summary>
+    public bool ShowRegistryNone => HasMine && !HasRows && !IsUnknown;
 
     /// <summary>"No translation into Русский yet".</summary>
-    public bool ShowEmpty => !IsUnknown && !HasRows;
+    public bool ShowEmpty => !IsUnknown && !HasRows && !HasMine;
 
     public string EmptyTitle => _localizer.Format(nameof(Strings.Game_Packs_None), LanguageName);
 
@@ -238,6 +280,11 @@ public sealed partial class PacksTabViewModel : ObservableObject
             row.RefreshTexts();
         }
 
+        foreach (var row in Mine)
+        {
+            row.RefreshTexts();
+        }
+
         OnPropertyChanged(string.Empty);
     }
 
@@ -258,6 +305,28 @@ public sealed partial class PacksTabViewModel : ObservableObject
         {
             row.SetContext(context);
         }
+
+        foreach (var row in Mine)
+        {
+            row.SetInstallState(busy, row.Pack is { } pack && pack.Manifest.Id == installingPackId);
+        }
+    }
+
+    /// <summary>The result's <c>Show in Packs</c>, the installed block's for a local pack: that Mine row selected.</summary>
+    public void ShowLocal(string language, string packId)
+    {
+        RebuildMine();
+        if (Mine.FirstOrDefault(r => r.Pack is { } pack && pack.Manifest.Language == language && pack.Manifest.Id == packId) is { } row)
+        {
+            SelectMine(row);
+        }
+    }
+
+    /// <summary>The game's local packs or job changed (a pack deleted, tried in game, a job started or ended).</summary>
+    public void RefreshMine()
+    {
+        RebuildMine();
+        OnPropertyChanged(string.Empty);
     }
 
     /// <summary>The installed block's <c>Show in Packs</c>: the pack's language, the pack selected.</summary>
@@ -305,12 +374,110 @@ public sealed partial class PacksTabViewModel : ObservableObject
 
     partial void OnSelectedChanged(PackRowViewModel? value)
     {
-        foreach (var row in Rows)
+        if (value is not null)
         {
-            row.IsSelected = row == value;
+            SelectedMine = null;
         }
 
+        MarkSelected();
         Pump();
+    }
+
+    private void SelectRow(PackRowViewModel row)
+    {
+        SelectedMine = null;
+        if (Selected == row)
+        {
+            MarkSelected();
+        }
+        else
+        {
+            Selected = row;
+        }
+    }
+
+    private void SelectMine(MinePackRowViewModel row)
+    {
+        SelectedMine = row;
+        MarkSelected();
+    }
+
+    /// <summary>One row is highlighted: the Mine row when one is selected, else the registry pack.</summary>
+    private void MarkSelected()
+    {
+        foreach (var row in Rows)
+        {
+            row.IsSelected = SelectedMine is null && row == Selected;
+        }
+
+        foreach (var row in Mine)
+        {
+            row.IsSelected = row == SelectedMine;
+        }
+
+        OnPropertyChanged(nameof(ShowMineDetails));
+        OnPropertyChanged(nameof(ShowPackDetails));
+    }
+
+    /// <summary>
+    /// The Mine rows: the game's open job (any language), then its local packs; known rows are kept (their selection and
+    /// install state), a selected row that is gone leaves the registry's selection.
+    /// </summary>
+    private void RebuildMine()
+    {
+        var rows = new List<MinePackRowViewModel>();
+        var actions = new MinePackActions(SelectMine, _openGeneration, _installLocal, () => UninstallRequested?.Invoke(this, EventArgs.Empty), _deleteLocal);
+        if (_jobs.FindOpen(_game.Id) is { } job)
+        {
+            var row = Mine.FirstOrDefault(r => r.Job?.Id == job.Id);
+            if (row is null)
+            {
+                row = new MinePackRowViewModel(job, Language, _localizer, actions);
+            }
+            else
+            {
+                row.Update(job, Language);
+            }
+
+            rows.Add(row);
+        }
+
+        foreach (var pack in _localPacks.List(_game.Id))
+        {
+            var key = $"{pack.Manifest.Language}/{pack.Manifest.Id}";
+            var installed = _localPacks.IsInstalled(pack);
+            var row = Mine.FirstOrDefault(r => r.IsLocal && r.Key == key);
+            if (row is null)
+            {
+                row = new MinePackRowViewModel(pack, Language, installed, _localizer, actions);
+            }
+            else
+            {
+                row.Update(pack, Language, installed);
+            }
+
+            row.SetInstallState(_busy, pack.Manifest.Id == _installingPackId);
+            rows.Add(row);
+        }
+
+        Mine.Clear();
+        foreach (var row in rows)
+        {
+            Mine.Add(row);
+        }
+
+        if (SelectedMine is { } selected && !rows.Contains(selected))
+        {
+            SelectedMine = null;
+        }
+
+        // With no registry pack to show, the first local pack is selected.
+        if (SelectedMine is null && Selected is null && rows.FirstOrDefault(r => r.IsLocal) is { } first)
+        {
+            SelectedMine = first;
+        }
+
+        MarkSelected();
     }
 
     partial void OnSelectedSortChanged(PackSortOption value)
@@ -351,7 +518,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             }
             else
             {
-                row = new PackRowViewModel(pack, _localizer, r => Selected = r, Retry, Install, Uninstall, _openGeneration, OpenUrl);
+                row = new PackRowViewModel(pack, _localizer, SelectRow, Retry, Install, Uninstall, _openGeneration, OpenUrl);
                 _rowsByKey[key] = row;
             }
 
@@ -368,6 +535,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
         }
 
         BuildLanguages();
+        var mineSelected = SelectedMine;
         var keep = selectedLanguage == Language ? rows.FirstOrDefault(r => r.Pack.Id == selectedId) : null;
         if (keep is not null && keep == Selected)
         {
@@ -378,15 +546,21 @@ public sealed partial class PacksTabViewModel : ObservableObject
             Selected = keep ?? rows.FirstOrDefault();
         }
 
+        // A selected Mine row stays selected over a new registry list.
+        SelectedMine = mineSelected;
+        RebuildMine();
         OnPropertyChanged(string.Empty);
     }
 
     private PackRowContext Context(IReadOnlyList<RegistryPack> packs) =>
         new(IsStale, _status.Installed, InstalledTitle(packs), _busy, _installingPackId, _packIndex.Current?.Index?.Dependencies);
 
-    private string? InstalledTitle(IReadOnlyList<RegistryPack> packs) => _status.Installed is { } installed
-        ? packs.FirstOrDefault(p => p.Id == installed.PackId)?.Title ?? installed.PackId
-        : null;
+    private string? InstalledTitle(IReadOnlyList<RegistryPack> packs) => _status.Installed switch
+    {
+        { Local: true } local => local.Title ?? local.PackId,
+        { } installed => packs.FirstOrDefault(p => p.Id == installed.PackId)?.Title ?? installed.PackId,
+        _ => null,
+    };
 
     private void BuildLanguages()
     {

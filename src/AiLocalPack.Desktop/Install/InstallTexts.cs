@@ -58,6 +58,7 @@ public static class InstallTexts
             InstallErrorKind.Busy => localizer[nameof(Strings.Install_Why_Busy)],
             InstallErrorKind.Blocked => localizer[nameof(Strings.Install_Why_Blocked)],
             InstallErrorKind.NotInRegistry => localizer[nameof(Strings.Install_Why_NotInRegistry)],
+            InstallErrorKind.LocalMissing => localizer[nameof(Strings.Install_Why_LocalMissing)],
             InstallErrorKind.Fetch => localizer[error.Fetch switch
             {
                 PackFetchProblem.Offline => nameof(Strings.Install_Why_Offline),

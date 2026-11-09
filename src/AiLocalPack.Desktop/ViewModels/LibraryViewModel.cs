@@ -356,6 +356,7 @@ public sealed partial class LibraryViewModel : PageViewModel
         var stale = IsRegistryStale;
         foreach (var card in _cards.Values)
         {
+            card.LibraryLanguage = language;
             card.ApplyStatus(_statuses.Resolve(card.Game, language), stale);
         }
 
@@ -374,10 +375,21 @@ public sealed partial class LibraryViewModel : PageViewModel
     /// page's Packs tab when none can be installed); Update does what the game page's header would (task 33): installs
     /// the later revision of the installed pack or re-applies one that still fits, in place, else opens the Generation
     /// tab (translate the new strings, task 56); Resume / Retry go on with the job in place (task 53); View / Generate
-    /// open the Generation tab (task 52).
+    /// open the Generation tab (task 52); Install &amp; play installs the last generation's local pack and launches the
+    /// game, in place (task 55).
     /// </summary>
     private void QuickAction(GameCardViewModel card)
     {
+        if (card.LocalResult is { Installed: false })
+        {
+            if (_jobs.ResultOf(card.Game.Id) is { } result)
+            {
+                _ = _install.InstallLocalAsync(card.Game, result.Pack, play: true);
+            }
+
+            return;
+        }
+
         if (card.StatusKind == LocalizationStatusKind.Paused
             && GamePrimaryActions.JobKind(card.Status.Job) is GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.RetryStage)
         {

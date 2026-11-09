@@ -27,6 +27,7 @@ public static class PrimaryActionTexts
             GamePrimaryActionKind.ResumeGeneration => localizer[nameof(Strings.Game_Action_Resume)],
             GamePrimaryActionKind.RetryStage => localizer[nameof(Strings.Game_Action_RetryStage)],
             GamePrimaryActionKind.ReviewGlossary => localizer[nameof(Strings.Game_Action_ReviewGlossary)],
+            GamePrimaryActionKind.InstallLocalPack => localizer[nameof(Strings.Game_Action_InstallPlay)],
             _ => string.Empty,
         };
     }
@@ -49,11 +50,15 @@ public static class PrimaryActionTexts
             { Kind: GamePrimaryActionKind.Generate } => localizer[nameof(Strings.Game_Caption_Generate)],
             { Kind: GamePrimaryActionKind.Play } => localizer.Format(
                 game.Source == GameSource.Steam ? nameof(Strings.Game_Caption_PlaySteam) : nameof(Strings.Game_Caption_Play),
-                action.Pack?.Title ?? action.Installed?.PackId),
+                action.Pack?.Title ?? action.Installed?.Title ?? action.Installed?.PackId ?? action.Result?.Title),
             { Kind: GamePrimaryActionKind.UpdatePack, Installed: { } installed } => localizer.Format(nameof(Strings.Game_Caption_Update), installed.Revision),
             { Kind: GamePrimaryActionKind.TranslateNewStrings } => localizer[nameof(Strings.Game_Caption_TranslateNew)],
             { Kind: GamePrimaryActionKind.Reapply, Installed: { } installed } => localizer.Format(
-                nameof(Strings.Game_Caption_Reapply), action.Pack?.Title ?? installed.PackId, installed.Revision),
+                nameof(Strings.Game_Caption_Reapply), action.Pack?.Title ?? installed.Title ?? installed.PackId, installed.Revision),
+            { Kind: GamePrimaryActionKind.InstallLocalPack, Result: { } result } => localizer.Format(
+                nameof(Strings.Game_Caption_LocalPack),
+                Math.Floor(result.Coverage * 100).ToString("0", localizer.Culture),
+                localizer[result.TestPassed ? nameof(Strings.Game_Caption_LocalTestPassed) : nameof(Strings.Game_Caption_LocalTestSkipped)]),
             { Job: { } job } when action.Kind is GamePrimaryActionKind.ViewProgress or GamePrimaryActionKind.ResumeGeneration
                 or GamePrimaryActionKind.RetryStage or GamePrimaryActionKind.ReviewGlossary => JobCaption(job, localizer, time),
             _ => string.Empty,

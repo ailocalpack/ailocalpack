@@ -164,7 +164,7 @@ public sealed partial class PackRowViewModel : ObservableObject
     /// <summary>An incompatible pack's row is dimmed.</summary>
     public bool IsDimmed => Compatibility is { CanInstall: false };
 
-    public bool IsInstalled => _context.Installed?.PackId == Pack.Id;
+    public bool IsInstalled => _context.Installed is { Local: false } installed && installed.PackId == Pack.Id;
 
     /// <summary>A game update broke the installed pack: the tag is amber.</summary>
     public bool IsInstalledBroken => IsInstalled && _context.Installed!.BrokenByUpdate;

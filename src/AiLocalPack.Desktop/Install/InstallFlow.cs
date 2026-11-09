@@ -179,6 +179,43 @@ public sealed class InstallFlow
         await InstallAsync(game, choice.Pack, manifests[choice.Pack.Id], choice.Compatibility);
     }
 
+    /// <summary>
+    /// Installs a pack generated on this machine (task 55: the result's <c>Install &amp; play</c>, Packs → Mine's
+    /// <c>Install</c>, the header's action). Asks only when it replaces another installed pack (the player made this one:
+    /// no alpha warning, and the install checks the files itself). With <paramref name="play"/> the game is launched once
+    /// installed (or at once when the pack is installed already).
+    /// </summary>
+    public async Task InstallLocalAsync(Game game, LocalPack pack, bool play)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(pack);
+        if (IsBusy)
+        {
+            return;
+        }
+
+        var installed = _store.Find(game.Id);
+        if (Generation.LocalPacks.IsInstalled(installed, pack))
+        {
+            if (play)
+            {
+                await PlayAsync(game);
+            }
+
+            return;
+        }
+
+        if (installed is null)
+        {
+            await RunInstallLocalAsync(game, pack, play);
+            return;
+        }
+
+        IReadOnlyList<InstallRisk> risks = [new InstallRisk(InstallRiskKind.Replaces, Replaced: installed, ReplacedTitle: _service.TitleOf(game.Id, installed))];
+        _ui.Post(() => _dialogs.Show<InstallConfirmDialogViewModel>(
+            new InstallConfirmRequest(pack.Manifest.Title, risks, () => _ = RunInstallLocalAsync(game, pack, play))));
+    }
+
     /// <summary>The installed block's <c>Uninstall (restore originals)</c>: asks, then restores the original files.</summary>
     public void Uninstall(Game game)
     {
@@ -242,6 +279,32 @@ public sealed class InstallFlow
                 ],
                 ToastKey(game)));
         });
+    }
+
+    private async Task RunInstallLocalAsync(Game game, LocalPack pack, bool play)
+    {
+        var outcome = await _service.InstallLocalAsync(Fresh(game), pack);
+        _activity?.Record(outcome);
+        if (!outcome.Succeeded)
+        {
+            ShowFailure(outcome, () => _ = RunInstallLocalAsync(game, pack, play));
+            return;
+        }
+
+        _ui.Post(() => Toast(new ToastViewModel(
+            ToastTone.Ok,
+            InstallTexts.Toast(outcome, _localizer),
+            play
+                ? [new ToastAction(_localizer[nameof(Strings.Install_Toast_Undo)], () => _ = RunUninstallAsync(game), "IconUndo")]
+                : [
+                    new ToastAction(_localizer[nameof(Strings.Install_Toast_Play)], () => _ = PlayAsync(game), "IconPlay", IsPrimary: true),
+                    new ToastAction(_localizer[nameof(Strings.Install_Toast_Undo)], () => _ = RunUninstallAsync(game), "IconUndo"),
+                ],
+            ToastKey(game))));
+        if (play)
+        {
+            await PlayAsync(game);
+        }
     }
 
     private async Task RunUninstallAsync(Game game)

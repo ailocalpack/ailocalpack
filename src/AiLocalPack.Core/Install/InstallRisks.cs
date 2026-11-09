@@ -70,7 +70,7 @@ public static class InstallRisks
             risks.Add(new InstallRisk(InstallRiskKind.Dependency, Dependency: dependency, DependencyName: dependencies?.Find(dependency.Id)?.Name));
         }
 
-        if (installed is not null && (installed.PackId != pack.Id || installed.Language != pack.Language))
+        if (installed is not null && (installed.Local || installed.PackId != pack.Id || installed.Language != pack.Language))
         {
             risks.Add(new InstallRisk(InstallRiskKind.Replaces, Replaced: installed, ReplacedTitle: installedTitle ?? installed.PackId));
         }

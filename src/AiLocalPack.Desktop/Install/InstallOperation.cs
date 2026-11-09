@@ -88,6 +88,9 @@ public enum InstallErrorKind
     /// <summary>No pack list, or the pack (or the installed one, for re-apply) isn't in it.</summary>
     NotInRegistry,
 
+    /// <summary>The local pack (generated on this machine, task 55) is gone or doesn't read.</summary>
+    LocalMissing,
+
     /// <summary>The pack couldn't be downloaded or failed its checks (<see cref="InstallError.Fetch"/>).</summary>
     Fetch,
 

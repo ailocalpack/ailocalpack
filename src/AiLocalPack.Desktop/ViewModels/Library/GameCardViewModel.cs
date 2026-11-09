@@ -56,13 +56,30 @@ public sealed partial class GameCardViewModel : ObservableObject
 
     public Game Game { get; private set; }
 
+    /// <summary>The library's target language (the local pack's line names its language when it differs).</summary>
+    public string LibraryLanguage { get; set; } = string.Empty;
+
     /// <summary>The clock for a paused job's resume time (the player's zone).</summary>
     public TimeProvider Time { get; init; } = TimeProvider.System;
 
     /// <summary>The game's status for the library's language (<see cref="ApplyStatus"/>).</summary>
     public LocalizationStatus Status { get; private set; } = LocalizationStatus.Unknown;
 
-    public LocalizationStatusKind StatusKind => Status.Kind;
+    /// <summary>
+    /// The status the card shows (badge, filters, sort, quick action): the game's, except for the last generation's local
+    /// pack (task 55) when nothing else is installed and no job runs: waiting = like a pack available (<c>Install &amp;
+    /// play</c>), installed in another language than the library's = installed.
+    /// </summary>
+    public LocalizationStatusKind StatusKind => LocalResult switch
+    {
+        { Installed: true } => LocalizationStatusKind.Installed,
+        { } => LocalizationStatusKind.PackAvailable,
+        _ => Status.Kind,
+    };
+
+    /// <summary>The last generation's local pack the card stands for (<see cref="StatusKind"/>), else <c>null</c>.</summary>
+    public GenerationResultState? LocalResult => GamePrimaryActions.Resolve(Status) is
+        { Kind: GamePrimaryActionKind.InstallLocalPack or GamePrimaryActionKind.Play, Result: { } result } ? result : null;
 
     /// <summary>The status comes from the saved pack list (registry unreachable): the badge is faded.</summary>
     public bool IsStale { get; private set; }
@@ -125,6 +142,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     {
         { Kind: InstallOperationKind.Uninstall } => _localizer[nameof(Strings.Library_Badge_Uninstalling)],
         { } operation => _localizer.Format(nameof(Strings.Library_Badge_Installing), operation.Percent),
+        _ when LocalResult is { Installed: false } => _localizer[nameof(Strings.Library_Badge_LocalReady)],
         _ => StatusBadgeText,
     };
 
@@ -142,7 +160,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     };
 
     /// <summary>Resource key of the badge icon geometry.</summary>
-    public string BadgeIcon => IsInstalling ? "IconLoader" : StatusKind switch
+    public string BadgeIcon => IsInstalling ? "IconLoader" : LocalResult is { Installed: false } ? "IconCheckCircle" : StatusKind switch
     {
         LocalizationStatusKind.Installed => "IconCheck",
         LocalizationStatusKind.PackAvailable => "IconDownload",
@@ -180,7 +198,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     /// "Install", "Update" ("Re-apply" for a pack that still fits), "View", "Resume" (paused or interrupted job), "Retry"
     /// (failed stage), "Generate with AI"; empty for installed, blocked and unknown.
     /// </summary>
-    public string QuickActionText => StatusKind switch
+    public string QuickActionText => LocalResult is { Installed: false } ? _localizer[nameof(Strings.Game_Action_InstallPlay)] : StatusKind switch
     {
         LocalizationStatusKind.PackAvailable => _localizer[nameof(Strings.Library_Action_Install)],
         LocalizationStatusKind.NeedsUpdate => _localizer[GamePrimaryActions.Resolve(Status).Kind == GamePrimaryActionKind.Reapply
@@ -197,7 +215,7 @@ public sealed partial class GameCardViewModel : ObservableObject
         _ => string.Empty,
     };
 
-    public string QuickActionIcon => StatusKind switch
+    public string QuickActionIcon => LocalResult is { Installed: false } ? "IconPlay" : StatusKind switch
     {
         LocalizationStatusKind.PackAvailable => "IconDownload",
         LocalizationStatusKind.NeedsUpdate => "IconRefresh",
@@ -223,7 +241,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     public string ManualText => _localizer[nameof(Strings.Library_Card_Manual)];
 
     /// <summary>Likes of the best pack (installed, available, needs update), with a thumbs-up; hidden when none.</summary>
-    public bool ShowLikes => ShowsPackInfo && Status.BestPack is { Rating.Likes: > 0 };
+    public bool ShowLikes => LocalResult is null && ShowsPackInfo && Status.BestPack is { Rating.Likes: > 0 };
 
     public string LikesText => (Status.BestPack?.Rating.Likes ?? 0).ToString("N0", _localizer.Culture);
 
@@ -252,6 +270,14 @@ public sealed partial class GameCardViewModel : ObservableObject
             if (!IsAvailable)
             {
                 return _localizer[nameof(Strings.Library_Card_Unavailable)];
+            }
+
+            if (LocalResult is { } local)
+            {
+                // "Your pack · 98% of strings", or "Your pack · Русский" when it isn't the library's language (the card is narrow).
+                return local.Language == LibraryLanguage
+                    ? _localizer.Format(nameof(Strings.Library_Card_LocalPack), Math.Floor(local.Coverage * 100).ToString("0", _localizer.Culture))
+                    : _localizer.Format(nameof(Strings.Library_Card_LocalPackLanguage), Core.Languages.LanguageNames.Native(local.Language));
             }
 
             if (ShowsPackInfo && Status.BestPack is { } best)

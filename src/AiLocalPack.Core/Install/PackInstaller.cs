@@ -521,6 +521,8 @@ public sealed class PackInstaller
                 record = new InstalledPack(request.Game.Id, request.Language, request.PackId, request.Revision, now, root, transaction, files, folders)
                 {
                     GeneratedFiles = generated,
+                    Local = request.Local,
+                    Title = request.Title,
                 };
             }
             else

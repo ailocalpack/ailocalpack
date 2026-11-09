@@ -2803,4 +2803,292 @@
   <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
     <value>Перевод начнётся после вашей проверки.</value>
   </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>Локальный пак удалён или не читается.</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>Локальный пак взят из {0}.</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>Охват</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_One" xml:space="preserve">
+    <value>{0} строка остаётся без перевода</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Few" xml:space="preserve">
+    <value>{0} строки остаются без перевода</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Many" xml:space="preserve">
+    <value>{0} строк остаются без перевода</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>Переведены все строки</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>Пробный запуск</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>Пройден</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>Переведённая игра проработала {0} с и не закрылась</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>Не пройден</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>Пропущен</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>В папке игры не нашлась программа для запуска</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>Игра собрана для другой системы</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>Игра запускается только через Steam</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>Система не запустила игру</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>Игра сразу закрывается и без перевода (ей нужен магазин или её медиафайлы)</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>Пробные запуски выключены</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>Шрифты</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>Не проверены</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>Инструменты не читают шрифты этого движка</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>Шрифты игры подходят</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>В них есть все буквы перевода</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>Подставлен {0}</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>В {0} нет букв перевода</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_One" xml:space="preserve">
+    <value>{0} буквы всё ещё нет</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Few" xml:space="preserve">
+    <value>{0} букв всё ещё нет</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Many" xml:space="preserve">
+    <value>{0} букв всё ещё нет</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>Проверка строк</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>Замечаний нет</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>Длины, подстановки и теги в порядке</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_One" xml:space="preserve">
+    <value>{0} замечание</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Few" xml:space="preserve">
+    <value>{0} замечания</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Many" xml:space="preserve">
+    <value>{0} замечаний</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>Перевод готов</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>Сохранён как локальный пак в «Паки → Мои» · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>«{0}» на {1}</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_One" xml:space="preserve">
+    <value>Показать {0} замечание</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Few" xml:space="preserve">
+    <value>Показать {0} замечания</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Many" xml:space="preserve">
+    <value>Показать {0} замечаний</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>Скрыть замечания</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>В игре выберите язык «{0}»: перевод заменяет его тексты.</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>Играть снова</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>Установить и играть</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>Показать в паках</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>Новый перевод</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>Пак остаётся в «Паки → Мои»; рабочая копия удаляется, открывается форма запуска.</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>Установка сохраняет оригинальные файлы; удалить перевод можно в любой момент.</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>Всё хорошо? Поделитесь с другими игроками.</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>Публикуется в реестр как alpha; игра, сборки, хеши, агент и шрифты заполняются сами.</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>Не сейчас</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>Опубликовать</value>
+  </data>
+  <data name="Gen_Result_PublishSoon" xml:space="preserve">
+    <value>Публикация в реестр появится вместе со входом через GitHub в следующей версии.</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>Опубликовать можно позже в «Паки → Мои».</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>Пак и его рабочая копия удалены.</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>Пак остался в «Паки → Мои»; рабочая копия удалена.</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>Удалить перевод?</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>Локальный пак «{0}» и рабочая копия задания будут удалены. Это нельзя отменить.</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>Пак установлен: сначала удалите его из игры.</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>Не удалось удалить файлы: {0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>Мои</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>В реестре пока нет паков на {0}.</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>Перевод на {0}</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>Создаётся с ИИ · открыть вкладку генерации</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>локальный · не опубликован</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>создаётся {0}%</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>проверен в игре</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>ещё не опробован</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>локальный · создан {0}</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>Проверен в игре</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>Вы поиграли с этим паком. Теперь им можно поделиться.</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>Ещё не опробован в игре</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>Установите его и поиграйте: публикация откроется после этого.</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>Пробный запуск</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>Шрифты</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>Проверка строк</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>Размер</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>Перед публикацией приложение сравнит его с паками реестра: можно выпустить его новой редакцией одного из них или отдельным паком.</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>Установлен в игру: удалите его из игры, прежде чем удалять пак.</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>Сначала опробуйте его в игре: после этого откроется публикация.</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>Удалить «{0}»?</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>Локальный пак и рабочая копия задания, которое его сделало, будут удалены. Это нельзя отменить.</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>Локальный пак «{0}» удалён.</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>Установить и играть</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>Ваш пак · {0}% строк · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>проверка пройдена</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>без пробного запуска</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>«{0}» · ваш пак</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>Ваш пак готов</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>Ваш пак · {0}% строк</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>Ваш пак · {0}</value>
+  </data>
 </root>

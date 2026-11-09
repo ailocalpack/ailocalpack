@@ -2747,4 +2747,280 @@
   <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
     <value>Translation starts once you check it.</value>
   </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>The local pack was deleted or can't be read.</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>Local pack taken from {0}.</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_One" xml:space="preserve">
+    <value>{0} string stays untranslated</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Other" xml:space="preserve">
+    <value>{0} strings stay untranslated</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>Every string is translated</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>Test run</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>Passed</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>The translated game ran {0} s without closing</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>No program to start was found in the game folder</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>The game is built for another system</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>The game starts only through Steam</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>The system didn't start the game</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>The game closes at once even untranslated (it needs its store or its media)</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>Test runs are turned off</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>Fonts</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>Not checked</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>The toolkit can't read this engine's fonts</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>Game fonts fit</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>They have every letter of the translation</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>{0} swapped in</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>{0} lack letters of the translation</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_One" xml:space="preserve">
+    <value>{0} letter is still missing</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Other" xml:space="preserve">
+    <value>{0} letters are still missing</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>Validator</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>No warnings</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>Lengths, placeholders and tags are fine</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_One" xml:space="preserve">
+    <value>{0} warning</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Other" xml:space="preserve">
+    <value>{0} warnings</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>Translation ready</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>Saved as a local pack in Packs → Mine · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>«{0}» into {1}</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_One" xml:space="preserve">
+    <value>Show the {0} warning</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Other" xml:space="preserve">
+    <value>Show the {0} warnings</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>Hide the warnings</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>In the game, choose {0} as the language: the translation replaces its texts.</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>Play again</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>Install &amp; play</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>Show in Packs</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>New translation</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>The pack stays in Packs → Mine; the working copy is deleted and the form opens.</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>Installing backs up the original files; you can uninstall any time.</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>Looks good? Share it with other players.</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>Publishes to the registry as alpha; game, builds, hashes, agent and fonts are filled in automatically.</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>Not now</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="Gen_Result_PublishSoon" xml:space="preserve">
+    <value>Publishing to the registry comes with GitHub sign-in in a later version.</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>You can publish it later from Packs → Mine.</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>The pack and its working copy were deleted.</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>The pack stays in Packs → Mine; the working copy was deleted.</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>Discard the translation?</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>The local pack «{0}» and the job's working copy are deleted. This can't be undone.</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>The pack is installed: uninstall it first.</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>Couldn't delete the files: {0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>Mine</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>No packs into {0} in the registry yet.</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>Translation into {0}</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>Generating with AI · open the Generation tab</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>local · not published</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>creating {0}%</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>tested in game</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>not tried yet</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>local · created {0}</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>Tested in game</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>You played the game with this pack. Now you can share it.</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>Not tried in game yet</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>Install it and play: publishing opens once you've tried it.</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>Test run</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>Fonts</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>Validator</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>Before publishing, the app compares it with the registry's packs: you can publish it as a new revision of one of them or as a separate pack.</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>Installed in the game: uninstall it before deleting.</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>Try it in game first: publishing opens after that.</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>Delete «{0}»?</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>The local pack and the working copy of the job that made it are deleted. This can't be undone.</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>Deleted the local pack «{0}».</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>Install &amp; play</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>Your pack · {0}% of strings · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>test passed</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>not test-run</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>«{0}» · your pack</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>Your pack ready</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>Your pack · {0}% of strings</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>Your pack · {0}</value>
+  </data>
 </root>

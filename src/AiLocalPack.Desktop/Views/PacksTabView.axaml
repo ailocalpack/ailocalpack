@@ -6,7 +6,8 @@
              x:Class="AiLocalPack.Desktop.Views.PacksTabView"
              x:DataType="gp:PacksTabViewModel">
     <!-- Design §4: toolbar (language popover, sort, count), list of registry packs + details panel of the selected one;
-         empty state for a language without packs, offline banner over the saved list. The Mine section comes in task 55. -->
+         empty state for a language without packs, offline banner over the saved list. Task 55: the Mine section on top of the
+         list (the generation job, local packs) with its own details. -->
     <StackPanel Spacing="14">
         <TextBlock Classes="muted" Text="{l:Loc Game_Packs_Unknown}" IsVisible="{Binding IsUnknown}" TextWrapping="Wrap" />
 
@@ -91,8 +92,42 @@
 
         <!-- List + details -->
         <Grid x:Name="PackSplit" ColumnDefinitions="340,*" ColumnSpacing="16" IsVisible="{Binding ShowList}">
-            <StackPanel Classes.staleList="{Binding IsStale}" Spacing="6">
-                <TextBlock Classes="capsLabel" Margin="4,6,0,2" Text="{l:Loc Packs_Section_Registry}" />
+            <StackPanel Spacing="6">
+                <!-- Mine: the generation job and the packs made on this machine -->
+                <TextBlock Classes="capsLabel" Margin="4,6,0,2" Text="{l:Loc Packs_Mine_Section}" IsVisible="{Binding HasMine}" />
+                <ItemsControl x:Name="MineList" ItemsSource="{Binding Mine}" IsVisible="{Binding HasMine}" AutomationProperties.Name="{l:Loc Packs_Mine_Section}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gp:MinePackRowViewModel">
+                            <Button Classes="packRow" Classes.on="{Binding IsSelected}" Command="{Binding SelectCommand}" AutomationProperties.Name="{Binding Title}">
+                                <StackPanel Spacing="4">
+                                    <DockPanel>
+                                        <Border DockPanel.Dock="Right" Classes="packTag" Classes.muted="{Binding !IsTagOk}" Classes.gen="{Binding IsTagGen}" Margin="8,0,0,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <Viewbox Classes="icon" Width="12" Height="12">
+                                                    <Path Classes="icon" Data="{Binding TagIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding Tag}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border DockPanel.Dock="Right" Classes="packTag" Margin="8,0,0,0" IsVisible="{Binding IsInstalled}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <Viewbox Classes="icon" Width="12" Height="12"><Path Classes="icon" Data="{StaticResource IconCheck}" /></Viewbox>
+                                                <TextBlock Text="{l:Loc Packs_Installed}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock Classes="packTitle" FontWeight="Bold" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                    <TextBlock Classes="packMeta" Text="{Binding Meta}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Classes.staleList="{Binding IsStale}" Spacing="6">
+                <TextBlock Classes="capsLabel" Margin="4,6,0,2" Text="{l:Loc Packs_Section_Registry}" IsVisible="{Binding !IsUnknown}" />
+                <TextBlock x:Name="RegistryNone" Classes="muted" FontSize="13" Margin="4,0,0,0" Text="{Binding RegistryNoneText}" TextWrapping="Wrap"
+                           IsVisible="{Binding ShowRegistryNone}" />
                 <ItemsControl x:Name="PackList" ItemsSource="{Binding Rows}" AutomationProperties.Name="{l:Loc Packs_List_Label}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="gp:PackRowViewModel">
@@ -155,9 +190,120 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                </StackPanel>
             </StackPanel>
 
-            <ContentControl x:Name="PackDetails" Grid.Column="1" Content="{Binding Selected}">
+            <!-- Mine details: a local pack -->
+            <ContentControl x:Name="MineDetails" Grid.Column="1" Content="{Binding SelectedMine}" IsVisible="{Binding ShowMineDetails}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate x:DataType="gp:MinePackRowViewModel">
+                        <Border Classes="packDetails">
+                            <StackPanel Spacing="14">
+                                <StackPanel Spacing="4">
+                                    <TextBlock x:Name="MineTitle" Classes="h2" FontSize="19" Text="{Binding Title}" TextWrapping="Wrap" />
+                                    <TextBlock Classes="muted" FontSize="13" Text="{Binding Created}" />
+                                </StackPanel>
+                                <Border x:Name="TriedBox" Classes="compatBox" Classes.ok="{Binding IsTried}">
+                                    <DockPanel>
+                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
+                                            <Path Classes="icon" Data="{Binding TagIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                        </Viewbox>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock x:Name="TriedTitle" FontWeight="Bold" Text="{Binding TriedTitle}" TextWrapping="Wrap" />
+                                            <TextBlock Classes="muted" Text="{Binding TriedText}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                                <StackPanel Spacing="7" Grid.IsSharedSizeScope="True">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Agent}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding AgentText}" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Kv_Coverage}" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                            <TextBlock x:Name="MineCoverage" Classes="kvValue" Text="{Binding CoverageText}" />
+                                            <ProgressBar Classes="coverage" Minimum="0" Maximum="100" Value="{Binding CoveragePercent}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Mine_TestRun}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding TestRunText}" TextWrapping="Wrap" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Mine_Fonts}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding FontsText}" TextWrapping="Wrap" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Mine_Validator}" />
+                                        <TextBlock x:Name="MineValidator" Grid.Column="1" Classes="kvValue" Text="{Binding ValidatorText}" TextWrapping="Wrap" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition SharedSizeGroup="kv" Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <TextBlock Classes="kvLabel" Text="{l:Loc Packs_Mine_Size}" />
+                                        <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding SizeText}" />
+                                    </Grid>
+                                </StackPanel>
+                                <Border Classes="compatBox">
+                                    <DockPanel>
+                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
+                                            <Path Classes="icon" Data="{StaticResource IconInfo}" Stroke="{DynamicResource AppAccentBrush}" />
+                                        </Viewbox>
+                                        <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Packs_Mine_PublishNote}" TextWrapping="Wrap" />
+                                    </DockPanel>
+                                </Border>
+                                <StackPanel Spacing="6">
+                                    <WrapPanel ItemSpacing="8" LineSpacing="6">
+                                        <Button x:Name="MineInstall" Classes="accent" Command="{Binding InstallCommand}" AutomationProperties.Name="{Binding InstallText}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{Binding InstallIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                                          Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="MineUninstall" Classes="ghost" Command="{Binding UninstallCommand}" IsVisible="{Binding IsInstalled}"
+                                                AutomationProperties.Name="{l:Loc Packs_Uninstall}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Packs_Uninstall}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="MinePublish" Classes="ghost" Command="{Binding PublishCommand}" ToolTip.Tip="{l:Loc Gen_Result_PublishSoon}"
+                                                ToolTip.ShowOnDisabled="True">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="MineDelete" Classes="ghost" Command="{Binding DeleteCommand}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Packs_Mine_Delete}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </WrapPanel>
+                                    <TextBlock x:Name="MineHint" Classes="muted" FontSize="12" Text="{Binding ActionHint}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+
+            <ContentControl x:Name="PackDetails" Grid.Column="1" Content="{Binding Selected}" IsVisible="{Binding ShowPackDetails}">
                 <ContentControl.ContentTemplate>
                     <DataTemplate x:DataType="gp:PackRowViewModel">
                         <Border Classes="packDetails">

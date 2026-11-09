@@ -376,7 +376,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     /// <summary>The registry's newer revision of the installed pack (same ID and language), else <c>null</c>.</summary>
     private Core.Registry.RegistryPack? LaterRevision(ActivityEvent activity)
     {
-        if (activity.Game is not { } game || _installed.Find(game) is not { } record || record.PackId != activity.PackId)
+        if (activity.Game is not { } game || _installed.Find(game) is not { Local: false } record || record.PackId != activity.PackId)
         {
             return null;
         }

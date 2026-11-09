@@ -1,7 +1,9 @@
 using System.Security.Cryptography;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Tests.Library;
@@ -135,6 +137,68 @@ internal sealed class InstallBed : IDisposable
         }
 
         return this;
+    }
+
+    /// <summary>
+    /// Saves a pack of game 10 generated on this machine (task 55) into the local packs, every string translated as
+    /// <paramref name="prefix"/> + the original, made by a completed generation job (its folder in the work folder) unless
+    /// <paramref name="withJob"/> is off. The generation service reads the jobs again, so the pack is the game's result.
+    /// </summary>
+    public LocalPack LocalPack(
+        string id = "claude-code",
+        string language = "ru",
+        string prefix = "RU ",
+        bool withJob = true,
+        TestRunResult? testRun = null,
+        IReadOnlyList<LocalPackWarning>? warnings = null,
+        IReadOnlyList<LocalPackString>? untranslated = null,
+        DateTimeOffset? tried = null)
+    {
+        var jobId = "job-" + id;
+        if (withJob)
+        {
+            var (entry, jobLock) = Services.GetRequiredService<GenerationJobStore>().Create(Game, language, "claude", GenerationOptions.Default);
+            jobLock.Dispose();
+            jobId = entry.Job.Id;
+            GenerationJobStore.Write(entry.Folder, entry.Job with { Stage = GenerationStage.Done, Status = GenerationJobStatus.Completed });
+        }
+
+        var recipe = _tool;
+        var strings = recipe.Extract(GameDir).Strings.ToDictionary(s => s.Key, s => prefix + s.Original, StringComparer.Ordinal);
+        var files = recipe.TouchedFiles(GameDir, strings.Keys)
+            .ToDictionary(f => f, f => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(GameDir, f)))), StringComparer.Ordinal);
+        var date = new DateTimeOffset(2026, 11, 9, 12, 0, 0, TimeSpan.Zero);
+        var total = strings.Count + (untranslated?.Count ?? 0);
+        var manifest = new PackManifest(
+            id,
+            Alpha,
+            language,
+            "Claude Code translation",
+            [new PackAuthor(LocalPackStore.PlaceholderAuthor)],
+            [new PackRevision(1, date, LocalPackStore.PlaceholderAuthor)],
+            PackStatus.Alpha,
+            new PackAgent("claude-code", "2.1.319", "claude-opus-5-5"),
+            [new PackBuild("1000", files)],
+            new PackRecipe(recipe.Id, recipe.Version.ToString(3)),
+            null,
+            null,
+            [],
+            ["noto-sans"],
+            new PackCoverage(strings.Count, total),
+            date,
+            date);
+        var report = new LocalPackReport(
+            jobId,
+            date,
+            testRun ?? TestRunResult.Passed(TimeSpan.FromSeconds(15)),
+            new LocalPackFonts(true, "noto-sans", ["Fixture Sans"], []),
+            warnings ?? [],
+            untranslated ?? [],
+            0,
+            Tried: tried);
+        var pack = Services.GetRequiredService<LocalPackStore>().Save(manifest, new StringTable(language, strings), report);
+        Services.GetRequiredService<GenerationService>().Recover();
+        return pack;
     }
 
     /// <summary>The text <see cref="PatchPack"/> puts into <see cref="SystemFile"/>.</summary>

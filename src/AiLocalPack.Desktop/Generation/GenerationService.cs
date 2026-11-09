@@ -2,6 +2,7 @@ using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Library;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Pipeline;
 using Microsoft.Extensions.Logging;
@@ -48,6 +49,9 @@ public enum GenerationActionProblem
     /// <summary>The job folder couldn't be written or deleted.</summary>
     Disk,
 
+    /// <summary>The local pack is installed in the game: uninstall it before deleting it (task 55).</summary>
+    Installed,
+
     /// <summary>The stages couldn't be set up.</summary>
     Unexpected,
 }
@@ -67,6 +71,22 @@ public sealed record GenerationJobDetails(PipelineProgress Progress, IReadOnlyLi
     public static GenerationJobDetails Empty { get; } = new(PipelineProgress.Empty, []);
 }
 
+/// <summary>
+/// The last generation's result (task 55): the game's latest completed job whose folder is still there and the local
+/// pack it made. The Generation tab shows it until the player discards it or starts over.
+/// </summary>
+public sealed record GenerationResult(string Folder, GenerationJob Job, LocalPack Pack)
+{
+    /// <summary>For the library and the page's header.</summary>
+    public GenerationResultState State => new(
+        Pack.Manifest.Id,
+        Pack.Manifest.Language,
+        Pack.Manifest.Title,
+        Pack.Manifest.Coverage?.Ratio ?? 0,
+        Pack.Report.TestRun.Outcome == TestRunOutcome.Passed,
+        Pack.Report.IsTried);
+}
+
 /// <summary>The stage handlers of one job: the real pipeline (<see cref="PipelineStagesFactory"/>), or fakes in tests.</summary>
 public interface IGenerationStagesFactory
 {
@@ -79,7 +99,9 @@ public interface IGenerationStagesFactory
 /// pipeline's stages, pauses, resumes (a paused, interrupted or failed job; the glossary approved) and cancels it (keeping
 /// or deleting its folder), resumes jobs paused by the limit when it resets (<see cref="StartAutoResume"/>), keeps the
 /// open jobs (read once from disk, then followed through the runs it starts) so the game page, the library and the tab
-/// know a game's job, and tells them on every change. Disposing it (the app quits) stops the runs, which leaves their
+/// know a game's job, and tells them on every change. A completed job's local pack is the game's result
+/// (<see cref="ResultOf"/>, task 55) until it is discarded (<see cref="DeleteLocalPackAsync"/>, which also deletes the
+/// job folder) or the player starts over (<see cref="CloseResultAsync"/>). Disposing it (the app quits) stops the runs, which leaves their
 /// jobs interrupted, resumable on the next start.
 /// </summary>
 public sealed class GenerationService : IDisposable
@@ -90,12 +112,14 @@ public sealed class GenerationService : IDisposable
     private readonly IGenerationStagesFactory _stages;
     private readonly GameCatalog _catalog;
     private readonly WorkingCopies _copies;
+    private readonly LocalPacks _localPacks;
     private readonly TimeProvider _time;
     private readonly ILogger<GenerationService> _logger;
     private readonly CancellationTokenSource _quit = new();
     private readonly Lock _lock = new();
     private readonly Dictionary<GameId, GenerationJobEntry> _open = [];
     private readonly Dictionary<GameId, GenerationRun> _runs = [];
+    private readonly Dictionary<GameId, GenerationResult> _results = [];
     private bool _loaded;
     private int _disposed;
     private int _autoResume;
@@ -107,6 +131,7 @@ public sealed class GenerationService : IDisposable
         IGenerationStagesFactory stages,
         GameCatalog catalog,
         WorkingCopies copies,
+        LocalPacks localPacks,
         TimeProvider time,
         ILogger<GenerationService> logger,
         ILogger<GenerationRunner> runnerLogger)
@@ -118,8 +143,10 @@ public sealed class GenerationService : IDisposable
         _stages = stages;
         _catalog = catalog;
         _copies = copies;
+        _localPacks = localPacks;
         _time = time;
         _logger = logger;
+        _localPacks.Changed += (_, game) => RefreshResult(game, raise: true);
     }
 
     /// <summary>How often <see cref="StartAutoResume"/> looks for jobs whose limit has reset.</summary>
@@ -150,6 +177,89 @@ public sealed class GenerationService : IDisposable
         {
             return [.. _open.Values.Select(e => e.Job)];
         }
+    }
+
+    /// <summary>The game's last generation result (its latest completed job with the local pack it made), if any.</summary>
+    public GenerationResult? ResultOf(GameId game)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        EnsureLoaded();
+        lock (_lock)
+        {
+            return _results.GetValueOrDefault(game);
+        }
+    }
+
+    /// <summary>The game's result for the library and the page (<see cref="GenerationResult.State"/>), if any.</summary>
+    public GenerationResultState? ResultStateOf(GameId game) =>
+        ResultOf(game) is { } result ? result.State with { Installed = _localPacks.IsInstalled(result.Pack) } : null;
+
+    /// <summary>
+    /// Deletes a local pack (Discard on the result, Delete in Packs → Mine) and the completed job folder that made it
+    /// (its working copy). Refused while the pack is installed. Never throws.
+    /// </summary>
+    public async Task<GenerationActionResult> DeleteLocalPackAsync(LocalPack pack)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        var game = pack.Manifest.Game;
+        try
+        {
+            var deleted = await Task.Run(() =>
+            {
+                if (!_localPacks.Delete(pack))
+                {
+                    return false;
+                }
+
+                foreach (var entry in _jobs.Store.List().Where(e => e.Job.Game == game && e.Job.Id == pack.Report.Job && !e.Job.IsOpen))
+                {
+                    _copies.Delete(entry.Folder);
+                    _logger.LogInformation("Generation job folder {Folder} deleted with its local pack", entry.Folder);
+                }
+
+                return true;
+            }).ConfigureAwait(false);
+            if (!deleted)
+            {
+                return new GenerationActionResult(null, GenerationActionProblem.Installed, "The pack is installed.");
+            }
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            _logger.LogError(e, "Couldn't delete the local pack {Pack} of {Game}", pack.Manifest.Id, game);
+            RefreshResult(game, raise: true);
+            return new GenerationActionResult(null, GenerationActionProblem.Disk, e.Message);
+        }
+
+        RefreshResult(game, raise: true);
+        return new GenerationActionResult(null);
+    }
+
+    /// <summary>
+    /// "New translation" on the result: the job folder (its working copy) is deleted, the local pack stays in Packs →
+    /// Mine, and the tab shows the start form again. Never throws.
+    /// </summary>
+    public async Task<GenerationActionResult> CloseResultAsync(GameId game)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        if (ResultOf(game) is not { } result)
+        {
+            return new GenerationActionResult(null, GenerationActionProblem.NotFound, "No result.");
+        }
+
+        try
+        {
+            await Task.Run(() => _copies.Delete(result.Folder)).ConfigureAwait(false);
+            _logger.LogInformation("Generation job folder {Folder} deleted; the local pack {Pack} stays", result.Folder, result.Pack.Manifest.Id);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            _logger.LogError(e, "Couldn't delete the generation job folder {Folder}", result.Folder);
+            return new GenerationActionResult(result.Job, GenerationActionProblem.Disk, e.Message);
+        }
+
+        RefreshResult(game, raise: true);
+        return new GenerationActionResult(result.Job);
     }
 
     /// <summary>The game's job state for the library and the page (<see cref="GenerationJobStates.Of"/>), if it has an open one.</summary>
@@ -614,6 +724,12 @@ public sealed class GenerationService : IDisposable
             }
         }
 
+        if (job.Status == GenerationJobStatus.Completed)
+        {
+            // The Build stage saved the local pack: the game's result.
+            RefreshResult(job.Game, raise: false);
+        }
+
         Changed?.Invoke(this, job);
     }
 
@@ -647,5 +763,70 @@ public sealed class GenerationService : IDisposable
                 _open[entry.Job.Game] = entry;
             }
         }
+
+        var results = entries
+            .Where(e => e.Job.Status == GenerationJobStatus.Completed)
+            .Select(e => e.Job.Game)
+            .Distinct()
+            .Select(game => FindResult(game, entries))
+            .OfType<GenerationResult>()
+            .ToList();
+        lock (_lock)
+        {
+            _results.Clear();
+            foreach (var result in results)
+            {
+                _results[result.Job.Game] = result;
+            }
+        }
+    }
+
+    /// <summary>Reads the game's result from disk again; tells the pages when it had or has one.</summary>
+    private void RefreshResult(GameId game, bool raise)
+    {
+        GenerationResult? result;
+        try
+        {
+            result = FindResult(game, _jobs.Store.List());
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogWarning(e, "Couldn't read the generation result of {Game}", game);
+            return;
+        }
+
+        GenerationResult? before;
+        lock (_lock)
+        {
+            before = _results.GetValueOrDefault(game);
+            if (result is null)
+            {
+                _results.Remove(game);
+            }
+            else
+            {
+                _results[game] = result;
+            }
+        }
+
+        if (raise && (result ?? before) is { } any)
+        {
+            Changed?.Invoke(this, any.Job);
+        }
+    }
+
+    /// <summary>The game's latest completed job with a local pack it made (a job whose pack was deleted doesn't count).</summary>
+    private GenerationResult? FindResult(GameId game, IReadOnlyList<GenerationJobEntry> entries)
+    {
+        var completed = entries.Where(e => e.Job.Game == game && e.Job.Status == GenerationJobStatus.Completed).OrderByDescending(e => e.Job.Updated).ToList();
+        if (completed.Count == 0)
+        {
+            return null;
+        }
+
+        var packs = _localPacks.List(game);
+        return completed
+            .Select(e => packs.FirstOrDefault(p => p.Report.Job == e.Job.Id) is { } pack ? new GenerationResult(e.Folder, e.Job, pack) : null)
+            .FirstOrDefault(r => r is not null);
     }
 }

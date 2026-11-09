@@ -220,4 +220,68 @@ public sealed class LocalPackStoreTests : IDisposable
         // Assert
         listed.Select(p => p.Report.Job).Should().Equal("job-2");
     }
+
+    [Fact]
+    public void Tried_mark_reads_back()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+        _store.UpdateReport(Game, "ru", "claude-code", r => r with { Tried = T0.AddHours(1) });
+
+        // Act
+        var pack = _store.Find(Game, "ru", "claude-code");
+
+        // Assert
+        (pack!.Report.Tried, pack.Report.IsTried).Should().Be((T0.AddHours(1), true));
+    }
+
+    [Fact]
+    public void Share_dismissal_reads_back()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+        _store.UpdateReport(Game, "ru", "claude-code", r => r with { ShareDismissed = true });
+
+        // Act
+        var pack = _store.Find(Game, "ru", "claude-code");
+
+        // Assert
+        pack!.Report.ShareDismissed.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Report_change_of_a_missing_pack_changes_nothing()
+    {
+        // Act
+        var changed = _store.UpdateReport(Game, "ru", "claude-code", r => r with { ShareDismissed = true });
+
+        // Assert
+        (changed, File.Exists(_store.ReportPath(Game, "ru", "claude-code"))).Should().Be(((LocalPack?)null, false));
+    }
+
+    [Fact]
+    public void New_pack_is_not_tried()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+
+        // Act
+        var pack = _store.Find(Game, "ru", "claude-code");
+
+        // Assert
+        (pack!.Report.IsTried, pack.Report.ShareDismissed).Should().Be((false, false));
+    }
+
+    [Fact]
+    public void Find_refuses_a_name_that_is_no_pack_id()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+
+        // Act
+        var pack = _store.Find(Game, "ru", "../ru/claude-code");
+
+        // Assert
+        pack.Should().BeNull();
+    }
 }

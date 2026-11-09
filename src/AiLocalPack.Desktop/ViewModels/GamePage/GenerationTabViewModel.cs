@@ -2,10 +2,12 @@ using System.Globalization;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Languages;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Generation;
+using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
@@ -127,7 +129,9 @@ public enum GenerationBanner
 /// stage with its counter and ETA, Pause / Resume / Retry / Cancel, a thick bar; the strings just translated; the Build
 /// step with the font swap; the validator box with its list; the agent's limit; the agent activity log) under the state's
 /// banner (paused by the limit or the player, interrupted, failed, waiting for review). <c>progress.json</c> and the log are
-/// read again after every change and every <see cref="DetailsInterval"/> while the job runs.
+/// read again after every change and every <see cref="DetailsInterval"/> while the job runs. Once the job completed, its
+/// local pack is the result card (task 55, <see cref="GenerationResultViewModel"/>) until the player discards it or starts
+/// a new translation.
 /// </summary>
 public sealed partial class GenerationTabViewModel : ObservableObject
 {
@@ -140,6 +144,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private readonly IUiDispatcher _ui;
     private readonly IDialogService _dialogs;
     private readonly ToastService _toasts;
+    private readonly InstallFlow _install;
+    private readonly LocalPacks _localPacks;
+    private readonly Action<LocalPack> _showInPacks;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
@@ -193,6 +200,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         IUiDispatcher ui,
         IDialogService dialogs,
         ToastService toasts,
+        InstallFlow install,
+        LocalPacks localPacks,
+        Action<LocalPack> showInPacks,
         TimeProvider time,
         ILogger logger)
     {
@@ -208,6 +218,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _ui = ui;
         _dialogs = dialogs;
         _toasts = toasts;
+        _install = install;
+        _localPacks = localPacks;
+        _showInPacks = showInPacks;
         _time = time;
         _logger = logger;
         Agents = [.. agents.Agents.Select(row => new GenerationAgentCard(row, localizer, Pick))];
@@ -227,10 +240,12 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         ToggleWarningsCommand = new RelayCommand(() => IsWarningsOpen = !IsWarningsOpen);
         ToggleLogCommand = new RelayCommand(() => IsLogOpen = !IsLogOpen);
         Job = jobs.FindOpen(game.Id);
+        SyncResult();
         SelectDefaultAgent();
         BuildLanguages();
         Steps = BuildSteps();
         SyncReview();
+        _install.Changed += OnInstallChanged;
     }
 
     // ---------- Frame ----------
@@ -238,7 +253,15 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     /// <summary>The game's open job (the progress card), or <c>null</c> (the start form).</summary>
     public GenerationJob? Job { get; private set; }
 
-    public bool ShowForm => Job is null;
+    public bool ShowForm => Job is null && Result is null;
+
+    /// <summary>The last job's local pack (task 55, design §6d) while no job is open, else <c>null</c>.</summary>
+    public GenerationResultViewModel? Result { get; private set; }
+
+    public bool ShowResult => Result is not null;
+
+    /// <summary>Why Discard or New translation didn't happen, under the result card.</summary>
+    public bool ShowResultError => ShowResult && HasActionError;
 
     /// <summary>The progress card: a job that doesn't wait for the glossary review.</summary>
     public bool ShowProgress => Job is not null && Review is null;
@@ -640,8 +663,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         }
 
         _target = language;
-        var hadJob = Job is not null;
+        var hadJob = Job is not null || Result is not null;
         Job = _jobs.FindOpen(game.Id);
+        SyncResult();
         BuildLanguages();
         Steps = BuildSteps();
         SyncReview();
@@ -661,6 +685,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     {
         Steps = BuildSteps();
         Review?.RefreshTexts();
+        Result?.RefreshTexts();
         foreach (var card in Agents)
         {
             card.RefreshTexts();
@@ -672,6 +697,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     public void Close()
     {
         _closed.Cancel();
+        _install.Changed -= OnInstallChanged;
         foreach (var card in Agents)
         {
             card.StateChanged -= OnAgentStateChanged;
@@ -877,6 +903,100 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             FollowDetails();
         });
     }
+
+    /// <summary>
+    /// Shows the last job's result while no job is open (the same card follows the pack's marks and the installed pack),
+    /// none otherwise.
+    /// </summary>
+    private void SyncResult()
+    {
+        if (Job is not null || _jobs.ResultOf(_game.Id) is not { } result)
+        {
+            Result = null;
+            return;
+        }
+
+        var installed = _localPacks.IsInstalled(result.Pack);
+        if (Result is { } current && current.Result.Job.Id == result.Job.Id)
+        {
+            current.Update(result, installed, _install.IsBusy);
+            return;
+        }
+
+        Result = new GenerationResultViewModel(result, installed, _install.IsBusy, _localizer, new GenerationResultActions(
+            pack => _install.InstallLocalAsync(_game, pack, play: true),
+            AskDiscard,
+            _showInPacks,
+            () => _ = NewTranslationAsync(),
+            NotNow));
+    }
+
+    /// <summary>An install started, moved on or ended (UI thread): the result's buttons follow.</summary>
+    private void OnInstallChanged(object? sender, EventArgs e)
+    {
+        if (Result is { } result)
+        {
+            result.Update(result.Result, _localPacks.IsInstalled(result.Pack), _install.IsBusy);
+        }
+    }
+
+    /// <summary><c>Discard</c>: asks, then deletes the local pack and the job's working copy; the start form comes back.</summary>
+    private void AskDiscard(LocalPack pack) =>
+        _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
+            _localizer[nameof(Strings.Gen_Result_Discard_Title)],
+            _localizer.Format(nameof(Strings.Gen_Result_Discard_Text), pack.Manifest.Title),
+            _localizer[nameof(Strings.Gen_Result_Discard)],
+            () => _ = DiscardAsync(pack)));
+
+    /// <summary>Deletes the result's pack and working copy (after the player confirmed).</summary>
+    public async Task DiscardAsync(LocalPack pack)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        ActionError = string.Empty;
+        var result = await _jobs.DeleteLocalPackAsync(pack);
+        _ui.Post(() =>
+        {
+            ActionError = ResultProblem(result);
+            if (result.Succeeded)
+            {
+                _toasts.Show(new ToastViewModel(ToastTone.Ok, _localizer[nameof(Strings.Gen_Result_Toast_Discarded)], []));
+            }
+
+            Update(_game, _target);
+        });
+    }
+
+    /// <summary><c>New translation</c>: the pack stays in Packs → Mine, the working copy goes, the start form comes back.</summary>
+    public async Task NewTranslationAsync()
+    {
+        ActionError = string.Empty;
+        var result = await _jobs.CloseResultAsync(_game.Id);
+        _ui.Post(() =>
+        {
+            ActionError = ResultProblem(result);
+            if (result.Succeeded)
+            {
+                _toasts.Show(new ToastViewModel(ToastTone.Ok, _localizer[nameof(Strings.Gen_Result_Toast_Closed)], []));
+            }
+
+            Update(_game, _target);
+        });
+    }
+
+    /// <summary><c>Not now</c> on the share strip: hidden for the pack from now on; publishing stays in Packs → Mine.</summary>
+    private void NotNow(LocalPack pack)
+    {
+        _ = Task.Run(() => _localPacks.DismissShare(pack));
+        _toasts.Show(new ToastViewModel(ToastTone.Info, _localizer[nameof(Strings.Gen_Result_Toast_NotNow)], []));
+    }
+
+    private string ResultProblem(GenerationActionResult result) => result.Problem switch
+    {
+        null => string.Empty,
+        GenerationActionProblem.Installed => _localizer[nameof(Strings.Gen_Result_Error_Installed)],
+        GenerationActionProblem.NotFound => string.Empty,
+        _ => _localizer.Format(nameof(Strings.Gen_Result_Error_Disk), result.Detail),
+    };
 
     /// <summary>Opens the review when the job waits for it (a new one after the glossary was drafted again), closes it otherwise.</summary>
     private void SyncReview()
@@ -1111,7 +1231,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private IReadOnlyList<GenerationStepViewModel> BuildSteps()
     {
-        var states = GenerationSteps.Of(Job);
+        var states = GenerationSteps.Of(Job ?? Result?.Result.Job);
         return [.. GenerationSteps.Stages.Select((stage, i) => new GenerationStepViewModel(stage, GenerationTexts.StepName(stage, _localizer), states[i], i == states.Count - 1))];
     }
 

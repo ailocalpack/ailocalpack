@@ -25,6 +25,8 @@ public sealed record LocalPack(string Folder, PackManifest Manifest, LocalPackRe
 /// <param name="KeptAsIs">Translations the agent left the same as the original (names, "HP"): counted as translated.</param>
 /// <param name="SizeBytes">The pack folder's size (manifest + string table).</param>
 /// <param name="InGameLanguage">The language the player has to pick in the game's settings, when not the pack's own.</param>
+/// <param name="Tried">When the player first closed the game after playing it with the pack installed (task 55); publishing is offered from then on.</param>
+/// <param name="ShareDismissed">The player answered "Not now" to the result's "Share it" strip.</param>
 public sealed record LocalPackReport(
     string Job,
     DateTimeOffset Created,
@@ -34,7 +36,13 @@ public sealed record LocalPackReport(
     IReadOnlyList<LocalPackString> Untranslated,
     int KeptAsIs,
     long SizeBytes = 0,
-    string? InGameLanguage = null);
+    string? InGameLanguage = null,
+    DateTimeOffset? Tried = null,
+    bool ShareDismissed = false)
+{
+    /// <summary>The player has played the game with the pack installed.</summary>
+    public bool IsTried => Tried is not null;
+}
 
 /// <param name="Checked">Whether the engine's fonts could be checked at all (no font hook = not checked).</param>
 /// <param name="Replacement">The whitelisted font swapped in, or <c>null</c>.</param>
@@ -57,7 +65,8 @@ public sealed record LocalPackString(string Key, string Original);
 /// commits it as is; the build report is apart, in <c>reports/&lt;game folder&gt;/&lt;language&gt;/&lt;id&gt;.json</c>
 /// (<c>{schemaVersion: 1, job, created, testRun {outcome, skip?, detail?, ranMs?, exitCode?}, fonts {checked,
 /// replacement?, swapped, uncovered}, warnings [{key, rule, message, original, translation}], untranslated [{key,
-/// original}], keptAsIs, sizeBytes, inGameLanguage?}</c>), since a pack folder holds nothing else. Until GitHub sign-in
+/// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?}</c>; the last two are the player's, task 55),
+/// since a pack folder holds nothing else. Until GitHub sign-in
 /// (task 58) the author is <see cref="PlaceholderAuthor"/>, replaced when publishing. Listing never throws for disk
 /// state (a broken pack is logged and left out).
 /// </summary>
@@ -200,6 +209,32 @@ public sealed class LocalPackStore
     /// <summary>The local pack the job made, or <c>null</c>.</summary>
     public LocalPack? FindByJob(GameId game, string jobId) => List(game).FirstOrDefault(p => p.Report.Job == jobId);
 
+    /// <summary>The local pack of the game, language and ID, or <c>null</c> (missing, broken). Never throws for disk state.</summary>
+    public LocalPack? Find(GameId game, string language, string id)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        return PackFormat.IsSlug(id) && Languages.GameLanguages.IsKnown(language) ? Read(PackFolder(game, language, id)) : null;
+    }
+
+    /// <summary>
+    /// Changes the pack's report (the player's marks: tried in game, "Not now"); the pack itself stays as it is.
+    /// Returns the pack as saved, or <c>null</c> when it is gone.
+    /// </summary>
+    /// <exception cref="IOException">The report can't be written.</exception>
+    /// <exception cref="UnauthorizedAccessException">The report can't be written.</exception>
+    public LocalPack? UpdateReport(GameId game, string language, string id, Func<LocalPackReport, LocalPackReport> change)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        if (Find(game, language, id) is not { } pack)
+        {
+            return null;
+        }
+
+        var report = change(pack.Report);
+        WriteReport(ReportPath(game, language, id), report);
+        return pack with { Report = report };
+    }
+
     /// <summary>Deletes the pack folder and its report (nothing when absent).</summary>
     /// <exception cref="IOException">A file can't be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">A file can't be deleted.</exception>
@@ -266,7 +301,9 @@ public sealed class LocalPackStore
             [.. report.Untranslated.Select(s => new StringJson(s.Key, s.Original))],
             report.KeptAsIs,
             report.SizeBytes,
-            report.InGameLanguage);
+            report.InGameLanguage,
+            report.Tried?.ToUniversalTime(),
+            report.ShareDismissed ? true : null);
         AtomicFile.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(LocalPackReportJson))));
     }
 
@@ -305,7 +342,9 @@ public sealed class LocalPackStore
             [.. (json.Untranslated ?? []).OfType<StringJson>().Select(s => new LocalPackString(s.Key ?? "", s.Original ?? ""))],
             json.KeptAsIs,
             json.SizeBytes,
-            json.InGameLanguage);
+            json.InGameLanguage,
+            json.Tried,
+            json.ShareDismissed == true);
     }
 }
 
@@ -319,7 +358,9 @@ internal sealed record LocalPackReportJson(
     IReadOnlyList<StringJson?>? Untranslated,
     int KeptAsIs,
     long SizeBytes,
-    string? InGameLanguage);
+    string? InGameLanguage,
+    DateTimeOffset? Tried = null,
+    bool? ShareDismissed = null);
 
 internal sealed record TestRunJson(string? Outcome, string? Skip, string? Detail, long? RanMs, int? ExitCode);
 

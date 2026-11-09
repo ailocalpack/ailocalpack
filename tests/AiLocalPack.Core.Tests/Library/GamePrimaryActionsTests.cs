@@ -216,4 +216,86 @@ public sealed class GamePrimaryActionsTests
         // Assert
         opensOnGeneration.Should().Be(expected);
     }
+
+    private static GenerationResultState Result(bool tried = false) => new("claude-code", "ru", "Claude Code translation", 0.99, true, tried);
+
+    [Fact]
+    public void Waiting_local_pack_offers_install_and_play()
+    {
+        // Arrange
+        var status = Status(LocalizationStatusKind.PackAvailable, [Pack("best")]) with { Result = Result() };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.InstallLocalPack, Result: Result()));
+    }
+
+    [Fact]
+    public void Waiting_local_pack_yields_to_the_installed_pack()
+    {
+        // Arrange
+        var installed = new InstalledPackState("best", InstalledPackProblem.None, 1);
+        var status = Status(LocalizationStatusKind.Installed, [Pack("best")], installed) with { Result = Result() };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.Play);
+    }
+
+    [Fact]
+    public void Installed_local_pack_plays_without_the_registry_pack_of_the_same_id()
+    {
+        // Arrange
+        var installed = new InstalledPackState("claude-code", InstalledPackProblem.None, 1, Local: true, Title: "Claude Code translation");
+        var status = Status(LocalizationStatusKind.Installed, [Pack("claude-code")], installed);
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.Play, null, installed));
+    }
+
+    [Fact]
+    public void Untried_result_opens_the_page_on_generation()
+    {
+        // Arrange
+        var status = Status(LocalizationStatusKind.NoPack) with { Result = Result() };
+
+        // Act
+        var opens = GamePrimaryActions.OpensOnGeneration(status);
+
+        // Assert
+        opens.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Tried_result_opens_the_page_on_packs()
+    {
+        // Arrange
+        var status = Status(LocalizationStatusKind.NoPack) with { Result = Result(tried: true) };
+
+        // Act
+        var opens = GamePrimaryActions.OpensOnGeneration(status);
+
+        // Assert
+        opens.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Result_installed_in_another_language_offers_play()
+    {
+        // Arrange: the page's target is another language, so the status has no installed pack.
+        var status = Status(LocalizationStatusKind.NoPack) with { Result = Result() with { Installed = true } };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.Play);
+    }
 }

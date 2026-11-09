@@ -27,6 +27,12 @@ public sealed record InstallRequest(Game Game, string Language, string PackId, i
     /// its users); re-apply writes the files given again.
     /// </summary>
     public IReadOnlyList<InstallDependency> Dependencies { get; init; } = [];
+
+    /// <summary>A pack generated on this machine (task 55), not one from the registry: recorded with <see cref="Title"/>.</summary>
+    public bool Local { get; init; }
+
+    /// <summary>The pack's title, recorded for a local pack (the registry's list names the others).</summary>
+    public string? Title { get; init; }
 }
 
 /// <summary>A whitelisted dependency to install with a pack: its unpacked files, laid out as in the game folder.</summary>
@@ -77,6 +83,15 @@ public sealed record InstalledPack(
 {
     /// <summary>Files the game makes from the pack's files (relative, <c>/</c>-separated), deleted on uninstall when present.</summary>
     public IReadOnlyList<string> GeneratedFiles { get; init; } = [];
+
+    /// <summary>
+    /// A pack generated on this machine (task 55: <c>LocalPackStore</c>), not one from the registry: re-apply reads it
+    /// from the local packs, and a registry pack with the same ID is a different pack.
+    /// </summary>
+    public bool Local { get; init; }
+
+    /// <summary>The title of a local pack (the registry's list names the others); <c>null</c> for a registry pack.</summary>
+    public string? Title { get; init; }
 }
 
 /// <summary>

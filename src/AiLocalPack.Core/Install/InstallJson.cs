@@ -15,7 +15,9 @@ internal sealed record InstalledPackJson(
     string? Backup,
     IReadOnlyList<InstalledFileJson?>? Files,
     IReadOnlyList<string>? AddedFolders,
-    IReadOnlyList<string>? GeneratedFiles = null);
+    IReadOnlyList<string>? GeneratedFiles = null,
+    bool? Local = null,
+    string? Title = null);
 
 internal sealed record InstalledDependencyJson(
     string? Game,
