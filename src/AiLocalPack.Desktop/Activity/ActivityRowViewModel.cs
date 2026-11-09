@@ -80,6 +80,9 @@ public sealed partial class ActivityRowViewModel : ObservableObject
 
     public bool IsOk => Tone == ActivityTone.Ok;
 
+    /// <summary>A generation waiting for the agent's limit (teal).</summary>
+    public bool IsPaused => Tone == ActivityTone.Paused;
+
     /// <summary>A feed event the player hasn't seen: dot + bold title.</summary>
     [ObservableProperty]
     public partial bool IsUnread { get; set; }

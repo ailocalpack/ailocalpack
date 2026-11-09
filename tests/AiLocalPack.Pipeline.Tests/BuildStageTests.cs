@@ -151,6 +151,35 @@ public sealed class BuildStageTests : IDisposable
     }
 
     [Fact]
+    public async Task The_build_step_and_the_font_swap_go_to_the_progress_file()
+    {
+        // Arrange
+        await TranslateAsync(original => "Жёлтый " + original);
+
+        // Act
+        await RunAsync();
+
+        // Assert
+        var build = PipelineProgressFile.Read(_h.Files).Build!;
+        new { build.Step, Fonts = build.SwappedFonts?.Count > 0, build.Replacement, Files = build.Files > 0 }
+            .Should().Be(new { Step = BuildStep.Packing, Fonts = true, Replacement = (string?)"Noto Sans", Files = true });
+    }
+
+    [Fact]
+    public async Task A_crash_in_the_test_run_leaves_the_progress_at_the_test_run()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var runner = new FakeTestRunner(TestRunResult.Crashed(TimeSpan.FromSeconds(4), 3, "the game closed with exit code 3"));
+
+        // Act
+        await RunAsync(runner: runner);
+
+        // Assert
+        PipelineProgressFile.Read(_h.Files).Build!.Step.Should().Be(BuildStep.TestRun);
+    }
+
+    [Fact]
     public async Task A_skipped_test_run_is_kept_in_the_report()
     {
         // Arrange

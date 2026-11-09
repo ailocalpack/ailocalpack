@@ -59,6 +59,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             return Fail(context, GenerationFailureKind.Toolkit, $"{game.Name}'s Steam build ID is unknown, so the pack can't name the build it fits: refresh the library and retry.");
         }
 
+        Step(context, new BuildProgress(BuildStep.Checking));
         var collected = LocalPackBuilder.Collect(source, stored, tool.Markup);
         foreach (var (key, issue) in collected.Refused)
         {
@@ -83,7 +84,9 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             }
 
             var output = new DirectoryRebuildOutput(build);
+            Step(context, new BuildProgress(BuildStep.Rebuilding));
             rebuilt = tool.Rebuild(context.CopyFolder, job.Language, collected.Translations, output, cancellationToken);
+            Step(context, new BuildProgress(BuildStep.Fonts, rebuilt.ChangedFiles.Count));
             fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, job.Language, collected.Translations, [], output, cancellationToken: cancellationToken).ConfigureAwait(false);
             touched = Hashes(context.CopyFolder, tool.TouchedFiles(context.CopyFolder, collected.Translations.Keys));
         }
@@ -105,6 +108,10 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         context.Log($"Rebuilt {files.Count} files with {tool.Id} {tool.Version.ToString(3)}: {rebuilt.Applied} strings applied, {collected.Coverage.Translated} of {collected.Coverage.Total} translated"
             + (collected.Warnings.Count > 0 ? $", {collected.Warnings.Count} validator warnings." : "."));
         LogFonts(context, fonts);
+        var swapped = fonts is { Replacement: { } replacement, Check: { } fontCheck }
+            ? new BuildProgress(BuildStep.TestRun, files.Count, [.. fontCheck.ToSwap.Select(f => f.DisplayName)], replacement.Name)
+            : new BuildProgress(BuildStep.TestRun, files.Count);
+        Step(context, swapped);
 
         TestRunResult testRun;
         try
@@ -122,8 +129,13 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             return new GenerationStepResult.Failed(GenerationFailureKind.TestRun, $"Test run failed: {testRun.Detail}");
         }
 
+        Step(context, swapped with { Step = BuildStep.Packing });
         return Save(context, tool, collected, touched, fonts, rebuilt, testRun);
     }
+
+    /// <summary>The progress card's build step line (task 53); display only.</summary>
+    private static void Step(GenerationStepContext context, BuildProgress step) =>
+        PipelineProgressFile.Update(context.Files, p => p with { Build = step });
 
     private GenerationStepResult Save(
         GenerationStepContext context,

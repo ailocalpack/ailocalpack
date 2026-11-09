@@ -134,10 +134,44 @@ public sealed class GenerationResumeTests : IDisposable
         };
 
         // Act
-        var state = GenerationJobStates.Of(job, "limit");
+        var state = GenerationJobStates.Of(job);
 
         // Assert
-        state.Should().Be(new AiLocalPack.Core.Library.GenerationJobState(55, true, null, "limit"));
+        state.Should().Be(new AiLocalPack.Core.Library.GenerationJobState(55, AiLocalPack.Core.Library.GenerationJobPhase.PausedByLimit, null, T0.AddHours(1)));
+    }
+
+    [Theory]
+    [InlineData(GenerationJobStatus.Running, null, AiLocalPack.Core.Library.GenerationJobPhase.Running)]
+    [InlineData(GenerationJobStatus.Paused, GenerationPauseReason.Player, AiLocalPack.Core.Library.GenerationJobPhase.PausedByPlayer)]
+    [InlineData(GenerationJobStatus.Interrupted, null, AiLocalPack.Core.Library.GenerationJobPhase.Interrupted)]
+    [InlineData(GenerationJobStatus.WaitingForReview, null, AiLocalPack.Core.Library.GenerationJobPhase.WaitingForReview)]
+    public void A_job_s_status_maps_to_its_phase(GenerationJobStatus status, GenerationPauseReason? reason, AiLocalPack.Core.Library.GenerationJobPhase expected)
+    {
+        // Arrange
+        var job = Entry("job", status, reason).Job;
+
+        // Act
+        var state = GenerationJobStates.Of(job);
+
+        // Assert
+        state!.Phase.Should().Be(expected);
+    }
+
+    [Fact]
+    public void A_failed_job_names_its_stage()
+    {
+        // Arrange
+        var job = Entry("job", GenerationJobStatus.Failed).Job with
+        {
+            Stage = GenerationStage.Build,
+            Failure = new GenerationFailure(GenerationStage.Build, GenerationFailureKind.TestRun, "crashed"),
+        };
+
+        // Act
+        var state = GenerationJobStates.Of(job);
+
+        // Assert
+        (state!.Phase, state.FailedStage).Should().Be((AiLocalPack.Core.Library.GenerationJobPhase.Failed, GenerationStage.Build));
     }
 
     [Fact]

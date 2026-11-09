@@ -29,14 +29,23 @@ public enum GamePrimaryActionKind
     /// </summary>
     Reapply,
 
-    /// <summary>A generation job exists (running or paused): opens the Generation tab.</summary>
+    /// <summary>A generation job runs: opens the Generation tab.</summary>
     ViewProgress,
+
+    /// <summary>The job is paused (limit or player) or was interrupted: resumes it from its stage and chunk (task 53).</summary>
+    ResumeGeneration,
+
+    /// <summary>A stage of the job failed: runs that stage again.</summary>
+    RetryStage,
+
+    /// <summary>The glossary waits for the player's review: opens the Generation tab.</summary>
+    ReviewGlossary,
 }
 
 /// <summary>The header's primary action with what its caption names.</summary>
 /// <param name="Pack">The pack it installs, plays with or updates to (from the registry); <c>null</c> when none or unknown.</param>
 /// <param name="Installed">The installed pack (<see cref="GamePrimaryActionKind.Play"/>, update kinds).</param>
-/// <param name="Job">The generation job (<see cref="GamePrimaryActionKind.ViewProgress"/>).</param>
+/// <param name="Job">The generation job (<see cref="GamePrimaryActionKind.ViewProgress"/> and the other job kinds).</param>
 public sealed record GamePrimaryAction(
     GamePrimaryActionKind Kind,
     RegistryPack? Pack = null,
@@ -50,7 +59,7 @@ public sealed record GamePrimaryAction(
 public static class GamePrimaryActions
 {
     /// <summary>
-    /// Blocked or unknown → none; a job → view progress; a pack broken by an update → update to the registry's later
+    /// Blocked or unknown → none; a job → by its phase (<see cref="JobKind"/>); a pack broken by an update → update to the registry's later
     /// revision of the same pack, else re-apply a pack that still fits, else translate the new strings; installed → play; packs → install the best; else
     /// generate.
     /// </summary>
@@ -64,7 +73,7 @@ public static class GamePrimaryActions
         {
             LocalizationStatusKind.Blocked or LocalizationStatusKind.Unknown => GamePrimaryAction.None,
             LocalizationStatusKind.Generating or LocalizationStatusKind.Paused =>
-                new(GamePrimaryActionKind.ViewProgress, Installed: status.Installed, Job: status.Job),
+                new(JobKind(status.Job), Installed: status.Installed, Job: status.Job),
             LocalizationStatusKind.NeedsUpdate when installedPack is not null && installedPack.Revision > status.Installed!.Revision =>
                 new(GamePrimaryActionKind.UpdatePack, installedPack, status.Installed),
             LocalizationStatusKind.NeedsUpdate when status.Installed is { NeedsReapply: true } => new(GamePrimaryActionKind.Reapply, installedPack, status.Installed),
@@ -74,6 +83,15 @@ public static class GamePrimaryActions
             _ => new(GamePrimaryActionKind.Generate),
         };
     }
+
+    /// <summary>Running → view progress; paused or interrupted → resume; failed → retry the stage; waiting → review the glossary.</summary>
+    public static GamePrimaryActionKind JobKind(GenerationJobState? job) => job?.Phase switch
+    {
+        GenerationJobPhase.PausedByLimit or GenerationJobPhase.PausedByPlayer or GenerationJobPhase.Interrupted => GamePrimaryActionKind.ResumeGeneration,
+        GenerationJobPhase.Failed => GamePrimaryActionKind.RetryStage,
+        GenerationJobPhase.WaitingForReview => GamePrimaryActionKind.ReviewGlossary,
+        _ => GamePrimaryActionKind.ViewProgress,
+    };
 
     /// <summary>The tab the page opens on: Generation while a job exists, otherwise Packs.</summary>
     public static bool OpensOnGeneration(LocalizationStatus status)

@@ -357,6 +357,64 @@ public sealed class TranslateStageTests : IDisposable
     }
 
     [Fact]
+    public async Task Translations_with_warnings_go_to_the_progress_file_with_their_rule()
+    {
+        // Arrange
+        await ExtractAsync();
+        var last = Chunks[0].Keys[^1];
+        var agent = Agent((run, _) =>
+        {
+            run.Store((key, original) => key == last ? "RU " + original + " " : "RU " + original);
+            return [ScriptedAgent.Usage, ScriptedAgent.Done];
+        });
+
+        // Act
+        await StepAsync(agent);
+
+        // Assert
+        var progress = PipelineProgressFile.Read(_h.Files);
+        new { Warning = progress.Warnings.Single().Key, progress.Warnings.Single().Rule, Recent = progress.Recent[^1].Warning }
+            .Should().Be(new { Warning = last, Rule = "whitespace", Recent = (string?)"whitespace" });
+    }
+
+    [Fact]
+    public async Task Warnings_of_other_chunks_stay_in_the_progress_file()
+    {
+        // Arrange
+        await ExtractAsync();
+        var first = Chunks[0].Keys[0];
+        await StepAsync(Agent((run, _) =>
+        {
+            run.Store((key, original) => key == first ? "RU " + original + " " : "RU " + original);
+            return [ScriptedAgent.Done];
+        }));
+
+        // Act
+        await StepAsync(ScriptedAgent.Translating(), chunk: 1, translated: Chunks[0].Keys.Count);
+
+        // Assert
+        PipelineProgressFile.Read(_h.Files).Warnings.Select(w => w.Key).Should().Equal(first);
+    }
+
+    [Fact]
+    public async Task The_agents_reported_limit_share_goes_to_the_progress_file()
+    {
+        // Arrange
+        await ExtractAsync();
+        var agent = Agent((run, _) =>
+        {
+            run.Store();
+            return [new AgentLimitStatus(0.45, "five_hour", null), ScriptedAgent.Done];
+        });
+
+        // Act
+        await StepAsync(agent);
+
+        // Assert
+        PipelineProgressFile.Read(_h.Files).Limit.Should().Be(new AgentLimitInfo(0.45, "five_hour", null));
+    }
+
+    [Fact]
     public async Task A_missing_chunk_plan_fails_the_stage()
     {
         // Arrange

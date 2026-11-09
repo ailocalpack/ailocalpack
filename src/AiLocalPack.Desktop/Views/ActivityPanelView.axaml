@@ -11,7 +11,7 @@
         <DataTemplate DataType="a:ActivityRowViewModel">
             <!-- The row: the open button (thumbnail, texts) with its side buttons and actions next to it, not inside, so each stays its own control for keyboard and screen readers -->
             <Border Classes="activityRow" Classes.decision="{Binding IsDecision}" Classes.attention="{Binding IsAttention}"
-                    Classes.bad="{Binding IsBad}" Classes.ok="{Binding IsOk}" Classes.read="{Binding IsRead}" Classes.unread="{Binding IsUnread}">
+                    Classes.bad="{Binding IsBad}" Classes.ok="{Binding IsOk}" Classes.paused="{Binding IsPaused}" Classes.read="{Binding IsRead}" Classes.unread="{Binding IsUnread}">
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
                     <Button Classes="activityRowOpen" Command="{Binding OpenCommand}" AutomationProperties.Name="{Binding Title}"
                             AutomationProperties.HelpText="{Binding ToneText}">

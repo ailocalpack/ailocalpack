@@ -124,4 +124,50 @@ public sealed class GenerationTabViewTests
         window.Close();
         return Task.CompletedTask;
     });
+
+    [Fact]
+    public Task Failed_job_shows_the_red_banner_and_retry_over_the_progress_card() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+        var game = services.GetRequiredService<GameLibrary>().Catalog.Games.Single(g => g.Id == GameId.Steam(10));
+        var (entry, jobLock) = services.GetRequiredService<AiLocalPack.Core.Generation.GenerationJobStore>().Create(game, "ru", "claude", AiLocalPack.Core.Generation.GenerationOptions.Default);
+        jobLock.Dispose();
+        AiLocalPack.Core.Generation.GenerationJobStore.Write(entry.Folder, entry.Job with
+        {
+            Stage = AiLocalPack.Core.Generation.GenerationStage.Build,
+            Status = AiLocalPack.Core.Generation.GenerationJobStatus.Failed,
+            Failure = new AiLocalPack.Core.Generation.GenerationFailure(AiLocalPack.Core.Generation.GenerationStage.Build, AiLocalPack.Core.Generation.GenerationFailureKind.TestRun, "crashed"),
+        });
+
+        // Act
+        var (window, _) = Open(services);
+
+        // Assert
+        (Find<Border>(window, "GenBanner").IsEffectivelyVisible,
+            Find<TextBlock>(window, "GenBannerTitle").Text,
+            Find<Button>(window, "GenRetry").IsEffectivelyVisible,
+            Find<Button>(window, "GenPause").IsEffectivelyVisible,
+            Find<Border>(window, "ProgressCard").IsEffectivelyVisible)
+            .Should().Be((true, "Stage Build & test failed.", true, false, true));
+        window.Close();
+        return Task.CompletedTask;
+    });
+
+    [Fact]
+    public Task Running_job_shows_pause_and_no_banner() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var services = Build();
+        var (window, page) = Open(services);
+
+        // Act
+        await page.Generation.StartCommand.ExecuteAsync(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<Border>(window, "GenBanner").IsEffectivelyVisible, Find<Button>(window, "GenPause").IsEffectivelyVisible, Find<TextBlock>(window, "ProgressTitle").Text)
+            .Should().Be((false, true, "Making the working copy"));
+        window.Close();
+    });
 }

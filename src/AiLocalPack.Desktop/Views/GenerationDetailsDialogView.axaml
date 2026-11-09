@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:AiLocalPack.Desktop.Generation"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.GenerationDetailsDialogView"
+             x:DataType="g:GenerationDetailsDialogViewModel"
+             Width="640">
+    <!-- Design §6b: a failed stage's Details: the reason, the failure's own message, the job's log, Retry stage. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,22,24,20" Spacing="12">
+            <TextBlock x:Name="GenDetailsTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" />
+            <TextBlock x:Name="GenDetailsReason" Text="{Binding Reason}" TextWrapping="Wrap" IsVisible="{Binding HasReason}" />
+            <SelectableTextBlock x:Name="GenDetailsMessage" Classes="muted" FontSize="13" Text="{Binding Message}" TextWrapping="Wrap" IsVisible="{Binding HasMessage}" />
+            <StackPanel Spacing="6">
+                <TextBlock Classes="capsLabel" Text="{l:Loc Install_Details_Log}" />
+                <TextBox x:Name="GenDetailsLog" Classes="log" Text="{Binding LogText, Mode=OneWay}" AutomationProperties.Name="{l:Loc Install_Details_Log}" />
+            </StackPanel>
+            <DockPanel Margin="0,6,0,0">
+                <Button x:Name="GenDetailsFolder" DockPanel.Dock="Left" Classes="ghost" Command="{Binding OpenFolderCommand}" IsVisible="{Binding CanOpenFolder}"
+                        Content="{l:Loc Gen_Details_OpenFolder}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button x:Name="GenDetailsClose" Classes="ghost" Command="{Binding CloseCommand}" Content="{l:Loc Gen_Details_Close}" />
+                    <Button x:Name="GenDetailsRetry" Classes="accent" Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}"
+                            Content="{l:Loc Gen_Action_Retry}" />
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

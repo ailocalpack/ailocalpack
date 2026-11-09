@@ -5,6 +5,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
@@ -37,6 +38,8 @@ public sealed partial class LibraryViewModel : PageViewModel
     private readonly GameLibrary _library;
     private readonly ICoverLoader _covers;
     private readonly GameStatuses _statuses;
+    private readonly GenerationService _jobs;
+    private readonly TimeProvider _time;
     private readonly InstallFlow _install;
     private readonly INavigationService _navigation;
     private readonly IPageFactory _pages;
@@ -95,9 +98,13 @@ public sealed partial class LibraryViewModel : PageViewModel
         ManualCoverStore manualCovers,
         PackIndex packIndex,
         SettingsStore settings,
-        InstallFlow install)
+        InstallFlow install,
+        GenerationService jobs,
+        TimeProvider time)
     {
         _install = install;
+        _jobs = jobs;
+        _time = time;
         _library = library;
         _covers = covers;
         _statuses = statuses;
@@ -329,7 +336,7 @@ public sealed partial class LibraryViewModel : PageViewModel
             }
             else
             {
-                card = new GameCardViewModel(game, _localizer, OpenGame, OpenFolder, Remove, QuickAction);
+                card = new GameCardViewModel(game, _localizer, OpenGame, OpenFolder, Remove, QuickAction) { Time = _time };
                 card.ApplyOperation(_install.Current, _install.IsBusy);
                 _cards.Add(game.Id, card);
                 _ = card.LoadCoverAsync(_covers);
@@ -366,10 +373,18 @@ public sealed partial class LibraryViewModel : PageViewModel
     /// The card's quick action: Install installs the best compatible pack in place (progress in the badge; the game
     /// page's Packs tab when none can be installed); Update does what the game page's header would (task 33): installs
     /// the later revision of the installed pack or re-applies one that still fits, in place, else opens the Generation
-    /// tab (translate the new strings, task 56); View / Resume / Generate open the Generation tab (task 52).
+    /// tab (translate the new strings, task 56); Resume / Retry go on with the job in place (task 53); View / Generate
+    /// open the Generation tab (task 52).
     /// </summary>
     private void QuickAction(GameCardViewModel card)
     {
+        if (card.StatusKind == LocalizationStatusKind.Paused
+            && GamePrimaryActions.JobKind(card.Status.Job) is GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.RetryStage)
+        {
+            _ = _jobs.ResumeAsync(card.Game);
+            return;
+        }
+
         if (card.StatusKind == LocalizationStatusKind.PackAvailable)
         {
             _ = _install.InstallBestAsync(card.Game, () => _navigation.NavigateTo(_pages.Create<GamePageViewModel>(card.Game, GamePageTab.Packs)));

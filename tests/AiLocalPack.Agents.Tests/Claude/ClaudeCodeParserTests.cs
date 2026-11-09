@@ -26,14 +26,14 @@ public sealed class ClaudeCodeParserTests
     }
 
     [Fact]
-    public void A_recorded_run_reads_as_session_tool_call_result_message_usage_and_done()
+    public void A_recorded_run_reads_as_session_tool_call_limit_status_result_message_usage_and_done()
     {
         // Act
         var events = Transcript("success");
 
         // Assert
         events.Select(e => e.GetType()).Should().Equal(
-            typeof(AgentSessionStarted), typeof(AgentToolCall), typeof(AgentToolResult), typeof(AgentMessage), typeof(AgentUsage), typeof(AgentDone));
+            typeof(AgentSessionStarted), typeof(AgentToolCall), typeof(AgentLimitStatus), typeof(AgentToolResult), typeof(AgentMessage), typeof(AgentUsage), typeof(AgentDone));
     }
 
     [Fact]
@@ -127,13 +127,33 @@ public sealed class ClaudeCodeParserTests
     }
 
     [Fact]
-    public void An_allowed_rate_limit_event_is_left_out()
+    public void An_allowed_rate_limit_event_without_utilization_is_left_out()
     {
         // Act
         var events = Parse("""{"type":"rate_limit_event","rate_limit_info":{"status":"allowed_warning","resetsAt":1794160800}}""");
 
         // Assert
         events.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void An_allowed_rate_limit_event_is_the_used_share_of_its_window()
+    {
+        // Act
+        var status = Transcript("success").OfType<AgentLimitStatus>().Single();
+
+        // Assert
+        status.Should().Be(new AgentLimitStatus(0.39, "five_hour", DateTimeOffset.FromUnixTimeSeconds(1794159000)));
+    }
+
+    [Fact]
+    public void An_allowed_rate_limit_event_without_windows_uses_its_own_utilization()
+    {
+        // Act
+        var events = Parse("""{"type":"rate_limit_event","rate_limit_info":{"status":"allowed","utilization":0.7,"resetsAt":1794160800}}""");
+
+        // Assert
+        events.Should().Equal(new AgentLimitStatus(0.7, null, ResetTime));
     }
 
     [Fact]

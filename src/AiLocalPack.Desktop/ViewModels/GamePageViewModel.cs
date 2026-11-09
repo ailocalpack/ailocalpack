@@ -8,6 +8,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
@@ -104,6 +105,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         GenerationService jobs,
         IGenerationEstimates estimates,
         AgentsSettingsSection agents,
+        IDialogService dialogs,
+        ToastService toasts,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -135,7 +138,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, _logger);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, time, _logger);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -256,7 +259,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>What exactly happens (<see cref="PrimaryActionTexts.Caption"/>); "Running since 21:04" while the game runs.</summary>
     public string PrimaryCaption => PlayPhase == GameSessionPhase.Running && Session?.StartedAt is { } started
         ? _localizer.Format(nameof(Strings.Game_Caption_RunningSince), TimeZoneInfo.ConvertTime(started, _time.LocalTimeZone).ToString("t", _localizer.Culture))
-        : PrimaryActionTexts.Caption(Action, Game, _localizer);
+        : PrimaryActionTexts.Caption(Action, Game, _localizer, _time);
 
     public bool HasLaunchError => LaunchError.Length > 0;
 
@@ -275,11 +278,17 @@ public sealed partial class GamePageViewModel : PageViewModel
         GamePrimaryActionKind.Play => "IconPlay",
         GamePrimaryActionKind.UpdatePack or GamePrimaryActionKind.Reapply => "IconRefresh",
         GamePrimaryActionKind.ViewProgress => "IconLoader",
+        GamePrimaryActionKind.ResumeGeneration => "IconPlay",
+        GamePrimaryActionKind.RetryStage => "IconRefresh",
+        GamePrimaryActionKind.ReviewGlossary => "IconPencil",
         _ => "IconSparkles",
     };
 
-    /// <summary>View progress is teal (generation), the others the accent.</summary>
-    public bool IsPrimaryGen => Action.Kind == GamePrimaryActionKind.ViewProgress;
+    /// <summary>View progress and Resume are teal (generation), the others the accent.</summary>
+    public bool IsPrimaryGen => Action.Kind is GamePrimaryActionKind.ViewProgress or GamePrimaryActionKind.ResumeGeneration;
+
+    /// <summary>The loader icon turns while the job runs.</summary>
+    public bool IsPrimarySpinning => Action.Kind == GamePrimaryActionKind.ViewProgress;
 
     /// <summary>
     /// Not while the game is starting or running (Play), nor for an unreachable folder, nor while an install, re-apply or
@@ -498,7 +507,8 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// Play launches the game (<see cref="GameSessions"/>); Install installs the best compatible pack (the install flow;
     /// when none can be installed the Packs tab says why); Update installs the registry's later revision of the installed
     /// pack (the install flow checks it and asks when a risk applies) and Re-apply writes the installed one again (task 33);
-    /// Generate, Translate new strings and View progress open the Generation tab (update mode comes with task 56).
+    /// Generate, Translate new strings, View progress and Review glossary open the Generation tab (update mode comes with
+    /// task 56); Resume and Retry stage go on with the job (task 53) on the Generation tab.
     /// </summary>
     private void RunPrimary()
     {
@@ -526,9 +536,17 @@ public sealed partial class GamePageViewModel : PageViewModel
             return;
         }
 
+        if (Action.Kind is GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.RetryStage)
+        {
+            SelectedTab = GamePageTab.Generation;
+            _ = Generation.ResumeAsync();
+            return;
+        }
+
         SelectedTab = Action.Kind switch
         {
-            GamePrimaryActionKind.Generate or GamePrimaryActionKind.TranslateNewStrings or GamePrimaryActionKind.ViewProgress => GamePageTab.Generation,
+            GamePrimaryActionKind.Generate or GamePrimaryActionKind.TranslateNewStrings or GamePrimaryActionKind.ViewProgress
+                or GamePrimaryActionKind.ReviewGlossary => GamePageTab.Generation,
             _ => SelectedTab,
         };
     }

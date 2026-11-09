@@ -5,6 +5,7 @@
              xmlns:add="using:AiLocalPack.Desktop.ViewModels.AddGame"
              xmlns:dialogs="using:AiLocalPack.Desktop.Dialogs"
              xmlns:install="using:AiLocalPack.Desktop.Install"
+             xmlns:gen="using:AiLocalPack.Desktop.Generation"
              xmlns:startup="using:AiLocalPack.Desktop.Startup"
              x:Class="AiLocalPack.Desktop.App"
              RequestedThemeVariant="Default">
@@ -37,6 +38,8 @@
         <DataTemplate DataType="dialogs:ConfirmDialogViewModel"><views:ConfirmDialogView /></DataTemplate>
         <DataTemplate DataType="install:InstallConfirmDialogViewModel"><views:InstallConfirmDialogView /></DataTemplate>
         <DataTemplate DataType="install:InstallDetailsDialogViewModel"><views:InstallDetailsDialogView /></DataTemplate>
+        <DataTemplate DataType="gen:GenerationCancelDialogViewModel"><views:GenerationCancelDialogView /></DataTemplate>
+        <DataTemplate DataType="gen:GenerationDetailsDialogViewModel"><views:GenerationDetailsDialogView /></DataTemplate>
         <!-- Startup checklist rows (splash details, startup checks under the bell) -->
         <DataTemplate DataType="startup:StartupStep"><views:StartupStepView /></DataTemplate>
     </Application.DataTemplates>

@@ -82,6 +82,20 @@ public static class AgentEventJson
 
                     w.WriteString("message", l.Message);
                     break;
+                case AgentLimitStatus st:
+                    w.WriteString("type", "limitStatus");
+                    w.WriteNumber("used", st.Used);
+                    w.WriteString("window", st.Window);
+                    if (st.ResetsAt is { } stResets)
+                    {
+                        w.WriteString("resetsAt", stResets.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        w.WriteNull("resetsAt");
+                    }
+
+                    break;
                 case AgentError x:
                     w.WriteString("type", "error");
                     w.WriteString("kind", Name(x.Kind));
@@ -151,6 +165,12 @@ public static class AgentEventJson
                         ? DateTimeOffset.Parse(resets, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal)
                         : null,
                     OptionalString(root, "message") ?? "The usage limit was reached."),
+                "limitStatus" => new AgentLimitStatus(
+                    root.TryGetProperty("used", out var used) && used.ValueKind == JsonValueKind.Number ? used.GetDouble() : throw new FormatException("no \"used\""),
+                    OptionalString(root, "window"),
+                    OptionalString(root, "resetsAt") is { } statusResets
+                        ? DateTimeOffset.Parse(statusResets, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal)
+                        : null),
                 "error" => new AgentError(Parse<AgentErrorKind>(root, "kind"), OptionalString(root, "message") ?? string.Empty),
                 "diagnostic" => new AgentDiagnostic(RequiredString(root, "text")),
                 "done" => new AgentDone(

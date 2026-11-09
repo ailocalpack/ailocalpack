@@ -16,7 +16,8 @@ namespace AiLocalPack.Agents.Claude;
 /// <see cref="AgentErrorKind.Reported"/>.</item>
 /// <item><c>user</c>: each <c>tool_result</c> block → <see cref="AgentToolResult"/> (text, or its text blocks joined).</item>
 /// <item><c>rate_limit_event</c> with status <c>rejected</c> → <see cref="AgentLimitReached"/> at its <c>resetsAt</c>
-/// (Unix seconds); <c>allowed</c> / <c>allowed_warning</c> are left out.</item>
+/// (Unix seconds); <c>allowed</c> / <c>allowed_warning</c> → <see cref="AgentLimitStatus"/> with the utilization of the
+/// event's window (<c>unifiedWindows[rateLimitType]</c>, else <c>utilization</c>), when it has one.</item>
 /// <item><c>result</c> → <see cref="AgentUsage"/> of the whole run (tokens, <c>total_cost_usd</c>), then the verdict:
 /// <c>success</c> without <c>is_error</c> → succeeded with <c>result</c>, else failed with its text or <c>errors</c>.</item>
 /// </list>
@@ -169,9 +170,14 @@ public sealed class ClaudeCodeParser : IAgentOutputParser
 
     private IEnumerable<AgentEvent> RateLimit(JsonElement root)
     {
-        if (!root.TryGetProperty("rate_limit_info", out var info) || info.ValueKind != JsonValueKind.Object || Text(info, "status") != "rejected")
+        if (!root.TryGetProperty("rate_limit_info", out var info) || info.ValueKind != JsonValueKind.Object)
         {
             return [];
+        }
+
+        if (Text(info, "status") != "rejected")
+        {
+            return Status(info) is { } status ? [status] : [];
         }
 
         _rejectedUntil = info.TryGetProperty("resetsAt", out var at) && at.ValueKind == JsonValueKind.Number && at.TryGetInt64(out var seconds)
@@ -188,6 +194,29 @@ public sealed class ClaudeCodeParser : IAgentOutputParser
             ? "The Claude subscription's included usage is used up; usage credits are needed to go on."
             : $"Claude usage limit reached{kind}.";
         return [new AgentLimitReached(_rejectedUntil, message)];
+    }
+
+    /// <summary>The used share of the event's window: <c>unifiedWindows[rateLimitType].utilization</c>, else <c>utilization</c>.</summary>
+    private static AgentLimitStatus? Status(JsonElement info)
+    {
+        var window = Text(info, "rateLimitType");
+        var source = info;
+        if (window is not null
+            && info.TryGetProperty("unifiedWindows", out var windows) && windows.ValueKind == JsonValueKind.Object
+            && windows.TryGetProperty(window, out var w) && w.ValueKind == JsonValueKind.Object)
+        {
+            source = w;
+        }
+
+        if (!source.TryGetProperty("utilization", out var used) || used.ValueKind != JsonValueKind.Number)
+        {
+            return null;
+        }
+
+        DateTimeOffset? resets = source.TryGetProperty("resetsAt", out var at) && at.ValueKind == JsonValueKind.Number && at.TryGetInt64(out var seconds)
+            ? FromUnixSeconds(seconds)
+            : null;
+        return new AgentLimitStatus(Math.Clamp(used.GetDouble(), 0, 1), window, resets);
     }
 
     private static IEnumerable<AgentEvent> Result(JsonElement root)

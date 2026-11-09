@@ -35,6 +35,15 @@ public sealed record AgentUsage(long InputTokens, long OutputTokens, long CacheR
 /// <param name="Message">The agent's own words.</param>
 public sealed record AgentLimitReached(DateTimeOffset? ResetsAt, string Message) : AgentEvent;
 
+/// <summary>
+/// How much of the subscription's current usage window is used, when the agent reports it (Claude Code does with every
+/// <c>rate_limit_event</c>; Codex doesn't). Display only (task 53).
+/// </summary>
+/// <param name="Used">Share of the window used, 0–1.</param>
+/// <param name="Window">The window, as the agent names it (<c>five_hour</c>, <c>seven_day</c>), when it says.</param>
+/// <param name="ResetsAt">When the window resets, when it says.</param>
+public sealed record AgentLimitStatus(double Used, string? Window, DateTimeOffset? ResetsAt) : AgentEvent;
+
 /// <summary>Something went wrong; whether the run goes on is up to <see cref="AgentDone"/>.</summary>
 public sealed record AgentError(AgentErrorKind Kind, string Message) : AgentEvent;
 

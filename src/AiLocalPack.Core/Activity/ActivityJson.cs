@@ -22,7 +22,8 @@ internal sealed record ActivityEventJson(
     string? Key = null,
     bool Decision = false,
     bool Read = false,
-    bool Hidden = false);
+    bool Hidden = false,
+    DateTimeOffset? Until = null);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,

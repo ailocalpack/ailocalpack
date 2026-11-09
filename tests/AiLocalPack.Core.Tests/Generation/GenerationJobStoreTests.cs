@@ -244,4 +244,64 @@ public sealed class GenerationJobStoreTests : IDisposable
         // Assert
         act.Should().Throw<GenerationJobException>().Which.Problem.Should().Be(GenerationJobProblem.NotFound);
     }
+
+    [Fact]
+    public void Log_tail_is_the_last_lines_oldest_first()
+    {
+        // Arrange
+        using var dir = new TempDir();
+        foreach (var n in Enumerable.Range(1, 5))
+        {
+            GenerationJobLog.Append(dir.Path, new FakeClock(), $"line {n}");
+        }
+
+        // Act
+        var tail = GenerationJobLog.Tail(dir.Path, 2);
+
+        // Assert
+        tail.Select(l => l[(l.IndexOf(' ', StringComparison.Ordinal) + 1)..]).Should().Equal("line 4", "line 5");
+    }
+
+    [Fact]
+    public void Log_tail_read_from_the_middle_leaves_out_the_cut_line()
+    {
+        // Arrange
+        using var dir = new TempDir();
+        Directory.CreateDirectory(Path.Combine(dir.Path, "logs"));
+        File.WriteAllText(GenerationJobStore.LogFile(dir.Path), "aaaaaaaaaa\nbb\ncc\n");
+
+        // Act
+        var tail = GenerationJobLog.Tail(dir.Path, 10, maxBytes: 8);
+
+        // Assert
+        tail.Should().Equal("bb", "cc");
+    }
+
+    [Fact]
+    public void Log_tail_cut_at_a_line_start_keeps_that_line()
+    {
+        // Arrange
+        using var dir = new TempDir();
+        Directory.CreateDirectory(Path.Combine(dir.Path, "logs"));
+        File.WriteAllText(GenerationJobStore.LogFile(dir.Path), "aaaaaaaaaa\nbb\ncc\n");
+
+        // Act
+        var tail = GenerationJobLog.Tail(dir.Path, 10, maxBytes: 6);
+
+        // Assert
+        tail.Should().Equal("bb", "cc");
+    }
+
+    [Fact]
+    public void Log_tail_without_a_log_is_empty()
+    {
+        // Arrange
+        using var dir = new TempDir();
+
+        // Act
+        var tail = GenerationJobLog.Tail(dir.Path, 10);
+
+        // Assert
+        tail.Should().BeEmpty();
+    }
 }

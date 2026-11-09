@@ -161,14 +161,17 @@ public sealed class GameCardViewModelTests
 /// <summary>Badge, context line and quick action of each status (task 21).</summary>
 public sealed class GameCardStatusTests
 {
+    // The culture's short time as ICU writes it (a narrow no-break space before "PM" on newer ICU).
+    private static readonly string SixPm = new DateTime(2026, 11, 9, 18, 0, 0).ToString("t", CultureInfo.GetCultureInfo("en"));
+
     private static readonly Game Alpha = TestGames.Steam(10, "Alpha", engine: "renpy");
 
     private static RegistryPack Pack(string id, PackStatus status = PackStatus.Alpha, int likes = 0) =>
         new(id, Alpha.Id, "ru", id, new PackAuthor("alice"), status, 1, DateTimeOffset.UnixEpoch, new PackCoverage(1, 1), ["1000"], 1, "m/manifest.json", 1, new RegistryRating(likes, 0, 0));
 
-    private static GameCardViewModel Card(LocalizationStatus status, Game? game = null, bool stale = false)
+    private static GameCardViewModel Card(LocalizationStatus status, Game? game = null, bool stale = false, TimeProvider? time = null)
     {
-        var card = new GameCardViewModel(game ?? Alpha, new Localizer(CultureInfo.GetCultureInfo("en")), _ => { }, _ => { });
+        var card = new GameCardViewModel(game ?? Alpha, new Localizer(CultureInfo.GetCultureInfo("en")), _ => { }, _ => { }) { Time = time ?? TimeProvider.System };
         card.ApplyStatus(status, stale);
         return card;
     }
@@ -203,22 +206,40 @@ public sealed class GameCardStatusTests
     public void Generating_shows_its_percent_a_progress_bar_and_view()
     {
         // Act
-        var card = Card(new LocalizationStatus(LocalizationStatusKind.Generating, LocalizationBlock.None, [], Job: new GenerationJobState(42, false, TimeSpan.FromMinutes(24.5))));
+        var card = Card(new LocalizationStatus(LocalizationStatusKind.Generating, LocalizationBlock.None, [], Job: new GenerationJobState(42, GenerationJobPhase.Running, TimeSpan.FromMinutes(24.5))));
 
         // Assert
         (card.BadgeText, card.ShowProgress, card.Percent, card.QuickActionText, card.ContextLine)
-            .Should().Be(("Generating · 42%", true, 42, "View", "≈ 25 min"));
+            .Should().Be(("Generating · 42%", true, 42, "View", "≈ 25 min left"));
     }
 
     [Fact]
-    public void Paused_shows_its_reason_and_resume()
+    public void Paused_by_the_limit_shows_when_it_resumes_and_resume()
     {
+        // Arrange
+        var clock = new FakeClock(new DateTimeOffset(2026, 11, 9, 12, 0, 0, TimeSpan.Zero));
+        var job = new GenerationJobState(68, GenerationJobPhase.PausedByLimit, ResumeAt: new DateTimeOffset(2026, 11, 9, 18, 0, 0, TimeSpan.Zero));
+
         // Act
-        var card = Card(new LocalizationStatus(LocalizationStatusKind.Paused, LocalizationBlock.None, [], Job: new GenerationJobState(68, true, PauseReason: "subscription limit")));
+        var card = Card(new LocalizationStatus(LocalizationStatusKind.Paused, LocalizationBlock.None, [], Job: job), time: clock);
 
         // Assert
         (card.BadgeText, card.IsPaused, card.QuickActionText, card.ContextLine)
-            .Should().Be(("Paused · 68%", true, "Resume", "subscription limit"));
+            .Should().Be(("Paused · 68%", true, "Resume", "Subscription limit · resumes ~" + SixPm));
+    }
+
+    [Theory]
+    [InlineData(GenerationJobPhase.PausedByPlayer, "Resume", "Paused by you")]
+    [InlineData(GenerationJobPhase.Interrupted, "Resume", "Interrupted: resume any time")]
+    [InlineData(GenerationJobPhase.Failed, "Retry", "A stage failed")]
+    [InlineData(GenerationJobPhase.WaitingForReview, "View", "The glossary waits for you")]
+    public void Stopped_job_shows_its_state_and_next_step(GenerationJobPhase phase, string action, string line)
+    {
+        // Act
+        var card = Card(new LocalizationStatus(LocalizationStatusKind.Paused, LocalizationBlock.None, [], Job: new GenerationJobState(68, phase)));
+
+        // Assert
+        (card.QuickActionText, card.ContextLine).Should().Be((action, line));
     }
 
     [Fact]

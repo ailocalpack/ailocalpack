@@ -5,6 +5,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Dialogs;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
@@ -40,6 +41,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private readonly IPageFactory _pages;
     private readonly IDialogService _dialogs;
     private readonly ICoverLoader _covers;
+    private readonly GenerationService _jobs;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly TimeProvider _time;
@@ -57,6 +59,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         IPageFactory pages,
         IDialogService dialogs,
         ICoverLoader covers,
+        GenerationService jobs,
         StartupProgress startup,
         Localizer localizer,
         IUiDispatcher ui,
@@ -72,6 +75,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         _pages = pages;
         _dialogs = dialogs;
         _covers = covers;
+        _jobs = jobs;
         _localizer = localizer;
         _ui = ui;
         _time = time;
@@ -288,7 +292,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             DecideLaterCommand = kind == ActivityRowKind.Decision ? new RelayCommand(() => _store.DecideLater(activity.Id)) : null,
         };
         row.Title = ActivityTexts.Title(activity, _localizer);
-        row.Detail = ActivityTexts.Detail(activity, later?.Revision, _localizer);
+        row.Detail = ActivityTexts.Detail(activity, later?.Revision, _localizer, _time);
         row.Time = ActivityTexts.Time(activity.Time, _time.LocalTimeZone, _localizer);
         row.IsUnread = kind == ActivityRowKind.Event && !activity.IsRead;
         row.Actions = game is null ? [] : Actions(activity, game, later, kind == ActivityRowKind.Decision);
@@ -332,6 +336,13 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
                 actions.Add(Action(nameof(Strings.Activity_Action_Translate), "IconSparkles", true, () =>
                 {
                     _store.Resolve(activity.Id);
+                    OpenGame(activity.Game, GamePageTab.Generation);
+                }));
+                break;
+            case ActivityEventKind.GenerationPaused:
+                actions.Add(Action(nameof(Strings.Activity_Action_ResumeNow), "IconPlay", true, () =>
+                {
+                    _ = _jobs.ResumeAsync(Fresh(game));
                     OpenGame(activity.Game, GamePageTab.Generation);
                 }));
                 break;
@@ -404,7 +415,9 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private void Open(ActivityEvent activity)
     {
         _store.MarkRead(activity.Id);
-        OpenGame(activity.Game, activity.Kind == ActivityEventKind.PackIncompatible && LaterRevision(activity) is null ? GamePageTab.Generation : GamePageTab.Packs);
+        var generation = activity.Kind == ActivityEventKind.GenerationPaused
+            || (activity.Kind == ActivityEventKind.PackIncompatible && LaterRevision(activity) is null);
+        OpenGame(activity.Game, generation ? GamePageTab.Generation : GamePageTab.Packs);
     }
 
     private void OpenGame(GameId? id, GamePageTab? tab)

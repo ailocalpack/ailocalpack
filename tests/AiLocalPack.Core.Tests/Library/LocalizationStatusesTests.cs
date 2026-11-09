@@ -161,8 +161,8 @@ public sealed class LocalizationStatusesTests
         };
         var job = localCase switch
         {
-            LocalCase.Generating or LocalCase.InstalledAndGenerating => new GenerationJobState(42, false),
-            LocalCase.Paused => new GenerationJobState(68, true),
+            LocalCase.Generating or LocalCase.InstalledAndGenerating => new GenerationJobState(42, GenerationJobPhase.Running),
+            LocalCase.Paused => new GenerationJobState(68, GenerationJobPhase.PausedByLimit),
             _ => null,
         };
 

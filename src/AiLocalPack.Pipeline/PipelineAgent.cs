@@ -80,6 +80,11 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                     {
                         seenModel = started;
                     }
+                    else if (e is AgentLimitStatus status)
+                    {
+                        // Shown while the run goes on (the progress card's limit box), so written at once.
+                        PipelineProgressFile.Update(context.Files, p => p with { Limit = new AgentLimitInfo(status.Used, status.Window, status.ResetsAt) });
+                    }
 
                     Record(context, transcript, e);
                 },
@@ -129,6 +134,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             AgentUsage u => string.Create(CultureInfo.InvariantCulture, $"Usage: {u.InputTokens} input, {u.OutputTokens} output, {u.CacheReadTokens} cache read, {u.CacheWriteTokens} cache write tokens")
                 + (u.CostUsd is { } cost ? string.Create(CultureInfo.InvariantCulture, $", ${cost:0.####}.") : "."),
             AgentLimitReached l => $"Agent limit reached" + (l.ResetsAt is { } at ? $", resets at {at:u}." : "."),
+            AgentLimitStatus st => string.Create(CultureInfo.InvariantCulture, $"Agent usage: {st.Used:P0} of the {st.Window ?? "current"} window used."),
             AgentError error => $"Agent error ({error.Kind}): {Short(error.Message)}",
             AgentDone d => $"Agent run ended: {d.Outcome}" + (d.Message is { } message ? $" ({Short(message)})." : "."),
             _ => null,

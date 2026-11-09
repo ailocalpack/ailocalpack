@@ -486,6 +486,7 @@ internal static class AgentCommand
             $"usage    in {u.InputTokens} · out {u.OutputTokens} · cache read {u.CacheReadTokens} · cache write {u.CacheWriteTokens}")
             + (u.CostUsd is { } cost ? string.Create(CultureInfo.InvariantCulture, $" · ${cost}") : string.Empty),
         AgentLimitReached l => $"limit    {(l.ResetsAt is { } at ? "resets " + at.ToUniversalTime().ToString("u", CultureInfo.InvariantCulture) : "reset time unknown")}: {OneLine(l.Message)}",
+        AgentLimitStatus st => string.Create(CultureInfo.InvariantCulture, $"usage    {st.Used:P0} of the {st.Window?.Replace('_', '-') ?? "current"} window used"),
         AgentError x => $"error    {x.Kind}: {OneLine(x.Message)}",
         AgentDiagnostic d => $"stderr   {d.Text}",
         AgentDone d => $"done     {d.Outcome}"

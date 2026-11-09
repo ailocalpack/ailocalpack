@@ -7,6 +7,7 @@ using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
@@ -44,7 +45,7 @@ public sealed class AppStartup
     private readonly GameLibrary _library;
     private readonly PackIndex _index;
     private readonly InstalledPackMonitor _monitor;
-    private readonly GenerationJobStore _jobs;
+    private readonly GenerationService _jobs;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
@@ -68,7 +69,7 @@ public sealed class AppStartup
         GameLibrary library,
         PackIndex index,
         InstalledPackMonitor monitor,
-        GenerationJobStore jobs,
+        GenerationService jobs,
         Localizer localizer,
         IUiDispatcher ui,
         TimeProvider time,
@@ -139,7 +140,7 @@ public sealed class AppStartup
             TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
         _jobsStep.Start();
-        _ = Task.Run(() => (Interrupted: _jobs.Recover(), Open: _jobs.List().Count(e => e.Job.IsOpen))).ContinueWith(
+        _ = Task.Run(_jobs.Recover).ContinueWith(
             t => _ui.Post(() =>
             {
                 if (t.IsCompletedSuccessfully)

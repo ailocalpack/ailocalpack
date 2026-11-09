@@ -984,7 +984,7 @@
     <value>alpha</value>
   </data>
   <data name="Library_Card_Remaining" xml:space="preserve">
-    <value>≈ {0} min</value>
+    <value>≈ {0} left</value>
   </data>
   <data name="Library_Card_Likes" xml:space="preserve">
     <value>{0} likes</value>
@@ -1119,13 +1119,10 @@
     <value>Generating · {0}%</value>
   </data>
   <data name="Game_Caption_GeneratingEta" xml:space="preserve">
-    <value>Generating · {0}% · ≈ {1} min left</value>
+    <value>Generating · {0}% · ≈ {1} left</value>
   </data>
   <data name="Game_Caption_Paused" xml:space="preserve">
     <value>Paused · {0}%</value>
-  </data>
-  <data name="Game_Caption_PausedReason" xml:space="preserve">
-    <value>Paused: {1} · {0}%</value>
   </data>
   <data name="Game_Installed_Label" xml:space="preserve">
     <value>Installed pack</value>
@@ -2363,7 +2360,304 @@
   <data name="Gen_Progress_Detail" xml:space="preserve">
     <value>Into {0} with {1}</value>
   </data>
-  <data name="Gen_Progress_More" xml:space="preserve">
-    <value>Details of the progress come in a later version.</value>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} h {1} min</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>Resume</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>Retry stage</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>Review glossary</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>Paused: subscription limit · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>Paused: subscription limit · resumes ~{0}</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>Interrupted at {0}%</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>Stage failed: {0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>Waiting for you</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>Subscription limit · resumes ~{0}</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>Subscription limit</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>Paused by you</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>Interrupted: resume any time</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>A stage failed</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>The glossary waits for you</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>Chunk {0} of {1}</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · ≈ {1} left</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>Copying the game: the agent works on the copy, your files stay untouched</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>Pulling out the text with the toolkit</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>Names, terms and tone, so the whole game reads the same</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>Rebuilding the game files on the copy and launching it once</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>Resume</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>Resume now</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>Retry stage</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>Continue to translation</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>Just translated</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>Last translated</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>same as original</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>spaces</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>line breaks</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>check</value>
+  </data>
+  <data name="Gen_Validator_Count_One" xml:space="preserve">
+    <value>{0} validator warning</value>
+  </data>
+  <data name="Gen_Validator_Count_Other" xml:space="preserve">
+    <value>{0} validator warnings</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>No validator warnings</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>Placeholders, tags and length limits are checked in every chunk; errors go back to the agent.</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>{0} limit</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>~{0}% used</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>reached</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>Current 5-hour window, as the agent reports it</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>Current 7-day window, as the agent reports it</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>Current usage window, as the agent reports it</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>Resets at ~{0}</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} doesn't report its limits; the job pauses by itself if they run out.</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>Agent activity</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>Nothing yet.</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>Checking the translations</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>Rebuilding the game files</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>Checking the fonts for the new letters</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>Launching the test build</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>Saving the local pack</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>Fonts: {0} lack letters of the translation; {1} (OFL) is used instead.</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>Your agent subscription limit was reached.</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>The job resumes automatically at ~{0}.</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>The job resumes automatically once the limit resets.</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>Paused.</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>Progress is saved: resume whenever you like.</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>The app was closed during the job.</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>Progress is saved: resume from stage {0}, chunk {1} of {2}.</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>Progress is saved: resume from stage {0}.</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>Stage {0} failed.</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>The glossary is ready.</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>Reviewing it in the app comes in a later version; translation starts when you continue.</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>The agent couldn't finish this step. Retrying usually helps; translations stored so far are kept.</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0} is signed out. Sign in in Settings → AI agents, then retry.</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} isn't installed any more. Install it in Settings → AI agents, then retry.</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>The toolkit couldn't process the game files. Details have the reason.</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>The working copy of the game couldn't be made. Details have the reason.</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>Files couldn't be written: check the free space, then retry.</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>The translated game closed with an error during the test run. Retrying rebuilds the files; your translations are kept.</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>Something unexpected went wrong. Details have the log.</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>Generation log: {0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>Open the job folder</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>Cancel the generation?</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>{0}% is done. You can keep the progress and continue later, or delete the working copy and free the disk.</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>Keep progress</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>Delete working copy</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>Stopped. Progress is kept: resume any time.</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>Generation cancelled, the working copy deleted.</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>The job is running in another window or command.</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>Generation is blocked for this game.</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>The game's folder is unavailable: connect its drive and try again.</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>The job is gone: it finished or was cancelled elsewhere.</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>Couldn't change the job's files: {0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>Couldn't resume: {0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>Generation paused: subscription limit</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>Resumes automatically at ~{0}</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>Resumes automatically once the limit resets</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>Resume now</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>Paused</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>Generating · {0}</value>
   </data>
 </root>

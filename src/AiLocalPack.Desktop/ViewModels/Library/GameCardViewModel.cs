@@ -5,6 +5,7 @@ using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
+using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Toolkit.Engines;
 using Avalonia;
 using Avalonia.Media;
@@ -54,6 +55,9 @@ public sealed partial class GameCardViewModel : ObservableObject
     }
 
     public Game Game { get; private set; }
+
+    /// <summary>The clock for a paused job's resume time (the player's zone).</summary>
+    public TimeProvider Time { get; init; } = TimeProvider.System;
 
     /// <summary>The game's status for the library's language (<see cref="ApplyStatus"/>).</summary>
     public LocalizationStatus Status { get; private set; } = LocalizationStatus.Unknown;
@@ -172,7 +176,10 @@ public sealed partial class GameCardViewModel : ObservableObject
     /// <summary>None while an operation runs on this game.</summary>
     public bool HasQuickAction => !IsInstalling && QuickActionText.Length > 0;
 
-    /// <summary>"Install", "Update" ("Re-apply" for a pack that still fits), "View", "Resume", "Generate with AI"; empty for installed, blocked and unknown.</summary>
+    /// <summary>
+    /// "Install", "Update" ("Re-apply" for a pack that still fits), "View", "Resume" (paused or interrupted job), "Retry"
+    /// (failed stage), "Generate with AI"; empty for installed, blocked and unknown.
+    /// </summary>
     public string QuickActionText => StatusKind switch
     {
         LocalizationStatusKind.PackAvailable => _localizer[nameof(Strings.Library_Action_Install)],
@@ -180,7 +187,12 @@ public sealed partial class GameCardViewModel : ObservableObject
             ? nameof(Strings.Library_Action_Reapply)
             : nameof(Strings.Library_Action_Update)],
         LocalizationStatusKind.Generating => _localizer[nameof(Strings.Library_Action_View)],
-        LocalizationStatusKind.Paused => _localizer[nameof(Strings.Library_Action_Resume)],
+        LocalizationStatusKind.Paused => _localizer[GamePrimaryActions.JobKind(Status.Job) switch
+        {
+            GamePrimaryActionKind.ResumeGeneration => nameof(Strings.Library_Action_Resume),
+            GamePrimaryActionKind.RetryStage => nameof(Strings.Library_Action_Retry),
+            _ => nameof(Strings.Library_Action_View),
+        }],
         LocalizationStatusKind.NoPack => _localizer[nameof(Strings.Library_Action_Generate)],
         _ => string.Empty,
     };
@@ -190,7 +202,12 @@ public sealed partial class GameCardViewModel : ObservableObject
         LocalizationStatusKind.PackAvailable => "IconDownload",
         LocalizationStatusKind.NeedsUpdate => "IconRefresh",
         LocalizationStatusKind.Generating => "IconLoader",
-        LocalizationStatusKind.Paused => "IconPlay",
+        LocalizationStatusKind.Paused => GamePrimaryActions.JobKind(Status.Job) switch
+        {
+            GamePrimaryActionKind.ResumeGeneration => "IconPlay",
+            GamePrimaryActionKind.RetryStage => "IconRefresh",
+            _ => "IconPencil",
+        },
         _ => "IconSparkles",
     };
 
@@ -248,8 +265,13 @@ public sealed partial class GameCardViewModel : ObservableObject
             {
                 return job switch
                 {
-                    { IsPaused: true, PauseReason: { } reason } => reason,
-                    { IsPaused: false, Remaining: { } left } => _localizer.Format(nameof(Strings.Library_Card_Remaining), Math.Max(1, (int)Math.Ceiling(left.TotalMinutes))),
+                    { Phase: GenerationJobPhase.Running, Remaining: { } left } => _localizer.Format(nameof(Strings.Library_Card_Remaining), GenerationTexts.Duration(left, _localizer)),
+                    { Phase: GenerationJobPhase.PausedByLimit, ResumeAt: { } at } => _localizer.Format(nameof(Strings.Library_Card_PausedLimit), GenerationTexts.ClockTime(at, Time, _localizer)),
+                    { Phase: GenerationJobPhase.PausedByLimit } => _localizer[nameof(Strings.Library_Card_PausedLimitSoon)],
+                    { Phase: GenerationJobPhase.PausedByPlayer } => _localizer[nameof(Strings.Library_Card_PausedPlayer)],
+                    { Phase: GenerationJobPhase.Interrupted } => _localizer[nameof(Strings.Library_Card_Interrupted)],
+                    { Phase: GenerationJobPhase.Failed } => _localizer[nameof(Strings.Library_Card_Failed)],
+                    { Phase: GenerationJobPhase.WaitingForReview } => _localizer[nameof(Strings.Library_Card_Review)],
                     _ => string.Empty,
                 };
             }

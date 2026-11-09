@@ -121,7 +121,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         }
 
         StringTable stored;
-        int warnings;
+        Dictionary<string, string> warnings;
         try
         {
             problems = Problems(context, chunk, markup, out warnings);
@@ -142,17 +142,23 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         }
 
         context.Log($"{label}: {chunk.Count - problems.Count} of {chunk.Count} strings translated"
-            + (warnings > 0 ? $", {warnings} with warnings" : "")
+            + (warnings.Count > 0 ? $", {warnings.Count} with warnings" : "")
             + (problems.Count > 0 ? $"; left untranslated after {asked} attempts: {string.Join(", ", problems.Keys.Take(20))}{(problems.Count > 20 ? $" and {problems.Count - 20} more" : "")}." : "."));
         var recent = chunk
             .Where(s => asking.Contains(s.Key) && stored.Strings.TryGetValue(s.Key, out var t) && !string.IsNullOrEmpty(t))
             .TakeLast(PipelineProgressFile.RecentCount)
-            .Select(s => new RecentTranslation(s.Key, s.Original, stored.Strings[s.Key]))
+            .Select(s => new RecentTranslation(s.Key, s.Original, stored.Strings[s.Key], warnings.GetValueOrDefault(s.Key)))
             .ToList();
-        if (recent.Count > 0)
+        var chunkKeys = chunk.Select(s => s.Key).ToHashSet(StringComparer.Ordinal);
+        var chunkWarnings = chunk
+            .Where(s => warnings.ContainsKey(s.Key) && stored.Strings.ContainsKey(s.Key))
+            .Select(s => new TranslationWarning(s.Key, warnings[s.Key], s.Original, stored.Strings[s.Key]))
+            .ToList();
+        PipelineProgressFile.Update(context.Files, p => p with
         {
-            PipelineProgressFile.Update(context.Files, p => p with { Recent = recent });
-        }
+            Recent = recent.Count > 0 ? recent : p.Recent,
+            Warnings = [.. p.Warnings.Where(w => !chunkKeys.Contains(w.Key)), .. chunkWarnings],
+        });
 
         var translated = source.Strings.Count(s => stored.Strings.TryGetValue(s.Key, out var t) && !string.IsNullOrEmpty(t));
         return new GenerationStepResult.ChunkDone(translated - job.Counters.Translated);
@@ -160,13 +166,13 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
 
     /// <summary>
     /// The chunk's strings without a valid stored translation → why (<c>null</c> = not translated yet, asked for the
-    /// first time); <paramref name="warnings"/> = stored translations with warnings only.
+    /// first time); <paramref name="warnings"/> = stored translations with warnings only → the first warning's rule.
     /// </summary>
-    private static Dictionary<string, string?> Problems(GenerationStepContext context, IReadOnlyList<ExtractedString> chunk, TextMarkup markup, out int warnings)
+    private static Dictionary<string, string?> Problems(GenerationStepContext context, IReadOnlyList<ExtractedString> chunk, TextMarkup markup, out Dictionary<string, string> warnings)
     {
         var stored = Store(context);
         var problems = new Dictionary<string, string?>(StringComparer.Ordinal);
-        warnings = 0;
+        warnings = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var s in chunk)
         {
             if (!stored.Strings.TryGetValue(s.Key, out var text) || string.IsNullOrEmpty(text))
@@ -183,7 +189,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
             }
             else if (issues.Count > 0)
             {
-                warnings++;
+                warnings[s.Key] = issues[0].Rule;
             }
         }
 

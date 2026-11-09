@@ -216,6 +216,20 @@ public sealed class ActivityStoreTests : IDisposable
     }
 
     [Fact]
+    public void A_paused_generation_s_resume_time_round_trips()
+    {
+        // Arrange
+        var until = new DateTimeOffset(2026, 11, 9, 18, 0, 0, TimeSpan.Zero);
+        Store().Add(Event("paused", ActivityEventKind.GenerationPaused) with { Until = until });
+
+        // Act
+        var read = Store().Decisions.Single();
+
+        // Assert
+        (read.Kind, read.Until, read.Tone).Should().Be((ActivityEventKind.GenerationPaused, until, ActivityTone.Paused));
+    }
+
+    [Fact]
     public void Hidden_and_set_aside_state_round_trips()
     {
         // Arrange

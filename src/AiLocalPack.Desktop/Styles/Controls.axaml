@@ -820,6 +820,15 @@
     <Style Selector="Border.activityRow.decision.bad">
         <Setter Property="BorderBrush" Value="{DynamicResource AppBadBrush}" />
     </Style>
+    <Style Selector="Border.activityRow.decision.paused">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.paused Border.activityTone">
+        <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+    </Style>
+    <Style Selector="Border.activityRow.paused Path.toneIcon">
+        <Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" />
+    </Style>
     <Style Selector="Border.activityRow.decision:pointerover, Border.activityRow.decision:focus-within">
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
     </Style>
@@ -1058,15 +1067,6 @@
         <Setter Property="Padding" Value="12,0" />
         <Setter Property="CornerRadius" Value="9" />
         <Setter Property="FontSize" Value="13" />
-    </Style>
-    <Style Selector="Button.primaryAction.gen">
-        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
-        <Setter Property="Foreground" Value="#0d1015" />
-    </Style>
-    <Style Selector="Button.primaryAction.gen:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
-        <Setter Property="Foreground" Value="#0d1015" />
-        <Setter Property="Opacity" Value="0.9" />
     </Style>
     <!-- Tab bar -->
     <Style Selector="Button.pageTab">
@@ -1380,5 +1380,82 @@
         <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
         <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+    </Style>
+    <!-- Generation progress (task 53, design §6b) -->
+    <Style Selector="ProgressBar.genProgress.paused">
+        <Setter Property="Opacity" Value="0.55" />
+    </Style>
+    <Style Selector="Border.genBanner">
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Border.genBanner Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>
+    <Style Selector="Border.genBanner.warn">
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Border.genBanner.warn Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Border.genBanner.bad">
+        <Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="Border.genBanner.bad Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <!-- Teal (generation) buttons: the accent theme paints its template, so the template is restyled too -->
+    <Style Selector="Button.genAction, Button.primaryAction.gen">
+        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="#0d1015" />
+    </Style>
+    <Style Selector="Button.genAction /template/ ContentPresenter#PART_ContentPresenter, Button.primaryAction.gen /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="#0d1015" />
+    </Style>
+    <Style Selector="Button.genAction:pointerover, Button.primaryAction.gen:pointerover">
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+    <Style Selector="Border.genBox">
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="TextBlock.genKey">
+        <Setter Property="FontFamily" Value="Menlo, Consolas, DejaVu Sans Mono, monospace" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <Style Selector="Border.genWarnTag">
+        <Setter Property="Padding" Value="6,1" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppWarnBrush}" />
+        <Setter Property="TextElement.FontSize" Value="11" />
+        <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Border.genWarnTag Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Path.genWarnIcon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Ellipse.genLiveDot">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Fill" Value="{DynamicResource AppGenBrush}" />
+        <Style.Animations>
+            <Animation Duration="0:0:1.4" IterationCount="Infinite">
+                <KeyFrame Cue="0%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+                <KeyFrame Cue="50%"><Setter Property="Opacity" Value="0.3" /></KeyFrame>
+                <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    <Style Selector="ProgressBar.genLimit">
+        <Setter Property="Height" Value="6" />
+        <Setter Property="MinHeight" Value="6" />
+        <Setter Property="CornerRadius" Value="3" />
+        <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+    </Style>
+    <Style Selector="ProgressBar.genLimit.reached">
+        <Setter Property="Foreground" Value="{DynamicResource AppWarnBrush}" />
     </Style>
 </Styles>

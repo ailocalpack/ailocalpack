@@ -1,3 +1,4 @@
+using System.Globalization;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
@@ -10,6 +11,9 @@ namespace AiLocalPack.Desktop.Tests.GamePage;
 /// <summary>The primary action's label and caption for every state (design §3).</summary>
 public sealed class PrimaryActionTextsTests
 {
+    // The culture's short time as ICU writes it (a narrow no-break space before "PM" on newer ICU).
+    private static readonly string SixPm = new DateTime(2026, 11, 9, 18, 0, 0).ToString("t", CultureInfo.GetCultureInfo("en"));
+
     private static Localizer L => Localizer.Current;
 
     private static RegistryPack Pack(string title = "Фонарщики", PackStatus status = PackStatus.Verified, string build = "1000", int revision = 4) =>
@@ -127,7 +131,7 @@ public sealed class PrimaryActionTextsTests
     public void View_progress_shows_percent_and_time_left()
     {
         // Arrange
-        var action = new GamePrimaryAction(GamePrimaryActionKind.ViewProgress, Job: new GenerationJobState(42, false, TimeSpan.FromMinutes(24.2)));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.ViewProgress, Job: new GenerationJobState(42, GenerationJobPhase.Running, TimeSpan.FromMinutes(24.2)));
 
         // Act
         var texts = Texts(action);
@@ -137,16 +141,61 @@ public sealed class PrimaryActionTextsTests
     }
 
     [Fact]
-    public void View_progress_of_a_paused_job_shows_the_reason()
+    public void Time_left_over_an_hour_is_in_hours_and_minutes()
     {
         // Arrange
-        var action = new GamePrimaryAction(GamePrimaryActionKind.ViewProgress, Job: new GenerationJobState(42, true, PauseReason: "subscription limit"));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.ViewProgress, Job: new GenerationJobState(42, GenerationJobPhase.Running, TimeSpan.FromMinutes(130)));
 
         // Act
         var texts = Texts(action);
 
         // Assert
-        texts.Should().Be(("View progress", "Paused: subscription limit · 42%"));
+        texts.Caption.Should().Be("Generating · 42% · ≈ 2 h 10 min left");
+    }
+
+    [Fact]
+    public void Job_paused_by_the_limit_offers_resume_with_the_reset_time()
+    {
+        // Arrange
+        var clock = new FakeClock(new DateTimeOffset(2026, 11, 9, 12, 0, 0, TimeSpan.Zero));
+        var job = new GenerationJobState(42, GenerationJobPhase.PausedByLimit, ResumeAt: new DateTimeOffset(2026, 11, 9, 18, 0, 0, TimeSpan.Zero));
+        var action = new GamePrimaryAction(GamePrimaryActionKind.ResumeGeneration, Job: job);
+
+        // Act
+        var texts = (PrimaryActionTexts.Label(action, L), PrimaryActionTexts.Caption(action, TestGames.Steam(10, "Lantern"), L, clock));
+
+        // Assert
+        texts.Should().Be(("Resume", "Paused: subscription limit · resumes ~" + SixPm));
+    }
+
+    [Theory]
+    [InlineData(GenerationJobPhase.PausedByPlayer, GamePrimaryActionKind.ResumeGeneration, "Resume", "Paused · 42%")]
+    [InlineData(GenerationJobPhase.Interrupted, GamePrimaryActionKind.ResumeGeneration, "Resume", "Interrupted at 42%")]
+    [InlineData(GenerationJobPhase.WaitingForReview, GamePrimaryActionKind.ReviewGlossary, "Review glossary", "Waiting for you")]
+    public void Stopped_job_names_its_state(GenerationJobPhase phase, GamePrimaryActionKind kind, string label, string caption)
+    {
+        // Arrange
+        var action = new GamePrimaryAction(kind, Job: new GenerationJobState(42, phase));
+
+        // Act
+        var texts = Texts(action);
+
+        // Assert
+        texts.Should().Be((label, caption));
+    }
+
+    [Fact]
+    public void Failed_job_offers_retry_naming_the_stage()
+    {
+        // Arrange
+        var job = new GenerationJobState(90, GenerationJobPhase.Failed, FailedStage: AiLocalPack.Core.Generation.GenerationStage.Build);
+        var action = new GamePrimaryAction(GamePrimaryActionKind.RetryStage, Job: job);
+
+        // Act
+        var texts = Texts(action);
+
+        // Assert
+        texts.Should().Be(("Retry stage", "Stage failed: Build & test"));
     }
 
     [Fact]

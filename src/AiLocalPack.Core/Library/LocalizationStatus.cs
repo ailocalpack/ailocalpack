@@ -76,10 +76,46 @@ public sealed record InstalledPackState(string PackId, InstalledPackProblem Prob
     public bool NeedsReapply => Problem is InstalledPackProblem.Wiped or InstalledPackProblem.ReapplyFailed;
 }
 
+/// <summary>Where an open generation job stands, for the library card and the page's header (task 53).</summary>
+public enum GenerationJobPhase
+{
+    Running,
+
+    /// <summary>The agent's subscription limit was reached; it goes on by itself at <see cref="GenerationJobState.ResumeAt"/>.</summary>
+    PausedByLimit,
+
+    /// <summary>The player paused it (or kept its progress when cancelling).</summary>
+    PausedByPlayer,
+
+    /// <summary>The app was closed or crashed while it ran.</summary>
+    Interrupted,
+
+    /// <summary>A stage failed (<see cref="GenerationJobState.FailedStage"/>).</summary>
+    Failed,
+
+    /// <summary>The glossary waits for the player's review.</summary>
+    WaitingForReview,
+}
+
 /// <summary>A generation job for the game and language (task 47), as the library needs it.</summary>
 /// <param name="Percent">Progress, 0–100.</param>
-/// <param name="PauseReason">Why it is paused, in the UI language ("subscription limit"); <c>null</c> = paused by the player.</param>
-public sealed record GenerationJobState(int Percent, bool IsPaused, TimeSpan? Remaining = null, string? PauseReason = null);
+/// <param name="Phase">Running, paused (and why), interrupted, failed or waiting for the player.</param>
+/// <param name="Remaining">Time left while it runs, when known.</param>
+/// <param name="ResumeAt">When a job paused by the limit goes on by itself.</param>
+/// <param name="FailedStage">The stage that failed (<see cref="GenerationJobPhase.Failed"/>).</param>
+public sealed record GenerationJobState(
+    int Percent,
+    GenerationJobPhase Phase,
+    TimeSpan? Remaining = null,
+    DateTimeOffset? ResumeAt = null,
+    Generation.GenerationStage? FailedStage = null)
+{
+    /// <summary>Not running: the library shows it as <see cref="LocalizationStatusKind.Paused"/>.</summary>
+    public bool IsPaused => Phase != GenerationJobPhase.Running;
+
+    /// <summary>Resuming is the player's next step: paused (either way) or interrupted.</summary>
+    public bool CanResume => Phase is GenerationJobPhase.PausedByLimit or GenerationJobPhase.PausedByPlayer or GenerationJobPhase.Interrupted;
+}
 
 /// <summary>
 /// The status of one game for one language with the data the card's context line needs: the registry packs, the

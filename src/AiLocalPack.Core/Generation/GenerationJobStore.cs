@@ -296,6 +296,38 @@ public static class GenerationJobLog
             // The log is a help for the player and for bug reports; a failed line doesn't stop the job.
         }
     }
+
+    /// <summary>
+    /// The log's last <paramref name="count"/> lines (read from the end, at most <paramref name="maxBytes"/>; a line cut
+    /// by that is left out), oldest first; empty when there is no log or it can't be read. Never throws.
+    /// </summary>
+    public static IReadOnlyList<string> Tail(string folder, int count, int maxBytes = 64 * 1024)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxBytes);
+        try
+        {
+            using var stream = new FileStream(GenerationJobStore.LogFile(folder), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            // One byte more than asked when cutting: if it is a line break, the first line read is whole.
+            var start = Math.Max(0, stream.Length - maxBytes - 1);
+            stream.Position = start;
+            var buffer = new byte[stream.Length - start];
+            stream.ReadExactly(buffer);
+            var text = Encoding.UTF8.GetString(buffer);
+            if (start > 0)
+            {
+                text = text[(text.IndexOf('\n', StringComparison.Ordinal) + 1)..];
+            }
+
+            var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            return lines.Count <= count ? lines : lines.GetRange(lines.Count - count, count);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return [];
+        }
+    }
 }
 
 /// <summary><c>job.json</c> ↔ <see cref="GenerationJob"/>. Never throws for bad content.</summary>

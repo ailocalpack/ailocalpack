@@ -23,6 +23,7 @@ public static class ActivityTexts
             ActivityEventKind.ReapplyFailed => nameof(Strings.Activity_Event_ReapplyFailed),
             ActivityEventKind.AutoReapplyFailed => nameof(Strings.Activity_Event_AutoReapplyFailed),
             ActivityEventKind.PackIncompatible => nameof(Strings.Activity_Event_PackIncompatible),
+            ActivityEventKind.GenerationPaused => nameof(Strings.Activity_Event_GenerationPaused),
             _ => nameof(Strings.Activity_Event_PackNotApplied),
         };
         return localizer.Format(key, activity.PackTitle ?? activity.PackId ?? string.Empty, activity.Revision ?? 0);
@@ -32,12 +33,16 @@ public static class ActivityTexts
     /// The line under the title: a failure's reason (+ that restoring failed), what an incompatible pack can do
     /// (<paramref name="laterRevision"/> = the registry's newer revision of the same pack), or <c>null</c>.
     /// </summary>
-    public static string? Detail(ActivityEvent activity, int? laterRevision, Localizer localizer)
+    /// <param name="time">The clock for a paused generation's resume time (the player's zone); the system's when not given.</param>
+    public static string? Detail(ActivityEvent activity, int? laterRevision, Localizer localizer, TimeProvider? time = null)
     {
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(localizer);
         return activity.Kind switch
         {
+            ActivityEventKind.GenerationPaused => activity.Until is { } until
+                ? localizer.Format(nameof(Strings.Activity_Detail_GenerationPausedAt), ViewModels.GamePage.GenerationTexts.ClockTime(until, time ?? TimeProvider.System, localizer))
+                : localizer[nameof(Strings.Activity_Detail_GenerationPaused)],
             ActivityEventKind.PackIncompatible => laterRevision is { } revision
                 ? localizer.Format(nameof(Strings.Activity_Detail_UpdateAvailable), revision)
                 : localizer[nameof(Strings.Activity_Detail_Translate)],
@@ -56,6 +61,7 @@ public static class ActivityTexts
             ActivityTone.Attention => nameof(Strings.Activity_Tone_Attention),
             ActivityTone.Bad => nameof(Strings.Activity_Tone_Bad),
             ActivityTone.Ok => nameof(Strings.Activity_Tone_Ok),
+            ActivityTone.Paused => nameof(Strings.Activity_Tone_Paused),
             _ => nameof(Strings.Activity_Tone_Info),
         }];
     }
@@ -65,6 +71,7 @@ public static class ActivityTexts
         ActivityTone.Attention => "IconAlert",
         ActivityTone.Bad => "IconXCircle",
         ActivityTone.Ok => "IconCheckCircle",
+        ActivityTone.Paused => "IconPause",
         _ => "IconInfo",
     };
 

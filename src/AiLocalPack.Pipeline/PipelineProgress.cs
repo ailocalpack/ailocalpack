@@ -8,7 +8,41 @@ using AiLocalPack.Core.Storage;
 namespace AiLocalPack.Pipeline;
 
 /// <summary>A string just translated, for the "just translated" feed.</summary>
-public sealed record RecentTranslation(string Key, string Original, string Translation);
+/// <param name="Warning">The validator's warning about it (its rule, <c>untranslated</c>, <c>whitespace</c>, <c>line-breaks</c>), if any.</param>
+public sealed record RecentTranslation(string Key, string Original, string Translation, string? Warning = null);
+
+/// <summary>A stored translation the validator warns about (task 53: the progress card's validator box).</summary>
+/// <param name="Rule">The rule (<see cref="Toolkit.Validation.StringValidator"/>: <c>untranslated</c>, <c>whitespace</c>, <c>line-breaks</c>).</param>
+public sealed record TranslationWarning(string Key, string Rule, string Original, string Translation);
+
+/// <summary>The agent's usage window as last reported (<see cref="AgentLimitStatus"/>).</summary>
+/// <param name="Used">Share used, 0–1.</param>
+public sealed record AgentLimitInfo(double Used, string? Window, DateTimeOffset? ResetsAt);
+
+/// <summary>Where the Build stage is (task 53).</summary>
+public enum BuildStep
+{
+    /// <summary>Checking the stored translations again.</summary>
+    Checking,
+
+    /// <summary>Rebuilding the game files from the translations.</summary>
+    Rebuilding,
+
+    /// <summary>Checking the game's fonts for the translation's letters (and swapping one in).</summary>
+    Fonts,
+
+    /// <summary>Launching the translated copy for the test run.</summary>
+    TestRun,
+
+    /// <summary>Saving the local pack.</summary>
+    Packing,
+}
+
+/// <summary>The Build stage's current step and what it found about fonts so far.</summary>
+/// <param name="Files">Game files rebuilt so far (known from <see cref="BuildStep.Fonts"/> on).</param>
+/// <param name="SwappedFonts">The game's fonts that lack letters of the translation.</param>
+/// <param name="Replacement">The open font swapped in for them.</param>
+public sealed record BuildProgress(BuildStep Step, int Files = 0, IReadOnlyList<string>? SwappedFonts = null, string? Replacement = null);
 
 /// <summary>The agent's usage summed over every run of the job.</summary>
 /// <param name="Runs">Agent runs that reported usage.</param>
@@ -47,12 +81,22 @@ public sealed record AgentRunInfo(string? Version, string? Model);
 public sealed record PipelineProgress(IReadOnlyList<RecentTranslation> Recent, UsageTotals Usage, AgentRunInfo? Agent = null)
 {
     public static PipelineProgress Empty { get; } = new([], UsageTotals.None);
+
+    /// <summary>Every stored translation the validator warns about, in the order the chunks stored them (task 53).</summary>
+    public IReadOnlyList<TranslationWarning> Warnings { get; init; } = [];
+
+    /// <summary>The agent's usage window as it last reported it (Claude Code only), else <c>null</c>.</summary>
+    public AgentLimitInfo? Limit { get; init; }
+
+    /// <summary>The Build stage's step, once it started.</summary>
+    public BuildProgress? Build { get; init; }
 }
 
 /// <summary>
 /// <c>progress.json</c> in the job folder (<see cref="GenerationFiles.ProgressPath"/>): <c>{schemaVersion: 1, recent:
-/// [{key, original, translation}], usage: {runs, inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens,
-/// costUsd?}, agent?: {version?, model?}}</c>. Best effort both ways: it only feeds the display, so a missing or broken file reads as empty and a
+/// [{key, original, translation, warning?}], usage: {runs, inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens,
+/// costUsd?}, agent?: {version?, model?}, warnings?: [{key, rule, original, translation}], limit?: {used, window?,
+/// resetsAt?}, build?: {step, files, swappedFonts?, replacement?}}</c> (step camelCase). Best effort both ways: it only feeds the display, so a missing or broken file reads as empty and a
 /// failed write is ignored.
 /// </summary>
 public static class PipelineProgressFile
@@ -85,7 +129,7 @@ public static class PipelineProgressFile
 
             var recent = (json.Recent ?? [])
                 .Where(r => r is { Key: not null, Original: not null, Translation: not null })
-                .Select(r => new RecentTranslation(r!.Key!, r.Original!, r.Translation!))
+                .Select(r => new RecentTranslation(r!.Key!, r.Original!, r.Translation!, r.Warning))
                 .TakeLast(RecentCount)
                 .ToList();
             var u = json.Usage;
@@ -93,7 +137,15 @@ public static class PipelineProgressFile
                 ? UsageTotals.None
                 : new UsageTotals(u.Runs, u.InputTokens, u.OutputTokens, u.CacheReadTokens, u.CacheWriteTokens, u.CostUsd);
             var agent = json.Agent is { } a ? new AgentRunInfo(a.Version, a.Model) : null;
-            return new PipelineProgress(recent, usage, agent);
+            var warnings = (json.Warnings ?? [])
+                .Where(w => w is { Key: not null, Rule: not null, Original: not null, Translation: not null })
+                .Select(w => new TranslationWarning(w!.Key!, w.Rule!, w.Original!, w.Translation!))
+                .ToList();
+            var limit = json.Limit is { } l ? new AgentLimitInfo(Math.Clamp(l.Used, 0, 1), l.Window, l.ResetsAt) : null;
+            var build = json.Build is { Step: { } step } b && Enum.TryParse<BuildStep>(step, ignoreCase: true, out var parsed)
+                ? new BuildProgress(parsed, b.Files, b.SwappedFonts, b.Replacement)
+                : null;
+            return new PipelineProgress(recent, usage, agent) { Warnings = warnings, Limit = limit, Build = build };
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException)
         {
@@ -109,9 +161,12 @@ public static class PipelineProgressFile
         var usage = next.Usage;
         var json = new ProgressFileJson(
             CurrentSchemaVersion,
-            [.. next.Recent.TakeLast(RecentCount).Select(r => new RecentJson(r.Key, r.Original, r.Translation))],
+            [.. next.Recent.TakeLast(RecentCount).Select(r => new RecentJson(r.Key, r.Original, r.Translation, r.Warning))],
             new UsageJson(usage.Runs, usage.InputTokens, usage.OutputTokens, usage.CacheReadTokens, usage.CacheWriteTokens, usage.CostUsd),
-            next.Agent is { } agent ? new AgentJson(agent.Version, agent.Model) : null);
+            next.Agent is { } agent ? new AgentJson(agent.Version, agent.Model) : null,
+            next.Warnings.Count == 0 ? null : [.. next.Warnings.Select(w => new WarningJson(w.Key, w.Rule, w.Original, w.Translation))],
+            next.Limit is { } limit ? new LimitJson(limit.Used, limit.Window, limit.ResetsAt) : null,
+            next.Build is { } build ? new BuildJson(JsonNamingPolicy.CamelCase.ConvertName(build.Step.ToString()), build.Files, build.SwappedFonts, build.Replacement) : null);
         try
         {
             AtomicFile.WriteAllBytes(files.ProgressPath, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(ProgressFileJson))));
@@ -125,11 +180,24 @@ public static class PipelineProgressFile
     }
 }
 
-internal sealed record ProgressFileJson(int SchemaVersion, IReadOnlyList<RecentJson?>? Recent, UsageJson? Usage, AgentJson? Agent = null);
+internal sealed record ProgressFileJson(
+    int SchemaVersion,
+    IReadOnlyList<RecentJson?>? Recent,
+    UsageJson? Usage,
+    AgentJson? Agent = null,
+    IReadOnlyList<WarningJson?>? Warnings = null,
+    LimitJson? Limit = null,
+    BuildJson? Build = null);
 
 internal sealed record AgentJson(string? Version, string? Model);
 
-internal sealed record RecentJson(string? Key, string? Original, string? Translation);
+internal sealed record RecentJson(string? Key, string? Original, string? Translation, string? Warning = null);
+
+internal sealed record WarningJson(string? Key, string? Rule, string? Original, string? Translation);
+
+internal sealed record LimitJson(double Used, string? Window, DateTimeOffset? ResetsAt);
+
+internal sealed record BuildJson(string? Step, int Files, IReadOnlyList<string>? SwappedFonts, string? Replacement);
 
 internal sealed record UsageJson(int Runs, long InputTokens, long OutputTokens, long CacheReadTokens, long CacheWriteTokens, decimal? CostUsd);
 

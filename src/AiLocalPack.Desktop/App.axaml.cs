@@ -139,8 +139,11 @@ public sealed class App : Application
         // Before the background checks: what they find (re-applied or broken packs) goes to the Activity panel, and
         // from there to OS notifications while the window isn't in front.
         services.GetRequiredService<AiLocalPack.Desktop.Activity.ActivityRecorder>();
+        services.GetRequiredService<AiLocalPack.Desktop.Activity.GenerationActivityRecorder>();
         services.GetRequiredService<ActivityNotifier>();
         startup.StartBackground();
         services.GetRequiredService<BackgroundChecks>().Start();
+        // Jobs paused by the agent's limit go on by themselves once it resets (task 53).
+        services.GetRequiredService<AiLocalPack.Desktop.Generation.GenerationService>().StartAutoResume();
     }
 }

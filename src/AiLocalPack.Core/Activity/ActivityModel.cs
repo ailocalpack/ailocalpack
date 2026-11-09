@@ -40,6 +40,12 @@ public enum ActivityEventKind
     /// decision (<c>Re-apply</c>).
     /// </summary>
     PackNotApplied,
+
+    /// <summary>
+    /// A generation job was paused by the agent's subscription limit (task 53): a decision (<c>Resume now</c>) until it
+    /// goes on by itself at <see cref="ActivityEvent.Until"/>, the player resumes or cancels it.
+    /// </summary>
+    GenerationPaused,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -56,6 +62,9 @@ public enum ActivityTone
 
     /// <summary>Failed (red).</summary>
     Bad,
+
+    /// <summary>A generation waits (teal: the agent's limit).</summary>
+    Paused,
 }
 
 /// <summary>
@@ -82,6 +91,9 @@ public sealed record ActivityEvent
     public string? PackTitle { get; init; }
 
     public int? Revision { get; init; }
+
+    /// <summary>When a paused generation goes on by itself (<see cref="ActivityEventKind.GenerationPaused"/>).</summary>
+    public DateTimeOffset? Until { get; init; }
 
     /// <summary>A failure's reason in the UI language of the moment it happened.</summary>
     public string? Detail { get; init; }
@@ -197,6 +209,7 @@ public static class ActivityEvents
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
             or ActivityEventKind.AutoReapplyFailed => ActivityTone.Bad,
         ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied => ActivityTone.Attention,
+        ActivityEventKind.GenerationPaused => ActivityTone.Paused,
         _ => ActivityTone.Info,
     };
 
@@ -205,8 +218,10 @@ public static class ActivityEvents
     /// player started goes to the feed (they saw its toast).
     /// </summary>
     public static bool IsDecisionKind(ActivityEventKind kind) =>
-        kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied;
+        kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied
+            or ActivityEventKind.GenerationPaused;
 
     /// <summary>Decisions about a game's installed pack: settled once the pack is installed, re-applied or uninstalled again.</summary>
-    public static bool IsPackProblem(ActivityEventKind kind) => IsDecisionKind(kind);
+    public static bool IsPackProblem(ActivityEventKind kind) =>
+        kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied;
 }

@@ -362,7 +362,8 @@ public sealed class ActivityStore
         e.Key,
         e.IsDecision,
         e.IsRead,
-        e.IsHidden);
+        e.IsHidden,
+        e.Until?.ToUniversalTime());
 
     private static ActivityEvent? FromJson(ActivityEventJson? json)
     {
@@ -397,6 +398,7 @@ public sealed class ActivityStore
             IsDecision = json.Decision,
             IsRead = json.Read,
             IsHidden = json.Hidden,
+            Until = json.Until,
         };
     }
 }

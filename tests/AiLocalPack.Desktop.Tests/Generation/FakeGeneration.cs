@@ -65,6 +65,9 @@ internal sealed class FakeGenerationStages : IGenerationStagesFactory
 
     public List<GenerationJob> Jobs { get; } = [];
 
+    /// <summary>What a stage's step ends with instead of finishing (a limit, a failure); <c>null</c> = it finishes.</summary>
+    public Func<GenerationStage, GenerationStepResult?>? Results { get; set; }
+
     public GenerationStages Create(Game game, GenerationJobEntry entry)
     {
         if (Refuse is { } e)
@@ -73,10 +76,10 @@ internal sealed class FakeGenerationStages : IGenerationStagesFactory
         }
 
         Jobs.Add(entry.Job);
-        return new GenerationStages(GenerationSteps.Stages.Select(stage => (IGenerationStage)new HeldStage(stage, Hold)));
+        return new GenerationStages(GenerationSteps.Stages.Select(stage => (IGenerationStage)new HeldStage(stage, Hold, Results)));
     }
 
-    private sealed class HeldStage(GenerationStage stage, bool hold) : IGenerationStage
+    private sealed class HeldStage(GenerationStage stage, bool hold, Func<GenerationStage, GenerationStepResult?>? results) : IGenerationStage
     {
         public GenerationStage Stage => stage;
 
@@ -85,6 +88,11 @@ internal sealed class FakeGenerationStages : IGenerationStagesFactory
             if (hold)
             {
                 await Task.Delay(Timeout.Infinite, cancellationToken);
+            }
+
+            if (results?.Invoke(stage) is { } result)
+            {
+                return result;
             }
 
             return stage switch

@@ -149,19 +149,24 @@ public sealed class GamePrimaryActionsTests
     }
 
     [Theory]
-    [InlineData(LocalizationStatusKind.Generating, false)]
-    [InlineData(LocalizationStatusKind.Paused, true)]
-    public void Generation_job_offers_its_progress(LocalizationStatusKind kind, bool paused)
+    [InlineData(GenerationJobPhase.Running, GamePrimaryActionKind.ViewProgress)]
+    [InlineData(GenerationJobPhase.PausedByLimit, GamePrimaryActionKind.ResumeGeneration)]
+    [InlineData(GenerationJobPhase.PausedByPlayer, GamePrimaryActionKind.ResumeGeneration)]
+    [InlineData(GenerationJobPhase.Interrupted, GamePrimaryActionKind.ResumeGeneration)]
+    [InlineData(GenerationJobPhase.Failed, GamePrimaryActionKind.RetryStage)]
+    [InlineData(GenerationJobPhase.WaitingForReview, GamePrimaryActionKind.ReviewGlossary)]
+    public void Generation_job_offers_its_next_step(GenerationJobPhase phase, GamePrimaryActionKind expected)
     {
         // Arrange
-        var job = new GenerationJobState(42, paused);
+        var job = new GenerationJobState(42, phase);
+        var kind = phase == GenerationJobPhase.Running ? LocalizationStatusKind.Generating : LocalizationStatusKind.Paused;
         var status = Status(kind, [Pack("best")], job: job);
 
         // Act
         var action = GamePrimaryActions.Resolve(status);
 
         // Assert
-        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.ViewProgress, Job: job));
+        action.Should().Be(new GamePrimaryAction(expected, Job: job));
     }
 
     [Theory]
@@ -201,7 +206,7 @@ public sealed class GamePrimaryActionsTests
     {
         // Arrange
         var job = kind is LocalizationStatusKind.Generating or LocalizationStatusKind.Paused
-            ? new GenerationJobState(10, kind == LocalizationStatusKind.Paused)
+            ? new GenerationJobState(10, kind == LocalizationStatusKind.Paused ? GenerationJobPhase.PausedByPlayer : GenerationJobPhase.Running)
             : null;
         var status = Status(kind, job: job);
 

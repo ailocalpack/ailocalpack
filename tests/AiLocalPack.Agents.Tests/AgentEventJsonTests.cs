@@ -14,6 +14,8 @@ public sealed class AgentEventJsonTests
         new AgentUsage(1, 2),
         new AgentLimitReached(new DateTimeOffset(2026, 11, 8, 18, 0, 0, TimeSpan.Zero), "5-hour limit reached"),
         new AgentLimitReached(null, "limit"),
+        new AgentLimitStatus(0.45, "five_hour", new DateTimeOffset(2026, 11, 8, 18, 0, 0, TimeSpan.Zero)),
+        new AgentLimitStatus(0.5, null, null),
         new AgentError(AgentErrorKind.SignedOut, "Please run /login"),
         new AgentDiagnostic("warning"),
         new AgentDone(AgentOutcome.LimitReached, "partial", "limit", 1),

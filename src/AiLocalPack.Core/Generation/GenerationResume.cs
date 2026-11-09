@@ -108,7 +108,7 @@ public sealed class GenerationActivity(ActivityStore store, Func<GenerationJob, 
 public static class GenerationJobStates
 {
     /// <summary>The open job's state; <c>null</c> for a cancelled or completed job (no badge).</summary>
-    public static Library.GenerationJobState? Of(GenerationJob job, string? pauseReason = null)
+    public static Library.GenerationJobState? Of(GenerationJob job)
     {
         ArgumentNullException.ThrowIfNull(job);
         if (!job.IsOpen)
@@ -117,10 +117,20 @@ public static class GenerationJobStates
         }
 
         var progress = GenerationProgress.Of(job);
+        var phase = job.Status switch
+        {
+            GenerationJobStatus.Running => Library.GenerationJobPhase.Running,
+            GenerationJobStatus.Paused when job.PauseReason == GenerationPauseReason.Limit => Library.GenerationJobPhase.PausedByLimit,
+            GenerationJobStatus.Paused => Library.GenerationJobPhase.PausedByPlayer,
+            GenerationJobStatus.Interrupted => Library.GenerationJobPhase.Interrupted,
+            GenerationJobStatus.Failed => Library.GenerationJobPhase.Failed,
+            _ => Library.GenerationJobPhase.WaitingForReview,
+        };
         return new Library.GenerationJobState(
             progress.Percent,
-            job.Status != GenerationJobStatus.Running,
-            job.Status == GenerationJobStatus.Running ? progress.Remaining : null,
-            pauseReason);
+            phase,
+            phase == Library.GenerationJobPhase.Running ? progress.Remaining : null,
+            phase == Library.GenerationJobPhase.PausedByLimit ? job.ResumeAt : null,
+            job.Failure?.Stage);
     }
 }

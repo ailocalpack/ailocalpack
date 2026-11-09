@@ -119,6 +119,7 @@ internal static class Composition
         services.AddSingleton<ToastService>();
         services.AddSingleton(sp => new ActivityStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<ActivityStore>>()));
         services.AddSingleton<ActivityRecorder>();
+        services.AddSingleton<GenerationActivityRecorder>();
         services.AddSingleton<InstallFlow>();
         services.AddSingleton<ActivityPanelViewModel>();
         services.AddSingleton<GameStatuses>();

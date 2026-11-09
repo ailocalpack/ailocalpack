@@ -1007,7 +1007,7 @@
     <value>альфа</value>
   </data>
   <data name="Library_Card_Remaining" xml:space="preserve">
-    <value>≈ {0} мин</value>
+    <value>осталось ≈ {0}</value>
   </data>
   <data name="Library_Card_Likes" xml:space="preserve">
     <value>Лайков: {0}</value>
@@ -1145,13 +1145,10 @@
     <value>Создаётся · {0}%</value>
   </data>
   <data name="Game_Caption_GeneratingEta" xml:space="preserve">
-    <value>Создаётся · {0}% · осталось ≈ {1} мин</value>
+    <value>Создаётся · {0}% · осталось ≈ {1}</value>
   </data>
   <data name="Game_Caption_Paused" xml:space="preserve">
     <value>На паузе · {0}%</value>
-  </data>
-  <data name="Game_Caption_PausedReason" xml:space="preserve">
-    <value>На паузе: {1} · {0}%</value>
   </data>
   <data name="Game_Installed_Label" xml:space="preserve">
     <value>Установленный пак</value>
@@ -2410,7 +2407,307 @@
   <data name="Gen_Progress_Detail" xml:space="preserve">
     <value>На {0} с {1}</value>
   </data>
-  <data name="Gen_Progress_More" xml:space="preserve">
-    <value>Подробности хода работы появятся в следующей версии.</value>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} ч {1} мин</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} ч</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>Повторить этап</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>Проверить глоссарий</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>Пауза: лимит подписки · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>Пауза: лимит подписки · продолжится в ~{0}</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>Прервано на {0}%</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>Этап не удался: {0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>Ждёт вас</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>Лимит подписки · продолжится в ~{0}</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>Лимит подписки</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>Вы поставили на паузу</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>Прервано: можно продолжить</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>Этап не удался</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>Глоссарий ждёт проверки</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>Часть {0} из {1}</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · осталось ≈ {1}</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>Копирование игры: агент работает с копией, ваши файлы не трогаются</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>Извлечение текста встроенными инструментами</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>Имена, термины и тон, чтобы вся игра звучала одинаково</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>Пересборка файлов на копии и пробный запуск</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>Продолжить сейчас</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>Повторить этап</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>Перейти к переводу</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>Только что переведено</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>Последнее переведённое</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>как в оригинале</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>пробелы</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>переносы строк</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>проверить</value>
+  </data>
+  <data name="Gen_Validator_Count_One" xml:space="preserve">
+    <value>{0} предупреждение валидатора</value>
+  </data>
+  <data name="Gen_Validator_Count_Few" xml:space="preserve">
+    <value>{0} предупреждения валидатора</value>
+  </data>
+  <data name="Gen_Validator_Count_Many" xml:space="preserve">
+    <value>{0} предупреждений валидатора</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>Валидатор не нашёл проблем</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>Плейсхолдеры, теги и ограничения длины проверяются в каждой части; ошибки уходят агенту на исправление.</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>Показать</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>Лимит {0}</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>использовано ~{0}%</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>исчерпан</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>Текущее 5-часовое окно, по данным агента</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>Текущее 7-дневное окно, по данным агента</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>Текущее окно использования, по данным агента</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>Сбросится в ~{0}</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} не сообщает о лимитах; если они закончатся, работа встанет на паузу сама.</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>Действия агента</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>Пока ничего.</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>Проверка переводов</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>Пересборка файлов игры</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>Проверка шрифтов на новые буквы</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>Запуск тестовой сборки</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>Сохранение локального пакета</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>Шрифты: в {0} нет букв перевода, вместо них используется {1} (OFL).</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>Достигнут лимит подписки агента.</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>Работа продолжится автоматически в ~{0}.</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>Работа продолжится автоматически, когда лимит сбросится.</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>Пауза.</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>Прогресс сохранён: продолжите, когда удобно.</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>Приложение закрылось во время работы.</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>Прогресс сохранён: продолжение с этапа {0}, часть {1} из {2}.</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>Прогресс сохранён: продолжение с этапа {0}.</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>Этап {0} не удался.</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>Глоссарий готов.</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>Проверка в приложении появится в следующей версии; перевод начнётся, когда вы продолжите.</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>Агент не смог завершить шаг. Обычно помогает повтор; уже сохранённые переводы остаются.</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0}: выполнен выход из аккаунта. Войдите в «Настройки → ИИ-агенты» и повторите.</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} больше не установлен. Установите его в «Настройки → ИИ-агенты» и повторите.</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>Встроенные инструменты не смогли обработать файлы игры. Причина — в подробностях.</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>Не удалось сделать рабочую копию игры. Причина — в подробностях.</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>Не удалось записать файлы: проверьте свободное место и повторите.</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>Переведённая игра закрылась с ошибкой при пробном запуске. Повтор пересоберёт файлы; переводы сохранятся.</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>Что-то пошло не так. Журнал — в подробностях.</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>Журнал генерации: {0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>Открыть папку задачи</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>Отменить генерацию?</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>Готово {0}%. Можно сохранить прогресс и продолжить позже или удалить рабочую копию и освободить место.</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>Сохранить прогресс</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>Удалить рабочую копию</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>Остановлено. Прогресс сохранён: продолжите в любой момент.</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>Генерация отменена, рабочая копия удалена.</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>Работа уже идёт в другом окне или команде.</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>Для этой игры генерация заблокирована.</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>Папка игры недоступна: подключите диск и попробуйте снова.</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>Работы больше нет: она завершена или отменена в другом месте.</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>Не удалось изменить файлы работы: {0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>Не удалось продолжить: {0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>Генерация на паузе: лимит подписки</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>Продолжится автоматически в ~{0}</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>Продолжится автоматически после сброса лимита</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>Продолжить сейчас</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>Генерация · {0}</value>
   </data>
 </root>
