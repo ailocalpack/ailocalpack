@@ -2615,10 +2615,10 @@
     <value>Этап {0} не удался.</value>
   </data>
   <data name="Gen_Banner_Review" xml:space="preserve">
-    <value>Глоссарий готов.</value>
+    <value>Глоссарий готов к проверке</value>
   </data>
   <data name="Gen_Banner_ReviewText" xml:space="preserve">
-    <value>Проверка в приложении появится в следующей версии; перевод начнётся, когда вы продолжите.</value>
+    <value>Перевод начнётся, когда вы продолжите; изменения сохраняются сразу.</value>
   </data>
   <data name="Gen_Failure_Agent" xml:space="preserve">
     <value>Агент не смог завершить шаг. Обычно помогает повтор; уже сохранённые переводы остаются.</value>
@@ -2709,5 +2709,98 @@
   </data>
   <data name="Activity_Task_Generation" xml:space="preserve">
     <value>Генерация · {0}</value>
+  </data>
+  <data name="Gen_Review_Title" xml:space="preserve">
+    <value>Проверьте глоссарий</value>
+  </data>
+  <data name="Gen_Review_Subtitle" xml:space="preserve">
+    <value>Имена, места и термины, которые используются в каждой порции. Исправьте их сейчас.</value>
+  </data>
+  <data name="Gen_Review_Terms_One" xml:space="preserve">
+    <value>{0} термин</value>
+  </data>
+  <data name="Gen_Review_Terms_Few" xml:space="preserve">
+    <value>{0} термина</value>
+  </data>
+  <data name="Gen_Review_Terms_Many" xml:space="preserve">
+    <value>{0} терминов</value>
+  </data>
+  <data name="Gen_Review_Tone" xml:space="preserve">
+    <value>Тон</value>
+  </data>
+  <data name="Gen_Review_Tone_Agent" xml:space="preserve">
+    <value>Как выбрал агент</value>
+  </data>
+  <data name="Gen_Review_Tone_Informal" xml:space="preserve">
+    <value>Неформальный</value>
+  </data>
+  <data name="Gen_Review_Tone_Formal" xml:space="preserve">
+    <value>Формальный</value>
+  </data>
+  <data name="Gen_Review_Tone_WithPronoun" xml:space="preserve">
+    <value>{0} («{1}»)</value>
+  </data>
+  <data name="Gen_Review_AgentTone" xml:space="preserve">
+    <value>Тон по версии агента: {0}</value>
+  </data>
+  <data name="Gen_Review_Column_Term" xml:space="preserve">
+    <value>Термин</value>
+  </data>
+  <data name="Gen_Review_Column_Translation" xml:space="preserve">
+    <value>Перевод</value>
+  </data>
+  <data name="Gen_Review_Column_Note" xml:space="preserve">
+    <value>Заметка</value>
+  </data>
+  <data name="Gen_Review_KeepAsIs" xml:space="preserve">
+    <value>оставить как есть</value>
+  </data>
+  <data name="Gen_Review_Edited" xml:space="preserve">
+    <value>изменено</value>
+  </data>
+  <data name="Gen_Review_Search" xml:space="preserve">
+    <value>Поиск по терминам</value>
+  </data>
+  <data name="Gen_Review_NoMatch" xml:space="preserve">
+    <value>Нет подходящих терминов.</value>
+  </data>
+  <data name="Gen_Review_Empty" xml:space="preserve">
+    <value>Агент сохранил только тон, без терминов.</value>
+  </data>
+  <data name="Gen_Review_Blank" xml:space="preserve">
+    <value>У каждого термина должен быть перевод.</value>
+  </data>
+  <data name="Gen_Review_Loading" xml:space="preserve">
+    <value>Загружаем глоссарий…</value>
+  </data>
+  <data name="Gen_Review_LoadFailed" xml:space="preserve">
+    <value>Не удалось прочитать глоссарий: {0}</value>
+  </data>
+  <data name="Gen_Review_SaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить изменение: {0}</value>
+  </data>
+  <data name="Gen_Action_Regenerate" xml:space="preserve">
+    <value>Сгенерировать заново</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Title" xml:space="preserve">
+    <value>Составить глоссарий заново?</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Text" xml:space="preserve">
+    <value>Агент составит его заново по строкам игры; текущие термины будут заменены.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_One" xml:space="preserve">
+    <value>Агент составит его заново по строкам игры; остальные термины будут заменены, а {0} изменённый вами термин останется.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Few" xml:space="preserve">
+    <value>Агент составит его заново по строкам игры; остальные термины будут заменены, а {0} изменённых вами термина останутся.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Many" xml:space="preserve">
+    <value>Агент составит его заново по строкам игры; остальные термины будут заменены, а {0} изменённых вами терминов останутся.</value>
+  </data>
+  <data name="Activity_Event_GlossaryReview" xml:space="preserve">
+    <value>Глоссарий готов к проверке</value>
+  </data>
+  <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
+    <value>Перевод начнётся после вашей проверки.</value>
   </data>
 </root>

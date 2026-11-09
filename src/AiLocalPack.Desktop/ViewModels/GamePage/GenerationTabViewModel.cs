@@ -112,7 +112,7 @@ public enum GenerationBanner
     /// <summary>A stage failed (red): the reason, <c>Details</c>, <c>Retry stage</c>.</summary>
     Failed,
 
-    /// <summary>The glossary waits for the player (amber): <c>Continue to translation</c> (the review itself is task 54).</summary>
+    /// <summary>The glossary waits for the player (amber); the review card below it (task 54).</summary>
     Review,
 }
 
@@ -222,12 +222,15 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         ResumeCommand = new AsyncRelayCommand(ResumeAsync, () => CanResume);
         CancelCommand = new RelayCommand(AskCancel, () => Job is not null && !_acting);
         DetailsCommand = new RelayCommand(ShowDetails, () => Job is not null);
+        ContinueCommand = new AsyncRelayCommand(ContinueAsync, () => CanResume && Review?.CanContinue == true);
+        RegenerateCommand = new RelayCommand(AskRegenerate, () => CanResume && Review?.IsLoaded == true);
         ToggleWarningsCommand = new RelayCommand(() => IsWarningsOpen = !IsWarningsOpen);
         ToggleLogCommand = new RelayCommand(() => IsLogOpen = !IsLogOpen);
         Job = jobs.FindOpen(game.Id);
         SelectDefaultAgent();
         BuildLanguages();
         Steps = BuildSteps();
+        SyncReview();
     }
 
     // ---------- Frame ----------
@@ -237,7 +240,19 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     public bool ShowForm => Job is null;
 
-    public bool ShowProgress => Job is not null;
+    /// <summary>The progress card: a job that doesn't wait for the glossary review.</summary>
+    public bool ShowProgress => Job is not null && Review is null;
+
+    /// <summary>The glossary review (task 54, design §6c) while the job waits for it, else <c>null</c>.</summary>
+    public GlossaryReviewViewModel? Review { get; private set; }
+
+    public bool ShowReview => Review is not null;
+
+    /// <summary><c>Continue to translation</c>: the edits saved, the translation starts.</summary>
+    public IAsyncRelayCommand ContinueCommand { get; }
+
+    /// <summary><c>Regenerate</c>: asks, then the agent drafts the glossary again, keeping the player's edits.</summary>
+    public IRelayCommand RegenerateCommand { get; }
 
     /// <summary>Setup + the four pipeline stages.</summary>
     public IReadOnlyList<GenerationStepViewModel> Steps { get; private set; }
@@ -399,11 +414,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     public bool ShowRetry => Job?.Status == GenerationJobStatus.Failed;
 
-    public bool ShowContinue => Job?.Status == GenerationJobStatus.WaitingForReview;
-
     public IRelayCommand PauseCommand { get; }
 
-    /// <summary>Resume, Resume now, Retry stage, Continue to translation: the job goes on (<see cref="GenerationService.ResumeAsync"/>).</summary>
+    /// <summary>Resume, Resume now, Retry stage (and Continue to translation, after the review's saves): the job goes on (<see cref="GenerationService.ResumeAsync"/>).</summary>
     public IAsyncRelayCommand ResumeCommand { get; }
 
     /// <summary>Opens the cancel dialog (Keep progress / Delete working copy / Back).</summary>
@@ -487,6 +500,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     /// <summary><c>Details</c> on a failed stage's banner.</summary>
     public bool ShowBannerDetails => Banner == GenerationBanner.Failed;
+
+    /// <summary>The banner's action (Resume, Retry stage…); none for the review, whose card has its own buttons.</summary>
+    public bool ShowBannerAction => Banner is not GenerationBanner.None and not GenerationBanner.Review;
 
     // ---------- Just translated ----------
 
@@ -628,6 +644,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         Job = _jobs.FindOpen(game.Id);
         BuildLanguages();
         Steps = BuildSteps();
+        SyncReview();
         if (_activated && ShowForm && (folderChanged || hadJob))
         {
             // Back to the form (the job was cancelled): the estimate and the agents again.
@@ -643,6 +660,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     public void RefreshTexts()
     {
         Steps = BuildSteps();
+        Review?.RefreshTexts();
         foreach (var card in Agents)
         {
             card.RefreshTexts();
@@ -805,6 +823,91 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             FollowDetails();
         });
     }
+
+    /// <summary>Continue to translation: waits for the glossary's edits to be saved, then the job goes on.</summary>
+    private async Task ContinueAsync()
+    {
+        if (Review is { } review && !await review.FlushAsync())
+        {
+            return;
+        }
+
+        await ResumeAsync();
+    }
+
+    private void AskRegenerate()
+    {
+        if (Review is not { } review)
+        {
+            return;
+        }
+
+        var edited = review.EditedCount;
+        _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
+            _localizer[nameof(Strings.Gen_Review_Regenerate_Title)],
+            edited > 0
+                ? _localizer.Plural(nameof(Strings.Gen_Review_Regenerate_Kept_One), edited, edited.ToString("N0", _localizer.Culture))
+                : _localizer[nameof(Strings.Gen_Review_Regenerate_Text)],
+            _localizer[nameof(Strings.Gen_Action_Regenerate)],
+            () => _ = RegenerateAsync(),
+            IsDestructive: false));
+    }
+
+    /// <summary>The agent drafts the glossary again (the player's edits kept); the progress card follows the Glossary stage.</summary>
+    public async Task RegenerateAsync()
+    {
+        if (_acting || Job is null || Review is not { } review)
+        {
+            return;
+        }
+
+        _acting = true;
+        ActionError = string.Empty;
+        RaiseControls();
+        await review.FlushAsync();
+        var result = await _jobs.RegenerateGlossaryAsync(_game);
+        _ui.Post(() =>
+        {
+            _acting = false;
+            ActionError = ActionProblem(result);
+            Job = _jobs.FindOpen(_game.Id);
+            Steps = BuildSteps();
+            SyncReview();
+            RaiseAll();
+            FollowDetails();
+        });
+    }
+
+    /// <summary>Opens the review when the job waits for it (a new one after the glossary was drafted again), closes it otherwise.</summary>
+    private void SyncReview()
+    {
+        if (Job is not { Status: GenerationJobStatus.WaitingForReview } job)
+        {
+            if (Review is { } old)
+            {
+                old.StateChanged -= OnReviewStateChanged;
+                Review = null;
+            }
+
+            return;
+        }
+
+        if (Review is { } current && current.Job.Id == job.Id && current.Job.Updated == job.Updated)
+        {
+            return;
+        }
+
+        if (Review is { } previous)
+        {
+            previous.StateChanged -= OnReviewStateChanged;
+        }
+
+        Review = new GlossaryReviewViewModel(job, _jobs, _localizer, _ui);
+        Review.StateChanged += OnReviewStateChanged;
+        _ = Review.LoadAsync();
+    }
+
+    private void OnReviewStateChanged(object? sender, EventArgs e) => RaiseControls();
 
     private void AskCancel()
     {
@@ -1088,6 +1191,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private void RaiseControls()
     {
         OnPropertyChanged(nameof(CanResume));
+        ContinueCommand.NotifyCanExecuteChanged();
+        RegenerateCommand.NotifyCanExecuteChanged();
         PauseCommand.NotifyCanExecuteChanged();
         ResumeCommand.NotifyCanExecuteChanged();
         CancelCommand.NotifyCanExecuteChanged();

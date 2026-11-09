@@ -346,6 +346,9 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
                     OpenGame(activity.Game, GamePageTab.Generation);
                 }));
                 break;
+            case ActivityEventKind.GlossaryReview:
+                actions.Add(Action(nameof(Strings.Game_Action_ReviewGlossary), "IconPencil", true, () => OpenGame(activity.Game, GamePageTab.Generation)));
+                break;
             case ActivityEventKind.PackNotApplied:
                 actions.Add(Action(nameof(Strings.Activity_Action_Reapply), "IconRefresh", true, () => _ = _install.ReapplyAsync(Fresh(game))));
                 break;
@@ -415,7 +418,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private void Open(ActivityEvent activity)
     {
         _store.MarkRead(activity.Id);
-        var generation = activity.Kind == ActivityEventKind.GenerationPaused
+        var generation = activity.Kind is ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview
             || (activity.Kind == ActivityEventKind.PackIncompatible && LaterRevision(activity) is null);
         OpenGame(activity.Game, generation ? GamePageTab.Generation : GamePageTab.Packs);
     }

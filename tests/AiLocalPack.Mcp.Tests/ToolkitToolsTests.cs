@@ -323,6 +323,68 @@ public sealed class ToolkitToolsTests
         (result.GetProperty("removed").GetInt32(), result.GetProperty("totalEntries").GetInt32()).Should().Be((1, 1));
     }
 
+    private static readonly Glossary Reviewed = new("ru", null, [
+        new GlossaryEntry("Potion", "Эликсир", Edited: true),
+        new GlossaryEntry("Ash", "Пепел"),
+    ], FormOfAddress.Formal);
+
+    [Fact]
+    public async Task Put_glossary_keeps_a_term_the_player_edited()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        new GenerationFiles(mcp.JobDir).WriteGlossary(Reviewed);
+
+        // Act
+        var result = await mcp.ResultAsync("put_glossary", new { entries = new[] { new { term = "potion", translation = "Зелье" } } });
+
+        // Assert
+        (result.GetProperty("keptByPlayer").EnumerateArray().Single().GetString(), new GenerationFiles(mcp.JobDir).ReadGlossary()!.Entries[0].Translation)
+            .Should().Be(("Potion", "Эликсир"));
+    }
+
+    [Fact]
+    public async Task Put_glossary_doesnt_remove_a_term_the_player_edited()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        new GenerationFiles(mcp.JobDir).WriteGlossary(Reviewed);
+
+        // Act
+        await mcp.ResultAsync("put_glossary", new { remove = new[] { "Potion", "Ash" } });
+
+        // Assert
+        new GenerationFiles(mcp.JobDir).ReadGlossary()!.Entries.Select(e => e.Term).Should().Equal("Potion");
+    }
+
+    [Fact]
+    public async Task Put_glossary_keeps_the_players_form_of_address()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        new GenerationFiles(mcp.JobDir).WriteGlossary(Reviewed);
+
+        // Act
+        await mcp.ResultAsync("put_glossary", new { tone = "на ты" });
+
+        // Assert
+        new GenerationFiles(mcp.JobDir).ReadGlossary()!.FormOfAddress.Should().Be(FormOfAddress.Formal);
+    }
+
+    [Fact]
+    public async Task Get_glossary_tells_the_players_form_of_address()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        new GenerationFiles(mcp.JobDir).WriteGlossary(Reviewed);
+
+        // Act
+        var result = await mcp.ResultAsync("get_glossary", new { });
+
+        // Assert
+        result.GetProperty("formOfAddress").GetString().Should().Be("formal");
+    }
+
     [Fact]
     public async Task Put_glossary_refuses_a_term_without_translation()
     {

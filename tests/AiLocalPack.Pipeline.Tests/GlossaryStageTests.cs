@@ -79,6 +79,20 @@ public sealed class GlossaryStageTests : IDisposable
     }
 
     [Fact]
+    public async Task A_run_that_leaves_only_the_players_edits_fails_the_stage()
+    {
+        // Arrange
+        _h.Files.WriteGlossary(new Glossary("ru", null, [new GlossaryEntry("Potion", "Эликсир", Edited: true)]));
+        var recording = Recording(Done());
+
+        // Act
+        var result = await RunAsync(recording);
+
+        // Assert
+        result.Should().Be(new GenerationStepResult.Failed(GenerationFailureKind.Agent, "Fake agent finished without saving a glossary."));
+    }
+
+    [Fact]
     public async Task An_empty_glossary_fails_the_stage()
     {
         // Arrange

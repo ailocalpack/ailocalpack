@@ -149,6 +149,12 @@ internal static class InstallPaths
         }
     }
 
+    /// <summary>
+    /// <see cref="DriveInfo.GetDrives"/> one call at a time: on macOS it reads <c>getmntinfo</c>'s shared buffer, and two
+    /// calls at once crash the process (AccessViolationException).
+    /// </summary>
+    private static readonly Lock DrivesLock = new();
+
     /// <summary>The drive (longest matching mount point) holding <paramref name="path"/>; <c>null</c> when unknown.</summary>
     public static DriveInfo? DriveOf(string path)
     {
@@ -156,9 +162,12 @@ internal static class InstallPaths
         {
             var full = Path.GetFullPath(path);
             var comparison = OperatingSystem.IsLinux() ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-            return DriveInfo.GetDrives()
-                .Where(d => d.IsReady && full.StartsWith(d.RootDirectory.FullName, comparison))
-                .MaxBy(d => d.RootDirectory.FullName.Length);
+            lock (DrivesLock)
+            {
+                return DriveInfo.GetDrives()
+                    .Where(d => d.IsReady && full.StartsWith(d.RootDirectory.FullName, comparison))
+                    .MaxBy(d => d.RootDirectory.FullName.Length);
+            }
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
         {

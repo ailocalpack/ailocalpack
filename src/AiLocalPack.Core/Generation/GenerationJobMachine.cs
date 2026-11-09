@@ -29,6 +29,9 @@ public abstract record GenerationTrigger
     /// <summary>The player approved the glossary (task 54): the translation starts.</summary>
     public sealed record GlossaryApproved : GenerationTrigger;
 
+    /// <summary>The player asked the agent to draft the glossary again (task 54): the Glossary stage runs again.</summary>
+    public sealed record GlossaryRegenerated : GenerationTrigger;
+
     public sealed record Cancelled : GenerationTrigger;
 }
 
@@ -75,7 +78,7 @@ public sealed class GenerationTransitionException : InvalidOperationException
 /// cancelled.</item>
 /// <item>Paused, Interrupted: resumed → Running at the same stage and chunk; cancelled.</item>
 /// <item>Failed: retried → Running at the failed stage; cancelled.</item>
-/// <item>WaitingForReview: glossary approved → Running at Translate; cancelled.</item>
+/// <item>WaitingForReview: glossary approved → Running at Translate; glossary regenerated → Running at Glossary; cancelled.</item>
 /// <item>Cancelled, Completed: nothing.</item>
 /// </list>
 /// Time running is added to <see cref="GenerationJob.ActiveTime"/> when leaving Running (an interrupted run up to the
@@ -96,7 +99,8 @@ public static class GenerationJobMachine
                 or GenerationTrigger.Interrupted or GenerationTrigger.Failed or GenerationTrigger.Cancelled) => true,
             (GenerationJobStatus.Paused or GenerationJobStatus.Interrupted, GenerationTrigger.Resumed or GenerationTrigger.Cancelled) => true,
             (GenerationJobStatus.Failed, GenerationTrigger.Retried or GenerationTrigger.Cancelled) => true,
-            (GenerationJobStatus.WaitingForReview, GenerationTrigger.GlossaryApproved or GenerationTrigger.Cancelled) => true,
+            (GenerationJobStatus.WaitingForReview, GenerationTrigger.GlossaryApproved or GenerationTrigger.GlossaryRegenerated
+                or GenerationTrigger.Cancelled) => true,
             _ => false,
         };
     }
@@ -133,7 +137,7 @@ public static class GenerationJobMachine
                 Failure = new GenerationFailure(job.Stage, failed.Kind, failed.Message),
             },
             GenerationTrigger.Cancelled => Stop(job, now, GenerationJobStatus.Cancelled),
-            GenerationTrigger.Resumed or GenerationTrigger.Retried => Start(job, now),
+            GenerationTrigger.Resumed or GenerationTrigger.Retried or GenerationTrigger.GlossaryRegenerated => Start(job, now),
             GenerationTrigger.GlossaryApproved => Start(job, now) with { Stage = GenerationStage.Translate },
             _ => throw new GenerationTransitionException(job, trigger),
         };

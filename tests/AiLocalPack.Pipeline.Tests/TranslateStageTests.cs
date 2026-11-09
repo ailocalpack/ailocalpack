@@ -101,6 +101,28 @@ public sealed class TranslateStageTests : IDisposable
     }
 
     [Fact]
+    public async Task The_prompt_gives_the_players_edited_term_and_form_of_address()
+    {
+        // Arrange
+        await ExtractAsync();
+        var drafted = new Glossary("ru", "informal, ты", [new GlossaryEntry("Harold", "Гарольд")]);
+        _h.Files.WriteGlossary(GlossaryReview.SetFormOfAddress(GlossaryReview.SetTranslation(drafted, "Harold", "Гаральд"), FormOfAddress.Formal));
+        var chunk = Chunks.Select((c, i) => (c, i)).First(x => x.c.Keys.Any(k => Source.Strings.Single(s => s.Key == k).Original.Contains("Harold", StringComparison.Ordinal))).i;
+        var agent = ScriptedAgent.Translating();
+
+        // Act
+        await StepAsync(agent, chunk);
+
+        // Assert
+        var prompt = agent.Runs.Single().Prompt;
+        new
+        {
+            Term = prompt.Contains("\"Harold\" → \"Гаральд\"", StringComparison.Ordinal),
+            Address = prompt.Contains("Form of address chosen by the player: formal (вы); it overrides anything above.", StringComparison.Ordinal),
+        }.Should().Be(new { Term = true, Address = true });
+    }
+
+    [Fact]
     public async Task Strings_already_translated_are_not_asked_for_again()
     {
         // Arrange

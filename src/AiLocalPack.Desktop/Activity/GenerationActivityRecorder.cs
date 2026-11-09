@@ -13,8 +13,9 @@ namespace AiLocalPack.Desktop.Activity;
 /// Feeds the Activity panel from the app's generation jobs (task 53, design §5): a running job is a running task
 /// ("Generating · Русский", the stage with its counter and ETA, the bar, ⏸ that pauses it; no ✕: cancelling asks on the
 /// Generation tab), ended when it stops; a job paused by the agent's limit is a decision (<c>Resume now</c>; it resumes by
-/// itself at <see cref="ActivityEvent.Until"/>), added once per pause and settled when the job runs again or ends. Never
-/// throws.
+/// itself at <see cref="ActivityEvent.Until"/>), added once per pause and settled when the job runs again or ends; a job
+/// whose glossary waits for the player's review (task 54) is a decision (<c>Review glossary</c> opens the Generation tab),
+/// added once per review and settled when the job goes on or ends. Never throws.
 /// </summary>
 public sealed class GenerationActivityRecorder
 {
@@ -82,7 +83,30 @@ public sealed class GenerationActivityRecorder
         {
             _store.ResolveGame(job.Game, e => e.Kind == ActivityEventKind.GenerationPaused);
         }
+
+        if (job.Status == GenerationJobStatus.WaitingForReview)
+        {
+            AddReview(job);
+        }
+        else
+        {
+            _store.ResolveGame(job.Game, e => e.Kind == ActivityEventKind.GlossaryReview);
+        }
     }
+
+    /// <summary>The key of one review: the job and the time it started waiting, so a glossary drafted again is a new decision.</summary>
+    public static string ReviewKey(GenerationJob job)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        return $"glossary-review:{job.Id}:{job.Updated.ToUnixTimeSeconds()}";
+    }
+
+    private void AddReview(GenerationJob job) => _store.Add(ActivityEvent.Create(ActivityEventKind.GlossaryReview, job.Updated) with
+    {
+        Game = job.Game,
+        GameName = job.GameName,
+        Key = ReviewKey(job),
+    });
 
     private void Publish(GenerationJob job)
     {
@@ -120,9 +144,25 @@ public sealed class GenerationActivityRecorder
         }
     }
 
-    /// <summary>A limit decision whose job isn't paused by the limit any more (resumed or cancelled by the CLI meanwhile) is settled.</summary>
+    /// <summary>
+    /// A limit decision whose job isn't paused by the limit any more (resumed or cancelled by the CLI meanwhile) is settled,
+    /// so is a review decision whose job doesn't wait any more; a job waiting for review (the CLI's too) gets its decision.
+    /// </summary>
     private void SettleStale()
     {
+        foreach (var decision in _store.Decisions.Where(e => e.Kind == ActivityEventKind.GlossaryReview && e.Game is not null))
+        {
+            if (_jobs.FindOpen(decision.Game!) is not { Status: GenerationJobStatus.WaitingForReview } waiting || decision.Key != ReviewKey(waiting))
+            {
+                _store.Resolve(decision.Id);
+            }
+        }
+
+        foreach (var job in _jobs.OpenJobs().Where(j => j.Status == GenerationJobStatus.WaitingForReview))
+        {
+            AddReview(job);
+        }
+
         foreach (var decision in _store.Decisions.Where(e => e.Kind == ActivityEventKind.GenerationPaused && e.Game is not null))
         {
             if (_jobs.FindOpen(decision.Game!) is not { Status: GenerationJobStatus.Paused, PauseReason: GenerationPauseReason.Limit })

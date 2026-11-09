@@ -170,4 +170,44 @@ public sealed class GenerationTabViewTests
             .Should().Be((false, true, "Making the working copy"));
         window.Close();
     });
+
+    [Fact]
+    public Task Glossary_review_shows_its_rows_tone_and_continue() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var services = Build();
+        var game = services.GetRequiredService<GameLibrary>().Catalog.Games.Single(g => g.Id == GameId.Steam(10));
+        var (entry, jobLock) = services.GetRequiredService<Core.Generation.GenerationJobStore>().Create(game, "ru", "claude", new Core.Generation.GenerationOptions(true));
+        jobLock.Dispose();
+        Core.Generation.GenerationJobStore.Write(entry.Folder, entry.Job with
+        {
+            Stage = Core.Generation.GenerationStage.Glossary,
+            Status = Core.Generation.GenerationJobStatus.WaitingForReview,
+            RunningSince = null,
+        });
+        new Core.Generation.GenerationFiles(entry.Folder).WriteGlossary(new Core.Generation.Glossary("ru", "на ты", [
+            new Core.Generation.GlossaryEntry("Harold", "Гарольд"),
+            new Core.Generation.GlossaryEntry("Potion", "Зелье"),
+        ]));
+
+        // Act
+        var (window, page) = Open(services);
+        for (var i = 0; i < 200 && page.Generation.Review?.IsLoaded != true; i++)
+        {
+            await Task.Delay(10);
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<Border>(window, "ReviewCard").IsEffectivelyVisible,
+            Find<Border>(window, "ProgressCard").IsVisible,
+            Find<ItemsControl>(window, "ReviewRows").ItemCount,
+            Find<ComboBox>(window, "ReviewTone").ItemCount,
+            Find<Button>(window, "ReviewContinue").IsEffectivelyEnabled,
+            Find<Button>(window, "GenBannerAction").IsVisible)
+            .Should().Be((true, false, 2, 3, true, false));
+        window.Close();
+    });
 }

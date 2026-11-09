@@ -13,7 +13,8 @@ namespace AiLocalPack.Core.Generation;
 /// <param name="Language">The translation's language tag.</param>
 /// <param name="Tone">Tone and form of address in the agent's words (<c>informal "ты", playful</c>), or <c>null</c>.</param>
 /// <param name="Entries">Terms in the order they were first added; a term is unique ignoring case.</param>
-public sealed record Glossary(string Language, string? Tone, IReadOnlyList<GlossaryEntry> Entries)
+/// <param name="FormOfAddress">The player's choice in the review (task 54), which overrides what <paramref name="Tone"/> says; <c>null</c> = the agent's.</param>
+public sealed record Glossary(string Language, string? Tone, IReadOnlyList<GlossaryEntry> Entries, FormOfAddress? FormOfAddress = null)
 {
     public const int CurrentSchemaVersion = 1;
 
@@ -32,15 +33,31 @@ public sealed record Glossary(string Language, string? Tone, IReadOnlyList<Gloss
 /// <param name="PartOfSpeech">For inflected languages: <c>noun</c>, <c>verb</c>…</param>
 /// <param name="Gender">For inflected languages: <c>masculine</c>, <c>feminine</c>, <c>neuter</c>…</param>
 /// <param name="KeepAsIs">The term stays untranslated (a brand, a made-up name).</param>
+/// <param name="Edited">The player changed it in the review (task 54): the agent can't replace or remove it, and
+/// <c>Regenerate</c> keeps it.</param>
 public sealed record GlossaryEntry(
     string Term,
     string Translation,
     string? Note = null,
     string? PartOfSpeech = null,
     string? Gender = null,
-    bool KeepAsIs = false);
+    bool KeepAsIs = false,
+    bool Edited = false);
 
-/// <summary>Reads and writes <c>glossary.json</c>: <c>{schemaVersion: 1, language, tone?, entries: [{term, translation, note?, partOfSpeech?, gender?, keepAsIs?}]}</c>.</summary>
+/// <summary>How the translation addresses the player and how characters address each other, as the player chose it.</summary>
+public enum FormOfAddress
+{
+    /// <summary>Informal ("ты", "du", "tu").</summary>
+    Informal,
+
+    /// <summary>Formal ("вы", "Sie", "vous").</summary>
+    Formal,
+}
+
+/// <summary>
+/// Reads and writes <c>glossary.json</c>: <c>{schemaVersion: 1, language, tone?, formOfAddress? ("informal" | "formal";
+/// an unknown value reads as none), entries: [{term, translation, note?, partOfSpeech?, gender?, keepAsIs?, edited?}]}</c>.
+/// </summary>
 public static class GlossarySerializer
 {
     private static readonly JsonSerializerOptions WriteOptions = new(GlossaryJsonContext.Default.Options)
@@ -98,10 +115,10 @@ public static class GlossarySerializer
                 return (null, $"term '{item.Term}' has no translation");
             }
 
-            entries.Add(new GlossaryEntry(item.Term, translation, Blank(item.Note), Blank(item.PartOfSpeech), Blank(item.Gender), item.KeepAsIs));
+            entries.Add(new GlossaryEntry(item.Term, translation, Blank(item.Note), Blank(item.PartOfSpeech), Blank(item.Gender), item.KeepAsIs, item.Edited));
         }
 
-        return (new Glossary(language, Blank(file.Tone), entries), null);
+        return (new Glossary(language, Blank(file.Tone), entries, ParseAddress(file.FormOfAddress)), null);
     }
 
     /// <summary>Indented JSON, entries in their order, non-ASCII unescaped.</summary>
@@ -112,14 +129,32 @@ public static class GlossarySerializer
             Glossary.CurrentSchemaVersion,
             glossary.Language,
             glossary.Tone,
-            [.. glossary.Entries.Select(e => new GlossaryEntryJson(e.Term, e.Translation, e.Note, e.PartOfSpeech, e.Gender, e.KeepAsIs))]);
+            glossary.FormOfAddress switch
+            {
+                FormOfAddress.Informal => "informal",
+                FormOfAddress.Formal => "formal",
+                _ => null,
+            },
+            [.. glossary.Entries.Select(e => new GlossaryEntryJson(e.Term, e.Translation, e.Note, e.PartOfSpeech, e.Gender, e.KeepAsIs, e.Edited))]);
         return JsonSerializer.SerializeToUtf8Bytes(file, WriteOptions.GetTypeInfo(typeof(GlossaryFileJson)));
     }
 
     private static string? Blank(string? text) => string.IsNullOrWhiteSpace(text) ? null : text;
+
+    private static FormOfAddress? ParseAddress(string? text) => text switch
+    {
+        "informal" => FormOfAddress.Informal,
+        "formal" => FormOfAddress.Formal,
+        _ => null,
+    };
 }
 
-internal sealed record GlossaryFileJson(int SchemaVersion, string? Language, string? Tone, IReadOnlyList<GlossaryEntryJson?>? Entries);
+internal sealed record GlossaryFileJson(
+    int SchemaVersion,
+    string? Language,
+    string? Tone,
+    string? FormOfAddress,
+    IReadOnlyList<GlossaryEntryJson?>? Entries);
 
 internal sealed record GlossaryEntryJson(
     string? Term,
@@ -127,7 +162,8 @@ internal sealed record GlossaryEntryJson(
     string? Note = null,
     string? PartOfSpeech = null,
     string? Gender = null,
-    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] bool KeepAsIs = false);
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] bool KeepAsIs = false,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] bool Edited = false);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,

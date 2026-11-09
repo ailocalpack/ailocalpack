@@ -46,6 +46,12 @@ public enum ActivityEventKind
     /// goes on by itself at <see cref="ActivityEvent.Until"/>, the player resumes or cancels it.
     /// </summary>
     GenerationPaused,
+
+    /// <summary>
+    /// A generation job's glossary waits for the player's review (task 54): a decision (<c>Review glossary</c>) until
+    /// the player continues, has it drafted again or cancels the job.
+    /// </summary>
+    GlossaryReview,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -208,7 +214,7 @@ public static class ActivityEvents
         ActivityEventKind.PackInstalled or ActivityEventKind.PackReapplied or ActivityEventKind.PackAutoReapplied => ActivityTone.Ok,
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
             or ActivityEventKind.AutoReapplyFailed => ActivityTone.Bad,
-        ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied => ActivityTone.Attention,
+        ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied or ActivityEventKind.GlossaryReview => ActivityTone.Attention,
         ActivityEventKind.GenerationPaused => ActivityTone.Paused,
         _ => ActivityTone.Info,
     };
@@ -219,7 +225,7 @@ public static class ActivityEvents
     /// </summary>
     public static bool IsDecisionKind(ActivityEventKind kind) =>
         kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied
-            or ActivityEventKind.GenerationPaused;
+            or ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview;
 
     /// <summary>Decisions about a game's installed pack: settled once the pack is installed, re-applied or uninstalled again.</summary>
     public static bool IsPackProblem(ActivityEventKind kind) =>

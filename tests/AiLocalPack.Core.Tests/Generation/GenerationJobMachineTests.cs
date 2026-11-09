@@ -32,6 +32,7 @@ public sealed class GenerationJobMachineTests
         ["fail"] = new GenerationTrigger.Failed(GenerationFailureKind.Agent, "boom"),
         ["retry"] = new GenerationTrigger.Retried(),
         ["approve"] = new GenerationTrigger.GlossaryApproved(),
+        ["regenerate"] = new GenerationTrigger.GlossaryRegenerated(),
         ["cancel"] = new GenerationTrigger.Cancelled(),
     };
 
@@ -41,7 +42,7 @@ public sealed class GenerationJobMachineTests
         [GenerationJobStatus.Paused] = ["resume", "cancel"],
         [GenerationJobStatus.Interrupted] = ["resume", "cancel"],
         [GenerationJobStatus.Failed] = ["retry", "cancel"],
-        [GenerationJobStatus.WaitingForReview] = ["approve", "cancel"],
+        [GenerationJobStatus.WaitingForReview] = ["approve", "regenerate", "cancel"],
         [GenerationJobStatus.Cancelled] = [],
         [GenerationJobStatus.Completed] = [],
     };
@@ -172,6 +173,19 @@ public sealed class GenerationJobMachineTests
 
         // Assert
         new { result.Stage, result.Status }.Should().Be(new { Stage = GenerationStage.Glossary, Status = GenerationJobStatus.WaitingForReview });
+    }
+
+    [Fact]
+    public void Regenerating_the_glossary_runs_the_glossary_stage_again()
+    {
+        // Arrange
+        var job = Job(GenerationJobStatus.WaitingForReview, GenerationStage.Glossary, review: true);
+
+        // Act
+        var result = GenerationJobMachine.Apply(job, new GenerationTrigger.GlossaryRegenerated(), T0.AddMinutes(1));
+
+        // Assert
+        new { result.Stage, result.Status }.Should().Be(new { Stage = GenerationStage.Glossary, Status = GenerationJobStatus.Running });
     }
 
     [Fact]

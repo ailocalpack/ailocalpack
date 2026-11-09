@@ -121,6 +121,62 @@ public sealed class GenerationActivityRecorderTests
         (store.Decisions.Count, store.Feed.Single().Kind).Should().Be((0, ActivityEventKind.GenerationPaused));
     }
 
+    private static Task StartWithReviewAsync(ServiceProvider services)
+    {
+        services.GetRequiredService<FakeGenerationStages>().Hold = false;
+        return services.GetRequiredService<GenerationService>().StartAsync(Alpha(services), "ru", "claude", new GenerationOptions(ReviewGlossary: true), null);
+    }
+
+    [Fact]
+    public async Task Glossary_waiting_for_review_is_a_decision()
+    {
+        // Arrange
+        using var services = Build(new FakeClock(Noon));
+        var store = services.GetRequiredService<ActivityStore>();
+
+        // Act
+        await StartWithReviewAsync(services);
+
+        // Assert
+        await WaitUntil(() => store.Decisions.Count == 1);
+        var decision = store.Decisions.Single();
+        (decision.Kind, decision.Tone, decision.GameName).Should().Be((ActivityEventKind.GlossaryReview, ActivityTone.Attention, "Alpha"));
+    }
+
+    [Fact]
+    public async Task Continuing_to_the_translation_settles_the_review_decision()
+    {
+        // Arrange
+        using var services = Build(new FakeClock(Noon));
+        var store = services.GetRequiredService<ActivityStore>();
+        await StartWithReviewAsync(services);
+        var jobs = services.GetRequiredService<GenerationService>();
+        await WaitUntil(() => store.Decisions.Count == 1 && !jobs.IsRunning(GameId.Steam(10)));
+        services.GetRequiredService<FakeGenerationStages>().Hold = true;
+
+        // Act
+        await jobs.ResumeAsync(Alpha(services));
+
+        // Assert
+        (store.Decisions.Count, store.Feed.Single().Kind).Should().Be((0, ActivityEventKind.GlossaryReview));
+    }
+
+    [Fact]
+    public async Task Panel_offers_review_glossary_on_the_review_decision()
+    {
+        // Arrange
+        using var services = Build(new FakeClock(Noon));
+        var store = services.GetRequiredService<ActivityStore>();
+        await StartWithReviewAsync(services);
+        await WaitUntil(() => store.Decisions.Count == 1);
+
+        // Act
+        var row = services.GetRequiredService<ActivityPanelViewModel>().Decisions.Single();
+
+        // Assert
+        (row.Title, row.Detail, row.Actions.Select(a => a.Text).First()).Should().Be(("Glossary ready for review", "Translation starts once you check it.", "Review glossary"));
+    }
+
     [Fact]
     public async Task Panel_offers_resume_now_on_the_limit_decision()
     {

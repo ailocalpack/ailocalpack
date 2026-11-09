@@ -7,7 +7,9 @@ namespace AiLocalPack.Pipeline;
 /// terms and tone with <c>put_glossary</c> (<see cref="PromptTemplate.Glossary"/>). The stage is done once
 /// <c>glossary.json</c> holds at least one entry or a tone; an agent that ends without saving one fails it. A run again
 /// (resume, retry) starts from the glossary stored so far: the prompt tells the agent to complete it. With the job's
-/// review option the job then waits for the player (<see cref="GenerationJobMachine"/>; the review screen is task 54).
+/// review option the job then waits for the player (<see cref="GenerationJobMachine"/>), who edits it and approves it or
+/// has it drafted again (task 54: <see cref="GlossaryReview"/>; the entries the player edited stay, and an agent run that
+/// stores only those still fails).
 /// </summary>
 public sealed class GlossaryStage(PipelineAgent agent, string gameName) : IGenerationStage
 {
@@ -48,7 +50,8 @@ public sealed class GlossaryStage(PipelineAgent agent, string gameName) : IGener
             return new GenerationStepResult.Failed(GenerationFailureKind.Agent, $"The glossary the agent saved can't be read: {e.Message}");
         }
 
-        if (glossary is null || (glossary.Entries.Count == 0 && glossary.Tone is null))
+        // Entries the player edited (kept by Regenerate) don't count: the agent must have stored something itself.
+        if (glossary is null || !GlossaryReview.HasAgentPart(glossary))
         {
             return new GenerationStepResult.Failed(GenerationFailureKind.Agent, $"{agent.DisplayName} finished without saving a glossary.");
         }

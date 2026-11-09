@@ -24,6 +24,7 @@ public static class ActivityTexts
             ActivityEventKind.AutoReapplyFailed => nameof(Strings.Activity_Event_AutoReapplyFailed),
             ActivityEventKind.PackIncompatible => nameof(Strings.Activity_Event_PackIncompatible),
             ActivityEventKind.GenerationPaused => nameof(Strings.Activity_Event_GenerationPaused),
+            ActivityEventKind.GlossaryReview => nameof(Strings.Activity_Event_GlossaryReview),
             _ => nameof(Strings.Activity_Event_PackNotApplied),
         };
         return localizer.Format(key, activity.PackTitle ?? activity.PackId ?? string.Empty, activity.Revision ?? 0);
@@ -43,6 +44,7 @@ public static class ActivityTexts
             ActivityEventKind.GenerationPaused => activity.Until is { } until
                 ? localizer.Format(nameof(Strings.Activity_Detail_GenerationPausedAt), ViewModels.GamePage.GenerationTexts.ClockTime(until, time ?? TimeProvider.System, localizer))
                 : localizer[nameof(Strings.Activity_Detail_GenerationPaused)],
+            ActivityEventKind.GlossaryReview => localizer[nameof(Strings.Activity_Detail_GlossaryReview)],
             ActivityEventKind.PackIncompatible => laterRevision is { } revision
                 ? localizer.Format(nameof(Strings.Activity_Detail_UpdateAvailable), revision)
                 : localizer[nameof(Strings.Activity_Detail_Translate)],

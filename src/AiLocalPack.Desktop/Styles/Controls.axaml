@@ -1415,6 +1415,10 @@
     <Style Selector="Button.genAction:pointerover, Button.primaryAction.gen:pointerover">
         <Setter Property="Opacity" Value="0.9" />
     </Style>
+    <!-- Glossary review (task 54): a term left without a translation -->
+    <Style Selector="TextBox.invalid">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBadBrush}" />
+    </Style>
     <Style Selector="Border.genBox">
         <Setter Property="Padding" Value="14,12" />
         <Setter Property="CornerRadius" Value="12" />

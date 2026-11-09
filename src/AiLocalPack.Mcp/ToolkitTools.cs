@@ -331,12 +331,12 @@ public sealed class ToolkitTools(ToolkitSession session)
                     || (e.Note?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
                 .ToList();
             var (start, items) = Page(entries, offset, limit, e => e);
-            return new GlossaryPage(glossary?.Language, glossary?.Tone, glossary?.Entries.Count ?? 0, entries.Count, items, Next(start + items.Count, entries.Count));
+            return new GlossaryPage(glossary?.Language, glossary?.Tone, Address(glossary?.FormOfAddress), glossary?.Entries.Count ?? 0, entries.Count, items, Next(start + items.Count, entries.Count));
         }
     }
 
     [McpServerTool(Name = "put_glossary", Destructive = false, Idempotent = true)]
-    [Description("Adds or replaces glossary terms (matched ignoring case), removes terms, and sets the tone / form of address.")]
+    [Description("Adds or replaces glossary terms (matched ignoring case), removes terms, and sets the tone / form of address. Terms the player edited (edited: true) are kept as they are.")]
     public PutGlossaryResult PutGlossary(
         [Description("Terms to add or replace.")] GlossaryEntry[]? entries = null,
         [Description("Terms to remove.")] string[]? remove = null,
@@ -349,11 +349,16 @@ public sealed class ToolkitTools(ToolkitSession session)
             var list = glossary.Entries.ToList();
             var added = 0;
             var replaced = 0;
+            var kept = new List<string>();
             foreach (var entry in entries ?? [])
             {
                 var clean = Clean(entry);
                 var at = list.FindIndex(e => Glossary.TermComparer.Equals(e.Term, clean.Term));
-                if (at >= 0)
+                if (at >= 0 && list[at].Edited)
+                {
+                    kept.Add(list[at].Term);
+                }
+                else if (at >= 0)
                 {
                     list[at] = clean;
                     replaced++;
@@ -365,10 +370,18 @@ public sealed class ToolkitTools(ToolkitSession session)
                 }
             }
 
-            var removedCount = list.RemoveAll(e => (remove ?? []).Contains(e.Term, Glossary.TermComparer));
+            foreach (var term in remove ?? [])
+            {
+                if (list.Find(e => e.Edited && Glossary.TermComparer.Equals(e.Term, term)) is { } edited)
+                {
+                    kept.Add(edited.Term);
+                }
+            }
+
+            var removedCount = list.RemoveAll(e => !e.Edited && (remove ?? []).Contains(e.Term, Glossary.TermComparer));
             var newTone = tone is null ? glossary.Tone : string.IsNullOrWhiteSpace(tone) ? null : Text(tone.Trim(), "tone");
-            session.WriteGlossary(new Glossary(language, newTone, list));
-            return new PutGlossaryResult(added, replaced, removedCount, list.Count, newTone);
+            session.WriteGlossary(glossary with { Language = language, Tone = newTone, Entries = list });
+            return new PutGlossaryResult(added, replaced, removedCount, list.Count, newTone, [.. kept.Distinct(Glossary.TermComparer)]);
         }
     }
 
@@ -425,6 +438,13 @@ public sealed class ToolkitTools(ToolkitSession session)
     private static string Severity(StringIssueSeverity severity) => severity == StringIssueSeverity.Error ? "error" : "warning";
 
     private static string Version(Version version) => version.ToString(3);
+
+    private static string? Address(FormOfAddress? address) => address switch
+    {
+        FormOfAddress.Informal => "informal",
+        FormOfAddress.Formal => "formal",
+        _ => null,
+    };
 
     private static GlossaryEntry Clean(GlossaryEntry entry)
     {
@@ -676,9 +696,11 @@ public sealed record ValidateResult(int Checked, int Errors, int Warnings, IRead
 
 /// <param name="TotalEntries">Terms in the glossary.</param>
 /// <param name="Total">Terms matching the search.</param>
-public sealed record GlossaryPage(string? Language, string? Tone, int TotalEntries, int Total, IReadOnlyList<GlossaryEntry> Entries, int? NextOffset);
+/// <param name="FormOfAddress">The player's choice (<c>informal</c> / <c>formal</c>), which overrides the tone; <c>null</c> when the player left it to the agent.</param>
+public sealed record GlossaryPage(string? Language, string? Tone, string? FormOfAddress, int TotalEntries, int Total, IReadOnlyList<GlossaryEntry> Entries, int? NextOffset);
 
-public sealed record PutGlossaryResult(int Added, int Replaced, int Removed, int TotalEntries, string? Tone);
+/// <param name="KeptByPlayer">Terms the call would have replaced or removed but the player edited: they stay as the player wrote them.</param>
+public sealed record PutGlossaryResult(int Added, int Replaced, int Removed, int TotalEntries, string? Tone, IReadOnlyList<string> KeptByPlayer);
 
 /// <param name="Output">The build folder (absolute), laid out like the game folder.</param>
 /// <param name="UnknownKeys">The first stored keys the game doesn't have.</param>

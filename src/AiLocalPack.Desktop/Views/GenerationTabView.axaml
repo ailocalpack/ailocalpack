@@ -6,7 +6,7 @@
              x:Class="AiLocalPack.Desktop.Views.GenerationTabView"
              x:DataType="gp:GenerationTabViewModel">
     <!-- Design §6: the five-step header and one centred card. Task 52: the start form (§6a); task 53: the state's banner
-         and the progress card (§6b). -->
+         and the progress card (§6b); task 54: the glossary review (§6c). -->
     <StackPanel MaxWidth="860" Spacing="14" HorizontalAlignment="Stretch">
         <!-- Five-step header: Setup + the four pipeline stages -->
         <ItemsControl x:Name="GenerationSteps" ItemsSource="{Binding Steps}" AutomationProperties.Name="{l:Loc Gen_Steps_Label}">
@@ -245,7 +245,8 @@
                 <WrapPanel DockPanel.Dock="Right" ItemSpacing="8" LineSpacing="6" VerticalAlignment="Center" Margin="12,0,0,0">
                     <Button x:Name="GenBannerDetails" Classes="ghost sm" Command="{Binding DetailsCommand}" IsVisible="{Binding ShowBannerDetails}"
                             Content="{l:Loc Gen_Action_Details}" />
-                    <Button x:Name="GenBannerAction" Classes="accent sm" Classes.genAction="{Binding IsBannerGen}" Command="{Binding ResumeCommand}">
+                    <Button x:Name="GenBannerAction" Classes="accent sm" Classes.genAction="{Binding IsBannerGen}" Command="{Binding ResumeCommand}"
+                            IsVisible="{Binding ShowBannerAction}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
                                 <Path Classes="icon" Data="{Binding BannerActionIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
@@ -260,6 +261,122 @@
                     <TextBlock x:Name="GenBannerText" FontSize="13" Text="{Binding BannerText}" TextWrapping="Wrap" />
                 </StackPanel>
             </DockPanel>
+        </Border>
+
+        <!-- Glossary review (§6c, task 54): the terms with editable translations, the tone, Regenerate / Cancel / Continue -->
+        <Border x:Name="ReviewCard" Classes="genCard" IsVisible="{Binding ShowReview}">
+            <StackPanel Spacing="16">
+                <StackPanel Spacing="14" DataContext="{Binding Review}" x:DataType="gp:GlossaryReviewViewModel">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Margin="12,0,0,0"
+                                    IsVisible="{Binding IsLoaded}">
+                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Tone}" VerticalAlignment="Center" />
+                            <ComboBox x:Name="ReviewTone" Classes="toolbar" MinWidth="200" ItemsSource="{Binding ToneOptions}"
+                                      SelectedItem="{Binding SelectedTone}" AutomationProperties.Name="{l:Loc Gen_Review_Tone}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="gp:GlossaryToneOption">
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Spacing="4">
+                            <WrapPanel ItemSpacing="10">
+                                <TextBlock Classes="genTitle" Text="{l:Loc Gen_Review_Title}" VerticalAlignment="Center" />
+                                <TextBlock x:Name="ReviewCount" Classes="muted" Text="{Binding CountText}" VerticalAlignment="Center" IsVisible="{Binding IsLoaded}" />
+                            </WrapPanel>
+                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Subtitle}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="ReviewAgentTone" Classes="faint" FontSize="12" Text="{Binding AgentTone}" TextWrapping="Wrap"
+                                       IsVisible="{Binding HasAgentTone}" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsLoading}">
+                        <Viewbox Classes="icon spin" Width="16" Height="16">
+                            <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                            <Path Classes="icon" Data="{StaticResource IconLoader}" />
+                        </Viewbox>
+                        <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Loading}" />
+                    </StackPanel>
+                    <TextBlock x:Name="ReviewError" Classes="error" FontSize="13" TextWrapping="Wrap" Text="{Binding Error}" IsVisible="{Binding HasError}" />
+
+                    <StackPanel Spacing="8" IsVisible="{Binding IsLoaded}">
+                        <TextBox x:Name="ReviewSearch" Classes="search" Text="{Binding Query}" PlaceholderText="{l:Loc Gen_Review_Search}"
+                                 AutomationProperties.Name="{l:Loc Gen_Review_Search}">
+                            <TextBox.InnerLeftContent>
+                                <Viewbox Classes="icon" Width="16" Height="16" Margin="10,0,0,0">
+                                    <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
+                                </Viewbox>
+                            </TextBox.InnerLeftContent>
+                        </TextBox>
+                        <Border Classes="genBox" Padding="0">
+                            <StackPanel>
+                                <Grid ColumnDefinitions="2*,3*,2*" ColumnSpacing="12" Margin="14,10,14,6">
+                                    <TextBlock Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Term}" />
+                                    <TextBlock Grid.Column="1" Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Translation}" />
+                                    <TextBlock Grid.Column="2" Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Note}" />
+                                </Grid>
+                                <ScrollViewer MaxHeight="440">
+                                    <ItemsControl x:Name="ReviewRows" ItemsSource="{Binding Rows}" Margin="14,0,14,10">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:GlossaryRowViewModel">
+                                                <Grid ColumnDefinitions="2*,3*,2*" ColumnSpacing="12" Margin="0,3">
+                                                    <TextBlock FontWeight="SemiBold" Text="{Binding Term}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                                    <StackPanel Grid.Column="1" Spacing="2">
+                                                        <TextBox Text="{Binding Translation}" Classes.invalid="{Binding IsBlank}"
+                                                                 AutomationProperties.Name="{Binding Term}" />
+                                                        <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding IsEdited}">
+                                                            <Viewbox Classes="icon" Width="11" Height="11">
+                                                                <Path Classes="icon" Data="{StaticResource IconPencil}" Stroke="{DynamicResource AppAccentBrush}" />
+                                                            </Viewbox>
+                                                            <TextBlock FontSize="11" Foreground="{DynamicResource AppAccentBrush}" Text="{l:Loc Gen_Review_Edited}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2" Classes="muted" FontSize="12" Text="{Binding Note}" TextWrapping="Wrap"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <TextBlock Classes="muted" FontSize="13" Margin="14,0,14,12" Text="{Binding NoRowsText}" IsVisible="{Binding HasNoRows}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock x:Name="ReviewActionError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
+                           Text="{Binding ActionError}" IsVisible="{Binding HasActionError}" />
+
+                <Border Classes="genFoot">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Button x:Name="ReviewRegenerate" Classes="ghost" Command="{Binding RegenerateCommand}" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="16" Height="16">
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{l:Loc Gen_Action_Regenerate}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <StackPanel Grid.Column="2" Spacing="4" HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                                <Button x:Name="ReviewCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
+                                        Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
+                                <Button x:Name="ReviewContinue" Classes="accent" Command="{Binding ContinueCommand}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="{l:Loc Gen_Action_ContinueTranslation}" VerticalAlignment="Center" />
+                                        <Viewbox Classes="icon" Width="16" Height="16">
+                                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        </Viewbox>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <TextBlock x:Name="ReviewBlank" Classes="muted" FontSize="12" HorizontalAlignment="Right" Text="{l:Loc Gen_Review_Blank}"
+                                       IsVisible="{Binding Review.HasBlank, FallbackValue=False}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
         </Border>
 
         <!-- Progress card (§6b) -->
@@ -289,14 +406,6 @@
                                     <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
                                 </Viewbox>
                                 <TextBlock Text="{l:Loc Gen_Action_Retry}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="GenContinue" Classes="accent" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowContinue}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="{l:Loc Gen_Action_ContinueTranslation}" VerticalAlignment="Center" />
-                                <Viewbox Classes="icon" Width="16" Height="16">
-                                    <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
-                                </Viewbox>
                             </StackPanel>
                         </Button>
                         <Button x:Name="GenCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"

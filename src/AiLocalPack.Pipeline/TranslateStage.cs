@@ -102,7 +102,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
             var entries = GlossaryFilter.Relevant(glossary, pending.Select(s => s.Original));
             context.Log($"{label}: {pending.Count} strings, {entries.Count} glossary entries, attempt {attempt} of {_options.MaxAttempts}.");
             var retry = attempt > 1;
-            var values = Values(gameName, job.Language, source, number, plan.Count, pending, entries, glossary?.Tone, retry ? problems : null);
+            var values = Values(gameName, job.Language, source, number, plan.Count, pending, entries, GlossaryReview.ToneForPrompt(glossary), retry ? problems : null);
             var run = await agent.RunAsync(context, retry ? PromptTemplate.TranslateRetry : PromptTemplate.Translate, values, gameName, cancellationToken).ConfigureAwait(false);
             asked++;
             if (run.Stop is { } stop)

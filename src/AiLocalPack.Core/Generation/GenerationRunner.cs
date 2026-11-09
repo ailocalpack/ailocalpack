@@ -356,7 +356,91 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
         AntiCheatPolicy policy,
         RegistryIndex? index,
         Func<GenerationJobEntry, GenerationStages> stages,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) => Continue(
+            folder,
+            game,
+            policy,
+            index,
+            stages,
+            job => job.Status switch
+            {
+                GenerationJobStatus.Failed => new GenerationTrigger.Retried(),
+                GenerationJobStatus.WaitingForReview => new GenerationTrigger.GlossaryApproved(),
+                _ => new GenerationTrigger.Resumed(),
+            },
+            null,
+            cancellationToken);
+
+    /// <summary>
+    /// The player asks the agent to draft the glossary of a job waiting for review again (task 54): the entries the player
+    /// didn't edit and the agent's tone are dropped (<see cref="GlossaryReview.ForRegenerate"/>), and the Glossary stage
+    /// runs again; the job then waits for the review again.
+    /// </summary>
+    /// <exception cref="GameBlockedException">The game is blocked by now.</exception>
+    /// <exception cref="GenerationJobException">Not found, unreadable, busy, or not waiting for review.</exception>
+    /// <exception cref="GenerationFileException">The glossary can't be read.</exception>
+    /// <exception cref="IOException">The glossary or job.json can't be written.</exception>
+    public GenerationRun RegenerateGlossary(
+        string folder,
+        Game game,
+        AntiCheatPolicy policy,
+        RegistryIndex? index,
+        Func<GenerationJobEntry, GenerationStages> stages,
+        CancellationToken cancellationToken = default) => Continue(
+            folder,
+            game,
+            policy,
+            index,
+            stages,
+            _ => new GenerationTrigger.GlossaryRegenerated(),
+            () =>
+            {
+                var files = new GenerationFiles(folder);
+                if (files.ReadGlossary() is { } glossary)
+                {
+                    files.WriteGlossary(GlossaryReview.ForRegenerate(glossary));
+                }
+            },
+            cancellationToken);
+
+    /// <summary>
+    /// Changes the glossary of a job waiting for review (the player's edits, task 54) and saves it at once. Returns the
+    /// glossary as saved.
+    /// </summary>
+    /// <exception cref="GenerationJobException">Not found, unreadable, busy, not waiting for review, or no glossary.</exception>
+    /// <exception cref="GenerationFileException">The glossary can't be read.</exception>
+    /// <exception cref="IOException">The glossary can't be written.</exception>
+    public Glossary EditGlossary(string folder, Func<Glossary, Glossary> change)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        using var jobLock = Lock(folder);
+        var job = GenerationJobStore.Read(folder);
+        if (job.Status != GenerationJobStatus.WaitingForReview)
+        {
+            throw new GenerationJobException(GenerationJobProblem.WrongState, $"The job {job.Id} is {job.Status.ToString().ToLowerInvariant()}, not waiting for the glossary review.");
+        }
+
+        var files = new GenerationFiles(folder);
+        var glossary = files.ReadGlossary()
+            ?? throw new GenerationJobException(GenerationJobProblem.WrongState, $"The job {job.Id} has no glossary.");
+        var changed = change(glossary);
+        if (changed != glossary)
+        {
+            files.WriteGlossary(changed);
+        }
+
+        return changed;
+    }
+
+    private GenerationRun Continue(
+        string folder,
+        Game game,
+        AntiCheatPolicy policy,
+        RegistryIndex? index,
+        Func<GenerationJobEntry, GenerationStages> stages,
+        Func<GenerationJob, GenerationTrigger> pick,
+        Action? before,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(stages);
@@ -376,20 +460,23 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
                 job = GenerationJobMachine.Apply(job, new GenerationTrigger.Interrupted(), now);
             }
 
-            GenerationTrigger trigger = job.Status switch
-            {
-                GenerationJobStatus.Failed => new GenerationTrigger.Retried(),
-                GenerationJobStatus.WaitingForReview => new GenerationTrigger.GlossaryApproved(),
-                _ => new GenerationTrigger.Resumed(),
-            };
+            var trigger = pick(job);
             if (!GenerationJobMachine.CanApply(job, trigger))
             {
-                throw new GenerationJobException(GenerationJobProblem.WrongState, $"The job {job.Id} is {job.Status.ToString().ToLowerInvariant()}: there is nothing to resume.");
+                throw new GenerationJobException(GenerationJobProblem.WrongState, trigger is GenerationTrigger.GlossaryRegenerated
+                    ? $"The job {job.Id} is {job.Status.ToString().ToLowerInvariant()}, not waiting for the glossary review."
+                    : $"The job {job.Id} is {job.Status.ToString().ToLowerInvariant()}: there is nothing to resume.");
             }
 
+            before?.Invoke();
             job = GenerationJobMachine.Apply(job, trigger, now);
             GenerationJobStore.Write(folder, job);
-            GenerationJobLog.Append(folder, _time, trigger is GenerationTrigger.GlossaryApproved ? "Glossary approved." : $"Resumed at {job.Stage} ({job.Counters.ChunksDone} of {job.Counters.Chunks} chunks done).");
+            GenerationJobLog.Append(folder, _time, trigger switch
+            {
+                GenerationTrigger.GlossaryApproved => "Glossary approved.",
+                GenerationTrigger.GlossaryRegenerated => "Glossary to be drafted again (the player's edits kept).",
+                _ => $"Resumed at {job.Stage} ({job.Counters.ChunksDone} of {job.Counters.Chunks} chunks done).",
+            });
             return Launch(new GenerationJobEntry(Path.GetFullPath(folder), job), jobLock, stages, cancellationToken);
         }
         catch

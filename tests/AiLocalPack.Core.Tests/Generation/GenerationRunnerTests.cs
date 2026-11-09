@@ -373,6 +373,86 @@ public sealed class GenerationRunnerTests : IDisposable
         new { Waiting = waiting.Status, job.Status }.Should().Be(new { Waiting = GenerationJobStatus.WaitingForReview, Status = GenerationJobStatus.Completed });
     }
 
+    private static readonly Glossary Drafted = new("ru", "на ты", [
+        new GlossaryEntry("Harold", "Гарольд"),
+        new GlossaryEntry("Potion", "Эликсир", Edited: true),
+    ]);
+
+    [Fact]
+    public async Task Regenerating_the_glossary_keeps_only_the_players_edits_for_the_agent_to_complete()
+    {
+        // Arrange
+        var first = Start(Stages(), review: true);
+        await first.Completion;
+        new GenerationFiles(first.Folder).WriteGlossary(Drafted);
+
+        // Act
+        await _jobs.RegenerateGlossary(first.Folder, Game(), Policy, null, _ => Stages(), Ct).Completion;
+
+        // Assert
+        new GenerationFiles(first.Folder).ReadGlossary().Should().BeEquivalentTo(new Glossary("ru", null, [new GlossaryEntry("Potion", "Эликсир", Edited: true)]));
+    }
+
+    [Fact]
+    public async Task Regenerating_the_glossary_runs_the_glossary_stage_and_waits_for_the_review_again()
+    {
+        // Arrange
+        var runs = 0;
+        var first = Start(Stages(glossary: () => { runs++; return new GenerationStepResult.StageDone(); }), review: true);
+        await first.Completion;
+
+        // Act
+        var job = await _jobs.RegenerateGlossary(first.Folder, Game(), Policy, null, _ => Stages(glossary: () => { runs++; return new GenerationStepResult.StageDone(); }), Ct).Completion;
+
+        // Assert
+        new { job.Status, job.Stage, Runs = runs }.Should().Be(new { Status = GenerationJobStatus.WaitingForReview, Stage = GenerationStage.Glossary, Runs = 2 });
+    }
+
+    [Fact]
+    public async Task Regenerating_is_refused_for_a_job_not_waiting_for_review()
+    {
+        // Arrange
+        var first = Start(Stages(), review: false);
+        await first.Completion;
+
+        // Act
+        var act = () => _jobs.RegenerateGlossary(first.Folder, Game(), Policy, null, _ => Stages(), Ct);
+
+        // Assert
+        act.Should().Throw<GenerationJobException>().Which.Problem.Should().Be(GenerationJobProblem.WrongState);
+    }
+
+    [Fact]
+    public async Task An_edit_of_a_waiting_glossary_is_saved_at_once()
+    {
+        // Arrange
+        var first = Start(Stages(), review: true);
+        await first.Completion;
+        new GenerationFiles(first.Folder).WriteGlossary(Drafted);
+
+        // Act
+        _jobs.EditGlossary(first.Folder, g => GlossaryReview.SetTranslation(g, "harold", "Гаральд"));
+
+        // Assert
+        new GenerationFiles(first.Folder).ReadGlossary()!.Entries[0].Should().Be(new GlossaryEntry("Harold", "Гаральд", Edited: true));
+    }
+
+    [Fact]
+    public async Task An_edit_is_refused_once_the_job_left_the_review()
+    {
+        // Arrange
+        var first = Start(Stages(), review: true);
+        await first.Completion;
+        new GenerationFiles(first.Folder).WriteGlossary(Drafted);
+        await Resume(first, Stages()).Completion;
+
+        // Act
+        var act = () => _jobs.EditGlossary(first.Folder, g => GlossaryReview.SetTranslation(g, "Harold", "Гаральд"));
+
+        // Assert
+        act.Should().Throw<GenerationJobException>().Which.Problem.Should().Be(GenerationJobProblem.WrongState);
+    }
+
     [Fact]
     public async Task A_completed_job_cant_be_resumed()
     {

@@ -58,6 +58,9 @@ public sealed record GenerationActionResult(GenerationJob? Job, GenerationAction
     public bool Succeeded => Problem is null;
 }
 
+/// <summary>The glossary of a job (read or as saved after an edit), or why not (English detail for the log).</summary>
+public sealed record GenerationGlossaryResult(Glossary? Glossary, GenerationActionProblem? Problem = null, string? Detail = null);
+
 /// <summary>What the progress card shows besides the job's counters: <c>progress.json</c> and the end of the job's log.</summary>
 public sealed record GenerationJobDetails(PipelineProgress Progress, IReadOnlyList<string> Log)
 {
@@ -136,6 +139,16 @@ public sealed class GenerationService : IDisposable
         lock (_lock)
         {
             return _open.GetValueOrDefault(game)?.Job;
+        }
+    }
+
+    /// <summary>Every open job (not cancelled or completed) as last saved.</summary>
+    public IReadOnlyList<GenerationJob> OpenJobs()
+    {
+        EnsureLoaded();
+        lock (_lock)
+        {
+            return [.. _open.Values.Select(e => e.Job)];
         }
     }
 
@@ -220,56 +233,66 @@ public sealed class GenerationService : IDisposable
     /// Goes on with the game's job: a paused or interrupted one from its stage and chunk, a failed one from the failed
     /// stage, one waiting for review with the translation. Never throws.
     /// </summary>
-    public async Task<GenerationActionResult> ResumeAsync(Game game)
+    public Task<GenerationActionResult> ResumeAsync(Game game) =>
+        ContinueAsync(game, "Resuming", (folder, stages) => _jobs.Resume(folder, game, _policy, _packIndex.Current?.Index, stages, _quit.Token));
+
+    /// <summary>
+    /// The player has the glossary of the job waiting for review drafted again (task 54): the entries they didn't edit
+    /// go, and the Glossary stage runs again. Never throws.
+    /// </summary>
+    public Task<GenerationActionResult> RegenerateGlossaryAsync(Game game) =>
+        ContinueAsync(game, "Regenerating the glossary", (folder, stages) => _jobs.RegenerateGlossary(folder, game, _policy, _packIndex.Current?.Index, stages, _quit.Token));
+
+    /// <summary>
+    /// The glossary of the game's open job, or why it can't be shown. Reads the disk (call it off the UI thread); never
+    /// throws.
+    /// </summary>
+    public GenerationGlossaryResult ReadGlossary(GameId game)
     {
-        ArgumentNullException.ThrowIfNull(game);
-        if (IsRunning(game.Id))
+        if (FolderOf(game) is not { } folder)
         {
-            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Busy, "The job is running.");
+            return new GenerationGlossaryResult(null, GenerationActionProblem.NotFound, "No open job.");
         }
 
-        if (FolderOf(game.Id) is not { } folder)
-        {
-            return new GenerationActionResult(null, GenerationActionProblem.NotFound, "No open job.");
-        }
-
-        if (!game.IsAvailable)
-        {
-            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.GameUnavailable, "The game's folder is unavailable.");
-        }
-
-        GenerationRun run;
         try
         {
-            run = await Task.Run(() => _jobs.Resume(folder, game, _policy, _packIndex.Current?.Index, entry => _stages.Create(game, entry), _quit.Token));
+            return new GenerationFiles(folder).ReadGlossary() is { } glossary
+                ? new GenerationGlossaryResult(glossary)
+                : new GenerationGlossaryResult(null, GenerationActionProblem.NotFound, "The job has no glossary.");
         }
-        catch (GameBlockedException e)
+        catch (GenerationFileException e)
         {
-            _logger.LogWarning("Resuming the generation for {Game} refused: {Reason}", game.Id, e.Message);
-            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Blocked, e.Message);
+            _logger.LogError(e, "Couldn't read the glossary of the generation job for {Game}", game);
+            return new GenerationGlossaryResult(null, GenerationActionProblem.Disk, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Changes the glossary of the game's job waiting for review (the player's edits) and saves it at once. Never throws:
+    /// the glossary as saved, or why not.
+    /// </summary>
+    public async Task<GenerationGlossaryResult> EditGlossaryAsync(GameId game, Func<Glossary, Glossary> change)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        if (FolderOf(game) is not { } folder)
+        {
+            return new GenerationGlossaryResult(null, GenerationActionProblem.NotFound, "No open job.");
+        }
+
+        try
+        {
+            return new GenerationGlossaryResult(await Task.Run(() => _jobs.EditGlossary(folder, change)).ConfigureAwait(false));
         }
         catch (GenerationJobException e)
         {
-            _logger.LogWarning("Resuming the generation for {Game} refused: {Reason}", game.Id, e.Message);
-            Reload();
-            var problem = e.Problem == GenerationJobProblem.Busy ? GenerationActionProblem.Busy : GenerationActionProblem.NotFound;
-            return new GenerationActionResult(FindOpen(game.Id), problem, e.Message);
+            _logger.LogWarning("Editing the glossary for {Game} refused: {Reason}", game, e.Message);
+            return new GenerationGlossaryResult(null, e.Problem == GenerationJobProblem.Busy ? GenerationActionProblem.Busy : GenerationActionProblem.NotFound, e.Message);
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or GenerationFileException)
         {
-            _logger.LogError(e, "Couldn't resume the generation job for {Game}", game.Id);
-            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Disk, e.Message);
+            _logger.LogError(e, "Couldn't save the glossary of the generation job for {Game}", game);
+            return new GenerationGlossaryResult(null, GenerationActionProblem.Disk, e.Message);
         }
-        catch (InvalidOperationException e)
-        {
-            _logger.LogError(e, "Couldn't set up the generation stages for {Game}", game.Id);
-            Reload();
-            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Unexpected, e.Message);
-        }
-
-        _logger.LogInformation("Generation job {Job} for {Game} resumed at {Stage}", run.Job.Id, game.Id, run.Job.Stage);
-        Follow(run);
-        return new GenerationActionResult(run.Job);
     }
 
     /// <summary>
@@ -455,6 +478,58 @@ public sealed class GenerationService : IDisposable
         }
 
         _quit.Dispose();
+    }
+
+    private async Task<GenerationActionResult> ContinueAsync(Game game, string what, Func<string, Func<GenerationJobEntry, GenerationStages>, GenerationRun> start)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        if (IsRunning(game.Id))
+        {
+            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Busy, "The job is running.");
+        }
+
+        if (FolderOf(game.Id) is not { } folder)
+        {
+            return new GenerationActionResult(null, GenerationActionProblem.NotFound, "No open job.");
+        }
+
+        if (!game.IsAvailable)
+        {
+            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.GameUnavailable, "The game's folder is unavailable.");
+        }
+
+        GenerationRun run;
+        try
+        {
+            run = await Task.Run(() => start(folder, entry => _stages.Create(game, entry)));
+        }
+        catch (GameBlockedException e)
+        {
+            _logger.LogWarning("{What} for {Game} refused: {Reason}", what, game.Id, e.Message);
+            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Blocked, e.Message);
+        }
+        catch (GenerationJobException e)
+        {
+            _logger.LogWarning("{What} for {Game} refused: {Reason}", what, game.Id, e.Message);
+            Reload();
+            var problem = e.Problem == GenerationJobProblem.Busy ? GenerationActionProblem.Busy : GenerationActionProblem.NotFound;
+            return new GenerationActionResult(FindOpen(game.Id), problem, e.Message);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or GenerationFileException)
+        {
+            _logger.LogError(e, "{What} for {Game} failed", what, game.Id);
+            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Disk, e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _logger.LogError(e, "Couldn't set up the generation stages for {Game}", game.Id);
+            Reload();
+            return new GenerationActionResult(FindOpen(game.Id), GenerationActionProblem.Unexpected, e.Message);
+        }
+
+        _logger.LogInformation("Generation job {Job} for {Game} goes on at {Stage} ({What})", run.Job.Id, game.Id, run.Job.Stage, what);
+        Follow(run);
+        return new GenerationActionResult(run.Job);
     }
 
     private async Task AutoResumeLoopAsync(CancellationToken cancellationToken)
