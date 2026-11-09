@@ -18,6 +18,7 @@ using AiLocalPack.Core.Background;
 using AiLocalPack.Desktop.AddGame;
 using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
@@ -36,6 +37,7 @@ using AiLocalPack.Toolkit.Dependencies;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Folders;
 using AiLocalPack.Toolkit.Fonts;
+using AiLocalPack.Toolkit.Generation;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -122,7 +124,7 @@ internal static class Composition
         services.AddSingleton<GameStatuses>();
         AddBackground(services, env, paths, loggerFactory);
         AddAgents(services);
-        services.AddSingleton<GenerationJobStore>();
+        AddGeneration(services);
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
         services.AddTransient<SplashViewModel>();
@@ -163,6 +165,18 @@ internal static class Composition
             return AgentInstaller.Create(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<OsEnvironment>(), http, sp.GetRequiredService<ILogger<AgentInstaller>>());
         });
         services.AddSingleton<IAgentHost, AgentHost>();
+    }
+
+    /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>
+    private static void AddGeneration(IServiceCollection services)
+    {
+        services.AddSingleton<GenerationJobStore>();
+        services.AddSingleton(sp => new WorkingCopies(sp.GetRequiredService<AppPaths>(), FileCloner.Create(), new SystemDiskSpace()));
+        services.AddSingleton(sp => new GenerationEstimator(sp.GetRequiredService<RecipeTools>(), sp.GetRequiredService<WorkingCopies>(), sp.GetRequiredService<EngineDetector>()));
+        services.AddSingleton<IGenerationEstimates, GenerationEstimates>();
+        services.AddSingleton(sp => new LocalPackStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<LocalPackStore>>()));
+        services.AddSingleton<IGenerationStagesFactory, PipelineStagesFactory>();
+        services.AddSingleton<GenerationService>();
     }
 
     /// <summary>Game catalog, Steam scan, detection and covers.</summary>

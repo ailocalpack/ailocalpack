@@ -122,6 +122,7 @@ public sealed partial class LibraryViewModel : PageViewModel
         _packIndex.Changed += (_, snapshot) => _ui.Post(() => OnPackIndexChanged(snapshot));
         _settings.Changed += (_, s) => _ui.Post(() => OnSettingsChanged(s));
         _statuses.InstalledChanged += (_, _) => _ui.Post(ApplyStatuses);
+        _statuses.JobChanged += (_, _) => _ui.Post(ApplyStatuses);
         _install.Changed += (_, _) => ApplyOperations();
         UpdateChipLabels();
         SyncCards();

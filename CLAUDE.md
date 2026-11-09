@@ -6,7 +6,7 @@ Treat this file and `docs/*.md` as the product spec and keep them current: recor
 
 ## Status
 
-Done through task 51: app shell, settings, Steam + manual game library with engine / anti-cheat detection, registry index (fetched, cached, offline), pack compatibility check, download cache, install transaction (backup, rollback, uninstall, re-apply, crash recovery, whitelisted dependencies, binary patches), re-check after game updates, Activity panel, tray + OS notifications, recipe tools for RPG Maker MV/MZ, Ren'Py, Godot 3/4, Unity, Unreal 4/5 with font swap, string validator, agent adapters (Claude Code, Codex, fake) with install and sign-in, toolkit MCP server, working copies + estimate, persisted generation jobs, pipeline stages Setup → Extract → Glossary → Translate by chunks → Build (rebuild, font swap, test run, local pack) running for real. The Generation tab (tasks 52–55) and publishing are not started. Feature-by-feature list with CLI commands: `docs/status.md`.
+Done through task 52: app shell, settings, Steam + manual game library with engine / anti-cheat detection, registry index (fetched, cached, offline), pack compatibility check, download cache, install transaction (backup, rollback, uninstall, re-apply, crash recovery, whitelisted dependencies, binary patches), re-check after game updates, Activity panel, tray + OS notifications, recipe tools for RPG Maker MV/MZ, Ren'Py, Godot 3/4, Unity, Unreal 4/5 with font swap, string validator, agent adapters (Claude Code, Codex, fake) with install and sign-in, toolkit MCP server, working copies + estimate, persisted generation jobs, pipeline stages Setup → Extract → Glossary → Translate by chunks → Build (rebuild, font swap, test run, local pack) running for real, Generation tab start form starting real jobs from the app. Generation progress / review / result (tasks 53–55) and publishing are not started. Feature-by-feature list with CLI commands: `docs/status.md`.
 
 ## Docs
 
@@ -17,7 +17,7 @@ Component details live in `docs/`. Read the matching doc before changing or exte
 - `docs/packs-and-registry.md`: manifest / string table details, registry index and client, pack compatibility, pack download and cache, binary patches (VCDIFF, LZMA2), dependencies whitelist, pack validation, index build, registry CI.
 - `docs/install.md`: install transaction (journal, backup, rollback, uninstall, re-apply, recovery, dependencies), game update re-check.
 - `docs/generation.md`: agent adapters and their contract, Claude Code and Codex adapters, agent install and sign-in, toolkit MCP server, working copies and estimate, generation jobs, pipeline and prompts, translate stage, build stage (test run, local packs).
-- `docs/desktop-app.md`: app structure (MVVM, DI, navigation), settings screen and sections, library, game page, packs tab, dialogs, add game folder, covers, startup, install flow (UI), Activity panel, tray and background.
+- `docs/desktop-app.md`: app structure (MVVM, DI, navigation), settings screen and sections, library, game page, packs tab, generation tab, dialogs, add game folder, covers, startup, install flow (UI), Activity panel, tray and background.
 - `docs/foundations.md`: app folders, settings storage, logging, UI localization (`.resx`, `Localizer`, plurals).
 - `docs/cli.md`: CLI framework and `games` / `toolkit` commands (area commands are also in their area's doc).
 
@@ -134,6 +134,7 @@ Both live in the GitHub organization **`ailocalpack`** (not a personal account: 
   4. Rebuild and do a test run (the translated working copy for 15 s, compared with the untranslated one when it closes early), then save a local pack (_Build stage_ in `docs/generation.md`).
 - The agent gets string length limits where they can be determined and must preserve placeholders and formatting tags; a validator checks both.
 - **Prompts** are versioned files `src/AiLocalPack.Pipeline/Prompts/<name>.v<N>.md`; a change that alters what the agent does is a new version file. Rendered prompts are snapshot-tested.
+- **Start form** (decided, task 52): `Start generation` needs a ready agent, a finished estimate, enough disk and an engine the toolkit reads; an unknown or unreadable engine blocks the start (the Extract stage would fail before any agent time) until task 57 lets the agent read unknown formats.
 - Details: `docs/generation.md`.
 
 ## Pack format

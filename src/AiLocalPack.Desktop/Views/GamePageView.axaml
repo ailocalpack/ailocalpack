@@ -221,16 +221,10 @@
                         <views:PacksTabView DataContext="{Binding Packs}" />
                     </Panel>
 
-                    <!-- Generation: start form, progress and result come with tasks 52–55 -->
-                    <StackPanel x:Name="GenerationPanel" IsVisible="{Binding IsGenerationTab}" MaxWidth="520" Margin="0,32,0,0"
-                                Spacing="10" HorizontalAlignment="Center">
-                        <Border Classes="illustration">
-                            <Viewbox Classes="icon" Width="40" Height="40">
-                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{DynamicResource AppFaintBrush}" StrokeThickness="1.5" />
-                            </Viewbox>
-                        </Border>
-                        <TextBlock Classes="muted" Text="{l:Loc Game_Generation_Soon}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-                    </StackPanel>
+                    <!-- Generation (§6): start form (task 52), progress, review and result (tasks 53–55) -->
+                    <Panel x:Name="GenerationPanel" IsVisible="{Binding IsGenerationTab}">
+                        <views:GenerationTabView DataContext="{Binding Generation}" />
+                    </Panel>
 
                     <!-- Audio / Textures: coming soon -->
                     <StackPanel x:Name="SoonPanel" IsVisible="{Binding IsSoonTab}" MaxWidth="520" Margin="0,32,0,0"

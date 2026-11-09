@@ -50,5 +50,6 @@
         <ProjectReference Include="..\AiLocalPack.Toolkit\AiLocalPack.Toolkit.csproj" />
         <ProjectReference Include="..\AiLocalPack.Agents\AiLocalPack.Agents.csproj" />
         <ProjectReference Include="..\AiLocalPack.Mcp\AiLocalPack.Mcp.csproj" />
+        <ProjectReference Include="..\AiLocalPack.Pipeline\AiLocalPack.Pipeline.csproj" />
     </ItemGroup>
 </Project>

@@ -1172,9 +1172,6 @@
   <data name="Game_Packs_Unknown" xml:space="preserve">
     <value>The pack list hasn't loaded yet. Packs show up once the registry answers.</value>
   </data>
-  <data name="Game_Generation_Soon" xml:space="preserve">
-    <value>Generating a translation with an AI agent comes in a later version.</value>
-  </data>
   <data name="Game_Tab_Packs" xml:space="preserve">
     <value>Packs</value>
   </data>
@@ -2149,5 +2146,224 @@
   </data>
   <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
     <value>The session expired. Sign in again to start or resume generation.</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>Setup</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>Extract</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>Glossary</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>Build &amp; test</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>Generation steps</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>Generate a translation into</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>Into</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>Translate into another language</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>To translate</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>Agent time</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>Subscription</value>
+  </data>
+  <data name="Gen_Tile_Words_One" xml:space="preserve">
+    <value>strings · {0} word</value>
+  </data>
+  <data name="Gen_Tile_Words_Other" xml:space="preserve">
+    <value>strings · {0} words</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>rough guess from file sizes</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>runs in the background</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>days of an entry plan's limits</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>Days of usage limits of an entry-level plan (Claude Pro, ChatGPT Plus), three 5-hour windows a day</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>Estimating…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>Couldn't size up the game: {0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>Agent</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>Not signed in</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>Downloading the official build · {0}%</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>Finish signing in in your browser…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>your copy</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>installed by ailocalpack</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>Checks</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>Checking the game's engine…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · supported by the toolkit</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>Unknown engine: the agent will learn unknown formats in a later version</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}: the toolkit doesn't handle it on this system yet</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}: the toolkit can't read it yet</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}: the toolkit couldn't read the game ({1})</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>Checking the disk space…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>{0} working copy</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>{0} working copy, cloned: takes no space</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · {1} free</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>Not enough space: {0} needed, {1} free</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} ready</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} needs setup</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>Choose an agent</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>No anti-cheat detected</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>Let me review the glossary before translating</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>The agent works on a copy; your game files are not touched.</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>Start generation</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>Starting…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>The game's folder isn't available</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} isn't ready yet</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>Estimating the size…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>The size couldn't be estimated</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>The toolkit can't read this game yet</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>Not enough disk space for the working copy</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>Generation is unavailable for this game.</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>This game already has a generation job.</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>Couldn't create the job's folder: {0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>Couldn't start the generation: {0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>Making the working copy</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>Extracting strings</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>Building the glossary</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>Translating</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>Building and testing</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>Waiting for your glossary review</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>Paused</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>Interrupted</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>Translation ready</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>Into {0} with {1}</value>
+  </data>
+  <data name="Gen_Progress_More" xml:space="preserve">
+    <value>Details of the progress come in a later version.</value>
   </data>
 </root>

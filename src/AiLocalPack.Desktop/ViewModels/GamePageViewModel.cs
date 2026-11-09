@@ -8,6 +8,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
@@ -16,6 +17,7 @@ using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels.GamePage;
+using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using Avalonia;
@@ -74,7 +76,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     private Bitmap? _greyImage;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsPacksTab), nameof(IsGenerationTab), nameof(IsSoonTab), nameof(SoonTitle), nameof(SoonText), nameof(SoonIcon))]
+    [NotifyPropertyChangedFor(nameof(IsPacksTab), nameof(IsGenerationTab), nameof(HasPrimaryAction), nameof(IsSoonTab), nameof(SoonTitle), nameof(SoonText), nameof(SoonIcon))]
     private GamePageTab _selectedTab;
 
     /// <summary>The header scrolled out of view: the sticky bar shows the mini cover, name and primary action.</summary>
@@ -99,6 +101,9 @@ public sealed partial class GamePageViewModel : PageViewModel
         InstallFlow install,
         InstalledPackMonitor monitor,
         TimeProvider time,
+        GenerationService jobs,
+        IGenerationEstimates estimates,
+        AgentsSettingsSection agents,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -130,6 +135,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, _logger);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -139,6 +145,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _sessions.Changed += OnSessionChanged;
         _install.Changed += OnInstallChanged;
         _statuses.InstalledChanged += OnInstalledChanged;
+        _statuses.JobChanged += OnJobChanged;
         _ = LoadCoverAsync(covers);
     }
 
@@ -161,6 +168,9 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     /// <summary>The Packs tab (design §4): list, details, language and sort.</summary>
     public PacksTabViewModel Packs { get; }
+
+    /// <summary>The Generation tab (design §6): the start form, then the job's progress.</summary>
+    public GenerationTabViewModel Generation { get; }
 
     // ---------- Cover and backdrop ----------
 
@@ -228,7 +238,9 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     // ---------- Primary action ----------
 
-    public bool HasPrimaryAction => Action.Kind != GamePrimaryActionKind.None;
+    /// <summary>None on the Generation tab's start form (design §6: its own button starts the job).</summary>
+    public bool HasPrimaryAction => Action.Kind != GamePrimaryActionKind.None
+        && !(Action.Kind == GamePrimaryActionKind.Generate && IsGenerationTab);
 
     /// <summary>
     /// "Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "View progress"…; Play reads
@@ -453,8 +465,10 @@ public sealed partial class GamePageViewModel : PageViewModel
         _sessions.Changed -= OnSessionChanged;
         _install.Changed -= OnInstallChanged;
         _statuses.InstalledChanged -= OnInstalledChanged;
+        _statuses.JobChanged -= OnJobChanged;
         _closed.Cancel();
         Packs.Close();
+        Generation.Close();
     }
 
     /// <summary>⋯ → <c>Re-apply</c>: writes the installed pack's files again (after a game update or a file check reverted them).</summary>
@@ -484,7 +498,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// Play launches the game (<see cref="GameSessions"/>); Install installs the best compatible pack (the install flow;
     /// when none can be installed the Packs tab says why); Update installs the registry's later revision of the installed
     /// pack (the install flow checks it and asks when a risk applies) and Re-apply writes the installed one again (task 33);
-    /// Generate, Translate new strings and View progress open the Generation tab (its content comes with tasks 52, 53, 56).
+    /// Generate, Translate new strings and View progress open the Generation tab (update mode comes with task 56).
     /// </summary>
     private void RunPrimary()
     {
@@ -572,6 +586,15 @@ public sealed partial class GamePageViewModel : PageViewModel
         }
     }
 
+    /// <summary>The game's generation job started, moved on or ended (any thread): status, tab % and the tab's card follow.</summary>
+    private void OnJobChanged(object? sender, Core.Generation.GenerationJob job)
+    {
+        if (job.Game == Game.Id)
+        {
+            _ui.Post(Refresh);
+        }
+    }
+
     private void OnSessionChanged(object? sender, GameSessionEvent change)
     {
         if (change.Game == Game.Id)
@@ -598,12 +621,20 @@ public sealed partial class GamePageViewModel : PageViewModel
         ActivateTab();
     }
 
-    /// <summary>The Packs tab fetches manifests only once shown (never for a blocked game).</summary>
+    /// <summary>
+    /// The Packs tab fetches manifests only once shown, the Generation tab estimates the game and checks the agents (never
+    /// for a blocked game).
+    /// </summary>
     private void ActivateTab()
     {
         if (SelectedTab == GamePageTab.Packs && !IsBlocked && Packs is not null)
         {
             Packs.Activate();
+        }
+
+        if (SelectedTab == GamePageTab.Generation && !IsBlocked && Generation is not null)
+        {
+            Generation.Activate();
         }
     }
 
@@ -624,6 +655,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     {
         Refresh();
         Packs.RefreshTexts();
+        Generation.RefreshTexts();
     }
 
     /// <summary>Recomputes the status and action and re-raises every text (catalog, pack list, language, UI language).</summary>
@@ -633,6 +665,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Action = GamePrimaryActions.Resolve(Status);
         UpdateTabs();
         Packs.Update(Game, Status, Language);
+        Generation.Update(Game, Language);
         ActivateTab();
         OnPropertyChanged(string.Empty);
         PrimaryCommand.NotifyCanExecuteChanged();

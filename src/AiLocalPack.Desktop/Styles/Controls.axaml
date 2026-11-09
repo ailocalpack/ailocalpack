@@ -1280,4 +1280,105 @@
     <Style Selector="StackPanel.staleList">
         <Setter Property="Opacity" Value="0.78" />
     </Style>
+
+    <!-- Generation tab (design §6): five-step header, centred card, estimate tiles, agent cards, checks -->
+    <Style Selector="Border.genStepIcon">
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+    </Style>
+    <Style Selector="Border.genStepIcon Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.done"><Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.done Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.running"><Setter Property="Background" Value="{DynamicResource AppGenBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.running Path.icon"><Setter Property="Stroke" Value="#06222a" /></Style>
+    <Style Selector="Border.genStepIcon.current"><Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.current Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.paused"><Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.paused Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.failed"><Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" /></Style>
+    <Style Selector="Border.genStepIcon.failed Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="Border.genStepLine">
+        <Setter Property="Height" Value="2" />
+        <Setter Property="Background" Value="{DynamicResource AppBorderStrongBrush}" />
+    </Style>
+    <Style Selector="Border.genStepLine.done"><Setter Property="Background" Value="{DynamicResource AppOkBrush}" /><Setter Property="Opacity" Value="0.55" /></Style>
+    <Style Selector="TextBlock.genStepName">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="TextBlock.genStepName.reached"><Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" /></Style>
+    <Style Selector="Border.genCard">
+        <Setter Property="Padding" Value="24,22" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="TextBlock.genTitle">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="LetterSpacing" Value="-0.3" />
+    </Style>
+    <Style Selector="Border.genTile">
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="TextBlock.genTileValue">
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="LetterSpacing" Value="-0.4" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <Style Selector="Border.genAgent">
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.genAgent.on">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+    </Style>
+    <Style Selector="TextBlock.faint">
+        <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="StackPanel.genStatus">
+        <Setter Property="TextElement.FontSize" Value="13" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="StackPanel.genStatus Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="StackPanel.genStatus.ok"><Setter Property="TextElement.Foreground" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.genStatus.ok Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.genStatus.bad Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="StackPanel.genCheck">
+        <Setter Property="TextElement.FontSize" Value="13" />
+    </Style>
+    <Style Selector="StackPanel.genCheck Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="StackPanel.genCheck.ok Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.genCheck.bad"><Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="StackPanel.genCheck.bad Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="Border.genFoot">
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="Padding" Value="0,16,0,0" />
+    </Style>
+    <Style Selector="TextBlock.genPercent">
+        <Setter Property="FontSize" Value="52" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="LetterSpacing" Value="-2" />
+    </Style>
+    <Style Selector="ProgressBar.genProgress">
+        <Setter Property="Height" Value="12" />
+        <Setter Property="MinHeight" Value="12" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+    </Style>
 </Styles>

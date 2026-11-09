@@ -1,8 +1,10 @@
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 
@@ -13,8 +15,15 @@ namespace AiLocalPack.Desktop.Library;
 /// from the anti-cheat policy and the latest pack list. The library cards and the game page read the same answer;
 /// installed packs (task 29), broken ones (task 33) and generation jobs (task 47) join here.
 /// </summary>
-public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings, IInstalledPacks installed)
+public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings, IInstalledPacks installed, GenerationService jobs)
 {
+    /// <summary>Raised (on any thread) when a game's generation job started, moved on or ended: its status may have changed.</summary>
+    public event EventHandler<GenerationJob>? JobChanged
+    {
+        add => jobs.Changed += value;
+        remove => jobs.Changed -= value;
+    }
+
     /// <summary>Raised (on any thread) when a game's installed pack changed: its status may have.</summary>
     public event EventHandler<GameId>? InstalledChanged
     {
@@ -36,6 +45,6 @@ public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, Se
     public LocalizationStatus Resolve(Game game, string language)
     {
         ArgumentNullException.ThrowIfNull(game);
-        return LocalizationStatuses.Resolve(game, language, policy.Resolve(game), packIndex.Current?.Index, installed.Find(game.Id, language));
+        return LocalizationStatuses.Resolve(game, language, policy.Resolve(game), packIndex.Current?.Index, installed.Find(game.Id, language), jobs.StateOf(game.Id));
     }
 }

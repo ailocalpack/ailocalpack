@@ -1201,9 +1201,6 @@
   <data name="Game_Packs_Unknown" xml:space="preserve">
     <value>Список паков ещё не загружен. Паки появятся, когда реестр ответит.</value>
   </data>
-  <data name="Game_Generation_Soon" xml:space="preserve">
-    <value>Создание перевода с ИИ-агентом появится в следующей версии.</value>
-  </data>
   <data name="Game_Tab_Packs" xml:space="preserve">
     <value>Паки</value>
   </data>
@@ -2193,5 +2190,227 @@
   </data>
   <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
     <value>Сеанс истёк. Войдите снова, чтобы начать или продолжить создание перевода.</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>Подготовка</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>Извлечение</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>Глоссарий</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>Перевод</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>Сборка и проверка</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>Этапы генерации</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>Создать перевод</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>Перевести на другой язык</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>Перевести</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>Время агента</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>Подписка</value>
+  </data>
+  <data name="Gen_Tile_Words_One" xml:space="preserve">
+    <value>строк · {0} слово</value>
+  </data>
+  <data name="Gen_Tile_Words_Few" xml:space="preserve">
+    <value>строк · {0} слова</value>
+  </data>
+  <data name="Gen_Tile_Words_Many" xml:space="preserve">
+    <value>строк · {0} слов</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>грубая оценка по размеру файлов</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>работает в фоне</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>дней лимитов базового тарифа</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>Дни лимитов базового тарифа (Claude Pro, ChatGPT Plus), три 5-часовых окна в день</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} ч</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>Оцениваем…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>Не удалось оценить игру: {0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>Агент</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>Готов</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>Не установлен</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>Вход не выполнен</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>Загрузка официальной сборки · {0}%</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>Завершите вход в браузере…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>ваша копия</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>установлен ailocalpack</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>Проверки</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>Определяем движок игры…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · поддерживается инструментами</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>Движок неизвестен: агент научится разбирать незнакомые форматы в следующей версии</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}: на этой системе инструменты его пока не поддерживают</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}: инструменты пока не умеют его читать</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}: инструменты не смогли прочитать игру ({1})</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>Проверяем место на диске…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>Рабочая копия {0}</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>Рабочая копия {0}, клон: места не занимает</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · свободно {1}</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>Мало места: нужно {0}, свободно {1}</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} готов</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} нужно настроить</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>Выберите агента</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>Античит не найден</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>Дать мне проверить глоссарий перед переводом</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>Агент работает с копией; файлы игры не меняются.</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>Начать генерацию</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>Запускаем…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>Папка игры недоступна</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} ещё не готов</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>Оцениваем объём…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>Не удалось оценить объём</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>Инструменты пока не умеют читать эту игру</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>Не хватает места для рабочей копии</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>Для этой игры генерация недоступна.</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>У этой игры уже есть задание генерации.</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>Не удалось создать папку задания: {0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>Не удалось начать генерацию: {0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>Создаём рабочую копию</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>Извлекаем строки</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>Составляем глоссарий</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>Переводим</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>Собираем и проверяем</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>Ждём вашей проверки глоссария</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>Прервано</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>Перевод готов</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>На {0} с {1}</value>
+  </data>
+  <data name="Gen_Progress_More" xml:space="preserve">
+    <value>Подробности хода работы появятся в следующей версии.</value>
   </data>
 </root>

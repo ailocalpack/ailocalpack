@@ -11,6 +11,8 @@ using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Tests.Settings;
 using AiLocalPack.Desktop.Covers;
+using AiLocalPack.Desktop.Generation;
+using AiLocalPack.Desktop.Tests.Generation;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Toolkit.Recipes;
@@ -26,7 +28,8 @@ namespace AiLocalPack.Desktop.Tests;
 /// one: by default a local folder without an index (unavailable), or the address a test passes. No covers are loaded (no
 /// network), UI updates run at once on the calling thread, folders are "opened" into <see cref="FakeShell"/>, the
 /// OS pickers are <see cref="FakeFilePicker"/>, games are "started" into <see cref="FakeProcesses"/> and agents are
-/// <see cref="FakeAgentHost"/>.
+/// <see cref="FakeAgentHost"/>. Generation jobs run <see cref="FakeGenerationStages"/> and the start form's estimate is
+/// <see cref="FakeEstimates"/>.
 /// </summary>
 internal static class TestServices
 {
@@ -93,6 +96,12 @@ internal static class TestServices
             // Agents are never the player's: none installed unless the test says so, nothing downloaded or started.
             services.AddSingleton<FakeAgentHost>();
             services.AddSingleton<IAgentHost>(sp => sp.GetRequiredService<FakeAgentHost>());
+
+            // Generation never runs the real pipeline, and the start form's estimate is the test's.
+            services.AddSingleton<FakeGenerationStages>();
+            services.AddSingleton<IGenerationStagesFactory>(sp => sp.GetRequiredService<FakeGenerationStages>());
+            services.AddSingleton<FakeEstimates>();
+            services.AddSingleton<IGenerationEstimates>(sp => sp.GetRequiredService<FakeEstimates>());
 
             services.AddSingleton<DependencyDownloads>();
             services.AddSingleton(sp => new DependencyStore(
