@@ -78,7 +78,7 @@ Stack: C# / .NET 10 and [Avalonia UI](https://avaloniaui.net/) with MVVM (Commun
 ## Contributing
 
 - **Translations of games** go to the [registry](https://github.com/ailocalpack/registry) as pull requests. Once its CI passes, a pack PR merges on its own with status `alpha`. A pack becomes `verified` after other players confirm that it works.
-- **Translations of the app UI** and code changes are pull requests to this repository. Add tests for what you change, and keep `dotnet build` free of warnings.
+- **Translations of the app UI**, bug reports and code changes go to this repository. See [CONTRIBUTING.md](CONTRIBUTING.md) for the setup, conventions and PR checklist.
 
 ## Licenses
 
