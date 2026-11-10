@@ -222,10 +222,10 @@ internal static class GitHubCommand
         _ => detail,
     };
 
-    private static HttpClient CreateHttpClient() =>
+    internal static HttpClient CreateHttpClient() =>
         GitHubOAuthApp.CreateHttpClient(new ProductInfoHeaderValue("ailocalpack-cli", typeof(GitHubCommand).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
 
-    private static GitHubSession CreateSession(OsEnvironment env, HttpClient http)
+    internal static GitHubSession CreateSession(OsEnvironment env, HttpClient http)
     {
         var app = GitHubOAuthApp.Resolve(env);
         return new GitHubSession(

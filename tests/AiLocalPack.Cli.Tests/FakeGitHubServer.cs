@@ -7,7 +7,8 @@ namespace AiLocalPack.Cli.Tests;
 /// <summary>
 /// A local fake github.com for the CLI run as a child process (<c>AILOCALPACK_GITHUB_URL</c>): the device-code and token
 /// endpoints (pending once, then a token, polled every second) and <c>GET /api/user</c>, which answers 401 when
-/// <see cref="Revoked"/>.
+/// <see cref="Revoked"/>; every other <c>/api/</c> call goes to <see cref="Api"/> (the publish client's REST calls,
+/// task 60).
 /// </summary>
 internal sealed class FakeGitHubServer : IDisposable
 {
@@ -22,11 +23,15 @@ internal sealed class FakeGitHubServer : IDisposable
         var port = FreePort();
         Url = $"http://127.0.0.1:{port}/";
         _listener.Prefixes.Add(Url);
+        Api = new FakeGitHubApi(new Uri(Url + "api/"));
         _listener.Start();
         _ = Task.Run(ServeAsync);
     }
 
     public string Url { get; }
+
+    /// <summary>The REST API behind <c>/api/</c> (except <c>/api/user</c>).</summary>
+    public FakeGitHubApi Api { get; }
 
     /// <summary>Answers the device-code request with <c>device_flow_disabled</c>.</summary>
     public bool DeviceFlowDisabled { get; set; }
@@ -39,6 +44,7 @@ internal sealed class FakeGitHubServer : IDisposable
         _stop.Cancel();
         _listener.Close();
         _stop.Dispose();
+        Api.Dispose();
     }
 
     private static int FreePort()
@@ -62,6 +68,12 @@ internal sealed class FakeGitHubServer : IDisposable
                 return;
             }
 
+            if (context.Request.Url!.AbsolutePath.StartsWith("/api/", StringComparison.Ordinal) && context.Request.Url.AbsolutePath != "/api/user")
+            {
+                await ForwardAsync(context);
+                continue;
+            }
+
             var (status, body) = Answer(context.Request);
             var bytes = Encoding.UTF8.GetBytes(body);
             context.Response.StatusCode = (int)status;
@@ -74,6 +86,38 @@ internal sealed class FakeGitHubServer : IDisposable
             await context.Response.OutputStream.WriteAsync(bytes);
             context.Response.Close();
         }
+    }
+
+    private async Task ForwardAsync(HttpListenerContext context)
+    {
+        var incoming = context.Request;
+        using var request = new HttpRequestMessage(new HttpMethod(incoming.HttpMethod), incoming.Url);
+        if (incoming.HasEntityBody)
+        {
+            using var buffer = new MemoryStream();
+            await incoming.InputStream.CopyToAsync(buffer);
+            request.Content = new ByteArrayContent(buffer.ToArray());
+        }
+
+        foreach (var name in new[] { "Authorization", "Accept" })
+        {
+            if (incoming.Headers[name] is { } value)
+            {
+                request.Headers.TryAddWithoutValidation(name, value);
+            }
+        }
+
+        using var response = await Api.HandleAsync(request, _stop.Token);
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        context.Response.StatusCode = (int)response.StatusCode;
+        context.Response.ContentType = "application/json";
+        foreach (var header in response.Headers)
+        {
+            context.Response.Headers.Add(header.Key, string.Join(",", header.Value));
+        }
+
+        await context.Response.OutputStream.WriteAsync(bytes);
+        context.Response.Close();
     }
 
     private (HttpStatusCode, string) Answer(HttpListenerRequest request) => request.Url!.AbsolutePath switch

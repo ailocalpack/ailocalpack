@@ -28,6 +28,7 @@ public sealed record LocalPack(string Folder, PackManifest Manifest, LocalPackRe
 /// <param name="Tried">When the player first closed the game after playing it with the pack installed (task 55); publishing is offered from then on.</param>
 /// <param name="ShareDismissed">The player answered "Not now" to the result's "Share it" strip.</param>
 /// <param name="Update">Made by an update job (task 56): the revision it builds on and what the game update changed.</param>
+/// <param name="Published">The last time the pack was sent to the registry (task 60): its PR.</param>
 public sealed record LocalPackReport(
     string Job,
     DateTimeOffset Created,
@@ -40,7 +41,8 @@ public sealed record LocalPackReport(
     string? InGameLanguage = null,
     DateTimeOffset? Tried = null,
     bool ShareDismissed = false,
-    LocalPackUpdate? Update = null)
+    LocalPackUpdate? Update = null,
+    LocalPackPublication? Published = null)
 {
     /// <summary>The player has played the game with the pack installed.</summary>
     public bool IsTried => Tried is not null;
@@ -52,6 +54,21 @@ public sealed record LocalPackReport(
 /// <param name="Changed">Strings translated again because the game changed their original.</param>
 /// <param name="Removed">The base's strings the game no longer has.</param>
 public sealed record LocalPackUpdate(int BaseRevision, int Added, int Changed, int Removed);
+
+/// <summary>Where the pack was sent (task 60): the registry pull request that carries it.</summary>
+/// <param name="Registry">The registry repository (<c>ailocalpack/registry</c>).</param>
+/// <param name="PackId">The pack's ID in the registry (another than the local one when it was taken).</param>
+/// <param name="Revision">The revision sent.</param>
+/// <param name="Fork">The player's fork (<c>login/registry</c>) holding <paramref name="Branch"/>.</param>
+public sealed record LocalPackPublication(
+    string Registry,
+    string PackId,
+    int Revision,
+    int PullRequest,
+    Uri PullRequestUrl,
+    string Fork,
+    string Branch,
+    DateTimeOffset At);
 
 /// <param name="Checked">Whether the engine's fonts could be checked at all (no font hook = not checked).</param>
 /// <param name="Replacement">The whitelisted font swapped in, or <c>null</c>.</param>
@@ -75,7 +92,8 @@ public sealed record LocalPackString(string Key, string Original);
 /// (<c>{schemaVersion: 1, job, created, testRun {outcome, skip?, detail?, ranMs?, exitCode?}, fonts {checked,
 /// replacement?, swapped, uncovered}, warnings [{key, rule, message, original, translation}], untranslated [{key,
 /// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?, update? {baseRevision, added, changed,
-/// removed}}</c>; tried and shareDismissed are the player's, task 55; update is task 56's), since a pack folder holds
+/// removed}, published? {registry, packId, revision, pullRequest, pullRequestUrl, fork, branch, at}}</c>; tried and
+/// shareDismissed are the player's, task 55; update is task 56's; published task 60's), since a pack folder holds
 /// nothing else; a binary patch pack's archive (task 57) is in <c>releases/&lt;Release asset name&gt;</c>
 /// (<see cref="PatchArchiveName"/>), as a local registry keeps it (<c>PackFetcher.LocalReleasesFolder</c>); beside the
 /// report <c>&lt;id&gt;.glossary.json</c>, the glossary the pack was made with (task 56: an update of
@@ -96,8 +114,9 @@ public sealed class LocalPackStore
     public const string ReleasesFolder = "releases";
 
     /// <summary>
-    /// The Release download folder of patch archives in the manifest's <c>patch.url</c>, until publishing (task 60) uploads
-    /// the archive and names its real asset; a local pack's archive is always read from <see cref="ReleasesFolder"/>.
+    /// The Release download folder of patch archives in a local pack's <c>patch.url</c>; publishing (task 60) names the
+    /// target registry's asset for the published ID and revision. A local pack's archive is always read from
+    /// <see cref="ReleasesFolder"/>.
     /// </summary>
     public const string PatchUrlPrefix = "https://github.com/ailocalpack/registry/releases/download/patches/";
 
@@ -422,7 +441,8 @@ public sealed class LocalPackStore
             report.InGameLanguage,
             report.Tried?.ToUniversalTime(),
             report.ShareDismissed ? true : null,
-            report.Update is { } u ? new UpdateJson(u.BaseRevision, u.Added, u.Changed, u.Removed) : null);
+            report.Update is { } u ? new UpdateJson(u.BaseRevision, u.Added, u.Changed, u.Removed) : null,
+            report.Published is { } p ? new PublishedJson(p.Registry, p.PackId, p.Revision, p.PullRequest, p.PullRequestUrl.AbsoluteUri, p.Fork, p.Branch, p.At.ToUniversalTime()) : null);
         AtomicFile.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(LocalPackReportJson))));
     }
 
@@ -464,8 +484,15 @@ public sealed class LocalPackStore
             json.InGameLanguage,
             json.Tried,
             json.ShareDismissed == true,
-            json.Update is { BaseRevision: >= 1 } u ? new LocalPackUpdate(u.BaseRevision, Math.Max(0, u.Added), Math.Max(0, u.Changed), Math.Max(0, u.Removed)) : null);
+            json.Update is { BaseRevision: >= 1 } u ? new LocalPackUpdate(u.BaseRevision, Math.Max(0, u.Added), Math.Max(0, u.Changed), Math.Max(0, u.Removed)) : null,
+            ReadPublished(json.Published));
     }
+
+    private static LocalPackPublication? ReadPublished(PublishedJson? json) =>
+        json is { Registry: { Length: > 0 } registry, PackId: { Length: > 0 } packId, Revision: >= 1, PullRequest: >= 1, Fork: { Length: > 0 } fork, Branch: { Length: > 0 } branch }
+        && Uri.TryCreate(json.PullRequestUrl, UriKind.Absolute, out var url)
+            ? new LocalPackPublication(registry, packId, json.Revision, json.PullRequest, url, fork, branch, json.At)
+            : null;
 }
 
 internal sealed record LocalPackReportJson(
@@ -481,7 +508,10 @@ internal sealed record LocalPackReportJson(
     string? InGameLanguage,
     DateTimeOffset? Tried = null,
     bool? ShareDismissed = null,
-    UpdateJson? Update = null);
+    UpdateJson? Update = null,
+    PublishedJson? Published = null);
+
+internal sealed record PublishedJson(string? Registry, string? PackId, int Revision, int PullRequest, string? PullRequestUrl, string? Fork, string? Branch, DateTimeOffset At);
 
 internal sealed record UpdateJson(int BaseRevision, int Added, int Changed, int Removed);
 

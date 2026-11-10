@@ -20,6 +20,7 @@ namespace AiLocalPack.Cli.Commands;
 /// A valid recipe pack's translations are also checked for unbalanced tags of its engine (warnings: no game files
 /// to compare with, so they never fail the pack).
 /// <c>pack local [&lt;game&gt;]</c>: the packs generated on this machine (task 51) with their folder and build report.
+/// <c>pack publish</c>: see <see cref="PackPublishCommand"/> (task 60).
 /// </summary>
 internal static class PackCommand
 {
@@ -84,7 +85,7 @@ internal static class PackCommand
             return Task.FromResult(compatibility.CanInstall ? 0 : IncompatibleExitCode);
         });
 
-        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate(), PackFetchCommand.Build(env), BuildLocal(env) };
+        return new Command("pack", "Packs: one localization of one game into one language.") { check, BuildValidate(), PackFetchCommand.Build(env), BuildLocal(env), PackPublishCommand.Build(env) };
     }
 
     private static Command BuildLocal(OsEnvironment env)
