@@ -8,7 +8,10 @@ public sealed class StringTableSerializerTests
     private static readonly StringTable Sample = new(
         "ru",
         new Dictionary<string, string> { ["Map001/ev1/p0"] = "Привет, {0}!", ["System/title"] = "Игра", ["empty"] = "" },
-        new Dictionary<string, string> { ["System/title"] = "Main menu caption" });
+        new Dictionary<string, string> { ["System/title"] = "Main menu caption" })
+    {
+        Originals = new Dictionary<string, string> { ["System/title"] = OriginalHash.Of("Game"), ["empty"] = OriginalHash.Of("") },
+    };
 
     [Fact]
     public void Compressed_table_reads_back_the_same()
@@ -65,6 +68,34 @@ public sealed class StringTableSerializerTests
     }
 
     [Fact]
+    public void The_original_hashes_read_back()
+    {
+        // Arrange
+        using var stream = new MemoryStream();
+        StringTableSerializer.Write(Sample, stream);
+        stream.Position = 0;
+
+        // Act
+        var result = StringTableSerializer.Read(stream);
+
+        // Assert
+        result.Value!.Originals.Should().BeEquivalentTo(Sample.Originals);
+    }
+
+    [Fact]
+    public void A_table_without_original_hashes_has_none()
+    {
+        // Arrange
+        var json = """{ "schemaVersion": 1, "language": "de", "strings": { "a": "Hallo" } }""";
+
+        // Act
+        var result = StringTableSerializer.Read(Encoding.UTF8.GetBytes(json));
+
+        // Assert
+        result.Value!.Originals.Should().BeEmpty();
+    }
+
+    [Fact]
     public void Plain_table_keeps_non_ascii_text_readable()
     {
         // Arrange
@@ -100,6 +131,8 @@ public sealed class StringTableSerializerTests
     [InlineData("""{ "schemaVersion": 1, "language": "ru", "strings": { "a": "x" }, "context": { "b": "note" } }""", "context[\"b\"]", "has no translation")]
     [InlineData("""{ "schemaVersion": 1, "language": "ru", "strings": { "a": "x", "a": "y" } }""", "strings", "listed twice")]
     [InlineData("""{ "schemaVersion": 2, "language": "ru", "strings": {} }""", "schemaVersion", "newer version of the app")]
+    [InlineData("""{ "schemaVersion": 1, "language": "ru", "strings": { "a": "x" }, "originals": { "b": "0123456789abcdef" } }""", "originals[\"b\"]", "has no translation")]
+    [InlineData("""{ "schemaVersion": 1, "language": "ru", "strings": { "a": "x" }, "originals": { "a": "0123456789ABCDEF" } }""", "originals[\"a\"]", "16 lowercase hex digits")]
     public void Invalid_table_fails_with_the_expected_error(string json, string field, string message)
     {
         // Arrange

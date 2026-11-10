@@ -24,6 +24,9 @@ public sealed partial class PromptTemplate
     /// <summary>The Glossary stage's task.</summary>
     public static PromptTemplate Glossary { get; } = Load("glossary", 1);
 
+    /// <summary>An update job's Glossary stage (task 56): a glossary that follows the base pack's translations.</summary>
+    public static PromptTemplate GlossaryUpdate { get; } = Load("glossary-update", 1);
+
     /// <summary>The Translate stage's task for one chunk.</summary>
     public static PromptTemplate Translate { get; } = Load("translate", 1);
 

@@ -21,6 +21,19 @@ public sealed class PromptTemplateTests
         prompt.Should().Be(Snapshot.Text("glossary.v1.ru.txt", prompt));
     }
 
+    [Fact]
+    public void The_glossary_update_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.GlossaryUpdate("Sample Quest", "ru", new EngineKind(GameEngine.RpgMaker, "mz"), 1_234, 12, "Фонарщики", 1_180);
+
+        // Act
+        var prompt = PromptTemplate.GlossaryUpdate.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("glossary-update.v1.ru.txt", prompt));
+    }
+
     private static Dictionary<string, string> TranslateValues(bool retry)
     {
         var source = new SourceStrings(new EngineKind(GameEngine.RpgMaker, "mz"), "rpgmaker", new Version(1, 0, 0), ["data/Map001.json"], []);

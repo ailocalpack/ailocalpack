@@ -42,6 +42,29 @@ public sealed class GenerationEstimatorTests : IDisposable
     }
 
     [Fact]
+    public void An_update_counts_only_the_strings_the_base_lacks_or_that_changed()
+    {
+        // Arrange
+        _dir.RpgMakerGame("game");
+        var strings = RecipeTools.Builtin.For(GameEngine.RpgMaker)!.Extract(Game, Ct).Strings;
+        var kept = strings.Take(50).ToList();
+        var baseTable = new Core.Packs.StringTable("ru", kept.ToDictionary(s => s.Key, s => "RU " + s.Original))
+        {
+            Originals = kept.ToDictionary(s => s.Key, s => Core.Packs.OriginalHash.Of(s == kept[0] ? "changed since" : s.Original)),
+        };
+
+        // Act
+        var estimate = Estimator().Estimate(Game, cancellationToken: Ct, updateBase: baseTable);
+
+        // Assert
+        estimate.Should().BeEquivalentTo(new
+        {
+            Work = new { Text = TextSize.Of(strings.Skip(50).Prepend(kept[0]).Select(s => s.Original)) },
+            Update = new { Changed = new[] { kept[0].Key }, Unchanged = kept.Skip(1).Select(s => s.Key).ToList() },
+        });
+    }
+
+    [Fact]
     public void The_reserve_is_the_size_of_the_files_the_strings_come_from()
     {
         // Arrange

@@ -320,7 +320,7 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
 
     public GenerationJobStore Store => store;
 
-    /// <summary>Creates the game's job and runs it in the background.</summary>
+    /// <summary>Creates the game's job (an update job with its base pack's files, task 56) and runs it in the background.</summary>
     /// <exception cref="GameBlockedException">The game is blocked (anti-cheat, opt-out).</exception>
     /// <exception cref="GenerationJobException">The game already has an open job.</exception>
     /// <exception cref="IOException">The job folder can't be written.</exception>
@@ -333,12 +333,19 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
         GenerationOptions options,
         Func<GenerationJobEntry, GenerationStages> stages,
         TimeSpan? estimatedTime = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        UpdateBase? updateBase = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(stages);
+        ArgumentNullException.ThrowIfNull(options);
+        if ((options.Base is null) != (updateBase is null))
+        {
+            throw new ArgumentException("An update job needs its base pack's files, and only an update job has them.", nameof(updateBase));
+        }
+
         GameBlocks.EnsureAllowed(game, policy, index, BlockedOperation.Generate);
-        var (entry, jobLock) = store.Create(game, language, agent, options, estimatedTime);
+        var (entry, jobLock) = store.Create(game, language, agent, options, estimatedTime, updateBase is null ? null : files => files.WriteBase(updateBase));
         GenerationJobLog.Append(entry.Folder, _time, $"Created for {game.Name} ({game.Id}) into {language} with agent {agent}.");
         return Launch(entry, jobLock, stages, cancellationToken);
     }

@@ -35,13 +35,22 @@ public sealed record GenerationSizeEstimate(
     GenerationEstimate Work,
     WorkingCopyPlan Copy,
     WorkingCopySpace Space,
-    long ReserveBytes);
+    long ReserveBytes)
+{
+    /// <summary>
+    /// An update's diff against the base pack (task 56), when one was given and the toolkit read the strings:
+    /// <see cref="Work"/> then counts only the strings to translate (added and changed).
+    /// </summary>
+    public UpdateDiff? Update { get; init; }
+}
 
 /// <summary>
 /// Sizes up a generation before it starts: the strings and words through the toolkit's extract when it handles the
 /// engine (else a guess from file sizes, <see cref="GenerationEstimateModel.GuessFromFileSizes"/>), the cost from
 /// <see cref="GenerationEstimateModel"/>, the working copy (<see cref="WorkingCopyScope.WithoutMedia"/> when the toolkit
-/// reads the game, else every file) and the disk. Reads the game folder only; blocks, call it off the UI thread.
+/// reads the game, else every file) and the disk. Reads the game as it is without the pack installed in it
+/// (<see cref="WorkingCopies.ReadWithoutPack{T}"/>: a scratch copy with the pack's originals when one is installed);
+/// blocks, call it off the UI thread.
 /// </summary>
 public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies, EngineDetector? detector = null)
 {
@@ -67,8 +76,14 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
 
     /// <param name="engine">The game's engine as stored (<c>Game.Engine</c>), else it is detected.</param>
     /// <param name="scope">The working copy's scope, else <see cref="WorkingCopyScope.WithoutMedia"/> when the toolkit reads the game and <see cref="WorkingCopyScope.AllFiles"/> otherwise.</param>
+    /// <param name="updateBase">An update's base string table (task 56): only the strings it lacks or that changed count.</param>
     /// <exception cref="WorkingCopyException">The game folder is missing or can't be listed.</exception>
-    public GenerationSizeEstimate Estimate(string gameFolder, EngineKind? engine = null, WorkingCopyScope? scope = null, CancellationToken cancellationToken = default)
+    public GenerationSizeEstimate Estimate(
+        string gameFolder,
+        EngineKind? engine = null,
+        WorkingCopyScope? scope = null,
+        CancellationToken cancellationToken = default,
+        Core.Packs.StringTable? updateBase = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
         var root = Path.GetFullPath(gameFolder);
@@ -82,10 +97,18 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
         var plan = copies.Plan(root, scope ?? (extraction is null ? WorkingCopyScope.AllFiles : WorkingCopyScope.WithoutMedia), cancellationToken);
 
         GenerationEstimate work;
+        UpdateDiff? update = null;
         long reserve = 0;
         if (extraction is not null)
         {
-            work = GenerationEstimateModel.Estimate(TextSize.Of(extraction.Strings.Select(s => s.Original)), EstimateBasis.Toolkit);
+            var strings = extraction.Strings;
+            if (updateBase is not null)
+            {
+                update = UpdateDiff.Of(strings.Select(s => KeyValuePair.Create(s.Key, s.Original)), updateBase);
+                strings = [.. strings.Where(s => update.ToTranslate.Contains(s.Key))];
+            }
+
+            work = GenerationEstimateModel.Estimate(TextSize.Of(strings.Select(s => s.Original)), EstimateBasis.Toolkit);
             reserve = extraction.Files.Sum(f => SizeOf(Path.Combine(root, f)));
         }
         else
@@ -93,7 +116,7 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
             work = GenerationEstimateModel.Estimate(Guess(root, cancellationToken), EstimateBasis.FileSizes);
         }
 
-        return new GenerationSizeEstimate(kind, source, tool, error, work, plan, copies.CheckSpace(plan, reserve), reserve);
+        return new GenerationSizeEstimate(kind, source, tool, error, work, plan, copies.CheckSpace(plan, reserve), reserve) { Update = update };
     }
 
     /// <summary>Text file and other data file bytes of the game (media, images, programs and fonts left out), for the guess.</summary>
@@ -135,7 +158,8 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
 
         try
         {
-            return (TextSizeSource.Toolkit, tool, tool.Extract(root, cancellationToken), null);
+            // The game's own text, not a translation installed over it (task 56).
+            return (TextSizeSource.Toolkit, tool, copies.ReadWithoutPack(root, folder => tool.Extract(folder, cancellationToken), cancellationToken), null);
         }
         catch (RecipeException e)
         {

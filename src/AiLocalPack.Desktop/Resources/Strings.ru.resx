@@ -3091,4 +3091,22 @@
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>Ваш пак · {0}</value>
   </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>Перевести новые строки</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>На основе установленного «{0}» ред. {1}: его переводы сохраняются, агенту уходят только новые и изменённые строки.</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>Новых: {0} · Изменённых: {1} · Без изменений: {2} · Удалено: {3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>Не удалось прочитать установленный «{0}» ред. {1}: {2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>Ред. {0}, обновление ред. {1} · Новых: {2} · Изменённых: {3} · Удалено: {4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>Игра обновилась ({0}). Установленный «{1}» ред. {2} сделан для прежней версии: строки, которые обновление добавило или изменило, остались без перевода.</value>
+  </data>
 </root>

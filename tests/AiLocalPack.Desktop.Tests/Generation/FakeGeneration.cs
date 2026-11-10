@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Generation;
@@ -17,6 +18,9 @@ internal sealed class FakeEstimates : IGenerationEstimates
     public Func<Game, CancellationToken, Task<GenerationSizeEstimate>> Estimate { get; set; } = (_, _) => Task.FromResult(Of());
 
     public int Calls { get; private set; }
+
+    /// <summary>The update base table of the last call (task 56), <c>null</c> for a new translation.</summary>
+    public StringTable? LastBase { get; private set; }
 
     /// <summary>An estimate: the text from the toolkit (or a guess), the copy and the disk.</summary>
     public static GenerationSizeEstimate Of(
@@ -44,9 +48,10 @@ internal sealed class FakeEstimates : IGenerationEstimates
             0);
     }
 
-    public Task<GenerationSizeEstimate> EstimateAsync(Game game, CancellationToken cancellationToken)
+    public Task<GenerationSizeEstimate> EstimateAsync(Game game, StringTable? updateBase, CancellationToken cancellationToken)
     {
         Calls++;
+        LastBase = updateBase;
         return Estimate(game, cancellationToken);
     }
 }
@@ -102,5 +107,19 @@ internal sealed class FakeGenerationStages : IGenerationStagesFactory
                 _ => new GenerationStepResult.StageDone(),
             };
         }
+    }
+}
+
+/// <summary>The update's base pack as the test sets it (task 56); by default no update is possible (nothing to build on).</summary>
+internal sealed class FakeUpdateBases : IUpdateBases
+{
+    public Func<Game, string, Task<UpdateBaseLoad?>> Load { get; set; } = (_, _) => Task.FromResult<UpdateBaseLoad?>(null);
+
+    public int Calls { get; private set; }
+
+    public Task<UpdateBaseLoad?> LoadAsync(Game game, string language, CancellationToken cancellationToken)
+    {
+        Calls++;
+        return Load(game, language);
     }
 }

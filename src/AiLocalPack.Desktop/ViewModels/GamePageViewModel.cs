@@ -113,6 +113,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         IDialogService dialogs,
         ToastService toasts,
         LocalPacks localPacks,
+        IUpdateBases updateBases,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -150,7 +151,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, time, _logger);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, time, _logger, updateBases, UpdateCandidate);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -362,8 +363,14 @@ public sealed partial class GamePageViewModel : PageViewModel
             : _localizer.Format(nameof(Strings.Game_Installed_TextNoAuthor), installed.PackId, installed.Revision)
         : string.Empty;
 
-    /// <summary>The amber banner between header and tabs when an update broke the installed pack.</summary>
-    public bool ShowUpdateBanner => Status.Kind == LocalizationStatusKind.NeedsUpdate;
+    /// <summary>
+    /// The amber banner between header and tabs when an update broke the installed pack, or left it partly untranslated
+    /// (made for another version of the game, task 56).
+    /// </summary>
+    public bool ShowUpdateBanner => Status.Kind == LocalizationStatusKind.NeedsUpdate || IsInstalledForOtherVersion;
+
+    /// <summary>The installed pack works but was made for another version of the game: new and changed strings show in English.</summary>
+    private bool IsInstalledForOtherVersion => Status is { Kind: LocalizationStatusKind.Installed, Installed.ForOtherVersion: true };
 
     /// <summary>
     /// Incompatible: "The game updated (build N). The installed «…» rev 3 is incompatible…"; files put back and not
@@ -371,6 +378,11 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// </summary>
     public string UpdateBannerText => Status.Installed switch
     {
+        { Problem: InstalledPackProblem.None } installed when IsInstalledForOtherVersion => _localizer.Format(
+            nameof(Strings.Game_UpdateBanner_OtherVersion),
+            VersionText,
+            InstalledTitle,
+            installed.Revision),
         { Problem: InstalledPackProblem.Wiped } installed => _localizer.Format(nameof(Strings.Game_UpdateBanner_Wiped), InstalledTitle, installed.Revision),
         { Problem: InstalledPackProblem.ReapplyFailed } installed => _localizer.Format(
             nameof(Strings.Game_UpdateBanner_ReapplyFailed),
@@ -385,8 +397,13 @@ public sealed partial class GamePageViewModel : PageViewModel
         _ => string.Empty,
     };
 
-    /// <summary>The banner's <c>Translate new strings</c>: only when the header offers the update (else it is the header's action).</summary>
-    public bool ShowBannerTranslate => Action.Kind == GamePrimaryActionKind.UpdatePack && Status.Installed is { NeedsReapply: false };
+    /// <summary>
+    /// The banner's <c>Translate new strings</c>: when the header offers the update (else it is the header's action), and
+    /// for a pack made for another version while the header offers Play.
+    /// </summary>
+    public bool ShowBannerTranslate =>
+        (Action.Kind == GamePrimaryActionKind.UpdatePack && Status.Installed is { NeedsReapply: false })
+        || (IsInstalledForOtherVersion && Action.Kind == GamePrimaryActionKind.Play);
 
     /// <summary>The banner's <c>Re-apply</c> for a pack that still fits, when the header offers the newer revision instead.</summary>
     public bool ShowBannerReapply => Action.Kind == GamePrimaryActionKind.UpdatePack && Status.Installed is { NeedsReapply: true };
@@ -554,6 +571,15 @@ public sealed partial class GamePageViewModel : PageViewModel
     [RelayCommand(CanExecute = nameof(CanChangeInstalled))]
     private void Uninstall() => _install.Uninstall(Game);
 
+    /// <summary>
+    /// The installed pack a game update made incompatible or left partly untranslated (made for another version, task 56):
+    /// the Generation tab's start form translates only the new and changed strings on top of it; <c>null</c> otherwise.
+    /// </summary>
+    private UpdateCandidate? UpdateCandidate => Status.Installed is { } installed
+        && installed is { Problem: InstalledPackProblem.Incompatible } or { Problem: InstalledPackProblem.None, ForOtherVersion: true }
+        ? new UpdateCandidate(installed.PackId, installed.Revision, InstalledTitle)
+        : null;
+
     /// <summary>"Generate with AI" on the empty Packs tab, "Translate new strings" on the banner: the Generation tab.</summary>
     [RelayCommand]
     private void OpenGeneration() => SelectedTab = GamePageTab.Generation;
@@ -562,8 +588,8 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// Play launches the game (<see cref="GameSessions"/>); Install installs the best compatible pack (the install flow;
     /// when none can be installed the Packs tab says why); Update installs the registry's later revision of the installed
     /// pack (the install flow checks it and asks when a risk applies) and Re-apply writes the installed one again (task 33);
-    /// Generate, Translate new strings, View progress and Review glossary open the Generation tab (update mode comes with
-    /// task 56); Resume and Retry stage go on with the job (task 53) on the Generation tab.
+    /// Generate, Translate new strings (its start form in update mode, task 56), View progress and Review glossary open
+    /// the Generation tab; Resume and Retry stage go on with the job (task 53) on the Generation tab.
     /// </summary>
     private void RunPrimary()
     {
@@ -757,7 +783,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Action = GamePrimaryActions.Resolve(Status);
         UpdateTabs();
         Packs.Update(Game, Status, Language);
-        Generation.Update(Game, Language);
+        Generation.Update(Game, Language, UpdateCandidate);
         ActivateTab();
         OnPropertyChanged(string.Empty);
         PrimaryCommand.NotifyCanExecuteChanged();

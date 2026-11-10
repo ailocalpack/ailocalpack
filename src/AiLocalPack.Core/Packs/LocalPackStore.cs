@@ -27,6 +27,7 @@ public sealed record LocalPack(string Folder, PackManifest Manifest, LocalPackRe
 /// <param name="InGameLanguage">The language the player has to pick in the game's settings, when not the pack's own.</param>
 /// <param name="Tried">When the player first closed the game after playing it with the pack installed (task 55); publishing is offered from then on.</param>
 /// <param name="ShareDismissed">The player answered "Not now" to the result's "Share it" strip.</param>
+/// <param name="Update">Made by an update job (task 56): the revision it builds on and what the game update changed.</param>
 public sealed record LocalPackReport(
     string Job,
     DateTimeOffset Created,
@@ -38,11 +39,19 @@ public sealed record LocalPackReport(
     long SizeBytes = 0,
     string? InGameLanguage = null,
     DateTimeOffset? Tried = null,
-    bool ShareDismissed = false)
+    bool ShareDismissed = false,
+    LocalPackUpdate? Update = null)
 {
     /// <summary>The player has played the game with the pack installed.</summary>
     public bool IsTried => Tried is not null;
 }
+
+/// <summary>What an update job (task 56) changed against the revision it builds on.</summary>
+/// <param name="BaseRevision">The base pack's revision; the pack is the next one.</param>
+/// <param name="Added">Strings translated that the base lacked (new in the game, or untranslated by the base).</param>
+/// <param name="Changed">Strings translated again because the game changed their original.</param>
+/// <param name="Removed">The base's strings the game no longer has.</param>
+public sealed record LocalPackUpdate(int BaseRevision, int Added, int Changed, int Removed);
 
 /// <param name="Checked">Whether the engine's fonts could be checked at all (no font hook = not checked).</param>
 /// <param name="Replacement">The whitelisted font swapped in, or <c>null</c>.</param>
@@ -65,8 +74,10 @@ public sealed record LocalPackString(string Key, string Original);
 /// commits it as is; the build report is apart, in <c>reports/&lt;game folder&gt;/&lt;language&gt;/&lt;id&gt;.json</c>
 /// (<c>{schemaVersion: 1, job, created, testRun {outcome, skip?, detail?, ranMs?, exitCode?}, fonts {checked,
 /// replacement?, swapped, uncovered}, warnings [{key, rule, message, original, translation}], untranslated [{key,
-/// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?}</c>; the last two are the player's, task 55),
-/// since a pack folder holds nothing else. Until GitHub sign-in
+/// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?, update? {baseRevision, added, changed,
+/// removed}}</c>; tried and shareDismissed are the player's, task 55; update is task 56's), since a pack folder holds
+/// nothing else; beside it <c>&lt;id&gt;.glossary.json</c>, the glossary the pack was made with (task 56: an update of
+/// the pack starts from it). Until GitHub sign-in
 /// (task 58) the author is <see cref="PlaceholderAuthor"/>, replaced when publishing. Listing never throws for disk
 /// state (a broken pack is logged and left out).
 /// </summary>
@@ -101,6 +112,10 @@ public sealed class LocalPackStore
     public string ReportPath(GameId game, string language, string id) =>
         Path.Combine(Root, ReportsFolder, RegistryLayout.GameFolder(game), language, id + ".json");
 
+    /// <summary>The glossary the pack was made with (task 56), next to its report.</summary>
+    public string GlossaryPath(GameId game, string language, string id) =>
+        Path.Combine(Root, ReportsFolder, RegistryLayout.GameFolder(game), language, id + ".glossary.json");
+
     /// <summary>
     /// <paramref name="preferred"/> when no local pack of the game + language has it, else the first free
     /// <c>&lt;preferred&gt;-2</c>, <c>-3</c>…
@@ -124,9 +139,10 @@ public sealed class LocalPackStore
     /// is made next to its place and renamed into it, so a crash leaves the old pack or the new one.
     /// </summary>
     /// <param name="manifest">The manifest; its <see cref="PackManifest.Strings"/> is set here.</param>
+    /// <param name="glossary">The glossary the pack was made with, kept for its updates (none deletes an earlier one).</param>
     /// <exception cref="IOException">A file can't be written.</exception>
     /// <exception cref="UnauthorizedAccessException">A file can't be written.</exception>
-    public LocalPack Save(PackManifest manifest, StringTable table, LocalPackReport report)
+    public LocalPack Save(PackManifest manifest, StringTable table, LocalPackReport report, Glossary? glossary = null)
     {
         ArgumentNullException.ThrowIfNull(manifest);
         ArgumentNullException.ThrowIfNull(table);
@@ -165,6 +181,17 @@ public sealed class LocalPackStore
         }
 
         var sized = report with { SizeBytes = strings.LongLength + manifestBytes.LongLength };
+        var glossaryPath = GlossaryPath(manifest.Game, manifest.Language, manifest.Id);
+        Directory.CreateDirectory(Path.GetDirectoryName(glossaryPath)!);
+        if (glossary is not null)
+        {
+            AtomicFile.WriteAllBytes(glossaryPath, GlossarySerializer.Write(glossary));
+        }
+        else
+        {
+            File.Delete(glossaryPath);
+        }
+
         WriteReport(ReportPath(manifest.Game, manifest.Language, manifest.Id), sized);
         return new LocalPack(folder, named, sized);
     }
@@ -216,6 +243,38 @@ public sealed class LocalPackStore
         return PackFormat.IsSlug(id) && Languages.GameLanguages.IsKnown(language) ? Read(PackFolder(game, language, id)) : null;
     }
 
+    /// <summary>The glossary the pack was made with, or <c>null</c> (none kept, unreadable: logged). Never throws for disk state.</summary>
+    public Glossary? ReadGlossary(GameId game, string language, string id)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        if (!PackFormat.IsSlug(id) || !Languages.GameLanguages.IsKnown(language))
+        {
+            return null;
+        }
+
+        var path = GlossaryPath(game, language, id);
+        try
+        {
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            var (glossary, error) = GlossarySerializer.Read(File.ReadAllBytes(path));
+            if (glossary is null)
+            {
+                _logger.LogWarning("The glossary {Path} of a local pack can't be read: {Error}", path, error);
+            }
+
+            return glossary;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogWarning(e, "The glossary {Path} of a local pack can't be read", path);
+            return null;
+        }
+    }
+
     /// <summary>
     /// Changes the pack's report (the player's marks: tried in game, "Not now"); the pack itself stays as it is.
     /// Returns the pack as saved, or <c>null</c> when it is gone.
@@ -247,6 +306,7 @@ public sealed class LocalPackStore
         }
 
         File.Delete(ReportPath(game, language, id));
+        File.Delete(GlossaryPath(game, language, id));
     }
 
     private LocalPack? Read(string packFolder)
@@ -303,7 +363,8 @@ public sealed class LocalPackStore
             report.SizeBytes,
             report.InGameLanguage,
             report.Tried?.ToUniversalTime(),
-            report.ShareDismissed ? true : null);
+            report.ShareDismissed ? true : null,
+            report.Update is { } u ? new UpdateJson(u.BaseRevision, u.Added, u.Changed, u.Removed) : null);
         AtomicFile.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(LocalPackReportJson))));
     }
 
@@ -344,7 +405,8 @@ public sealed class LocalPackStore
             json.SizeBytes,
             json.InGameLanguage,
             json.Tried,
-            json.ShareDismissed == true);
+            json.ShareDismissed == true,
+            json.Update is { BaseRevision: >= 1 } u ? new LocalPackUpdate(u.BaseRevision, Math.Max(0, u.Added), Math.Max(0, u.Changed), Math.Max(0, u.Removed)) : null);
     }
 }
 
@@ -360,7 +422,10 @@ internal sealed record LocalPackReportJson(
     long SizeBytes,
     string? InGameLanguage,
     DateTimeOffset? Tried = null,
-    bool? ShareDismissed = null);
+    bool? ShareDismissed = null,
+    UpdateJson? Update = null);
+
+internal sealed record UpdateJson(int BaseRevision, int Added, int Changed, int Removed);
 
 internal sealed record TestRunJson(string? Outcome, string? Skip, string? Detail, long? RanMs, int? ExitCode);
 

@@ -175,6 +175,7 @@ internal static class Composition
         services.AddSingleton(sp => new WorkingCopies(sp.GetRequiredService<AppPaths>(), FileCloner.Create(), new SystemDiskSpace()));
         services.AddSingleton(sp => new GenerationEstimator(sp.GetRequiredService<RecipeTools>(), sp.GetRequiredService<WorkingCopies>(), sp.GetRequiredService<EngineDetector>()));
         services.AddSingleton<IGenerationEstimates, GenerationEstimates>();
+        services.AddSingleton<IUpdateBases, UpdateBases>();
         services.AddSingleton(sp => new LocalPackStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<LocalPackStore>>()));
         services.AddSingleton<IGenerationStagesFactory, PipelineStagesFactory>();
         services.AddSingleton<LocalPacks>();

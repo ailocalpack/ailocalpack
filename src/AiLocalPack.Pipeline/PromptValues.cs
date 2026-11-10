@@ -36,4 +36,14 @@ public static class PromptValues
         ["stringCount"] = strings.ToString("N0", CultureInfo.InvariantCulture),
         ["fileCount"] = files.ToString("N0", CultureInfo.InvariantCulture),
     };
+
+    /// <param name="baseTitle">The base pack's title.</param>
+    /// <param name="kept">Strings that already have the base's translation.</param>
+    public static Dictionary<string, string> GlossaryUpdate(string gameName, string language, EngineKind engine, int strings, int files, string baseTitle, int kept)
+    {
+        var values = Glossary(gameName, language, engine, strings, files);
+        values["baseTitle"] = baseTitle;
+        values["keptCount"] = kept.ToString("N0", CultureInfo.InvariantCulture);
+        return values;
+    }
 }

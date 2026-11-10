@@ -63,11 +63,12 @@ public sealed class LocalPacks
         return IsInstalled(_installed.Find(pack.Manifest.Game), pack);
     }
 
-    /// <summary><paramref name="record"/> is <paramref name="pack"/>.</summary>
+    /// <summary><paramref name="record"/> is <paramref name="pack"/> (the same revision: an update job's pack replaces its local base, task 56).</summary>
     public static bool IsInstalled(InstalledPack? record, LocalPack pack)
     {
         ArgumentNullException.ThrowIfNull(pack);
-        return record is { Local: true } && record.Game == pack.Manifest.Game && record.Language == pack.Manifest.Language && record.PackId == pack.Manifest.Id;
+        return record is { Local: true } && record.Game == pack.Manifest.Game && record.Language == pack.Manifest.Language && record.PackId == pack.Manifest.Id
+            && record.Revision == pack.Manifest.Revision;
     }
 
     /// <summary>

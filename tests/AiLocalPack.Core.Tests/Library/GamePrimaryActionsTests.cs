@@ -298,4 +298,60 @@ public sealed class GamePrimaryActionsTests
         // Assert
         action.Kind.Should().Be(GamePrimaryActionKind.Play);
     }
+
+    [Fact]
+    public void An_updates_new_revision_waiting_offers_install_and_play_over_the_broken_pack()
+    {
+        // Arrange
+        var broken = new InstalledPackState("claude-code", InstalledPackProblem.Incompatible, 1, Local: true);
+        var status = Status(LocalizationStatusKind.NeedsUpdate, [], broken) with { Result = Result() };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.InstallLocalPack, Installed: broken, Result: Result()));
+    }
+
+    [Fact]
+    public void An_updates_new_revision_waiting_offers_install_and_play_over_a_pack_for_another_version()
+    {
+        // Arrange
+        var outdated = new InstalledPackState("best", Revision: 3, ForOtherVersion: true);
+        var status = Status(LocalizationStatusKind.Installed, [Pack("best")], outdated) with { Result = Result() with { PackId = "best" } };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.InstallLocalPack, Installed: outdated, Result: Result() with { PackId = "best" }));
+    }
+
+    [Fact]
+    public void A_pack_for_another_version_without_a_result_waiting_offers_play()
+    {
+        // Arrange
+        var outdated = new InstalledPackState("best", Revision: 3, ForOtherVersion: true);
+        var status = Status(LocalizationStatusKind.Installed, [Pack("best")], outdated);
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.Play);
+    }
+
+    [Fact]
+    public void A_broken_pack_with_another_packs_result_waiting_still_offers_new_strings()
+    {
+        // Arrange
+        var broken = new InstalledPackState("best", InstalledPackProblem.Incompatible, 1);
+        var status = Status(LocalizationStatusKind.NeedsUpdate, [Pack("best")], broken) with { Result = Result() };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.TranslateNewStrings);
+    }
 }

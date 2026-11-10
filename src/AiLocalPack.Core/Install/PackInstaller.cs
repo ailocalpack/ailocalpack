@@ -1113,6 +1113,18 @@ public sealed class PackInstaller
         }
     }
 
+    /// <summary>
+    /// Where the install of <paramref name="record"/> backed up the original of <paramref name="relativePath"/> (a file
+    /// the pack replaced; task 56 reads the game without the pack from it).
+    /// </summary>
+    /// <exception cref="ArgumentException">The path would leave the backup folder.</exception>
+    public static string BackupFile(AppPaths paths, InstalledPack record, string relativePath)
+    {
+        ArgumentNullException.ThrowIfNull(paths);
+        ArgumentNullException.ThrowIfNull(record);
+        return InstallPaths.Resolve(Path.Combine(paths.Backups, RegistryLayout.GameFolder(record.Game), record.Backup, FilesFolder), relativePath);
+    }
+
     private string BackupFolder(GameId game, string transaction) => Path.Combine(_paths.Backups, RegistryLayout.GameFolder(game), transaction);
 
     private string NewTransactionName() =>

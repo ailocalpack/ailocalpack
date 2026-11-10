@@ -36,8 +36,8 @@
         <Border x:Name="StartForm" Classes="genCard" IsVisible="{Binding ShowForm}">
             <StackPanel Spacing="18">
                 <WrapPanel ItemSpacing="10" LineSpacing="6">
-                    <TextBlock Classes="genTitle" Text="{l:Loc Gen_Title}" VerticalAlignment="Center" />
-                    <Button x:Name="GenLanguageButton" Classes="langPicker" ToolTip.Tip="{l:Loc Gen_Language_Tip}"
+                    <TextBlock x:Name="GenFormTitle" Classes="genTitle" Text="{Binding FormTitle}" VerticalAlignment="Center" />
+                    <Button x:Name="GenLanguageButton" Classes="langPicker" ToolTip.Tip="{l:Loc Gen_Language_Tip}" IsEnabled="{Binding CanPickLanguage}"
                             AutomationProperties.Name="{l:Loc Gen_Language_Tip}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Classes="muted" Text="{l:Loc Gen_Language_Into}" VerticalAlignment="Center" />
@@ -73,6 +73,20 @@
                         </Button.Flyout>
                     </Button>
                 </WrapPanel>
+
+                <!-- Update mode (task 56): the base pack and what the game update changed -->
+                <Border x:Name="GenUpdateBanner" Classes="genBanner" IsVisible="{Binding IsUpdateMode}">
+                    <DockPanel>
+                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="18" Height="18" Margin="0,0,10,0" VerticalAlignment="Top">
+                            <Path Classes="icon bannerIcon" Data="{StaticResource IconInfo}" />
+                        </Viewbox>
+                        <StackPanel Spacing="2">
+                            <TextBlock x:Name="GenUpdateBannerText" FontSize="13" Text="{Binding UpdateBannerText}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="GenUpdateDiff" Classes="muted" FontSize="12" Text="{Binding UpdateDiffText}" TextWrapping="Wrap"
+                                       IsVisible="{Binding HasUpdateDiff}" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
 
                 <!-- Estimate tiles: skeletons with "Estimating…" until the size is known -->
                 <StackPanel Spacing="8">
@@ -217,12 +231,12 @@
                         </StackPanel>
                         <StackPanel Grid.Column="1" Spacing="4" HorizontalAlignment="Right">
                             <Button x:Name="StartGeneration" Classes="accent" HorizontalAlignment="Right" Command="{Binding StartCommand}"
-                                    AutomationProperties.Name="{l:Loc Gen_Start}">
+                                    AutomationProperties.Name="{Binding StartText}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <Viewbox Classes="icon" Width="16" Height="16">
                                         <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
                                     </Viewbox>
-                                    <TextBlock Text="{l:Loc Gen_Start}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding StartText}" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Button>
                             <TextBlock x:Name="StartBlockText" Classes="muted" FontSize="12" HorizontalAlignment="Right" TextAlignment="Right"
@@ -415,6 +429,8 @@
                         <TextBlock x:Name="ResultTitle" Classes="genTitle" FontSize="22" Text="{l:Loc Gen_Result_Title}" />
                         <TextBlock x:Name="ResultSubtitle" Classes="muted" FontSize="13" Text="{Binding Subtitle}" TextWrapping="Wrap" />
                         <TextBlock x:Name="ResultPackLine" Classes="faint" FontSize="12" Text="{Binding PackLine}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="ResultUpdateLine" Classes="faint" FontSize="12" Text="{Binding UpdateLine}" TextWrapping="Wrap"
+                                   IsVisible="{Binding HasUpdateLine}" />
                     </StackPanel>
                 </StackPanel>
 

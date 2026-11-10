@@ -98,6 +98,7 @@ public sealed class GenerationJobStoreTests : IDisposable
     [InlineData("{\"schemaVersion\":1,\"id\":\"j\",\"game\":\"nope\",\"language\":\"ru\",\"agent\":\"fake\",\"stage\":\"setup\",\"status\":\"running\",\"created\":\"2026-01-01T00:00:00Z\",\"updated\":\"2026-01-01T00:00:00Z\"}", "not a game ID")]
     [InlineData("{\"schemaVersion\":1,\"id\":\"j\",\"game\":\"steam:1\",\"language\":\"ru\",\"agent\":\"fake\",\"stage\":\"setup\",\"status\":\"running\",\"created\":\"2026-01-01T00:00:00Z\",\"updated\":\"2026-01-01T00:00:00Z\",\"counters\":{\"chunks\":1,\"chunksDone\":2}}", "out of range")]
     [InlineData("{\"schemaVersion\":1,\"id\":\"j\",\"game\":\"steam:1\",\"language\":\"ru\",\"agent\":\"fake\",\"stage\":\"setup\",\"status\":\"running\"}", "required")]
+    [InlineData("{\"schemaVersion\":1,\"id\":\"j\",\"game\":\"steam:1\",\"language\":\"ru\",\"agent\":\"fake\",\"stage\":\"setup\",\"status\":\"running\",\"created\":\"2026-01-01T00:00:00Z\",\"updated\":\"2026-01-01T00:00:00Z\",\"options\":{\"reviewGlossary\":false,\"base\":{\"packId\":\"Bad Id\",\"revision\":1}}}", "options.base")]
     public void A_bad_file_is_refused_with_the_reason(string json, string reason)
     {
         // Arrange
@@ -108,6 +109,47 @@ public sealed class GenerationJobStoreTests : IDisposable
 
         // Assert
         new { job, HasReason = error?.Contains(reason, StringComparison.Ordinal) }.Should().BeEquivalentTo(new { job = (GenerationJob?)null, HasReason = true });
+    }
+
+    [Fact]
+    public void An_update_jobs_base_reads_back_as_written()
+    {
+        // Arrange
+        var job = FullJob() with { Options = new GenerationOptions(Base: new GenerationBase("lanterns", 3, true, "Фонарщики")) };
+
+        // Act
+        var (read, _) = GenerationJobSerializer.Read(GenerationJobSerializer.Write(job));
+
+        // Assert
+        read!.Options.Base.Should().Be(new GenerationBase("lanterns", 3, true, "Фонарщики"));
+    }
+
+    [Fact]
+    public void Create_writes_the_job_files_prepared_before_job_json()
+    {
+        // Arrange
+        var game = Game();
+
+        // Act
+        var (entry, jobLock) = _store.Create(game, "ru", "fake", GenerationOptions.Default, prepare: files => File.WriteAllText(Path.Combine(files.Folder, "extra.txt"), "x"));
+        jobLock.Dispose();
+
+        // Assert
+        File.ReadAllText(Path.Combine(entry.Folder, "extra.txt")).Should().Be("x");
+    }
+
+    [Fact]
+    public void Create_fails_and_deletes_the_folder_when_preparing_fails()
+    {
+        // Arrange
+        var game = Game();
+
+        // Act
+        var act = () => _store.Create(game, "ru", "fake", GenerationOptions.Default, prepare: _ => throw new IOException("disk full"));
+
+        // Assert
+        act.Should().Throw<IOException>();
+        Directory.EnumerateDirectories(Path.Combine(_paths.WorkingCopies, "steam-620")).Should().BeEmpty();
     }
 
     [Fact]

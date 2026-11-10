@@ -3023,4 +3023,22 @@
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>Your pack · {0}</value>
   </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>Translate the new strings into</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>Based on the installed «{0}» rev {1}: its translations stay, only new and changed strings go to the agent.</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>New: {0} · Changed: {1} · Kept: {2} · Removed: {3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>The installed «{0}» rev {1} can’t be read: {2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>Revision {0}, an update of rev {1} · New: {2} · Changed: {3} · Removed: {4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>The game updated ({0}). The installed «{1}» rev {2} was made for an earlier version: strings the update added or changed show untranslated.</value>
+  </data>
 </root>

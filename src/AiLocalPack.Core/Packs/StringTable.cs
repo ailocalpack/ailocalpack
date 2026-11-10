@@ -1,4 +1,6 @@
 using System.IO.Compression;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using AiLocalPack.Core.Languages;
 
@@ -20,6 +22,32 @@ public sealed record StringTable(string Language, IReadOnlyDictionary<string, st
         : this(language, strings, new Dictionary<string, string>())
     {
     }
+
+    /// <summary>
+    /// Key (present in <see cref="Strings"/>) → <see cref="OriginalHash"/> of the original text the translation was made
+    /// from (task 56), so a later revision can tell which strings a game update changed. Optional: tables made before
+    /// task 56 have none (their strings count as unchanged).
+    /// </summary>
+    public IReadOnlyDictionary<string, string> Originals { get; init; } = new Dictionary<string, string>();
+}
+
+/// <summary>
+/// The hash of an original text a string table keeps per key (<see cref="StringTable.Originals"/>, task 56): the first
+/// 16 lowercase hex digits (64 bits) of the SHA-256 of its UTF-8 bytes. Enough to tell a changed text, and it doesn't
+/// hold the text itself.
+/// </summary>
+public static class OriginalHash
+{
+    public const int Length = 16;
+
+    public static string Of(string original)
+    {
+        ArgumentNullException.ThrowIfNull(original);
+        return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(original)))[..Length];
+    }
+
+    public static bool IsValid(string? hash) =>
+        hash is { Length: Length } && hash.All(c => c is (>= '0' and <= '9') or (>= 'a' and <= 'f'));
 }
 
 /// <summary>Reads and writes <see cref="StringTable"/> files, gzip-compressed or plain JSON.</summary>
@@ -109,9 +137,22 @@ public static class StringTableSerializer
             errors.Add(PackFormat.Key("context", key), "has no translation in strings.");
         }
 
+        var originals = Entries("originals", file.Originals, errors);
+        foreach (var (key, hash) in originals)
+        {
+            if (!strings.ContainsKey(key))
+            {
+                errors.Add(PackFormat.Key("originals", key), "has no translation in strings.");
+            }
+            else if (!OriginalHash.IsValid(hash))
+            {
+                errors.Add(PackFormat.Key("originals", key), $"'{hash}' is not {OriginalHash.Length} lowercase hex digits.");
+            }
+        }
+
         return errors.Any
             ? new PackReadResult<StringTable>(null, errors.List)
-            : new PackReadResult<StringTable>(new StringTable(file.Language!, strings, context), []);
+            : new PackReadResult<StringTable>(new StringTable(file.Language!, strings, context) { Originals = originals }, []);
     }
 
     /// <summary>Writes the table as indented JSON with keys in ordinal order, gzip-compressed unless <paramref name="compress"/> is false.</summary>
@@ -123,9 +164,8 @@ public static class StringTableSerializer
             StringTable.CurrentSchemaVersion,
             table.Language,
             new SortedDictionary<string, string?>(table.Strings.ToDictionary(e => e.Key, string? (e) => e.Value), StringComparer.Ordinal),
-            table.Context.Count > 0
-                ? new SortedDictionary<string, string?>(table.Context.ToDictionary(e => e.Key, string? (e) => e.Value), StringComparer.Ordinal)
-                : null);
+            Sorted(table.Context),
+            Sorted(table.Originals));
         if (!compress)
         {
             JsonSerializer.Serialize(stream, file, PackJsonWriter.Context.StringTableJson);
@@ -135,6 +175,9 @@ public static class StringTableSerializer
         using var gzip = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
         JsonSerializer.Serialize(gzip, file, PackJsonWriter.Context.StringTableJson);
     }
+
+    private static SortedDictionary<string, string?>? Sorted(IReadOnlyDictionary<string, string> entries) =>
+        entries.Count > 0 ? new SortedDictionary<string, string?>(entries.ToDictionary(e => e.Key, string? (e) => e.Value), StringComparer.Ordinal) : null;
 
     private static SortedDictionary<string, string> Entries(string field, IReadOnlyDictionary<string, string?>? entries, PackFormatErrors errors)
     {

@@ -132,6 +132,9 @@ internal static class PackCommand
     {
         var manifest = pack.Manifest;
         var report = pack.Report;
+        yield return $"revision: {manifest.Revision}" + (report.Update is { } update
+            ? $" (update of rev {update.BaseRevision}: {update.Added} new strings, {update.Changed} changed, {update.Removed} removed)"
+            : "");
         yield return $"coverage: {manifest.Coverage.Translated} of {manifest.Coverage.Total} strings"
             + (report.KeptAsIs > 0 ? $" ({report.KeptAsIs} kept as is)" : "")
             + (report.Untranslated.Count > 0 ? $", {report.Untranslated.Count} stay untranslated" : "");

@@ -18,6 +18,8 @@ public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, I
 /// translated copy (<see cref="IGameTestRunner"/>; a crash fails the stage, a skip is recorded); then the local pack is
 /// saved (<see cref="LocalPackStore"/>: the job's earlier pack replaced, else a new ID) and checked as registry CI would
 /// (<see cref="PackValidator"/>). An overlay a crash left in the working copy is undone first, so the step is safe to repeat.
+/// An update job's pack (task 56) is the next revision of its base pack, saved under the base's ID (a local base is
+/// replaced by it); the job's glossary is kept with the pack for its own updates.
 /// </summary>
 public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools, BuildServices services) : IGenerationStage
 {
@@ -29,11 +31,14 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         var job = context.Job;
         SourceStrings? source;
         StringTable? stored;
+        UpdateBase? updateBase;
         try
         {
             TestRunOverlay.Recover(context.Folder, context.CopyFolder);
             source = SourceStringsFile.Read(context.Files);
             stored = context.Files.ReadStrings();
+            updateBase = job.Options.Base is null ? null : context.Files.ReadBase()
+                ?? throw new GenerationFileException(context.Files.BaseFolder, "the update's base pack is missing");
         }
         catch (GenerationFileException e)
         {
@@ -130,7 +135,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         }
 
         Step(context, swapped with { Step = BuildStep.Packing });
-        return Save(context, tool, collected, touched, fonts, rebuilt, testRun);
+        return Save(context, tool, source, collected, touched, fonts, rebuilt, testRun, updateBase);
     }
 
     /// <summary>The progress card's build step line (task 53); display only.</summary>
@@ -140,20 +145,43 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
     private GenerationStepResult Save(
         GenerationStepContext context,
         IRecipeTool tool,
+        SourceStrings source,
         BuildTranslations collected,
         IReadOnlyDictionary<string, string> touched,
         FontFixResult fonts,
         RebuildResult rebuilt,
-        TestRunResult testRun)
+        TestRunResult testRun,
+        UpdateBase? updateBase)
     {
         var job = context.Job;
         var store = services.LocalPacks;
         var earlier = store.FindByJob(game.Id, job.Id);
-        var id = earlier is { } e && e.Manifest.Language == job.Language ? e.Manifest.Id : store.FreeId(game.Id, job.Language, LocalPackBuilder.PreferredId(agent.Id));
+        var id = updateBase is not null ? updateBase.Manifest.Id
+            : earlier is { } e && e.Manifest.Language == job.Language ? e.Manifest.Id
+            : store.FreeId(game.Id, job.Language, LocalPackBuilder.PreferredId(agent.Id));
+        LocalPackUpdate? update = null;
+        if (updateBase is not null)
+        {
+            var diff = UpdateDiff.Of(source.Strings.Select(s => KeyValuePair.Create(s.Key, s.Original)), updateBase.Strings);
+            update = new LocalPackUpdate(updateBase.Manifest.Revision, diff.Added.Count, diff.Changed.Count, diff.Removed.Count);
+        }
+
+        Glossary? glossary;
+        try
+        {
+            glossary = context.Files.ReadGlossary();
+        }
+        catch (GenerationFileException ex)
+        {
+            context.Log($"The glossary isn't kept with the pack: {ex.Message}");
+            glossary = null;
+        }
+
         var now = context.Time.GetUtcNow();
         var progress = PipelineProgressFile.Read(context.Files);
         var manifest = LocalPackBuilder.Manifest(new LocalPackInput(
-            id, game, job.Language, agent.Id, agent.DisplayName, progress.Agent, job.Options.Model, tool.Id, tool.Version, touched, fonts.ManifestFonts, collected.Coverage, now));
+            id, game, job.Language, agent.Id, agent.DisplayName, progress.Agent, job.Options.Model, tool.Id, tool.Version, touched, fonts.ManifestFonts, collected.Coverage, now,
+            updateBase?.Manifest, update));
         var report = new LocalPackReport(
             job.Id,
             now,
@@ -164,11 +192,12 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             collected.Warnings,
             collected.Untranslated,
             collected.KeptAsIs,
-            InGameLanguage: rebuilt.InGameLanguage);
+            InGameLanguage: rebuilt.InGameLanguage,
+            Update: update);
         LocalPack pack;
         try
         {
-            pack = store.Save(manifest, new StringTable(job.Language, collected.Translations), report);
+            pack = store.Save(manifest, LocalPackBuilder.Table(source, collected, job.Language), report, glossary);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -181,7 +210,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             return Fail(context, GenerationFailureKind.Unexpected, $"The local pack {pack.Folder} doesn't pass the registry's checks: {string.Join("; ", validation.Problems)}");
         }
 
-        context.Log($"Local pack {manifest.Id} saved in {pack.Folder} ({pack.Report.SizeBytes} bytes): {collected.Coverage.Translated} of {collected.Coverage.Total} strings, {collected.Untranslated.Count} stay untranslated.");
+        context.Log($"Local pack {manifest.Id} rev {manifest.Revision} saved in {pack.Folder} ({pack.Report.SizeBytes} bytes): {collected.Coverage.Translated} of {collected.Coverage.Total} strings, {collected.Untranslated.Count} stay untranslated.");
         return new GenerationStepResult.StageDone(job.Counters with { Translated = collected.Translations.Count });
     }
 

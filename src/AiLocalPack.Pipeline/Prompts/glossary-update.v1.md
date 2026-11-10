@@ -1,0 +1,23 @@
+Build the glossary for updating the translation of the video game "{{gameName}}" ({{engine}}) into {{languageName}}.
+
+The game was updated. Its translation "{{baseTitle}}" already covers most of it: {{keptCount}} of the {{stringCount}} translatable strings in {{fileCount}} files keep their existing translation, and a later step translates only the new and changed strings, in chunks of about 50, each chunk with the glossary entries it mentions. The glossary is what makes the new strings use the same names, terms and tone as the existing translation.
+
+Steps:
+
+1. Call `get_glossary`. A glossary may already exist from an earlier run that was interrupted: keep its entries and complete it instead of starting over.
+2. Read the strings with `extract_strings` (`limit` 200, then the next `offset`). A string with a stored translation is part of the existing translation; a string without one is new or changed. Read the strings without a translation first, then enough translated ones to see how the existing translation writes the names and terms they use; use `search` to find where a term occurs and how it was translated.
+3. Pick the entries the new and changed strings need:
+   - proper names: characters, places, factions, items, skills, enemies;
+   - terms of the game's world and mechanics, and invented words;
+   - interface words used across many strings (stats, menu commands, currency).
+   Leave out ordinary words that need no special care.
+4. For each entry:
+   - `term`: exactly as the game writes it;
+   - `translation`: **as the existing translation writes it**, in its base form; only a term it never translated gets a new translation, following the usual conventions of {{languageName}} for transliterating or translating names;
+   - `keepAsIs`: true for names the existing translation leaves as they are;
+   - `note`: who or what it is and anything a translator must know (for a character: gender and how they speak);
+   - `partOfSpeech` and `gender`: when {{languageName}} inflects words or makes other words agree with them.
+5. Describe the tone and form of address the existing translation uses (formal or informal address when {{languageName}} makes the difference, the style of the interface texts), so the new strings match it. One or two sentences.
+6. Save with `put_glossary`: the entries (up to 50 per call) and the `tone`.
+
+Don't translate the strings themselves now and don't change the existing translations: `put_translations` belongs to the later step. When the glossary is saved, reply with the number of entries and the tone you found.

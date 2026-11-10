@@ -299,16 +299,16 @@ public sealed class BuildStageTests : IDisposable
         // Assert
         result.Should().BeOfType<GenerationStepResult.Failed>().Which.Kind.Should().Be(GenerationFailureKind.Toolkit);
     }
+}
 
-    /// <summary>Returns one result for every test run and records the requests.</summary>
-    private sealed class FakeTestRunner(TestRunResult result) : IGameTestRunner
+/// <summary>Returns one result for every test run and records the requests.</summary>
+internal sealed class FakeTestRunner(TestRunResult result) : IGameTestRunner
+{
+    public List<TestRunRequest> Requests { get; } = [];
+
+    public Task<TestRunResult> RunAsync(TestRunRequest request, CancellationToken cancellationToken)
     {
-        public List<TestRunRequest> Requests { get; } = [];
-
-        public Task<TestRunResult> RunAsync(TestRunRequest request, CancellationToken cancellationToken)
-        {
-            Requests.Add(request);
-            return Task.FromResult(result);
-        }
+        Requests.Add(request);
+        return Task.FromResult(result);
     }
 }

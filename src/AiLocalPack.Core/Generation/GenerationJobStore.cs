@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -201,7 +202,8 @@ public sealed class GenerationJobStore
     }
 
     /// <summary>
-    /// A new job folder with <c>job.json</c> (running at Setup), locked for the caller's runner.
+    /// A new job folder with <c>job.json</c> (running at Setup), locked for the caller's runner. <paramref name="prepare"/>
+    /// writes the job's own files first (an update job's base pack, task 56); when it fails, the folder is deleted.
     /// </summary>
     /// <exception cref="GenerationJobException"><see cref="GenerationJobProblem.AlreadyExists"/>: the game has an open job.</exception>
     /// <exception cref="IOException">The folder or file can't be written.</exception>
@@ -210,7 +212,8 @@ public sealed class GenerationJobStore
         string language,
         string agent,
         GenerationOptions options,
-        TimeSpan? estimatedTime = null)
+        TimeSpan? estimatedTime = null,
+        Action<GenerationFiles>? prepare = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         if (FindOpen(game.Id) is { } open)
@@ -228,6 +231,17 @@ public sealed class GenerationJobStore
             ?? throw new GenerationJobException(GenerationJobProblem.Busy, $"The new job folder {folder} is locked.");
         try
         {
+            prepare?.Invoke(new GenerationFiles(folder));
+        }
+        catch
+        {
+            jobLock.Dispose();
+            TryDelete(folder);
+            throw;
+        }
+
+        try
+        {
             var job = GenerationJobMachine.Create(id, game.Id, game.Name, language, agent, options, now, estimatedTime);
             Write(folder, job);
             return (new GenerationJobEntry(folder, job), jobLock);
@@ -236,6 +250,18 @@ public sealed class GenerationJobStore
         {
             jobLock.Dispose();
             throw;
+        }
+    }
+
+    private void TryDelete(string folder)
+    {
+        try
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogWarning(e, "The job folder {Folder} left by a failed start can't be deleted", folder);
         }
     }
 
@@ -348,7 +374,11 @@ public static class GenerationJobSerializer
             job.GameName,
             job.Language,
             job.Agent,
-            new GenerationOptionsJson(job.Options.ReviewGlossary, Name(job.Options.Scope), job.Options.Model),
+            new GenerationOptionsJson(
+                job.Options.ReviewGlossary,
+                Name(job.Options.Scope),
+                job.Options.Model,
+                job.Options.Base is { } b ? new GenerationBaseJson(b.PackId, b.Revision, b.Local, b.Title) : null),
             Name(job.Stage),
             Name(job.Status),
             Name(job.PauseReason),
@@ -440,6 +470,17 @@ public static class GenerationJobSerializer
             scope = parsedScope;
         }
 
+        GenerationBase? baseRef = null;
+        if (file.Options?.Base is { } b)
+        {
+            if (!PackFormat.IsSlug(b.PackId) || b.Revision < 1)
+            {
+                return (null, "options.base needs a pack ID and a revision");
+            }
+
+            baseRef = new GenerationBase(b.PackId!, b.Revision, b.Local, b.Title ?? b.PackId!);
+        }
+
         var counters = file.Counters ?? new GenerationCountersJson(0, 0, 0, 0);
         if (counters.Strings < 0 || counters.Translated < 0 || counters.Chunks < 0 || counters.ChunksDone < 0 || counters.ChunksDone > counters.Chunks)
         {
@@ -453,7 +494,7 @@ public static class GenerationJobSerializer
             GameName = file.GameName ?? game.ToString(),
             Language = file.Language,
             Agent = file.Agent,
-            Options = new GenerationOptions(file.Options?.ReviewGlossary ?? false, scope, file.Options?.Model),
+            Options = new GenerationOptions(file.Options?.ReviewGlossary ?? false, scope, file.Options?.Model, baseRef),
             Stage = stage,
             Status = status,
             PauseReason = pause,
@@ -504,7 +545,9 @@ internal sealed record GenerationJobFileJson(
     long ChunkMs,
     long? EstimatedMs);
 
-internal sealed record GenerationOptionsJson(bool ReviewGlossary, string? Scope, string? Model);
+internal sealed record GenerationOptionsJson(bool ReviewGlossary, string? Scope, string? Model, GenerationBaseJson? Base = null);
+
+internal sealed record GenerationBaseJson(string? PackId, int Revision, bool Local, string? Title);
 
 internal sealed record GenerationFailureJson(string? Stage, string? Kind, string? Message);
 

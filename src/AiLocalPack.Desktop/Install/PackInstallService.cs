@@ -389,7 +389,7 @@ public sealed class PackInstallService
 
         // The installed revision: a local pack from its folder; the cache keeps a registry one since the install; else
         // the registry, while it still lists it.
-        var cached = record.Local ? OpenLocal(game.Id, record.Language, record.PackId) : _cache.Find(game.Id, record.Language, record.PackId, record.Revision);
+        var cached = record.Local ? OpenLocal(game.Id, record.Language, record.PackId, record.Revision) : _cache.Find(game.Id, record.Language, record.PackId, record.Revision);
         if (cached is null && record.Local)
         {
             return run.Fail(new InstallError(InstallErrorKind.LocalMissing));
@@ -625,11 +625,12 @@ public sealed class PackInstallService
 
     /// <summary>
     /// A local pack (task 55) as a cache entry: its folder holds the manifest and the string table at the manifest's
-    /// path, as a cache entry does. <c>null</c> when it is gone or doesn't read.
+    /// path, as a cache entry does. <c>null</c> when it is gone, isn't <paramref name="revision"/> (when given) or doesn't read.
     /// </summary>
-    private CachedPack? OpenLocal(GameId game, string language, string id)
+    private CachedPack? OpenLocal(GameId game, string language, string id, int? revision = null)
     {
-        if (_localPacks.Find(game, language, id) is not { } pack)
+        // An update job's next revision replaces the installed one (task 56): the installed revision is gone then.
+        if (_localPacks.Find(game, language, id) is not { } pack || (revision is { } r && pack.Manifest.Revision != r))
         {
             return null;
         }

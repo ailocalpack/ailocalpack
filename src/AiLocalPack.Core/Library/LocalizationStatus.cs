@@ -69,12 +69,17 @@ public enum InstalledPackProblem
 /// <param name="Revision">The installed revision (the game page offers <c>Update to rev N</c> when the registry has a later one).</param>
 /// <param name="Local">A pack generated on this machine (task 55), not the registry's pack of the same ID.</param>
 /// <param name="Title">The local pack's title; <c>null</c> for a registry pack (the list names it).</param>
+/// <param name="ForOtherVersion">
+/// A recipe pack installed over files it wasn't made for (<see cref="Install.PackFit"/>, task 56): it works, but the
+/// strings a game update added or changed stay untranslated, so the game page offers <c>Translate new strings</c>.
+/// </param>
 public sealed record InstalledPackState(
     string PackId,
     InstalledPackProblem Problem = InstalledPackProblem.None,
     int Revision = 1,
     bool Local = false,
-    string? Title = null)
+    string? Title = null,
+    bool ForOtherVersion = false)
 {
     /// <summary>A game update broke the pack: the status is <see cref="LocalizationStatusKind.NeedsUpdate"/>.</summary>
     public bool BrokenByUpdate => Problem != InstalledPackProblem.None;

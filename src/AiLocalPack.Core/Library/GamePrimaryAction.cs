@@ -83,6 +83,14 @@ public static class GamePrimaryActions
             return new(result.Installed ? GamePrimaryActionKind.Play : GamePrimaryActionKind.InstallLocalPack, Result: result);
         }
 
+        if (status is { Kind: LocalizationStatusKind.NeedsUpdate or LocalizationStatusKind.Installed, Job: null, Result: { Installed: false } update, Installed: { NeedsReapply: false } outdated }
+            && update.PackId == outdated.PackId && (outdated.BrokenByUpdate || outdated.ForOtherVersion || outdated.Local))
+        {
+            // An update job's new revision (task 56) waits for the pack the game update broke or left partly untranslated
+            // (a local pack's waiting result of the same ID is always its next revision: it replaced the installed one).
+            return new(GamePrimaryActionKind.InstallLocalPack, Installed: outdated, Result: update);
+        }
+
         return status.Kind switch
         {
             LocalizationStatusKind.Blocked or LocalizationStatusKind.Unknown => GamePrimaryAction.None,

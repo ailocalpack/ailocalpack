@@ -386,4 +386,42 @@ public sealed class GenJobTests : IDisposable
         // Assert
         new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "The job runs with the fake agent: give its recording with --fake-agent." + Environment.NewLine });
     }
+
+    /// <summary>
+    /// The first job's local pack recorded as installed (as the app's install does), then a game update that changes the
+    /// potion's description.
+    /// </summary>
+    private async Task InstallAndUpdateGameAsync()
+    {
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+        var game = _steam.Root + "/steamapps/common/Sample Quest";
+        new Core.Install.InstalledPackStore(Core.Storage.AppPaths.UnderHome(Home)).Put(
+            new Core.Install.InstalledPack(Core.Games.GameId.Steam(620), "ru", "fake", 1, DateTimeOffset.UtcNow, game, "backup", [], []) { Local = true });
+        var items = Path.Combine(game, "data", "Items.json");
+        File.WriteAllText(items, File.ReadAllText(items).Replace("Restores 500 HP to one ally.", "Restores 800 HP to one ally.", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task An_update_translates_the_changed_string_on_top_of_the_installed_pack()
+    {
+        // Arrange
+        await InstallAndUpdateGameAsync();
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--update");
+
+        // Assert
+        result.StdOut.Should().Contain("Update of fake rev 1: 0 new strings, 1 changed, 0 removed, 63 kept.")
+            .And.Contain("revision: 2 (update of rev 1: 0 new strings, 1 changed, 0 removed)");
+    }
+
+    [Fact]
+    public async Task An_update_without_an_installed_pack_is_refused()
+    {
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--update");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().BeEquivalentTo(new { ExitCode = 1, StdErr = "Sample Quest has no installed pack to update." + Environment.NewLine });
+    }
 }

@@ -7,11 +7,15 @@ namespace AiLocalPack.Core.Generation;
 /// The files a generation keeps in its job folder, next to (never inside) the working copy of the game:
 /// <c>strings.json</c> = the string store (a plain JSON <see cref="StringTable"/> of the translations so far, written
 /// after every change), <c>glossary.json</c> (<see cref="Glossary"/>), <c>source.json</c> (the extracted strings), <c>chunks.json</c> (the translate plan), <c>progress.json</c> (recent
-/// translations, agent usage) and <c>build/</c> = the latest rebuild, laid out
-/// like the game folder. Writes are atomic. Beside them: <c>job.json</c> and <c>logs/job.log</c> (<see cref="GenerationJobStore"/>).
+/// translations, agent usage), <c>build/</c> = the latest rebuild, laid out
+/// like the game folder, and an update job's <c>base/</c> (task 56). Writes are atomic. Beside them: <c>job.json</c> and <c>logs/job.log</c> (<see cref="GenerationJobStore"/>).
 /// </summary>
 public sealed class GenerationFiles
 {
+    private const string BaseManifestName = "manifest.json";
+    private const string BaseStringsName = "strings.json.gz";
+    private const string BaseGlossaryName = "glossary.json";
+
     public GenerationFiles(string jobFolder)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
@@ -34,6 +38,65 @@ public sealed class GenerationFiles
     public string ProgressPath => Path.Combine(Folder, "progress.json");
 
     public string BuildFolder => Path.Combine(Folder, "build");
+
+    /// <summary>An update job's base pack (task 56): <c>manifest.json</c>, <c>strings.json.gz</c>, <c>glossary.json</c> when it had one.</summary>
+    public string BaseFolder => Path.Combine(Folder, "base");
+
+    /// <summary>Writes the base pack's files (<see cref="BaseFolder"/>); the manifest last.</summary>
+    /// <exception cref="IOException">A file can't be written.</exception>
+    public void WriteBase(UpdateBase updateBase)
+    {
+        ArgumentNullException.ThrowIfNull(updateBase);
+        Directory.CreateDirectory(BaseFolder);
+        AtomicFile.Write(Path.Combine(BaseFolder, BaseStringsName), stream => StringTableSerializer.Write(updateBase.Strings, stream));
+        var glossary = Path.Combine(BaseFolder, BaseGlossaryName);
+        if (updateBase.Glossary is { } g)
+        {
+            AtomicFile.WriteAllBytes(glossary, GlossarySerializer.Write(g));
+        }
+        else
+        {
+            File.Delete(glossary);
+        }
+
+        AtomicFile.WriteAllBytes(Path.Combine(BaseFolder, BaseManifestName), System.Text.Encoding.UTF8.GetBytes(PackManifestSerializer.Write(updateBase.Manifest)));
+    }
+
+    /// <summary>The base pack's files, or <c>null</c> when the job has none (not an update job).</summary>
+    /// <exception cref="GenerationFileException">A file exists but can't be read or isn't valid.</exception>
+    public UpdateBase? ReadBase()
+    {
+        var manifestPath = Path.Combine(BaseFolder, BaseManifestName);
+        if (ReadBytes(manifestPath) is not { } manifestData)
+        {
+            return null;
+        }
+
+        var manifest = PackManifestSerializer.Read(System.Text.Encoding.UTF8.GetString(manifestData));
+        if (manifest.Value is not { } value)
+        {
+            throw new GenerationFileException(manifestPath, string.Join("; ", manifest.Errors.Select(e => $"{e.Field}: {e.Message}")));
+        }
+
+        var stringsPath = Path.Combine(BaseFolder, BaseStringsName);
+        var strings = ReadBytes(stringsPath) is { } stringsData
+            ? StringTableSerializer.Read(stringsData)
+            : throw new GenerationFileException(stringsPath, "is missing");
+        if (strings.Value is not { } table)
+        {
+            throw new GenerationFileException(stringsPath, string.Join("; ", strings.Errors.Select(e => $"{e.Field}: {e.Message}")));
+        }
+
+        var glossaryPath = Path.Combine(BaseFolder, BaseGlossaryName);
+        Glossary? glossary = null;
+        if (ReadBytes(glossaryPath) is { } glossaryData)
+        {
+            var (read, error) = GlossarySerializer.Read(glossaryData);
+            glossary = read ?? throw new GenerationFileException(glossaryPath, error!);
+        }
+
+        return new UpdateBase(value, table, glossary);
+    }
 
     /// <summary>The string store, or <c>null</c> when nothing was stored yet.</summary>
     /// <exception cref="GenerationFileException">The file exists but can't be read or isn't a valid string table.</exception>

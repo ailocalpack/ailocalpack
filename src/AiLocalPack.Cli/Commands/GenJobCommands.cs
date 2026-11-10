@@ -6,6 +6,7 @@ using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Background;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Languages;
@@ -67,9 +68,10 @@ internal static class GenJobCommands
         var review = new Option<bool>("--review-glossary") { Description = "Wait for the player's review after the glossary." };
         var allFiles = new Option<bool>("--all-files") { Description = "Copy every file into the working copy." };
         var model = new Option<string?>("--model") { Description = "The agent's model (default: the agent's own)." };
+        var update = new Option<bool>("--update") { Description = "Translate only the new and changed strings on top of the installed pack (its next revision, in its language)." };
         var until = UntilOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, until, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, update, until, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -79,7 +81,33 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            var tag = result.GetValue(language) ?? GameLanguages.Resolve(context.Settings.GameLanguage, CultureInfo.CurrentUICulture);
+            UpdateBase? updateBase = null;
+            InstalledPack? installed = null;
+            if (result.GetValue(update))
+            {
+                installed = new InstalledPackStore(context.Paths).Find(context.Game.Id);
+                if (installed is null)
+                {
+                    error.WriteLine($"{context.Game.Name} has no installed pack to update.");
+                    return 1;
+                }
+
+                var load = UpdateBaseLoader.Load(installed, context.LocalPacks, new PackCache(context.Paths));
+                if (load.Base is null)
+                {
+                    error.WriteLine($"The installed pack {installed.PackId} rev {installed.Revision} can't be updated: {load.Detail}");
+                    return 1;
+                }
+
+                updateBase = load.Base;
+                if (result.GetValue(language) is { } asked && asked != installed.Language)
+                {
+                    error.WriteLine($"The installed pack is in '{installed.Language}': an update keeps its language.");
+                    return 1;
+                }
+            }
+
+            var tag = installed?.Language ?? result.GetValue(language) ?? GameLanguages.Resolve(context.Settings.GameLanguage, CultureInfo.CurrentUICulture);
             if (!GameLanguages.Tags.Contains(tag, StringComparer.Ordinal))
             {
                 error.WriteLine($"'{tag}' is not a supported language tag.");
@@ -107,12 +135,21 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            var options = new GenerationOptions(result.GetValue(review), result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null, result.GetValue(model));
+            var options = new GenerationOptions(
+                result.GetValue(review),
+                result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null,
+                result.GetValue(model),
+                updateBase?.Reference(installed!.Local));
             var plan = new StagePlan(agentId, recording, pauseBefore);
             GenerationRun run;
             try
             {
-                var estimate = context.Estimator.Estimate(context.Game.InstallPath, Engine(context.Game), options.Scope, cancellationToken);
+                var estimate = context.Estimator.Estimate(context.Game.InstallPath, Engine(context.Game), options.Scope, cancellationToken, updateBase?.Strings);
+                if (estimate.Update is { } diff)
+                {
+                    output.WriteLine($"Update of {updateBase!.Manifest.Id} rev {updateBase.Manifest.Revision}: {diff.Added.Count} new strings, {diff.Changed.Count} changed, {diff.Removed.Count} removed, {diff.Unchanged.Count} kept.");
+                }
+
                 run = context.Jobs.Start(
                     context.Game,
                     context.Policy,
@@ -122,7 +159,8 @@ internal static class GenJobCommands
                     options,
                     _ => context.Stages(plan),
                     (estimate.Work.TimeLow + estimate.Work.TimeHigh) / 2,
-                    cancellationToken);
+                    cancellationToken,
+                    updateBase);
             }
             catch (Exception e) when (e is GameBlockedException or GenerationJobException or WorkingCopyException or IOException)
             {
@@ -464,7 +502,8 @@ internal static class GenJobCommands
             AntiCheatPolicy.Bundled,
             DevCommand.SavedIndex(env, paths),
             env,
-            new LocalPackStore(paths));
+            new LocalPackStore(paths),
+            paths);
     }
 
     /// <summary>The agent of a run (<paramref name="Recording"/> = the fake agent's) and where it pauses.</summary>
@@ -480,7 +519,8 @@ internal static class GenJobCommands
         AntiCheatPolicy Policy,
         RegistryIndex? Index,
         OsEnvironment Env,
-        LocalPackStore LocalPacks)
+        LocalPackStore LocalPacks,
+        AppPaths Paths)
     {
         /// <summary>Every stage, with the plan's agent.</summary>
         public GenerationStages Stages(StagePlan plan)

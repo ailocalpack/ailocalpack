@@ -179,6 +179,13 @@ public sealed class InstalledPackMonitor
             return new PackRecheckResult(game, title, PackRecheckDecision.Intact, InstalledPackProblem.None);
         }
 
+        if (record.Local && _localPacks?.Find(record.Game, record.Language, record.PackId) is { } replaced && replaced.Manifest.Revision > record.Revision)
+        {
+            // An update job (task 56) made the next revision because this one no longer fit: it stays incompatible.
+            Set(record, InstalledPackProblem.Incompatible);
+            return new PackRecheckResult(game, title, PackRecheckDecision.Incompatible, InstalledPackProblem.Incompatible);
+        }
+
         PackCompatibility? compatibility = null;
         if (files.Unreadable.Count == 0 && await ManifestOfAsync(record, cancellationToken).ConfigureAwait(false) is { } manifest)
         {
@@ -235,7 +242,7 @@ public sealed class InstalledPackMonitor
     {
         if (record.Local)
         {
-            return _localPacks?.Find(record.Game, record.Language, record.PackId)?.Manifest;
+            return _localPacks?.Find(record.Game, record.Language, record.PackId)?.Manifest is { } local && local.Revision == record.Revision ? local : null;
         }
 
         if (_cache.Find(record.Game, record.Language, record.PackId, record.Revision) is { } cached)

@@ -102,6 +102,8 @@ internal static class TestServices
             services.AddSingleton<IGenerationStagesFactory>(sp => sp.GetRequiredService<FakeGenerationStages>());
             services.AddSingleton<FakeEstimates>();
             services.AddSingleton<IGenerationEstimates>(sp => sp.GetRequiredService<FakeEstimates>());
+            services.AddSingleton<FakeUpdateBases>();
+            services.AddSingleton<IUpdateBases>(sp => sp.GetRequiredService<FakeUpdateBases>());
 
             services.AddSingleton<DependencyDownloads>();
             services.AddSingleton(sp => new DependencyStore(

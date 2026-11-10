@@ -97,6 +97,9 @@ public sealed record GenerationRecentRow(string Key, string Original, string Tra
 /// <summary>A line of the validator's list: key, rule, original → translation.</summary>
 public sealed record GenerationWarningRow(string Key, string Rule, string Original, string Translation);
 
+/// <summary>The installed pack a game update made incompatible: the start form translates only the new and changed strings on top of it (task 56).</summary>
+public sealed record UpdateCandidate(string PackId, int Revision, string Title);
+
 /// <summary>The banner above the progress card (design §6b states).</summary>
 public enum GenerationBanner
 {
@@ -131,7 +134,10 @@ public enum GenerationBanner
 /// banner (paused by the limit or the player, interrupted, failed, waiting for review). <c>progress.json</c> and the log are
 /// read again after every change and every <see cref="DetailsInterval"/> while the job runs. Once the job completed, its
 /// local pack is the result card (task 55, <see cref="GenerationResultViewModel"/>) until the player discards it or starts
-/// a new translation.
+/// a new translation. When a game update made the installed pack incompatible or left it partly untranslated (made for
+/// another version), the form is in update mode (task 56):
+/// the base pack is read (<see cref="IUpdateBases"/>), the tiles count only the new and changed strings, the language is
+/// the pack's, and <c>Translate new strings</c> starts a job that makes the pack's next revision.
 /// </summary>
 public sealed partial class GenerationTabViewModel : ObservableObject
 {
@@ -149,7 +155,12 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private readonly Action<LocalPack> _showInPacks;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly IUpdateBases? _updateBases;
     private readonly CancellationTokenSource _closed = new();
+    private UpdateCandidate? _update;
+    private UpdateBaseLoad? _base;
+    private bool _baseUnusable;
+    private string? _baseError;
     private GenerationJobDetails _details = GenerationJobDetails.Empty;
     private int _detailsLoop;
     private bool _acting;
@@ -204,9 +215,13 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         LocalPacks localPacks,
         Action<LocalPack> showInPacks,
         TimeProvider time,
-        ILogger logger)
+        ILogger logger,
+        IUpdateBases? updateBases = null,
+        UpdateCandidate? update = null)
     {
         _game = game;
+        _updateBases = updateBases;
+        _update = updateBases is null ? null : update;
         _target = language;
         Language = language;
         _jobs = jobs;
@@ -282,6 +297,36 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     // ---------- Title and language ----------
 
+    /// <summary>
+    /// The form translates only the new and changed strings on top of the installed pack a game update broke (task 56):
+    /// such a pack exists and has strings to build on.
+    /// </summary>
+    public bool IsUpdateMode => _update is not null && !_baseUnusable;
+
+    /// <summary>"Generate a translation into" / "Translate the new strings into".</summary>
+    public string FormTitle => _localizer[IsUpdateMode ? nameof(Strings.Gen_Update_Title) : nameof(Strings.Gen_Title)];
+
+    /// <summary>An update keeps its pack's language.</summary>
+    public bool CanPickLanguage => !IsUpdateMode;
+
+    /// <summary>"Based on the installed «Фонарщики» rev 3: the new revision keeps its translations."</summary>
+    public string UpdateBannerText => _update is { } u ? _localizer.Format(nameof(Strings.Gen_Update_Banner), u.Title, u.Revision) : string.Empty;
+
+    /// <summary>"New: 12 · Changed: 3 · Kept: 1,180 · Removed: 2", once estimated.</summary>
+    public string UpdateDiffText => _estimate?.Update is { } d
+        ? _localizer.Format(
+            nameof(Strings.Gen_Update_Diff),
+            d.Added.Count.ToString("N0", _localizer.Culture),
+            d.Changed.Count.ToString("N0", _localizer.Culture),
+            d.Unchanged.Count.ToString("N0", _localizer.Culture),
+            d.Removed.Count.ToString("N0", _localizer.Culture))
+        : string.Empty;
+
+    public bool HasUpdateDiff => UpdateDiffText.Length > 0;
+
+    /// <summary>"Start generation" / "Translate new strings".</summary>
+    public string StartText => _localizer[IsUpdateMode ? nameof(Strings.Game_Action_TranslateNew) : nameof(Strings.Gen_Start)];
+
     /// <summary>The language the pack will be in (exact tag); the page's target until the player picks another.</summary>
     public string Language { get; private set; }
 
@@ -324,8 +369,10 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     /// <summary>"1–2" days of an entry-level plan's limits.</summary>
     public string LimitsValue => _estimate is { } e ? Approx + FormatRange(e.Work.LimitDaysLow, e.Work.LimitDaysHigh, _localizer.Culture) : "—";
 
-    /// <summary>Why the size couldn't be estimated.</summary>
-    public string EstimateErrorText => _estimateError is { } error ? _localizer.Format(nameof(Strings.Gen_Estimate_Failed), error) : string.Empty;
+    /// <summary>Why the size couldn't be estimated (or the update's base pack couldn't be read).</summary>
+    public string EstimateErrorText => _baseError is { } baseError && _update is { } u
+        ? _localizer.Format(nameof(Strings.Gen_Update_BaseFailed), u.Title, u.Revision, baseError)
+        : _estimateError is { } error ? _localizer.Format(nameof(Strings.Gen_Estimate_Failed), error) : string.Empty;
 
     public IRelayCommand RetryEstimateCommand { get; }
 
@@ -652,12 +699,21 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         }
     }
 
-    /// <summary>The page's game, target language and job changed (catalog, settings, a job event).</summary>
-    public void Update(Game game, string language)
+    /// <summary>The page's game, target language, job and installed pack changed (catalog, settings, a job event, an install).</summary>
+    public void Update(Game game, string language, UpdateCandidate? update = null)
     {
         var folderChanged = game.InstallPath != _game.InstallPath || game.IsAvailable != _game.IsAvailable;
+        update = _updateBases is null ? null : update;
+        if (update != _update)
+        {
+            _update = update;
+            _base = null;
+            _baseUnusable = false;
+            folderChanged = true;
+        }
+
         _game = game;
-        if (Language == _target)
+        if (Language == _target || _update is not null)
         {
             Language = language;
         }
@@ -750,6 +806,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         var run = ++_estimateRun;
         _estimate = null;
         _estimateError = null;
+        _baseError = null;
         EstimateState = EstimateState.Estimating;
         _ = EstimateAsync(run);
     }
@@ -758,12 +815,31 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     {
         GenerationSizeEstimate? estimate = null;
         string? error = null;
+        string? baseError = null;
+        var baseLoad = _base;
+        var unusable = _baseUnusable;
         try
         {
-            estimate = await _estimates.EstimateAsync(_game, _closed.Token);
-            _logger.LogInformation(
-                "Generation estimate for {Game}: {Strings} strings ({Source}), copy {Bytes} bytes, needs {Needed} of {Free} free",
-                _game.Id, estimate.Work.Text.Strings, estimate.Source, estimate.Copy.TotalBytes, estimate.Space.NeededBytes, estimate.Space.FreeBytes);
+            if (_update is not null && _updateBases is not null && !unusable && baseLoad?.Base is null)
+            {
+                baseLoad = await _updateBases.LoadAsync(_game, Language, _closed.Token);
+                unusable = baseLoad is null;
+                baseError = baseLoad?.Problem is not null ? baseLoad.Detail ?? baseLoad.Problem.ToString() : null;
+            }
+
+            if (baseError is null)
+            {
+                estimate = await _estimates.EstimateAsync(_game, unusable ? null : baseLoad?.Base?.Strings, _closed.Token);
+                _logger.LogInformation(
+                    "Generation estimate for {Game}: {Strings} strings ({Source}{Update}), copy {Bytes} bytes, needs {Needed} of {Free} free",
+                    _game.Id,
+                    estimate.Work.Text.Strings,
+                    estimate.Source,
+                    estimate.Update is { } d ? $", update: {d.Added.Count} new, {d.Changed.Count} changed, {d.Removed.Count} removed" : "",
+                    estimate.Copy.TotalBytes,
+                    estimate.Space.NeededBytes,
+                    estimate.Space.FreeBytes);
+            }
         }
         catch (OperationCanceledException)
         {
@@ -782,6 +858,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
                 return;
             }
 
+            _base = baseLoad;
+            _baseUnusable = unusable;
+            _baseError = baseError;
             _estimate = estimate;
             _estimateError = error;
             EstimateState = estimate is null ? EstimateState.Failed : EstimateState.Done;
@@ -798,8 +877,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _starting = true;
         StartError = string.Empty;
         RaiseStart();
-        var options = new GenerationOptions(ReviewGlossary);
-        var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (estimate.Work.TimeLow + estimate.Work.TimeHigh) / 2);
+        var updateBase = IsUpdateMode ? _base?.Base : null;
+        var options = new GenerationOptions(ReviewGlossary, Base: updateBase is null ? null : _base!.Reference);
+        var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (estimate.Work.TimeLow + estimate.Work.TimeHigh) / 2, updateBase);
         _ui.Post(() =>
         {
             _starting = false;
@@ -906,7 +986,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     /// <summary>
     /// Shows the last job's result while no job is open (the same card follows the pack's marks and the installed pack),
-    /// none otherwise.
+    /// none otherwise. In update mode a result that is the installed base pack itself gives way to the form: the game
+    /// update is what's left to translate (task 56).
     /// </summary>
     private void SyncResult()
     {
@@ -917,6 +998,12 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         }
 
         var installed = _localPacks.IsInstalled(result.Pack);
+        if (installed && _update is { } update && result.Pack.Manifest.Id == update.PackId && result.Pack.Manifest.Revision == update.Revision)
+        {
+            Result = null;
+            return;
+        }
+
         if (Result is { } current && current.Result.Job.Id == result.Job.Id)
         {
             current.Update(result, installed, _install.IsBusy);

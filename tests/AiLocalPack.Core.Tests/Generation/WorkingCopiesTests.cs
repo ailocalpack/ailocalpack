@@ -384,11 +384,6 @@ public sealed class WorkingCopiesTests : IDisposable
         new { cloned, text = File.ReadAllText(target) }.Should().BeEquivalentTo(new { cloned = false, text = "mine" });
     }
 
-    private sealed class NoClones : IFileCloner
-    {
-        public bool TryClone(string source, string destination) => false;
-    }
-
     /// <summary>Stands for a file system with clones: copies, so the content is right.</summary>
     private sealed class CopyingCloner : IFileCloner
     {
@@ -398,9 +393,16 @@ public sealed class WorkingCopiesTests : IDisposable
             return true;
         }
     }
+}
 
-    private sealed class FixedDiskSpace(long? free) : IDiskSpace
-    {
-        public long? FreeBytes(string path) => free;
-    }
+/// <summary>A file system without clones: every file is copied.</summary>
+internal sealed class NoClones : IFileCloner
+{
+    public bool TryClone(string source, string destination) => false;
+}
+
+/// <summary>Free space as given (<c>null</c> = unknown).</summary>
+internal sealed class FixedDiskSpace(long? free) : IDiskSpace
+{
+    public long? FreeBytes(string path) => free;
 }

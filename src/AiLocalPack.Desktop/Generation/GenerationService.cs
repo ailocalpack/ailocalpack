@@ -517,7 +517,8 @@ public sealed class GenerationService : IDisposable
     /// Creates the game's job and runs it in the background with the pipeline's stages. Never throws: a blocked game,
     /// an open job already, a folder that can't be written come back as the result's problem.
     /// </summary>
-    public async Task<GenerationStartResult> StartAsync(Game game, string language, string agentId, GenerationOptions options, TimeSpan? estimatedTime)
+    /// <param name="updateBase">An update job's base pack (task 56; <paramref name="options"/> name it), copied into the job folder.</param>
+    public async Task<GenerationStartResult> StartAsync(Game game, string language, string agentId, GenerationOptions options, TimeSpan? estimatedTime, UpdateBase? updateBase = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         GenerationRun run;
@@ -532,7 +533,8 @@ public sealed class GenerationService : IDisposable
                 options,
                 entry => _stages.Create(game, entry),
                 estimatedTime,
-                _quit.Token));
+                _quit.Token,
+                updateBase));
         }
         catch (GameBlockedException e)
         {
@@ -558,7 +560,9 @@ public sealed class GenerationService : IDisposable
         }
 
         // Back on the caller's thread (the UI's in the app), so the first change reaches the pages from there.
-        _logger.LogInformation("Generation job {Job} started for {Game} into {Language} with {Agent}", run.Job.Id, game.Id, language, agentId);
+        _logger.LogInformation(
+            "Generation job {Job} started for {Game} into {Language} with {Agent}{Update}",
+            run.Job.Id, game.Id, language, agentId, options.Base is { } b ? $", updating {b.PackId} rev {b.Revision}" : "");
         Follow(run);
         return new GenerationStartResult(run.Job);
     }

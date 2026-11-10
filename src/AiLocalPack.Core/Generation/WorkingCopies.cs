@@ -24,7 +24,8 @@ public enum WorkingCopyScope
 /// <param name="RelativePath">Relative to the game folder, <c>/</c>-separated.</param>
 /// <param name="LinkTarget">The link's target as stored (a link is recreated, never followed); <c>null</c> for a file.</param>
 /// <param name="IsFolderLink">The link points at a folder.</param>
-public sealed record WorkingCopyEntry(string RelativePath, long Size, string? LinkTarget = null, bool IsFolderLink = false);
+/// <param name="Source">The file to copy instead of the game's: the original an installed pack replaced (task 56).</param>
+public sealed record WorkingCopyEntry(string RelativePath, long Size, string? LinkTarget = null, bool IsFolderLink = false, string? Source = null);
 
 /// <summary>What <see cref="WorkingCopies.Plan"/> found: the files to copy and what the scope leaves out.</summary>
 /// <param name="Folders">Every folder of the copy (relative, <c>/</c>-separated, parents first), empty ones included.</param>
@@ -38,6 +39,9 @@ public sealed record WorkingCopyPlan(
     long SkippedBytes)
 {
     public int FileCount => Entries.Count;
+
+    /// <summary>The installed pack's files the plan takes from its backup or leaves out (task 56).</summary>
+    public InstalledOriginals WithoutPack { get; init; } = InstalledOriginals.None;
 }
 
 /// <summary>
@@ -142,8 +146,9 @@ public sealed class SystemDiskSpace : IDiskSpace
 /// Copies of game files that generation works on (the agent never touches the game folder):
 /// <c>&lt;data&gt;/work/&lt;game folder&gt;/&lt;job id&gt;/</c> is the job folder (task 47's <c>job.json</c>, the
 /// <see cref="GenerationFiles"/>), its <c>game/</c> subfolder the copy. Files are cloned where the file system can
-/// (<see cref="IFileCloner"/>), else copied; links are recreated, never followed. Methods block; call them off the UI
-/// thread.
+/// (<see cref="IFileCloner"/>), else copied; links are recreated, never followed. The copy is the game without the pack
+/// installed in its folder (<see cref="InstalledOriginals"/>, task 56): the files the pack wrote come from its backup,
+/// the ones it added are left out. Methods block; call them off the UI thread.
 /// </summary>
 public sealed class WorkingCopies
 {
@@ -151,6 +156,7 @@ public sealed class WorkingCopies
     public const long Margin = 64L * 1024 * 1024;
 
     private const string CopyFolderName = "game";
+    private const string ScratchFolderName = ".scratch";
     private const int BufferSize = 1 << 20;
 
     private static readonly HashSet<string> MediaExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -272,7 +278,74 @@ public sealed class WorkingCopies
             }
         }
 
-        return new WorkingCopyPlan(root, scope, entries, folders, total, skipped, skippedBytes);
+        var withoutPack = InstalledOriginals.Find(_paths, root);
+        if (!withoutPack.IsEmpty)
+        {
+            var kept = new List<WorkingCopyEntry>(entries.Count);
+            foreach (var entry in entries)
+            {
+                if (withoutPack.Added.Contains(entry.RelativePath))
+                {
+                    total -= entry.Size;
+                }
+                else if (entry.LinkTarget is null && withoutPack.Restored.TryGetValue(entry.RelativePath, out var original))
+                {
+                    var size = SizeOf(original);
+                    total += size - entry.Size;
+                    kept.Add(entry with { Size = size, Source = original });
+                }
+                else
+                {
+                    kept.Add(entry);
+                }
+            }
+
+            entries = kept;
+        }
+
+        return new WorkingCopyPlan(root, scope, entries, folders, total, skipped, skippedBytes) { WithoutPack = withoutPack };
+    }
+
+    /// <summary>
+    /// Runs <paramref name="read"/> on the game as it is without its installed pack: the game folder itself when no pack
+    /// is installed there, else a scratch copy of it (files without media, the pack's originals from its backup; cloned
+    /// where the file system can) deleted afterwards. The estimate's extract reads the game through it (task 56).
+    /// </summary>
+    /// <exception cref="WorkingCopyException">The game folder is missing, can't be listed, or the scratch copy doesn't fit.</exception>
+    public T ReadWithoutPack<T>(string gameFolder, Func<string, T> read, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
+        ArgumentNullException.ThrowIfNull(read);
+        var root = Path.GetFullPath(gameFolder);
+        if (InstalledOriginals.Find(_paths, root).IsEmpty)
+        {
+            return read(root);
+        }
+
+        var plan = Plan(root, WorkingCopyScope.WithoutMedia, cancellationToken);
+        var scratch = Path.Combine(_paths.WorkingCopies, ScratchFolderName, Path.GetRandomFileName());
+        try
+        {
+            var copy = Create(plan, scratch, cancellationToken: cancellationToken);
+            return read(copy.Folder);
+        }
+        finally
+        {
+            DeleteTree(scratch);
+            RemoveEmptyParent(scratch);
+        }
+    }
+
+    private static long SizeOf(string path)
+    {
+        try
+        {
+            return new FileInfo(path).Length;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return 0;
+        }
     }
 
     /// <summary>
@@ -387,7 +460,7 @@ public sealed class WorkingCopies
         foreach (var entry in plan.Entries)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var source = Path.Combine(plan.GameFolder, entry.RelativePath);
+            var source = entry.Source ?? Path.Combine(plan.GameFolder, entry.RelativePath);
             var target = Path.Combine(copy, entry.RelativePath);
             if (entry.LinkTarget is { } link)
             {
@@ -511,7 +584,7 @@ public sealed class WorkingCopies
         try
         {
             Directory.CreateDirectory(_paths.WorkingCopies);
-            return _cloner.TryClone(Path.Combine(plan.GameFolder, sample.RelativePath), probe);
+            return _cloner.TryClone(sample.Source ?? Path.Combine(plan.GameFolder, sample.RelativePath), probe);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {

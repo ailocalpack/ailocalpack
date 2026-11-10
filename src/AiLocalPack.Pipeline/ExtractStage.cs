@@ -12,6 +12,8 @@ namespace AiLocalPack.Pipeline;
 /// reads every string anyway.
 /// An unknown engine, one switched off on this OS or without a tool fails the stage before any agent time is spent,
 /// until the agent can write its own extractor (task 57).
+/// An update job (task 56) compares the strings with its base pack (<see cref="UpdateDiff"/>): the base's translations
+/// of unchanged strings go into the string store, and the chunks hold only the added and changed strings.
 /// </summary>
 public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null) : IGenerationStage
 {
@@ -49,10 +51,35 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null) 
         }
 
         var source = SourceStrings.Of(kind, extraction);
-        var chunks = ChunkPlanner.Plan(tool.Id, source.Strings, budget);
+        IReadOnlyList<TranslationChunk> chunks;
         int translated;
+        UpdateDiff? diff = null;
         try
         {
+            var toTranslate = source.Strings;
+            if (context.Job.Options.Base is not null)
+            {
+                if (context.Files.ReadBase() is not { } updateBase)
+                {
+                    return new GenerationStepResult.Failed(GenerationFailureKind.Disk, "The update's base pack is missing from the job folder (base/).");
+                }
+
+                if (updateBase.Manifest.Language != context.Job.Language)
+                {
+                    return new GenerationStepResult.Failed(GenerationFailureKind.Unexpected, $"The base pack is in '{updateBase.Manifest.Language}', the job in '{context.Job.Language}'.");
+                }
+
+                if (updateBase.Manifest.Recipe is { } recipe && recipe.Tool != tool.Id)
+                {
+                    context.Log($"The base pack was made with {recipe.Tool}, the game is read with {tool.Id} now.");
+                }
+
+                diff = UpdateDiff.Of(source.Strings.Select(s => KeyValuePair.Create(s.Key, s.Original)), updateBase.Strings);
+                context.Files.WriteStrings(diff.Seed(context.Files.ReadStrings(), updateBase.Strings, context.Job.Language));
+                toTranslate = [.. source.Strings.Where(s => diff.ToTranslate.Contains(s.Key))];
+            }
+
+            chunks = ChunkPlanner.Plan(tool.Id, toTranslate, budget);
             translated = Translated(context.Files, source);
             SourceStringsFile.Write(context.Files, source);
             ChunkPlanFile.Write(context.Files, chunks);
@@ -63,7 +90,12 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null) 
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            return new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"source.json can't be written: {e.Message}");
+            return new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The job's files (source.json, strings.json, chunks.json) can't be written: {e.Message}");
+        }
+
+        if (diff is not null)
+        {
+            context.Log($"Update of {context.Job.Options.Base!.PackId} rev {context.Job.Options.Base.Revision}: {diff.Added.Count} new strings, {diff.Changed.Count} changed, {diff.Removed.Count} removed, {diff.Unchanged.Count} unchanged (their translations kept).");
         }
 
         context.Log($"Extracted {source.Strings.Count} strings from {source.Files.Count} files with {tool.Id} {tool.Version.ToString(3)} ({kind.DisplayName}): {chunks.Count} chunks"

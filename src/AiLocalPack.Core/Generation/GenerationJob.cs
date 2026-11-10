@@ -104,7 +104,8 @@ public sealed record GenerationCounters(int Strings = 0, int Translated = 0, int
 /// <param name="ReviewGlossary">Wait for the player after the glossary (task 54).</param>
 /// <param name="Scope">Which game files the working copy holds; <c>null</c> = the default for the engine.</param>
 /// <param name="Model">The agent's model, when the player picked one.</param>
-public sealed record GenerationOptions(bool ReviewGlossary = false, WorkingCopyScope? Scope = null, string? Model = null)
+/// <param name="Base">An update job's base pack (task 56): only the strings it lacks or that changed are translated, and the result is its next revision.</param>
+public sealed record GenerationOptions(bool ReviewGlossary = false, WorkingCopyScope? Scope = null, string? Model = null, GenerationBase? Base = null)
 {
     public static readonly GenerationOptions Default = new();
 }

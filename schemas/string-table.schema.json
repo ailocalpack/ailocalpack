@@ -21,6 +21,12 @@
       "type": "object",
       "propertyNames": { "minLength": 1 },
       "additionalProperties": { "type": "string" }
+    },
+    "originals": {
+      "description": "Optional: key (present in strings) → hash of the original text the translation was made from (first 16 lowercase hex digits of the SHA-256 of its UTF-8 bytes), so a later revision can tell which strings a game update changed. Holds no original text.",
+      "type": "object",
+      "propertyNames": { "minLength": 1 },
+      "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{16}$" }
     }
   }
 }

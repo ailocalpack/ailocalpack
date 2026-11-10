@@ -66,6 +66,19 @@ public sealed partial class GenerationResultViewModel : ObservableObject
     /// <summary>"«Claude Code translation» into Русский".</summary>
     public string PackLine => _localizer.Format(nameof(Strings.Gen_Result_PackLine), Pack.Manifest.Title, LanguageNames.Native(Pack.Manifest.Language));
 
+    /// <summary>"Revision 4, an update of rev 3 · New: 12 · Changed: 3 · Removed: 2" for an update job's pack (task 56).</summary>
+    public string UpdateLine => Pack.Report.Update is { } u
+        ? _localizer.Format(
+            nameof(Strings.Gen_Result_Update),
+            Pack.Manifest.Revision,
+            u.BaseRevision,
+            u.Added.ToString("N0", _localizer.Culture),
+            u.Changed.ToString("N0", _localizer.Culture),
+            u.Removed.ToString("N0", _localizer.Culture))
+        : string.Empty;
+
+    public bool HasUpdateLine => UpdateLine.Length > 0;
+
     // ---------- Tiles and warnings ----------
 
     public IReadOnlyList<ResultTile> Tiles => LocalPackTexts.Tiles(Pack, _localizer);

@@ -50,7 +50,8 @@ internal sealed record StringTableJson(
     int? SchemaVersion,
     string? Language,
     IReadOnlyDictionary<string, string?>? Strings,
-    IReadOnlyDictionary<string, string?>? Context);
+    IReadOnlyDictionary<string, string?>? Context,
+    IReadOnlyDictionary<string, string?>? Originals = null);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
