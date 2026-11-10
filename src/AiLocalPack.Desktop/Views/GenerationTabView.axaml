@@ -146,9 +146,12 @@
                             <DataTemplate x:DataType="gp:GenerationAgentCard">
                                 <Border Classes="genAgent" Classes.on="{Binding IsSelected}" Tapped="OnAgentCardTapped">
                                     <StackPanel Spacing="6">
-                                            <RadioButton GroupName="GenerationAgent" FontWeight="Bold" Content="{Binding Name}"
-                                                         IsChecked="{Binding IsSelected, Mode=OneWay}" Command="{Binding SelectCommand}"
-                                                         AutomationProperties.Name="{Binding Name}" />
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                <RadioButton GroupName="GenerationAgent" FontWeight="Bold" Content="{Binding Name}"
+                                                             IsChecked="{Binding IsSelected, Mode=OneWay}" Command="{Binding SelectCommand}"
+                                                             AutomationProperties.Name="{Binding Name}" VerticalAlignment="Center" />
+                                                <views:AgentLogo Grid.Column="1" DataContext="{Binding Info}" IsSmall="True" VerticalAlignment="Center" />
+                                            </Grid>
                                             <WrapPanel ItemSpacing="10" LineSpacing="6">
                                                 <StackPanel Classes="genStatus" Classes.ok="{Binding IsStatusOk}" Classes.bad="{Binding IsStatusBad}"
                                                             Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">

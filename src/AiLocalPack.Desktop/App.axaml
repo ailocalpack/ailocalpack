@@ -15,6 +15,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://AiLocalPack/Styles/Theme.axaml" />
+                <ResourceInclude Source="avares://AiLocalPack/Styles/BrandIcons.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

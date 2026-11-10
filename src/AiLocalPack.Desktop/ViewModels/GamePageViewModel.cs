@@ -231,6 +231,18 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     public bool HasEngine => EngineText.Length > 0;
 
+    /// <summary>The engine's mark on the chip (<c>Styles/BrandIcons.axaml</c>); <see langword="null"/> = the generic box (RPG Maker has no mark there).</summary>
+    public string? EngineBrandKey => !EngineKind.TryParse(Game.Engine, out var engine) ? null : engine.Engine switch
+    {
+        GameEngine.Unity => "BrandUnity",
+        GameEngine.Unreal => "BrandUnreal",
+        GameEngine.Godot => "BrandGodot",
+        GameEngine.RenPy => "BrandRenPy",
+        _ => null,
+    };
+
+    public bool HasEngineBrand => EngineBrandKey is not null;
+
     /// <summary>"Steam" or "Added manually".</summary>
     public string StoreText => _localizer[Game.Source == GameSource.Steam ? nameof(Strings.Game_Chip_Steam) : nameof(Strings.Game_Chip_Manual)];
 

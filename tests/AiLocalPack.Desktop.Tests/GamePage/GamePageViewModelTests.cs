@@ -214,6 +214,24 @@ public sealed class GamePageViewModelTests : IDisposable
         (page.EngineText, page.StoreText, page.VersionText).Should().Be(("Unity (Mono)", "Steam", "build 14,882,031"));
     }
 
+    [Theory]
+    [InlineData("godot:4", "BrandGodot")]
+    [InlineData("renpy", "BrandRenPy")]
+    [InlineData("rpgmaker:mz", null)]
+    public async Task Engine_chip_shows_the_engine_mark_when_there_is_one(string engine, string? brandKey)
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var catalog = services.GetRequiredService<GameLibrary>().Catalog;
+        catalog.Update(GameId.Steam(10), g => g with { Engine = engine });
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        page.EngineBrandKey.Should().Be(brandKey);
+    }
+
     private static Game ManualWithFiles() => TestGames.Manual("Wren") with
     {
         Version = GameVersion.FromFileHashes([new("Game.exe", new string('b', 64))]),

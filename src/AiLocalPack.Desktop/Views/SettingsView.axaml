@@ -64,15 +64,7 @@
         <DataTemplate DataType="ag:AgentRow">
             <Border Classes="settingRow">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
-                    <Border Classes="agentLogo" VerticalAlignment="Top">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                <GradientStop Offset="0" Color="{Binding Info.ColorFrom}" />
-                                <GradientStop Offset="1" Color="{Binding Info.ColorTo}" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <TextBlock Text="{Binding Info.Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <views:AgentLogo DataContext="{Binding Info}" VerticalAlignment="Top" />
                     <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,16,0" VerticalAlignment="Center">
                         <WrapPanel>
                             <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}" Margin="0,0,10,0" VerticalAlignment="Center"
@@ -159,7 +151,7 @@
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
                     <Border Classes="rowPic">
                         <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Path Classes="icon" Data="{StaticResource IconGamepad}" Stroke="{DynamicResource AppTextBrush}" />
+                            <Path Classes="brand" Data="{StaticResource BrandSteam}" />
                         </Viewbox>
                     </Border>
                     <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />

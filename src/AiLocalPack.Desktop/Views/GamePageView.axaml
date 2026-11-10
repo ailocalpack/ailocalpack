@@ -64,14 +64,19 @@
                             <WrapPanel x:Name="FactChips" ItemSpacing="6" LineSpacing="6">
                                 <Border Classes="factChip" IsVisible="{Binding HasEngine}">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <Viewbox Classes="icon" Width="13" Height="13"><Path Classes="icon" Data="{StaticResource IconBox}" /></Viewbox>
+                                        <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding HasEngineBrand}">
+                                            <Path Classes="brand" Data="{Binding EngineBrandKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                        </Viewbox>
+                                        <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding !HasEngineBrand}">
+                                            <Path Classes="icon" Data="{StaticResource IconBox}" />
+                                        </Viewbox>
                                         <TextBlock Text="{Binding EngineText}" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
                                 <Border Classes="factChip">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding IsSteam}">
-                                            <Path Classes="icon" Data="{StaticResource IconGamepad}" />
+                                            <Path Classes="brand" Data="{StaticResource BrandSteam}" />
                                         </Viewbox>
                                         <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding !IsSteam}">
                                             <Path Classes="icon" Data="{StaticResource IconHardDrive}" />

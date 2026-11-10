@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:agents="using:AiLocalPack.Desktop.Agents"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             x:Class="AiLocalPack.Desktop.Views.AgentLogo"
+             x:DataType="agents:AgentInfo">
+    <!-- An agent's logo tile (Settings → AI agents, the Generation tab's agent cards): its brand mark, a neutral icon or two letters,
+         white on its colours. Add the "small" class for the 28 px tile. -->
+    <Border Classes="agentLogo" Classes.small="{Binding $parent[views:AgentLogo].IsSmall}">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="{Binding ColorFrom}" />
+                <GradientStop Offset="1" Color="{Binding ColorTo}" />
+            </LinearGradientBrush>
+        </Border.Background>
+        <Panel>
+            <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding HasBrandLogo}">
+                <Path Classes="brand" Fill="White" Data="{Binding LogoKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+            </Viewbox>
+            <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding HasIconLogo}">
+                <Path Classes="icon" Stroke="White" Data="{Binding LogoKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+            </Viewbox>
+            <TextBlock Text="{Binding Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding HasMark}" />
+        </Panel>
+    </Border>
+</UserControl>
