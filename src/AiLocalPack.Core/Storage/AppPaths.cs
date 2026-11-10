@@ -60,6 +60,12 @@ public sealed record AppPaths
     /// </summary>
     public string Agents => Path.Combine(Data, "agents");
 
+    /// <summary>
+    /// The signed-in GitHub account (login, name, avatar, granted scopes; task 58), shown without network. Machine-local
+    /// like the token it goes with, which lives in the OS keychain, never here.
+    /// </summary>
+    public string GitHubAccountFile => Path.Combine(Data, "github-account.json");
+
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 

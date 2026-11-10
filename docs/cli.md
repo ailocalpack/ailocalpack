@@ -1,6 +1,6 @@
 # CLI
 
-The `ailocalpack` CLI: framework and the general commands. Commands of a specific area are also described in that area's doc (`index`/`pack` in `docs/packs-and-registry.md`, `agent` and `gen` in `docs/generation.md`, `toolkit` in `docs/toolkit.md`). Part of the product spec in `CLAUDE.md`: keep it current; record settled decisions in the matching section here.
+The `ailocalpack` CLI: framework and the general commands. Commands of a specific area are also described in that area's doc (`index`/`pack` in `docs/packs-and-registry.md`, `agent` and `gen` in `docs/generation.md`, `toolkit` in `docs/toolkit.md`, `github` in `docs/publishing.md`). Part of the product spec in `CLAUDE.md`: keep it current; record settled decisions in the matching section here.
 
 ## CLI
 

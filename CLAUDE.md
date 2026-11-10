@@ -6,7 +6,7 @@ Treat this file and `docs/*.md` as the product spec and keep them current: recor
 
 ## Status
 
-Done through task 57: app shell, settings, Steam + manual game library with engine / anti-cheat detection, registry index (fetched, cached, offline), pack compatibility check, download cache, install transaction (backup, rollback, uninstall, re-apply, crash recovery, whitelisted dependencies, binary patches), re-check after game updates, Activity panel, tray + OS notifications, recipe tools for RPG Maker MV/MZ, Ren'Py, Godot 3/4, Unity, Unreal 4/5 with font swap, string validator, agent adapters (Claude Code, Codex, fake) with install and sign-in, toolkit MCP server, working copies + estimate, persisted generation jobs, pipeline stages Setup → Extract → Glossary → Translate by chunks → Build (rebuild, font swap, test run, local pack) running for real, Generation tab start form starting real jobs from the app, generation progress card with pause / resume / cancel, state banners, auto-resume after the limit and Activity rows, glossary review (edits saved at once, form of address, Regenerate keeping the player's edits, Activity decision), generation result (tiles, Install & play of the local pack through the install service, Discard, New translation, tried-in-game detection, share strip), Packs → Mine and update mode (`Translate new strings`: the installed pack's next revision with only the new and changed strings), unknown engines (the agent's own extractor / rebuilder in a sandboxed workspace, a binary patch pack from our own VCDIFF encoder). Publishing is not started. Feature-by-feature list with CLI commands: `docs/status.md`.
+Done through task 58: app shell, settings, Steam + manual game library with engine / anti-cheat detection, registry index (fetched, cached, offline), pack compatibility check, download cache, install transaction (backup, rollback, uninstall, re-apply, crash recovery, whitelisted dependencies, binary patches), re-check after game updates, Activity panel, tray + OS notifications, recipe tools for RPG Maker MV/MZ, Ren'Py, Godot 3/4, Unity, Unreal 4/5 with font swap, string validator, agent adapters (Claude Code, Codex, fake) with install and sign-in, toolkit MCP server, working copies + estimate, persisted generation jobs, pipeline stages Setup → Extract → Glossary → Translate by chunks → Build (rebuild, font swap, test run, local pack) running for real, Generation tab start form starting real jobs from the app, generation progress card with pause / resume / cancel, state banners, auto-resume after the limit and Activity rows, glossary review (edits saved at once, form of address, Regenerate keeping the player's edits, Activity decision), generation result (tiles, Install & play of the local pack through the install service, Discard, New translation, tried-in-game detection, share strip), Packs → Mine and update mode (`Translate new strings`: the installed pack's next revision with only the new and changed strings), unknown engines (the agent's own extractor / rebuilder in a sandboxed workspace, a binary patch pack from our own VCDIFF encoder), GitHub sign-in (Device Flow, token in the OS keychain, `github login / whoami / logout`). Publishing itself (fork, PR, publish UI) is not started. Feature-by-feature list with CLI commands: `docs/status.md`.
 
 ## Docs
 
@@ -19,6 +19,7 @@ Component details live in `docs/`. Read the matching doc before changing or exte
 - `docs/generation.md`: agent adapters and their contract, Claude Code and Codex adapters, agent install and sign-in, toolkit MCP server, working copies and estimate, generation jobs, pipeline and prompts, translate stage, build stage (test run, local packs).
 - `docs/desktop-app.md`: app structure (MVVM, DI, navigation), settings screen and sections, library, game page, packs tab, generation tab, dialogs, add game folder, covers, startup, install flow (UI), Activity panel, tray and background.
 - `docs/foundations.md`: app folders, settings storage, logging, UI localization (`.resx`, `Localizer`, plurals).
+- `docs/publishing.md`: GitHub sign-in (Device Flow, OAuth App, scope, session), keychain (Windows Credential Manager, macOS Keychain, Linux Secret Service).
 - `docs/cli.md`: CLI framework and `games` / `toolkit` commands (area commands are also in their area's doc).
 
 UI screens and their states: `design/README.md` (drafts in `design/drafts`).
@@ -42,6 +43,8 @@ Dev environment variables:
 - `AILOCALPACK_INDEX_URL=<url | folder>`: registry index location, e.g. `tests/fixtures/registry`.
 - `AILOCALPACK_TOOLKIT_ALL_ENGINES=1`: no engine switched off on this OS (RPG Maker on macOS).
 - `AILOCALPACK_UPDATE_SNAPSHOTS=1`: rewrite prompt snapshots in Pipeline tests.
+- `AILOCALPACK_SECRETS_FILE=<path>`: secrets (the GitHub token) in a plain-text JSON file instead of the OS keychain (dev, tests only). With `AILOCALPACK_HOME` set the keychain service is `ailocalpack (<home>)`, apart from the real sign-in.
+- `AILOCALPACK_GITHUB_CLIENT_ID=<id>`: another OAuth App (Device Flow on); `AILOCALPACK_GITHUB_URL=<url>`: a fake GitHub (`<url>/login/...`, API under `<url>/api/`).
 
 Synthetic test games: `ailocalpack dev fixture rpgmaker|renpy|godot|unity|unreal|custom <dir>` (`custom` = a made-up format no toolkit tool reads). Install by hand: `toolkit rebuild` → `dev apply-files` / `dev uninstall`. Fake agent: `agent run --fake <recording.jsonl>`, `gen run <game> --fake-agent <recording>`.
 
@@ -160,7 +163,7 @@ Both live in the GitHub organization **`ailocalpack`** (not a personal account: 
 
 ## Publishing
 
-- GitHub sign-in via **OAuth Device Flow** (no client secret in the app); token stored in the OS keychain.
+- GitHub sign-in via **OAuth Device Flow** (decided, task 58): an OAuth App in the `ailocalpack` org, client ID baked in, no client secret anywhere; scope `public_repo` (fork, push, PR, Discussions; nothing private). The token lives only in the OS keychain (Windows Credential Manager, macOS Keychain, Linux Secret Service over D-Bus; own code, no library); without a keychain (Linux with no keyring) the app stays signed out and explains, never stores the token in plain text. Sign-out deletes the token here; without a client secret the app can't revoke it on GitHub, so it links to the app's connections page. Details: `docs/publishing.md`.
 - The app forks the registry via the API, commits the pack to a branch, and opens a PR.
 - Before publishing, it compares with existing packs and offers a new revision of an existing pack (own or someone else's) instead of a duplicate.
 

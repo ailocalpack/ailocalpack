@@ -6,6 +6,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <!-- Linux keychain: the Secret Service over D-Bus (task 58), the library Avalonia uses on Linux. -->
+        <PackageReference Include="Tmds.DBus.Protocol" />
     </ItemGroup>
 
     <ItemGroup>

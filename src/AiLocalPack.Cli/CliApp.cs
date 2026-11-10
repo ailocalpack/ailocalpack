@@ -18,6 +18,7 @@ public static class CliApp
             IndexCommand.Build(env),
             PackCommand.Build(env),
             AgentCommand.Build(env),
+            GitHubCommand.Build(env),
             GenCommand.Build(env),
             McpCommand.Build(env),
             DevCommand.Build(env),
