@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gh="using:AiLocalPack.Desktop.ViewModels.GitHub"
+             x:Class="AiLocalPack.Desktop.Views.GitHubSignInView"
+             x:DataType="gh:GitHubSignInViewModel"
+             IsVisible="{Binding IsActive}">
+    <!-- The GitHub Device Flow panel (design §7–§8): Settings → GitHub inline, the publish dialog, rating. Hidden while idle. -->
+    <StackPanel Spacing="8">
+        <!-- Asking GitHub for a code / waiting for the approval -->
+        <StackPanel Spacing="8" IsVisible="{Binding IsBusy}">
+            <!-- Step numbers are drawn, not ①/②: those glyphs come from a fallback font and sit off the line. -->
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="4" IsVisible="{Binding IsWaiting}">
+                <Border Classes="stepNumber"><TextBlock Text="1" /></Border>
+                <TextBlock x:Name="StepOpen" Grid.Column="1" Classes="rowLabel" Text="{Binding StepOpenText}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <Border Grid.Row="1" Classes="stepNumber"><TextBlock Text="2" /></Border>
+                <TextBlock Grid.Row="1" Grid.Column="1" Classes="rowHelp" Text="{Binding StepEnterText}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            </Grid>
+            <Border Classes="deviceCode" IsVisible="{Binding IsWaiting}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <SelectableTextBlock x:Name="UserCode" Classes="deviceCode" Text="{Binding UserCode}" VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button x:Name="CopyCode" Classes="ghost sm" Command="{Binding CopyCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconCopy}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding CopyText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="OpenBrowser" Classes="accent sm" Command="{Binding OpenBrowserCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding OpenBrowserText}" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Viewbox Classes="icon spin" Width="14" Height="14">
+                        <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                        <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppAccentBrush}" />
+                    </Viewbox>
+                    <TextBlock x:Name="SignInStatus" Classes="rowHelp" Text="{Binding StatusText}" VerticalAlignment="Center" />
+                </StackPanel>
+                <Button x:Name="CancelSignIn" Grid.Column="1" Classes="bare sm" Command="{Binding CancelCommand}" Content="{Binding CancelText}" />
+            </Grid>
+        </StackPanel>
+
+        <!-- It didn't work: the reason, Try again -->
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" IsVisible="{Binding IsFailed}">
+            <TextBlock x:Name="SignInError" Classes="error" Text="{Binding Error}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Button x:Name="TryAgain" Classes="ghost sm" Command="{Binding StartCommand}" Content="{Binding TryAgainText}" />
+                <Button Classes="bare sm" Command="{Binding CancelCommand}" Content="{Binding CancelText}" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

@@ -3038,4 +3038,121 @@
   <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
     <value>The game updated ({0}). The installed «{1}» rev {2} was made for an earlier version: strings the update added or changed show untranslated.</value>
   </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Windows Credential Manager</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>macOS Keychain</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>the system keyring (Secret Service)</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>the dev secrets file</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>memory</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>Open {0} in your browser</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>Enter this code and approve ailocalpack</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>Asking GitHub for a code…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>Waiting for you to approve in the browser…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>Open browser</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>Can't reach GitHub. Check the connection and try again.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub refused the sign-in: {0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>The code expired before it was approved. Try again to get a new one.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>The sign-in was cancelled on GitHub.</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub approved {0}, but {1} couldn't keep the token, so you stay signed out (it is never saved in plain text): {2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>My published packs</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>GitHub account</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github account sign in sign out login logout token keychain profile publish</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>Not signed in</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>Only needed to publish packs and to rate or confirm them. Installing never needs an account.</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>Signed in · token kept in the system keychain ({0})</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>Signed out: the token is deleted from this computer. GitHub still lists ailocalpack among your authorized apps until you revoke it there.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>Revoke access on GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub no longer accepts the app's access for {0}, so the app signed out. Sign in again to publish or rate packs.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>GitHub can't be reached right now; showing the account as last seen.</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>Can't read the token from {0}: {1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>Sign in with GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>Can't delete the token from {0}, so you are still signed in: {1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>My published packs</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>published packs pull request pr discussion verified alpha</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>Nothing published yet. After generating a pack, publish it from the game's Generation tab.</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>Sign in to see packs you published.</value>
+  </data>
 </root>

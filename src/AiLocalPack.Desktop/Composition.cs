@@ -5,6 +5,8 @@ using AiLocalPack.Core.Activity;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.GitHub;
+using AiLocalPack.Core.Secrets;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
@@ -19,6 +21,7 @@ using AiLocalPack.Desktop.AddGame;
 using AiLocalPack.Desktop.Background;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Generation;
+using AiLocalPack.Desktop.GitHub;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
@@ -30,7 +33,9 @@ using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
+using AiLocalPack.Desktop.ViewModels.GitHub;
 using AiLocalPack.Desktop.ViewModels.Settings.Agents;
+using AiLocalPack.Desktop.ViewModels.Settings.GitHub;
 using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Dependencies;
@@ -125,6 +130,7 @@ internal static class Composition
         services.AddSingleton<GameStatuses>();
         AddBackground(services, env, paths, loggerFactory);
         AddAgents(services);
+        AddGitHub(services);
         AddGeneration(services);
         services.AddSingleton<AppStartup>();
         services.AddSingleton(sp => sp.GetRequiredService<AppStartup>().Progress);
@@ -166,6 +172,28 @@ internal static class Composition
             return AgentInstaller.Create(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<OsEnvironment>(), http, sp.GetRequiredService<ILogger<AgentInstaller>>());
         });
         services.AddSingleton<IAgentHost, AgentHost>();
+    }
+
+    /// <summary>GitHub sign-in: the session (token in the OS keychain), the Device Flow panel (tasks 58–59).</summary>
+    private static void AddGitHub(IServiceCollection services)
+    {
+        services.AddSingleton<IGitHubHost>(sp =>
+        {
+            var env = sp.GetRequiredService<OsEnvironment>();
+            var app = GitHubOAuthApp.Resolve(env);
+            var http = GitHubOAuthApp.CreateHttpClient(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
+            var time = sp.GetRequiredService<TimeProvider>();
+            var session = new GitHubSession(
+                SecretStores.Create(env),
+                new GitHubDeviceFlow(http, app, time, logger: sp.GetRequiredService<ILogger<GitHubDeviceFlow>>()),
+                new GitHubUserClient(http, app),
+                sp.GetRequiredService<AppPaths>(),
+                app,
+                time,
+                sp.GetRequiredService<ILogger<GitHubSession>>());
+            return new GitHubHost(session, http, sp.GetRequiredService<ILogger<GitHubHost>>());
+        });
+        services.AddTransient<GitHubSignInViewModel>();
     }
 
     /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>
@@ -231,7 +259,8 @@ internal static class Composition
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<LibrariesSettingsSection>());
         services.AddSingleton<AgentsSettingsSection>();
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<AgentsSettingsSection>());
-        AddPlaceholder(SettingsSectionId.GitHub, "IconGitHub", nameof(Strings.Settings_GitHub_Title), nameof(Strings.Settings_GitHub_Description));
+        services.AddSingleton<GitHubSettingsSection>();
+        services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<GitHubSettingsSection>());
         AddPlaceholder(SettingsSectionId.Storage, "IconHardDrive", nameof(Strings.Settings_Storage_Title), nameof(Strings.Settings_Storage_Description));
         AddPlaceholder(SettingsSectionId.About, "IconInfo", nameof(Strings.Settings_About_Title), nameof(Strings.Settings_About_Description));
 

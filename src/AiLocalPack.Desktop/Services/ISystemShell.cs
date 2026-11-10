@@ -1,5 +1,9 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using AiLocalPack.Desktop.Background;
+using Avalonia.Input.Platform;
+using Avalonia.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace AiLocalPack.Desktop.Services;
@@ -12,9 +16,12 @@ public interface ISystemShell
 
     /// <summary>Opens an <c>https</c> address in the default browser. False when it couldn't.</summary>
     bool OpenUrl(Uri url);
+
+    /// <summary>Puts <paramref name="text"/> on the clipboard (a Device Flow code). False when it couldn't.</summary>
+    Task<bool> CopyTextAsync(string text);
 }
 
-internal sealed class SystemShell(ILogger<SystemShell> logger) : ISystemShell
+internal sealed class SystemShell(AppWindowHost window, ILogger<SystemShell> logger) : ISystemShell
 {
     public bool OpenFolder(string path)
     {
@@ -56,6 +63,30 @@ internal sealed class SystemShell(ILogger<SystemShell> logger) : ISystemShell
         catch (Exception e) when (e is Win32Exception or InvalidOperationException or PlatformNotSupportedException)
         {
             logger.LogError(e, "Can't open {Url} in the browser", url);
+            return false;
+        }
+    }
+
+    public async Task<bool> CopyTextAsync(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        try
+        {
+            return await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (window.Window?.Clipboard is not { } clipboard)
+                {
+                    logger.LogWarning("Can't copy: no clipboard (the main window isn't open)");
+                    return false;
+                }
+
+                await clipboard.SetTextAsync(text);
+                return true;
+            });
+        }
+        catch (Exception e) when (e is InvalidOperationException or PlatformNotSupportedException or COMException)
+        {
+            logger.LogError(e, "Can't copy to the clipboard");
             return false;
         }
     }

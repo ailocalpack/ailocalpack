@@ -4,6 +4,7 @@
              xmlns:s="using:AiLocalPack.Desktop.ViewModels.Settings"
              xmlns:lib="using:AiLocalPack.Desktop.ViewModels.Settings.Libraries"
              xmlns:ag="using:AiLocalPack.Desktop.ViewModels.Settings.Agents"
+             xmlns:gh="using:AiLocalPack.Desktop.ViewModels.Settings.GitHub"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
@@ -280,6 +281,64 @@
                         <TextBlock Text="{Binding PillText}" />
                     </Border>
                 </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Settings → GitHub -->
+        <DataTemplate DataType="gh:GitHubAccountRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="avatar" IsVisible="{Binding IsSignedIn}">
+                        <Panel>
+                            <TextBlock Text="{Binding AvatarLetter}" IsVisible="{Binding !HasAvatar}" />
+                            <Image x:Name="GitHubAvatar" Source="{Binding Avatar}" Stretch="UniformToFill" IsVisible="{Binding HasAvatar}" />
+                        </Panel>
+                    </Border>
+                    <Border Classes="rowPic" IsVisible="{Binding IsSignedOut}" VerticalAlignment="Top">
+                        <Viewbox Classes="icon" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Classes="brand" Data="{StaticResource BrandGitHub}" />
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <WrapPanel>
+                            <views:HighlightTextBlock x:Name="GitHubLogin" Classes="rowLabel" Source="{Binding Title}" Margin="0,0,8,0" VerticalAlignment="Center"
+                                                      Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding FullName}" IsVisible="{Binding HasFullName}" VerticalAlignment="Center" />
+                        </WrapPanel>
+                        <TextBlock x:Name="GitHubHelp" Classes="rowHelp" Text="{Binding Help}" TextWrapping="Wrap"
+                                   IsVisible="{Binding Help, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <HyperlinkButton Classes="inline" Content="{Binding HelpLinkText}" NavigateUri="{Binding HelpLinkUri}" IsVisible="{Binding HasHelpLink}" />
+                        <TextBlock x:Name="GitHubWarning" Classes="rowHelp" Foreground="{DynamicResource AppWarnBrush}" Text="{Binding Warning}"
+                                   IsVisible="{Binding HasWarning}" TextWrapping="Wrap" />
+                        <TextBlock Classes="error" Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+                        <views:GitHubSignInView x:Name="GitHubDeviceFlow" DataContext="{Binding SignIn}" Margin="0,6,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Top">
+                        <Button x:Name="GitHubSignIn" Classes="accent sm" Command="{Binding SignInCommand}" IsVisible="{Binding CanSignIn}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="brand" Data="{StaticResource BrandGitHub}" Fill="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding SignInText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="ghost sm" Command="{Binding CheckAgainCommand}" IsVisible="{Binding CanCheckAgain}" Content="{Binding CheckAgainText}" />
+                        <Button x:Name="GitHubProfile" Classes="bare sm" Command="{Binding OpenProfileCommand}" IsVisible="{Binding IsSignedIn}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding ProfileText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="GitHubSignOut" Classes="bare sm" Command="{Binding SignOutCommand}" IsVisible="{Binding IsSignedIn}" Content="{Binding SignOutText}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="gh:PublishedPacksRow">
+            <Border Classes="settingRow">
+                <TextBlock x:Name="PublishedPacksEmpty" Classes="rowHelp" VerticalAlignment="Center" Text="{Binding Text}" TextWrapping="Wrap" />
             </Border>
         </DataTemplate>
     </UserControl.DataTemplates>

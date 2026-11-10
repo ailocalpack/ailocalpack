@@ -420,6 +420,7 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="IsVisible" Value="False" />
         <Setter Property="Background" Value="{DynamicResource AppBadgeBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
     </Style>
     <Style Selector="Button.gameCard:pointerover Button.quick.has, Button.gameCard:focus-within Button.quick.has">
         <Setter Property="IsVisible" Value="True" />
@@ -436,9 +437,25 @@
         <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
         <Setter Property="Foreground" Value="#06222a" />
     </Style>
-    <Style Selector="Button.quick.primary:pointerover /template/ ContentPresenter">
+    <!-- Hover / pressed: Fluent's own pointer-over fill is translucent and the label vanishes into the cover art, so every
+         variant keeps an opaque fill (a step lighter for the plain one) and gets a thin ring. -->
+    <Style Selector="Button.quick:pointerover /template/ ContentPresenter, Button.quick:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Button.quick.primary:pointerover /template/ ContentPresenter, Button.quick.primary:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
         <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.quick.warn:pointerover /template/ ContentPresenter, Button.quick.warn:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppWarnBrush}" />
+        <Setter Property="Foreground" Value="#1a1205" />
+    </Style>
+    <Style Selector="Button.quick.gen:pointerover /template/ ContentPresenter, Button.quick.gen:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="#06222a" />
     </Style>
 
     <!-- Status filter chip: pill with a live count; the chosen one is raised and its count accent -->
@@ -939,6 +956,53 @@
         <Setter Property="CornerRadius" Value="24" />
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+
+    <!-- GitHub Device Flow code (design §7–§8) and the account avatar -->
+    <Style Selector="Border.deviceCode">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="MaxWidth" Value="520" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    <Style Selector="SelectableTextBlock.deviceCode">
+        <Setter Property="FontFamily" Value="Menlo, Consolas, DejaVu Sans Mono, monospace" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LetterSpacing" Value="2" />
+        <Setter Property="Margin" Value="0,0,24,0" />
+    </Style>
+    <Style Selector="Border.stepNumber">
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.stepNumber TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.avatar">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Border.avatar TextBlock">
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <!-- Spinner: a rotating loader icon -->

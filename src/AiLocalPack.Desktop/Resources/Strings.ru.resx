@@ -3106,4 +3106,121 @@
   <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
     <value>Игра обновилась ({0}). Установленный «{1}» ред. {2} сделан для прежней версии: строки, которые обновление добавило или изменило, остались без перевода.</value>
   </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Диспетчер учётных данных Windows</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>Связка ключей macOS</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>системная связка ключей (Secret Service)</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>файл секретов для разработки</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>память</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>Откройте {0} в браузере</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>Введите этот код и разрешите доступ ailocalpack</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>Запрашиваем код у GitHub…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>Ждём, пока вы подтвердите вход в браузере…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>Скопировано</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>Открыть браузер</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>Попробовать снова</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>Не удаётся связаться с GitHub. Проверьте подключение и попробуйте снова.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub отклонил вход: {0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>Срок действия кода истёк до подтверждения. Попробуйте снова, чтобы получить новый.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>Вход отменён на GitHub.</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub подтвердил вход {0}, но хранилище «{1}» не смогло сохранить токен, поэтому вход не выполнен (открытым текстом токен не сохраняется): {2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>Аккаунт</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>Мои опубликованные переводы</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>Аккаунт GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github аккаунт войти выйти вход выход токен связка ключей профиль публикация</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>Вход не выполнен</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>Нужен только для публикации переводов и для оценок и подтверждений. Для установки аккаунт не нужен.</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>Вход выполнен · токен в системном хранилище ({0})</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>Вы вышли: токен удалён с этого компьютера. GitHub показывает ailocalpack среди разрешённых приложений, пока вы не отзовёте доступ там.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>Отозвать доступ на GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub больше не принимает доступ приложения для {0}, поэтому вход сброшен. Войдите снова, чтобы публиковать и оценивать переводы.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>GitHub сейчас недоступен; показан аккаунт, каким он был при последней проверке.</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>Не удаётся прочитать токен из хранилища «{0}»: {1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>Войти через GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>Не удаётся удалить токен из хранилища «{0}», поэтому вход сохраняется: {1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>Мои опубликованные переводы</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>опубликованные переводы пулл-реквест pr обсуждение проверен alpha</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>Пока ничего не опубликовано. Сгенерировав перевод, опубликуйте его на вкладке «Генерация» игры.</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>Войдите, чтобы увидеть опубликованные вами переводы.</value>
+  </data>
 </root>
