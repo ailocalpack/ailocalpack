@@ -157,6 +157,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private readonly InstallFlow _install;
     private readonly LocalPacks _localPacks;
     private readonly Action<LocalPack> _showInPacks;
+    private readonly Func<LocalPack, PackPublishViewModel> _publish;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly IUpdateBases? _updateBases;
@@ -218,11 +219,13 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         InstallFlow install,
         LocalPacks localPacks,
         Action<LocalPack> showInPacks,
+        Func<LocalPack, PackPublishViewModel> publish,
         TimeProvider time,
         ILogger logger,
         IUpdateBases? updateBases = null,
         UpdateCandidate? update = null)
     {
+        _publish = publish;
         _game = game;
         _updateBases = updateBases;
         _update = updateBases is null ? null : update;
@@ -1019,7 +1022,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             AskDiscard,
             _showInPacks,
             () => _ = NewTranslationAsync(),
-            NotNow));
+            NotNow), _publish(result.Pack));
     }
 
     /// <summary>An install started, moved on or ended (UI thread): the result's buttons follow.</summary>

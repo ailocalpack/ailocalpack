@@ -13,7 +13,17 @@ public sealed partial record RegistryRepo(string Owner, string Name)
     /// <summary>The Release (tag) holding patch archives, in the registry and in the player's fork alike.</summary>
     public const string PatchReleaseTag = "patches";
 
+    /// <summary>Dev: publishes to another registry repository (<c>&lt;owner&gt;/&lt;repo&gt;</c>, e.g. a test registry) instead of <see cref="Default"/>.</summary>
+    public const string Variable = "AILOCALPACK_REGISTRY";
+
     public static RegistryRepo Default { get; } = new("ailocalpack", "registry");
+
+    /// <summary>The registry to publish to: <see cref="Variable"/> when it names a repository, else <see cref="Default"/>.</summary>
+    public static RegistryRepo Resolve(Storage.OsEnvironment env)
+    {
+        ArgumentNullException.ThrowIfNull(env);
+        return TryParse(env.GetVariable(Variable), out var repo) ? repo : Default;
+    }
 
     public string FullName => $"{Owner}/{Name}";
 

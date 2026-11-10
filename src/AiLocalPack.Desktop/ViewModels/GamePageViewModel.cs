@@ -14,6 +14,7 @@ using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
+using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
@@ -57,6 +58,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly InstalledPackMonitor _monitor;
     private readonly GenerationService _jobs;
     private readonly LocalPacks _localPacks;
+    private readonly PublishFlow _publish;
     private readonly IDialogService _dialogs;
     private readonly ToastService _toasts;
     private readonly TimeProvider _time;
@@ -114,6 +116,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         ToastService toasts,
         LocalPacks localPacks,
         IUpdateBases updateBases,
+        PublishFlow publish,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -132,6 +135,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _monitor = monitor;
         _jobs = jobs;
         _localPacks = localPacks;
+        _publish = publish;
         _dialogs = dialogs;
         _toasts = toasts;
         _time = time;
@@ -147,11 +151,11 @@ public sealed partial class GamePageViewModel : PageViewModel
         UpdateTabs();
         Packs = new PacksTabViewModel(
             game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, localPacks, jobs,
-            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, _logger);
+            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, _logger);
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, time, _logger, updateBases, UpdateCandidate);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -163,6 +167,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _statuses.InstalledChanged += OnInstalledChanged;
         _statuses.JobChanged += OnJobChanged;
         _localPacks.Changed += OnLocalPacksChanged;
+        _publish.Changed += OnLocalPacksChanged;
         _ = LoadCoverAsync(covers);
     }
 
@@ -523,6 +528,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _statuses.InstalledChanged -= OnInstalledChanged;
         _statuses.JobChanged -= OnJobChanged;
         _localPacks.Changed -= OnLocalPacksChanged;
+        _publish.Changed -= OnLocalPacksChanged;
         _closed.Cancel();
         Packs.Close();
         Generation.Close();
@@ -553,6 +559,9 @@ public sealed partial class GamePageViewModel : PageViewModel
         SelectedTab = GamePageTab.Packs;
         Packs.ShowLocal(pack.Manifest.Language, pack.Manifest.Id);
     }
+
+    /// <summary>A local pack's publish state and <c>Publish</c> (task 61) for the result strip and Mine.</summary>
+    private PackPublishViewModel PublishOf(LocalPack pack) => new(_publish, () => Game, pack, _localizer);
 
     /// <summary>Mine's <c>Delete</c>: asks, then deletes the local pack and the working copy of the job that made it.</summary>
     private void AskDeleteLocal(LocalPack pack) =>

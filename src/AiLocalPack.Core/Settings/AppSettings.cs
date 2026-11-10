@@ -41,6 +41,9 @@ namespace AiLocalPack.Core.Settings;
 /// Hidden dev setting (no UI): another registry index, an <c>https://</c> URL or a local folder
 /// (<see cref="Registry.RegistryLocation.TryParse"/>); <c>AILOCALPACK_INDEX_URL</c> wins over it. <c>null</c> = the public registry.
 /// </param>
+/// <param name="PublishLicenseAccepted">
+/// The player ticked "I publish under CC BY-SA 4.0" in the first publish dialog (task 61): later publishes don't ask again.
+/// </param>
 public sealed record AppSettings(
     int SchemaVersion = AppSettings.CurrentSchemaVersion,
     string? UiLanguage = null,
@@ -55,7 +58,8 @@ public sealed record AppSettings(
     IReadOnlyList<string>? IgnoredSteamLibraries = null,
     string? RegistryIndexUrl = null,
     string? DefaultAgent = null,
-    IReadOnlyList<string>? SignedInAgents = null)
+    IReadOnlyList<string>? SignedInAgents = null,
+    bool PublishLicenseAccepted = false)
 {
     public const int CurrentSchemaVersion = 1;
 

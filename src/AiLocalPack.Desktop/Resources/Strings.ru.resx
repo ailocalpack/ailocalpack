@@ -2965,9 +2965,6 @@
   <data name="Gen_Result_Publish" xml:space="preserve">
     <value>Опубликовать</value>
   </data>
-  <data name="Gen_Result_PublishSoon" xml:space="preserve">
-    <value>Публикация в реестр появится вместе со входом через GitHub в следующей версии.</value>
-  </data>
   <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
     <value>Опубликовать можно позже в «Паки → Мои».</value>
   </data>
@@ -3222,5 +3219,227 @@
   </data>
   <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
     <value>Войдите, чтобы увидеть опубликованные вами переводы.</value>
+  </data>
+  <data name="Activity_Event_PackSubmitted" xml:space="preserve">
+    <value>«{0}» отправлен в реестр</value>
+  </data>
+  <data name="Activity_Event_PublishFailed" xml:space="preserve">
+    <value>Не удалось опубликовать «{0}»</value>
+  </data>
+  <data name="Publish_SignIn_Title" xml:space="preserve">
+    <value>Публикация в реестре ailocalpack</value>
+  </data>
+  <data name="Publish_SignIn_Intro" xml:space="preserve">
+    <value>Только в первый раз. Паки публикуются как pull request на GitHub, поэтому войдите в свой аккаунт GitHub.</value>
+  </data>
+  <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
+    <value>Вы вошли как {0}</value>
+  </data>
+  <data name="Publish_SignIn_SignInButton" xml:space="preserve">
+    <value>Войти через GitHub</value>
+  </data>
+  <data name="Publish_SignIn_License" xml:space="preserve">
+    <value>Я публикую этот перевод под лицензией CC BY-SA 4.0</value>
+  </data>
+  <data name="Publish_SignIn_LicenseText" xml:space="preserve">
+    <value>Любой может использовать и изменять его с указанием авторства. Публикуются только переводы и рецепты, никогда исходный текст или файлы игры.</value>
+  </data>
+  <data name="Publish_SignIn_HintWaiting" xml:space="preserve">
+    <value>Ждём подтверждения GitHub…</value>
+  </data>
+  <data name="Publish_SignIn_HintSignIn" xml:space="preserve">
+    <value>Войдите через GitHub, чтобы продолжить</value>
+  </data>
+  <data name="Publish_SignIn_HintLicense" xml:space="preserve">
+    <value>Примите лицензию, чтобы продолжить</value>
+  </data>
+  <data name="Publish_Continue" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="Publish_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Publish_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Publish_Similar_Title" xml:space="preserve">
+    <value>Пак на языке «{0}» уже есть</value>
+  </data>
+  <data name="Publish_Similar_Intro" xml:space="preserve">
+    <value>Улучшить его вместо того, чтобы добавлять почти такой же?</value>
+  </data>
+  <data name="Publish_Similar_Existing" xml:space="preserve">
+    <value>«{0}» от {1} · ред. {2}</value>
+  </data>
+  <data name="Publish_Similar_Coverage" xml:space="preserve">
+    <value>покрытие {0}%</value>
+  </data>
+  <data name="Publish_Similar_Build" xml:space="preserve">
+    <value>сделан для сборки {0}</value>
+  </data>
+  <data name="Publish_Similar_Base" xml:space="preserve">
+    <value>Ваш пак — обновление этого пака</value>
+  </data>
+  <data name="Publish_Similar_Recommended" xml:space="preserve">
+    <value>Рекомендуется</value>
+  </data>
+  <data name="Publish_Similar_RevisionTitle" xml:space="preserve">
+    <value>Новая редакция «{0}» (ред. {1})</value>
+  </data>
+  <data name="Publish_Similar_RevisionText" xml:space="preserve">
+    <value>Его игроки получат вашу версию как обновление. {0} остаётся автором, вы указаны автором ред. {1}. Статус начинается заново с alpha.</value>
+  </data>
+  <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
+    <value>Отдельный пак</value>
+  </data>
+  <data name="Publish_Similar_SeparateText" xml:space="preserve">
+    <value>«{0}» появится рядом с «{1}», игроки выберут сами. Выберите это, если ваш перевод отличается намеренно (тон, термины).</value>
+  </data>
+  <data name="Publish_Similar_Choice" xml:space="preserve">
+    <value>Как опубликовать</value>
+  </data>
+  <data name="Publish_Again" xml:space="preserve">
+    <value>Опубликовать снова</value>
+  </data>
+  <data name="Publish_Step_Fork" xml:space="preserve">
+    <value>Форк реестра</value>
+  </data>
+  <data name="Publish_Step_Commit" xml:space="preserve">
+    <value>Коммит пака</value>
+  </data>
+  <data name="Publish_Step_PullRequest" xml:space="preserve">
+    <value>Pull request</value>
+  </data>
+  <data name="Publish_Step_Account" xml:space="preserve">
+    <value>Проверка аккаунта GitHub</value>
+  </data>
+  <data name="Publish_Doing_Fork" xml:space="preserve">
+    <value>создании форка реестра</value>
+  </data>
+  <data name="Publish_Doing_Commit" xml:space="preserve">
+    <value>коммите пака</value>
+  </data>
+  <data name="Publish_Doing_PullRequest" xml:space="preserve">
+    <value>открытии pull request</value>
+  </data>
+  <data name="Publish_Doing_Account" xml:space="preserve">
+    <value>проверке аккаунта</value>
+  </data>
+  <data name="Publish_Error_NotSignedIn" xml:space="preserve">
+    <value>Сначала войдите в GitHub: паки публикуются как pull request с вашего аккаунта.</value>
+  </data>
+  <data name="Publish_Error_Keychain" xml:space="preserve">
+    <value>Не удалось прочитать вход в GitHub из хранилища паролей; разблокируйте его и опубликуйте снова.</value>
+  </data>
+  <data name="Publish_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub больше не принимает ваш вход (доступ отозван или истёк). Войдите в GitHub ещё раз.</value>
+  </data>
+  <data name="Publish_Error_Forbidden" xml:space="preserve">
+    <value>GitHub отказал в доступе при {0}. Повторный вход даст приложению нужный доступ (public_repo).</value>
+  </data>
+  <data name="Publish_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Лимит запросов GitHub для вашего аккаунта исчерпан до {0}; опубликуйте снова после этого (ничего не потеряно).</value>
+  </data>
+  <data name="Publish_Error_RateLimited" xml:space="preserve">
+    <value>Лимит запросов GitHub для вашего аккаунта пока исчерпан; опубликуйте снова через несколько минут (ничего не потеряно).</value>
+  </data>
+  <data name="Publish_Error_NoRegistry" xml:space="preserve">
+    <value>Реестра {0} нет на GitHub (или он не виден с вашего аккаунта).</value>
+  </data>
+  <data name="Publish_Error_NotFound" xml:space="preserve">
+    <value>GitHub чего-то не нашёл при {0}; опубликуйте снова.</value>
+  </data>
+  <data name="Publish_Error_Rejected" xml:space="preserve">
+    <value>GitHub отклонил запрос при {0}.</value>
+  </data>
+  <data name="Publish_Error_Conflict" xml:space="preserve">
+    <value>GitHub не смог выполнить запрос при {0}; опубликуйте снова чуть позже.</value>
+  </data>
+  <data name="Publish_Error_Network" xml:space="preserve">
+    <value>Не удалось связаться с GitHub при {0}; проверьте подключение и опубликуйте снова: публикация продолжится с того же места.</value>
+  </data>
+  <data name="Publish_Error_Invalid" xml:space="preserve">
+    <value>Реестр не примет этот пак: {0}</value>
+  </data>
+  <data name="Publish_Error_OptedOut" xml:space="preserve">
+    <value>Издатель игры попросил не распространять любительские переводы, поэтому реестр не принимает для неё паки.</value>
+  </data>
+  <data name="Publish_Error_TargetGone" xml:space="preserve">
+    <value>Пака, который вы выбрали для обновления, больше нет в реестре; опубликуйте свой как отдельный пак.</value>
+  </data>
+  <data name="Publish_Error_ForkNotReady" xml:space="preserve">
+    <value>GitHub ещё создаёт вашу копию реестра; опубликуйте снова через несколько минут.</value>
+  </data>
+  <data name="Publish_Error_Unexpected" xml:space="preserve">
+    <value>Неожиданный ответ GitHub при {0}; опубликуйте снова.</value>
+  </data>
+  <data name="Publish_Target_Revision" xml:space="preserve">
+    <value>ред. {0} пака «{1}»</value>
+  </data>
+  <data name="Publish_Target_Pack" xml:space="preserve">
+    <value>«{0}»</value>
+  </data>
+  <data name="Publish_Sending_Title" xml:space="preserve">
+    <value>Публикуем {0}…</value>
+  </data>
+  <data name="Publish_Checking_Title" xml:space="preserve">
+    <value>PR #{0} открыт · CI проверяет пак</value>
+  </data>
+  <data name="Publish_Checking_Text" xml:space="preserve">
+    <value>Схема, хеши, отсутствие исполняемых файлов, шрифты. Когда проверки пройдут, пак сам попадёт в реестр как alpha; страницу можно закрыть, ход виден в Активности.</value>
+  </data>
+  <data name="Publish_Failed_Title" xml:space="preserve">
+    <value>Не удалось опубликовать «{0}»</value>
+  </data>
+  <data name="Publish_Published_Title" xml:space="preserve">
+    <value>Опубликовано: {0} · {1}</value>
+  </data>
+  <data name="Publish_Published_Text" xml:space="preserve">
+    <value>Игроки видят его с предупреждением alpha. Он станет verified, когда {0} других игрока подтвердят, что он работает.</value>
+  </data>
+  <data name="Publish_Published_VerifiedText" xml:space="preserve">
+    <value>Игроки подтвердили, что он работает: пак verified.</value>
+  </data>
+  <data name="Publish_Meter" xml:space="preserve">
+    <value>{0} из {1} игроков подтвердили «работает»</value>
+  </data>
+  <data name="Publish_CopyLink" xml:space="preserve">
+    <value>Копировать ссылку</value>
+  </data>
+  <data name="Publish_Discussion" xml:space="preserve">
+    <value>Обсуждение</value>
+  </data>
+  <data name="Publish_OpenPr" xml:space="preserve">
+    <value>Открыть PR</value>
+  </data>
+  <data name="Publish_Toast_LinkCopied" xml:space="preserve">
+    <value>Ссылка скопирована</value>
+  </data>
+  <data name="Publish_Toast_Sent" xml:space="preserve">
+    <value>Отправлено: {0}, открыт PR #{1}, CI проверяет пак.</value>
+  </data>
+  <data name="Publish_Toast_Failed" xml:space="preserve">
+    <value>Не удалось опубликовать {0}.</value>
+  </data>
+  <data name="Publish_Row_Sending" xml:space="preserve">
+    <value>локальный · публикуется…</value>
+  </data>
+  <data name="Publish_Row_Checking" xml:space="preserve">
+    <value>PR #{0} · идёт CI</value>
+  </data>
+  <data name="Publish_Row_Published" xml:space="preserve">
+    <value>опубликован · {0} · ред. {1}</value>
+  </data>
+  <data name="Publish_Row_Failed" xml:space="preserve">
+    <value>локальный · не опубликован (попытка не удалась)</value>
+  </data>
+  <data name="Publish_Similar_Builds_One" xml:space="preserve">
+    <value>сделан для {0} сборки</value>
+  </data>
+  <data name="Publish_Similar_Builds_Few" xml:space="preserve">
+    <value>сделан для {0} сборок</value>
+  </data>
+  <data name="Publish_Similar_Builds_Many" xml:space="preserve">
+    <value>сделан для {0} сборок</value>
   </data>
 </root>

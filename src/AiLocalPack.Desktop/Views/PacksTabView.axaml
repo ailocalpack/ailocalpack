@@ -249,7 +249,8 @@
                                         <TextBlock Grid.Column="1" Classes="kvValue" Text="{Binding SizeText}" />
                                     </Grid>
                                 </StackPanel>
-                                <Border Classes="compatBox">
+                                <views:PublishStatusView x:Name="MinePublishStatus" DataContext="{Binding Publish}" />
+                                <Border Classes="compatBox" IsVisible="{Binding ShowPublishNote}">
                                     <DockPanel>
                                         <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
                                             <Path Classes="icon" Data="{StaticResource IconInfo}" Stroke="{DynamicResource AppAccentBrush}" />
@@ -277,8 +278,7 @@
                                                 <TextBlock Text="{l:Loc Packs_Uninstall}" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Button>
-                                        <Button x:Name="MinePublish" Classes="ghost" Command="{Binding PublishCommand}" ToolTip.Tip="{l:Loc Gen_Result_PublishSoon}"
-                                                ToolTip.ShowOnDisabled="True">
+                                        <Button x:Name="MinePublish" Classes="ghost" Command="{Binding PublishCommand}" IsVisible="{Binding ShowPublish}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
                                                     <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
@@ -295,7 +295,7 @@
                                             </StackPanel>
                                         </Button>
                                     </WrapPanel>
-                                    <TextBlock x:Name="MineHint" Classes="muted" FontSize="12" Text="{Binding ActionHint}" TextWrapping="Wrap" />
+                                    <TextBlock x:Name="MineHint" Classes="muted" FontSize="12" Text="{Binding ActionHint}" TextWrapping="Wrap" IsVisible="{Binding HasActionHint}" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>

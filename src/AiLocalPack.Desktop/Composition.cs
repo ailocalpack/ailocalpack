@@ -27,6 +27,8 @@ using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
+using AiLocalPack.Desktop.Publishing;
+using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
@@ -174,16 +176,19 @@ internal static class Composition
         services.AddSingleton<IAgentHost, AgentHost>();
     }
 
-    /// <summary>GitHub sign-in: the session (token in the OS keychain), the Device Flow panel (tasks 58–59).</summary>
+    private static ProductInfoHeaderValue UserAgent => new("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0");
+
+    /// <summary>GitHub sign-in: the session (token in the OS keychain), the Device Flow panel (tasks 58–59), publishing (tasks 60–61).</summary>
     private static void AddGitHub(IServiceCollection services)
     {
-        services.AddSingleton<IGitHubHost>(sp =>
+        // One session for sign-in and publishing; the publish client has its own client (uploads take longer than 30 s).
+        services.AddSingleton(sp =>
         {
             var env = sp.GetRequiredService<OsEnvironment>();
             var app = GitHubOAuthApp.Resolve(env);
-            var http = GitHubOAuthApp.CreateHttpClient(new ProductInfoHeaderValue("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
+            var http = GitHubOAuthApp.CreateHttpClient(UserAgent);
             var time = sp.GetRequiredService<TimeProvider>();
-            var session = new GitHubSession(
+            return new GitHubSession(
                 SecretStores.Create(env),
                 new GitHubDeviceFlow(http, app, time, logger: sp.GetRequiredService<ILogger<GitHubDeviceFlow>>()),
                 new GitHubUserClient(http, app),
@@ -191,9 +196,27 @@ internal static class Composition
                 app,
                 time,
                 sp.GetRequiredService<ILogger<GitHubSession>>());
-            return new GitHubHost(session, http, sp.GetRequiredService<ILogger<GitHubHost>>());
         });
+        services.AddSingleton<IGitHubHost>(sp => new GitHubHost(
+            sp.GetRequiredService<GitHubSession>(), GitHubOAuthApp.CreateHttpClient(UserAgent), sp.GetRequiredService<ILogger<GitHubHost>>()));
         services.AddTransient<GitHubSignInViewModel>();
+
+        // Publishing (tasks 60–61): the registry is ailocalpack/registry, or AILOCALPACK_REGISTRY in dev.
+        services.AddSingleton<IPackPublishing>(sp =>
+        {
+            var http = GitHubOAuthApp.CreateHttpClient(UserAgent);
+            http.Timeout = TimeSpan.FromMinutes(10);
+            return new PackPublishing(
+                new PackPublisher(
+                    sp.GetRequiredService<GitHubSession>(),
+                    http,
+                    sp.GetRequiredService<LocalPackStore>(),
+                    sp.GetRequiredService<AppPaths>(),
+                    sp.GetRequiredService<TimeProvider>(),
+                    logger: sp.GetRequiredService<ILogger<PackPublisher>>()),
+                RegistryRepo.Resolve(sp.GetRequiredService<OsEnvironment>()));
+        });
+        services.AddSingleton<PublishFlow>();
     }
 
     /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>

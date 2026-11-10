@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:p="using:AiLocalPack.Desktop.Publishing"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             x:Class="AiLocalPack.Desktop.Views.PublishSignInDialogView"
+             x:DataType="p:PublishSignInDialogViewModel"
+             Width="560">
+    <!-- Design §7, first time: GitHub sign-in (Device Flow) and the CC BY-SA 4.0 consent in one dialog. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,20,20,20" Spacing="14">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                    <TextBlock x:Name="PublishSignInTitle" Classes="dialogTitle" FontSize="18" Text="{l:Loc Publish_SignIn_Title}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Publish_SignIn_Intro}" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button x:Name="CloseButton" Grid.Column="1" Classes="icon" Command="{Binding CancelCommand}" VerticalAlignment="Top"
+                        ToolTip.Tip="{l:Loc Publish_Close}" AutomationProperties.Name="{l:Loc Publish_Close}">
+                    <Path Data="{StaticResource IconX}" />
+                </Button>
+            </Grid>
+
+            <!-- Signed in: the account; else the Device Flow panel or a button to start it again -->
+            <StackPanel x:Name="SignedIn" Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsSignedIn}">
+                <Viewbox Classes="icon" Width="16" Height="16" VerticalAlignment="Center">
+                    <Path Classes="icon" Data="{StaticResource IconCheckCircle}" Stroke="{DynamicResource AppOkBrush}" />
+                </Viewbox>
+                <TextBlock FontWeight="SemiBold" Text="{Binding SignedInText}" VerticalAlignment="Center" />
+            </StackPanel>
+            <views:GitHubSignInView x:Name="DeviceFlow" DataContext="{Binding SignIn}" />
+            <Button x:Name="SignInButton" Classes="accent" Command="{Binding StartSignInCommand}" IsVisible="{Binding ShowSignInButton}" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Viewbox Classes="icon" Width="16" Height="16">
+                        <Path Classes="icon" Data="{StaticResource IconGitHub}" Stroke="{Binding $parent[Button].Foreground}" />
+                    </Viewbox>
+                    <TextBlock Text="{l:Loc Publish_SignIn_SignInButton}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <CheckBox x:Name="LicenseBox" IsChecked="{Binding IsLicenseAccepted}" AutomationProperties.Name="{l:Loc Publish_SignIn_License}">
+                <StackPanel Spacing="2">
+                    <TextBlock FontWeight="SemiBold" Text="{l:Loc Publish_SignIn_License}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Publish_SignIn_LicenseText}" TextWrapping="Wrap" />
+                </StackPanel>
+            </CheckBox>
+
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,4,0,0">
+                <TextBlock x:Name="PublishHint" Classes="muted" FontSize="12" Text="{Binding Hint}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <Button x:Name="CancelButton" Grid.Column="1" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc Publish_Cancel}" />
+                <Button x:Name="ContinueButton" Grid.Column="2" Classes="accent" Command="{Binding ContinueCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="{l:Loc Publish_Continue}" VerticalAlignment="Center" />
+                        <Viewbox Classes="icon" Width="16" Height="16">
+                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

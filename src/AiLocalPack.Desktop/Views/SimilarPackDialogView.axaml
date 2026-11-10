@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:p="using:AiLocalPack.Desktop.Publishing"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.SimilarPackDialogView"
+             x:DataType="p:SimilarPackDialogViewModel"
+             Width="580">
+    <!-- Design §7, similar pack found: the registry pack and two radio cards (new revision / a separate pack). -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,20,20,20" Spacing="14">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                    <TextBlock x:Name="SimilarTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Publish_Similar_Intro}" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button x:Name="CloseButton" Grid.Column="1" Classes="icon" Command="{Binding CancelCommand}" VerticalAlignment="Top"
+                        ToolTip.Tip="{l:Loc Publish_Close}" AutomationProperties.Name="{l:Loc Publish_Close}">
+                    <Path Data="{StaticResource IconX}" />
+                </Button>
+            </Grid>
+
+            <!-- The registry pack -->
+            <Border Classes="compatBox">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Border Classes="avatar"><TextBlock Text="{Binding Initial}" /></Border>
+                    <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                        <TextBlock x:Name="ExistingTitle" FontWeight="Bold" Text="{Binding ExistingTitle}" TextWrapping="Wrap" />
+                        <WrapPanel ItemSpacing="10" LineSpacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Viewbox Classes="icon" Width="13" Height="13" VerticalAlignment="Center">
+                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" IsVisible="{Binding IsVerified}" />
+                                </Viewbox>
+                                <TextBlock Classes="muted" FontSize="13" Text="{Binding StatusText}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Viewbox Classes="icon" Width="13" Height="13" VerticalAlignment="Center">
+                                    <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{DynamicResource AppMutedBrush}" />
+                                </Viewbox>
+                                <TextBlock Classes="muted" FontSize="13" Text="{Binding LikesText}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock Classes="muted" FontSize="13" Text="{Binding CoverageText}" VerticalAlignment="Center" />
+                            <TextBlock Classes="muted" FontSize="13" Text="{Binding BuildText}" IsVisible="{Binding HasBuild}" VerticalAlignment="Center" />
+                        </WrapPanel>
+                        <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Publish_Similar_Base}" IsVisible="{Binding IsBase}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <StackPanel Spacing="10" AutomationProperties.Name="{l:Loc Publish_Similar_Choice}">
+                <Border x:Name="RevisionCard" Classes="genAgent" Classes.on="{Binding IsRevisionChosen}" Tapped="OnRevisionTapped">
+                    <StackPanel Spacing="4">
+                        <WrapPanel ItemSpacing="8" LineSpacing="4">
+                            <RadioButton x:Name="RevisionChoice" GroupName="PublishTarget" FontWeight="Bold" Content="{Binding RevisionTitle}"
+                                         IsChecked="{Binding IsRevisionChosen}" AutomationProperties.Name="{Binding RevisionTitle}" VerticalAlignment="Center" />
+                            <Border x:Name="Recommended" Classes="recommended" IsVisible="{Binding IsRecommended}" VerticalAlignment="Center">
+                                <TextBlock Text="{l:Loc Publish_Similar_Recommended}" />
+                            </Border>
+                        </WrapPanel>
+                        <TextBlock Classes="muted" FontSize="13" Margin="28,0,0,0" Text="{Binding RevisionText}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+                <Border x:Name="SeparateCard" Classes="genAgent" Classes.on="{Binding IsSeparateChosen}" Tapped="OnSeparateTapped">
+                    <StackPanel Spacing="4">
+                        <RadioButton x:Name="SeparateChoice" GroupName="PublishTarget" FontWeight="Bold" Content="{Binding SeparateTitle}"
+                                     IsChecked="{Binding IsSeparateChosen}" AutomationProperties.Name="{Binding SeparateTitle}" />
+                        <TextBlock Classes="muted" FontSize="13" Margin="28,0,0,0" Text="{Binding SeparateText}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <WrapPanel HorizontalAlignment="Right" ItemSpacing="8" LineSpacing="8" Margin="0,4,0,0">
+                <Button x:Name="CancelButton" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc Publish_Cancel}" />
+                <Button x:Name="PublishButton" Classes="accent" Command="{Binding PublishCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="16" Height="16">
+                            <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                        <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </WrapPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -6,6 +6,7 @@
              xmlns:dialogs="using:AiLocalPack.Desktop.Dialogs"
              xmlns:install="using:AiLocalPack.Desktop.Install"
              xmlns:gen="using:AiLocalPack.Desktop.Generation"
+             xmlns:pub="using:AiLocalPack.Desktop.Publishing"
              xmlns:startup="using:AiLocalPack.Desktop.Startup"
              x:Class="AiLocalPack.Desktop.App"
              Name="AI Local Pack"
@@ -42,6 +43,8 @@
         <DataTemplate DataType="install:InstallDetailsDialogViewModel"><views:InstallDetailsDialogView /></DataTemplate>
         <DataTemplate DataType="gen:GenerationCancelDialogViewModel"><views:GenerationCancelDialogView /></DataTemplate>
         <DataTemplate DataType="gen:GenerationDetailsDialogViewModel"><views:GenerationDetailsDialogView /></DataTemplate>
+        <DataTemplate DataType="pub:PublishSignInDialogViewModel"><views:PublishSignInDialogView /></DataTemplate>
+        <DataTemplate DataType="pub:SimilarPackDialogViewModel"><views:SimilarPackDialogView /></DataTemplate>
         <!-- Startup checklist rows (splash details, startup checks under the bell) -->
         <DataTemplate DataType="startup:StartupStep"><views:StartupStepView /></DataTemplate>
     </Application.DataTemplates>

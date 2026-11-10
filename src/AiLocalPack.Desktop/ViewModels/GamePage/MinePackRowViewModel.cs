@@ -15,15 +15,17 @@ public sealed record MinePackActions(
     Action OpenGeneration,
     Action<LocalPack> Install,
     Action Uninstall,
-    Action<LocalPack> Delete);
+    Action<LocalPack> Delete,
+    Func<LocalPack, PackPublishViewModel> Publish);
 
 /// <summary>
 /// One row of the Packs tab's Mine section (task 55, design §4): the game's generation job (<c>creating 42%</c>, opens
 /// the Generation tab) or a pack generated on this machine (<c>Local · not published</c>, <c>tested in game</c> once the
 /// player played with it). A local pack's details: the "Tested in game" box, made with, coverage, test run, fonts,
 /// validator warnings, size, the note that publishing compares it with the registry's packs first, and the actions
-/// <c>Install</c> / <c>Installed ✓</c> + <c>Uninstall</c>, <c>Publish</c> (wired in task 61) and <c>Delete</c>
-/// (not while installed).
+/// <c>Install</c> / <c>Installed ✓</c> + <c>Uninstall</c>, <c>Publish</c> (task 61: once tried in game) and <c>Delete</c>
+/// (not while installed). Once sent, the row reads <c>PR #214 · CI running</c> / <c>published · alpha</c> and the details
+/// show the publish state (<see cref="PackPublishViewModel"/>).
 /// </summary>
 public sealed partial class MinePackRowViewModel : ObservableObject
 {
@@ -44,6 +46,8 @@ public sealed partial class MinePackRowViewModel : ObservableObject
         ArgumentNullException.ThrowIfNull(pack);
         Pack = pack;
         _installed = installed;
+        Publish = actions.Publish(pack);
+        PublishCommand = Publish.PublishCommand;
     }
 
     /// <summary>The game's open generation job's row.</summary>
@@ -76,6 +80,9 @@ public sealed partial class MinePackRowViewModel : ObservableObject
         PublishCommand = new RelayCommand(() => { }, () => false);
     }
 
+    /// <summary>A local pack's publish state and <c>Publish</c> (task 61); <c>null</c> for the job's row.</summary>
+    public PackPublishViewModel? Publish { get; }
+
     /// <summary>The local pack (a local row), else <c>null</c>.</summary>
     public LocalPack? Pack { get; private set; }
 
@@ -97,8 +104,14 @@ public sealed partial class MinePackRowViewModel : ObservableObject
 
     public IRelayCommand DeleteCommand { get; }
 
-    /// <summary>Off until publishing comes (task 61).</summary>
-    public IRelayCommand PublishCommand { get; }
+    /// <summary>The local pack's <c>Publish</c> (off for the job's row).</summary>
+    public IRelayCommand PublishCommand { get; private set; }
+
+    /// <summary><c>Publish</c> is shown: tried in game and not sent yet (or the last try failed).</summary>
+    public bool ShowPublish => Publish?.ShowPublish == true;
+
+    /// <summary>The note that publishing compares with the registry first, while the pack wasn't sent.</summary>
+    public bool ShowPublishNote => Publish is { ShowStatus: false };
 
     // ---------- Row ----------
 
@@ -116,7 +129,7 @@ public sealed partial class MinePackRowViewModel : ObservableObject
                 return _localizer[nameof(Strings.Packs_Mine_JobMeta)];
             }
 
-            var meta = _localizer[nameof(Strings.Packs_Mine_LocalMeta)];
+            var meta = Publish?.RowMeta ?? _localizer[nameof(Strings.Packs_Mine_LocalMeta)];
             return Pack!.Manifest.Language == _tabLanguage ? meta : $"{meta} · {LanguageNames.Native(Pack.Manifest.Language)}";
         }
     }
@@ -173,16 +186,19 @@ public sealed partial class MinePackRowViewModel : ObservableObject
 
     public bool CanDelete => IsLocal && !_installed && !_busy;
 
-    /// <summary>Why Delete or Publish is off.</summary>
+    /// <summary>Why Delete or Publish is off: installed (no Delete), not tried in game (no Publish yet), else nothing.</summary>
     public string ActionHint => _installed ? _localizer[nameof(Strings.Packs_Mine_DeleteInstalled)]
-        : IsTried ? _localizer[nameof(Strings.Gen_Result_PublishSoon)]
-        : _localizer[nameof(Strings.Packs_Mine_PublishAfterTry)];
+        : !IsTried && Publish is { ShowStatus: false } ? _localizer[nameof(Strings.Packs_Mine_PublishAfterTry)]
+        : string.Empty;
+
+    public bool HasActionHint => ActionHint.Length > 0;
 
     internal void Update(LocalPack pack, string tabLanguage, bool installed)
     {
         Pack = pack;
         _tabLanguage = tabLanguage;
         _installed = installed;
+        Publish?.Update(pack);
         RefreshTexts();
     }
 
@@ -207,6 +223,7 @@ public sealed partial class MinePackRowViewModel : ObservableObject
         InstallCommand.NotifyCanExecuteChanged();
         UninstallCommand.NotifyCanExecuteChanged();
         DeleteCommand.NotifyCanExecuteChanged();
+        Publish?.RefreshTexts();
     }
 
     private string Line(ResultTile tile) => tile.Detail.Length > 0

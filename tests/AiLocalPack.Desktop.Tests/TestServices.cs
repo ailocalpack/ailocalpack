@@ -14,6 +14,8 @@ using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.GitHub;
 using AiLocalPack.Desktop.Tests.GitHub;
+using AiLocalPack.Desktop.Tests.Publishing;
+using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Tests.Generation;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Services;
@@ -30,7 +32,7 @@ namespace AiLocalPack.Desktop.Tests;
 /// one: by default a local folder without an index (unavailable), or the address a test passes. No covers are loaded (no
 /// network), UI updates run at once on the calling thread, folders are "opened" into <see cref="FakeShell"/>, the
 /// OS pickers are <see cref="FakeFilePicker"/>, games are "started" into <see cref="FakeProcesses"/> and agents are
-/// <see cref="FakeAgentHost"/>, GitHub is <see cref="FakeGitHubHost"/>. Generation jobs run <see cref="FakeGenerationStages"/> and the start form's estimate is
+/// <see cref="FakeAgentHost"/>, GitHub is <see cref="FakeGitHubHost"/> and publishing <see cref="FakePackPublishing"/>. Generation jobs run <see cref="FakeGenerationStages"/> and the start form's estimate is
 /// <see cref="FakeEstimates"/>.
 /// </summary>
 internal static class TestServices
@@ -102,6 +104,8 @@ internal static class TestServices
             // GitHub is never the player's: no network, no keychain; signed out unless the test says so.
             services.AddSingleton<FakeGitHubHost>();
             services.AddSingleton<IGitHubHost>(sp => sp.GetRequiredService<FakeGitHubHost>());
+            services.AddSingleton<FakePackPublishing>();
+            services.AddSingleton<IPackPublishing>(sp => sp.GetRequiredService<FakePackPublishing>());
 
             // Generation never runs the real pipeline, and the start form's estimate is the test's.
             services.AddSingleton<FakeGenerationStages>();

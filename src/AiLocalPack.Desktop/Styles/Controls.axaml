@@ -1516,6 +1516,40 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
     </Style>
     <Style Selector="Border.genBanner.share Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" /></Style>
+    <!-- Publish strip states (task 61, design §7): sending / CI running teal (the plain genBanner), failed red, published green -->
+    <Style Selector="Border.genBanner.ok">
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.genBanner.ok Path.bannerIcon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.publishStep Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="StackPanel.publishStep TextBlock"><Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="StackPanel.publishStep.done Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="StackPanel.publishStep.done TextBlock"><Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" /></Style>
+    <Style Selector="StackPanel.publishStep.current Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>
+    <Style Selector="StackPanel.publishStep.current TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Border.meterBox">
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppOkBrush}" />
+    </Style>
+    <Style Selector="Border.meterBox.on"><Setter Property="Background" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Border.meterBox Path.icon"><Setter Property="Stroke" Value="White" /></Style>
+    <Style Selector="Border.recommended">
+        <Setter Property="Padding" Value="7,1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+    </Style>
+    <Style Selector="Border.recommended TextBlock">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
     <Style Selector="TextBlock.resultValue">
         <Setter Property="FontSize" Value="16" />
         <Setter Property="FontWeight" Value="Bold" />

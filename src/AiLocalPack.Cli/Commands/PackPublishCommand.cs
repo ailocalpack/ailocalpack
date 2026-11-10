@@ -23,7 +23,7 @@ internal static class PackPublishCommand
     public static Command Build(OsEnvironment env)
     {
         var packArgument = new Argument<string>("local-pack") { Description = "The local pack: its folder (as 'pack local' prints it) or <game id>/<language>/<pack id>." };
-        var registry = new Option<string>("--registry") { Description = $"The registry repository to open the PR in (default {RegistryRepo.Default}); a test registry for trying it out." };
+        var registry = new Option<string>("--registry") { Description = $"The registry repository to open the PR in (default {RegistryRepo.Variable}, else {RegistryRepo.Default}); a test registry for trying it out." };
         var asNew = new Option<bool>("--new") { Description = "Publish as a separate pack even when the registry has packs for this game and language." };
         var revisionOf = new Option<string?>("--revision-of") { Description = "Publish as the next revision of this registry pack (same game and language); its author stays the author, you are credited." };
         var publish = new Command(
@@ -36,7 +36,7 @@ internal static class PackPublishCommand
         {
             var output = result.InvocationConfiguration.Output;
             var error = result.InvocationConfiguration.Error;
-            var repo = RegistryRepo.Default;
+            var repo = RegistryRepo.Resolve(env);
             if (result.GetValue(registry) is { } registryText && !RegistryRepo.TryParse(registryText, out repo))
             {
                 await error.WriteLineAsync($"'{registryText}' is not a GitHub repository (<owner>/<repo>).");

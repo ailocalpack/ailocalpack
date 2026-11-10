@@ -58,7 +58,7 @@ public sealed class GenerationResultViewTests
 
         // Assert
         (Find<Border>(window, "ShareStrip").IsEffectivelyVisible, Find<Button>(window, "SharePublish").IsEffectivelyEnabled, Find<Button>(window, "ResultShowInPacks").IsEffectivelyVisible)
-            .Should().Be((true, false, true));
+            .Should().Be((true, true, true));
         window.Close();
     });
 

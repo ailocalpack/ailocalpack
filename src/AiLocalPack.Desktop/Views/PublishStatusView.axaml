@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gp="using:AiLocalPack.Desktop.ViewModels.GamePage"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             x:Class="AiLocalPack.Desktop.Views.PublishStatusView"
+             x:DataType="gp:PackPublishViewModel"
+             IsVisible="{Binding ShowStatus, FallbackValue=False}">
+    <!-- The publish strip after sending (task 61, design §7): sending with mini-steps, CI running, failed, published. Used by
+         the Generation result and the Packs → Mine details. -->
+    <Border x:Name="PublishStrip" Classes="genBanner" Classes.bad="{Binding IsFailed}" Classes.ok="{Binding IsPublished}"
+            AutomationProperties.LiveSetting="Polite">
+        <DockPanel>
+            <Viewbox DockPanel.Dock="Left" Classes="icon" Classes.spin="{Binding IsSending}" Width="20" Height="20" Margin="0,0,12,0" VerticalAlignment="Top">
+                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                <Path Classes="icon bannerIcon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+            </Viewbox>
+            <StackPanel Spacing="8">
+                <StackPanel Spacing="2">
+                    <TextBlock x:Name="PublishTitle" FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="PublishText" FontSize="13" Text="{Binding Text}" TextWrapping="Wrap" IsVisible="{Binding HasText}" />
+                </StackPanel>
+
+                <!-- Fork the registry → Commit the pack → Open a pull request -->
+                <ItemsControl x:Name="PublishSteps" ItemsSource="{Binding Steps}" IsVisible="{Binding IsSending}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel ItemSpacing="16" LineSpacing="4" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gp:PublishMiniStep">
+                            <StackPanel Classes="publishStep" Classes.done="{Binding IsDone}" Classes.current="{Binding IsCurrent}" Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Classes.spin="{Binding IsCurrent}" Width="13" Height="13" VerticalAlignment="Center">
+                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                    <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                </Viewbox>
+                                <TextBlock FontSize="13" Text="{Binding Text}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- 0 / 3 players confirmed "works" -->
+                <StackPanel x:Name="PublishMeter" Orientation="Horizontal" Spacing="6" IsVisible="{Binding ShowMeter}">
+                    <ItemsControl ItemsSource="{Binding MeterBoxes}" Focusable="False">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="4" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:Boolean">
+                                <Border Classes="meterBox" Classes.on="{Binding}">
+                                    <Viewbox Classes="icon" Width="12" Height="12" IsVisible="{Binding}">
+                                        <Path Classes="icon" Data="{StaticResource IconCheck}" />
+                                    </Viewbox>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Classes="muted" FontSize="12" Text="{Binding MeterText}" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <WrapPanel ItemSpacing="8" LineSpacing="6">
+                    <Button x:Name="PublishOpenPr" Classes="ghost sm" Command="{Binding OpenPrCommand}" IsVisible="{Binding ShowOpenPr}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Publish_OpenPr}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="PublishAgain" Classes="accent sm" Command="{Binding PublishCommand}" IsVisible="{Binding IsFailed}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Publish_Again}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="PublishCopyLink" Classes="ghost sm" Command="{Binding CopyLinkCommand}" IsVisible="{Binding ShowCopyLink}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconCopy}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Publish_CopyLink}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="PublishDiscussion" Classes="ghost sm" Command="{Binding DiscussionCommand}" IsVisible="{Binding HasDiscussion}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Publish_Discussion}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

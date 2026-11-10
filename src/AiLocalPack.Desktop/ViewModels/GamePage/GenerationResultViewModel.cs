@@ -2,6 +2,7 @@ using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Localization;
+using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.ViewModels.AddGame;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,8 +23,9 @@ public sealed record GenerationResultActions(
 /// tiles (coverage, test run, fonts, validator) with the warnings list behind <c>Show the N warnings</c>; the in-game
 /// language note. Before the player tried the pack in game: <c>Install &amp; play</c> (installs with backup, launches the
 /// game; <c>Play</c> once installed) and <c>Discard</c> (only while not installed). After the player played with it
-/// installed and closed the game: the "Looks good? Share it" strip (<c>Not now</c>, <c>Publish</c> wired in task 61)
-/// and the actions <c>Play again</c> and <c>Show in Packs</c>. <c>New translation</c> keeps the pack in Packs → Mine and
+/// installed and closed the game: the "Looks good? Share it" strip (<c>Not now</c>, <c>Publish</c>: task 61) and the
+/// actions <c>Play again</c> and <c>Show in Packs</c>; once sent, the same place shows the publish state
+/// (<see cref="PackPublishViewModel"/>: sending, CI running, failed, published). <c>New translation</c> keeps the pack in Packs → Mine and
 /// returns to the start form.
 /// </summary>
 public sealed partial class GenerationResultViewModel : ObservableObject
@@ -38,10 +40,12 @@ public sealed partial class GenerationResultViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(WarningsToggleText), nameof(ShowWarnings))]
     private bool _isWarningsOpen;
 
-    public GenerationResultViewModel(GenerationResult result, bool installed, bool busy, Localizer localizer, GenerationResultActions actions)
+    public GenerationResultViewModel(GenerationResult result, bool installed, bool busy, Localizer localizer, GenerationResultActions actions, PackPublishViewModel publish)
     {
         ArgumentNullException.ThrowIfNull(result);
+        ArgumentNullException.ThrowIfNull(publish);
         Result = result;
+        Publish = publish;
         _installed = installed;
         _busy = busy;
         _localizer = localizer;
@@ -57,6 +61,9 @@ public sealed partial class GenerationResultViewModel : ObservableObject
     public GenerationResult Result { get; private set; }
 
     public LocalPack Pack => Result.Pack;
+
+    /// <summary>The pack's publish state and <c>Publish</c> (task 61).</summary>
+    public PackPublishViewModel Publish { get; }
 
     // ---------- Header ----------
 
@@ -111,8 +118,8 @@ public sealed partial class GenerationResultViewModel : ObservableObject
     /// <summary>The player played the game with it installed and closed it.</summary>
     public bool IsTried => Pack.Report.IsTried;
 
-    /// <summary>"Looks good? Share it with other players." once tried, until <c>Not now</c>.</summary>
-    public bool ShowShare => IsTried && !Pack.Report.ShareDismissed;
+    /// <summary>"Looks good? Share it with other players." once tried, until <c>Not now</c> or the pack was sent.</summary>
+    public bool ShowShare => IsTried && !Pack.Report.ShareDismissed && Publish.Phase == PublishPhase.NotPublished;
 
     /// <summary>"Install &amp; play" (not installed), "Play" (installed, not tried yet), "Play again" (tried); "Installing…" meanwhile.</summary>
     public string PlayText => _localizer[_busy && _acting ? nameof(Strings.Packs_Installing)
@@ -154,6 +161,7 @@ public sealed partial class GenerationResultViewModel : ObservableObject
         Result = result;
         _installed = installed;
         _busy = busy;
+        Publish.Update(result.Pack);
         if (!busy)
         {
             _acting = false;
@@ -165,6 +173,7 @@ public sealed partial class GenerationResultViewModel : ObservableObject
     internal void RefreshTexts()
     {
         OnPropertyChanged(string.Empty);
+        Publish.RefreshTexts();
         PlayCommand.NotifyCanExecuteChanged();
         DiscardCommand.NotifyCanExecuteChanged();
         NewTranslationCommand.NotifyCanExecuteChanged();

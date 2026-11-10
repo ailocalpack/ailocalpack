@@ -25,6 +25,8 @@ public static class ActivityTexts
             ActivityEventKind.PackIncompatible => nameof(Strings.Activity_Event_PackIncompatible),
             ActivityEventKind.GenerationPaused => nameof(Strings.Activity_Event_GenerationPaused),
             ActivityEventKind.GlossaryReview => nameof(Strings.Activity_Event_GlossaryReview),
+            ActivityEventKind.PackSubmitted => nameof(Strings.Activity_Event_PackSubmitted),
+            ActivityEventKind.PublishFailed => nameof(Strings.Activity_Event_PublishFailed),
             _ => nameof(Strings.Activity_Event_PackNotApplied),
         };
         return localizer.Format(key, activity.PackTitle ?? activity.PackId ?? string.Empty, activity.Revision ?? 0);

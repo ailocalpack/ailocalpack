@@ -78,6 +78,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
     private readonly GenerationService _jobs;
     private readonly Action<LocalPack> _installLocal;
     private readonly Action<LocalPack> _deleteLocal;
+    private readonly Func<LocalPack, PackPublishViewModel> _publish;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
     private readonly Lock _lock = new();
@@ -124,8 +125,10 @@ public sealed partial class PacksTabViewModel : ObservableObject
         GenerationService jobs,
         Action<LocalPack> installLocal,
         Action<LocalPack> deleteLocal,
+        Func<LocalPack, PackPublishViewModel> publish,
         ILogger logger)
     {
+        _publish = publish;
         _game = game;
         _status = status;
         _target = language;
@@ -426,7 +429,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
     private void RebuildMine()
     {
         var rows = new List<MinePackRowViewModel>();
-        var actions = new MinePackActions(SelectMine, _openGeneration, _installLocal, () => UninstallRequested?.Invoke(this, EventArgs.Empty), _deleteLocal);
+        var actions = new MinePackActions(SelectMine, _openGeneration, _installLocal, () => UninstallRequested?.Invoke(this, EventArgs.Empty), _deleteLocal, _publish);
         if (_jobs.FindOpen(_game.Id) is { } job)
         {
             var row = Mine.FirstOrDefault(r => r.Job?.Id == job.Id);

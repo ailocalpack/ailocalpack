@@ -98,6 +98,9 @@ public sealed class LocalPacks
         Change(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id, r => r with { ShareDismissed = true });
     }
 
+    /// <summary>The game's local packs changed on disk by another writer (publishing recorded a PR, task 61): the pages read them again.</summary>
+    public void Refresh(GameId game) => Changed?.Invoke(this, game);
+
     /// <summary>Marks the pack tried in game at <paramref name="at"/> (the first time only).</summary>
     public void MarkTried(GameId game, string language, string id, DateTimeOffset at) =>
         Change(game, language, id, r => r.Tried is null ? r with { Tried = at } : r);

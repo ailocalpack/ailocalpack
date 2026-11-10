@@ -52,6 +52,12 @@ public enum ActivityEventKind
     /// the player continues, has it drafted again or cancels the job.
     /// </summary>
     GlossaryReview,
+
+    /// <summary>A local pack was sent to the registry (task 61): its PR is open, CI checks it (<see cref="ActivityEvent.Detail"/>).</summary>
+    PackSubmitted,
+
+    /// <summary>Publishing a local pack stopped before its PR (offline, rate limit, refused): the reason in <see cref="ActivityEvent.Detail"/>.</summary>
+    PublishFailed,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -151,6 +157,9 @@ public enum ActivityTaskKind
 
     /// <summary>A generation job (task 47; can be paused and cancelled).</summary>
     Generation,
+
+    /// <summary>A local pack being sent to the registry (task 61).</summary>
+    Publish,
 }
 
 /// <summary>
@@ -211,9 +220,10 @@ public static class ActivityEvents
 {
     public static ActivityTone ToneOf(ActivityEventKind kind) => kind switch
     {
-        ActivityEventKind.PackInstalled or ActivityEventKind.PackReapplied or ActivityEventKind.PackAutoReapplied => ActivityTone.Ok,
+        ActivityEventKind.PackInstalled or ActivityEventKind.PackReapplied or ActivityEventKind.PackAutoReapplied
+            or ActivityEventKind.PackSubmitted => ActivityTone.Ok,
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
-            or ActivityEventKind.AutoReapplyFailed => ActivityTone.Bad,
+            or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed => ActivityTone.Bad,
         ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied or ActivityEventKind.GlossaryReview => ActivityTone.Attention,
         ActivityEventKind.GenerationPaused => ActivityTone.Paused,
         _ => ActivityTone.Info,
