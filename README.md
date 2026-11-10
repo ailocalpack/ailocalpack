@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/branding/app-icon-512.png" width="128" alt=""></p>
+
 # ailocalpack
 
 A free, open-source desktop app for Windows, macOS and Linux (Steam Deck included). It lets you **install** a community translation for a game you own, or **generate** a new one with an AI agent and **publish** it for other players.

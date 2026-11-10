@@ -10,6 +10,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <!-- English strings live in the main assembly (Strings.resx); other languages in satellite assemblies. -->
         <NeutralLanguage>en</NeutralLanguage>
+        <!-- Windows exe icon; the same file is the window icon (rendered from assets/branding/app-icon.svg). -->
+        <ApplicationIcon>Assets\app-icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>

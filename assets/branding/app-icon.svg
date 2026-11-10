@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f48"/><stop offset="1" stop-color="#14161f"/>
+    </linearGradient>
+    <linearGradient id="pad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a98ff"/><stop offset="1" stop-color="#4152e0"/>
+    </linearGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#bg)"/>
+  <path d="M330 420 H694 C790 420 840 480 856 580 L880 730 C892 810 820 850 770 800 L700 730 H324 L254 800 C204 850 132 810 144 730 L168 580 C184 480 234 420 330 420 Z" fill="url(#pad)"/>
+  <g fill="#fff">
+    <rect x="262" y="555" width="136" height="44" rx="14"/>
+    <rect x="308" y="509" width="44" height="136" rx="14"/>
+    <circle cx="700" cy="530" r="24"/><circle cx="700" cy="624" r="24"/>
+    <circle cx="653" cy="577" r="24"/><circle cx="747" cy="577" r="24"/>
+  </g>
+  <g fill="#fff" stroke="#1d2133" stroke-width="20" paint-order="stroke">
+    <path d="M470 170 H770 C820 170 850 200 850 250 V350 C850 400 820 430 770 430 H560 L490 490 L505 430 H470 C420 430 390 400 390 350 V250 C390 200 420 170 470 170 Z"/>
+  </g>
+  <g fill="none" stroke="#4152e0" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M450 380 L500 230 L550 380 M470 325 H530"/>
+    <path d="M705 215 V238 M645 250 H765 M670 262 C690 330 720 360 775 380 M740 262 C720 330 690 360 635 380"/>
+  </g>
+</svg>

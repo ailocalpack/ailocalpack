@@ -17,7 +17,7 @@ Component details live in `docs/`. Read the matching doc before changing or exte
 - `docs/packs-and-registry.md`: manifest / string table details, registry index and client, pack compatibility, pack download and cache, binary patches (VCDIFF, LZMA2), dependencies whitelist, pack validation, index build, registry CI.
 - `docs/install.md`: install transaction (journal, backup, rollback, uninstall, re-apply, recovery, dependencies), game update re-check.
 - `docs/generation.md`: agent adapters and their contract, Claude Code and Codex adapters, agent install and sign-in, toolkit MCP server, working copies and estimate, generation jobs, pipeline and prompts, translate stage, build stage (test run, local packs).
-- `docs/desktop-app.md`: app structure (MVVM, DI, navigation), settings screen and sections, library, game page, packs tab, generation tab, dialogs, add game folder, covers, startup, install flow (UI), Activity panel, tray and background.
+- `docs/desktop-app.md`: app structure (MVVM, DI, navigation), settings screen and sections, library, game page, packs tab, generation tab, dialogs, add game folder, covers, startup, install flow (UI), Activity panel, app icon, tray and background.
 - `docs/foundations.md`: app folders, settings storage, logging, UI localization (`.resx`, `Localizer`, plurals).
 - `docs/publishing.md`: GitHub sign-in (Device Flow, OAuth App, scope, session), keychain (Windows Credential Manager, macOS Keychain, Linux Secret Service).
 - `docs/cli.md`: CLI framework and `games` / `toolkit` commands (area commands are also in their area's doc).

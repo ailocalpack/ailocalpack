@@ -5,6 +5,7 @@
         x:Class="AiLocalPack.Desktop.Views.SplashWindow"
         x:DataType="vm:SplashViewModel"
         Title="ailocalpack"
+        Icon="/Assets/app-icon.ico"
         Width="480" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterScreen"
         WindowDecorations="None"
