@@ -9,6 +9,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="..\..\src\AiLocalPack.Desktop\Styles\Theme.axaml;..\..\src\AiLocalPack.Desktop\Styles\BrandIcons.axaml"
+              LinkBase="styles" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\src\AiLocalPack.Desktop\AiLocalPack.Desktop.csproj" />
     </ItemGroup>
 </Project>
