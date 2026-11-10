@@ -25,27 +25,12 @@
             <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
         </Style>
         <!-- Overview cover strip -->
-        <Style Selector="Button.stripItem">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
+        <Style Selector="StackPanel.stripItem">
             <Setter Property="Width" Value="100" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
-        <Style Selector="Button.stripItem:pointerover /template/ ContentPresenter, Button.stripItem:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-        <Style Selector="Button.stripItem:disabled">
+        <Style Selector="StackPanel.stripItem.skipped">
             <Setter Property="Opacity" Value="0.55" />
-        </Style>
-        <Style Selector="Button.stripItem:disabled /template/ ContentPresenter">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-        <Style Selector="Button.stripItem Border.stripCover">
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-        </Style>
-        <Style Selector="Button.stripItem:pointerover Border.stripCover, Button.stripItem:focus-visible Border.stripCover">
-            <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
         </Style>
         <Style Selector="Border.tally">
             <Setter Property="Padding" Value="10,4" />
@@ -332,35 +317,31 @@
                             <TextBlock Text="{l:Loc AddGame_Overview_Stopped}" />
                         </Border>
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                            <ItemsControl x:Name="CoverStrip" ItemsSource="{Binding Games}" Margin="0,0,0,10">
+                            <ItemsControl x:Name="CoverStrip" ItemsSource="{Binding Games}" Margin="0,0,0,10" Focusable="False">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="12" /></ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="vm:FolderGameViewModel">
-                                        <Button Classes="stripItem" IsEnabled="{Binding IsReviewable}"
-                                                Command="{Binding $parent[ItemsControl].((vm:AddGameDialogViewModel)DataContext).StartCommand}"
-                                                CommandParameter="{Binding}"
-                                                ToolTip.Tip="{l:Loc AddGame_StartFrom}" AutomationProperties.Name="{Binding Name}">
-                                            <StackPanel Spacing="5">
-                                                <Border Classes="stripCover" Width="100" Height="150" CornerRadius="10" ClipToBounds="True">
-                                                    <Panel>
-                                                        <Border Background="{StaticResource AppLogoBrush}" Opacity="0.85" />
-                                                        <Image Source="{Binding CoverArt}" Stretch="UniformToFill" IsVisible="{Binding HasCoverArt}" />
-                                                        <Image Source="{Binding CoverIcon}" Stretch="Uniform" Width="48" Height="48" IsVisible="{Binding HasCoverIcon}" />
-                                                        <Border Margin="6" MinWidth="22" Height="22" CornerRadius="11" Padding="7,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                                                Background="{DynamicResource AppAccentBrush}" IsVisible="{Binding HasNumber}">
-                                                            <TextBlock Text="{Binding Number}" Foreground="White" FontSize="12" FontWeight="ExtraBold"
-                                                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                                        </Border>
-                                                    </Panel>
-                                                </Border>
-                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" />
-                                                <TextBlock Classes="hint" Text="{Binding StatusText}" FontSize="11"
-                                                           Foreground="{DynamicResource AppBadBrush}" IsVisible="{Binding IsBlocked}" />
-                                                <TextBlock Classes="hint" Text="{Binding StatusText}" FontSize="11" IsVisible="{Binding !IsBlocked}" />
-                                            </StackPanel>
-                                        </Button>
+                                        <StackPanel Classes="stripItem" Classes.skipped="{Binding !IsReviewable}" Spacing="5"
+                                                    AutomationProperties.Name="{Binding Name}">
+                                            <Border Width="100" Height="150" CornerRadius="10" ClipToBounds="True">
+                                                <Panel>
+                                                    <Border Background="{StaticResource AppLogoBrush}" Opacity="0.85" />
+                                                    <Image Source="{Binding CoverArt}" Stretch="UniformToFill" IsVisible="{Binding HasCoverArt}" />
+                                                    <Image Source="{Binding CoverIcon}" Stretch="Uniform" Width="48" Height="48" IsVisible="{Binding HasCoverIcon}" />
+                                                    <Border Margin="6" MinWidth="22" Height="22" CornerRadius="11" Padding="7,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                            Background="{DynamicResource AppAccentBrush}" IsVisible="{Binding HasNumber}">
+                                                        <TextBlock Text="{Binding Number}" Foreground="White" FontSize="12" FontWeight="ExtraBold"
+                                                                   VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                    </Border>
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Classes="hint" Text="{Binding StatusText}" FontSize="11"
+                                                       Foreground="{DynamicResource AppBadBrush}" IsVisible="{Binding IsBlocked}" />
+                                            <TextBlock Classes="hint" Text="{Binding StatusText}" FontSize="11" IsVisible="{Binding !IsBlocked}" />
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

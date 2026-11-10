@@ -487,9 +487,6 @@
   <data name="AddGame_Overview_Start" xml:space="preserve">
     <value>Начать добавление</value>
   </data>
-  <data name="AddGame_StartFrom" xml:space="preserve">
-    <value>Начать с этой игры</value>
-  </data>
   <data name="AddGame_Skip_NoGame" xml:space="preserve">
     <value>нет исполняемых файлов</value>
   </data>

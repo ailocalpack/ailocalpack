@@ -110,4 +110,24 @@ public sealed class AddGameDialogViewTests
         Find<Button>(window, "OtherFolderButton").IsVisible.Should().BeFalse();
         window.Close();
     });
+
+    [Fact]
+    public Task Overview_covers_are_not_clickable() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var games = new TempDir();
+        games.RenPy("Indie/Wren", name: "Wren").RenPy("Indie/Moss", name: "Moss");
+        using var services = TestServices.Build(s => s.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>());
+        var window = Open(services);
+        var dialog = services.GetRequiredService<IDialogService>().Show<AddGameDialogViewModel>();
+
+        // Act
+        await dialog.AnalyzeAsync(games.Combine("Indie"));
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        var strip = Find<ItemsControl>(window, "CoverStrip");
+        (strip.ItemCount, strip.GetVisualDescendants().OfType<Button>().Count()).Should().Be((2, 0));
+        window.Close();
+    });
 }

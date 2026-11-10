@@ -414,11 +414,14 @@ public sealed partial class AddGameDialogViewModel : DialogViewModel
 
     // ---------- Several games: navigation ----------
 
-    /// <summary>"Start adding" (from the first game not reviewed yet) or a click on a cover (from that game).</summary>
+    /// <summary>
+    /// "Start adding": from the first game not reviewed yet. Games are reviewed in order only; the overview's
+    /// covers aren't clickable, so no game is jumped to and none is left unseen.
+    /// </summary>
     [RelayCommand]
-    private void Start(FolderGameViewModel? from)
+    private void Start()
     {
-        var index = from is not null ? Queue.ToList().IndexOf(from) : Queue.ToList().FindIndex(g => !g.IsDone);
+        var index = Queue.ToList().FindIndex(g => !g.IsDone);
         if (Queue.Count > 0)
         {
             ShowReview(Math.Max(index, 0));

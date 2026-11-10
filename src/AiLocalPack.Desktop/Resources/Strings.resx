@@ -509,9 +509,6 @@
   <data name="AddGame_Overview_Start" xml:space="preserve">
     <value>Start adding</value>
   </data>
-  <data name="AddGame_StartFrom" xml:space="preserve">
-    <value>Start from this game</value>
-  </data>
   <data name="AddGame_Skip_NoGame" xml:space="preserve">
     <value>no executable files</value>
   </data>

@@ -257,20 +257,6 @@ public sealed class AddSeveralGamesTests : IDisposable
     }
 
     [Fact]
-    public async Task Clicking_a_cover_starts_from_that_game()
-    {
-        // Arrange
-        var vm = await Overview(Indie());
-
-        // Act
-        vm.StartCommand.Execute(vm.Queue[2]);
-
-        // Assert
-        vm.StepText.Should().Be("Game 3 of 3");
-        vm.Summary!.Name.Should().Be("Wren");
-    }
-
-    [Fact]
     public async Task Add_puts_the_game_in_the_catalog_and_moves_to_the_next_one()
     {
         // Arrange
@@ -509,7 +495,8 @@ public sealed class AddSeveralGamesTests : IDisposable
     {
         // Arrange
         var vm = await Reviewing(Indie());
-        vm.StartCommand.Execute(vm.Queue[2]);
+        vm.SkipCommand.Execute(null);
+        vm.SkipCommand.Execute(null);
         await vm.PrimaryCommand.ExecuteAsync(null);
 
         // Act
