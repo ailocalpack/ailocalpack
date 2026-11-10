@@ -26,7 +26,7 @@ def render(svg: pathlib.Path, out: pathlib.Path, width: int, height: int, full_b
                         f'<div style="width:{width}px;height:{height}px;display:flex;align-items:center;justify-content:center;gap:48px;'
                         f'font-family:system-ui,sans-serif;color:#fff">'
                         f'{text.replace("<svg ", f"<svg style=\"flex:none\" width={min(width, height) - (160 if title else 0)} height={min(width, height) - (160 if title else 0)} ", 1)}'
-                        + (f'<div><div style="font-size:76px;font-weight:800;letter-spacing:-.03em;white-space:nowrap">{title}</div>'
+                        + (f'<div><div style="font-size:76px;font-weight:800;letter-spacing:-.03em;line-height:1.05;max-width:640px">{title}</div>'
                            f'<div style="font-size:34px;opacity:.7;margin-top:8px;max-width:620px">{subtitle}</div></div>' if title else '')
                         + '</div></body></html>')
         subprocess.run([CHROME, "--headless", "--disable-gpu", "--hide-scrollbars", "--default-background-color=00000000",
@@ -49,6 +49,8 @@ def main():
 
         # Desktop app: tray / notification icon and the multi-size .ico (exe and window icon).
         full_img.resize((64, 64), Image.LANCZOS).save(ASSETS / "tray.png")
+        # In-app logo (window header, splash), sharp up to 64 px at 2x and beyond.
+        full_img.resize((256, 256), Image.LANCZOS).save(ASSETS / "logo.png")
         full_img.save(ASSETS / "app-icon.ico", sizes=[(s, s) for s in (16, 20, 24, 32, 40, 48, 64, 128, 256)])
         # Linux (AppImage / Flatpak / .desktop) and docs.
         full_img.resize((512, 512), Image.LANCZOS).save(HERE / "app-icon-512.png")
@@ -71,9 +73,9 @@ def main():
         # GitHub social previews (1280×640, icon on the left of a dark band).
         for name, svg, bg, title, subtitle in (
                 ("social-preview-app.png", "app-icon.svg", "linear-gradient(135deg,#232845,#11131b)",
-                 "ailocalpack", "Install or generate a translation for any game you own"),
+                 "AI Local Pack", "Install or generate a translation for any game you own"),
                 ("social-preview-registry.png", "registry-icon.svg", "linear-gradient(135deg,#1b3631,#0b1412)",
-                 "ailocalpack registry", "Community game translations")):
+                 "AI Local Pack Registry", "Community game translations")):
             render(HERE / svg, HERE / name, 1280, 640, full_bleed=True, background=bg, title=title, subtitle=subtitle)
 
 

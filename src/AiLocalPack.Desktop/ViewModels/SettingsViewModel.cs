@@ -1,4 +1,5 @@
 using System.Reflection;
+using AiLocalPack.Core;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.ViewModels.Settings;
@@ -66,7 +67,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     public string NoResultsText => _localizer.Format(nameof(Strings.Settings_Search_NoResults), Query.Trim());
 
     /// <summary>App version for the footer of the section list.</summary>
-    public string Version { get; } = "ailocalpack " + AppVersion;
+    public string Version { get; } = AppInfo.DisplayName + " " + AppVersion;
 
     private static string AppVersion
     {

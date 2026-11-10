@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>ailocalpack contributors</Authors>
-    <Product>ailocalpack</Product>
+    <Authors>AI Local Pack contributors</Authors>
+    <Product>AI Local Pack</Product>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/ailocalpack/ailocalpack</RepositoryUrl>
   </PropertyGroup>

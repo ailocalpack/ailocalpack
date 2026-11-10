@@ -38,7 +38,7 @@
     <value>Нет настроек по запросу «{0}».</value>
   </data>
   <data name="Settings_ComingSoon" xml:space="preserve">
-    <value>Этот раздел появится в одной из следующих версий ailocalpack.</value>
+    <value>Этот раздел появится в одной из следующих версий AI Local Pack.</value>
   </data>
   <data name="Settings_General_Title" xml:space="preserve">
     <value>Общие</value>
@@ -656,7 +656,7 @@
     <value>Другие магазины</value>
   </data>
   <data name="Settings_ManualGames_Note" xml:space="preserve">
-    <value>Удаление убирает игру только из ailocalpack. Файлы игры и установленные пакеты остаются как есть.</value>
+    <value>Удаление убирает игру только из AI Local Pack. Файлы игры и установленные пакеты остаются как есть.</value>
   </data>
   <data name="Settings_Steam_Label" xml:space="preserve">
     <value>Steam</value>
@@ -740,7 +740,7 @@
     <value>Не удалось сохранить список папок. Попробуйте ещё раз.</value>
   </data>
   <data name="Settings_RemoveFolder_Title" xml:space="preserve">
-    <value>Убрать «{0}» из ailocalpack?</value>
+    <value>Убрать «{0}» из AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveFolder_Text" xml:space="preserve">
     <value>Её игры пропадут из библиотеки. Папка, игры и установленные пакеты остаются на диске, Steam не меняется. Папку можно добавить снова позже.</value>
@@ -758,7 +758,7 @@
     <value>вручную, папка, игра, gog, itch, epic</value>
   </data>
   <data name="Settings_RemoveGame_Title" xml:space="preserve">
-    <value>Убрать «{0}» из ailocalpack?</value>
+    <value>Убрать «{0}» из AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveGame_Text" xml:space="preserve">
     <value>Папка игры и установленный пакет остаются на диске. Папку можно добавить снова позже.</value>
@@ -1223,10 +1223,10 @@
     <value>Локализация для этой игры недоступна</value>
   </data>
   <data name="Game_Blocked_AntiCheat" xml:space="preserve">
-    <value>Обнаружен {0}. Изменение файлов игры может привести к блокировке аккаунта, поэтому ailocalpack не устанавливает и не создаёт паки для игр с античитом.</value>
+    <value>Обнаружен {0}. Изменение файлов игры может привести к блокировке аккаунта, поэтому AI Local Pack не устанавливает и не создаёт паки для игр с античитом.</value>
   </data>
   <data name="Game_Blocked_OptOut" xml:space="preserve">
-    <value>Издатель попросил не распространять любительские переводы этой игры, поэтому ailocalpack не устанавливает и не создаёт для неё паки.</value>
+    <value>Издатель попросил не распространять любительские переводы этой игры, поэтому AI Local Pack не устанавливает и не создаёт для неё паки.</value>
   </data>
   <data name="Game_Blocked_Mistake" xml:space="preserve">
     <value>Считаете, что это ошибка?</value>
@@ -1532,7 +1532,7 @@
     <value>Файлов пака больше нет в реестре.</value>
   </data>
   <data name="Install_Why_NewerFormat" xml:space="preserve">
-    <value>Паку нужна более новая версия ailocalpack. Обновите приложение.</value>
+    <value>Паку нужна более новая версия AI Local Pack. Обновите приложение.</value>
   </data>
   <data name="Install_Why_HashMismatch" xml:space="preserve">
     <value>Загрузка повреждена (не сошлась контрольная сумма) и удалена.</value>
@@ -1928,7 +1928,7 @@
     <value>Новое</value>
   </data>
   <data name="Activity_App" xml:space="preserve">
-    <value>ailocalpack</value>
+    <value>AI Local Pack</value>
   </data>
   <data name="Activity_Tone_Attention" xml:space="preserve">
     <value>Нужно ваше решение</value>
@@ -2012,7 +2012,7 @@
     <value>Активность: {0}</value>
   </data>
   <data name="Tray_Open" xml:space="preserve">
-    <value>Открыть ailocalpack</value>
+    <value>Открыть AI Local Pack</value>
   </data>
   <data name="Tray_CheckUpdates" xml:space="preserve">
     <value>Проверить обновления игр</value>
@@ -2069,7 +2069,7 @@
     <value>Готов · вход выполнен</value>
   </data>
   <data name="Settings_Agent_Source_Managed" xml:space="preserve">
-    <value>Установлен ailocalpack</value>
+    <value>Установлен AI Local Pack</value>
   </data>
   <data name="Settings_Agent_Source_Path" xml:space="preserve">
     <value>Найден в системе: {0}</value>
@@ -2093,16 +2093,16 @@
     <value>Хеш проверен, установка файлов…</value>
   </data>
   <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
-    <value>ailocalpack нужна версия {0} или новее. Обновите копию приложения.</value>
+    <value>AI Local Pack нужна версия {0} или новее. Обновите копию приложения.</value>
   </data>
   <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
-    <value>ailocalpack нужна версия {0} или новее. Обновите свою копию тем же способом, каким устанавливали, и проверьте снова.</value>
+    <value>AI Local Pack нужна версия {0} или новее. Обновите свою копию тем же способом, каким устанавливали, и проверьте снова.</value>
   </data>
   <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
-    <value>Войдите с подпиской Claude. Вход Claude Code откроется в браузере; ailocalpack не видит токен.</value>
+    <value>Войдите с подпиской Claude. Вход Claude Code откроется в браузере; AI Local Pack не видит токен.</value>
   </data>
   <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
-    <value>Войдите с подпиской ChatGPT. Вход Codex откроется в браузере; ailocalpack не видит токен.</value>
+    <value>Войдите с подпиской ChatGPT. Вход Codex откроется в браузере; AI Local Pack не видит токен.</value>
   </data>
   <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
     <value>Не удалось проверить вход: {0}</value>
@@ -2282,7 +2282,7 @@
     <value>ваша копия</value>
   </data>
   <data name="Gen_Agent_Source_Managed" xml:space="preserve">
-    <value>установлен ailocalpack</value>
+    <value>установлен AI Local Pack</value>
   </data>
   <data name="Gen_Checks_Label" xml:space="preserve">
     <value>Проверки</value>

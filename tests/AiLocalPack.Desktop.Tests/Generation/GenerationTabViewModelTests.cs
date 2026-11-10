@@ -149,7 +149,7 @@ public sealed class GenerationTabViewModelTests
         var card = Open(services).Agents.Single(a => a.AgentId == "claude");
 
         // Assert
-        card.SourceText.Should().Be("installed by ailocalpack · v2.1.311");
+        card.SourceText.Should().Be("installed by AI Local Pack · v2.1.311");
     }
 
     [Fact]

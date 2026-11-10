@@ -151,7 +151,7 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         await row.InstallCommand.ExecuteAsync(null);
 
         // Assert
-        (row.State, row.SourceText, row.HasError).Should().Be((AgentRowState.NotSignedIn, "Installed by ailocalpack · v0.167.0", false));
+        (row.State, row.SourceText, row.HasError).Should().Be((AgentRowState.NotSignedIn, "Installed by AI Local Pack · v0.167.0", false));
     }
 
     [Fact]
@@ -327,7 +327,7 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         // Assert
         (row.StatusText, row.Help, row.CanCheckAgain, row.CanSignOut).Should().Be((
             "Version 2.1.100 is too old",
-            "ailocalpack needs version 2.1.259 or later. Update your copy the way you installed it, then check again.",
+            "AI Local Pack needs version 2.1.259 or later. Update your copy the way you installed it, then check again.",
             true,
             false));
     }

@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace AiLocalPack.Desktop.Dialogs;
 
 /// <summary>What a confirmation asks: the question, what is <em>not</em> affected, the confirming button's text.</summary>
-/// <param name="Title">The question ("Remove «Wren &amp; Whistle» from ailocalpack?").</param>
+/// <param name="Title">The question ("Remove «Wren &amp; Whistle» from AI Local Pack?").</param>
 /// <param name="Message">What happens and what stays (design §8: destructive actions say what is not affected).</param>
 /// <param name="ConfirmText">Text of the confirming button ("Remove").</param>
 /// <param name="OnConfirm">Runs after the dialog closed, when the player confirmed.</param>

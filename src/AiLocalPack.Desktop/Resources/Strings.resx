@@ -43,7 +43,7 @@
     <comment>{0} = the search query.</comment>
   </data>
   <data name="Settings_ComingSoon" xml:space="preserve">
-    <value>This section arrives in a later version of ailocalpack.</value>
+    <value>This section arrives in a later version of AI Local Pack.</value>
   </data>
   <data name="Settings_General_Title" xml:space="preserve">
     <value>General</value>
@@ -651,7 +651,7 @@
     <value>Other stores</value>
   </data>
   <data name="Settings_ManualGames_Note" xml:space="preserve">
-    <value>Removing a game only removes it from ailocalpack. Game files and installed packs stay as they are.</value>
+    <value>Removing a game only removes it from AI Local Pack. Game files and installed packs stay as they are.</value>
   </data>
   <data name="Settings_Steam_Label" xml:space="preserve">
     <value>Steam</value>
@@ -732,7 +732,7 @@
     <value>Couldn't save the folder list. Try again.</value>
   </data>
   <data name="Settings_RemoveFolder_Title" xml:space="preserve">
-    <value>Remove «{0}» from ailocalpack?</value>
+    <value>Remove «{0}» from AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveFolder_Text" xml:space="preserve">
     <value>Its games leave the library. The folder, the games and installed packs stay on disk, and Steam is not changed. You can add the folder again later.</value>
@@ -750,7 +750,7 @@
     <value>manual, folder, game, gog, itch, epic</value>
   </data>
   <data name="Settings_RemoveGame_Title" xml:space="preserve">
-    <value>Remove «{0}» from ailocalpack?</value>
+    <value>Remove «{0}» from AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveGame_Text" xml:space="preserve">
     <value>The game folder and any installed pack stay on disk. You can add the folder again later.</value>
@@ -1194,10 +1194,10 @@
     <value>Localization is unavailable for this game</value>
   </data>
   <data name="Game_Blocked_AntiCheat" xml:space="preserve">
-    <value>{0} was detected. Modifying game files can get your account banned, so ailocalpack doesn't install or generate packs for games with anti-cheat.</value>
+    <value>{0} was detected. Modifying game files can get your account banned, so AI Local Pack doesn't install or generate packs for games with anti-cheat.</value>
   </data>
   <data name="Game_Blocked_OptOut" xml:space="preserve">
-    <value>The publisher asked not to distribute fan translations for this game, so ailocalpack doesn't install or generate packs for it.</value>
+    <value>The publisher asked not to distribute fan translations for this game, so AI Local Pack doesn't install or generate packs for it.</value>
   </data>
   <data name="Game_Blocked_Mistake" xml:space="preserve">
     <value>Think this is a mistake?</value>
@@ -1503,7 +1503,7 @@
     <value>The pack's files are gone from the registry.</value>
   </data>
   <data name="Install_Why_NewerFormat" xml:space="preserve">
-    <value>The pack needs a newer version of ailocalpack. Update the app.</value>
+    <value>The pack needs a newer version of AI Local Pack. Update the app.</value>
   </data>
   <data name="Install_Why_HashMismatch" xml:space="preserve">
     <value>The download was damaged (hash check failed) and was deleted.</value>
@@ -1887,7 +1887,7 @@
     <value>New</value>
   </data>
   <data name="Activity_App" xml:space="preserve">
-    <value>ailocalpack</value>
+    <value>AI Local Pack</value>
   </data>
   <data name="Activity_Tone_Attention" xml:space="preserve">
     <value>Needs your decision</value>
@@ -1968,7 +1968,7 @@
     <value>Activity: {0}</value>
   </data>
   <data name="Tray_Open" xml:space="preserve">
-    <value>Open ailocalpack</value>
+    <value>Open AI Local Pack</value>
   </data>
   <data name="Tray_CheckUpdates" xml:space="preserve">
     <value>Check for game updates</value>
@@ -2025,7 +2025,7 @@
     <value>Ready · signed in</value>
   </data>
   <data name="Settings_Agent_Source_Managed" xml:space="preserve">
-    <value>Installed by ailocalpack</value>
+    <value>Installed by AI Local Pack</value>
   </data>
   <data name="Settings_Agent_Source_Path" xml:space="preserve">
     <value>Found on your system: {0}</value>
@@ -2049,16 +2049,16 @@
     <value>Hash checked, putting it into place…</value>
   </data>
   <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
-    <value>ailocalpack needs version {0} or later. Update the app's copy.</value>
+    <value>AI Local Pack needs version {0} or later. Update the app's copy.</value>
   </data>
   <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
-    <value>ailocalpack needs version {0} or later. Update your copy the way you installed it, then check again.</value>
+    <value>AI Local Pack needs version {0} or later. Update your copy the way you installed it, then check again.</value>
   </data>
   <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
-    <value>Sign in with your Claude subscription. Claude Code's own login opens in the browser; ailocalpack never sees the token.</value>
+    <value>Sign in with your Claude subscription. Claude Code's own login opens in the browser; AI Local Pack never sees the token.</value>
   </data>
   <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
-    <value>Sign in with your ChatGPT subscription. Codex's own login opens in the browser; ailocalpack never sees the token.</value>
+    <value>Sign in with your ChatGPT subscription. Codex's own login opens in the browser; AI Local Pack never sees the token.</value>
   </data>
   <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
     <value>Couldn't check the sign-in: {0}</value>
@@ -2235,7 +2235,7 @@
     <value>your copy</value>
   </data>
   <data name="Gen_Agent_Source_Managed" xml:space="preserve">
-    <value>installed by ailocalpack</value>
+    <value>installed by AI Local Pack</value>
   </data>
   <data name="Gen_Checks_Label" xml:space="preserve">
     <value>Checks</value>

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using AiLocalPack.Core;
 using Microsoft.Extensions.Logging;
 using Tmds.DBus.Protocol;
 
@@ -48,7 +49,7 @@ public sealed class FreeDesktopNotifications(ILogger<FreeDesktopNotifications> l
     {
         using var writer = connection.GetMessageWriter();
         writer.WriteMethodCallHeader(destination: Service, path: ObjectPath, @interface: Service, signature: "susssasa{sv}i", member: "Notify");
-        writer.WriteString("ailocalpack");
+        writer.WriteString(AppInfo.DisplayName);
         writer.WriteUInt32(0);
         writer.WriteString(string.Empty);
         writer.WriteString(notification.Title);

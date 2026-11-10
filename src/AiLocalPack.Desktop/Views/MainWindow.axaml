@@ -6,7 +6,7 @@
         xmlns:views="using:AiLocalPack.Desktop.Views"
         x:Class="AiLocalPack.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="ailocalpack"
+        Title="AI Local Pack"
         Icon="/Assets/app-icon.ico"
         Width="1200" Height="760"
         MinWidth="960" MinHeight="600"
@@ -24,11 +24,9 @@
                     BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="0,0,0,1">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                        <Border Width="26" Height="26" CornerRadius="8" Background="{StaticResource AppLogoBrush}">
-                            <TextBlock Text="al" Foreground="White" FontSize="12" FontWeight="ExtraBold"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <TextBlock x:Name="Logo" Text="ailocalpack" FontSize="15" FontWeight="ExtraBold" VerticalAlignment="Center" />
+                        <Image Source="/Assets/logo.png" Width="26" Height="26"
+                               RenderOptions.BitmapInterpolationMode="HighQuality" />
+                        <TextBlock x:Name="Logo" Text="AI Local Pack" FontSize="15" FontWeight="ExtraBold" VerticalAlignment="Center" />
                         <Button x:Name="BackButton" Classes="back" Margin="12,0,0,0"
                                 Content="{Binding BackLabel}"
                                 Command="{Binding GoBackCommand}"

@@ -279,7 +279,7 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
 
         // Assert
         var dialog = Confirmation();
-        dialog.Title.Should().Be($"Remove «{extra}» from ailocalpack?");
+        dialog.Title.Should().Be($"Remove «{extra}» from AI Local Pack?");
         dialog.Message.Should().Be(
             "Its games leave the library. The folder, the games and installed packs stay on disk, and Steam is not changed. You can add the folder again later.");
         dialog.ConfirmText.Should().Be("Remove");
@@ -406,7 +406,7 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
 
         // Assert
         var dialog = Confirmation();
-        dialog.Title.Should().Be("Remove «Wren and Whistle» from ailocalpack?");
+        dialog.Title.Should().Be("Remove «Wren and Whistle» from AI Local Pack?");
         dialog.Message.Should().Be("The game folder and any installed pack stay on disk. You can add the folder again later.");
         Get<GameCatalog>().Games.Should().ContainSingle();
     }

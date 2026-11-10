@@ -8,6 +8,7 @@
              xmlns:gen="using:AiLocalPack.Desktop.Generation"
              xmlns:startup="using:AiLocalPack.Desktop.Startup"
              x:Class="AiLocalPack.Desktop.App"
+             Name="AI Local Pack"
              RequestedThemeVariant="Default">
     <!-- RequestedThemeVariant="Default" follows the OS theme, live; SettingsApplier sets it from Settings → General → Theme. -->
     <Application.Resources>

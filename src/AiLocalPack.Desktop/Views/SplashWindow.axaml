@@ -4,7 +4,7 @@
         xmlns:views="using:AiLocalPack.Desktop.Views"
         x:Class="AiLocalPack.Desktop.Views.SplashWindow"
         x:DataType="vm:SplashViewModel"
-        Title="ailocalpack"
+        Title="AI Local Pack"
         Icon="/Assets/app-icon.ico"
         Width="480" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterScreen"
@@ -17,14 +17,13 @@
         <StackPanel Spacing="18">
             <StackPanel Spacing="10" HorizontalAlignment="Center">
                 <Panel Width="64" Height="64" HorizontalAlignment="Center">
-                    <Border Classes="breathe" Margin="-6" CornerRadius="22" BorderThickness="2"
+                    <Border Classes="breathe" Margin="-6" CornerRadius="20" BorderThickness="2"
                             BorderBrush="{DynamicResource AppAccentBrush}" RenderTransform="scale(1)" />
-                    <Border CornerRadius="18" Background="{StaticResource AppLogoBrush}" BoxShadow="0 12 40 0 #595566f0">
-                        <TextBlock Text="al" Foreground="White" FontSize="26" FontWeight="ExtraBold"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Border CornerRadius="14" Background="#1d2133" BoxShadow="0 12 40 0 #595566f0">
+                        <Image Source="/Assets/logo.png" RenderOptions.BitmapInterpolationMode="HighQuality" />
                     </Border>
                 </Panel>
-                <TextBlock Text="ailocalpack" FontSize="20" FontWeight="ExtraBold" HorizontalAlignment="Center" />
+                <TextBlock Text="AI Local Pack" FontSize="20" FontWeight="ExtraBold" HorizontalAlignment="Center" />
                 <TextBlock x:Name="Version" Text="{Binding Version}" FontSize="12" Margin="0,-6,0,0"
                            Foreground="{DynamicResource AppFaintBrush}" HorizontalAlignment="Center" />
             </StackPanel>

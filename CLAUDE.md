@@ -1,4 +1,4 @@
-# ailocalpack
+# AI Local Pack (`ailocalpack`)
 
 Open-source, cross-platform (Windows, macOS, Linux) desktop app that lets a player **install** a community localization for any game they own, or **generate** a new one with an AI agent and **publish** it for others.
 
@@ -54,6 +54,11 @@ Synthetic test games: `ailocalpack dev fixture rpgmaker|renpy|godot|unity|unreal
 - No server of our own: the app, GitHub, and the player's AI agent account are the whole system.
 - AI usage goes through the player's own agent subscription or API key; the project pays for no inference.
 - Open source.
+
+## Naming
+
+- **AI Local Pack** is the name players read: window titles, the header logo, tray, OS notifications, autostart entries, UI text in every language, README, social previews (`AppInfo.DisplayName` in Core; resx strings write it out).
+- **`ailocalpack`** stays the technical name: the CLI command, the GitHub organization and repositories, app folders (`AppPaths.AppFolderName`), keychain service, MCP server, notification / autostart IDs (`io.github.ailocalpack`), file suffixes and names the toolkit writes into games, agent prompts, User-Agent. Renaming any of them breaks existing installs or packs.
 
 ## Domain terms
 

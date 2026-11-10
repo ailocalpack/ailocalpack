@@ -222,7 +222,7 @@ public sealed class LinuxAutostart(OsEnvironment env) : IAutostart
         var exec = string.Join(' ', new[] { command.Executable }.Concat(command.Arguments).Select(Quote));
         return "[Desktop Entry]\n"
             + "Type=Application\n"
-            + "Name=ailocalpack\n"
+            + "Name=" + AppInfo.DisplayName + "\n"
             + "Comment=Keeps game translations in place after game updates\n"
             + "Exec=" + exec + "\n"
             + "Terminal=false\n"

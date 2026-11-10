@@ -11,7 +11,7 @@ public static class CliApp
     public static RootCommand Build(OsEnvironment env)
     {
         ArgumentNullException.ThrowIfNull(env);
-        var root = new RootCommand("ailocalpack: install, generate and publish game localizations.")
+        var root = new RootCommand("AI Local Pack: install, generate and publish game localizations.")
         {
             GamesCommand.Build(env),
             ToolkitCommand.Build(env),

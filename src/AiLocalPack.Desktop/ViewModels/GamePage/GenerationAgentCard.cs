@@ -66,7 +66,7 @@ public sealed partial class GenerationAgentCard : ObservableObject
 
     public bool IsStatusBusy => AgentRowStates.IsBusy(Row.State);
 
-    /// <summary>"on PATH · v2.1.319" / "installed by ailocalpack · v2.1.311", for a ready agent.</summary>
+    /// <summary>"on PATH · v2.1.319" / "installed by AI Local Pack · v2.1.311", for a ready agent.</summary>
     public string SourceText
     {
         get

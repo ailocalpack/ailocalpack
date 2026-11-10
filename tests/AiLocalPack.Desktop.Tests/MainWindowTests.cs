@@ -109,7 +109,7 @@ public sealed class MainWindowTests
         Dispatcher.UIThread.RunJobs();
 
         // Assert
-        Find<TextBlock>(window, "Logo").Text.Should().Be("ailocalpack");
+        Find<TextBlock>(window, "Logo").Text.Should().Be("AI Local Pack");
         Find<Button>(window, "ActivityButton").IsVisible.Should().BeTrue();
         Find<Button>(window, "SettingsButton").IsVisible.Should().BeTrue();
         Find<Button>(window, "BackButton").IsVisible.Should().BeFalse();

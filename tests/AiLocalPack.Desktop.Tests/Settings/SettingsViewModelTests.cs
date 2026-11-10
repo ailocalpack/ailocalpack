@@ -191,7 +191,7 @@ public sealed class SettingsViewModelTests : IDisposable
         var version = vm.Version;
 
         // Assert
-        version.Should().MatchRegex(@"^ailocalpack \d+\.\d+\.\d+");
+        version.Should().MatchRegex(@"^AI Local Pack \d+\.\d+\.\d+");
         version.Should().NotContain("+");
     }
 }

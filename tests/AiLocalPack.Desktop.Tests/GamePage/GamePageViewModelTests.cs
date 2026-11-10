@@ -329,7 +329,7 @@ public sealed class GamePageViewModelTests : IDisposable
         (page.IsBlocked, page.ShowTabs, page.BlockedText).Should().Be((
             true,
             false,
-            "Easy Anti-Cheat was detected. Modifying game files can get your account banned, so ailocalpack doesn't install or generate packs for games with anti-cheat."));
+            "Easy Anti-Cheat was detected. Modifying game files can get your account banned, so AI Local Pack doesn't install or generate packs for games with anti-cheat."));
     }
 
     [Fact]

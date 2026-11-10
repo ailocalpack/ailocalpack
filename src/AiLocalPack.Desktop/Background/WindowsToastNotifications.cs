@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security;
+using AiLocalPack.Core;
 using AiLocalPack.Core.Storage;
 using Microsoft.Extensions.Logging;
 
@@ -90,7 +91,7 @@ public sealed unsafe partial class WindowsToastNotifications : ISystemNotificati
             try
             {
                 using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey($@"Software\Classes\AppUserModelId\{SystemNotifications.AppId}", writable: true);
-                key.SetValue("DisplayName", "ailocalpack");
+                key.SetValue("DisplayName", AppInfo.DisplayName);
                 if (WriteIcon() is { } icon)
                 {
                     key.SetValue("IconUri", icon);

@@ -1,3 +1,4 @@
+using AiLocalPack.Core;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
@@ -74,7 +75,7 @@ public sealed class TrayHost
             _icon = new TrayIcon
             {
                 // Set before the icon is attached: macOS refuses a null tooltip.
-                ToolTipText = "ailocalpack",
+                ToolTipText = AppInfo.DisplayName,
                 Icon = new WindowIcon(image),
                 Menu = [_open, _check, new NativeMenuItemSeparator(), _quit],
             };

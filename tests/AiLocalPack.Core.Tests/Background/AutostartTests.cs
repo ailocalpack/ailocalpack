@@ -131,7 +131,7 @@ public sealed class AutostartTests
 
         // Assert
         File.ReadAllText(home.Combine(".config/autostart/ailocalpack.desktop")).Should().Be(
-            "[Desktop Entry]\nType=Application\nName=ailocalpack\nComment=Keeps game translations in place after game updates\n"
+            "[Desktop Entry]\nType=Application\nName=AI Local Pack\nComment=Keeps game translations in place after game updates\n"
             + "Exec=/home/deck/Apps/ailocalpack.AppImage --background\nTerminal=false\nX-GNOME-Autostart-enabled=true\n");
     }
 
