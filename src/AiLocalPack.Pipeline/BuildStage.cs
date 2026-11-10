@@ -4,6 +4,7 @@ using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Recipes.Agent;
 
 namespace AiLocalPack.Pipeline;
 
@@ -20,6 +21,8 @@ public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, I
 /// (<see cref="PackValidator"/>). An overlay a crash left in the working copy is undone first, so the step is safe to repeat.
 /// An update job's pack (task 56) is the next revision of its base pack, saved under the base's ID (a local base is
 /// replaced by it); the job's glossary is kept with the pack for its own updates.
+/// Strings the agent's own extractor found (task 57) are rebuilt by its own script and packed as a binary patch
+/// (<see cref="PatchBuild"/>).
 /// </summary>
 public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools, BuildServices services) : IGenerationStage
 {
@@ -54,7 +57,9 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             return Fail(context, GenerationFailureKind.Toolkit, "source.json is missing: the Extract stage didn't store it.");
         }
 
-        if (tools.Find(source.Tool) is not { } tool)
+        var patch = source.Tool == AgentScriptTool.ToolId;
+        var found = patch ? null : tools.Find(source.Tool);
+        if (!patch && found is null)
         {
             return Fail(context, GenerationFailureKind.Toolkit, $"The toolkit has no '{source.Tool}' tool any more.");
         }
@@ -63,6 +68,13 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         {
             return Fail(context, GenerationFailureKind.Toolkit, $"{game.Name}'s Steam build ID is unknown, so the pack can't name the build it fits: refresh the library and retry.");
         }
+
+        if (patch)
+        {
+            return await new PatchBuild(game, agent, services).RunAsync(context, source, stored, cancellationToken).ConfigureAwait(false);
+        }
+
+        var tool = found!;
 
         Step(context, new BuildProgress(BuildStep.Checking));
         var collected = LocalPackBuilder.Collect(source, stored, tool.Markup);
@@ -139,7 +151,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
     }
 
     /// <summary>The progress card's build step line (task 53); display only.</summary>
-    private static void Step(GenerationStepContext context, BuildProgress step) =>
+    internal static void Step(GenerationStepContext context, BuildProgress step) =>
         PipelineProgressFile.Update(context.Files, p => p with { Build = step });
 
     private GenerationStepResult Save(
@@ -244,7 +256,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         }
     }
 
-    private static GenerationStepResult.Failed Fail(GenerationStepContext context, GenerationFailureKind kind, string message)
+    internal static GenerationStepResult.Failed Fail(GenerationStepContext context, GenerationFailureKind kind, string message)
     {
         context.Log(message);
         return new GenerationStepResult.Failed(kind, message);

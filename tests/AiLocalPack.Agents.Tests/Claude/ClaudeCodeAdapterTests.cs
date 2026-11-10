@@ -220,6 +220,62 @@ public sealed class ClaudeCodeAdapterTests : IDisposable
     }
 
     [Fact]
+    public async Task A_run_with_commands_reads_sandbox_settings_that_never_run_a_command_unconfined()
+    {
+        // Arrange
+        string? settings = null;
+        var runner = new RoutingProcessRunner(spec =>
+        {
+            settings = File.ReadAllText(spec.Arguments[spec.Arguments.ToList().IndexOf("--settings") + 1]);
+            return ClaudeTranscripts.Output("success");
+        });
+        var request = new AgentRunRequest("Write an extractor.", _dir.Path) { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.RunCommands } };
+
+        // Act
+        await foreach (var _ in Adapter(runner).RunAsync(new AgentInstallation("claude", "/bin/claude", null, AgentSource.Path), request, TestContext.Current.CancellationToken))
+        {
+        }
+
+        // Assert
+        var sandbox = System.Text.Json.JsonDocument.Parse(settings!).RootElement.GetProperty("sandbox");
+        (sandbox.GetProperty("enabled").GetBoolean(), sandbox.GetProperty("failIfUnavailable").GetBoolean(), sandbox.GetProperty("allowUnsandboxedCommands").GetBoolean(),
+            sandbox.GetProperty("network").GetProperty("allowedDomains").GetArrayLength())
+            .Should().Be((true, true, false, 0));
+    }
+
+    [Fact]
+    public async Task A_run_with_commands_has_its_temporary_folder_inside_the_working_folder()
+    {
+        // Arrange
+        var runner = new RoutingProcessRunner(_ => ClaudeTranscripts.Output("success"));
+        var request = new AgentRunRequest("Write an extractor.", _dir.Path) { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.RunCommands } };
+
+        // Act
+        await foreach (var _ in Adapter(runner).RunAsync(new AgentInstallation("claude", "/bin/claude", null, AgentSource.Path), request, TestContext.Current.CancellationToken))
+        {
+        }
+
+        // Assert
+        var temp = Path.Combine(_dir.Path, AgentSandbox.TempFolderName);
+        (runner.Started.Single().Environment["TMPDIR"], Directory.Exists(temp)).Should().Be((temp, true));
+    }
+
+    [Fact]
+    public async Task A_run_without_commands_has_no_sandbox_settings()
+    {
+        // Arrange
+        var runner = new RoutingProcessRunner(_ => ClaudeTranscripts.Output("success"));
+
+        // Act
+        await foreach (var _ in Adapter(runner).RunAsync(new AgentInstallation("claude", "/bin/claude", null, AgentSource.Path), new AgentRunRequest("Translate.", _dir.Path), TestContext.Current.CancellationToken))
+        {
+        }
+
+        // Assert
+        runner.Started.Single().Arguments.Should().NotContain("--settings");
+    }
+
+    [Fact]
     public async Task A_runs_files_are_deleted_once_it_ended()
     {
         // Arrange

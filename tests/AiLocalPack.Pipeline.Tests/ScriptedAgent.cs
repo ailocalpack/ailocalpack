@@ -11,6 +11,9 @@ internal sealed class ScriptedRun(string prompt, string copyFolder)
 {
     public string Prompt { get; } = prompt;
 
+    /// <summary>The run's request (working folder, built-in tools, system prompt).</summary>
+    public AgentRunRequest? Request { get; init; }
+
     /// <summary>The job folder (the working copy's parent), where put_translations would store.</summary>
     public GenerationFiles Files { get; } = new(Path.GetDirectoryName(Path.GetFullPath(copyFolder))!);
 
@@ -102,7 +105,7 @@ internal sealed class ScriptedAgent(Func<ScriptedRun, int, CancellationToken, Ta
 
     public async IAsyncEnumerable<AgentEvent> RunAsync(AgentInstallation installation, AgentRunRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var run = new ScriptedRun(request.Prompt, request.WorkingDirectory);
+        var run = new ScriptedRun(request.Prompt, request.WorkingDirectory) { Request = request };
         int number;
         lock (_lock)
         {

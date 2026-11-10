@@ -2294,13 +2294,13 @@
     <value>{0} · поддерживается инструментами</value>
   </data>
   <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
-    <value>Движок неизвестен: агент научится разбирать незнакомые форматы в следующей версии</value>
+    <value>Движок неизвестен: агент напишет свой разборщик, пак будет бинарным патчем</value>
   </data>
   <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
-    <value>{0}: на этой системе инструменты его пока не поддерживают</value>
+    <value>{0}: на этой системе инструменты его не поддерживают, агент напишет свой разборщик (пак — бинарный патч)</value>
   </data>
   <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
-    <value>{0}: инструменты пока не умеют его читать</value>
+    <value>{0}: инструменты его не читают, агент напишет свой разборщик (пак — бинарный патч)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
     <value>{0}: инструменты не смогли прочитать игру ({1})</value>
@@ -2357,7 +2357,7 @@
     <value>Не удалось оценить объём</value>
   </data>
   <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>Инструменты пока не умеют читать эту игру</value>
+    <value>Инструментам не удалось прочитать файлы игры</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Не хватает места для рабочей копии</value>

@@ -75,7 +75,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
             chunk.Add(s);
         }
 
-        var markup = tools.Find(source.Tool)?.Markup ?? TextMarkup.None;
+        var markup = SourceMarkup.Of(tools, source);
         var glossary = Glossary(context);
         var label = $"Chunk {number} of {plan.Count}";
         var asked = 0;

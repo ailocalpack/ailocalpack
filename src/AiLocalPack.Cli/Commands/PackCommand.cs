@@ -135,6 +135,9 @@ internal static class PackCommand
         yield return $"revision: {manifest.Revision}" + (report.Update is { } update
             ? $" (update of rev {update.BaseRevision}: {update.Added} new strings, {update.Changed} changed, {update.Removed} removed)"
             : "");
+        yield return manifest.Patch is { } patch
+            ? $"kind: binary patch of {patch.Files.Count} files ({patch.Size} bytes; the agent's own scripts made it)"
+            : $"kind: strings + recipe {manifest.Recipe?.Tool} {manifest.Recipe?.Version}";
         yield return $"coverage: {manifest.Coverage.Translated} of {manifest.Coverage.Total} strings"
             + (report.KeptAsIs > 0 ? $" ({report.KeptAsIs} kept as is)" : "")
             + (report.Untranslated.Count > 0 ? $", {report.Untranslated.Count} stay untranslated" : "");

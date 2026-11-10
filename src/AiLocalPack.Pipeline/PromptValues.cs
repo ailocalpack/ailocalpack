@@ -46,4 +46,30 @@ public static class PromptValues
         values["keptCount"] = kept.ToString("N0", CultureInfo.InvariantCulture);
         return values;
     }
+
+    /// <param name="gamePath">The working copy, which the agent reads but never writes (task 57).</param>
+    public static Dictionary<string, string> SystemScripts(string gameName, string language, string gamePath)
+    {
+        var values = System(gameName, language);
+        values["gamePath"] = gamePath;
+        return values;
+    }
+
+    public static Dictionary<string, string> ExtractUnknown(string gameName, string language, EngineKind engine, string gamePath, int files) => new(StringComparer.Ordinal)
+    {
+        ["gameName"] = gameName,
+        ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown" : engine.DisplayName,
+        ["gamePath"] = gamePath,
+        ["fileCount"] = files.ToString("N0", CultureInfo.InvariantCulture),
+        ["languageName"] = LanguageName(language),
+        ["languageTag"] = language,
+    };
+
+    public static Dictionary<string, string> RebuildUnknown(string gameName, string language, string gamePath, int translations) => new(StringComparer.Ordinal)
+    {
+        ["gameName"] = gameName,
+        ["gamePath"] = gamePath,
+        ["translationCount"] = translations.ToString("N0", CultureInfo.InvariantCulture),
+        ["languageName"] = LanguageName(language),
+    };
 }

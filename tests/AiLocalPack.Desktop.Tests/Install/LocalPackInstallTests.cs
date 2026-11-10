@@ -163,4 +163,50 @@ public sealed class LocalPackInstallTests
 
     private static RegistryPack PackOf(InstallBed bed, string id) =>
         bed.Services.GetRequiredService<PackIndex>().Current!.Index!.PacksFor(InstallBed.Alpha, "ru").Single(p => p.Id == id);
+
+    [Fact]
+    public async Task Local_patch_pack_applies_its_archive_from_the_local_releases_folder()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        var pack = bed.LocalPatchPack();
+
+        // Act
+        var outcome = await bed.Services.GetRequiredService<PackInstallService>().InstallLocalAsync(bed.Game, pack, TestContext.Current.CancellationToken);
+
+        // Assert
+        (outcome.Succeeded, bed.Read(InstallBed.SystemFile).Contains(InstallBed.PatchedTitle, StringComparison.Ordinal)).Should().Be((true, true));
+    }
+
+    [Fact]
+    public async Task Local_patch_pack_uninstalls_back_to_the_original_file()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        var before = bed.Read(InstallBed.SystemFile);
+        var service = bed.Services.GetRequiredService<PackInstallService>();
+        await service.InstallLocalAsync(bed.Game, bed.LocalPatchPack(), TestContext.Current.CancellationToken);
+
+        // Act
+        await service.UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
+
+        // Assert
+        bed.Read(InstallBed.SystemFile).Should().Be(before);
+    }
+
+    [Fact]
+    public async Task Local_patch_pack_without_its_archive_fails_without_touching_the_game()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        var before = bed.Read(InstallBed.SystemFile);
+        var pack = bed.LocalPatchPack();
+        File.Delete(bed.Services.GetRequiredService<LocalPackStore>().PatchArchivePath(pack.Manifest)!);
+
+        // Act
+        var outcome = await bed.Services.GetRequiredService<PackInstallService>().InstallLocalAsync(bed.Game, pack, TestContext.Current.CancellationToken);
+
+        // Assert
+        (outcome.Succeeded, bed.Read(InstallBed.SystemFile)).Should().Be((false, before));
+    }
 }

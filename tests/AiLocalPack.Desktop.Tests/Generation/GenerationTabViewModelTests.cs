@@ -292,13 +292,31 @@ public sealed class GenerationTabViewModelTests
     }
 
     [Fact]
-    public void Unknown_engine_holds_start_until_the_agent_can_read_it()
+    public void Unknown_engine_lets_start_with_a_warning_that_the_agent_writes_its_own_reader()
     {
         // Arrange
         using var services = Build((agents, estimates) =>
         {
             ClaudeReady(agents, estimates);
             estimates.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(source: TextSizeSource.UnknownEngine, engine: EngineKind.Unknown));
+        });
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        (tab.StartBlock, tab.Checks[0].IsWarning, tab.Checks[0].Text)
+            .Should().Be(((GenerationStartBlock?)null, true, "Unknown engine: the agent writes its own reader, and the pack is a binary patch"));
+    }
+
+    [Fact]
+    public void A_toolkit_that_failed_to_read_the_game_holds_start()
+    {
+        // Arrange
+        using var services = Build((agents, estimates) =>
+        {
+            ClaudeReady(agents, estimates);
+            estimates.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(source: TextSizeSource.ToolkitFailed));
         });
 
         // Act

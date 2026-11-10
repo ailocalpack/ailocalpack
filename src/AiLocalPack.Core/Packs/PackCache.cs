@@ -18,8 +18,11 @@ public sealed record CachedPack(PackManifest Manifest, string Folder, string Man
     /// <summary>The gzip string table, or <c>null</c> for a patch pack without one.</summary>
     public string? StringsFile => Manifest.Strings is { } strings ? PackCache.PathIn(Folder, strings.Path) : null;
 
-    /// <summary>The binary patch archive (<see cref="PackCache.PatchFileName"/>), or <c>null</c> for a recipe pack.</summary>
-    public string? PatchFile => Manifest.Patch is null ? null : Path.Combine(Folder, PackCache.PatchFileName);
+    /// <summary>The binary patch archive (<see cref="PackCache.PatchFileName"/>, or <see cref="PatchArchive"/>), or <c>null</c> for a recipe pack.</summary>
+    public string? PatchFile => Manifest.Patch is null ? null : PatchArchive ?? Path.Combine(Folder, PackCache.PatchFileName);
+
+    /// <summary>Where the archive is when it isn't in the folder: a local patch pack's (task 57, <see cref="LocalPackStore.PatchArchivePath"/>).</summary>
+    public string? PatchArchive { get; init; }
 
     /// <summary>Reads the string table (decompressed); a recipe pack always has one.</summary>
     public PackReadResult<StringTable> ReadStrings()

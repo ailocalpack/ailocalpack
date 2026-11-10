@@ -5,6 +5,7 @@ using System.Text;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Recipes.Agent;
 using AiLocalPack.Toolkit.Validation;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
@@ -44,7 +45,7 @@ public sealed class ToolkitTools(ToolkitSession session)
             var detection = session.Detect(refresh: true);
             var kind = detection.Kind;
             var problem = session.ToolProblem(kind);
-            var tool = problem is null ? session.Tools.For(kind) : null;
+            IRecipeTool? tool = problem is null ? session.Tools.For(kind) : session.AgentTool() is { Exists: true } agent ? agent : null;
             return new DetectResult(
                 kind.ToString(),
                 kind.DisplayName,
@@ -398,6 +399,11 @@ public sealed class ToolkitTools(ToolkitSession session)
             }
 
             var (tool, _) = session.Tool();
+            if (tool is AgentScriptTool)
+            {
+                throw new McpException("The toolkit can't rebuild this game: run your own rebuild script instead (see your task).");
+            }
+
             var output = session.Files.BuildFolder;
             RebuildResult result;
             try

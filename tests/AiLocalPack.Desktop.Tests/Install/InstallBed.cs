@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Library;
@@ -197,6 +198,46 @@ internal sealed class InstallBed : IDisposable
             0,
             Tried: tried);
         var pack = Services.GetRequiredService<LocalPackStore>().Save(manifest, new StringTable(language, strings), report);
+        Services.GetRequiredService<GenerationService>().Recover();
+        return pack;
+    }
+
+    /// <summary>
+    /// A local binary patch pack (task 57) as the Build stage saves it for a game the toolkit can't read: the archive made
+    /// by <see cref="PatchArchiveWriter"/> from the current <see cref="SystemFile"/> to one with <see cref="PatchedTitle"/>.
+    /// </summary>
+    public LocalPack LocalPatchPack(string id = "claude-code")
+    {
+        var (entry, jobLock) = Services.GetRequiredService<GenerationJobStore>().Create(Game, "ru", "claude", GenerationOptions.Default);
+        jobLock.Dispose();
+        GenerationJobStore.Write(entry.Folder, entry.Job with { Stage = GenerationStage.Done, Status = GenerationJobStatus.Completed });
+        var build = Path.Combine(entry.Folder, "build");
+        var target = Path.Combine(build, SystemFile.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+        File.WriteAllText(target, Read(SystemFile).Replace("\"gameTitle\":", $"\"gameTitle\":\"{PatchedTitle}\",\"oldTitle\":", StringComparison.Ordinal));
+        var temp = Path.Combine(entry.Folder, "patch.zip");
+        var archive = PatchArchiveWriter.Write(temp, GameDir, build, [SystemFile]);
+        var date = new DateTimeOffset(2026, 11, 10, 12, 0, 0, TimeSpan.Zero);
+        var manifest = new PackManifest(
+            id,
+            Alpha,
+            "ru",
+            "Claude Code translation",
+            [new PackAuthor(LocalPackStore.PlaceholderAuthor)],
+            [new PackRevision(1, date, LocalPackStore.PlaceholderAuthor)],
+            PackStatus.Alpha,
+            new PackAgent("claude-code"),
+            [new PackBuild("1000", archive.Originals)],
+            null,
+            null,
+            new PackPatch(PackPatch.VcdiffFormat, LocalPackStore.PatchUrl(Alpha, "ru", id, 1), archive.Sha256, archive.Size, archive.Patched),
+            [],
+            [],
+            new PackCoverage(1, 1),
+            date,
+            date);
+        var report = new LocalPackReport(entry.Job.Id, date, TestRunResult.Passed(TimeSpan.FromSeconds(15)), LocalPackFonts.NotChecked, [], [], 0);
+        var pack = Services.GetRequiredService<LocalPackStore>().Save(manifest, new StringTable("ru", new Dictionary<string, string> { ["title"] = PatchedTitle }), report, patchArchive: temp);
         Services.GetRequiredService<GenerationService>().Recover();
         return pack;
     }

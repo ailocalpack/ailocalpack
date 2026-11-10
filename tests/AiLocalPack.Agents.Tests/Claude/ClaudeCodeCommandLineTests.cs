@@ -192,4 +192,24 @@ public sealed class ClaudeCodeCommandLineTests
         // Assert
         result.Should().Be(supported);
     }
+
+    [Fact]
+    public void A_settings_file_is_passed_with_settings()
+    {
+        // Act
+        var arguments = ClaudeCodeCommandLine.Arguments(Request with { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.RunCommands } }, null, null, "/tmp/r/settings.json");
+
+        // Assert
+        (ValueAfter(arguments, "--settings"), ValueAfter(arguments, "--tools")).Should().Be(("/tmp/r/settings.json", "Bash"));
+    }
+
+    [Fact]
+    public void Commands_still_run_restricted_to_the_working_folder()
+    {
+        // Act
+        var arguments = ClaudeCodeCommandLine.Arguments(Request with { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.RunCommands, AgentBuiltinTool.EditFiles } }, null, null, "/tmp/r/settings.json");
+
+        // Assert
+        arguments.Should().Contain(["--restricted", "--permission-mode", "dontAsk"]);
+    }
 }

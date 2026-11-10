@@ -27,8 +27,8 @@ public enum GenerationStartBlock
     EstimateFailed,
 
     /// <summary>
-    /// The toolkit can't read the game (unknown engine, switched off on this OS, no tool, a reading error): the Extract
-    /// stage would fail before any agent time, until the agent writes its own extractor (task 57).
+    /// The toolkit's tool for the game's engine failed to read it (a reading error). An unknown engine, one switched off
+    /// on this OS or without a tool doesn't block: the agent writes its own extractor (task 57).
     /// </summary>
     EngineUnsupported,
 
@@ -37,7 +37,7 @@ public enum GenerationStartBlock
 }
 
 /// <summary>What the start form knows when it decides whether a job can start.</summary>
-/// <param name="EngineSupported">The toolkit read the strings (only meaningful once the estimate is done).</param>
+/// <param name="EngineSupported">The toolkit read the strings, or has no tool for the engine so the agent reads them (task 57); false = the toolkit's tool failed (only meaningful once the estimate is done).</param>
 /// <param name="EnoughDisk">The working copy fits (only meaningful once the estimate is done).</param>
 public sealed record GenerationStartInputs(
     bool GameAvailable,

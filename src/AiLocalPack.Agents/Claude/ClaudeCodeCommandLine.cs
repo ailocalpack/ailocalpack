@@ -21,6 +21,12 @@ namespace AiLocalPack.Agents.Claude;
 /// them and every tool of each MCP server (<c>mcp__&lt;name&gt;</c>); <c>dontAsk</c> + <c>--permission-prompts none</c>
 /// denies anything else instead of waiting for an answer nobody gives.</item>
 /// <item><c>--strict-mcp-config</c>: only the run's MCP servers, none of the player's.</item>
+/// <item><b>Commands</b> (<see cref="AgentBuiltinTool.RunCommands"/>, task 57): <c>--settings &lt;file&gt;</c> with
+/// <see cref="SandboxSettings"/>: Bash runs in Claude Code's sandbox, which lets commands write only the working folder
+/// (and the temporary folder, which <see cref="AgentSandbox"/> moves inside it) and reach no network host;
+/// <c>failIfUnavailable</c> + <c>allowUnsandboxedCommands: false</c>, so a sandbox that can't start (Linux without
+/// bubblewrap) runs no command at all instead of running it unconfined (checked with 2.1.322 on macOS: without them a
+/// sandbox that failed to start ran the commands unconfined).</item>
 /// <item>The MCP config and the system prompt go in files (<see cref="McpConfigFileName"/>,
 /// <see cref="SystemPromptFileName"/>) so no quoting or length limit applies (cmd.exe takes 8 191 characters).</item>
 /// </list>
@@ -34,8 +40,23 @@ public static partial class ClaudeCodeCommandLine
 
     public const string SystemPromptFileName = "system-prompt.md";
 
+    public const string SettingsFileName = "settings.json";
+
+    /// <summary>The <c>--settings</c> of a run with commands: Bash only in the sandbox, no network, never unconfined.</summary>
+    public const string SandboxSettings = """
+        {
+          "sandbox": {
+            "enabled": true,
+            "failIfUnavailable": true,
+            "autoAllowBashIfSandboxed": true,
+            "allowUnsandboxedCommands": false,
+            "network": { "allowedDomains": [], "strictAllowlist": true }
+          }
+        }
+        """;
+
     /// <summary>The run's arguments (after the installation's own), given where its MCP config and system prompt files are.</summary>
-    public static IReadOnlyList<string> Arguments(AgentRunRequest request, string? mcpConfigFile, string? systemPromptFile)
+    public static IReadOnlyList<string> Arguments(AgentRunRequest request, string? mcpConfigFile, string? systemPromptFile, string? settingsFile = null)
     {
         ArgumentNullException.ThrowIfNull(request);
         var arguments = new List<string>
@@ -53,6 +74,11 @@ public static partial class ClaudeCodeCommandLine
         if (mcpConfigFile is not null)
         {
             arguments.AddRange(["--mcp-config", mcpConfigFile]);
+        }
+
+        if (settingsFile is not null)
+        {
+            arguments.AddRange(["--settings", settingsFile]);
         }
 
         var tools = BuiltinToolNames(request.BuiltinTools);

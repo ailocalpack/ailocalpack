@@ -2247,13 +2247,13 @@
     <value>{0} · supported by the toolkit</value>
   </data>
   <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
-    <value>Unknown engine: the agent will learn unknown formats in a later version</value>
+    <value>Unknown engine: the agent writes its own reader, and the pack is a binary patch</value>
   </data>
   <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
-    <value>{0}: the toolkit doesn't handle it on this system yet</value>
+    <value>{0}: not handled by the toolkit on this system, so the agent writes its own reader (binary patch pack)</value>
   </data>
   <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
-    <value>{0}: the toolkit can't read it yet</value>
+    <value>{0}: the toolkit can't read it, so the agent writes its own reader (binary patch pack)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
     <value>{0}: the toolkit couldn't read the game ({1})</value>
@@ -2310,7 +2310,7 @@
     <value>The size couldn't be estimated</value>
   </data>
   <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>The toolkit can't read this game yet</value>
+    <value>The toolkit couldn't read this game's files</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Not enough disk space for the working copy</value>

@@ -169,7 +169,59 @@ public sealed class ToolkitToolsTests
         var error = await mcp.ErrorAsync("extract_strings");
 
         // Assert
-        error.Should().Be("The engine is unknown, so the toolkit can't read its strings.");
+        error.Should().Be("The engine is unknown, so the toolkit can't read its strings. Write your own extractor: it must write strings.json in your workspace.");
+    }
+
+    [Fact]
+    public async Task Extract_strings_of_an_unknown_engine_reads_the_agents_strings_once_written()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(game: dir =>
+        {
+            dir.File("game/readme.txt", "hello");
+            dir.File("job/agent/strings.json", """{"strings": [{"key": "readme.txt:1", "original": "hello", "file": "readme.txt"}]}""");
+        });
+
+        // Act
+        var result = await mcp.ResultAsync("extract_strings");
+
+        // Assert
+        (result.GetProperty("tool").GetString(), Keys(result)).Should().BeEquivalentTo(("agent-script", new[] { "readme.txt:1" }));
+    }
+
+    [Fact]
+    public async Task Put_translations_of_agent_strings_checks_their_placeholders()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(game: dir =>
+        {
+            dir.File("game/readme.txt", "hello");
+            dir.File("job/agent/strings.json", """{"strings": [{"key": "a", "original": "Hi {hero}", "placeholders": ["{hero}"]}]}""");
+        });
+
+        // Act
+        var result = await mcp.ResultAsync("put_translations", new { translations = new Dictionary<string, string> { ["a"] = "Привет" } });
+
+        // Assert
+        result.GetProperty("rejected")[0].GetProperty("issues")[0].GetProperty("rule").GetString().Should().Be("placeholder-missing");
+    }
+
+    [Fact]
+    public async Task Rebuild_of_agent_strings_tells_the_agent_to_run_its_own_script()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(game: dir =>
+        {
+            dir.File("game/readme.txt", "hello");
+            dir.File("job/agent/strings.json", """{"strings": [{"key": "a", "original": "hello"}]}""");
+            dir.File("job/strings.json", """{"schemaVersion": 1, "language": "ru", "strings": {"a": "привет"}}""");
+        });
+
+        // Act
+        var error = await mcp.ErrorAsync("rebuild");
+
+        // Assert
+        error.Should().Contain("run your own rebuild script");
     }
 
     [Fact]

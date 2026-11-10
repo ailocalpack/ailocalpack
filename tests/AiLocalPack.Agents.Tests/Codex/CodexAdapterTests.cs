@@ -67,6 +67,25 @@ public sealed class CodexAdapterTests : IDisposable
     }
 
     [Fact]
+    public async Task A_run_with_commands_writes_in_the_workspace_sandbox_with_its_temporary_folder_inside_it()
+    {
+        // Arrange
+        var runner = new RoutingProcessRunner(_ => CodexTranscripts.Output("success"));
+        var request = new AgentRunRequest("Write an extractor.", _dir.Path) { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.RunCommands } };
+
+        // Act
+        await foreach (var _ in Adapter(runner).RunAsync(Installation, request, TestContext.Current.CancellationToken))
+        {
+        }
+
+        // Assert
+        var spec = runner.Started.Single();
+        var arguments = spec.Arguments.ToList();
+        (arguments[arguments.IndexOf("--sandbox") + 1], arguments.Contains("sandbox_workspace_write.network_access=false"), spec.Environment["TMPDIR"])
+            .Should().Be(("workspace-write", true, Path.Combine(_dir.Path, AgentSandbox.TempFolderName)));
+    }
+
+    [Fact]
     public void A_chatgpt_sign_in_says_so()
     {
         // Act

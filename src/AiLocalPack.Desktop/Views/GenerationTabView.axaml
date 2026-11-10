@@ -202,13 +202,14 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="gp:GenerationCheckViewModel">
-                                <StackPanel Classes="genCheck" Classes.ok="{Binding IsOk}" Classes.bad="{Binding IsBad}" Orientation="Horizontal" Spacing="8">
+                                <StackPanel Classes="genCheck" Classes.ok="{Binding IsOk}" Classes.bad="{Binding IsBad}" Classes.warning="{Binding IsWarning}" Orientation="Horizontal" Spacing="8">
                                     <Viewbox Classes="icon" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Classes.spin="{Binding IsPending}">
                                         <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
                                         <Panel>
                                             <Path Classes="icon" Data="{StaticResource IconCheck}" IsVisible="{Binding IsOk}" />
                                             <Path Classes="icon" Data="{StaticResource IconX}" IsVisible="{Binding IsBad}" />
                                             <Path Classes="icon" Data="{StaticResource IconLoader}" IsVisible="{Binding IsPending}" />
+                                            <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding IsWarning}" />
                                         </Panel>
                                     </Viewbox>
                                     <TextBlock Text="{Binding Text}" TextWrapping="Wrap" MaxWidth="380" />

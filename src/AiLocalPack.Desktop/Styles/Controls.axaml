@@ -1375,6 +1375,7 @@
     <Style Selector="StackPanel.genCheck.ok Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
     <Style Selector="StackPanel.genCheck.bad"><Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedBrush}" /></Style>
     <Style Selector="StackPanel.genCheck.bad Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="StackPanel.genCheck.warning Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
     <Style Selector="Border.genFoot">
         <Setter Property="BorderThickness" Value="0,1,0,0" />
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />

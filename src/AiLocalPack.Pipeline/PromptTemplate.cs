@@ -33,6 +33,15 @@ public sealed partial class PromptTemplate
     /// <summary>The Translate stage's task for the strings an earlier attempt at the chunk left without a valid translation.</summary>
     public static PromptTemplate TranslateRetry { get; } = Load("translate-retry", 1);
 
+    /// <summary>The system prompt of a run that writes and runs its own scripts in its workspace (task 57).</summary>
+    public static PromptTemplate SystemScripts { get; } = Load("system-scripts", 1);
+
+    /// <summary>Extract stage for a game the toolkit can't read: the agent writes and checks its extractor and rebuilder (task 57).</summary>
+    public static PromptTemplate ExtractUnknown { get; } = Load("extract-unknown", 1);
+
+    /// <summary>Build stage for such a game: the agent runs its rebuilder on the final translations (task 57).</summary>
+    public static PromptTemplate RebuildUnknown { get; } = Load("rebuild-unknown", 1);
+
     public string Name { get; }
 
     public int Version { get; }

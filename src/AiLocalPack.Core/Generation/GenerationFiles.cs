@@ -8,7 +8,8 @@ namespace AiLocalPack.Core.Generation;
 /// <c>strings.json</c> = the string store (a plain JSON <see cref="StringTable"/> of the translations so far, written
 /// after every change), <c>glossary.json</c> (<see cref="Glossary"/>), <c>source.json</c> (the extracted strings), <c>chunks.json</c> (the translate plan), <c>progress.json</c> (recent
 /// translations, agent usage), <c>build/</c> = the latest rebuild, laid out
-/// like the game folder, and an update job's <c>base/</c> (task 56). Writes are atomic. Beside them: <c>job.json</c> and <c>logs/job.log</c> (<see cref="GenerationJobStore"/>).
+/// like the game folder, an update job's <c>base/</c> (task 56) and, for a game the toolkit can't read (task 57), the
+/// agent's workspace <c>agent/</c> (<see cref="AgentFolder"/>). Writes are atomic. Beside them: <c>job.json</c> and <c>logs/job.log</c> (<see cref="GenerationJobStore"/>).
 /// </summary>
 public sealed class GenerationFiles
 {
@@ -41,6 +42,26 @@ public sealed class GenerationFiles
 
     /// <summary>An update job's base pack (task 56): <c>manifest.json</c>, <c>strings.json.gz</c>, <c>glossary.json</c> when it had one.</summary>
     public string BaseFolder => Path.Combine(Folder, "base");
+
+    /// <summary>
+    /// The agent's own workspace for a game the toolkit can't read (task 57), its runs' working folder and the only folder
+    /// its commands may write: <c>scripts/</c> (its extract and rebuild code, kept for later promotion into the toolkit,
+    /// never in a pack), <c>strings.json</c> (what its extractor found), <c>translations.json</c> (written by the app for
+    /// its rebuild), <c>out/</c> (the game files its rebuild wrote).
+    /// </summary>
+    public string AgentFolder => Path.Combine(Folder, "agent");
+
+    /// <summary>The agent extractor's output: <c>{strings: [{key, original, file?, context?, maxLength?, placeholders?}]}</c>.</summary>
+    public string AgentStringsPath => Path.Combine(AgentFolder, "strings.json");
+
+    /// <summary>The translations the agent's rebuild applies: <c>{language, strings: {key: translation}}</c>.</summary>
+    public string AgentTranslationsPath => Path.Combine(AgentFolder, "translations.json");
+
+    /// <summary>The game files the agent's rebuild wrote, laid out like the game folder.</summary>
+    public string AgentOutputFolder => Path.Combine(AgentFolder, "out");
+
+    /// <summary>The agent's extract and rebuild code.</summary>
+    public string AgentScriptsFolder => Path.Combine(AgentFolder, "scripts");
 
     /// <summary>Writes the base pack's files (<see cref="BaseFolder"/>); the manifest last.</summary>
     /// <exception cref="IOException">A file can't be written.</exception>

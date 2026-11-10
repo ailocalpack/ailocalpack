@@ -71,7 +71,9 @@ public sealed class ClaudeCodeAdapter(
         string? scratch = null;
         string? mcpConfig = null;
         string? systemPrompt = null;
-        if (request.McpServers.Count > 0 || !string.IsNullOrEmpty(request.SystemPrompt))
+        string? settings = null;
+        var commands = request.BuiltinTools.Contains(AgentBuiltinTool.RunCommands);
+        if (request.McpServers.Count > 0 || !string.IsNullOrEmpty(request.SystemPrompt) || commands)
         {
             var config = request.McpServers.Count > 0 ? ClaudeCodeCommandLine.McpConfig(request.McpServers) : null;
             scratch = Directory.CreateTempSubdirectory("ailocalpack-claude-").FullName;
@@ -86,14 +88,21 @@ public sealed class ClaudeCodeAdapter(
                 systemPrompt = Path.Combine(scratch, ClaudeCodeCommandLine.SystemPromptFileName);
                 File.WriteAllText(systemPrompt, request.SystemPrompt);
             }
+
+            if (commands)
+            {
+                settings = Path.Combine(scratch, ClaudeCodeCommandLine.SettingsFileName);
+                File.WriteAllText(settings, ClaudeCodeCommandLine.SandboxSettings);
+            }
         }
 
         var template = new ProcessSpec(installation.Executable, [])
         {
             WorkingDirectory = request.WorkingDirectory,
             StandardInput = request.Prompt,
+            Environment = AgentSandbox.Environment(request),
         };
-        var arguments = ClaudeCodeCommandLine.Arguments(request, mcpConfig, systemPrompt);
+        var arguments = ClaudeCodeCommandLine.Arguments(request, mcpConfig, systemPrompt, settings);
         var spec = Spec(installation, arguments, template);
         return new AgentRunProcess(spec) { ScratchDirectory = scratch };
     }

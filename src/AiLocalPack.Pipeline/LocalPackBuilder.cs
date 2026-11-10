@@ -33,6 +33,8 @@ public sealed record BuildTranslations(
 /// <param name="Model">The job's own model option, when the agent didn't report one.</param>
 /// <param name="Base">An update job's base pack (task 56): the pack is its next revision.</param>
 /// <param name="Update">What the update changed, for the new revision's notes.</param>
+/// <param name="Patch">A binary patch pack (task 57, a game the toolkit can't read): the manifest has this <c>patch</c>
+/// instead of a recipe; <paramref name="Touched"/> = the patched files' originals.</param>
 public sealed record LocalPackInput(
     string Id,
     Game Game,
@@ -48,7 +50,8 @@ public sealed record LocalPackInput(
     PackCoverage Coverage,
     DateTimeOffset Now,
     PackManifest? Base = null,
-    LocalPackUpdate? Update = null);
+    LocalPackUpdate? Update = null,
+    PackPatch? Patch = null);
 
 /// <summary>
 /// Turns a finished translation into a local pack (task 51). Pure. The string table holds the accepted translations
@@ -174,9 +177,9 @@ public static class LocalPackBuilder
             PackStatus.Alpha,
             new PackAgent(ManifestAgentId(input.AgentId), input.Agent?.Version, model),
             [new PackBuild(buildId, new SortedDictionary<string, string>(input.Touched.ToDictionary(), StringComparer.Ordinal))],
-            new PackRecipe(input.Tool, input.ToolVersion.ToString(3)),
+            input.Patch is null ? new PackRecipe(input.Tool, input.ToolVersion.ToString(3)) : null,
             null,
-            null,
+            input.Patch,
             [],
             [.. input.Fonts],
             input.Coverage,

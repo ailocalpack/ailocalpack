@@ -5,6 +5,7 @@ using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Recipes.Agent;
 using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Pipeline;
@@ -24,6 +25,19 @@ public sealed record SourceStrings(EngineKind Engine, string Tool, Version ToolV
         ArgumentNullException.ThrowIfNull(engine);
         ArgumentNullException.ThrowIfNull(extraction);
         return new SourceStrings(engine, extraction.Tool, extraction.Version, extraction.Files, extraction.Strings);
+    }
+}
+
+/// <summary>The markup the validator checks the source's translations with: the recipe tool's, or for strings the agent extracted (task 57) the placeholders its extractor listed.</summary>
+public static class SourceMarkup
+{
+    public static TextMarkup Of(RecipeTools tools, SourceStrings source)
+    {
+        ArgumentNullException.ThrowIfNull(tools);
+        ArgumentNullException.ThrowIfNull(source);
+        return source.Tool == AgentScriptTool.ToolId
+            ? AgentScriptTool.MarkupOf(source.Strings)
+            : tools.Find(source.Tool)?.Markup ?? TextMarkup.None;
     }
 }
 

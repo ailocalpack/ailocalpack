@@ -638,7 +638,7 @@ public sealed class PackInstallService
         try
         {
             var sha = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(Path.Combine(pack.Folder, RegistryLayout.ManifestFileName))));
-            return new CachedPack(pack.Manifest, pack.Folder, sha);
+            return new CachedPack(pack.Manifest, pack.Folder, sha) { PatchArchive = _localPacks.PatchArchivePath(pack.Manifest) };
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {

@@ -129,6 +129,7 @@ public sealed partial class CodexAdapter(
         {
             WorkingDirectory = request.WorkingDirectory,
             StandardInput = request.Prompt,
+            Environment = AgentSandbox.Environment(request),
         };
         var arguments = CodexCommandLine.Arguments(request);
         return new AgentRunProcess(AgentPrograms.Process(installation.Executable, [.. installation.Arguments, .. arguments], _environment, template));

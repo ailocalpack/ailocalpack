@@ -2,6 +2,7 @@ using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Recipes;
+using AiLocalPack.Toolkit.Recipes.Agent;
 using ModelContextProtocol;
 
 namespace AiLocalPack.Mcp;
@@ -22,6 +23,7 @@ public sealed class ToolkitSession
     private readonly ToolkitServerOptions options;
     private EngineDetection? detection;
     private Extracted? extraction;
+    private AgentScriptTool? agentTool;
 
     /// <exception cref="ArgumentException">The root is missing, or the job folder is the root or inside it.</exception>
     public ToolkitSession(ToolkitServerOptions options)
@@ -60,15 +62,27 @@ public sealed class ToolkitSession
     public EngineDetection Detect(bool refresh = false) =>
         detection = refresh || detection is null ? new EngineDetector().Detect(Copy.Root) : detection;
 
-    /// <summary>The recipe tool for the copy's engine.</summary>
-    /// <exception cref="McpException">Unknown engine, an engine switched off on this OS, or one without a tool.</exception>
+    /// <summary>
+    /// The recipe tool for the copy's engine; for an engine the toolkit can't read, the strings the agent's own extractor
+    /// wrote into its workspace (<see cref="AgentScriptTool"/>, task 57) once that file is there.
+    /// </summary>
+    /// <exception cref="McpException">Unknown engine, an engine switched off on this OS, or one without a tool, and no agent extraction.</exception>
     public (IRecipeTool Tool, EngineKind Kind) Tool()
     {
         var kind = Detect().Kind;
-        return ToolProblem(kind) is { } problem
-            ? throw new McpException(problem)
-            : (Tools.For(kind)!, kind);
+        if (ToolProblem(kind) is not { } problem)
+        {
+            return (Tools.For(kind)!, kind);
+        }
+
+        var agent = AgentTool();
+        return agent.Exists
+            ? (agent, kind)
+            : throw new McpException(problem + " Write your own extractor: it must write strings.json in your workspace.");
     }
+
+    /// <summary>The strings the agent's extractor wrote (<c>agent/strings.json</c> of the job folder).</summary>
+    public AgentScriptTool AgentTool() => agentTool ??= new AgentScriptTool(Files.AgentStringsPath);
 
     /// <summary>Why the toolkit can't read games of <paramref name="kind"/>, or <c>null</c> when it can.</summary>
     public string? ToolProblem(EngineKind kind)
@@ -90,6 +104,13 @@ public sealed class ToolkitSession
         }
 
         var (tool, kind) = Tool();
+        if (refresh && tool is AgentScriptTool)
+        {
+            // The extractor may have written the file again: a new instance reads it afresh.
+            agentTool = null;
+            (tool, kind) = Tool();
+        }
+
         try
         {
             var result = tool.Extract(Copy.Root, cancellationToken);

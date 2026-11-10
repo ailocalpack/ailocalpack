@@ -11,6 +11,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Dependencies;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Recipes.Agent;
 using AiLocalPack.Toolkit.Recipes.Godot;
 using AiLocalPack.Toolkit.Recipes.RenPy;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
@@ -24,7 +25,7 @@ namespace AiLocalPack.Cli.Commands;
 /// Developer commands for checking the install transaction by hand (task 27): <c>dev apply-files &lt;game&gt; &lt;dir&gt;</c>
 /// installs the files of a folder (laid out like the game folder) as a pack, <c>dev uninstall &lt;game&gt;</c> undoes it.
 /// <c>--dependency id@version</c> installs whitelisted dependencies with them (task 32). Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
-/// <c>dev fixture rpgmaker &lt;dir&gt;</c>, <c>dev fixture renpy &lt;dir&gt;</c> and <c>dev fixture godot &lt;dir&gt;</c> write synthetic games (tasks 28, 30, 35).
+/// <c>dev fixture rpgmaker|renpy|godot|unity|unreal|custom &lt;dir&gt;</c> write synthetic games (tasks 28, 30, 35, 57).
 /// </summary>
 internal static class DevCommand
 {
@@ -325,7 +326,22 @@ internal static class DevCommand
             result.InvocationConfiguration.Output.WriteLine($"Wrote a synthetic Unreal game into {dir} ({files.Count} files).");
             return 0;
         });
-        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot, unity, unreal };
+        var customDir = new Argument<string>("dir") { Description = "Folder to create the game in (missing or empty)." };
+        var custom = new Command("custom", "Write a synthetic game in a made-up binary format no toolkit tool reads (the agent writes its own extractor, task 57).") { customDir };
+        custom.SetAction(result =>
+        {
+            var dir = Path.GetFullPath(result.GetValue(customDir)!);
+            if (File.Exists(dir) || (Directory.Exists(dir) && Directory.EnumerateFileSystemEntries(dir).Any()))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"{dir} already exists and isn't an empty folder.");
+                return 1;
+            }
+
+            var files = CustomFormatFixture.Create(dir);
+            result.InvocationConfiguration.Output.WriteLine($"Wrote a synthetic game in a made-up format into {dir} ({files.Count} files).");
+            return 0;
+        });
+        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot, unity, unreal, custom };
     }
 
     private static Command BuildUninstall(OsEnvironment env)

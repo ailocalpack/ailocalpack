@@ -76,7 +76,9 @@ public sealed record LocalPackString(string Key, string Original);
 /// replacement?, swapped, uncovered}, warnings [{key, rule, message, original, translation}], untranslated [{key,
 /// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?, update? {baseRevision, added, changed,
 /// removed}}</c>; tried and shareDismissed are the player's, task 55; update is task 56's), since a pack folder holds
-/// nothing else; beside it <c>&lt;id&gt;.glossary.json</c>, the glossary the pack was made with (task 56: an update of
+/// nothing else; a binary patch pack's archive (task 57) is in <c>releases/&lt;Release asset name&gt;</c>
+/// (<see cref="PatchArchiveName"/>), as a local registry keeps it (<c>PackFetcher.LocalReleasesFolder</c>); beside the
+/// report <c>&lt;id&gt;.glossary.json</c>, the glossary the pack was made with (task 56: an update of
 /// the pack starts from it). Until GitHub sign-in
 /// (task 58) the author is <see cref="PlaceholderAuthor"/>, replaced when publishing. Listing never throws for disk
 /// state (a broken pack is logged and left out).
@@ -89,6 +91,15 @@ public sealed class LocalPackStore
     public const int ReportSchemaVersion = 1;
 
     private const string ReportsFolder = "reports";
+
+    /// <summary>Where patch archives go, named as their Release asset (the local registry's folder name).</summary>
+    public const string ReleasesFolder = "releases";
+
+    /// <summary>
+    /// The Release download folder of patch archives in the manifest's <c>patch.url</c>, until publishing (task 60) uploads
+    /// the archive and names its real asset; a local pack's archive is always read from <see cref="ReleasesFolder"/>.
+    /// </summary>
+    public const string PatchUrlPrefix = "https://github.com/ailocalpack/registry/releases/download/patches/";
 
     private static readonly JsonSerializerOptions WriteOptions = new(LocalPackJsonContext.Default.Options)
     {
@@ -116,6 +127,29 @@ public sealed class LocalPackStore
     public string GlossaryPath(GameId game, string language, string id) =>
         Path.Combine(Root, ReportsFolder, RegistryLayout.GameFolder(game), language, id + ".glossary.json");
 
+    /// <summary>The archive's Release asset name: <c>&lt;game folder&gt;-&lt;language&gt;-&lt;pack id&gt;-&lt;revision&gt;.zip</c>.</summary>
+    public static string PatchArchiveName(GameId game, string language, string id, int revision)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        return $"{RegistryLayout.GameFolder(game)}-{language}-{id}-{revision.ToString(CultureInfo.InvariantCulture)}.zip";
+    }
+
+    /// <summary>The <c>patch.url</c> of a local patch pack.</summary>
+    public static Uri PatchUrl(GameId game, string language, string id, int revision) => new(PatchUrlPrefix + PatchArchiveName(game, language, id, revision));
+
+    /// <summary>The local archive of a patch pack (named by its <c>patch.url</c>), or <c>null</c> for a recipe pack.</summary>
+    public string? PatchArchivePath(PackManifest manifest)
+    {
+        ArgumentNullException.ThrowIfNull(manifest);
+        if (manifest.Patch is not { } patch)
+        {
+            return null;
+        }
+
+        var name = Uri.UnescapeDataString(patch.Url.Segments[^1]);
+        return name.Length == 0 || name is "." or ".." || name.IndexOfAny(['/', '\\', ':']) >= 0 ? null : Path.Combine(Root, ReleasesFolder, name);
+    }
+
     /// <summary>
     /// <paramref name="preferred"/> when no local pack of the game + language has it, else the first free
     /// <c>&lt;preferred&gt;-2</c>, <c>-3</c>…
@@ -140,13 +174,32 @@ public sealed class LocalPackStore
     /// </summary>
     /// <param name="manifest">The manifest; its <see cref="PackManifest.Strings"/> is set here.</param>
     /// <param name="glossary">The glossary the pack was made with, kept for its updates (none deletes an earlier one).</param>
+    /// <param name="patchArchive">A patch pack's archive (task 57), moved into <see cref="ReleasesFolder"/> first; required when the manifest has a <c>patch</c>.</param>
     /// <exception cref="IOException">A file can't be written.</exception>
     /// <exception cref="UnauthorizedAccessException">A file can't be written.</exception>
-    public LocalPack Save(PackManifest manifest, StringTable table, LocalPackReport report, Glossary? glossary = null)
+    public LocalPack Save(PackManifest manifest, StringTable table, LocalPackReport report, Glossary? glossary = null, string? patchArchive = null)
     {
         ArgumentNullException.ThrowIfNull(manifest);
         ArgumentNullException.ThrowIfNull(table);
         ArgumentNullException.ThrowIfNull(report);
+        long archiveBytes = 0;
+        if (manifest.Patch is not null)
+        {
+            var archivePath = PatchArchivePath(manifest) ?? throw new ArgumentException("The patch URL names no archive file.", nameof(manifest));
+            if (patchArchive is null)
+            {
+                throw new ArgumentException("A patch pack needs its archive.", nameof(patchArchive));
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(archivePath)!);
+            if (!string.Equals(Path.GetFullPath(patchArchive), archivePath, StringComparison.Ordinal))
+            {
+                File.Move(patchArchive, archivePath, overwrite: true);
+            }
+
+            archiveBytes = new FileInfo(archivePath).Length;
+        }
+
         using var compressed = new MemoryStream();
         StringTableSerializer.Write(table, compressed, compress: true);
         var strings = compressed.ToArray();
@@ -180,7 +233,7 @@ public sealed class LocalPackStore
             }
         }
 
-        var sized = report with { SizeBytes = strings.LongLength + manifestBytes.LongLength };
+        var sized = report with { SizeBytes = strings.LongLength + manifestBytes.LongLength + archiveBytes };
         var glossaryPath = GlossaryPath(manifest.Game, manifest.Language, manifest.Id);
         Directory.CreateDirectory(Path.GetDirectoryName(glossaryPath)!);
         if (glossary is not null)
@@ -294,11 +347,16 @@ public sealed class LocalPackStore
         return pack with { Report = report };
     }
 
-    /// <summary>Deletes the pack folder and its report (nothing when absent).</summary>
+    /// <summary>Deletes the pack folder, its patch archive and its report (nothing when absent).</summary>
     /// <exception cref="IOException">A file can't be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">A file can't be deleted.</exception>
     public void Delete(GameId game, string language, string id)
     {
+        if (Find(game, language, id) is { } pack && PatchArchivePath(pack.Manifest) is { } archive)
+        {
+            File.Delete(archive);
+        }
+
         var folder = PackFolder(game, language, id);
         if (Directory.Exists(folder))
         {

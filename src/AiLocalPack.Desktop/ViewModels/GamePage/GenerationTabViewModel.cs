@@ -79,6 +79,9 @@ public sealed class GenerationCheckViewModel(GenerationCheckState state, string 
     public bool IsBad => State == GenerationCheckState.Bad;
 
     public bool IsPending => State == GenerationCheckState.Pending;
+
+    /// <summary>Not a blocker, but the player should know (task 57: the agent writes its own reader).</summary>
+    public bool IsWarning => State == GenerationCheckState.Warning;
 }
 
 public enum GenerationCheckState
@@ -86,6 +89,7 @@ public enum GenerationCheckState
     Pending,
     Ok,
     Bad,
+    Warning,
 }
 
 /// <summary>A line of "Just translated": key · original (from the player's copy) · translation, ⚠ with the warning's rule.</summary>
@@ -393,7 +397,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _game.IsAvailable,
         SelectedAgent?.IsReady == true,
         EstimateState,
-        _estimate is { Source: TextSizeSource.Toolkit },
+        _estimate is { Source: not TextSizeSource.ToolkitFailed },
         _estimate?.Space.IsEnough == true,
         _starting));
 
@@ -1334,9 +1338,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         return e.Source switch
         {
             TextSizeSource.Toolkit => new(GenerationCheckState.Ok, _localizer.Format(nameof(Strings.Gen_Check_Engine_Supported), engine)),
-            TextSizeSource.UnknownEngine => new(GenerationCheckState.Bad, _localizer[nameof(Strings.Gen_Check_Engine_Unknown)]),
-            TextSizeSource.EngineDisabled => new(GenerationCheckState.Bad, _localizer.Format(nameof(Strings.Gen_Check_Engine_Disabled), engine)),
-            TextSizeSource.NoTool => new(GenerationCheckState.Bad, _localizer.Format(nameof(Strings.Gen_Check_Engine_NoTool), engine)),
+            TextSizeSource.UnknownEngine => new(GenerationCheckState.Warning, _localizer[nameof(Strings.Gen_Check_Engine_Unknown)]),
+            TextSizeSource.EngineDisabled => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_Disabled), engine)),
+            TextSizeSource.NoTool => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_NoTool), engine)),
             _ => new(GenerationCheckState.Bad, _localizer.Format(nameof(Strings.Gen_Check_Engine_Failed), engine, e.ToolkitError)),
         };
     }

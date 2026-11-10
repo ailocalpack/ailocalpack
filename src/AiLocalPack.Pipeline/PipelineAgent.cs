@@ -13,6 +13,18 @@ public sealed record PipelineAgentResult(GenerationStepResult? Stop, string? Rep
 }
 
 /// <summary>
+/// A run in the agent's own workspace (task 57, a game the toolkit can't read): the job's <c>agent/</c> folder as the
+/// working folder, reading files, editing them and running commands there (each adapter's sandbox keeps writes inside
+/// it and has no network), the <see cref="PromptTemplate.SystemScripts"/> system prompt; the toolkit server still reads
+/// the working copy.
+/// </summary>
+public sealed record AgentWorkspace(string Folder)
+{
+    public static IReadOnlySet<AgentBuiltinTool> Tools { get; } =
+        new HashSet<AgentBuiltinTool> { AgentBuiltinTool.ReadFiles, AgentBuiltinTool.EditFiles, AgentBuiltinTool.RunCommands };
+}
+
+/// <summary>
 /// Runs the job's agent for a stage: finds the program and checks its sign-in first (a signed-out Codex retries for half
 /// a minute before saying so), then runs it headless in the working copy with the toolkit server as its only tools
 /// (no built-in file, edit or shell tools), the <see cref="PromptTemplate.System"/> prompt appended and the job's model.
@@ -33,13 +45,17 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         PromptTemplate prompt,
         IReadOnlyDictionary<string, string> values,
         string gameName,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        AgentWorkspace? workspace = null)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(prompt);
         ArgumentNullException.ThrowIfNull(values);
         var task = prompt.Render(values);
-        var system = PromptTemplate.System.Render(PromptValues.System(gameName, context.Job.Language));
+        var systemTemplate = workspace is null ? PromptTemplate.System : PromptTemplate.SystemScripts;
+        var system = workspace is null
+            ? PromptTemplate.System.Render(PromptValues.System(gameName, context.Job.Language))
+            : PromptTemplate.SystemScripts.Render(PromptValues.SystemScripts(gameName, context.Job.Language, context.CopyFolder));
         if (await adapter.DetectAsync(cancellationToken).ConfigureAwait(false) is not { } installation)
         {
             return Stop(context, new GenerationStepResult.Failed(
@@ -53,13 +69,27 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                 GenerationFailureKind.SignedOut, $"{adapter.DisplayName} isn't signed in: sign in in Settings → AI agents."));
         }
 
-        var request = new AgentRunRequest(task, context.CopyFolder)
+        if (workspace is not null)
+        {
+            try
+            {
+                Directory.CreateDirectory(workspace.Folder);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                return Stop(context, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's workspace {workspace.Folder} can't be made: {e.Message}"));
+            }
+        }
+
+        var request = new AgentRunRequest(task, workspace?.Folder ?? context.CopyFolder)
         {
             SystemPrompt = system,
+            BuiltinTools = workspace is null ? new HashSet<AgentBuiltinTool>() : AgentWorkspace.Tools,
             McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language)],
             Model = context.Job.Options.Model,
         };
-        context.Log($"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {PromptTemplate.System.Label}"
+        context.Log($"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
+            + (workspace is null ? "" : $", in its workspace {workspace.Folder} with file and command tools")
             + (request.Model is { } model ? $", model {model}." : "."));
         var transcript = Transcript(context);
         var usage = new List<AgentUsage>();

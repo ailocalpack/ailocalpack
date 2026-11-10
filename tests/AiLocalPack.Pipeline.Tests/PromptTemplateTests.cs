@@ -97,6 +97,45 @@ public sealed class PromptTemplateTests
     }
 
     [Fact]
+    public void The_scripts_system_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.SystemScripts("Lantern Tale", "ru", "/data/work/fp-ab/job/game");
+
+        // Act
+        var prompt = PromptTemplate.SystemScripts.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-scripts.v1.ru.txt", prompt));
+    }
+
+    [Fact]
+    public void The_unknown_engine_extract_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.ExtractUnknown("Lantern Tale", "ru", EngineKind.Unknown, "/data/work/fp-ab/job/game", 5);
+
+        // Act
+        var prompt = PromptTemplate.ExtractUnknown.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("extract-unknown.v1.ru.txt", prompt));
+    }
+
+    [Fact]
+    public void The_unknown_engine_rebuild_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.RebuildUnknown("Lantern Tale", "ru", "/data/work/fp-ab/job/game", 1_234);
+
+        // Act
+        var prompt = PromptTemplate.RebuildUnknown.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("rebuild-unknown.v1.ru.txt", prompt));
+    }
+
+    [Fact]
     public void A_missing_field_is_refused()
     {
         // Arrange
