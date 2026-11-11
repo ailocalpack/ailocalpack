@@ -28,6 +28,8 @@ using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Publishing;
+using AiLocalPack.Desktop.Ratings;
+using AiLocalPack.Core.Ratings;
 using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
@@ -223,6 +225,13 @@ internal static class Composition
             new PullRequestStatusClient(GitHubOAuthApp.CreateHttpClient(UserAgent), sp.GetRequiredService<GitHubSession>().App, sp.GetRequiredService<TimeProvider>()),
             sp.GetRequiredService<GitHubSession>()));
         services.AddSingleton<PullRequestTracker>();
+
+        // Ratings (task 63): likes and works / doesn't-work reports in the pack's Discussion, with the player's token.
+        services.AddSingleton(sp => new PackRatingStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<PackRatingStore>>()));
+        services.AddSingleton<IPackDiscussions>(sp => new PackDiscussions(
+            new PackDiscussionClient(GitHubOAuthApp.CreateHttpClient(UserAgent), sp.GetRequiredService<GitHubSession>().App, sp.GetRequiredService<TimeProvider>()),
+            sp.GetRequiredService<GitHubSession>()));
+        services.AddSingleton<PackRatings>();
     }
 
     /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>

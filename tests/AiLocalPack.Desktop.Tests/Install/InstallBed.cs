@@ -99,7 +99,8 @@ internal sealed class InstallBed : IDisposable
         IReadOnlyList<PackDependency>? dependencies = null,
         bool writeStrings = true,
         string prefix = "RU ",
-        IReadOnlyList<string>? fonts = null)
+        IReadOnlyList<string>? fonts = null,
+        Uri? discussion = null)
     {
         var recipe = _tool;
         var strings = recipe.Extract(GameDir).Strings.ToDictionary(s => s.Key, s => prefix + s.Original, StringComparer.Ordinal);
@@ -128,7 +129,7 @@ internal sealed class InstallBed : IDisposable
             date,
             date);
         var folder = $"games/steam-10/{language}/{id}";
-        _registry.Pack(10, language, id, status, likes, buildId);
+        _registry.Pack(10, language, id, status, likes, buildId, discussion: discussion);
         _registry.WriteFile($"{folder}/manifest.json", PackManifestSerializer.Write(manifest));
         if (writeStrings)
         {

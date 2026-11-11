@@ -268,6 +268,12 @@ public sealed partial class PackRowViewModel : ObservableObject
 
     public bool HasDiscussion => Pack.Discussion is not null;
 
+    /// <summary>"Your rating" (task 63) when this is the installed pack, else <c>null</c>.</summary>
+    public PackRatingViewModel? Rating { get; private set; }
+
+    /// <summary>The rating block is shown: the installed pack, played with since it was installed.</summary>
+    public bool ShowRating => Rating?.IsVisible ?? false;
+
     // ---------- Details: actions ----------
 
     /// <summary>
@@ -301,6 +307,18 @@ public sealed partial class PackRowViewModel : ObservableObject
 
     // ---------- Updates from the tab ----------
 
+    /// <summary>The installed pack's rating block, or <c>null</c> for any other pack.</summary>
+    internal void SetRating(PackRatingViewModel? rating)
+    {
+        if (Rating != rating)
+        {
+            Rating = rating;
+            OnPropertyChanged(nameof(Rating));
+        }
+
+        OnPropertyChanged(nameof(ShowRating));
+    }
+
     internal void SetPack(RegistryPack pack)
     {
         Pack = pack;
@@ -331,6 +349,7 @@ public sealed partial class PackRowViewModel : ObservableObject
         InstallCommand.NotifyCanExecuteChanged();
         UninstallCommand.NotifyCanExecuteChanged();
         OpenDiscussionCommand.NotifyCanExecuteChanged();
+        Rating?.Refresh();
     }
 
     private void SetState(PackCheckState state, PackManifest? manifest, PackCompatibility? compatibility, PackManifestFetch? failure)

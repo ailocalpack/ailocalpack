@@ -3452,4 +3452,94 @@
   <data name="Settings_PublishedPack_Pr" xml:space="preserve">
     <value>PR</value>
   </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>Your rating</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>Like</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>Liked</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>Works</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>Doesn't work</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>What works or doesn't? (optional)</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>Works / Doesn't work goes to the pack's GitHub Discussion under your account, with your game's build and your comment.</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>Sending to GitHub…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>You reported «{0}» for rev {1} on {2}. Sending again replaces your report.</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>You're credited on this pack, so you can't confirm it works: other players do.</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>Rating opens once the registry creates this pack's Discussion on GitHub.</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>How is «{0}»? Your answer helps other players.</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>Thanks! Your report was sent to the pack's GitHub Discussion.</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>Add details</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>Sign in to GitHub to rate packs</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>Likes and reports go to the pack's GitHub Discussion under your account. Installing packs never needs an account.</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>Your rating is sent as soon as GitHub confirms the sign-in.</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>Sign in to GitHub to rate packs.</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>Couldn't read your GitHub sign-in from the system keychain. Try again, or sign in again in Settings → GitHub.</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub no longer accepts your sign-in. Sign in again.</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>The pack's Discussion is no longer on GitHub.</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>The registry's maintainers locked the pack's Discussion: it takes no new ratings.</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub refused it: {0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>GitHub's request limit is used up for now; try again after {0}.</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>GitHub's request limit is used up for now; try again in a while.</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>Can't reach GitHub. Check the connection and try again.</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>Couldn't send it: {0}</value>
+  </data>
 </root>

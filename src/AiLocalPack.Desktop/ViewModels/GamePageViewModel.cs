@@ -6,6 +6,7 @@ using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Ratings;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Covers;
@@ -15,6 +16,7 @@ using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Publishing;
+using AiLocalPack.Desktop.Ratings;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
@@ -59,6 +61,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly GenerationService _jobs;
     private readonly LocalPacks _localPacks;
     private readonly PublishFlow _publish;
+    private readonly PackRatings _ratings;
     private readonly IDialogService _dialogs;
     private readonly ToastService _toasts;
     private readonly TimeProvider _time;
@@ -117,6 +120,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         LocalPacks localPacks,
         IUpdateBases updateBases,
         PublishFlow publish,
+        PackRatings ratings,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null)
     {
@@ -136,6 +140,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _jobs = jobs;
         _localPacks = localPacks;
         _publish = publish;
+        _ratings = ratings;
         _dialogs = dialogs;
         _toasts = toasts;
         _time = time;
@@ -151,7 +156,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         UpdateTabs();
         Packs = new PacksTabViewModel(
             game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, localPacks, jobs,
-            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, _logger);
+            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, ratings, _logger);
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
@@ -168,6 +173,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _statuses.JobChanged += OnJobChanged;
         _localPacks.Changed += OnLocalPacksChanged;
         _publish.Changed += OnLocalPacksChanged;
+        _ratings.Changed += OnRatingsChanged;
         _ = LoadCoverAsync(covers);
     }
 
@@ -414,6 +420,92 @@ public sealed partial class GamePageViewModel : PageViewModel
         _ => string.Empty,
     };
 
+    // ---------- Rating prompt (task 63) ----------
+
+    /// <summary>The installed registry pack's revision as the player played it, or <c>null</c>.</summary>
+    private PackRating? InstalledRating => Status.Installed is { Local: false } installed ? _ratings.Find(Game.Id, InstalledLanguage, installed.PackId) : null;
+
+    /// <summary>The installed pack's language: the index entry's, else the page's.</summary>
+    private string InstalledLanguage => InstalledPack?.Language ?? Language;
+
+    /// <summary>
+    /// The strip in the banner's place after the first session with a newly installed pack ("How is «…»? Works / Doesn't
+    /// work / Later"; <see cref="RatingRules.ShowPrompt"/>); never next to the update banner.
+    /// </summary>
+    public bool ShowRatingPrompt => !ShowUpdateBanner && !Status.IsBlocked && InstalledPack is { } pack
+        && RatingRules.ShowPrompt(Status.Installed, InstalledRating, DiscussionRef.TryParse(pack.Discussion, out _), IsInstalledAuthor(pack));
+
+    /// <summary>"How is «Фонарщики»? Your answer helps other players."</summary>
+    public string RatingPromptText => _localizer.Format(nameof(Strings.Rating_Prompt), InstalledTitle);
+
+    /// <summary>A report from the prompt is on its way: its buttons are off.</summary>
+    public bool IsRatingSending => InstalledPack is { } pack && _ratings.SendOf(Game.Id, pack.Language, pack.Id) is { IsRunning: true };
+
+    /// <summary>Why the prompt's report didn't go through, or empty.</summary>
+    public string RatingPromptError => InstalledPack is { } pack && _ratings.SendOf(Game.Id, pack.Language, pack.Id) is { Error: { } error }
+        ? RatingTexts.Error(error, _localizer)
+        : string.Empty;
+
+    public bool HasRatingPromptError => RatingPromptError.Length > 0;
+
+    /// <summary>⋯ → <c>Rate</c>: the Packs tab on the installed pack, where its rating block is (after the player played with it).</summary>
+    public bool CanRate => RatingRules.ShowBlock(Status.Installed, InstalledRating);
+
+    private bool CanSendRating => !IsRatingSending;
+
+    private bool IsInstalledAuthor(RegistryPack pack) =>
+        RatingRules.IsAuthor(_ratings.Login, pack.Author, Packs.Rows.FirstOrDefault(r => r.Pack.Id == pack.Id)?.Manifest?.Authors);
+
+    [RelayCommand(CanExecute = nameof(CanSendRating))]
+    private void RateWorks() => SendRating(PackVerdict.Works);
+
+    [RelayCommand(CanExecute = nameof(CanSendRating))]
+    private void RateDoesNotWork() => SendRating(PackVerdict.DoesNotWork);
+
+    [RelayCommand]
+    private void RateLater()
+    {
+        if (InstalledPack is { } pack && Status.Installed is { } installed)
+        {
+            _ratings.Later(Game.Id, pack.Language, pack.Id, installed.Revision);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRate))]
+    private void Rate() => ShowInPacks();
+
+    /// <summary>The prompt's Works / Doesn't work: the report with no text; the toast's <c>Add details</c> opens the rating block.</summary>
+    private void SendRating(PackVerdict verdict)
+    {
+        if (InstalledPack is { } pack && Status.Installed is { } installed)
+        {
+            _ratings.Report(Game, pack, installed.Revision, verdict, null, ShowInPacks);
+        }
+    }
+
+    /// <summary>The player's ratings or a send changed (any thread): the prompt, the menu's Rate and the Packs tab follow.</summary>
+    private void OnRatingsChanged(object? sender, GameId game)
+    {
+        if (game == Game.Id)
+        {
+            _ui.Post(RefreshRatings);
+        }
+    }
+
+    private void RefreshRatings()
+    {
+        Packs.RefreshRatings();
+        OnPropertyChanged(nameof(ShowRatingPrompt));
+        OnPropertyChanged(nameof(RatingPromptText));
+        OnPropertyChanged(nameof(IsRatingSending));
+        OnPropertyChanged(nameof(RatingPromptError));
+        OnPropertyChanged(nameof(HasRatingPromptError));
+        OnPropertyChanged(nameof(CanRate));
+        RateWorksCommand.NotifyCanExecuteChanged();
+        RateDoesNotWorkCommand.NotifyCanExecuteChanged();
+        RateCommand.NotifyCanExecuteChanged();
+    }
+
     /// <summary>
     /// The banner's <c>Translate new strings</c>: when the header offers the update (else it is the header's action), and
     /// for a pack made for another version while the header offers Play.
@@ -529,6 +621,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _statuses.JobChanged -= OnJobChanged;
         _localPacks.Changed -= OnLocalPacksChanged;
         _publish.Changed -= OnLocalPacksChanged;
+        _ratings.Changed -= OnRatingsChanged;
         _closed.Cancel();
         Packs.Close();
         Generation.Close();
@@ -810,6 +903,9 @@ public sealed partial class GamePageViewModel : PageViewModel
         PrimaryCommand.NotifyCanExecuteChanged();
         ReapplyCommand.NotifyCanExecuteChanged();
         UninstallCommand.NotifyCanExecuteChanged();
+        RateCommand.NotifyCanExecuteChanged();
+        RateWorksCommand.NotifyCanExecuteChanged();
+        RateDoesNotWorkCommand.NotifyCanExecuteChanged();
     }
 
     private void UpdateTabs()

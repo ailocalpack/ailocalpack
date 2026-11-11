@@ -602,6 +602,11 @@
     <Style Selector="Button.bare">
         <Setter Property="Background" Value="Transparent" />
     </Style>
+    <!-- Rating (task 63): the like given, the verdict reported -->
+    <Style Selector="Button.ghost.chosen">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+    </Style>
     <!-- Confirming a destructive action (Remove) -->
     <Style Selector="Button.danger">
         <Setter Property="MinHeight" Value="40" />
@@ -1347,6 +1352,15 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <!-- "Your rating" under the installed pack's actions (task 63) -->
+    <Style Selector="Border.ratingBlock">
+        <Setter Property="Padding" Value="0,12,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+    </Style>
+    <Style Selector="Border.ratingBlock TextBlock.bad">
+        <Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" />
     </Style>
     <!-- Tinted compatibility box: green / amber / red; neutral while checking -->
     <Style Selector="Border.compatBox">

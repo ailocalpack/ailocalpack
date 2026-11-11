@@ -239,6 +239,11 @@ public sealed partial class FakeGitHubApi : HttpMessageHandler
         var path = Uri.UnescapeDataString(parts[0]);
         var query = parts.Length > 1 ? parts[1].Split('&').Select(p => p.Split('=', 2)).ToDictionary(p => p[0], p => Uri.UnescapeDataString(p.Length > 1 ? p[1] : "")) : [];
         var json = body is { Length: > 0 } && !path.StartsWith("uploads/", StringComparison.Ordinal) ? JsonNode.Parse(body) : null;
+        if (path == "graphql" && method == "POST")
+        {
+            return GraphQl(json!);
+        }
+
         if (path == "user" && method == "GET")
         {
             return Ok(new JsonObject { ["login"] = Login, ["name"] = "Octo Cat", ["html_url"] = $"https://github.com/{Login}" });

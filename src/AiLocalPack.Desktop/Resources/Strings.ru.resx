@@ -3523,4 +3523,94 @@
   <data name="Settings_PublishedPack_Pr" xml:space="preserve">
     <value>PR</value>
   </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>Оценить</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>Ваша оценка</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>Нравится</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>Вам нравится</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>Работает</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>Не работает</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>Что работает, а что нет? (необязательно)</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>«Работает» / «Не работает» уходит в обсуждение пакета на GitHub от вашего имени, с версией игры и вашим комментарием.</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>Отправляем на GitHub…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>Вы отметили «{0}» для ревизии {1} ({2}). Новая отправка заменит ваш отчёт.</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>Вы среди авторов пакета, поэтому не можете подтвердить, что он работает: это делают другие игроки.</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>Оценки откроются, когда реестр создаст обсуждение этого пакета на GitHub.</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>Как вам «{0}»? Ваш ответ поможет другим игрокам.</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>Позже</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>Спасибо! Отчёт отправлен в обсуждение пакета на GitHub.</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>Добавить подробности</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>Войдите в GitHub, чтобы оценивать пакеты</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>Оценки и отчёты публикуются в обсуждении пакета на GitHub от вашего имени. Для установки пакетов аккаунт не нужен.</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>Оценка отправится, как только GitHub подтвердит вход.</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>Войдите в GitHub, чтобы оценивать пакеты.</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>Не удалось прочитать вход в GitHub из системной связки ключей. Попробуйте ещё раз или войдите заново в «Настройки → GitHub».</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub больше не принимает ваш вход. Войдите снова.</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>Обсуждения этого пакета больше нет на GitHub.</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>Мейнтейнеры реестра закрыли обсуждение пакета: новые оценки не принимаются.</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub отказал: {0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Лимит запросов к GitHub пока исчерпан; попробуйте после {0}.</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>Лимит запросов к GitHub пока исчерпан; попробуйте немного позже.</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>Нет связи с GitHub. Проверьте подключение и попробуйте ещё раз.</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>Не удалось отправить: {0}</value>
+  </data>
 </root>

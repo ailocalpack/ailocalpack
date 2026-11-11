@@ -66,6 +66,9 @@ public sealed record AppPaths
     /// </summary>
     public string GitHubAccountFile => Path.Combine(Data, "github-account.json");
 
+    /// <summary>The player's ratings of installed packs (task 63): played with, "Later", liked, reported.</summary>
+    public string PackRatingsFile => Path.Combine(Data, "pack-ratings.json");
+
     /// <summary>Copies of game files the agent works on during generation.</summary>
     public string WorkingCopies => Path.Combine(Data, "work");
 

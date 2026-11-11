@@ -458,6 +458,45 @@
                                     <TextBlock x:Name="InstallHint" Classes="muted" FontSize="12" Text="{Binding InstallHint}" IsVisible="{Binding HasInstallHint}" TextWrapping="Wrap" />
                                 </StackPanel>
 
+                                <!-- Your rating (task 63): the installed pack, after the player played with it -->
+                                <Border x:Name="RatingBlock" Classes="ratingBlock" IsVisible="{Binding ShowRating}">
+                                    <StackPanel Spacing="8" DataContext="{Binding Rating}" x:DataType="gp:PackRatingViewModel">
+                                        <TextBlock Classes="muted" FontSize="12" FontWeight="SemiBold" Text="{l:Loc Rating_Title}" />
+                                        <WrapPanel ItemSpacing="8" LineSpacing="8">
+                                            <Button x:Name="LikeButton" Classes="ghost sm" Classes.chosen="{Binding IsLiked}" Command="{Binding LikeCommand}"
+                                                    AutomationProperties.Name="{Binding LikeText}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{Binding LikeText}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="WorksButton" Classes="ghost sm" Classes.chosen="{Binding IsWorksReported}" Command="{Binding WorksCommand}"
+                                                    IsVisible="{Binding ShowConfirm}" AutomationProperties.Name="{l:Loc Rating_Works}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{l:Loc Rating_Works}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="DoesNotWorkButton" Classes="ghost sm" Classes.chosen="{Binding IsDoesNotWorkReported}" Command="{Binding DoesNotWorkCommand}"
+                                                    IsVisible="{Binding ShowConfirm}" AutomationProperties.Name="{l:Loc Rating_DoesNotWork}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconX}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{l:Loc Rating_DoesNotWork}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                        </WrapPanel>
+                                        <TextBox x:Name="RatingComment" Text="{Binding Comment}" IsVisible="{Binding ShowComment}" AcceptsReturn="True" TextWrapping="Wrap"
+                                                 MaxLength="2000" MinHeight="56" MaxHeight="140" PlaceholderText="{l:Loc Rating_Comment}" AutomationProperties.Name="{l:Loc Rating_Comment}" />
+                                        <TextBlock x:Name="RatingStatus" Classes="muted" FontSize="12" Classes.bad="{Binding IsFailed}" Text="{Binding StatusText}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+
                                 <Button x:Name="ReviewsLink" Classes="link" Padding="2,0" HorizontalAlignment="Left" Command="{Binding OpenDiscussionCommand}"
                                         IsVisible="{Binding HasDiscussion}" ToolTip.Tip="{l:Loc Packs_Reviews_Tip}" AutomationProperties.Name="{l:Loc Packs_Reviews}">
                                     <StackPanel Orientation="Horizontal" Spacing="4">

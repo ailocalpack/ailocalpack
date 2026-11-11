@@ -7,6 +7,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Localization;
+using AiLocalPack.Desktop.Ratings;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
@@ -79,6 +80,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
     private readonly Action<LocalPack> _installLocal;
     private readonly Action<LocalPack> _deleteLocal;
     private readonly Func<LocalPack, PackPublishViewModel> _publish;
+    private readonly PackRatings _ratings;
     private readonly ILogger _logger;
     private readonly CancellationTokenSource _closed = new();
     private readonly Lock _lock = new();
@@ -126,9 +128,11 @@ public sealed partial class PacksTabViewModel : ObservableObject
         Action<LocalPack> installLocal,
         Action<LocalPack> deleteLocal,
         Func<LocalPack, PackPublishViewModel> publish,
+        PackRatings ratings,
         ILogger logger)
     {
         _publish = publish;
+        _ratings = ratings;
         _game = game;
         _status = status;
         _target = language;
@@ -238,6 +242,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
     public void Activate()
     {
         _active = true;
+        SyncSelectedRating();
         Pump();
     }
 
@@ -307,6 +312,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
         foreach (var row in Rows)
         {
             row.SetContext(context);
+            AttachRating(row);
         }
 
         foreach (var row in Mine)
@@ -330,6 +336,17 @@ public sealed partial class PacksTabViewModel : ObservableObject
     {
         RebuildMine();
         OnPropertyChanged(string.Empty);
+    }
+
+    /// <summary>The player's ratings or a send changed (task 63): the installed pack's rating block follows.</summary>
+    public void RefreshRatings()
+    {
+        foreach (var row in Rows)
+        {
+            AttachRating(row);
+        }
+
+        SyncSelectedRating();
     }
 
     /// <summary>The installed block's <c>Show in Packs</c>: the pack's language, the pack selected.</summary>
@@ -383,7 +400,32 @@ public sealed partial class PacksTabViewModel : ObservableObject
         }
 
         MarkSelected();
+        SyncSelectedRating();
         Pump();
+    }
+
+    /// <summary>The installed pack's row gets "Your rating" (with the manifest's authors once known); every other row none.</summary>
+    private void AttachRating(PackRowViewModel row)
+    {
+        if (_status.Installed is { Local: false } installed && installed.PackId == row.Pack.Id)
+        {
+            var rating = row.Rating ?? new PackRatingViewModel(row.Pack, installed, _ratings, _localizer, () => _game);
+            rating.Update(row.Pack, installed, row.Manifest?.Authors);
+            row.SetRating(rating);
+        }
+        else
+        {
+            row.SetRating(null);
+        }
+    }
+
+    /// <summary>The selected pack's rating block reads the player's like and report from GitHub (once per pack, signed in).</summary>
+    private void SyncSelectedRating()
+    {
+        if (_active && Selected?.Rating is { IsVisible: true } rating)
+        {
+            _ = rating.SyncAsync();
+        }
     }
 
     private void SelectRow(PackRowViewModel row)
@@ -526,6 +568,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             }
 
             row.SetContext(context);
+            AttachRating(row);
             rows.Add(row);
         }
 
@@ -691,6 +734,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
 
                 manifest = fetch.Manifest;
                 row.SetManifest(manifest);
+                AttachRating(row);
             }
 
             var compatibility = await _manifests.CheckAsync(manifest, game, _closed.Token);

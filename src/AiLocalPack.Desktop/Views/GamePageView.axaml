@@ -116,6 +116,7 @@
                                             <MenuFlyout Placement="BottomEdgeAlignedRight">
                                                 <MenuItem x:Name="ReapplyItem" Header="{l:Loc Game_Installed_Reapply}" Command="{Binding ReapplyCommand}" />
                                                 <MenuItem x:Name="ShowInPacksItem" Header="{l:Loc Game_Installed_ShowInPacks}" Command="{Binding ShowInPacksCommand}" />
+                                                <MenuItem x:Name="RateItem" Header="{l:Loc Game_Installed_Rate}" Command="{Binding RateCommand}" IsVisible="{Binding CanRate}" />
                                                 <Separator />
                                                 <MenuItem x:Name="UninstallItem" Header="{l:Loc Game_Installed_Uninstall}" Command="{Binding UninstallCommand}" />
                                             </MenuFlyout>
@@ -159,7 +160,41 @@
                     </Grid>
                 </Panel>
 
-                <!-- Update banner (task 33): incompatible / files put back / re-apply failed; the rating prompt (task 63) goes in the same place -->
+                <!-- Rating prompt (task 63): after the first session with a newly installed pack, in the update banner's place -->
+                <Border x:Name="RatingPrompt" Classes="banner" Margin="24,0" IsVisible="{Binding ShowRatingPrompt}">
+                    <DockPanel>
+                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{DynamicResource AppAccentBrush}" />
+                        </Viewbox>
+                        <Button x:Name="RateLater" DockPanel.Dock="Right" Classes="bare sm" Margin="8,0,0,0" VerticalAlignment="Center"
+                                Command="{Binding RateLaterCommand}" Content="{l:Loc Rating_Later}" />
+                        <Button x:Name="RateDoesNotWork" DockPanel.Dock="Right" Classes="ghost sm" Margin="8,0,0,0" VerticalAlignment="Center"
+                                Command="{Binding RateDoesNotWorkCommand}" AutomationProperties.Name="{l:Loc Rating_DoesNotWork}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconThumbsDown}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{l:Loc Rating_DoesNotWork}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="RateWorks" DockPanel.Dock="Right" Classes="ghost sm" Margin="12,0,0,0" VerticalAlignment="Center"
+                                Command="{Binding RateWorksCommand}" AutomationProperties.Name="{l:Loc Rating_Works}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{l:Loc Rating_Works}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <TextBlock x:Name="RatingPromptText" Text="{Binding RatingPromptText}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="RatingPromptError" Foreground="{DynamicResource AppBadBrush}" FontSize="12" Text="{Binding RatingPromptError}"
+                                       IsVisible="{Binding HasRatingPromptError}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- Update banner (task 33): incompatible / files put back / re-apply failed -->
                 <Border x:Name="UpdateBanner" Classes="banner warn" Margin="24,0" IsVisible="{Binding ShowUpdateBanner}">
                     <DockPanel>
                         <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center">
