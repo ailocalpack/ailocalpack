@@ -60,7 +60,7 @@ public sealed record PublishStatus(
 public static class PublishStatuses
 {
     /// <summary>Players (not the author) who confirm "works" before a pack becomes <c>verified</c> (design §7; the registry's N, task 64).</summary>
-    public const int VerifiedConfirmations = 3;
+    public const int VerifiedConfirmations = Core.Registry.RegistryVerification.RequiredConfirmations;
 
     /// <summary>A local pack's key: game, language and local ID.</summary>
     public static string KeyOf(LocalPack pack)

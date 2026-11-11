@@ -18,7 +18,7 @@ public enum PackVerdict
 /// <summary>
 /// A works / doesn't-work report (task 63): the pack and revision, the game build the player played, and an optional
 /// comment. Posted as a comment in the pack's Discussion (<see cref="PackReportComment"/>); the registry's scheduled
-/// Action (task 64) parses it back to count confirmations.
+/// Action (<c>ratings collect</c>, task 64) parses it back to count confirmations.
 /// </summary>
 /// <param name="Build">The game's build: the store build ID, or <c>files:&lt;8 hex&gt;</c> for a file-hash version; <c>null</c> when unknown.</param>
 /// <param name="Text">The player's own words, or <c>null</c>.</param>
@@ -67,7 +67,7 @@ public sealed record PackReport(
 }
 
 /// <summary>
-/// The comment format of a report, shared with the registry's Action (task 64), which must parse exactly this. The
+/// The comment format of a report, shared with the registry's Action (<c>ratings collect</c>, task 64), which parses exactly this. The
 /// first line is a machine-readable marker, an HTML comment GitHub doesn't render:
 /// <code>
 /// &lt;!-- ailocalpack-report {"v":1,"verdict":"works","game":"steam:620","language":"ru","pack":"full","revision":3,"build":"9087113"} --&gt;

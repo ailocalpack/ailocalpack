@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Registry;
 
@@ -5,6 +6,73 @@ namespace AiLocalPack.Core.Tests.Registry;
 
 public sealed class RegistryInputsTests
 {
+    [Fact]
+    public void Written_ratings_read_back()
+    {
+        // Arrange
+        var written = new Dictionary<RegistryPackKey, RegistryPackRating>
+        {
+            [new RegistryPackKey(GameId.Steam(620), "ru", "full")] = new(new RegistryRating(4, 3, 1), new Uri("https://github.com/ailocalpack/registry/discussions/7"), 2),
+            [new RegistryPackKey(GameId.Steam(620), "de", "komplett")] = new(new RegistryRating(0, 0, 0), null, 1),
+        };
+
+        // Act
+        var (read, _) = RegistryRatings.Read(RegistryRatings.Write(written));
+
+        // Assert
+        read.Should().BeEquivalentTo(written);
+    }
+
+    [Fact]
+    public void Ratings_are_written_in_pack_order()
+    {
+        // Arrange
+        var written = new Dictionary<RegistryPackKey, RegistryPackRating>
+        {
+            [new RegistryPackKey(GameId.Steam(620), "ru", "full")] = new(RegistryRating.None, null, 1),
+            [new RegistryPackKey(GameId.Steam(620), "de", "komplett")] = new(RegistryRating.None, null, 1),
+        };
+
+        // Act
+        var json = RegistryRatings.Write(written);
+
+        // Assert
+        json.IndexOf("steam:620/de/komplett", StringComparison.Ordinal).Should().BeLessThan(json.IndexOf("steam:620/ru/full", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Verified_policy_reads_overrides_by_revision()
+    {
+        // Act
+        var (overrides, _) = VerifiedPolicy.Read("""
+            {"schemaVersion": 1, "packs": [
+              {"pack": "steam:620/ru/full", "revision": 3, "status": "verified", "note": "checked"},
+              {"pack": "steam:620/ru/full", "revision": 4, "status": "alpha"}]}
+            """);
+
+        // Assert
+        overrides.Should().BeEquivalentTo(new Dictionary<(RegistryPackKey, int), PackStatus>
+        {
+            [(new RegistryPackKey(GameId.Steam(620), "ru", "full"), 3)] = PackStatus.Verified,
+            [(new RegistryPackKey(GameId.Steam(620), "ru", "full"), 4)] = PackStatus.Alpha,
+        });
+    }
+
+    [Theory]
+    [InlineData("""{"schemaVersion": 1, "packs": [{"pack": "steam:620", "revision": 1, "status": "alpha"}]}""", "packs[0].pack")]
+    [InlineData("""{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/full", "status": "alpha"}]}""", "packs[0].revision")]
+    [InlineData("""{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/full", "revision": 1, "status": "gold"}]}""", "packs[0].status")]
+    [InlineData("""{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/full", "revision": 1, "status": "alpha"}, {"pack": "steam:620/ru/full", "revision": 1, "status": "verified"}]}""", "packs[1]")]
+    [InlineData("""{"schemaVersion": 2, "packs": []}""", "schemaVersion")]
+    public void Bad_verified_policy_refuses_the_file(string json, string field)
+    {
+        // Act
+        var (overrides, errors) = VerifiedPolicy.Read(json);
+
+        // Assert
+        (overrides, errors.Single().Field).Should().Be((null, field));
+    }
+
     [Fact]
     public void Ratings_read_counts_and_discussion()
     {
@@ -27,6 +95,7 @@ public sealed class RegistryInputsTests
     [InlineData("""{"schemaVersion": 1, "packs": {"steam:620/xx/full": {}}}""", "packs[\"steam:620/xx/full\"]")]
     [InlineData("""{"schemaVersion": 1, "packs": {"steam:620/ru/full": {"likes": -1}}}""", "packs[\"steam:620/ru/full\"].likes")]
     [InlineData("""{"schemaVersion": 1, "packs": {"steam:620/ru/full": {"discussion": "http://x"}}}""", "packs[\"steam:620/ru/full\"].discussion")]
+    [InlineData("""{"schemaVersion": 1, "packs": {"steam:620/ru/full": {"revision": 0}}}""", "packs[\"steam:620/ru/full\"].revision")]
     [InlineData("""{"schemaVersion": 2, "packs": {}}""", "schemaVersion")]
     public void Bad_ratings_refuse_the_file(string json, string field)
     {

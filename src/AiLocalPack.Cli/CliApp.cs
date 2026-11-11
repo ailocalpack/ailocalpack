@@ -17,6 +17,7 @@ public static class CliApp
             ToolkitCommand.Build(env),
             IndexCommand.Build(env),
             PackCommand.Build(env),
+            RatingsCommand.Build(env),
             AgentCommand.Build(env),
             GitHubCommand.Build(env),
             GenCommand.Build(env),

@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Registry;
 
@@ -204,5 +205,147 @@ public sealed class RegistryIndexBuilderTests : IDisposable
 
         // Assert
         result.Index.Should().BeNull();
+    }
+
+    private static readonly RegistryPackKey Menus = new(GameId.Steam(620), "ru", "menus");
+
+    private static Dictionary<RegistryPackKey, RegistryPackRating> MenusRating(int works, int doesNotWork, int? revision = 1) =>
+        new() { [Menus] = new RegistryPackRating(new RegistryRating(0, works, doesNotWork), null, revision) };
+
+    private static RegistryPack MenusIn(RegistryBuildResult result) =>
+        result.Index!.PacksFor(GameId.Steam(620), "ru").Single(p => p.Id == "menus");
+
+    [Fact]
+    public void Three_confirmations_make_the_pack_verified()
+    {
+        // Act
+        var result = RegistryIndexBuilder.Build(RegistryFixtures.Folder, Generated, MenusRating(3, 0), TestContext.Current.CancellationToken);
+
+        // Assert
+        MenusIn(result).Status.Should().Be(PackStatus.Verified);
+    }
+
+    [Fact]
+    public void Two_confirmations_leave_the_pack_alpha()
+    {
+        // Act
+        var result = RegistryIndexBuilder.Build(RegistryFixtures.Folder, Generated, MenusRating(2, 0), TestContext.Current.CancellationToken);
+
+        // Assert
+        MenusIn(result).Status.Should().Be(PackStatus.Alpha);
+    }
+
+    [Fact]
+    public void As_many_doesnt_work_reports_as_confirmations_leave_the_pack_alpha()
+    {
+        // Act
+        var result = RegistryIndexBuilder.Build(RegistryFixtures.Folder, Generated, MenusRating(3, 3), TestContext.Current.CancellationToken);
+
+        // Assert
+        MenusIn(result).Status.Should().Be(PackStatus.Alpha);
+    }
+
+    [Fact]
+    public void Ratings_of_another_revision_count_for_nothing()
+    {
+        // Act
+        var result = RegistryIndexBuilder.Build(RegistryFixtures.Folder, Generated, MenusRating(5, 0, revision: 2), TestContext.Current.CancellationToken);
+
+        // Assert
+        (MenusIn(result).Status, MenusIn(result).Rating.Works).Should().Be((PackStatus.Alpha, 0));
+    }
+
+    [Fact]
+    public void Ratings_of_another_revision_are_reported()
+    {
+        // Act
+        var result = RegistryIndexBuilder.Build(RegistryFixtures.Folder, Generated, MenusRating(5, 0, revision: 2), TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().ContainSingle().Which.Message.Should().Contain("count rev 2, but the pack is at rev 1");
+    }
+
+    [Fact]
+    public void Maintainer_grants_verified_for_the_current_revision()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/verified.json", """{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/menus", "revision": 1, "status": "verified", "note": "checked by hand"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        MenusIn(result).Status.Should().Be(PackStatus.Verified);
+    }
+
+    [Fact]
+    public void Maintainer_revokes_verified_whatever_the_confirmations()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/verified.json", """{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/menus", "revision": 1, "status": "alpha"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, MenusRating(9, 0), TestContext.Current.CancellationToken);
+
+        // Assert
+        MenusIn(result).Status.Should().Be(PackStatus.Alpha);
+    }
+
+    [Fact]
+    public void Maintainer_revokes_a_verified_manifest()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/verified.json", """{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/full", "revision": 2, "status": "alpha"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Index!.PacksFor(GameId.Steam(620), "ru").Single(p => p.Id == "full").Status.Should().Be(PackStatus.Alpha);
+    }
+
+    [Fact]
+    public void Override_of_an_older_revision_does_nothing()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/verified.json", """{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/full", "revision": 1, "status": "alpha"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Index!.PacksFor(GameId.Steam(620), "ru").Single(p => p.Id == "full").Status.Should().Be(PackStatus.Verified);
+    }
+
+    [Fact]
+    public void Override_of_a_pack_not_in_the_registry_is_reported()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/verified.json", """{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/gone", "revision": 1, "status": "verified"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().ContainSingle().Which.Should().Be(new RegistryBuildProblem("policy/verified.json", "", "steam:620/ru/gone is not in the registry; its entry does nothing."));
+    }
+
+    [Fact]
+    public void Broken_verified_policy_stops_the_build()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/verified.json", """{"schemaVersion": 1, "packs": [{"pack": "steam:620/ru/menus", "revision": 1, "status": "gold"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        (result.Index, result.Problems.Single().File).Should().Be((null, "policy/verified.json"));
     }
 }

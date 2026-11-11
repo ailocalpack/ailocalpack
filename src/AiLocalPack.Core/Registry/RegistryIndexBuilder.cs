@@ -25,7 +25,8 @@ public sealed record RegistryBuildResult(RegistryIndex? Index, IReadOnlyList<Reg
 /// that passes <see cref="PackValidator"/> (a failing one is left out, the rest published), game flags from
 /// <see cref="RegistryOptOuts.Path"/> and the <c>allowed</c> list of <see cref="AntiCheatPolicyPath"/>, the dependency
 /// whitelist from <see cref="DependencyWhitelist.PolicyPath"/> (packs naming anything else are left out), ratings and
-/// discussion links from the ratings file. Manifest paths are relative to the root, where <c>index.json</c> is published.
+/// discussion links from the ratings file, the status worked out by <see cref="RegistryVerification"/> with the
+/// maintainers' <see cref="VerifiedPolicy"/>. Manifest paths are relative to the root, where <c>index.json</c> is published.
 /// </summary>
 public static class RegistryIndexBuilder
 {
@@ -50,7 +51,7 @@ public static class RegistryIndexBuilder
             return new RegistryBuildResult(null, problems);
         }
 
-        if (!ReadDependencies(root, problems, out var dependencies))
+        if (!ReadDependencies(root, problems, out var dependencies) || !ReadVerified(root, problems, out var overrides))
         {
             return new RegistryBuildResult(null, problems);
         }
@@ -74,9 +75,21 @@ public static class RegistryIndexBuilder
                 var manifest = validation.Manifest!;
                 var key = new RegistryPackKey(manifest.Game, manifest.Language, manifest.Id);
                 var rating = ratings?.GetValueOrDefault(key);
-                packs.Add(ToIndexPack(manifest, $"{relative}/{RegistryLayout.ManifestFileName}", rating));
+                if (rating is { Revision: { } counted } && counted != manifest.Revision)
+                {
+                    // Reports of another revision say nothing about this one (a collector run before the merge).
+                    problems.Add(new RegistryBuildProblem("", "", $"ratings for {key} count rev {counted}, but the pack is at rev {manifest.Revision}; its works / doesn't work counts are left out."));
+                    rating = rating with { Rating = rating.Rating with { Works = 0, DoesNotWork = 0 } };
+                }
+
+                var overridden = overrides!.TryGetValue((key, manifest.Revision), out var status) ? status : (PackStatus?)null;
+                packs.Add(ToIndexPack(manifest, $"{relative}/{RegistryLayout.ManifestFileName}", rating, overridden));
             }
         }
+
+        var present = packs.Select(p => new RegistryPackKey(p.Game, p.Language, p.Id)).ToHashSet();
+        problems.AddRange(overrides!.Keys.Select(k => k.Pack).Distinct().Where(k => !present.Contains(k)).OrderBy(k => k.ToString(), StringComparer.Ordinal)
+            .Select(k => new RegistryBuildProblem(VerifiedPolicy.Path, "", $"{k} is not in the registry; its entry does nothing.")));
 
         if (ratings is not null)
         {
@@ -125,13 +138,42 @@ public static class RegistryIndexBuilder
         return whitelist is not null;
     }
 
-    private static RegistryPack ToIndexPack(PackManifest manifest, string manifestPath, RegistryPackRating? rating) => new(
+    /// <summary><see cref="VerifiedPolicy.Path"/>: missing = no overrides; unreadable or invalid stops the build.</summary>
+    private static bool ReadVerified(
+        string root,
+        List<RegistryBuildProblem> problems,
+        out IReadOnlyDictionary<(RegistryPackKey Pack, int Revision), PackStatus>? overrides)
+    {
+        overrides = new Dictionary<(RegistryPackKey, int), PackStatus>();
+        var file = Path.Combine(root, VerifiedPolicy.Path);
+        if (!File.Exists(file))
+        {
+            return true;
+        }
+
+        string text;
+        try
+        {
+            text = File.ReadAllText(file);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            problems.Add(new RegistryBuildProblem(VerifiedPolicy.Path, "", $"can't be read: {e.Message}"));
+            return false;
+        }
+
+        (overrides, var errors) = VerifiedPolicy.Read(text);
+        problems.AddRange(errors.Select(e => new RegistryBuildProblem(VerifiedPolicy.Path, e.Field, e.Message)));
+        return overrides is not null;
+    }
+
+    private static RegistryPack ToIndexPack(PackManifest manifest, string manifestPath, RegistryPackRating? rating, PackStatus? overridden) => new(
         manifest.Id,
         manifest.Game,
         manifest.Language,
         manifest.Title,
         manifest.Author,
-        manifest.Status,
+        RegistryVerification.Status(manifest.Status, rating?.Rating ?? RegistryRating.None, overridden),
         manifest.Revision,
         manifest.Updated,
         manifest.Coverage,
@@ -143,7 +185,7 @@ public static class RegistryIndexBuilder
         rating?.Discussion);
 
     /// <summary>The <c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c> folders in ordinal order; files on the way are reported.</summary>
-    private static List<string> PackFolders(string root, string games, List<RegistryBuildProblem> problems)
+    internal static List<string> PackFolders(string root, string games, List<RegistryBuildProblem> problems)
     {
         var result = new List<string>();
         void Walk(string folder, int depth)

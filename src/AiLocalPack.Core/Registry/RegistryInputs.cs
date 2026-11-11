@@ -28,11 +28,15 @@ public sealed record RegistryPackKey(GameId Game, string Language, string Id)
 }
 
 /// <summary>Community numbers of one pack, as the registry's scheduled Action collects them from its Discussion.</summary>
-public sealed record RegistryPackRating(RegistryRating Rating, Uri? Discussion);
+/// <param name="Revision">
+/// The pack revision <see cref="RegistryRating.Works"/> / <see cref="RegistryRating.DoesNotWork"/> count reports of
+/// (task 64: only the current revision's count); <c>null</c> in a file written by hand = the current one.
+/// </param>
+public sealed record RegistryPackRating(RegistryRating Rating, Uri? Discussion, int? Revision = null);
 
 /// <summary>
-/// <c>ratings.json</c>, written by the registry's ratings Action (task 64) and read by <c>index build --ratings</c>:
-/// <c>{schemaVersion: 1, packs: {"steam:620/ru/full": {likes, works, doesNotWork, discussion?}}}</c>.
+/// <c>ratings.json</c>, written by <c>ratings collect</c> (task 64) and read by <c>index build --ratings</c>:
+/// <c>{schemaVersion: 1, packs: {"steam:620/ru/full": {likes, works, doesNotWork, revision?, discussion?}}}</c>.
 /// </summary>
 public static class RegistryRatings
 {
@@ -97,10 +101,30 @@ public static class RegistryRatings
                 errors.Add($"{field}.discussion", $"'{link}' is not an https:// URL.");
             }
 
-            ratings[key] = new RegistryPackRating(rating, discussion);
+            if (entry.Revision is < 1)
+            {
+                errors.Add($"{field}.revision", $"must be 1 or more, not {entry.Revision}.");
+            }
+
+            ratings[key] = new RegistryPackRating(rating, discussion, entry.Revision);
         }
 
         return errors.Any ? (null, errors.List) : (ratings, []);
+    }
+
+    /// <summary>The file <see cref="Read"/> reads: packs in ordinal order, indented, <c>\n</c> line ends and a trailing newline.</summary>
+    public static string Write(IReadOnlyDictionary<RegistryPackKey, RegistryPackRating> ratings)
+    {
+        ArgumentNullException.ThrowIfNull(ratings);
+        var packs = new SortedDictionary<string, RatingJson?>(StringComparer.Ordinal);
+        foreach (var (key, value) in ratings)
+        {
+            packs[key.ToString()] = new RatingJson(
+                value.Rating.Likes, value.Rating.Works, value.Rating.DoesNotWork, value.Discussion?.AbsoluteUri, value.Revision);
+        }
+
+        var json = JsonSerializer.Serialize(new RatingsFileJson(CurrentSchemaVersion, packs), RegistryRatingsWriteContext.Default.RatingsFileJson);
+        return json.ReplaceLineEndings("\n") + "\n";
     }
 }
 
@@ -160,7 +184,7 @@ public static class RegistryOptOuts
 
 internal sealed record RatingsFileJson(int? SchemaVersion, IReadOnlyDictionary<string, RatingJson?>? Packs);
 
-internal sealed record RatingJson(int? Likes, int? Works, int? DoesNotWork, string? Discussion);
+internal sealed record RatingJson(int? Likes, int? Works, int? DoesNotWork, string? Discussion, int? Revision = null);
 
 internal sealed record OptOutFileJson(int? SchemaVersion, IReadOnlyList<OptOutJson?>? Games);
 
@@ -170,3 +194,10 @@ internal sealed record OptOutJson(string? Game, string? Note);
 [JsonSerializable(typeof(RatingsFileJson))]
 [JsonSerializable(typeof(OptOutFileJson))]
 internal sealed partial class RegistryInputsJsonContext : JsonSerializerContext;
+
+[JsonSourceGenerationOptions(
+    PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+    WriteIndented = true,
+    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+[JsonSerializable(typeof(RatingsFileJson))]
+internal sealed partial class RegistryRatingsWriteContext : JsonSerializerContext;
