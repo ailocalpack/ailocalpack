@@ -1,5 +1,35 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:AiLocalPack.Desktop.Views">
+    <!-- Design system (docs/desktop-app.md, Controls and colours): radius 6 tags · 8 controls up to 36 px · 10 controls of
+         40 px · 12 large buttons, blocks · 14–18 cards, dialogs; pills are height / 2. Button heights 32 (sm) · 40 · 48. -->
+
+    <!-- Keyboard focus ring: 2 px in the focus colour, 3 px outside the control (not clipped to it), its corners following
+         the control's own (Fluent's default ring is square and sat inside rounded buttons) -->
+    <Styles.Resources>
+        <FocusAdornerTemplate x:Key="AppFocusRing">
+            <Border Margin="-3" BorderThickness="2" IsHitTestVisible="False" AdornerLayer.IsClipEnabled="False"
+                    BorderBrush="{DynamicResource AppFocusBrush}"
+                    CornerRadius="{Binding $self.(AdornerLayer.AdornedElement), Converter={x:Static views:FocusRingCornerRadiusConverter.Instance}}" />
+        </FocusAdornerTemplate>
+    </Styles.Resources>
+    <Style Selector="AdornerLayer">
+        <Setter Property="DefaultFocusAdorner" Value="{StaticResource AppFocusRing}" />
+    </Style>
+    <!-- Fluent's combo box shows focus as an accent fill instead of a ring: the same ring here, no fill -->
+    <Style Selector="ComboBox">
+        <Setter Property="FocusAdorner" Value="{StaticResource AppFocusRing}" />
+    </Style>
+    <Style Selector="ComboBox:focus-visible /template/ Border#HighlightBackground">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="ComboBox:focus-visible /template/ ContentControl#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <!-- A check box's corner radius is also its 20 px box's -->
+    <Style Selector="CheckBox">
+        <Setter Property="CornerRadius" Value="5" />
+    </Style>
     <Style Selector="Window">
         <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
@@ -20,6 +50,10 @@
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
     </Style>
+    <Style Selector="Button.icon:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
     <Style Selector="Button.icon Path">
         <Setter Property="Width" Value="18" />
         <Setter Property="Height" Value="18" />
@@ -37,7 +71,7 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="10,6" />
     </Style>
-    <Style Selector="Button.back:pointerover /template/ ContentPresenter">
+    <Style Selector="Button.back:pointerover /template/ ContentPresenter, Button.back:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
     </Style>
@@ -188,12 +222,12 @@
         <Setter Property="Padding" Value="7,0" />
         <Setter Property="CornerRadius" Value="11" />
         <Setter Property="Background" Value="{DynamicResource AppWarnBrush}" />
-        <Setter Property="TextElement.Foreground" Value="#1a1205" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppOnWarnBrush}" />
         <Setter Property="TextElement.FontSize" Value="12" />
         <Setter Property="TextElement.FontWeight" Value="ExtraBold" />
     </Style>
     <Style Selector="Border.badge.bad">
-        <Setter Property="Background" Value="{DynamicResource AppBadBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppBadFillBrush}" />
         <Setter Property="TextElement.Foreground" Value="White" />
     </Style>
     <Style Selector="TextBlock.hint">
@@ -246,6 +280,36 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
+    <!-- Secondary button: transparent with a border; hover lifts to the next surface, the border stays -->
+    <Style Selector="Button.ghost:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.ghost:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.ghost:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+    </Style>
+    <!-- Quiet button (a row's Open, Remove): no chrome until hovered -->
+    <Style Selector="Button.bare:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.bare:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.bare:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <!-- Primary button: the accent fill (Fluent's accent keys are set from the palette in Theme.axaml) -->
     <Style Selector="Button.accent">
         <Setter Property="MinHeight" Value="40" />
         <Setter Property="Padding" Value="16,0" />
@@ -295,6 +359,17 @@
     <Style Selector="Button.icon.sm">
         <Setter Property="Width" Value="32" />
         <Setter Property="Height" Value="32" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <!-- Icon button over a picture (change cover): a dark plate and a white icon in both themes -->
+    <Style Selector="Button.icon.overlay">
+        <Setter Property="Background" Value="#b3101318" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.icon.overlay:pointerover /template/ ContentPresenter, Button.icon.overlay:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#e6101318" />
+        <Setter Property="Foreground" Value="White" />
     </Style>
 
     <!-- Library card: the whole card is one button; no button chrome, the cover lifts on hover -->
@@ -359,7 +434,7 @@
         <Setter Property="Margin" Value="8" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Padding" Value="7,0,9,0" />
-        <Setter Property="CornerRadius" Value="7" />
+        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Background" Value="{DynamicResource AppBadgeBrush}" />
@@ -429,7 +504,7 @@
         <Setter Property="Margin" Value="8" />
         <Setter Property="MinHeight" Value="34" />
         <Setter Property="Padding" Value="10,0" />
-        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="CornerRadius" Value="8" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Bottom" />
@@ -449,11 +524,11 @@
     </Style>
     <Style Selector="Button.quick.warn">
         <Setter Property="Background" Value="{DynamicResource AppWarnBrush}" />
-        <Setter Property="Foreground" Value="#1a1205" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnWarnBrush}" />
     </Style>
     <Style Selector="Button.quick.gen">
         <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
-        <Setter Property="Foreground" Value="#06222a" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnGenBrush}" />
     </Style>
     <!-- Hover / pressed: Fluent's own pointer-over fill is translucent and the label vanishes into the cover art, so every
          variant keeps an opaque fill (a step lighter for the plain one) and gets a thin ring. -->
@@ -464,16 +539,16 @@
         <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style Selector="Button.quick.primary:pointerover /template/ ContentPresenter, Button.quick.primary:pressed /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentFillHoverBrush}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
     <Style Selector="Button.quick.warn:pointerover /template/ ContentPresenter, Button.quick.warn:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppWarnBrush}" />
-        <Setter Property="Foreground" Value="#1a1205" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnWarnBrush}" />
     </Style>
     <Style Selector="Button.quick.gen:pointerover /template/ ContentPresenter, Button.quick.gen:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
-        <Setter Property="Foreground" Value="#06222a" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnGenBrush}" />
     </Style>
 
     <!-- Status filter chip: pill with a live count; the chosen one is raised and its count accent -->
@@ -545,10 +620,10 @@
         <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
     </Style>
     <Style Selector="Border.notice.warn">
-        <Setter Property="Background" Value="#26f0b44c" />
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
     </Style>
     <Style Selector="Border.notice.bad">
-        <Setter Property="Background" Value="#26ef6b6b" />
+        <Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" />
     </Style>
     <Style Selector="Border.notice TextBlock">
         <Setter Property="TextWrapping" Value="Wrap" />
@@ -564,16 +639,16 @@
     <!-- Fact chip (engine, executable, size) -->
     <Style Selector="Border.fact">
         <Setter Property="Padding" Value="9,4" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="TextElement.FontSize" Value="12" />
     </Style>
     <Style Selector="Border.fact.warn">
-        <Setter Property="Background" Value="#26f0b44c" />
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppWarnBrush}" />
     </Style>
     <Style Selector="Border.fact.bad">
-        <Setter Property="Background" Value="#26ef6b6b" />
+        <Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" />
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppBadBrush}" />
     </Style>
 
@@ -581,10 +656,11 @@
     <Style Selector="Button.link">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="4,2" />
+        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
         <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
-    <Style Selector="Button.link:pointerover /template/ ContentPresenter">
+    <Style Selector="Button.link:pointerover /template/ ContentPresenter, Button.link:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
     </Style>
@@ -619,6 +695,10 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
         <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
     </Style>
+    <Style Selector="Button.ghost.chosen:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.ghost.chosen:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+    </Style>
     <!-- Confirming a destructive action (Remove) -->
     <Style Selector="Button.danger">
         <Setter Property="MinHeight" Value="40" />
@@ -626,15 +706,13 @@
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{DynamicResource AppBadBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppBadFillBrush}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
     <Style Selector="Button.danger:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.danger:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AppBadBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppBadFillHoverBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Foreground" Value="White" />
-    </Style>
-    <Style Selector="Button.danger:pointerover">
-        <Setter Property="Opacity" Value="0.9" />
     </Style>
     <!-- Square icon tile at the start of a settings row (Steam, a library folder, a game) -->
     <Style Selector="Border.rowPic">
@@ -645,7 +723,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style Selector="Border.rowPic.warn">
-        <Setter Property="Background" Value="#26f0b44c" />
+        <Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" />
     </Style>
     <Style Selector="TextBlock.mono">
         <Setter Property="FontFamily" Value="Menlo, Consolas, DejaVu Sans Mono, monospace" />
@@ -830,7 +908,7 @@
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Margin" Value="0,-8,-12,0" />
-        <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentFillBrush}" />
         <Setter Property="IsHitTestVisible" Value="False" />
     </Style>
     <Style Selector="Border.bellBadge.attention">
@@ -844,7 +922,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style Selector="Border.bellBadge.attention TextBlock">
-        <Setter Property="Foreground" Value="#1b1408" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnWarnBrush}" />
     </Style>
     <Style Selector="StackPanel.activitySection">
         <Setter Property="Margin" Value="10,10,10,6" />
@@ -1062,7 +1140,7 @@
     <Style Selector="Border.factChip">
         <Setter Property="Height" Value="26" />
         <Setter Property="Padding" Value="9,0" />
-        <Setter Property="CornerRadius" Value="7" />
+        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="TextElement.FontSize" Value="12" />
         <Setter Property="TextElement.FontWeight" Value="SemiBold" />
@@ -1175,9 +1253,9 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.primaryAction.sm">
-        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="MinHeight" Value="32" />
         <Setter Property="Padding" Value="12,0" />
-        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="CornerRadius" Value="8" />
         <Setter Property="FontSize" Value="13" />
     </Style>
     <!-- Tab bar -->
@@ -1193,7 +1271,7 @@
         <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
-    <Style Selector="Button.pageTab:pointerover /template/ ContentPresenter">
+    <Style Selector="Button.pageTab:pointerover /template/ ContentPresenter, Button.pageTab:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -1202,7 +1280,7 @@
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
     </Style>
-    <Style Selector="Button.pageTab.on:pointerover /template/ ContentPresenter">
+    <Style Selector="Button.pageTab.on:pointerover /template/ ContentPresenter, Button.pageTab.on:pressed /template/ ContentPresenter">
         <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
     </Style>
     <Style Selector="Button.pageTab.soon">
@@ -1260,6 +1338,10 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.langItem:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.langItem:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
     <Style Selector="Button.langItem.on">
         <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
@@ -1424,7 +1506,7 @@
     <Style Selector="Border.genStepIcon.done"><Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" /></Style>
     <Style Selector="Border.genStepIcon.done Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
     <Style Selector="Border.genStepIcon.running"><Setter Property="Background" Value="{DynamicResource AppGenBrush}" /></Style>
-    <Style Selector="Border.genStepIcon.running Path.icon"><Setter Property="Stroke" Value="#06222a" /></Style>
+    <Style Selector="Border.genStepIcon.running Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOnGenBrush}" /></Style>
     <Style Selector="Border.genStepIcon.current"><Setter Property="Background" Value="{DynamicResource AppWarnSoftBrush}" /></Style>
     <Style Selector="Border.genStepIcon.current Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppWarnBrush}" /></Style>
     <Style Selector="Border.genStepIcon.paused"><Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" /></Style>
@@ -1571,10 +1653,10 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppOkBrush}" />
     </Style>
     <Style Selector="Border.meterBox.on"><Setter Property="Background" Value="{DynamicResource AppOkBrush}" /></Style>
-    <Style Selector="Border.meterBox Path.icon"><Setter Property="Stroke" Value="White" /></Style>
+    <Style Selector="Border.meterBox Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppOnOkBrush}" /></Style>
     <Style Selector="Border.recommended">
         <Setter Property="Padding" Value="7,1" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
     </Style>
     <Style Selector="Border.recommended TextBlock">
@@ -1593,11 +1675,12 @@
     <!-- Teal (generation) buttons: the accent theme paints its template, so the template is restyled too -->
     <Style Selector="Button.genAction, Button.primaryAction.gen">
         <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
-        <Setter Property="Foreground" Value="#0d1015" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnGenBrush}" />
     </Style>
-    <Style Selector="Button.genAction /template/ ContentPresenter#PART_ContentPresenter, Button.primaryAction.gen /template/ ContentPresenter#PART_ContentPresenter">
+    <Style Selector="Button.genAction:not(:disabled) /template/ ContentPresenter#PART_ContentPresenter, Button.primaryAction.gen:not(:disabled) /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppGenBrush}" />
-        <Setter Property="Foreground" Value="#0d1015" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppOnGenBrush}" />
     </Style>
     <Style Selector="Button.genAction:pointerover, Button.primaryAction.gen:pointerover">
         <Setter Property="Opacity" Value="0.9" />

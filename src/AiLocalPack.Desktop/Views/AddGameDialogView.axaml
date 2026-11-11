@@ -16,7 +16,7 @@
             <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
         </Style>
         <Style Selector="Border.segment.added">
-            <Setter Property="Background" Value="#3fb37f" />
+            <Setter Property="Background" Value="{DynamicResource AppOkBrush}" />
         </Style>
         <Style Selector="Border.segment.skipped">
             <Setter Property="Background" Value="{DynamicResource AppFaintBrush}" />
@@ -40,7 +40,7 @@
             <Setter Property="TextElement.FontWeight" Value="Bold" />
         </Style>
         <Style Selector="Border.tally.bad">
-            <Setter Property="Background" Value="#26ef6b6b" />
+            <Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" />
             <Setter Property="TextElement.Foreground" Value="{DynamicResource AppBadBrush}" />
         </Style>
         <Style Selector="Border.tally.inLibrary">
@@ -237,7 +237,7 @@
                                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                             <Panel Width="16" Height="16">
                                                 <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding IsDone}">
-                                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="#3fb37f" />
+                                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" />
                                                 </Viewbox>
                                                 <Viewbox Classes="icon spin" Width="16" Height="16" IsVisible="{Binding IsRunning}">
                                                     <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
@@ -277,7 +277,7 @@
                                     <Border Classes="notice" Margin="0,3" Padding="14,8">
                                         <Grid ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="10">
                                             <Viewbox Classes="icon" Width="14" Height="14">
-                                                <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="#3fb37f" />
+                                                <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" />
                                             </Viewbox>
                                             <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" />
                                             <TextBlock Grid.Column="2" Classes="sub" Text="{Binding Engine}" />
@@ -382,7 +382,7 @@
                                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                                             <Panel Width="14" Height="14">
                                                 <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding IsAdded}">
-                                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="#3fb37f" />
+                                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" />
                                                 </Viewbox>
                                                 <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsAdded}">
                                                     <Path Classes="icon" Data="{StaticResource IconSkip}" Stroke="{DynamicResource AppMutedBrush}" />
@@ -422,11 +422,11 @@
                                         </Viewbox>
                                     </Panel>
                                 </Border>
-                                <Button x:Name="CoverButton" Classes="icon" Width="32" Height="32" Margin="6" Background="#b3101318"
+                                <Button x:Name="CoverButton" Classes="icon sm overlay" Margin="6"
                                         HorizontalAlignment="Right" VerticalAlignment="Bottom" IsVisible="{Binding Summary.CanEdit, FallbackValue=False}"
                                         Command="{Binding Summary.ChooseCoverCommand}"
                                         ToolTip.Tip="{l:Loc AddGame_ChangeCover}" AutomationProperties.Name="{l:Loc AddGame_ChangeCover}">
-                                    <Path Data="{StaticResource IconImage}" Width="14" Height="14" Stroke="White" />
+                                    <Path Data="{StaticResource IconImage}" Width="14" Height="14" />
                                 </Button>
                             </Panel>
 
@@ -527,7 +527,7 @@
                                     <StackPanel Spacing="4">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <TextBlock Classes="hint" Text="{l:Loc AddGame_Details_Engine}" />
-                                            <TextBlock Classes="hint" Foreground="#3fb37f" Text="{l:Loc AddGame_Details_Detected}" IsVisible="{Binding Summary.IsEngineDetected, FallbackValue=False}" />
+                                            <TextBlock Classes="hint" Foreground="{DynamicResource AppOkBrush}" Text="{l:Loc AddGame_Details_Detected}" IsVisible="{Binding Summary.IsEngineDetected, FallbackValue=False}" />
                                             <TextBlock Classes="hint" Foreground="{DynamicResource AppWarnBrush}" Text="{l:Loc AddGame_Details_NotDetected}" IsVisible="{Binding !Summary.IsEngineDetected, FallbackValue=False}" />
                                         </StackPanel>
                                         <ComboBox x:Name="EngineBox" HorizontalAlignment="Stretch" ItemsSource="{Binding Summary.EngineOptions}" SelectedItem="{Binding Summary.SelectedEngine}"

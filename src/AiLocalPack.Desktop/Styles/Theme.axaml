@@ -13,8 +13,8 @@
             <SolidColorBrush x:Key="AppAccentFillBrush" Color="#5566f0" />
             <SolidColorBrush x:Key="AppAccentSoftBrush" Color="#297b8cff" />
             <SolidColorBrush x:Key="AppSurface3Brush" Color="#252c3c" />
-            <SolidColorBrush x:Key="AppBorderStrongBrush" Color="#29ffffff" />
-            <SolidColorBrush x:Key="AppFaintBrush" Color="#6b7487" />
+            <SolidColorBrush x:Key="AppBorderStrongBrush" Color="#33ffffff" />
+            <SolidColorBrush x:Key="AppFaintBrush" Color="#8a94a7" />
             <SolidColorBrush x:Key="AppWarnBrush" Color="#f0b44c" />
             <SolidColorBrush x:Key="AppBadBrush" Color="#ef6b6b" />
             <SolidColorBrush x:Key="AppHighlightBrush" Color="#4df0b44c" />
@@ -25,6 +25,32 @@
             <SolidColorBrush x:Key="AppGenBrush" Color="#3fc6d9" />
             <SolidColorBrush x:Key="AppBadgeBrush" Color="#d10a0c12" />
             <SolidColorBrush x:Key="AppGenSoftBrush" Color="#293fc6d9" />
+            <!-- Filled controls (design system: docs/desktop-app.md, Controls and colours): fill, hover, pressed, the text on it -->
+            <SolidColorBrush x:Key="AppAccentFillHoverBrush" Color="#4b5be6" />
+            <SolidColorBrush x:Key="AppAccentFillPressedBrush" Color="#4352d6" />
+            <SolidColorBrush x:Key="AppBadFillBrush" Color="#c93c3c" />
+            <SolidColorBrush x:Key="AppBadFillHoverBrush" Color="#b83434" />
+            <SolidColorBrush x:Key="AppOnWarnBrush" Color="#1a1205" />
+            <SolidColorBrush x:Key="AppOnGenBrush" Color="#06222a" />
+            <SolidColorBrush x:Key="AppOnOkBrush" Color="#0d1015" />
+            <SolidColorBrush x:Key="AppFocusBrush" Color="#8f9dff" />
+            <!-- Fluent's button keys on our palette: accent buttons keep white text on every state (≥ 4.5:1), plain ones
+                 are a neutral fill one step above the surface -->
+            <SolidColorBrush x:Key="AccentButtonBackground" Color="#5566f0" />
+            <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="#4b5be6" />
+            <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="#4352d6" />
+            <SolidColorBrush x:Key="AccentButtonForeground" Color="#ffffff" />
+            <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#ffffff" />
+            <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#ffffff" />
+            <SolidColorBrush x:Key="ButtonBackground" Color="#1c2230" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#252c3c" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#252c3c" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="#e9edf4" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#e9edf4" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#e9edf4" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
             <!-- Game page backdrop from the cover's colors (design §3): strong in dark, much fainter in light -->
             <x:Double x:Key="HeroBackdropOpacity">0.55</x:Double>
             <LinearGradientBrush x:Key="HeroFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
@@ -44,18 +70,43 @@
             <SolidColorBrush x:Key="AppAccentFillBrush" Color="#4152e0" />
             <SolidColorBrush x:Key="AppAccentSoftBrush" Color="#1a4152e0" />
             <SolidColorBrush x:Key="AppSurface3Brush" Color="#e2e7ef" />
-            <SolidColorBrush x:Key="AppBorderStrongBrush" Color="#2e0f172a" />
-            <SolidColorBrush x:Key="AppFaintBrush" Color="#7d879a" />
-            <SolidColorBrush x:Key="AppWarnBrush" Color="#9a6200" />
-            <SolidColorBrush x:Key="AppBadBrush" Color="#c23434" />
+            <SolidColorBrush x:Key="AppBorderStrongBrush" Color="#3d0f172a" />
+            <SolidColorBrush x:Key="AppFaintBrush" Color="#606a7e" />
+            <SolidColorBrush x:Key="AppWarnBrush" Color="#875400" />
+            <SolidColorBrush x:Key="AppBadBrush" Color="#b32d2d" />
             <SolidColorBrush x:Key="AppHighlightBrush" Color="#4dc48000" />
-            <SolidColorBrush x:Key="AppOkBrush" Color="#17834f" />
-            <SolidColorBrush x:Key="AppOkSoftBrush" Color="#1a17834f" />
+            <SolidColorBrush x:Key="AppOkBrush" Color="#127044" />
+            <SolidColorBrush x:Key="AppOkSoftBrush" Color="#1a127044" />
             <SolidColorBrush x:Key="AppWarnSoftBrush" Color="#1fc48000" />
-            <SolidColorBrush x:Key="AppBadSoftBrush" Color="#17c23434" />
-            <SolidColorBrush x:Key="AppGenBrush" Color="#0a7f91" />
+            <SolidColorBrush x:Key="AppBadSoftBrush" Color="#17b32d2d" />
+            <SolidColorBrush x:Key="AppGenBrush" Color="#086b7a" />
             <SolidColorBrush x:Key="AppBadgeBrush" Color="#ebffffff" />
-            <SolidColorBrush x:Key="AppGenSoftBrush" Color="#1a0a7f91" />
+            <SolidColorBrush x:Key="AppGenSoftBrush" Color="#1a086b7a" />
+            <SolidColorBrush x:Key="AppAccentFillHoverBrush" Color="#3646cc" />
+            <SolidColorBrush x:Key="AppAccentFillPressedBrush" Color="#2f3db8" />
+            <SolidColorBrush x:Key="AppBadFillBrush" Color="#c23434" />
+            <SolidColorBrush x:Key="AppBadFillHoverBrush" Color="#a82b2b" />
+            <SolidColorBrush x:Key="AppOnWarnBrush" Color="#ffffff" />
+            <SolidColorBrush x:Key="AppOnGenBrush" Color="#ffffff" />
+            <SolidColorBrush x:Key="AppOnOkBrush" Color="#ffffff" />
+            <SolidColorBrush x:Key="AppFocusBrush" Color="#4152e0" />
+            <!-- Fluent's button keys on our palette: accent buttons keep white text on every state (≥ 4.5:1), plain ones
+                 are a neutral fill one step above the surface -->
+            <SolidColorBrush x:Key="AccentButtonBackground" Color="#4152e0" />
+            <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="#3646cc" />
+            <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="#2f3db8" />
+            <SolidColorBrush x:Key="AccentButtonForeground" Color="#ffffff" />
+            <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#ffffff" />
+            <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#ffffff" />
+            <SolidColorBrush x:Key="ButtonBackground" Color="#eef1f6" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#e2e7ef" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#e2e7ef" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="#141a26" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#141a26" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#141a26" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
             <x:Double x:Key="HeroBackdropOpacity">0.22</x:Double>
             <LinearGradientBrush x:Key="HeroFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
                 <GradientStop Offset="0" Color="#00f4f6fa" />
@@ -64,6 +115,11 @@
             <SolidColorBrush x:Key="StickyBarBrush" Color="#ebf4f6fa" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
+
+    <!-- Corner radius scale (docs/desktop-app.md, Controls and colours). Fluent's own keys are set too, so every stock
+         control (text box, combo box, check box, flyout, tooltip) rounds the same way. -->
+    <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
+    <CornerRadius x:Key="OverlayCornerRadius">12</CornerRadius>
 
     <LinearGradientBrush x:Key="AppLogoBrush" StartPoint="0%,0%" EndPoint="100%,100%">
         <GradientStop Offset="0" Color="#5566f0" />
