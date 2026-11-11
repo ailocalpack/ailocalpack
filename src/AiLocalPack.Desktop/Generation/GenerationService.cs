@@ -1,6 +1,7 @@
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Core.Storage;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Registry;
@@ -260,6 +261,47 @@ public sealed class GenerationService : IDisposable
 
         RefreshResult(game, raise: true);
         return new GenerationActionResult(result.Job);
+    }
+
+    /// <summary>
+    /// Deletes a job folder with its working copy (Settings → Storage, task 66). An open job is cancelled first (refused
+    /// while it runs here: <see cref="GenerationActionProblem.Busy"/>); the folder of the game's result goes as "New
+    /// translation" does (the local pack stays); any other folder (a finished or broken job) is deleted. Never throws.
+    /// </summary>
+    public async Task<GenerationActionResult> DeleteJobFolderAsync(string folder)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(folder);
+        EnsureLoaded();
+        GameId? open, result;
+        lock (_lock)
+        {
+            open = _open.Values.FirstOrDefault(e => PathNames.Same(e.Folder, folder))?.Job.Game;
+            result = _results.Values.FirstOrDefault(r => PathNames.Same(r.Folder, folder))?.Job.Game;
+        }
+
+        if (open is { } game)
+        {
+            return IsRunning(game)
+                ? new GenerationActionResult(FindOpen(game), GenerationActionProblem.Busy, "The job is running.")
+                : await CancelAsync(game, deleteFolder: true).ConfigureAwait(false);
+        }
+
+        if (result is { } done)
+        {
+            return await CloseResultAsync(done).ConfigureAwait(false);
+        }
+
+        try
+        {
+            await Task.Run(() => _copies.Delete(folder)).ConfigureAwait(false);
+            _logger.LogInformation("Generation job folder {Folder} deleted from Settings → Storage", folder);
+            return new GenerationActionResult(null);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            _logger.LogError(e, "Couldn't delete the generation job folder {Folder}", folder);
+            return new GenerationActionResult(null, GenerationActionProblem.Disk, e.Message);
+        }
     }
 
     /// <summary>The game's job state for the library and the page (<see cref="GenerationJobStates.Of"/>), if it has an open one.</summary>

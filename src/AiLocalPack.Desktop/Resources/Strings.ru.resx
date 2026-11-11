@@ -3613,4 +3613,187 @@
   <data name="Rating_Error_Unexpected" xml:space="preserve">
     <value>Не удалось отправить: {0}</value>
   </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>Прерванный перенос резервных копий завершён</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>место диск размер свободно занято</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>Место на диске</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>Занято {0}</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>Считаем…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>Резервные копии {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>Рабочие копии {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>Кэш {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>Место на диске</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>Резервные копии</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>Рабочие копии генерации</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>Кэш</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>Резервные копии заменённых файлов игр</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>бэкап оригиналы удаление перенести папка расположение</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>Пока ничего не сохранено</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>Переносим резервные копии… {0} %</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>Перенести…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>Нужны, чтобы удалять пакеты, поэтому здесь их не очистить. Копия удаляется вместе со своим пакетом.</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>Где хранить резервные копии</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>Перенести резервные копии?</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>Резервные копии ({1}) переедут в {0}. Установленные пакеты останутся на месте и по-прежнему удаляются; игры не затрагиваются. Не отключайте этот диск, пока пакеты установлены.</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>Перенести</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>Перенесено. Старую папку {0} пока не удалось удалить; приложение попробует снова при следующем запуске.</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>Сейчас устанавливается или удаляется пакет. Попробуйте, когда он закончит.</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>Сначала нужно завершить прерванную установку или перенос. Перезапустите приложение и попробуйте снова.</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>Резервные копии уже в этой папке.</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>Выберите папку вне текущей папки резервных копий.</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>В {0} уже есть файлы. Выберите другую папку; ничего не перенесено.</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>Там не хватает места для резервных копий; ничего не перенесено.</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>Приложение не может писать в эту папку; ничего не перенесено.</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>Скопированный файл не совпал с оригиналом, поэтому резервные копии остались на месте.</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>Расположение резервных копий задала более новая версия приложения; обновите приложение, чтобы их перенести.</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>Не удалось перенести резервные копии, они остались на месте: {0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>Рабочая копия</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>Остановите генерацию, чтобы удалить</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>Нет. Копия файлов игры создаётся при запуске генерации, чтобы агент не трогал папку игры.</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>Осталась от прерванного запуска</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>Идёт генерация</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>Пауза до сброса лимита</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>Генерация на паузе</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>Ждёт проверки глоссария</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>Генерация прервана</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>Генерация не удалась</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>Отменена</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>Завершена</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>Удалить рабочую копию {0}?</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>Освободится {0}. Созданные и установленные пакеты останутся; игра не затрагивается.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>Освободится {0}. Прогресс приостановленного перевода будет потерян: продолжить его не получится, только начать заново. Установленные пакеты останутся; игра не затрагивается.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>Для этой игры идёт генерация. Сначала остановите её.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>Не удалось удалить: {0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>Индекс реестра и скачанные пакеты</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>кэш очистить загрузки индекс</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}. Скачивается заново, когда нужно.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>Очищаем…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>Очищено: освобождено {0}.</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>Освобождено {0}. {1} сейчас используется и останется, пока приложение с ним работает.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>Сейчас устанавливается пакет. Попробуйте, когда он закончит.</value>
+  </data>
 </root>

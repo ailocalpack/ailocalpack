@@ -262,4 +262,8 @@ public enum RecoveryOutcome
 
 /// <param name="Game">The game of the interrupted transaction.</param>
 /// <param name="Failure">Why finishing failed (<see cref="RecoveryOutcome.Failed"/>).</param>
-public sealed record RecoveryResult(RecoveryOutcome Outcome, GameId? Game = null, string? PackId = null, InstallFailure? Failure = null);
+public sealed record RecoveryResult(RecoveryOutcome Outcome, GameId? Game = null, string? PackId = null, InstallFailure? Failure = null)
+{
+    /// <summary>A move of the backups a crash left behind was finished first (task 66, <see cref="BackupLocation.Recover"/>).</summary>
+    public bool BackupMoveFinished { get; init; }
+}

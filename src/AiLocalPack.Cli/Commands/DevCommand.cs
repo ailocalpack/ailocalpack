@@ -147,7 +147,7 @@ internal static class DevCommand
         var added = record.Files.Count(f => f.OriginalSha256 is null);
         output.WriteLine($"Installed {record.PackId} rev {record.Revision} ({record.Language}) into {game.Id} \"{game.Name}\": "
             + $"{Count(record.Files.Count - added, "file")} replaced, {added} added.");
-        output.WriteLine($"Backup: {Path.Combine(AppPaths.Resolve(env).Backups, RegistryLayout.GameFolder(game.Id), record.Backup)}");
+        output.WriteLine($"Backup: {Path.Combine(BackupLocation.RootOf(AppPaths.Resolve(env)), RegistryLayout.GameFolder(game.Id), record.Backup)}");
         var whitelist = index?.Dependencies ?? DependencyWhitelist.Empty;
         foreach (var used in installed.Dependencies)
         {

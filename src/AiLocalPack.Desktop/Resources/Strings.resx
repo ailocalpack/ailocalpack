@@ -3542,4 +3542,187 @@
   <data name="Rating_Error_Unexpected" xml:space="preserve">
     <value>Couldn't send it: {0}</value>
   </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>An interrupted move of the backups was finished</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>disk space size free used</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>Disk space</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>{0} used</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>Measuring…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>Backups {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>Working copies {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>Cache {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>Disk space</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>Backups</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>Generation working copies</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>Cache</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>Backups of overwritten game files</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>backup originals uninstall move folder location</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>Nothing backed up yet</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>Moving the backups… {0} %</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>Change location…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>Needed to uninstall packs, so they can't be cleared here. A backup is removed when its pack is uninstalled.</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>Where to keep the backups</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>Move the backups?</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>The backups ({1}) move into {0}. Installed packs stay installed and can still be uninstalled; the games aren't touched. Don't remove that drive while packs are installed.</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>Moved. The old folder {0} couldn't be deleted yet; the app tries again on the next start.</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>A pack is being installed or uninstalled. Try again when it has finished.</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>An interrupted install or move has to be finished first. Restart the app and try again.</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>The backups are already in this folder.</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>Pick a folder outside the current backups folder.</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>{0} already holds files. Pick another folder; nothing was moved.</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>Not enough free space there for the backups; nothing was moved.</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>The app can't write to that folder; nothing was moved.</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>A copied file didn't read back the same, so the backups stay where they were.</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>A newer version of the app set where the backups are; update the app to move them.</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>The backups couldn't be moved and stay where they were: {0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>Working copy</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>Stop generation to delete</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>None. A copy of the game files is made when generation starts, so the agent never touches the game folder.</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>Left by an interrupted start</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>Generating now</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>Paused until the limit resets</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>Generation paused</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>Waiting for the glossary review</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>Generation interrupted</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>Generation failed</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>Delete the working copy of {0}?</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>Frees {0}. Packs you made and installed packs stay; the game isn't touched.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>Frees {0}. The paused translation's progress is lost: it can't be resumed and would start over. Installed packs stay; the game isn't touched.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>Generation is running for this game. Stop it first.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>Couldn't delete it: {0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>Registry index and downloaded packs</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>cache clear downloads index</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}. Downloaded again when needed.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>Clearing…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>Cleared: {0} freed.</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>Freed {0}. {1} in use stays until the app is done with it.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>A pack is being installed. Try again when it has finished.</value>
+  </data>
 </root>

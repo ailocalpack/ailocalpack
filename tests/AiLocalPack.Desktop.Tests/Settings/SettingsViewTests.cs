@@ -74,6 +74,26 @@ public sealed class SettingsViewTests
     });
 
     [Fact]
+    public Task Storage_section_shows_sizes_and_the_backups_folder() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = TestServices.Build();
+        var paths = services.GetRequiredService<Core.Storage.AppPaths>();
+        Directory.CreateDirectory(Path.Combine(paths.Backups, "steam-620", "20261101-120000-abcdefgh"));
+        File.WriteAllBytes(Path.Combine(paths.Backups, "steam-620", "20261101-120000-abcdefgh", "data.json"), new byte[2048]);
+        services.GetRequiredService<ViewModels.Settings.Storage.StorageSettingsSection>().RefreshAsync().GetAwaiter().GetResult();
+
+        // Act
+        var window = Open(services, SettingsSectionId.Storage);
+
+        // Assert
+        (Find<HighlightTextBlock>(window, "StorageTotal").Source, Find<TextBlock>(window, "BackupsHelp").Text, Find<TextBlock>(window, "BackupsFolder").Text,
+            Find<TextBlock>(window, "CacheHelp").Text, Find<Button>(window, "ChangeBackups").IsEffectivelyEnabled)
+            .Should().Be(("2 KB used", "2 KB · 1 game", paths.Backups, "0 B. Downloaded again when needed.", true));
+        window.Close();
+    });
+
+    [Fact]
     public Task Agents_section_shows_each_agent_with_its_status() => HeadlessUi.RunAsync(() =>
     {
         // Arrange

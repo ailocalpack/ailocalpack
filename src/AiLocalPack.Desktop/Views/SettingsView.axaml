@@ -5,6 +5,7 @@
              xmlns:lib="using:AiLocalPack.Desktop.ViewModels.Settings.Libraries"
              xmlns:ag="using:AiLocalPack.Desktop.ViewModels.Settings.Agents"
              xmlns:gh="using:AiLocalPack.Desktop.ViewModels.Settings.GitHub"
+             xmlns:st="using:AiLocalPack.Desktop.ViewModels.Settings.Storage"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
@@ -280,6 +281,108 @@
                     <Border Grid.Column="1" Classes="soonPill" VerticalAlignment="Center">
                         <TextBlock Text="{Binding PillText}" />
                     </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Settings → Storage -->
+        <DataTemplate DataType="st:StorageSummaryRow">
+            <Border Classes="settingRow">
+                <StackPanel Spacing="10" VerticalAlignment="Center">
+                    <views:HighlightTextBlock x:Name="StorageTotal" Classes="rowLabel" Source="{Binding Label}"
+                                              Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                    <views:StackedBar Height="12" First="{Binding BackupsShare}" Second="{Binding WorkingCopiesShare}" Third="{Binding CacheShare}"
+                                      FirstBrush="{DynamicResource AppAccentFillBrush}" SecondBrush="{DynamicResource AppGenBrush}" ThirdBrush="{DynamicResource AppWarnBrush}"
+                                      Track="{DynamicResource AppBorderBrush}" IsVisible="{Binding IsMeasured}" />
+                    <WrapPanel IsVisible="{Binding IsMeasured}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                            <Border Width="10" Height="10" CornerRadius="3" Background="{DynamicResource AppAccentFillBrush}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding BackupsLegend}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                            <Border Width="10" Height="10" CornerRadius="3" Background="{DynamicResource AppGenBrush}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding WorkingCopiesLegend}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                            <Border Width="10" Height="10" CornerRadius="3" Background="{DynamicResource AppWarnBrush}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding CacheLegend}" />
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="st:BackupsRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconHardDrive}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <TextBlock x:Name="BackupsHelp" Classes="rowHelp" Text="{Binding Help}" />
+                        <TextBlock x:Name="BackupsFolder" Classes="mono" Foreground="{DynamicResource AppMutedBrush}" Text="{Binding Folder}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="BackupsError" Classes="error" Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+                        <TextBlock Classes="rowHelp" Text="{Binding Note}" IsVisible="{Binding HasNote}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button Classes="bare sm" Command="{Binding OpenCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding OpenText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="ChangeBackups" Classes="ghost sm" Command="{Binding ChangeCommand}" Content="{Binding ChangeText}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="st:WorkingCopyRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic" Classes.warn="{Binding LosesProgress}">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Panel>
+                                <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding !LosesProgress}" />
+                                <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppWarnBrush}" IsVisible="{Binding LosesProgress}" />
+                            </Panel>
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <TextBlock Classes="rowHelp" Text="{Binding Help}" />
+                        <TextBlock Classes="error" Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Panel Grid.Column="2" VerticalAlignment="Center">
+                        <TextBlock Classes="hint" Text="{Binding RunningText}" IsVisible="{Binding IsRunning}" VerticalAlignment="Center" />
+                        <Button Classes="bare sm" Command="{Binding DeleteCommand}" IsVisible="{Binding !IsRunning}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding DeleteText}" />
+                            </StackPanel>
+                        </Button>
+                    </Panel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="st:CacheRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <TextBlock x:Name="CacheHelp" Classes="rowHelp" Text="{Binding Help}" />
+                        <TextBlock Classes="rowHelp" Classes.error="{Binding ResultIsError}" Text="{Binding Result}" IsVisible="{Binding HasResult}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button x:Name="ClearCache" Grid.Column="1" Classes="ghost sm" VerticalAlignment="Center"
+                            Command="{Binding ClearCommand}" Content="{Binding ClearText}" />
                 </Grid>
             </Border>
         </DataTemplate>

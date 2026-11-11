@@ -236,6 +236,9 @@ public sealed class AppStartup
                 case RecoveryOutcome.Busy:
                     step.Skip(() => _localizer[nameof(Strings.Startup_Recovery_Busy)]);
                     break;
+                case RecoveryOutcome.Nothing when result.BackupMoveFinished:
+                    step.Complete(StartupTone.Ok, () => _localizer[nameof(Strings.Startup_Recovery_BackupMove)]);
+                    break;
                 default:
                     step.Skip(() => _localizer[nameof(Strings.Startup_Recovery_Nothing)]);
                     break;

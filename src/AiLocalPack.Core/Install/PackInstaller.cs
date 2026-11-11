@@ -43,6 +43,7 @@ public sealed class PackInstaller
     private readonly OsKind _os;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly BackupLocation _backups;
 
     public PackInstaller(
         AppPaths paths,
@@ -65,6 +66,7 @@ public sealed class PackInstaller
         _os = env.Os;
         _time = time ?? TimeProvider.System;
         _logger = logger ?? (ILogger)NullLogger.Instance;
+        _backups = new BackupLocation(paths, time: _time, logger: _logger);
     }
 
     /// <summary>Tests: called before each file of a stage (stage, relative path); an exception thrown here fails the transaction there.</summary>
@@ -77,7 +79,7 @@ public sealed class PackInstaller
     internal bool RollBackOnFailure { get; set; } = true;
 
     /// <summary>A journal survived (a crash or a failed rollback): <see cref="Recover"/> has work to do. Never throws.</summary>
-    public bool HasInterruptedTransaction => File.Exists(_paths.InstallJournal);
+    public bool HasInterruptedTransaction => File.Exists(_paths.InstallJournal) || _backups.HasInterruptedMove;
 
     /// <summary>Installs the files for a game that has no pack installed (<see cref="InstallProblem.AlreadyInstalled"/> otherwise).</summary>
     /// <exception cref="GameBlockedException">The game is blocked (anti-cheat, opt-out).</exception>
@@ -633,11 +635,11 @@ public sealed class PackInstaller
 
     private void CheckFreeSpace(InstallPlan plan, string gameFolder)
     {
-        Directory.CreateDirectory(_paths.Backups);
+        Directory.CreateDirectory(BackupsRoot);
         var backup = plan.Entries.Where(e => e.OriginalFrom is not null).Sum(e => SizeOf(e.OriginalFrom!))
             + plan.Entries.Where(e => e.Write && e.BeforeCopy == CopyBefore).Sum(e => SizeOf(e.Full));
         var written = plan.Entries.Where(e => e.Write).Sum(e => e.Size);
-        var backupDrive = InstallPaths.DriveOf(_paths.Backups);
+        var backupDrive = InstallPaths.DriveOf(BackupsRoot);
         var gameDrive = InstallPaths.DriveOf(gameFolder);
         if (backupDrive is null || gameDrive is null)
         {
@@ -780,7 +782,7 @@ public sealed class PackInstaller
     /// </summary>
     private void DeleteUnusedBackups(GameId game)
     {
-        var folder = Path.Combine(_paths.Backups, RegistryLayout.GameFolder(game));
+        var folder = Path.Combine(BackupsRoot, RegistryLayout.GameFolder(game));
         var used = _store.DependenciesOf(game).Select(d => d.Backup).Append(_store.Find(game)?.Backup).OfType<string>().ToHashSet(StringComparer.Ordinal);
         try
         {
@@ -990,6 +992,14 @@ public sealed class PackInstaller
 
     private RecoveryResult RecoverLocked(CancellationToken cancellationToken)
     {
+        // A backup move a crash left behind first (task 66): until it is finished the backups folder is still the old
+        // one, so an unfinished move never stops a transaction.
+        var moved = _backups.HasInterruptedMove && _backups.RecoverLocked();
+        return RecoverJournalLocked(cancellationToken) with { BackupMoveFinished = moved };
+    }
+
+    private RecoveryResult RecoverJournalLocked(CancellationToken cancellationToken)
+    {
         InstallJournalFile? journal;
         try
         {
@@ -1061,18 +1071,7 @@ public sealed class PackInstaller
         }
     }
 
-    private FileStream? TryLock()
-    {
-        Directory.CreateDirectory(_paths.Data);
-        try
-        {
-            return new FileStream(_paths.InstallLock, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
-        }
-        catch (IOException)
-        {
-            return null;
-        }
-    }
+    private FileStream? TryLock() => InstallLock.TryAcquire(_paths);
 
     private InstallJournalFile? ReadJournal()
     {
@@ -1122,10 +1121,22 @@ public sealed class PackInstaller
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(record);
-        return InstallPaths.Resolve(Path.Combine(paths.Backups, RegistryLayout.GameFolder(record.Game), record.Backup, FilesFolder), relativePath);
+        return BackupFile(BackupLocation.RootOf(paths), record, relativePath);
     }
 
-    private string BackupFolder(GameId game, string transaction) => Path.Combine(_paths.Backups, RegistryLayout.GameFolder(game), transaction);
+    /// <summary><see cref="BackupFile(AppPaths, InstalledPack, string)"/> with the backups folder already read (<see cref="BackupLocation.RootOf"/>).</summary>
+    /// <exception cref="ArgumentException">The path would leave the backup folder.</exception>
+    public static string BackupFile(string backupsRoot, InstalledPack record, string relativePath)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(backupsRoot);
+        ArgumentNullException.ThrowIfNull(record);
+        return InstallPaths.Resolve(Path.Combine(backupsRoot, RegistryLayout.GameFolder(record.Game), record.Backup, FilesFolder), relativePath);
+    }
+
+    /// <summary>The folder the backups are in (the player may have moved it, task 66); read for each use, under the lock.</summary>
+    private string BackupsRoot => BackupLocation.RootOf(_paths);
+
+    private string BackupFolder(GameId game, string transaction) => Path.Combine(BackupsRoot, RegistryLayout.GameFolder(game), transaction);
 
     private string NewTransactionName() =>
         _time.GetUtcNow().UtcDateTime.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + "-"

@@ -21,6 +21,7 @@ public static class CliApp
             AgentCommand.Build(env),
             GitHubCommand.Build(env),
             GenCommand.Build(env),
+            StorageCommand.Build(env),
             McpCommand.Build(env),
             DevCommand.Build(env),
         };

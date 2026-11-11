@@ -36,8 +36,18 @@ public sealed record AppPaths
     /// <summary>The game catalog (machine-local: holds install paths).</summary>
     public string GamesFile => Path.Combine(Data, "games.json");
 
-    /// <summary>Originals of game files overwritten by installed packs (what makes uninstall possible).</summary>
+    /// <summary>
+    /// The default folder of the originals of game files overwritten by installed packs (what makes uninstall possible).
+    /// The player can move them elsewhere (Settings → Storage, task 66): the folder in use is
+    /// <see cref="Install.BackupLocation.RootOf"/>, never this property.
+    /// </summary>
     public string Backups => Path.Combine(Data, "backups");
+
+    /// <summary>
+    /// Where the backups are when the player moved them (<see cref="Install.BackupLocation"/>), and the move in progress;
+    /// missing = <see cref="Backups"/>. Machine-local (data, not config): it names a folder on this machine's drives.
+    /// </summary>
+    public string BackupsLocationFile => Path.Combine(Data, "backups-location.json");
 
     /// <summary>The installed packs: per game the pack, revision, touched files with their original and new hashes, backup folder.</summary>
     public string InstalledPacksFile => Path.Combine(Data, "installed-packs.json");

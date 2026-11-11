@@ -38,6 +38,7 @@ public sealed record InstalledOriginals(IReadOnlyDictionary<string, string> Rest
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(record);
+        var backups = BackupLocation.RootOf(paths);
         var restored = new Dictionary<string, string>(StringComparer.Ordinal);
         var added = new HashSet<string>(StringComparer.Ordinal);
         foreach (var file in record.Files)
@@ -54,7 +55,7 @@ public sealed record InstalledOriginals(IReadOnlyDictionary<string, string> Rest
                 {
                     added.Add(file.Path);
                 }
-                else if (PackInstaller.BackupFile(paths, record, file.Path) is var backup && File.Exists(backup))
+                else if (PackInstaller.BackupFile(backups, record, file.Path) is var backup && File.Exists(backup))
                 {
                     restored[file.Path] = backup;
                 }

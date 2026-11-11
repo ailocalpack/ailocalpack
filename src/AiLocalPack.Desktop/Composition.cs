@@ -41,6 +41,7 @@ using AiLocalPack.Desktop.ViewModels.GitHub;
 using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using AiLocalPack.Desktop.ViewModels.Settings.GitHub;
 using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
+using AiLocalPack.Desktop.ViewModels.Settings.Storage;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Dependencies;
 using AiLocalPack.Toolkit.Engines;
@@ -123,6 +124,10 @@ internal static class Composition
             sp.GetRequiredService<TimeProvider>(),
             sp.GetRequiredService<ILogger<PackInstaller>>()));
         services.AddSingleton<IInstalledPacks, StoreInstalledPacks>();
+        services.AddSingleton<IDiskSpace, SystemDiskSpace>();
+        services.AddSingleton(sp => new BackupLocation(
+            sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<IDiskSpace>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<BackupLocation>>()));
+        services.AddSingleton(sp => new AppCache(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<AppCache>>()));
         services.AddSingleton<PackInstallService>();
         services.AddSingleton<InstalledPackMonitor>();
         services.AddSingleton<ToastService>();
@@ -304,7 +309,8 @@ internal static class Composition
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<AgentsSettingsSection>());
         services.AddSingleton<GitHubSettingsSection>();
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<GitHubSettingsSection>());
-        AddPlaceholder(SettingsSectionId.Storage, "IconHardDrive", nameof(Strings.Settings_Storage_Title), nameof(Strings.Settings_Storage_Description));
+        services.AddSingleton<StorageSettingsSection>();
+        services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<StorageSettingsSection>());
         AddPlaceholder(SettingsSectionId.About, "IconInfo", nameof(Strings.Settings_About_Title), nameof(Strings.Settings_About_Description));
 
         void AddPlaceholder(SettingsSectionId id, string icon, string title, string description) =>

@@ -48,7 +48,7 @@ public sealed class SettingsViewModelTests : IDisposable
     public void Deep_link_opens_the_section()
     {
         // Arrange
-        const SettingsSectionId section = SettingsSectionId.Storage;
+        const SettingsSectionId section = SettingsSectionId.About;
 
         // Act
         var vm = Create(section);
