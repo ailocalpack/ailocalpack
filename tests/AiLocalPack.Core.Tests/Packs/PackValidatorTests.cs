@@ -1,4 +1,5 @@
 using System.Text;
+using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Tests.Registry;
 
@@ -104,6 +105,66 @@ public sealed class PackValidatorTests : IDisposable
 
         // Assert
         result.Problems.Single().Field.Should().Be("dependencies[0]");
+    }
+
+    [Fact]
+    public void Pack_for_an_opted_out_game_is_refused()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.File("policy/opt-out.json", """{"schemaVersion": 1, "games": [{"game": "steam:620", "note": "asked in #12"}]}""");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+        {
+            File = "manifest.json",
+            Field = "game",
+            Message = "steam:620 is on the registry's opt-out list (policy/opt-out.json): its publisher asked not to distribute fan translations, so the registry takes no packs for it.",
+        });
+    }
+
+    [Fact]
+    public void Pack_for_another_game_than_the_opted_out_ones_is_accepted()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.CopyFolder(Path.Combine(RegistryFixtures.Folder, "policy"), "policy");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Broken_opt_out_list_refuses_the_pack()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.File("policy/opt-out.json", "{");
+
+        // Act
+        var result = PackValidator.Validate(folder, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Single().Message.Should().StartWith("can't be checked: policy/opt-out.json is invalid");
+    }
+
+    [Fact]
+    public void Given_opt_out_list_is_used_instead_of_the_registry_file()
+    {
+        // Arrange
+        var folder = CopyPack();
+
+        // Act
+        var result = PackValidator.Validate(folder, null, new HashSet<GameId> { GameId.Steam(620) }, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Single().Field.Should().Be("game");
     }
 
     [Fact]

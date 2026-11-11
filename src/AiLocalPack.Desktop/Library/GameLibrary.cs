@@ -10,23 +10,51 @@ namespace AiLocalPack.Desktop.Library;
 /// <summary>
 /// Keeps the game catalog in step with the disk: a refresh scans Steam (with the library folders the player added or
 /// removed in settings), merges the result into <see cref="GameCatalog"/>, then detects engines and anti-cheats of new
-/// or updated games. One refresh runs at a time; games appear (catalog <see cref="GameCatalog.Changed"/>) as soon as
+/// or updated games (every game when the anti-cheat rules changed, <see cref="AntiCheatRules"/>; a new pack list with
+/// other rules starts a refresh). One refresh runs at a time; games appear (catalog <see cref="GameCatalog.Changed"/>) as soon as
 /// the Steam scan is merged, detection details follow.
 /// </summary>
-public sealed class GameLibrary(
-    GameCatalog catalog,
-    SteamLibraryScanner scanner,
-    EngineDetector engines,
-    AntiCheatDetector antiCheats,
-    SettingsStore settings,
-    TimeProvider time,
-    ILogger<GameLibrary> logger)
+public sealed class GameLibrary
 {
+    private readonly SteamLibraryScanner _scanner;
+    private readonly EngineDetector _engines;
+    private readonly AntiCheatDetector _antiCheats;
+    private readonly AntiCheatRules? _rules;
+    private readonly SettingsStore _settings;
+    private readonly TimeProvider _time;
+    private readonly ILogger<GameLibrary> _logger;
     private readonly Lock _lock = new();
     private Task? _running;
     private Task? _queued;
 
-    public GameCatalog Catalog { get; } = catalog;
+    /// <param name="rules">
+    /// Which anti-cheat rules the catalog was checked with; <c>null</c> = only new and updated games are checked.
+    /// </param>
+    public GameLibrary(
+        GameCatalog catalog,
+        SteamLibraryScanner scanner,
+        EngineDetector engines,
+        AntiCheatDetector antiCheats,
+        AntiCheatRules? rules,
+        SettingsStore settings,
+        TimeProvider time,
+        ILogger<GameLibrary> logger)
+    {
+        Catalog = catalog;
+        _scanner = scanner;
+        _engines = engines;
+        _antiCheats = antiCheats;
+        _rules = rules;
+        _settings = settings;
+        _time = time;
+        _logger = logger;
+        if (rules is not null)
+        {
+            rules.RulesChanged += (_, _) => _ = RefreshAsync();
+        }
+    }
+
+    public GameCatalog Catalog { get; }
 
     /// <summary>The last finished Steam scan this session (libraries and their availability); <c>null</c> before the first.</summary>
     public SteamScan? LastScan { get; private set; }
@@ -100,21 +128,29 @@ public sealed class GameLibrary(
         StateChanged?.Invoke(this, EventArgs.Empty);
         try
         {
-            var scan = scanner.Scan(settings.Current.SteamLibraries);
+            var scan = _scanner.Scan(_settings.Current.SteamLibraries);
             var changes = Catalog.Refresh(scan);
             LastScan = scan;
-            LastScanAt = time.GetUtcNow();
-            logger.LogInformation(
+            LastScanAt = _time.GetUtcNow();
+            _logger.LogInformation(
                 "Steam scan: {Libraries} libraries, {Games} games, {Changes} catalog changes",
                 scan.Libraries.Count, scan.Games.Count, changes.Count);
             Progressed?.Invoke(this, new GameLibraryScanned(scan, changes));
-            var detected = Math.Max(engines.UpdateCatalog(Catalog, changes), antiCheats.UpdateCatalog(Catalog, changes));
+            var stamp = _antiCheats.Policy.RulesStamp;
+            var recheck = _rules is not null && !_rules.IsChecked(stamp);
+            if (recheck)
+            {
+                _logger.LogInformation("Anti-cheat rules {Stamp} are new: checking every game again", stamp);
+            }
+
+            var detected = Math.Max(_engines.UpdateCatalog(Catalog, changes), _antiCheats.UpdateCatalog(Catalog, changes, recheck));
+            _rules?.MarkChecked(stamp);
             Progressed?.Invoke(this, new GameLibraryDetected(detected));
         }
         catch (Exception e)
         {
             // A failed refresh must not take the app down; the catalog keeps the last known games.
-            logger.LogError(e, "Game library refresh failed");
+            _logger.LogError(e, "Game library refresh failed");
             Progressed?.Invoke(this, new GameLibraryRefreshFailed(e));
         }
         finally

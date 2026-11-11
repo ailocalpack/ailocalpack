@@ -132,6 +132,80 @@ public sealed class RegistryIndexBuilderTests : IDisposable
     }
 
     [Fact]
+    public void Packs_of_an_opted_out_game_are_left_out()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/opt-out.json", """{"schemaVersion": 1, "games": [{"game": "steam:620"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        (result.Index!.Find(GameId.Steam(620))!.OptOut, result.Index.PacksFor(GameId.Steam(620), "ru").Count).Should().Be((true, 0));
+    }
+
+    [Fact]
+    public void Packs_of_an_opted_out_game_are_reported()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/opt-out.json", """{"schemaVersion": 1, "games": [{"game": "steam:620"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Problems.Should().NotBeEmpty().And.OnlyContain(p => p.Field == "game" && p.Message.Contains("opt-out list"));
+    }
+
+    [Fact]
+    public void Anti_cheat_rules_and_listed_games_are_published_in_the_index()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/anti-cheat.json", """
+            {"schemaVersion": 1,
+             "antiCheats": [{"id": "acme-guard", "name": "Acme Guard", "markers": ["AcmeGuard/"]}],
+             "games": [{"game": "steam:730", "antiCheat": "acme-guard"}]}
+            """);
+
+        // Act
+        var index = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken).Index!;
+
+        // Assert
+        (index.AntiCheats.Single().Id, index.Find(GameId.Steam(730))!.AntiCheat).Should().Be(("acme-guard", "acme-guard"));
+    }
+
+    [Fact]
+    public void Registry_may_list_a_game_with_a_bundled_anti_cheat()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/anti-cheat.json", """{"schemaVersion": 1, "games": [{"game": "steam:730", "antiCheat": "eac"}]}""");
+
+        // Act
+        var index = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken).Index!;
+
+        // Assert
+        index.Find(GameId.Steam(730))!.AntiCheat.Should().Be("eac");
+    }
+
+    [Fact]
+    public void Game_listed_with_an_unknown_anti_cheat_stops_the_build()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        _dir.File("registry/policy/anti-cheat.json", """{"schemaVersion": 1, "games": [{"game": "steam:730", "antiCheat": "nobody-knows"}]}""");
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        (result.Index, result.Problems.Single().File).Should().Be((null, "policy/anti-cheat.json"));
+    }
+
+    [Fact]
     public void Dependency_whitelist_is_published_in_the_index()
     {
         // Act

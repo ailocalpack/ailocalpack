@@ -1,3 +1,4 @@
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
@@ -288,5 +289,76 @@ public sealed class RegistryIndexSerializerTests
 
         // Assert
         packs.Should().BeEmpty();
+    }
+
+    /// <summary>An index with the registry's anti-cheat policy: one rule and a game listed with an anti-cheat.</summary>
+    private static RegistryIndex WithAntiCheat() => RegistryFixtures.Index(RegistryFixtures.Pack()) with
+    {
+        Games = new Dictionary<GameId, RegistryGame>(RegistryFixtures.Index(RegistryFixtures.Pack()).Games)
+        {
+            [GameId.Steam(730)] = new(GameId.Steam(730), false, false, new Dictionary<string, IReadOnlyList<RegistryPack>>()) { AntiCheat = "acme-guard" },
+        },
+        AntiCheats = [new AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard/", "acme*.sys"])],
+    };
+
+    [Fact]
+    public void Anti_cheat_policy_reads_back_the_same()
+    {
+        // Arrange
+        var json = RegistryIndexSerializer.Write(WithAntiCheat());
+
+        // Act
+        var index = RegistryIndexSerializer.Read(json).Index!;
+
+        // Assert
+        (index.AntiCheats.Single(), index.Find(GameId.Steam(730))!.AntiCheat).Should()
+            .BeEquivalentTo((new AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard/", "acme*.sys"]), "acme-guard"));
+    }
+
+    [Fact]
+    public void Written_anti_cheat_policy_passes_the_schema()
+    {
+        // Arrange
+        var json = RegistryIndexSerializer.Write(WithAntiCheat());
+
+        // Act
+        var errors = RegistryFixtures.SchemaErrors(json);
+
+        // Assert
+        errors.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Damaged_anti_cheat_rule_is_left_out_and_the_rest_kept()
+    {
+        // Arrange
+        var json = """
+            {
+              "schemaVersion": 1, "generated": "2026-11-04T12:00:00Z", "games": {},
+              "antiCheats": [
+                { "id": "bad", "name": "Bad", "markers": ["../up"] },
+                { "id": "acme-guard", "name": "Acme Guard", "markers": ["AcmeGuard/"] }
+              ]
+            }
+            """;
+
+        // Act
+        var result = RegistryIndexSerializer.Read(json);
+
+        // Assert
+        (result.Index!.AntiCheats.Single().Id, result.Errors.Single().Field).Should().Be(("acme-guard", "antiCheats[0]"));
+    }
+
+    [Fact]
+    public void Game_with_an_unreadable_anti_cheat_id_stays_blocked()
+    {
+        // Arrange
+        var json = """{ "schemaVersion": 1, "generated": "2026-11-04T12:00:00Z", "games": { "steam:730": { "antiCheat": "Bad ID" } } }""";
+
+        // Act
+        var result = RegistryIndexSerializer.Read(json);
+
+        // Assert
+        (result.Index!.Find(GameId.Steam(730))!.AntiCheat, result.Errors.Single().Field).Should().Be(("Bad ID", "games[\"steam:730\"].antiCheat"));
     }
 }

@@ -9,9 +9,17 @@ internal sealed record RegistryIndexJson(
     int? SchemaVersion,
     string? Generated,
     IReadOnlyDictionary<string, RegistryGameJson?>? Games,
-    IReadOnlyList<DependencyJson?>? Dependencies = null);
+    IReadOnlyList<DependencyJson?>? Dependencies = null,
+    IReadOnlyList<RegistryAntiCheatJson?>? AntiCheats = null);
 
-internal sealed record RegistryGameJson(bool? OptOut, bool? AntiCheatAllowed, IReadOnlyDictionary<string, IReadOnlyList<RegistryPackJson?>?>? Packs);
+internal sealed record RegistryGameJson(
+    bool? OptOut,
+    bool? AntiCheatAllowed,
+    string? AntiCheat,
+    IReadOnlyDictionary<string, IReadOnlyList<RegistryPackJson?>?>? Packs);
+
+/// <summary>An anti-cheat detection rule of the registry's policy, as <c>policy/anti-cheat.json</c> has it.</summary>
+internal sealed record RegistryAntiCheatJson(string? Id, string? Name, IReadOnlyList<string?>? Markers);
 
 internal sealed record RegistryPackJson(
     string? Id,

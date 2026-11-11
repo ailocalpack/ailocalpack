@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Fonts;
+using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Registry;
 
 namespace AiLocalPack.Core.Packs;
@@ -37,13 +38,21 @@ public static class PackValidator
     public const long MaxPackSize = 100L * 1024 * 1024;
 
     public static PackValidation Validate(string folder, CancellationToken cancellationToken = default) =>
-        Validate(folder, null, cancellationToken);
+        Validate(folder, null, null, cancellationToken);
 
     /// <param name="dependencies">
     /// The registry's dependency whitelist; <c>null</c> = read from <c>policy/dependencies.json</c> of the registry
     /// checkout holding the folder (<c>&lt;root&gt;/games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c>), none when it isn't in one.
     /// </param>
-    public static PackValidation Validate(string folder, DependencyWhitelist? dependencies, CancellationToken cancellationToken = default)
+    /// <param name="optOuts">
+    /// Games whose publisher opted out (<see cref="RegistryOptOuts"/>): their packs are refused; <c>null</c> = read from
+    /// <c>policy/opt-out.json</c> of the registry checkout holding the folder, none when it isn't in one.
+    /// </param>
+    public static PackValidation Validate(
+        string folder,
+        DependencyWhitelist? dependencies,
+        IReadOnlySet<GameId>? optOuts = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(folder);
         var problems = new List<PackProblem>();
@@ -59,6 +68,7 @@ public static class PackValidator
         CheckLayout(full, manifest, problems);
         CheckFonts(manifest, problems);
         CheckDependencies(full, manifest, dependencies, problems);
+        CheckOptOut(full, manifest, optOuts, problems);
         if (manifest?.Strings is { } strings)
         {
             CheckStrings(full, manifest, strings, files, problems);
@@ -215,6 +225,57 @@ public static class PackValidator
         }
     }
 
+    /// <summary>The registry takes no pack for a game whose publisher opted out.</summary>
+    private static void CheckOptOut(string folder, PackManifest? manifest, IReadOnlySet<GameId>? optOuts, List<PackProblem> problems)
+    {
+        if (manifest is null)
+        {
+            return;
+        }
+
+        if (optOuts is null)
+        {
+            var file = RegistryFile(folder, RegistryOptOuts.Path);
+            if (file is null || !File.Exists(file))
+            {
+                return;
+            }
+
+            string text;
+            try
+            {
+                text = File.ReadAllText(file);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                problems.Add(new PackProblem(RegistryLayout.ManifestFileName, "game", $"can't be checked: {RegistryOptOuts.Path} can't be read ({e.Message})."));
+                return;
+            }
+
+            (optOuts, var errors) = RegistryOptOuts.Read(text);
+            if (optOuts is null)
+            {
+                problems.Add(new PackProblem(RegistryLayout.ManifestFileName, "game", $"can't be checked: {RegistryOptOuts.Path} is invalid ({errors[0]})."));
+                return;
+            }
+        }
+
+        if (optOuts.Contains(manifest.Game))
+        {
+            problems.Add(new PackProblem(
+                RegistryLayout.ManifestFileName,
+                "game",
+                $"{manifest.Game} is on the registry's opt-out list ({RegistryOptOuts.Path}): its publisher asked not to distribute fan translations, so the registry takes no packs for it."));
+        }
+    }
+
+    /// <summary>A policy file of the registry checkout holding the pack folder (four levels up); <c>null</c> at a drive's top.</summary>
+    private static string? RegistryFile(string folder, string path)
+    {
+        var root = new DirectoryInfo(folder).Parent?.Parent?.Parent?.Parent;
+        return root is null ? null : Path.Combine(root.FullName, path.Replace('/', Path.DirectorySeparatorChar));
+    }
+
     /// <summary>Packs name whitelisted executables (ID and version), never ship them.</summary>
     private static void CheckDependencies(string folder, PackManifest? manifest, DependencyWhitelist? whitelist, List<PackProblem> problems)
     {
@@ -225,8 +286,7 @@ public static class PackValidator
 
         if (whitelist is null)
         {
-            var root = new DirectoryInfo(folder).Parent?.Parent?.Parent?.Parent;
-            var file = root is null ? null : Path.Combine(root.FullName, DependencyWhitelist.PolicyPath.Replace('/', Path.DirectorySeparatorChar));
+            var file = RegistryFile(folder, DependencyWhitelist.PolicyPath);
             if (file is null || !File.Exists(file))
             {
                 whitelist = DependencyWhitelist.Empty;

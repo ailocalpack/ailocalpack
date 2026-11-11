@@ -65,11 +65,12 @@ public static class GameBlocks
     }
 
     /// <inheritdoc cref="Resolve(GameId, AntiCheatVerdict, RegistryIndex?)"/>
+    /// <remarks>The anti-cheat verdict comes from <paramref name="policy"/> with the registry's policy on top (<see cref="AntiCheatPolicy.WithRegistry"/>).</remarks>
     public static GameBlock? Resolve(Game game, AntiCheatPolicy policy, RegistryIndex? index)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(policy);
-        return Resolve(game.Id, policy.Resolve(game), index);
+        return Resolve(game.Id, policy.WithRegistry(index).Resolve(game), index);
     }
 
     /// <summary>

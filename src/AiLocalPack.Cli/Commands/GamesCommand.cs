@@ -31,16 +31,18 @@ internal static class GamesCommand
             var catalog = new GameCatalog(paths, NullLogger<GameCatalog>.Instance, TimeProvider.System);
             catalog.Load();
             var changes = catalog.Refresh(scan);
+            // The registry's anti-cheat rules (local registry or the app's saved pack list, no network) on top of the bundled ones.
+            var policy = AntiCheatPolicy.Bundled.WithRegistry(DevCommand.SavedIndex(env, paths));
             new EngineDetector().UpdateCatalog(catalog, changes);
-            new AntiCheatDetector().UpdateCatalog(catalog, changes);
+            new AntiCheatDetector(policy).UpdateCatalog(catalog, changes);
             var output = result.InvocationConfiguration.Output;
             if (result.GetValue(json))
             {
-                WriteJson(output, scan, catalog.Games);
+                WriteJson(output, scan, catalog.Games, policy);
             }
             else
             {
-                WriteTable(output, scan, catalog.Games);
+                WriteTable(output, scan, catalog.Games, policy);
             }
 
             return 0;
@@ -49,7 +51,7 @@ internal static class GamesCommand
         return new Command("games", "Installed games.") { list };
     }
 
-    private static void WriteJson(TextWriter output, SteamScan scan, IReadOnlyList<Game> games)
+    private static void WriteJson(TextWriter output, SteamScan scan, IReadOnlyList<Game> games, AntiCheatPolicy policy)
     {
         var dto = new GamesListJson(
             [.. scan.Libraries.Select(l => new LibraryJson(l.Path, l.IsAvailable, l.IsAddedByHand))],
@@ -61,7 +63,7 @@ internal static class GamesCommand
                 g.Version?.BuildId,
                 g.Engine,
                 g.AntiCheat,
-                AntiCheatPolicy.Bundled.Resolve(g).IsBlocked,
+                policy.Resolve(g).IsBlocked,
                 g.InstallPath,
                 g.LibraryPath,
                 g.LastPlayed?.ToUniversalTime(),
@@ -69,7 +71,7 @@ internal static class GamesCommand
         output.WriteLine(JsonSerializer.Serialize(dto, CliJsonContext.Default.GamesListJson));
     }
 
-    private static void WriteTable(TextWriter output, SteamScan scan, IReadOnlyList<Game> games)
+    private static void WriteTable(TextWriter output, SteamScan scan, IReadOnlyList<Game> games, AntiCheatPolicy policy)
     {
         if (!scan.SteamFound)
         {
@@ -88,7 +90,7 @@ internal static class GamesCommand
             g.Id.ToString(),
             g.Version?.BuildId ?? (g.Version is null ? "-" : "files"),
             EngineKind.TryParse(g.Engine, out var engine) ? engine.DisplayName : "-",
-            AntiCheatCell(AntiCheatPolicy.Bundled.Resolve(g)),
+            AntiCheatCell(policy.Resolve(g)),
             g.LastPlayed?.ToLocalTime().ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) ?? "never",
             g.Name,
             g.IsAvailable ? g.InstallPath : $"{g.InstallPath} (not available)",

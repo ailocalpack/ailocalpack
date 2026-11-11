@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
@@ -98,7 +99,32 @@ public static class RegistryIndexSerializer
         }
 
         var dependencies = DependencyWhitelist.Read(file.Dependencies, "dependencies", skipped);
-        return new RegistryIndexReadResult(new RegistryIndex(generated, games) { Dependencies = dependencies }, skipped.List);
+        var antiCheats = ReadAntiCheats(file.AntiCheats, skipped);
+        return new RegistryIndexReadResult(new RegistryIndex(generated, games) { Dependencies = dependencies, AntiCheats = antiCheats }, skipped.List);
+    }
+
+    /// <summary>The registry's anti-cheat rules; a damaged or repeated one is left out with its error, like a pack.</summary>
+    private static List<AntiCheatRule> ReadAntiCheats(IReadOnlyList<RegistryAntiCheatJson?>? list, PackFormatErrors skipped)
+    {
+        var rules = new List<AntiCheatRule>();
+        for (var i = 0; i < (list?.Count ?? 0); i++)
+        {
+            var entry = list![i];
+            if (!AntiCheatPolicy.TryCreateRule(entry?.Id, entry?.Name, entry?.Markers, out var rule, out var error))
+            {
+                skipped.Add($"antiCheats[{i}]", error);
+            }
+            else if (rules.Any(r => r.Id == rule.Id))
+            {
+                skipped.Add($"antiCheats[{i}].id", $"'{rule.Id}' is listed twice.");
+            }
+            else
+            {
+                rules.Add(rule);
+            }
+        }
+
+        return rules;
     }
 
     public static RegistryIndexReadResult Read(Stream stream)
@@ -110,8 +136,8 @@ public static class RegistryIndexSerializer
 
     /// <summary>
     /// The index as indented JSON: games, languages and packs in ordinal order (the same index always gives the same
-    /// bytes), defaults left out (<c>false</c> flags, no rating, no discussion, no dependency whitelist); the whitelist's
-    /// entries by ID.
+    /// bytes), defaults left out (<c>false</c> flags, no rating, no discussion, no dependency whitelist or anti-cheat rules);
+    /// the whitelist's entries by ID, the rules in the policy's order.
     /// </summary>
     public static string Write(RegistryIndex index)
     {
@@ -128,6 +154,7 @@ public static class RegistryIndexSerializer
             games[game.Id.ToString()] = new RegistryGameJson(
                 game.OptOut ? true : null,
                 game.AntiCheatAllowed ? true : null,
+                game.AntiCheat,
                 packs.Count > 0 ? packs : null);
         }
 
@@ -135,7 +162,8 @@ public static class RegistryIndexSerializer
             RegistryIndex.CurrentSchemaVersion,
             PackFormat.FormatDate(index.Generated),
             games,
-            index.Dependencies.Dependencies.Count > 0 ? index.Dependencies.ToJson() : null);
+            index.Dependencies.Dependencies.Count > 0 ? index.Dependencies.ToJson() : null,
+            index.AntiCheats.Count > 0 ? [.. index.AntiCheats.Select(r => new RegistryAntiCheatJson(r.Id, r.Name, [.. r.Markers]))] : null);
         return JsonSerializer.Serialize(file, Writer.RegistryIndexJson);
     }
 
@@ -200,7 +228,14 @@ public static class RegistryIndexSerializer
             languages[language] = packs;
         }
 
-        return new RegistryGame(id, entry.OptOut ?? false, entry.AntiCheatAllowed ?? false, languages);
+        var antiCheat = entry.AntiCheat;
+        if (antiCheat is not null && !AntiCheatPolicy.IsValidId(antiCheat))
+        {
+            // The block stays on: an unreadable ID is still an anti-cheat, shown by its ID.
+            skipped.Add($"{field}.antiCheat", $"'{antiCheat}' is not an anti-cheat ID (lowercase letters, digits, '-').");
+        }
+
+        return new RegistryGame(id, entry.OptOut ?? false, entry.AntiCheatAllowed ?? false, languages) { AntiCheat = antiCheat };
     }
 
     private static bool IsPlainName(string key) => key.Length > 0 && key.All(c => char.IsAsciiLetterOrDigit(c) || c == '-');

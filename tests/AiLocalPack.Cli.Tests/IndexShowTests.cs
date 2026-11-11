@@ -74,6 +74,40 @@ public sealed class IndexShowTests : IDisposable
         result.StdOut.Should().Contain("steam:400: opt-out").And.Contain("steam:570: anti-cheat allowed");
     }
 
+    /// <summary>A registry folder whose index lists steam:730 with the registry's own anti-cheat rule.</summary>
+    private string AntiCheatRegistry()
+    {
+        _dir.File("anti-cheat/index.json", """
+            {
+              "schemaVersion": 1, "generated": "2026-11-04T12:00:00Z",
+              "games": { "steam:730": { "antiCheat": "acme-guard" } },
+              "antiCheats": [ { "id": "acme-guard", "name": "Acme Guard", "markers": ["AcmeGuard/"] } ]
+            }
+            """);
+        return _dir.Combine("anti-cheat");
+    }
+
+    [Fact]
+    public async Task Anti_cheat_the_registry_lists_is_a_game_flag()
+    {
+        // Act
+        var result = await RunAsync(AntiCheatRegistry());
+
+        // Assert
+        result.StdOut.Should().Contain("steam:730: anti-cheat Acme Guard");
+    }
+
+    [Fact]
+    public async Task Json_has_the_registry_anti_cheat_policy()
+    {
+        // Act
+        var result = await RunAsync(AntiCheatRegistry(), "--json");
+
+        // Assert
+        var json = JsonNode.Parse(result.StdOut)!;
+        ((string)json["games"]![0]!["antiCheat"]!, (string)json["antiCheats"]![0]!["name"]!).Should().Be(("acme-guard", "Acme Guard"));
+    }
+
     [Fact]
     public async Task Game_and_language_filter_the_packs()
     {

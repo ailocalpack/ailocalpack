@@ -1,5 +1,6 @@
 using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Registry;
 
 namespace AiLocalPack.Core.Tests.AntiCheat;
 
@@ -170,5 +171,168 @@ public sealed class AntiCheatPolicyTests
 
         // Assert
         policy.Find("eac")!.Markers.Should().Equal("EasyAntiCheat/", "pb/pbcl.dll", "*_BE.exe");
+    }
+
+    private static readonly GameId Listed = GameId.Steam(1004);
+
+    /// <summary>An index carrying registry policy: rules, a game listed with an anti-cheat, an allowed game.</summary>
+    private static RegistryIndex Registry(IReadOnlyList<AntiCheatRule>? rules = null, string? listed = null, GameId? allowed = null)
+    {
+        var games = new Dictionary<GameId, RegistryGame>();
+        if (listed is not null)
+        {
+            games[Listed] = new RegistryGame(Listed, false, false, new Dictionary<string, IReadOnlyList<RegistryPack>>()) { AntiCheat = listed };
+        }
+
+        if (allowed is { } id)
+        {
+            games[id] = new RegistryGame(id, false, true, new Dictionary<string, IReadOnlyList<RegistryPack>>()) { AntiCheat = games.GetValueOrDefault(id)?.AntiCheat };
+        }
+
+        return new RegistryIndex(DateTimeOffset.UnixEpoch, games) { AntiCheats = rules ?? [] };
+    }
+
+    [Fact]
+    public void Registry_rule_replaces_the_bundled_rule_with_its_id()
+    {
+        // Arrange
+        var index = Registry([new AntiCheatRule("eac", "Easy Anti-Cheat (EOS)", ["EOSBootstrapper.exe"])]);
+
+        // Act
+        var merged = Policy().WithRegistry(index);
+
+        // Assert
+        merged.AntiCheats.Select(r => (r.Id, r.Markers[0])).Should().Equal(("eac", "EOSBootstrapper.exe"), ("vanguard", "vgc.exe"));
+    }
+
+    [Fact]
+    public void Registry_rule_with_a_new_id_is_added_after_the_bundled_ones()
+    {
+        // Arrange
+        var index = Registry([new AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard/"])]);
+
+        // Act
+        var merged = Policy().WithRegistry(index);
+
+        // Assert
+        merged.AntiCheats.Select(r => r.Id).Should().Equal("eac", "vanguard", "acme-guard");
+    }
+
+    [Fact]
+    public void Game_the_registry_lists_is_blocked_without_files()
+    {
+        // Arrange
+        var index = Registry(listed: "vanguard");
+
+        // Act
+        var verdict = Policy().WithRegistry(index).Resolve(Listed, AntiCheatPolicy.NoneId);
+
+        // Assert
+        verdict.Should().BeEquivalentTo(new { AntiCheatId = "vanguard", Name = "Riot Vanguard", IsBlocked = true });
+    }
+
+    [Fact]
+    public void Registry_whitelist_beats_detection()
+    {
+        // Arrange
+        var index = Registry(allowed: Shooter);
+
+        // Act
+        var verdict = Policy().WithRegistry(index).Resolve(Shooter, "eac");
+
+        // Assert
+        verdict.IsBlocked.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Registry_whitelist_beats_a_game_the_registry_lists()
+    {
+        // Arrange
+        var index = Registry(listed: "vanguard", allowed: Listed);
+
+        // Act
+        var verdict = Policy().WithRegistry(index).Resolve(Listed, AntiCheatPolicy.NoneId);
+
+        // Assert
+        verdict.IsBlocked.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Bundled_whitelist_still_counts_with_a_registry()
+    {
+        // Arrange
+        var index = Registry([new AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard/"])]);
+
+        // Act
+        var verdict = Policy().WithRegistry(index).Resolve(Moddable, "eac");
+
+        // Assert
+        verdict.IsBlocked.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Without_an_index_the_policy_is_unchanged()
+    {
+        // Arrange
+        var policy = Policy();
+
+        // Act
+        var merged = policy.WithRegistry(null);
+
+        // Assert
+        merged.Should().BeSameAs(policy);
+    }
+
+    [Fact]
+    public void Same_index_gives_the_same_merged_policy()
+    {
+        // Arrange
+        var policy = Policy();
+        var index = Registry(listed: "eac");
+
+        // Act
+        var merged = policy.WithRegistry(index);
+
+        // Assert
+        policy.WithRegistry(index).Should().BeSameAs(merged);
+    }
+
+    [Fact]
+    public void Rules_stamp_changes_with_a_new_marker()
+    {
+        // Arrange
+        var index = Registry([new AntiCheatRule("eac", "Easy Anti-Cheat", ["EasyAntiCheat/", "EOSBootstrapper.exe"])]);
+
+        // Act
+        var stamp = Policy().WithRegistry(index).RulesStamp;
+
+        // Assert
+        stamp.Should().NotBe(Policy().RulesStamp).And.HaveLength(16);
+    }
+
+    [Fact]
+    public void Rules_stamp_ignores_the_game_lists()
+    {
+        // Arrange
+        var index = Registry(listed: "eac", allowed: Moddable);
+
+        // Act
+        var stamp = Policy().WithRegistry(index).RulesStamp;
+
+        // Assert
+        stamp.Should().Be(Policy().RulesStamp);
+    }
+
+    [Fact]
+    public void Games_list_may_name_an_anti_cheat_of_the_baseline()
+    {
+        // Arrange
+        var json = """{ "schemaVersion": 1, "games": [ { "game": "steam:1004", "antiCheat": "eac" } ] }""";
+
+        // Act
+        var policy = AntiCheatPolicy.Parse(json, AntiCheatPolicy.Bundled);
+
+        // Assert
+        policy.KnownGames[Listed].Should().Be("eac");
     }
 }

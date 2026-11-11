@@ -256,7 +256,12 @@ internal static class Composition
         services.AddSingleton(sp => new SteamLibraryScanner(sp.GetRequiredService<SteamLocator>(), sp.GetService<ILogger<SteamLibraryScanner>>()));
         services.AddSingleton(sp => new EngineDetector(sp.GetService<ILogger<EngineDetector>>()));
         services.AddSingleton(sp => AntiCheatPolicy.Bundled);
-        services.AddSingleton(sp => new AntiCheatDetector(sp.GetRequiredService<AntiCheatPolicy>(), sp.GetService<ILogger<AntiCheatDetector>>()));
+        services.AddSingleton<AntiCheatRules>();
+        services.AddSingleton(sp =>
+        {
+            var rules = new Lazy<AntiCheatRules>(sp.GetRequiredService<AntiCheatRules>);
+            return new AntiCheatDetector(() => rules.Value.Current, sp.GetService<ILogger<AntiCheatDetector>>());
+        });
         services.AddSingleton<GameLibrary>();
         services.AddSingleton<IProcessList, SystemProcessList>();
         services.AddSingleton<IProcessStarter, SystemProcessStarter>();

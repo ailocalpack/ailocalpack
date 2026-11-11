@@ -23,7 +23,8 @@ public sealed record RegistryBuildResult(RegistryIndex? Index, IReadOnlyList<Reg
 /// <summary>
 /// Builds <c>index.json</c> from a registry checkout: every pack under <c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;/</c>
 /// that passes <see cref="PackValidator"/> (a failing one is left out, the rest published), game flags from
-/// <see cref="RegistryOptOuts.Path"/> and the <c>allowed</c> list of <see cref="AntiCheatPolicyPath"/>, the dependency
+/// <see cref="RegistryOptOuts.Path"/> (packs of those games are left out) and <see cref="AntiCheatPolicyPath"/> (its rules,
+/// per-game anti-cheats and <c>allowed</c> list), the dependency
 /// whitelist from <see cref="DependencyWhitelist.PolicyPath"/> (packs naming anything else are left out), ratings and
 /// discussion links from the ratings file, the status worked out by <see cref="RegistryVerification"/> with the
 /// maintainers' <see cref="VerifiedPolicy"/>. Manifest paths are relative to the root, where <c>index.json</c> is published.
@@ -45,8 +46,8 @@ public static class RegistryIndexBuilder
             return Fail("", "The registry folder doesn't exist.");
         }
 
-        if (!ReadPolicy(root, RegistryOptOuts.Path, RegistryOptOuts.Read, problems, out var optOuts)
-            || !ReadPolicy(root, AntiCheatPolicyPath, ReadAllowed, problems, out var allowed))
+        if (!ReadPolicy<IReadOnlySet<GameId>>(root, RegistryOptOuts.Path, RegistryOptOuts.Read, new HashSet<GameId>(), problems, out var optOuts)
+            || !ReadPolicy(root, AntiCheatPolicyPath, ReadAntiCheat, new AntiCheatPolicy([], new Dictionary<GameId, string>(), new HashSet<GameId>()), problems, out var antiCheat))
         {
             return new RegistryBuildResult(null, problems);
         }
@@ -63,7 +64,7 @@ public static class RegistryIndexBuilder
             foreach (var folder in PackFolders(root, games, problems))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var validation = PackValidator.Validate(folder, dependencies, cancellationToken);
+                var validation = PackValidator.Validate(folder, dependencies, optOuts, cancellationToken);
                 var relative = Relative(root, folder);
                 if (!validation.IsValid)
                 {
@@ -98,7 +99,7 @@ public static class RegistryIndexBuilder
                 .Select(k => new RegistryBuildProblem("", "", $"ratings for {k}, which is not in the registry, are left out.")));
         }
 
-        var ids = packs.Select(p => p.Game).Concat(optOuts!).Concat(allowed!).Distinct();
+        var ids = packs.Select(p => p.Game).Concat(optOuts!).Concat(antiCheat!.AllowedGames).Concat(antiCheat.KnownGames.Keys).Distinct();
         var index = new RegistryIndex(
             generated,
             ids.ToDictionary(
@@ -106,10 +107,11 @@ public static class RegistryIndexBuilder
                 id => new RegistryGame(
                     id,
                     optOuts!.Contains(id),
-                    allowed!.Contains(id),
+                    antiCheat.AllowedGames.Contains(id),
                     packs.Where(p => p.Game == id).GroupBy(p => p.Language, StringComparer.Ordinal)
-                        .ToDictionary(g => g.Key, IReadOnlyList<RegistryPack> (g) => [.. g.OrderBy(p => p.Id, StringComparer.Ordinal)]))));
-        return new RegistryBuildResult(index with { Dependencies = dependencies! }, problems);
+                        .ToDictionary(g => g.Key, IReadOnlyList<RegistryPack> (g) => [.. g.OrderBy(p => p.Id, StringComparer.Ordinal)]))
+                { AntiCheat = antiCheat.KnownGames.GetValueOrDefault(id) }));
+        return new RegistryBuildResult(index with { Dependencies = dependencies!, AntiCheats = antiCheat.AntiCheats }, problems);
     }
 
     /// <summary><see cref="DependencyWhitelist.PolicyPath"/>: missing = empty; unreadable or invalid stops the build.</summary>
@@ -222,11 +224,12 @@ public static class RegistryIndexBuilder
         return result;
     }
 
-    private static (IReadOnlySet<GameId>? Games, IReadOnlyList<PackFormatError> Errors) ReadAllowed(string json)
+    /// <summary>The registry's anti-cheat policy; its <c>games</c> list may name bundled anti-cheats.</summary>
+    private static (AntiCheatPolicy? Policy, IReadOnlyList<PackFormatError> Errors) ReadAntiCheat(string json)
     {
         try
         {
-            return (AntiCheatPolicy.Parse(json).AllowedGames, []);
+            return (AntiCheatPolicy.Parse(json, AntiCheatPolicy.Bundled), []);
         }
         catch (AntiCheatPolicyException e)
         {
@@ -235,14 +238,16 @@ public static class RegistryIndexBuilder
     }
 
     /// <summary>A missing file is an empty list; an unreadable or invalid one stops the build.</summary>
-    private static bool ReadPolicy(
+    private static bool ReadPolicy<T>(
         string root,
         string path,
-        Func<string, (IReadOnlySet<GameId>? Games, IReadOnlyList<PackFormatError> Errors)> read,
+        Func<string, (T? Value, IReadOnlyList<PackFormatError> Errors)> read,
+        T empty,
         List<RegistryBuildProblem> problems,
-        out IReadOnlySet<GameId>? games)
+        out T? value)
+        where T : class
     {
-        games = new HashSet<GameId>();
+        value = empty;
         var file = Path.Combine(root, path);
         if (!File.Exists(file))
         {
@@ -260,9 +265,9 @@ public static class RegistryIndexBuilder
             return false;
         }
 
-        (games, var errors) = read(text);
+        (value, var errors) = read(text);
         problems.AddRange(errors.Select(e => new RegistryBuildProblem(path, e.Field, e.Message)));
-        return games is not null;
+        return value is not null;
     }
 
     private static RegistryBuildResult Fail(string file, string message) => new(null, [new RegistryBuildProblem(file, "", message)]);

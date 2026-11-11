@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
@@ -256,14 +257,19 @@ internal static class IndexCommand
             }
         }
 
-        var flagged = games.Where(g => g.OptOut || g.AntiCheatAllowed).ToList();
+        var flagged = games.Where(g => g.OptOut || g.AntiCheatAllowed || g.AntiCheat is not null).ToList();
         if (flagged.Count > 0)
         {
             output.WriteLine();
             output.WriteLine("Game flags:");
             foreach (var game in flagged)
             {
-                var flags = new[] { game.OptOut ? "opt-out" : null, game.AntiCheatAllowed ? "anti-cheat allowed" : null }.OfType<string>();
+                var flags = new[]
+                {
+                    game.OptOut ? "opt-out" : null,
+                    game.AntiCheat is { } antiCheat ? $"anti-cheat {AntiCheatPolicy.Bundled.WithRegistry(index).DisplayName(antiCheat)}" : null,
+                    game.AntiCheatAllowed ? "anti-cheat allowed" : null,
+                }.OfType<string>();
                 output.WriteLine($"  {game.Id}: {string.Join(", ", flags)}");
             }
         }
@@ -283,6 +289,7 @@ internal static class IndexCommand
                 g.Id.ToString(),
                 g.OptOut,
                 g.AntiCheatAllowed,
+                g.AntiCheat,
                 [.. PacksOf(g, language).Select(p => new IndexPackJson(
                     p.Language,
                     p.Id,
@@ -300,7 +307,8 @@ internal static class IndexCommand
                     p.Rating.Likes,
                     p.Rating.Works,
                     p.Rating.DoesNotWork,
-                    p.Discussion?.AbsoluteUri))]))]);
+                    p.Discussion?.AbsoluteUri))]))],
+            [.. index.AntiCheats.Select(r => new IndexAntiCheatJson(r.Id, r.Name, r.Markers))]);
         output.WriteLine(JsonSerializer.Serialize(dto, JsonWriter.IndexShowJson));
     }
 
@@ -318,9 +326,13 @@ internal sealed record IndexShowJson(
     string? Detail,
     DateTimeOffset? FetchedAt,
     DateTimeOffset Generated,
-    IReadOnlyList<IndexGameJson> Games);
+    IReadOnlyList<IndexGameJson> Games,
+    IReadOnlyList<IndexAntiCheatJson> AntiCheats);
 
-internal sealed record IndexGameJson(string Id, bool OptOut, bool AntiCheatAllowed, IReadOnlyList<IndexPackJson> Packs);
+internal sealed record IndexGameJson(string Id, bool OptOut, bool AntiCheatAllowed, string? AntiCheat, IReadOnlyList<IndexPackJson> Packs);
+
+/// <summary>An anti-cheat detection rule the registry adds to (or replaces in) the app's bundled list.</summary>
+internal sealed record IndexAntiCheatJson(string Id, string Name, IReadOnlyList<string> Markers);
 
 internal sealed record IndexPackJson(
     string Language,

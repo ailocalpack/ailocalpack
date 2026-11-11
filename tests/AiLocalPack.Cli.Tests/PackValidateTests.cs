@@ -55,6 +55,21 @@ public sealed class PackValidateTests : IDisposable
         (result.ExitCode, result.StdOut.Split('\n').Count(l => l.Contains(": valid (", StringComparison.Ordinal))).Should().Be((0, 4));
     }
 
+    [Fact]
+    public async Task Pack_for_an_opted_out_game_fails()
+    {
+        // Arrange
+        var folder = CopyPack();
+        _dir.File("policy/opt-out.json", """{"schemaVersion": 1, "games": [{"game": "steam:620"}]}""");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--github");
+
+        // Assert
+        (result.ExitCode, result.StdOut).Should().Match<(int, string)>(r =>
+            r.Item1 == 1 && r.Item2.Contains("title=game::steam:620 is on the registry's opt-out list", StringComparison.Ordinal));
+    }
+
     public static TheoryData<string, string> InvalidPacks => new()
     {
         { "bad-manifest", "manifest.json: authors[1].github: 'bob_2' is not a GitHub login." },

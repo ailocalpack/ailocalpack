@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/verified-policy.schema.json",
+  "title": "ailocalpack verified overrides",
+  "description": "policy/verified.json of the registry: maintainers grant or revoke `verified` for one revision of a pack, whatever its confirmations say. Maintainers only. `ailocalpack index build` applies an entry while the pack is at that revision; an entry for an older revision does nothing, one for a pack not in the registry is reported. A broken file stops the index build. Unknown properties are allowed (forward compatibility); a breaking change raises schemaVersion.",
+  "type": "object",
+  "required": ["schemaVersion", "packs"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packs": {
+      "description": "A pack + revision listed once.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pack", "revision", "status"],
+        "properties": {
+          "pack": {
+            "description": "<game id>/<language>/<pack id>, e.g. steam:620/ru/full.",
+            "type": "string",
+            "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})/[A-Za-z0-9-]+/[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "revision": { "type": "integer", "minimum": 1 },
+          "status": { "enum": ["verified", "alpha"] },
+          "note": { "description": "For maintainers: why.", "type": "string" }
+        }
+      }
+    }
+  }
+}

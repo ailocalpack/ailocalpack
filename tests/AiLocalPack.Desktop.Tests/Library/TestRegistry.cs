@@ -1,3 +1,4 @@
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
@@ -9,7 +10,7 @@ namespace AiLocalPack.Desktop.Tests.Library;
 internal sealed class TestRegistry : IDisposable
 {
     private readonly TempDir _dir = new();
-    private readonly Dictionary<GameId, (bool OptOut, bool AntiCheatAllowed, List<RegistryPack> Packs)> _games = [];
+    private readonly Dictionary<GameId, (bool OptOut, bool AntiCheatAllowed, string? AntiCheat, List<RegistryPack> Packs)> _games = [];
 
     /// <summary>The registry folder (pass as <c>registry:</c> to <see cref="TestServices.Build"/>) once <see cref="Write"/> ran.</summary>
     public string Path => _dir.Path;
@@ -116,6 +117,17 @@ internal sealed class TestRegistry : IDisposable
         return this;
     }
 
+    /// <summary>Lists the game with an anti-cheat by ID (the registry's <c>policy/anti-cheat.json</c> games).</summary>
+    public TestRegistry AntiCheat(uint appId, string antiCheat)
+    {
+        var game = GameId.Steam(appId);
+        _games[game] = Game(game) with { AntiCheat = antiCheat };
+        return this;
+    }
+
+    /// <summary>The registry's anti-cheat detection rules published with the index.</summary>
+    public List<AntiCheatRule> AntiCheatRules { get; } = [];
+
     /// <summary>The dependency whitelist published with the index.</summary>
     public DependencyWhitelist Dependencies { get; set; } = DependencyWhitelist.Empty;
 
@@ -127,9 +139,13 @@ internal sealed class TestRegistry : IDisposable
                 g.Key,
                 g.Value.OptOut,
                 g.Value.AntiCheatAllowed,
-                g.Value.Packs.GroupBy(p => p.Language).ToDictionary(l => l.Key, l => (IReadOnlyList<RegistryPack>)[.. l]))))
+                g.Value.Packs.GroupBy(p => p.Language).ToDictionary(l => l.Key, l => (IReadOnlyList<RegistryPack>)[.. l]))
+            {
+                AntiCheat = g.Value.AntiCheat,
+            }))
     {
         Dependencies = Dependencies,
+        AntiCheats = AntiCheatRules,
     });
 
     public TestRegistry Write()
@@ -140,11 +156,11 @@ internal sealed class TestRegistry : IDisposable
 
     public void Dispose() => _dir.Dispose();
 
-    private (bool OptOut, bool AntiCheatAllowed, List<RegistryPack> Packs) Game(GameId id)
+    private (bool OptOut, bool AntiCheatAllowed, string? AntiCheat, List<RegistryPack> Packs) Game(GameId id)
     {
         if (!_games.TryGetValue(id, out var game))
         {
-            game = (false, false, []);
+            game = (false, false, null, []);
             _games[id] = game;
         }
 

@@ -20,9 +20,12 @@ public sealed class GameBlocksTests
         knownGame ? new Dictionary<GameId, string> { [Id] = "eac" } : new Dictionary<GameId, string>(),
         allowed ? new HashSet<GameId> { Id } : new HashSet<GameId>());
 
-    private static RegistryIndex Index(bool optOut = false, bool antiCheatAllowed = false) => new(
+    private static RegistryIndex Index(bool optOut = false, bool antiCheatAllowed = false, string? antiCheat = null, params AntiCheatRule[] rules) => new(
         DateTimeOffset.UnixEpoch,
-        new Dictionary<GameId, RegistryGame> { [Id] = new(Id, optOut, antiCheatAllowed, new Dictionary<string, IReadOnlyList<RegistryPack>>()) });
+        new Dictionary<GameId, RegistryGame> { [Id] = new(Id, optOut, antiCheatAllowed, new Dictionary<string, IReadOnlyList<RegistryPack>>()) { AntiCheat = antiCheat } })
+    {
+        AntiCheats = rules,
+    };
 
     [Fact]
     public void Detected_anti_cheat_blocks_the_game()
@@ -113,6 +116,45 @@ public sealed class GameBlocksTests
 
         // Assert
         block!.Reason.Should().Be(LocalizationBlock.OptOut);
+    }
+
+    [Fact]
+    public void Anti_cheat_the_registry_lists_for_the_game_blocks_it()
+    {
+        // Arrange
+        var game = Game("none");
+
+        // Act
+        var block = GameBlocks.Resolve(game, Policy(), Index(antiCheat: "eac"));
+
+        // Assert
+        block.Should().Be(new GameBlock(LocalizationBlock.AntiCheat, "eac", "Easy Anti-Cheat"));
+    }
+
+    [Fact]
+    public void Registry_rule_names_an_anti_cheat_the_app_does_not_know()
+    {
+        // Arrange
+        var game = Game("acme-guard");
+
+        // Act
+        var block = GameBlocks.Resolve(game, Policy(), Index(rules: new AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard/"])));
+
+        // Assert
+        block!.AntiCheatName.Should().Be("Acme Guard");
+    }
+
+    [Fact]
+    public void Registry_whitelist_lifts_an_anti_cheat_the_registry_lists()
+    {
+        // Arrange
+        var game = Game("none");
+
+        // Act
+        var block = GameBlocks.Resolve(game, Policy(), Index(antiCheatAllowed: true, antiCheat: "eac"));
+
+        // Assert
+        block.Should().BeNull();
     }
 
     [Fact]

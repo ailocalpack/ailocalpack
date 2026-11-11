@@ -114,6 +114,11 @@ public sealed record AppPaths
     /// <summary>Remembered SHA-256 of game files (<see cref="FileHashCache"/>; safe to delete: files are hashed again).</summary>
     public string FileHashes => Path.Combine(Cache, "file-hashes.json");
 
+    /// <summary>
+    /// The anti-cheat rules the catalog was last checked with (stamp; safe to delete: every game is checked again).
+    /// </summary>
+    public string AntiCheatRulesFile => Path.Combine(Cache, "anti-cheat-rules.json");
+
     /// <summary>All three roots under <paramref name="home"/> (made absolute against the current directory).</summary>
     public static AppPaths UnderHome(string home)
     {

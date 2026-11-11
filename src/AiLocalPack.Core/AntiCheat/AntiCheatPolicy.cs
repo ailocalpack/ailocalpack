@@ -1,7 +1,11 @@
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Registry;
 
 namespace AiLocalPack.Core.AntiCheat;
 
@@ -29,7 +33,7 @@ public sealed record AntiCheatVerdict(string? AntiCheatId, string? Name, bool Is
 
 /// <summary>
 /// Anti-cheat rules and per-game overrides: the list bundled with the app (<see cref="Bundled"/>, <c>anti-cheat.json</c>)
-/// and, later, the registry's <c>policy/anti-cheat.json</c> in the same format. Holds the detection rules, games known to
+/// and the registry's <c>policy/anti-cheat.json</c> in the same format, published in the index (<see cref="WithRegistry"/>). Holds the detection rules, games known to
 /// have an anti-cheat by ID (kernel anti-cheats installed outside the game folder) and the whitelist of games that
 /// officially allow mods, which beats both.
 /// </summary>
@@ -43,6 +47,8 @@ public sealed partial class AntiCheatPolicy
     private static readonly Lazy<AntiCheatPolicy> BundledPolicy = new(LoadBundled);
 
     private readonly Dictionary<string, AntiCheatRule> _byId;
+    private readonly ConditionalWeakTable<RegistryIndex, AntiCheatPolicy> _merged = new();
+    private string? _stamp;
 
     public AntiCheatPolicy(
         IReadOnlyList<AntiCheatRule> antiCheats,
@@ -93,8 +99,48 @@ public sealed partial class AntiCheatPolicy
         return Resolve(game.Id, game.AntiCheat);
     }
 
-    /// <summary>Reads a policy file. Throws <see cref="AntiCheatPolicyException"/> on invalid JSON or rules.</summary>
-    public static AntiCheatPolicy Parse(string json)
+    /// <summary>
+    /// The policy with the registry's on top (<see cref="RegistryIndex.AntiCheats"/>, the games' anti-cheat and allowed
+    /// flags): a registry rule replaces the bundled one with its ID and new ones are added after them, a game the registry
+    /// lists takes its anti-cheat, the allowed lists add up. Without an index (none fetched or saved) this policy as is.
+    /// The result is kept per index, so callers may ask for every game.
+    /// </summary>
+    public AntiCheatPolicy WithRegistry(RegistryIndex? index)
+    {
+        if (index is null)
+        {
+            return this;
+        }
+
+        return _merged.GetValue(index, i => Merge(i.AntiCheats, i.Games.Values.Where(g => g.AntiCheat is not null).ToDictionary(g => g.Id, g => g.AntiCheat!), i.Games.Values.Where(g => g.AntiCheatAllowed).Select(g => g.Id)));
+    }
+
+    private AntiCheatPolicy Merge(IReadOnlyList<AntiCheatRule> rules, IReadOnlyDictionary<GameId, string> known, IEnumerable<GameId> allowed)
+    {
+        var overrides = rules.ToDictionary(r => r.Id, StringComparer.Ordinal);
+        var merged = AntiCheats.Select(r => overrides.GetValueOrDefault(r.Id) ?? r).ToList();
+        merged.AddRange(rules.Where(r => Find(r.Id) is null));
+        var games = new Dictionary<GameId, string>(KnownGames);
+        foreach (var (game, antiCheat) in known)
+        {
+            games[game] = antiCheat;
+        }
+
+        return new AntiCheatPolicy(merged, games, AllowedGames.Concat(allowed).ToHashSet());
+    }
+
+    /// <summary>
+    /// A short fingerprint of the detection rules (IDs and markers, in order): a game checked under other rules is
+    /// checked again, since a new marker may find an anti-cheat in it.
+    /// </summary>
+    public string RulesStamp => _stamp ??= Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(
+        string.Join("\n", AntiCheats.Select(r => r.Id + "\t" + string.Join("\t", r.Markers))))))[..16];
+
+    /// <summary>
+    /// Reads a policy file. Throws <see cref="AntiCheatPolicyException"/> on invalid JSON or rules. The <c>games</c> list
+    /// may name anti-cheats of <paramref name="baseline"/> too (the registry's file naming a bundled one).
+    /// </summary>
+    public static AntiCheatPolicy Parse(string json, AntiCheatPolicy? baseline = null)
     {
         ArgumentNullException.ThrowIfNull(json);
         AntiCheatPolicyFile? file;
@@ -129,7 +175,7 @@ public sealed partial class AntiCheatPolicy
             throw new AntiCheatPolicyException($"Anti-cheat '{duplicate.Key}' is listed twice.");
         }
 
-        var ids = rules.Select(r => r.Id).ToHashSet(StringComparer.Ordinal);
+        var ids = rules.Select(r => r.Id).Concat(baseline?.AntiCheats.Select(r => r.Id) ?? []).ToHashSet(StringComparer.Ordinal);
         var known = new Dictionary<GameId, string>();
         foreach (var entry in file.Games ?? [])
         {
@@ -155,33 +201,52 @@ public sealed partial class AntiCheatPolicy
         return new AntiCheatPolicy(rules, known, allowed);
     }
 
-    private static AntiCheatRule ReadRule(AntiCheatJson? entry)
+    private static AntiCheatRule ReadRule(AntiCheatJson? entry) =>
+        TryCreateRule(entry?.Id, entry?.Name, entry?.Markers, out var rule, out var error)
+            ? rule
+            : throw new AntiCheatPolicyException(error);
+
+    /// <summary>
+    /// Checks one rule as <see cref="Parse"/> does (ID pattern, not <see cref="NoneId"/>, a name, valid markers); the
+    /// registry index carries rules in the same shape.
+    /// </summary>
+    public static bool TryCreateRule(string? id, string? name, IReadOnlyList<string?>? markers, out AntiCheatRule rule, out string error)
     {
-        if (entry?.Id is not { } id || !IdPattern().IsMatch(id) || id == NoneId)
+        rule = null!;
+        if (!IsValidId(id))
         {
-            throw new AntiCheatPolicyException($"Invalid anti-cheat ID '{entry?.Id}' (lowercase letters, digits, '-').");
+            error = $"Invalid anti-cheat ID '{id}' (lowercase letters, digits, '-').";
+            return false;
         }
 
-        if (string.IsNullOrWhiteSpace(entry.Name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new AntiCheatPolicyException($"Anti-cheat '{id}' has no name.");
+            error = $"Anti-cheat '{id}' has no name.";
+            return false;
         }
 
-        if (entry.Markers is not { Count: > 0 } markers)
+        if (markers is not { Count: > 0 })
         {
-            throw new AntiCheatPolicyException($"Anti-cheat '{id}' has no markers.");
+            error = $"Anti-cheat '{id}' has no markers.";
+            return false;
         }
 
         foreach (var marker in markers)
         {
             if (!IsValidMarker(marker))
             {
-                throw new AntiCheatPolicyException($"Anti-cheat '{id}': invalid marker '{marker}'.");
+                error = $"Anti-cheat '{id}': invalid marker '{marker}'.";
+                return false;
             }
         }
 
-        return new AntiCheatRule(id, entry.Name, [.. markers.Select(m => m!)]);
+        error = "";
+        rule = new AntiCheatRule(id!, name, [.. markers.Select(m => m!)]);
+        return true;
     }
+
+    /// <summary>An anti-cheat ID: lowercase letters, digits and dashes, not <see cref="NoneId"/>.</summary>
+    public static bool IsValidId(string? id) => id is not null && IdPattern().IsMatch(id) && id != NoneId;
 
     /// <summary>Relative, '/'-separated, no empty / dot parts, wildcards only in the last part.</summary>
     private static bool IsValidMarker(string? marker)

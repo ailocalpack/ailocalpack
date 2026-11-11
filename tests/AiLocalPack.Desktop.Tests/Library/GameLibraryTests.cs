@@ -33,6 +33,7 @@ public sealed class GameLibraryTests : IDisposable
             new SteamLibraryScanner(new SteamLocator(env)),
             new EngineDetector(),
             new AntiCheatDetector(),
+            null,
             _settings,
             _clock,
             NullLogger<GameLibrary>.Instance);

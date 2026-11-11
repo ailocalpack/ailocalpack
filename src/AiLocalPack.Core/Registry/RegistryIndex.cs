@@ -1,3 +1,4 @@
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
@@ -16,6 +17,12 @@ public sealed record RegistryIndex(DateTimeOffset Generated, IReadOnlyDictionary
 
     /// <summary>The executable components packs may require (<c>policy/dependencies.json</c>), published with the packs.</summary>
     public DependencyWhitelist Dependencies { get; init; } = DependencyWhitelist.Empty;
+
+    /// <summary>
+    /// Anti-cheat detection rules from the registry's <c>policy/anti-cheat.json</c>, merged over the bundled ones by
+    /// <see cref="AntiCheatPolicy.WithRegistry"/> (a new anti-cheat needs no app release).
+    /// </summary>
+    public IReadOnlyList<AntiCheatRule> AntiCheats { get; init; } = [];
 
     /// <summary>Every pack, game by game.</summary>
     public IEnumerable<RegistryPack> Packs => Games.Values.SelectMany(g => g.AllPacks);
@@ -38,6 +45,12 @@ public sealed record RegistryGame(
     bool AntiCheatAllowed,
     IReadOnlyDictionary<string, IReadOnlyList<RegistryPack>> Packs)
 {
+    /// <summary>
+    /// The anti-cheat the registry's policy lists for the game by ID (one that leaves no files in the game folder);
+    /// <c>null</c> = none listed.
+    /// </summary>
+    public string? AntiCheat { get; init; }
+
     public IEnumerable<RegistryPack> AllPacks => Packs.Values.SelectMany(p => p);
 
     public IReadOnlyList<RegistryPack> PacksIn(string language) => Packs.GetValueOrDefault(language) ?? [];

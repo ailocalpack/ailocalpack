@@ -31,7 +31,7 @@ public sealed record AntiCheatDetection(IReadOnlyList<AntiCheatMatch> Matches)
 
 /// <summary>
 /// Finds anti-cheat files in a game folder with the marker rules of an <see cref="AntiCheatPolicy"/> (default: the bundled
-/// list). Walks the folder breadth-first down to <see cref="MaxDepth"/> levels (anti-cheats sit next to the executable,
+/// list; the app passes the bundled one with the registry's on top, read anew for each search). Walks the folder breadth-first down to <see cref="MaxDepth"/> levels (anti-cheats sit next to the executable,
 /// which can be nested like <c>Project/Binaries/Win64</c> or inside a macOS bundle) and stops after
 /// <see cref="MaxFolders"/> folders. Names ignore case. Best effort: unreadable or missing folders give no match, never an
 /// exception. Whether a match blocks the game is the policy's call (<see cref="AntiCheatPolicy.Resolve(GameId, string?)"/>).
@@ -44,25 +44,35 @@ public sealed class AntiCheatDetector
     /// <summary>Folders searched at most per game, so a huge asset tree can't stall a scan.</summary>
     public const int MaxFolders = 20_000;
 
-    private readonly AntiCheatPolicy _policy;
+    private readonly Func<AntiCheatPolicy> _policy;
     private readonly ILogger _logger;
-    private readonly (AntiCheatRule Rule, Marker[] Markers)[] _rules;
+    private ParsedRules? _parsed;
 
     public AntiCheatDetector(AntiCheatPolicy? policy = null, ILogger<AntiCheatDetector>? logger = null)
+        : this(() => policy ?? AntiCheatPolicy.Bundled, logger)
     {
-        _policy = policy ?? AntiCheatPolicy.Bundled;
-        _logger = logger ?? NullLogger<AntiCheatDetector>.Instance;
-        _rules = [.. _policy.AntiCheats.Select(r => (r, r.Markers.Select(Marker.Parse).ToArray()))];
     }
+
+    /// <param name="policy">The current policy, asked for before each search (it changes when the registry's does).</param>
+    public AntiCheatDetector(Func<AntiCheatPolicy> policy, ILogger<AntiCheatDetector>? logger = null)
+    {
+        ArgumentNullException.ThrowIfNull(policy);
+        _policy = policy;
+        _logger = logger ?? NullLogger<AntiCheatDetector>.Instance;
+    }
+
+    /// <summary>The policy searches use now.</summary>
+    public AntiCheatPolicy Policy => _policy();
 
     public AntiCheatDetection Detect(string gameFolder)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
+        var rules = Rules();
         var found = new List<AntiCheatMatch>();
         var queue = new Queue<(FolderView Folder, int Depth)>();
         queue.Enqueue((FolderView.Root(Path.GetFullPath(gameFolder)), 0));
         var visited = 0;
-        while (queue.TryDequeue(out var item) && found.Count < _rules.Length)
+        while (queue.TryDequeue(out var item) && found.Count < rules.Length)
         {
             if (++visited > MaxFolders)
             {
@@ -71,7 +81,7 @@ public sealed class AntiCheatDetector
             }
 
             var (folder, depth) = item;
-            foreach (var (rule, markers) in _rules)
+            foreach (var (rule, markers) in rules)
             {
                 if (found.Any(m => m.Id == rule.Id))
                 {
@@ -103,17 +113,31 @@ public sealed class AntiCheatDetector
         return found.Count == 0 ? AntiCheatDetection.None : new AntiCheatDetection(found);
     }
 
+    /// <summary>The policy's markers, parsed once per policy.</summary>
+    private (AntiCheatRule Rule, Marker[] Markers)[] Rules()
+    {
+        var policy = _policy();
+        if (_parsed is { } cached && ReferenceEquals(cached.Policy, policy))
+        {
+            return cached.Rules;
+        }
+
+        var rules = policy.AntiCheats.Select(r => (r, r.Markers.Select(Marker.Parse).ToArray())).ToArray();
+        _parsed = new ParsedRules(policy, rules);
+        return rules;
+    }
+
     /// <summary>
     /// Checks available catalog games that were never checked or appear in <paramref name="changes"/> as added or updated
-    /// (an update can add an anti-cheat), and stores the anti-cheat ID or <see cref="AntiCheatPolicy.NoneId"/>. Returns
-    /// how many games were checked.
+    /// (an update can add an anti-cheat), every available game when <paramref name="all"/> (the rules changed), and
+    /// stores the anti-cheat ID or <see cref="AntiCheatPolicy.NoneId"/>. Returns how many games were checked.
     /// </summary>
-    public int UpdateCatalog(GameCatalog catalog, IEnumerable<GameChange> changes)
+    public int UpdateCatalog(GameCatalog catalog, IEnumerable<GameChange> changes, bool all = false)
     {
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentNullException.ThrowIfNull(changes);
         var changed = changes.Where(c => c is GameAdded or GameVersionChanged).Select(c => c.Game.Id).ToHashSet();
-        var due = catalog.Games.Where(g => g.IsAvailable && (g.AntiCheat is null || changed.Contains(g.Id))).ToList();
+        var due = catalog.Games.Where(g => g.IsAvailable && (all || g.AntiCheat is null || changed.Contains(g.Id))).ToList();
         foreach (var game in due)
         {
             var antiCheat = Detect(game.InstallPath).StoredId;
@@ -122,6 +146,9 @@ public sealed class AntiCheatDetector
 
         return due.Count;
     }
+
+    /// <summary>One reference, so a search on another thread never sees half of it.</summary>
+    private sealed record ParsedRules(AntiCheatPolicy Policy, (AntiCheatRule Rule, Marker[] Markers)[] Rules);
 
     /// <summary>A parsed <see cref="AntiCheatRule.Markers"/> entry.</summary>
     private sealed record Marker(string? Parent, string Name, bool IsFolder, bool IsPattern)

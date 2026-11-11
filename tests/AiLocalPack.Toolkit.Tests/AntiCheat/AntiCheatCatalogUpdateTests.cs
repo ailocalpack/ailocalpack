@@ -1,3 +1,4 @@
+using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.AntiCheat;
@@ -95,5 +96,36 @@ public sealed class AntiCheatCatalogUpdateTests : IDisposable
 
         // Assert
         _catalog.Find(Id)!.AntiCheat.Should().BeNull();
+    }
+
+    [Fact]
+    public void Checked_game_is_checked_again_when_the_rules_changed()
+    {
+        // Arrange
+        _dir.Dir("Shooter/EasyAntiCheat");
+        AddGame("Shooter", antiCheat: "none");
+
+        // Act
+        _detector.UpdateCatalog(_catalog, [], all: true);
+
+        // Assert
+        _catalog.Find(Id)!.AntiCheat.Should().Be("eac");
+    }
+
+    [Fact]
+    public void Rules_from_the_policy_provider_are_read_for_each_search()
+    {
+        // Arrange
+        _dir.File("Shooter/AcmeGuard.sys", "x");
+        AddGame("Shooter");
+        var policy = AntiCheatPolicy.Bundled;
+        var detector = new AntiCheatDetector(() => policy);
+        policy = AntiCheatPolicy.Parse("""{ "schemaVersion": 1, "antiCheats": [ { "id": "acme-guard", "name": "Acme Guard", "markers": ["AcmeGuard.sys"] } ] }""");
+
+        // Act
+        detector.UpdateCatalog(_catalog, []);
+
+        // Assert
+        _catalog.Find(Id)!.AntiCheat.Should().Be("acme-guard");
     }
 }

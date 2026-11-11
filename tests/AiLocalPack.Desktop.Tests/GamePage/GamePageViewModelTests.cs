@@ -406,6 +406,50 @@ public sealed class GamePageViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task Anti_cheat_the_registry_lists_blocks_the_game()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.AntiCheat(20, "battleye"));
+
+        // Act
+        var page = Open(services, 20);
+
+        // Assert
+        (page.IsBlocked, page.Status.AntiCheatName).Should().Be((true, "BattlEye"));
+    }
+
+    [Fact]
+    public async Task Registry_whitelist_lifts_the_detected_anti_cheat()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r.AllowAntiCheat(30));
+
+        // Act
+        var page = Open(services, 30);
+
+        // Assert
+        page.IsBlocked.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task New_registry_marker_blocks_a_game_checked_before()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+        var library = services.GetRequiredService<GameLibrary>();
+        File.WriteAllText(Path.Combine(GameOf(services, 20).InstallPath, "AcmeGuard.sys"), "x");
+        _registry.AntiCheatRules.Add(new Core.AntiCheat.AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard.sys"]));
+        _registry.Write();
+        await services.GetRequiredService<PackIndex>().RefreshAsync();
+
+        // Act
+        await library.RefreshAsync();
+
+        // Assert
+        (GameOf(services, 20).AntiCheat, Open(services, 20).IsBlocked).Should().Be(("acme-guard", true));
+    }
+
+    [Fact]
     public async Task Report_opens_the_registry_issue_with_the_detected_file()
     {
         // Arrange

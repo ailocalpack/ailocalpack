@@ -45,6 +45,7 @@ public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, Se
     public LocalizationStatus Resolve(Game game, string language)
     {
         ArgumentNullException.ThrowIfNull(game);
-        return LocalizationStatuses.Resolve(game, language, policy.Resolve(game), packIndex.Current?.Index, installed.Find(game.Id, language), jobs.StateOf(game.Id), jobs.ResultStateOf(game.Id));
+        var index = packIndex.Current?.Index;
+        return LocalizationStatuses.Resolve(game, language, policy.WithRegistry(index).Resolve(game), index, installed.Find(game.Id, language), jobs.StateOf(game.Id), jobs.ResultStateOf(game.Id));
     }
 }

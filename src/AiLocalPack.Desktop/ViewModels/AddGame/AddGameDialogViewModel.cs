@@ -6,6 +6,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Desktop.AddGame;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Dialogs;
+using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
@@ -121,7 +122,7 @@ public sealed partial class AddGameDialogViewModel : DialogViewModel
     public AddGameDialogViewModel(
         GameCatalog catalog,
         GameFolderAnalyzer analyzer,
-        AntiCheatPolicy policy,
+        AntiCheatRules antiCheatRules,
         IFilePicker picker,
         ICoverLoader covers,
         ManualCoverStore coverStore,
@@ -141,7 +142,7 @@ public sealed partial class AddGameDialogViewModel : DialogViewModel
         _localizer = localizer;
         _ui = ui;
         _logger = logger;
-        _summaryServices = new GameSummaryServices(catalog, analyzer, policy, picker, covers, coverStore, localizer, ui, logger);
+        _summaryServices = new GameSummaryServices(catalog, analyzer, antiCheatRules.Current, picker, covers, coverStore, localizer, ui, logger);
         _executablesStep = new(nameof(Strings.AddGame_Stage_Executables), localizer);
         _engineStep = new(nameof(Strings.AddGame_Stage_Engine), localizer);
         _fingerprintStep = new(nameof(Strings.AddGame_Stage_Fingerprint), localizer);

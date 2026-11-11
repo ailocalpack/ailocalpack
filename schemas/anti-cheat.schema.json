@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/anti-cheat.schema.json",
+  "title": "ailocalpack anti-cheat policy",
+  "description": "The anti-cheat policy: the list bundled with the app (src/AiLocalPack.Core/AntiCheat/anti-cheat.json) and the registry's policy/anti-cheat.json (maintainers only), in the same format. The app puts the registry's on top of the bundled one: a registry rule replaces the bundled rule with its id and new ones are added, a game listed in `games` takes that anti-cheat, the `allowed` lists add up. `ailocalpack index build` publishes the registry's rules in index.json (`antiCheats`) and the games as `antiCheat` / `antiCheatAllowed`. Games with an anti-cheat are blocked for install and generation unless allowed. A broken file stops the index build. Unknown properties are allowed (forward compatibility); a breaking change raises schemaVersion.",
+  "type": "object",
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "antiCheats": {
+      "description": "Detection rules; ids unique.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/antiCheat" }
+    },
+    "games": {
+      "description": "Games known to use an anti-cheat that leaves no files in the game folder (kernel anti-cheats installed elsewhere); each listed once. The anti-cheat is one of this file's or, in the registry's file, one of the app's bundled list.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["game", "antiCheat"],
+        "properties": {
+          "game": { "$ref": "#/$defs/gameId" },
+          "antiCheat": { "$ref": "#/$defs/antiCheatId" }
+        }
+      }
+    },
+    "allowed": {
+      "description": "Games that officially allow mods (whitelist): never blocked for an anti-cheat, found in the files or listed. An opt-out still blocks them.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["game"],
+        "properties": {
+          "game": { "$ref": "#/$defs/gameId" },
+          "note": { "description": "For maintainers (not shown): a link to the studio's statement that mods are allowed.", "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "gameId": { "type": "string", "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})$" },
+    "antiCheatId": {
+      "description": "Lowercase letters, digits and dashes; `none` is reserved (a game checked without a finding).",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "not": { "const": "none" }
+    },
+    "antiCheat": {
+      "type": "object",
+      "required": ["id", "name", "markers"],
+      "properties": {
+        "id": { "$ref": "#/$defs/antiCheatId" },
+        "name": { "description": "Display name (product name, not translated).", "type": "string", "pattern": "\\S" },
+        "markers": {
+          "description": "Files or folders that show the anti-cheat, checked in every folder of the game tree (6 levels deep): a name (`BEClient_x64.dll`), a folder with a trailing '/' (`EasyAntiCheat/`) or a short path (`pb/pbcl.dll`); '*' and '?' only in the last part; names ignore case.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/marker" }
+        }
+      }
+    },
+    "marker": {
+      "type": "string",
+      "pattern": "^([^/\\\\*?]+/)*[^/\\\\]+/?$",
+      "allOf": [
+        { "pattern": "\\S" },
+        { "not": { "pattern": "(^|/)\\.\\.?(/|$)" } }
+      ]
+    }
+  }
+}

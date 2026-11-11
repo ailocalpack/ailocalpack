@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ailocalpack.github.io/registry/schemas/opt-out.schema.json",
+  "title": "ailocalpack opt-out list",
+  "description": "policy/opt-out.json of the registry: games whose publisher asked not to distribute fan translations. Maintainers only. `ailocalpack index build` sets `optOut` on these games in index.json, leaves their packs out and `pack validate` refuses new ones; the app blocks install and generation for them. A broken file stops the index build (dropping an entry would unblock a game). Unknown properties are allowed (forward compatibility); a breaking change raises schemaVersion.",
+  "type": "object",
+  "required": ["schemaVersion", "games"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "games": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["game"],
+        "properties": {
+          "game": { "description": "Game ID; listed once.", "$ref": "#/$defs/gameId" },
+          "note": { "description": "For maintainers (not shown in the app): who asked and when, a link to the request issue.", "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "gameId": { "type": "string", "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})$" }
+  }
+}
