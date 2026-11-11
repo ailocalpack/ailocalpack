@@ -528,7 +528,12 @@ internal static class GenJobCommands
             IAgentAdapter adapter = plan.Recording is { } recording
                 ? new FakeAgentAdapter(new ProcessRunner(), FakeAgentReplayer.ForCurrentProcess("agent", "replay"), recording)
                 : AgentCommand.Adapter(Env, plan.AgentId)!;
-            var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
+            // The entry assembly's path only matters under `dotnet ailocalpack.dll`; the single-file CLI (empty
+            // Location) is started by its own executable, which AppLaunch takes from the process path.
+#pragma warning disable IL3000
+            var entryAssembly = System.Reflection.Assembly.GetEntryAssembly()?.Location;
+#pragma warning restore IL3000
+            var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, entryAssembly)
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
             var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, new GameTestRunner(new ProcessRunner(), Env.Os));
             var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies, Build: build);
