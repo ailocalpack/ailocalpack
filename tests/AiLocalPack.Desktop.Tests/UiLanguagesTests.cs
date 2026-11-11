@@ -34,8 +34,8 @@ public sealed class UiLanguagesTests
     }
 
     [Theory]
-    [InlineData("de-DE")]
-    [InlineData("ja")]
+    [InlineData("nl-NL")]
+    [InlineData("zh-TW")]
     [InlineData("")]
     public void Falls_back_to_english_for_an_unsupported_os_language(string os)
     {
@@ -50,7 +50,7 @@ public sealed class UiLanguagesTests
     }
 
     [Theory]
-    [InlineData("de")]
+    [InlineData("nl")]
     [InlineData("not a language")]
     [InlineData("  ")]
     public void Ignores_an_unsupported_or_invalid_setting(string setting)
@@ -63,5 +63,53 @@ public sealed class UiLanguagesTests
 
         // Assert
         culture.Name.Should().Be("ru-RU");
+    }
+
+    [Theory]
+    [InlineData("de-AT", "de-AT")]
+    [InlineData("es-MX", "es-MX")]
+    [InlineData("zh-CN", "zh-CN")]
+    [InlineData("pt-BR", "pt-BR")]
+    public void Keeps_a_regional_culture_of_a_supported_language(string os, string expected)
+    {
+        // Arrange
+        var osCulture = C(os);
+
+        // Act
+        var culture = UiLanguages.Resolve(null, osCulture);
+
+        // Assert
+        culture.Name.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Another_variant_of_a_supported_language_gets_the_supported_one()
+    {
+        // Arrange
+        var os = C("pt-PT");
+
+        // Act
+        var culture = UiLanguages.Resolve(null, os);
+
+        // Assert
+        culture.Name.Should().Be("pt-BR");
+    }
+
+    [Theory]
+    [InlineData("zh-CN", "zh-Hans")]
+    [InlineData("pt-BR", "pt-BR")]
+    [InlineData("uk-UA", "uk")]
+    [InlineData("en-US", "en")]
+    [InlineData("nl-NL", "en")]
+    public void Tag_names_the_supported_language_a_culture_reads(string name, string expected)
+    {
+        // Arrange
+        var culture = C(name);
+
+        // Act
+        var tag = UiLanguages.TagOf(culture);
+
+        // Assert
+        tag.Should().Be(expected);
     }
 }

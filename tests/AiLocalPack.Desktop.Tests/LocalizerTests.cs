@@ -26,7 +26,7 @@ public sealed class LocalizerTests
     public void Unknown_culture_gets_english_strings()
     {
         // Arrange
-        var localizer = Create("de-DE");
+        var localizer = Create("nl-NL");
 
         // Act
         var title = localizer[nameof(Strings.Library_Title)];

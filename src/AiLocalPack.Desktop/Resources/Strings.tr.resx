@@ -1,0 +1,4015 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Chrome_BackTo" xml:space="preserve">
+    <value>‹ {0}</value>
+  </data>
+  <data name="Chrome_Activity" xml:space="preserve">
+    <value>Etkinlik</value>
+  </data>
+  <data name="Chrome_Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>Kütüphane</value>
+  </data>
+  <data name="Library_GameCount_One" xml:space="preserve">
+    <value>{0} oyun</value>
+  </data>
+  <data name="Library_GameCount_Other" xml:space="preserve">
+    <value>{0} oyun</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>Sistem ({0})</value>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>Ayarlarda ara</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>“{0}” aramasıyla eşleşen ayar yok.</value>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>Bu bölüm AI Local Pack'in sonraki bir sürümünde gelecek.</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>Diller, tema, arka plan, bildirimler</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>Kütüphaneler</value>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Steam klasörleri ve elle eklenen oyunlar</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>YZ ajanları</value>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>Yapay zekâ ile çeviri oluşturmak için Claude Code ve Codex</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>Hesap ve yayımladığınız çeviriler</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>Depolama</value>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>Yedekler, çalışma kopyaları, önbellek</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>Sürüm, güncellemeler, lisanslar, yasal bilgiler</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>Arka plan</value>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>Bildirimler</value>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>Arayüz dili</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>İlk olarak yapay zekâ ile çevrildi. Kötü bir ifade mi gördünüz?</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>GitHub'da düzeltin</value>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>arayüz dil yerelleştirme çeviri ui locale translation</value>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>Oyunları şu dile çevir</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>Çevirilere göz atarken ve yapay zekâ ile oluştururken varsayılan dil. Her oyun sayfasında başka bir dil seçilebilir.</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>hedef dil çeviri yerelleştirme target language translation</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>Sistem, işletim sisteminin açık / koyu ayarını izler.</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>koyu açık mod renkler görünüm dark light</value>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Koyu</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>Sistemle başlat, sistem tepsisinde çalışmaya devam et</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>Pencere kapalıyken de uygulamanın oyun güncellemelerini fark etmesini sağlar.</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>tepsi otomatik başlatma açılış oturum arka plan tray autostart</value>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>Oyun güncellemelerinden sonra çevirileri yeniden uygula</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>Bir mağaza güncellemesi ya da dosya doğrulaması çeviriyi silerse ve derleme hâlâ uyumluysa, çeviri yeni bir yedekle yeniden yüklenir. Aksi hâlde bildirim alırsınız.</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>Sistem tepsisi kapalı olduğu için yalnızca uygulama açılırken.</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>Bunun yerine bildirim alırsınız ve elle yeniden uygulayabilirsiniz.</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>güncelleme yeniden yükle geri yükle onar</value>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>Kararınız gerektiğinde</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>Duraklatılan YZ çevirisi, oyun güncellemesinden sonra uyumsuz çeviri, başarısız yeniden uygulama, reddedilen PR.</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>Bir görev bittiğinde</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>Çeviri yüklendi veya yeniden uygulandı, YZ çevirisi bitti, PR birleştirildi, uygulama güncellemesi hazır.</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>Çevirilerimle ilgili topluluk etkinliği</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>Yeni yorumlar, “çalışıyor” onayları, bir çevirinin doğrulanması.</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>bildirimler uyarılar notifications</value>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>Pencere kapalıyken sistem bildirimi olarak gösterilir; uygulamanın içinde ise her şey zaten Etkinlik'te.</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>Sistem bildirimleri için sistem tepsisi gerekir (yukarıdaki Arka plan); o zamana kadar olaylar yalnızca Etkinlik'te görünür.</value>
+  </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>Oyun ara</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>Sırala</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>Ada göre</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>Son oynanan</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>Klasör</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>Oyun klasörü ekle</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>Steam kütüphanelerinde oyunlar aranıyor…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>Steam kütüphanesi bulunamadı</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>Steam bulunamadı ya da içinde oyun yok. Bir oyun klasörünü elle ekleyin veya Steam kütüphanelerinizin yerini gösterin.</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>Oyun klasörü ekle</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>Ayarlar → Kütüphaneler</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>Hiçbir şey bulunamadı</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>“{0}” ile eşleşen oyun yok. Oyun kütüphanede değil mi? Klasörünü ekleyin.</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>Aramayı ve filtreyi sıfırla</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>Klasör ekle</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>elle eklendi</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>Bilinmeyen motor</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>Klasöre erişilemiyor</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0} (engellendi: {1})</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>Hile koruması</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>Oyun sayfasını aç</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>Oyun klasörünü aç</value>
+  </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>Kütüphaneden kaldır</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>Oyunu eklemek için klasörü bırakın</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>Bir oyun klasörü ya da birkaç oyun içeren bir klasör</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>Oyun ekle</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>Adım {0} / {1}</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>Oyun klasörünü buraya bırakın</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>Motor algılanır ve oyun dosyaları kontrol edilir. Dosyalar yalnızca okunur, hiçbir şey değiştirilmez.</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>Klasör seç…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>Bir oyun klasörü seçin</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>Bir klasörü doğrudan kütüphanenin üzerine de bırakabilirsiniz</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>Oyun klasörüm nerede?</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>Masaüstü kısayolu: sağ tıklayın → “Dosya konumunu aç”.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>Dock: oyuna sağ tıklayın → Seçenekler → Finder'da Göster.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>Masaüstü kısayolu: oyunun yolu, .desktop dosyasındaki Exec satırındadır.</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG, itch.io, Epic: başlatıcıda “Kurulum klasörünü aç” seçeneği vardır.</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Steam oyunlarını eklemeniz gerekmez: kütüphanede kendiliğinden görünürler.</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>“{0}” klasöründe veya alt klasörlerinde oyun bulunamadı.</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>Oyunun çalıştırılabilir dosyasını içeren klasörü seçin.</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>“{0}” klasörü yok ya da açılamıyor.</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>“{0}” aranamayacak kadar büyük. Daha dar bir klasör seçin.</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>“{0}” klasöründeki dosyalar okunamıyor.</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>Bu görsel açılamıyor. Bir PNG veya JPEG dosyası seçin.</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>“{0}” inceleniyor…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>Oyun dosyaları yalnızca okunur; hiçbir şey değiştirilmez</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>Çalıştırılabilir dosyalar bulunuyor</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>Motor algılanıyor</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>Dosyaların parmak izi alınıyor</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>Katalogda aranıyor</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0} / {1:N0} dosya</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>sonraki bir sürümde</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>Motor tanınmadı</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>Çalıştırılabilir dosya yok</value>
+  </data>
+  <data name="AddGame_Files_One" xml:space="preserve">
+    <value>{0} dosya</value>
+  </data>
+  <data name="AddGame_Files_Other" xml:space="preserve">
+    <value>{0} dosya</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} GB</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>Kapağı değiştir</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>Başka klasör</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>“{0}” içinde bir oyun var: {1} alt klasöründe.</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>Çeviri arama sonraki bir sürümde gelecek.</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>Bu oyunun katalogdaki çevirileri burada görünecek. Oyunu şimdiden ekleyebilirsiniz.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>Motor tanınmadı.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>Yine de yapay zekâ ile çeviri oluşturabilirsiniz: ajan oyun dosyalarını kendisi çözer. Motoru biliyorsanız ayrıntılarda seçin.</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>Bu oyun kütüphanede zaten “{0}” adıyla var.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>Algılanan: {0}.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>Bu oyun için çeviri yüklenemez veya oluşturulamaz: hile koruması hesabınızı yasaklayabilir. Oyunu yine de ekleyebilirsiniz; kütüphane onu kullanılamaz olarak gösterir.</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>Oyun ayrıntılarını düzenle</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>Ad</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>Motor</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>algılandı</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>algılanmadı</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>Ana çalıştırılabilir dosya</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>Kapak</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>Görsel seç…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>Oyun simgesini kullan</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>Bir kapak görseli seçin</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>Diğer / bilmiyorum</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>Oyunu ekle</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>Kullanılamaz olarak ekle</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>Oyun sayfasını aç</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>Oyun ekle</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>Kütüphaneye “{0}” adıyla eklendi.</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>Oyunlar bulunuyor</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>“{0}” içinde oyunlar aranıyor…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>{0} / {1} klasör tarandı</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>en fazla 3 seviye derinlikte</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>Oyun {0} / {1} kontrol ediliyor: {2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>Durdur ve göster</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>Sırada, oyunlar tek tek: ayrıntıları kontrol edip ekleyin. İstediğiniz oyunu atlayabilirsiniz; kütüphanede zaten olan oyunlar otomatik olarak atlanır.</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>Eklenecek yeni bir şey yok</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>Arama durduruldu: şimdiye kadar bulunan oyunlar gösteriliyor.</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>Bu klasör çok büyük, bu yüzden arama erken durdu. Kalanları bulmak için daha dar bir klasör seçin.</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>Bu oyunlar Steam üzerinden zaten kütüphanenizde.</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>Eklemeye başla</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>çalıştırılabilir dosya yok</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>çalışma zamanı yükleyicileri (DirectX, Visual C++…)</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>yüklü bir oyun değil, oyun yükleyicisi</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>oyun değil, bir yardımcı araç</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>oyun kayıtları</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>Yeni</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>Hile koruması</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>Kütüphanede</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>Okunamıyor</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>Eklendi</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>Atlandı</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>Tüm oyunlar</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>Oyun {0} / {1}</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>Önceki</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>Atla</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>Sonraki</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>Hiç oyun eklenmedi</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>Atlanan oyunlar daha sonra aynı klasörden eklenebilir.</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>eklendi</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>kullanılamaz olarak eklendi (hile koruması)</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>atlandı</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>zaten kütüphanede</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>atlandı: dosyaları okunamıyor</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>Kütüphaneye</value>
+  </data>
+  <data name="AddGame_Scanning_Found_One" xml:space="preserve">
+    <value>{0} oyun bulundu · durdurup bulunanları inceleyebilirsiniz</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Other" xml:space="preserve">
+    <value>{0} oyun bulundu · durdurup bulunanları inceleyebilirsiniz</value>
+  </data>
+  <data name="AddGame_Overview_Title_One" xml:space="preserve">
+    <value>“{1}” içinde {0} oyun bulundu</value>
+  </data>
+  <data name="AddGame_Overview_Title_Other" xml:space="preserve">
+    <value>“{1}” içinde {0} oyun bulundu</value>
+  </data>
+  <data name="AddGame_Overview_Queue_One" xml:space="preserve">
+    <value>{0} oyun, tek tek</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Other" xml:space="preserve">
+    <value>{0} oyun, tek tek</value>
+  </data>
+  <data name="AddGame_Skipped_Title_One" xml:space="preserve">
+    <value>Oyun içermeyen {0} klasör atlandı</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Other" xml:space="preserve">
+    <value>Oyun içermeyen {0} klasör atlandı</value>
+  </data>
+  <data name="AddGame_Tally_New_One" xml:space="preserve">
+    <value>{0} yeni</value>
+  </data>
+  <data name="AddGame_Tally_New_Other" xml:space="preserve">
+    <value>{0} yeni</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_One" xml:space="preserve">
+    <value>{0} hile korumalı</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Other" xml:space="preserve">
+    <value>{0} hile korumalı</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_One" xml:space="preserve">
+    <value>{0} zaten kütüphanede</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Other" xml:space="preserve">
+    <value>{0} zaten kütüphanede</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_One" xml:space="preserve">
+    <value>{0} okunamıyor</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Other" xml:space="preserve">
+    <value>{0} okunamıyor</value>
+  </data>
+  <data name="AddGame_Result_Title_One" xml:space="preserve">
+    <value>{0} oyun eklendi</value>
+  </data>
+  <data name="AddGame_Result_Title_Other" xml:space="preserve">
+    <value>{0} oyun eklendi</value>
+  </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>Elle eklenen oyunlar</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>Diğer mağazalar</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>Bir oyunu kaldırmak onu yalnızca AI Local Pack'ten kaldırır. Oyun dosyaları ve yüklü çeviriler olduğu gibi kalır.</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>yeniden tara, tara, yenile, steamapps, kütüphane klasörleri, rescan, scan</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · taranıyor…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>Steam kütüphane klasörleri okunuyor.</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>Son tarama: {0}. Steam, uygulama her açıldığında yeniden taranır.</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>Henüz taranmadı.</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>Steam bulunamadı</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>Steam alışılmadık bir yere yüklendiyse kütüphane klasörünü aşağıdan ekleyin.</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>Yeniden tara</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>Taranıyor</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Steam kütüphane klasörü</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · Steam tarafından bulundu</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · sizin tarafınızdan eklendi</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>Erişilemiyor</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_One" xml:space="preserve">
+    <value>{0} oyun gizli</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Other" xml:space="preserve">
+    <value>{0} oyun gizli</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>Steam kütüphane klasörü ekle</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>Yalnızca başka bir sürücüdeki kütüphane bulunamadıysa.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, sürücü, disk, sd kart, kütüphane, ekle, drive, sd card</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>Bir Steam kütüphane klasörü seçin</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>“{0}” bir Steam kütüphanesi değil: içinde steamapps klasörü yok.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>“{0}” zaten listede.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>Klasör listesi kaydedilemedi. Tekrar deneyin.</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>“{0}” AI Local Pack'ten kaldırılsın mı?</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>Klasördeki oyunlar kütüphaneden çıkar. Klasör, oyunlar ve yüklü çeviriler diskte kalır; Steam'de hiçbir şey değişmez. Klasörü daha sonra yeniden ekleyebilirsiniz.</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>Elle eklenen oyun</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>Elle eklenen oyun yok. Burada veya kütüphanede Oyun klasörü ekle'yi kullanın ya da bir klasörü pencereye sürükleyin.</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>Oyun klasörü ekle</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>elle, klasör, oyun, gog, itch, epic, manual, folder</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>“{0}” AI Local Pack'ten kaldırılsın mı?</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>Oyun klasörü ve yüklü çeviriler diskte kalır. Klasörü daha sonra yeniden ekleyebilirsiniz.</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games, GOG, EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>O zamana kadar bu mağazaların oyunlarını klasör olarak ekleyin.</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, mağaza, galaxy, store</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>Yakında</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>Bir Steam kütüphanesine erişilemiyor</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
+    <value>{1}: klasör geri gelene kadar {0} oyun gizli. Yüklü çevirilere dokunulmadı.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Other" xml:space="preserve">
+    <value>{1}: klasör geri gelene kadar {0} oyun gizli. Yüklü çevirilere dokunulmadı.</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Settings_Steam_Folders_One" xml:space="preserve">
+    <value>{0} klasör</value>
+  </data>
+  <data name="Settings_Steam_Folders_Other" xml:space="preserve">
+    <value>{0} klasör</value>
+  </data>
+  <data name="Chrome_Activity_Checking" xml:space="preserve">
+    <value>Etkinlik: açılış kontrolleri sürüyor</value>
+  </data>
+  <data name="Chrome_CheckingForChanges" xml:space="preserve">
+    <value>Değişiklikler kontrol ediliyor…</value>
+  </data>
+  <data name="Startup_Step_Settings" xml:space="preserve">
+    <value>Ayarlar yükleniyor</value>
+  </data>
+  <data name="Startup_Step_Catalog" xml:space="preserve">
+    <value>Oyun kütüphaneniz açılıyor</value>
+  </data>
+  <data name="Startup_Step_Steam" xml:space="preserve">
+    <value>Steam kütüphaneleri taranıyor</value>
+  </data>
+  <data name="Startup_Step_Detection" xml:space="preserve">
+    <value>Motorlar ve hile koruması algılanıyor</value>
+  </data>
+  <data name="Startup_Waiting" xml:space="preserve">
+    <value>Bekliyor</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>Tamamlanmadı: ayrıntılar günlükte</value>
+  </data>
+  <data name="Startup_Summary" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Startup_Checks_Title" xml:space="preserve">
+    <value>Açılış kontrolleri</value>
+  </data>
+  <data name="Startup_Settings_Done" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Startup_Settings_ThemeSystem" xml:space="preserve">
+    <value>sistem teması</value>
+  </data>
+  <data name="Startup_Settings_ThemeDark" xml:space="preserve">
+    <value>koyu tema</value>
+  </data>
+  <data name="Startup_Settings_ThemeLight" xml:space="preserve">
+    <value>açık tema</value>
+  </data>
+  <data name="Startup_Catalog_Missing" xml:space="preserve">
+    <value>Henüz oyun yok: ilk açılış</value>
+  </data>
+  <data name="Startup_Catalog_Corrupted" xml:space="preserve">
+    <value>Oyun listesi bozulmuş: yedeği kaydedildi, Steam'den yeniden oluşturuluyor</value>
+  </data>
+  <data name="Startup_Catalog_Unreadable" xml:space="preserve">
+    <value>Oyun listesi okunamıyor: boş başlatılıyor, değişiklikler kaydedilmiyor</value>
+  </data>
+  <data name="Startup_Steam_NotFound" xml:space="preserve">
+    <value>Steam bulunamadı</value>
+  </data>
+  <data name="Startup_Steam_New" xml:space="preserve">
+    <value>{0} · yeni: {1}</value>
+  </data>
+  <data name="Startup_Steam_More" xml:space="preserve">
+    <value>{0} +{1}</value>
+  </data>
+  <data name="Startup_Detection_None" xml:space="preserve">
+    <value>Yeni veya güncellenen oyun yok</value>
+  </data>
+  <data name="Startup_Detection_Done_One" xml:space="preserve">
+    <value>{0} oyun kontrol edildi</value>
+  </data>
+  <data name="Startup_Detection_Done_Other" xml:space="preserve">
+    <value>{0} oyun kontrol edildi</value>
+  </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>Çeviri listesi güncelleniyor</value>
+  </data>
+  <data name="Startup_Index_Done_One" xml:space="preserve">
+    <value>{0} çeviri</value>
+  </data>
+  <data name="Startup_Index_Done_Other" xml:space="preserve">
+    <value>{0} çeviri</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>Çevrimdışı: kayıtlı liste gösteriliyor ({0})</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>Çeviri kataloğuna ulaşılamıyor</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>Çeviri listesi uygulamanın daha yeni bir sürümünü gerektiriyor</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>Çeviri kataloğunun adresi geçersiz: ayrıntılar günlükte</value>
+  </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>Yarıda kalan bir yükleme tamamlanıyor</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>Uygulamayı kapatmayın</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>Yükleme geri alındı: oyun dosyaları eski hâlinde</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>Yükleme tamamlandı</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>Kaldırma tamamlandı: orijinal dosyalar geri yüklendi</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>Henüz tamamlanamadı: bir sonraki açılışta yeniden denenecek (ayrıntılar günlükte)</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>Başka bir yükleme sürüyor</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>Tamamlanacak bir şey yok</value>
+  </data>
+  <data name="Splash_Version" xml:space="preserve">
+    <value>Sürüm {0}</value>
+  </data>
+  <data name="Splash_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Splash_Details" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="Splash_HideDetails" xml:space="preserve">
+    <value>Ayrıntıları gizle</value>
+  </data>
+  <data name="Splash_Slow" xml:space="preserve">
+    <value>Her zamankinden uzun sürüyor. Lütfen uygulamayı kapatmayın: {0} / {1} adım tamamlandı.</value>
+  </data>
+  <data name="Library_CatalogDamaged" xml:space="preserve">
+    <value>Kayıtlı oyun listesi bozulmuştu. Steam oyunları yeniden bulundu; elle eklenen oyunların yeniden eklenmesi gerekiyor. Eski dosya şu adla saklandı: {0}.</value>
+  </data>
+  <data name="Library_CatalogDamaged_NoBackup" xml:space="preserve">
+    <value>Kayıtlı oyun listesi bozulmuştu. Steam oyunları yeniden bulundu; elle eklenen oyunların yeniden eklenmesi gerekiyor.</value>
+  </data>
+  <data name="Library_Banner_Dismiss" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>Yüklü</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>Çeviri var</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>Çeviri yok</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>Güncelleme gerekli</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>Tümü</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>Oluşturuluyor</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>Duruma göre filtrele</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>Oluşturuluyor · %{0}</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>Duraklatıldı · %{0}</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>Kullanılamaz</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>Yükle</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>Güncelle</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>Görüntüle</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>Sürdür</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>YZ ile oluştur</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>Stüdyo çekildi</value>
+  </data>
+  <data name="Library_Card_PackCount_One" xml:space="preserve">
+    <value>{0} çeviri</value>
+  </data>
+  <data name="Library_Card_PackCount_Other" xml:space="preserve">
+    <value>{0} çeviri</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>doğrulandı</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>alfa</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>≈ {0} kaldı</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>{0} beğeni</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>Çeviri dili</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>Rozetler ve sayılar için dil. Ayarlar → Genel'de de var.</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>Önce önemliler</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>Çeviri kataloğuna ulaşılamıyor. Kaydedilen veriler gösteriliyor (tarih: {0}).</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>Çeviri kataloğuna ulaşılamıyor. Çeviri durumları katalog yanıt verince görünecek.</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>Çeviri kataloğu daha yeni bir biçim kullanıyor. Güncel çevirileri görmek için uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>Uygulamaya ayarlanan çeviri kataloğu adresi geçersiz, bu yüzden çeviri durumları gösterilemiyor.</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>Bu filtreyle eşleşen oyun yok. Oyun kütüphanede değil mi? Klasörünü ekleyin.</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>Bu filtreyle “{0}” aramasına uyan oyun yok. Oyun kütüphanede değil mi? Klasörünü ekleyin.</value>
+  </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>Motor bilinmiyor</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>Elle eklendi</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>derleme {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>dosya hash'i {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>Oyun sürümü: Steam derleme kimliği (build ID)</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_One" xml:space="preserve">
+    <value>Oyun sürümü: {0} dosyanın hash'i</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Other" xml:space="preserve">
+    <value>Oyun sürümü: {0} dosyanın hash'i</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>Çeviriyi yükle</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>YZ ile çeviri oluştur</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>Oyna</value>
+  </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>Başlatılıyor…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>Çalışıyor</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>{0} saatinden beri çalışıyor</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>Oyun başlatılamadı: {0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>Oyun klasörüne ulaşılamıyor. Sürücüyü bağlayın veya klasörün hâlâ yerinde olup olmadığını kontrol edin.</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>Oyun klasöründe başlatılacak bir program bulunamadı.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>Bu bir Windows derlemesi. Linux'ta oynamak için Steam'e Steam dışı oyun olarak ekleyip Proton'u açın.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>Bu bir Windows derlemesi; bu sistemde çalışmaz.</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>Bu bir Linux derlemesi; bu sistemde çalışmaz.</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>Bu bir macOS derlemesi; bu sistemde çalışmaz.</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>Rev. {0} sürümüne güncelle</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>Yeni satırları çevir</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>İlerlemeyi gör</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>Claude Code veya Codex aboneliğinizi kullanır</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>Steam üzerinden · “{0}” ile</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>“{0}” ile</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>Yüklü rev. {0} yerine geçer</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>Yeni oyun sürümü için henüz revizyon yok</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>“{0}”</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>sizin sürümünüz için yapıldı</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>Oluşturuluyor · %{0}</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>Oluşturuluyor · %{0} · ≈ {1} kaldı</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>Duraklatıldı · %{0}</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>Yüklü çeviri</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>Yüklü · yeni sürümle uyumsuz</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>“{0}” · {1} · rev. {2}</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>“{0}” · rev. {1}</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>Oyun güncellendi ({0}). Yüklü “{1}” rev. {2} bununla uyumsuz; bazı metinler İngilizce görünebilir.</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>Ses: yakında</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>Metin okuma (TTS) ile {0} seslendirme bir sonraki ana sürümde gelecek. Metin çevirisi bugün çalışıyor.</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>Dokular: yakında</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>Görsellerin içindeki metinlerin (tabelalar, menüler, haritalar) çevirisi daha sonra gelecek. Metin çevirisi bugün çalışıyor.</value>
+  </data>
+  <data name="Game_Packs_Count_One" xml:space="preserve">
+    <value>{1}: {0} çeviri</value>
+  </data>
+  <data name="Game_Packs_Count_Other" xml:space="preserve">
+    <value>{1}: {0} çeviri</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>Henüz {0} çeviri yok</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>Bu oyun için henüz kimse çeviri paylaşmadı. YZ ajanınızla oluşturup diğer oyuncularla paylaşabilirsiniz.</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>YZ ile oluştur</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>Çeviri listesi henüz yüklenmedi. Çeviriler katalog yanıt verince görünecek.</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>Metin</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>YZ ile oluştur</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>Ses</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>Dokular</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>yakında</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>%{0}</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>Oyun sayfası bölümleri</value>
+  </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>Yerelleştirme</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>Araçlar</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>Hiçbiri size uymuyor mu?</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>YZ ile kendinizinkini oluşturun</value>
+  </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>Bu oyun için yerelleştirme kullanılamıyor</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>{0} algılandı. Oyun dosyalarını değiştirmek hesabınızın yasaklanmasına yol açabilir, bu yüzden AI Local Pack hile korumalı oyunlar için çeviri yüklemez veya oluşturmaz.</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>Yayıncı bu oyun için hayran çevirilerinin dağıtılmamasını istedi, bu yüzden AI Local Pack bu oyun için çeviri yüklemez veya oluşturmaz.</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>Bunun bir hata olduğunu mu düşünüyorsunuz?</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>Bildir</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>GitHub'da çeviri kataloğunda önceden doldurulmuş bir issue açar</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>Başka bir dile yapılmış çevirileri göster</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>Dil ara</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>Bu oyunun çevirileri</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>Aramayla eşleşen dil yok.</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>Çevirileri sırala</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>Durum, puan</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>En yeni</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>Kapsam</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>Katalog</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>Çeviriler</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>uyumlu</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>muhtemelen uyumlu</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>uyumsuz</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>kontrol ediliyor…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>kontrol edilmedi</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>Yüklü</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>rev. {0} · rev. {1} mevcut</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>GitHub Discussions'taki beğeniler</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>rev. {0}</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>Sürümünüzle uyumlu</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>Muhtemelen uyumlu</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>Sürümünüzle uyumsuz</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>Uyumluluk kontrol ediliyor…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>Çevirinin manifesti okunuyor ve değiştirdiği dosyalar sizin kopyanızla karşılaştırılıyor.</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>Çevirinin ayrıntıları okunamadı</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>Katalog yanıt vermedi. Bağlantıyı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>Katalogda bu çevirinin manifesti yok. Liste kaydedildikten sonra kaldırılmış olabilir.</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>Katalogdaki çeviri manifesti bozuk, bu yüzden çeviri kontrol edilemez veya yüklenemez.</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>Çeviri daha yeni bir biçimde. Yüklemek için uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>Sizdeki derleme olan {0} için yapıldı.</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>Değiştirdiği tüm dosyalar ({0}) sizin kopyanızla eşleşiyor.</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>Derleme {0} için yapıldı, sizdeki {1}. Değişen dosyalar: {2} / {3}; güncellemenin eklediği satırlar çevrilmeden kalır.</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>Yapıldığı sürümden bu yana değişen dosyalar: {0} / {1}; güncellemenin eklediği satırlar çevrilmeden kalır.</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>Bu çeviri başka bir oyun için.</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>Oyun klasörüne ulaşılamıyor. Sürücüyü bağlayıp tekrar deneyin.</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>Değiştirdiği dosyalar oyun klasöründe eksik ({0}), örneğin {1}.</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>Oyun klasöründeki {0} okunamıyor.</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>İkili yama, yapıldığı dosyaların birebir aynısını gerektirir; değişen dosyalar: {0} / {1}.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>Bu uygulamada olmayan “{0}” araç seti aracını gerektiriyor. Uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>“{0}” {1} gerektiriyor; bu, uygulamadakinden daha yeni. Uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>Yazar</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>Yapım aracı</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>Kapsam</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>Raporlar</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>Güncellendi</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>Yazı tipleri</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>Gerektirir</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>Revizyonlar</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>Elle</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>Satırların %{0} kadarı</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>{0} kişide çalışıyor · {1} kişide çalışmıyor</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0} (resmî sürümden indirilir)</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>rev. {0} · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>rev. {0} · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>Yükle</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>Yüklü</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>Yükleme kullanılamıyor. Bunun yerine eksik satırları YZ ile çevirebilirsiniz.</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>Katalog erişilebilir olduğunda yükleme kullanılabilir hâle gelir.</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>Yüklü “{0}” yerine geçer.</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>YZ ile çevir</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>GitHub'daki yorumlar</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>Çevirinin tartışmasını tarayıcıda açar</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>Kataloğa ulaşılamıyor. Kaydedilen liste gösteriliyor (tarih: {0}); tekrar çevrimiçi olana kadar yükleme kullanılamaz.</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>Diğer dillerde mevcut:</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>Önceki çeviri “{0}” rev. {1} kaldırıldı.</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>Dosyalarınızla uyumluluk: {0}.</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>Çeviri rev. {0} önbellekten alındı.</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>Çeviri rev. {0} indirildi: {1} bayt.</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>Geri yüklenen orijinal dosyalar: {0}; kaldırılan eklenmiş dosyalar: {1}.</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>Korundu (yüklemeden sonra değişti): {0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>Yeniden oluşturulan oyun dosyaları: {0}; uygulanan satırlar: {1}.</value>
+  </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>Oyunda kendine ait {1} seçeneği yok: çeviri, {0} metinlerin yerini alır. Oyun ayarlarında dil olarak {0} seçeneğini seçin.</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>Oyunun bu sürümünde bulunamayan satırlar: {0}.</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>Değiştirilen dosyalar: {0}; eklenen dosyalar: {1}.</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>Durduruldu: {0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>Oyun dosyaları yedekten geri yüklendi.</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>Oyun dosyaları geri yüklenemedi; uygulama bir sonraki açılışta yeniden dener.</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>“{0}” yükleniyor · adım {1} / {2}</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>“{0}” yeniden uygulanıyor · adım {1} / {2}</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>“{0}” kaldırılıyor</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>Çeviri indiriliyor</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>Önceki çeviri kaldırılıyor</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>Oyun dosyalarınız kontrol ediliyor</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>Oyun dosyaları satırlardan yeniden oluşturuluyor</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>Orijinal dosyalar yedekleniyor</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>Yeni dosyalar yazılıyor</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>Doğrulanıyor</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>Orijinal dosyalar geri yükleniyor</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>Başka bir yükleme veya kaldırma sürüyor. Bitmesini bekleyip tekrar deneyin.</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>Bu oyun için yükleme kullanılamıyor (hile koruması veya stüdyonun isteği).</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>Çeviri artık katalog listesinde değil.</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>Çeviri indirilemedi: kataloğa bağlantı yok.</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>Çeviri indirilemedi: katalog zamanında yanıt vermedi.</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>Çeviri indirilemedi: katalog bir hatayla yanıt verdi.</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>Çevirinin dosyaları katalogdan kaldırılmış.</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>Çeviri, AI Local Pack'in daha yeni bir sürümünü gerektiriyor. Uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>İndirilen dosya bozuktu (hash kontrolü başarısız) ve silindi.</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>İndirilen dosya kaydedilemedi: önbellek klasörüne yazılamıyor.</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>Katalogdaki çeviri bozuk.</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>Çeviri, oyunun sizdeki sürümüne uymuyor. {0}</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>Çevirinin satır tablosu okunamıyor.</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>{0} satırlardan yeniden oluşturulamadı: oyun dosyası okunamıyor veya beklenmedik bir biçimde.</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>Bir şeyler ters gitti. Ayrıntılar günlükte.</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>Oyun çalışıyor. Kapatıp tekrar deneyin.</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} kullanımda; oyun çalışıyor gibi görünüyor. Kapatıp tekrar deneyin.</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>Oyunun sürücüsünde yeterli boş alan yok.</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>{0} dosyasını değiştirme izni yok.</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} salt okunur.</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>Oyun klasörüne ulaşılamıyor (sürücü çıkarıldı veya klasör taşındı).</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>Bu oyun için zaten bir çeviri yüklü.</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>Bu oyun için yüklü çeviri yok.</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>Daha önceki bir yükleme yarıda kaldı ve henüz tamamlanamadı. Tamamlamak için uygulamayı yeniden başlatın.</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>{0} yazıldıktan sonra beklenen içeriğe sahip değildi.</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>{0} yedeği eksik veya bozuk.</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>{0} okunamadı veya yazılamadı.</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>Alfa: henüz diğer oyuncular tarafından onaylanmadı.</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>Muhtemelen uyumlu. {0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>{0} {1} resmî sürümünden indirilir (hash kontrollü).</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>Yüklü “{0}” rev. {1} yerine geçer.</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>“{0}” yüklensin mi?</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>Orijinal dosyalar yedeklenir; istediğiniz zaman kaldırabilirsiniz.</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>Yükle</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>Yüklendi: “{0}”.</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>Oyunda dil olarak {0} seçeneğini seçin.</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>Yeniden uygulandı: “{0}”.</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>Kaldırıldı: “{0}”; orijinal dosyalar geri yüklendi.</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>Yüklenemedi; dosyalar geri yüklendi.</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>Yeniden uygulanamadı; dosyalar geri yüklendi.</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>Yüklenemedi ve dosyalar geri yüklenemedi. Uygulama bir sonraki açılışta yeniden dener.</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>Kaldırılamadı.</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>Oyna</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>Geri al</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>“{0}” yüklenemedi</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>“{0}” yeniden uygulanamadı</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>“{0}” kaldırılamadı</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>Oyun dosyaları önceki hâlinde.</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>Bazı dosyalar hâlâ çeviriye ait olabilir; yeniden kaldırmak işi tamamlar.</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>Bazı dosyalar geri yüklenemedi; uygulama bir sonraki açılışta yeniden dener.</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>Günlük</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>“{0}” kaldırılsın mı?</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>Oyunun orijinal dosyaları yedekten geri yüklenir. Çeviri katalogda kalır ve yeniden yüklenebilir; oyununuza ve kayıtlarınıza dokunulmaz.</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>yükleniyor</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>Yükleniyor…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>Kaldır (orijinalleri geri yükle)</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>Yükleniyor · %{0}</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>Kaldırılıyor…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>Yüklü çeviri işlemleri</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>Yeniden uygula</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>Metin'de göster</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>Kaldır (orijinalleri geri yükle)</value>
+  </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>Yazı tipleri: oyunun yazı tiplerinde çevirinin tüm harfleri var.</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>Yazı tipleri: “{0}” içinde çevirinin bazı harfleri yok (eksik: {1}; {2}); {3} (açık yazı tipi) ile değiştirildi.</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>Yazı tipleri: “{0}” içinde çevirinin bazı harfleri yok (eksik: {1}; {2}).</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>{0} içinde de bazıları yok (eksik: {1}; {2}); bunlar kutucuk olarak görünebilir.</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>Yazı tipleri: {0} okunamıyor; olduğu gibi bırakıldı.</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>Çeviri, bu uygulamanın tanımadığı bir yazı tipi belirtiyor: {0} (yok sayıldı; uygulamayı güncelleyin).</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>Oyunun yazı tipinde bu çevirinin bazı harfleri yok ve bunları içeren açık yazı tipi {0} hazırlanamadı.</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>Oyunun yazı tipinde bu çevirinin bazı harfleri yok ve bunları içeren açık yazı tipi {0} indirilemedi. Bağlantıyı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0} (uygulamayla gelir)</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0} (yüklerken indirilir)</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>Bu uygulamanın araç seti şimdilik bu sistemde {0} oyunlarını desteklemiyor, bu yüzden bu çeviriyi yükleyemez.</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>Gerekli bileşenler indiriliyor</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>Bu çeviri {0} gerektiriyor; bu bileşen kataloğun izin verilen bileşenler listesinde değil, bu yüzden yüklenemez.</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>Bu çeviri {0} gerektiriyor ve bunun resmî sürümünde bu oyunun sürümüne ({1}) uygun derleme yok.</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>Bu çeviri {0} gerektiriyor, ancak uygulama bu oyunun derlemesinin hangi sistem için olduğunu anlayamadı (ana çalıştırılabilir dosyası okunamıyor).</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>{0} resmî sürümünden indirilemedi. Bağlantıyı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>{0} resmî sürümü artık kataloğun listesindeki adreste değil.</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>İndirilen {0}, kataloğun listesindeki hash ile eşleşmiyor; silindi ve hiçbir şey yüklenmedi.</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>{0} sürüm arşivi güvenli şekilde açılamıyor; hiçbir şey yüklenmedi.</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>Bu çevirinin gerektirdiği bir bileşenin başka bir sürümü oyun için zaten yüklü ya da bileşen çevirinin kendi dosyalarının üzerine yazacak.</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1} ({2}): resmî sürümden ({4}) {3} bayt indirildi, hash kontrol edildi.</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1} ({2}): önbellekten alındı (hash indirilirken kontrol edilmişti).</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>{0} {1} bu oyun için zaten yüklü; çeviri onu ortak kullanıyor.</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} çeviriyle birlikte yüklendi: {2} dosya.</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>{0} {1} kaldırıldı: başka hiçbir çeviri kullanmıyor.</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0} (kataloğun izin verilen bileşenler listesinde değil)</value>
+  </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>Yüklü çeviriler kontrol ediliyor</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>Kontrol edilecek yüklü çeviri yok</value>
+  </data>
+  <data name="Startup_Packs_Done_One" xml:space="preserve">
+    <value>{0} çeviri yerinde</value>
+  </data>
+  <data name="Startup_Packs_Done_Other" xml:space="preserve">
+    <value>{0} çeviri yerinde</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>Oyun güncellemesinden sonra yeniden uygulandı: {0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>Bir oyun güncellemesi çeviriyi bozdu: {0}</value>
+  </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>Oluşturma görevleri kontrol ediliyor</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>Oluşturma görevi yok</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>Uygulama kapalıyken yarıda kaldı: {0}. Oyun sayfasından sürdürün</value>
+  </data>
+  <data name="Startup_Jobs_Done_One" xml:space="preserve">
+    <value>{0} oluşturma görevi sürüyor</value>
+  </data>
+  <data name="Startup_Jobs_Done_Other" xml:space="preserve">
+    <value>{0} oluşturma görevi sürüyor</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>Yeniden uygula</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>“{0}” rev. {1} dosyalarınızdan yeniden yazılır</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>Yüklü · oyun güncellemesinden sonra uygulanmadı</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>Oyun güncellemesi orijinal dosyaları geri koydu: “{0}” rev. {1} hâlâ uyuyor ama uygulanmış değil, bu yüzden oyun orijinal metnini gösteriyor.</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>Oyun güncellemesi orijinal dosyaları geri koydu ve “{0}” rev. {1} yeniden uygulanamadı. {2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>Yeniden uygula</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>İkili yama, oyun dosyalarının bir kopyasına uygulanıyor</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>Yamalanan dosyalar: {0}.</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>Zaten yamalı, olduğu gibi bırakıldı: {0}.</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>Çevirinin yama arşivi bozuk.</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>Yamalamak için {0} okunamıyor.</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>Yamalanan dosyalar yazılamadı: önbellek klasörüne yazılamıyor.</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>İkili yama {0} dosyasına uygulanamadı: yama bozuk ya da bu uygulamanın okuyamadığı bir şekilde yapılmış.</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>Etkinlik</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>Tümünü okundu say</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>Bildirim ayarları</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>Pencere kapalıyken olaylar sistem bildirimi olarak gelir.</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>Kararınızı bekliyor</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>Sürüyor</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>Bugün</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>Dün</value>
+  </data>
+  <data name="Activity_Day_New_One" xml:space="preserve">
+    <value>{0} yeni</value>
+  </data>
+  <data name="Activity_Day_New_Other" xml:space="preserve">
+    <value>{0} yeni</value>
+  </data>
+  <data name="Activity_ShowMore_One" xml:space="preserve">
+    <value>{0} tane daha göster</value>
+  </data>
+  <data name="Activity_ShowMore_Other" xml:space="preserve">
+    <value>{0} tane daha göster</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>Her şey sakin</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>Yüklemeler, YZ ile yapılan çeviriler, yayımlama ve oyun güncellemelerinden sonraki otomatik yeniden uygulamalar burada görünür.</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>Sonra karar ver: akışa taşı</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>Gizle</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>Yeni</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>AI Local Pack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>Kararınızı bekliyor</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>Başarısız</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>Bilgi</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · %{1}</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>“{0}” yüklendi</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>“{0}” kaldırıldı; orijinal dosyalar geri yüklendi</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>“{0}” yeniden uygulandı</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>“{0}” oyun güncellemesinden sonra yeniden uygulandı</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>“{0}” yüklenemedi</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>“{0}” kaldırılamadı</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>“{0}” yeniden uygulanamadı</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>Oyun güncellendi; “{0}” yeniden uygulanamadı</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>Oyun güncellendi; “{0}” rev. {1} artık uyumsuz</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>Oyun güncellendi; “{0}” uygulanmış değil</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>Bazı dosyalar geri yüklenemedi; uygulama bir sonraki açılışta yeniden dener.</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>Çevirinin {0}. revizyonu mevcut.</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>Henüz daha yeni bir revizyon yok: yeni satırları YZ ile çevirin.</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>Oyun orijinal dosyalarını geri koydu. Çeviri bu sürüme hâlâ uyuyor: yeniden uygulayın.</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>Günlük</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>Yeniden uygula</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>Rev. {0} sürümüne güncelle</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>Yeni satırları çevir</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_One" xml:space="preserve">
+    <value>Etkinlik: {0} öğe kararınızı bekliyor</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Other" xml:space="preserve">
+    <value>Etkinlik: {0} öğe kararınızı bekliyor</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>Etkinlik: {0}</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>AI Local Pack'i aç</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>Oyun güncellemelerini kontrol et</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Çık</value>
+  </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>Ajanlar yalnızca YZ ile yeni çeviriler oluşturmak için kullanılır; çeviri yüklemek için hiçbir zaman gerekmez. Kendi aboneliğinizle çalışırlar: proje hiçbir YZ kullanımı için ödeme yapmaz.</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>Ajanlar</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>Varsayılan</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>Daha sonra</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>YZ ajanı</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai yükle giriş çıkış oturum abonelik güncelle install sign in login</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>Kontrol ediliyor…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>Yüklü değil</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>Yükleniyor · %{0}</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>{0} sürümüne güncelleniyor · %{1}</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>{0} sürümü çok eski</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>Yüklü · giriş yapılmadı</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>Oturumun süresi doldu</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>Giriş kontrol edilmedi</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>Giriş bekleniyor</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>Hazır · giriş yapıldı</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>AI Local Pack tarafından yüklendi</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>Sisteminizde bulundu: {0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>giriş yapılan hesap: {0}</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>Anthropic'in resmî derlemesi{0} uygulamanın klasörüne indirilir ve imzası kontrol edilir. Node.js ya da yönetici izni gerekmez.</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>OpenAI'ın resmî derlemesi{0} uygulamanın klasörüne indirilir ve hash'i sürümün sağlama toplamlarıyla karşılaştırılır. Node.js ya da yönetici izni gerekmez.</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>Resmî sürüm bulunuyor ve güvenilirliği kontrol ediliyor…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>{0} adresinden indiriliyor…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>Hash kontrol edildi, yerine yerleştiriliyor…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>AI Local Pack {0} veya daha yeni bir sürüm gerektiriyor. Uygulamanın kopyasını güncelleyin.</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>AI Local Pack {0} veya daha yeni bir sürüm gerektiriyor. Kopyanızı nasıl yüklediyseniz öyle güncelleyin, sonra yeniden kontrol edin.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>Claude aboneliğinizle giriş yapın. Claude Code'un kendi giriş ekranı tarayıcıda açılır; AI Local Pack token'ı hiçbir zaman görmez.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>ChatGPT aboneliğinizle giriş yapın. Codex'in kendi giriş ekranı tarayıcıda açılır; AI Local Pack token'ı hiçbir zaman görmez.</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>Giriş kontrol edilemedi: {0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>{0} tarafından açılan tarayıcı penceresinde girişi tamamlayın.</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>Yükle</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>{0} sürümüne güncelle</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>Giriş yap</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>Çıkış yap</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>Yeniden kontrol et</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>{0} yüklenemedi: {1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>{0} ile bağlantı kurulamadı. Bağlantıyı kontrol edip tekrar deneyin; indirme kaldığı yerden devam eder.</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>{0} sunucusu bir hatayla yanıt verdi. Daha sonra tekrar deneyin.</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>{0} için bu sistemde resmî derleme yok.</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>İndirilen dosya imza veya hash kontrolünden geçemedi ve silindi. Hiçbir şey yüklenmedi.</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>Uygulamanın klasörüne yazılamıyor: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>Başka bir {0} yüklemesi sürüyor.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>Giriş işlemi oturum açılmadan sona erdi. Tekrar deneyin.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>Giriş 10 dakika içinde tamamlanmadı ve durduruldu.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>Giriş başlatılamadı: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>Ajan hâlâ giriş yapılmış olduğunu bildiriyor.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>Varsayılan ajan</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>Oluşturma formunda önceden seçilir; her oyun için değiştirebilirsiniz.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>ajan oluşturma önceden seçili claude codex agent</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>Önce bir ajan yükleyip giriş yapın</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>Kendi API anahtarı veya yerel model</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>Claude veya ChatGPT aboneliği olmayan oyuncular için.</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>api anahtarı yerel model ollama key local</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0}: oturum kapandı</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>Oturumun süresi doldu. Oluşturmayı başlatmak veya sürdürmek için yeniden giriş yapın.</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>Hazırlık</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>Çıkarma</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>Sözlük</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>Çeviri</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>Derleme ve test</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>Oluşturma adımları</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>Şu dile çeviri oluştur</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>Hedef dil</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>Başka bir dile çevir</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>Çevrilecek</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>Ajan süresi</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>Abonelik</value>
+  </data>
+  <data name="Gen_Tile_Words_One" xml:space="preserve">
+    <value>satır · {0} kelime</value>
+  </data>
+  <data name="Gen_Tile_Words_Other" xml:space="preserve">
+    <value>satır · {0} kelime</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>dosya boyutlarından kaba tahmin</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>arka planda çalışır</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>başlangıç planı limiti (gün)</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>Başlangıç seviyesi bir planın (Claude Pro, ChatGPT Plus) kaç günlük kullanım limiti; günde üç adet 5 saatlik pencere</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} dk</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} sa</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>Tahmin ediliyor…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>Oyunun boyutu ölçülemedi: {0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>Ajan</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>Yüklü değil</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>Giriş yapılmadı</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>Resmî derleme indiriliyor · %{0}</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>Tarayıcınızda girişi tamamlayın…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>sizin kopyanız</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>AI Local Pack tarafından yüklendi</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>Kontroller</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>Oyunun motoru kontrol ediliyor…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · araç seti destekliyor</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>Bilinmeyen motor: ajan kendi okuyucusunu yazar ve çeviri bir ikili yama olur</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}: bu sistemde araç seti desteklemiyor, bu yüzden ajan kendi okuyucusunu yazar (çeviri bir ikili yama olur)</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}: araç seti okuyamıyor, bu yüzden ajan kendi okuyucusunu yazar (çeviri bir ikili yama olur)</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}: araç seti oyunu okuyamadı ({1})</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>Disk alanı kontrol ediliyor…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>Çalışma kopyası: {0}</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>Çalışma kopyası: {0}, klonlandı: yer kaplamaz</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · {1} boş</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>Yeterli alan yok: {0} gerekli, {1} boş</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} hazır</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} kurulum gerektiriyor</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>Bir ajan seçin</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>Hile koruması algılanmadı</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>Çeviriden önce sözlüğü gözden geçireyim</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>Ajan bir kopya üzerinde çalışır; oyun dosyalarınıza dokunulmaz.</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>Oluşturmayı başlat</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>Başlatılıyor…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>Oyunun klasörüne erişilemiyor</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} henüz hazır değil</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>Boyut tahmin ediliyor…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>Boyut tahmin edilemedi</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>Araç seti bu oyunun dosyalarını okuyamadı</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>Çalışma kopyası için yeterli disk alanı yok</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>Bu oyun için oluşturma kullanılamıyor.</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>Bu oyunun zaten bir oluşturma görevi var.</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>Görevin klasörü oluşturulamadı: {0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>Oluşturma başlatılamadı: {0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>Çalışma kopyası hazırlanıyor</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>Satırlar çıkarılıyor</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>Sözlük oluşturuluyor</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>Çevriliyor</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>Derleniyor ve test ediliyor</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>Sözlüğü gözden geçirmeniz bekleniyor</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>Duraklatıldı</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>Yarıda kaldı</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>Başarısız</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>Çeviri hazır</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>Hedef: {0} · {1} ile</value>
+  </data>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} dk</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} sa {1} dk</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} sa</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>Sürdür</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>Aşamayı yinele</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>Sözlüğü gözden geçir</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>Duraklatıldı: abonelik limiti · %{0}</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>Duraklatıldı: abonelik limiti · ~{0} devam eder</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>%{0} noktasında yarıda kaldı</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>Aşama başarısız: {0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>Sizi bekliyor</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>Abonelik limiti · ~{0} devam eder</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>Abonelik limiti</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>Sizin tarafınızdan duraklatıldı</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>Yarıda kaldı: istediğiniz zaman sürdürün</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>Bir aşama başarısız oldu</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>Sözlük sizi bekliyor</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>Parça {0} / {1}</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · ≈ {1} kaldı</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>Oyun kopyalanıyor: ajan kopya üzerinde çalışır, dosyalarınıza dokunulmaz</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>Metin araç setiyle çıkarılıyor</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>Adlar, terimler ve üslup; böylece oyunun tamamı tutarlı okunur</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>Oyun dosyaları kopya üzerinde yeniden oluşturuluyor ve oyun bir kez başlatılıyor</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>Duraklat</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>Sürdür</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>Şimdi sürdür</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>Aşamayı yinele</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>Çeviriye geç</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>Az önce çevrildi</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>Son çevrilenler</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>orijinalle aynı</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>boşluklar</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>satır sonları</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>kontrol</value>
+  </data>
+  <data name="Gen_Validator_Count_One" xml:space="preserve">
+    <value>{0} doğrulayıcı uyarısı</value>
+  </data>
+  <data name="Gen_Validator_Count_Other" xml:space="preserve">
+    <value>{0} doğrulayıcı uyarısı</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>Doğrulayıcı uyarısı yok</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>Yer tutucular, etiketler ve uzunluk sınırları her parçada kontrol edilir; hatalar ajana geri gönderilir.</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>Göster</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>Gizle</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>{0} kullanım limiti</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>~%{0} kullanıldı</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>doldu</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>Ajanın bildirdiği şu anki 5 saatlik pencere</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>Ajanın bildirdiği şu anki 7 günlük pencere</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>Ajanın bildirdiği şu anki kullanım penceresi</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>~{0} sıfırlanır</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} limitlerini bildirmiyor; limitler dolarsa görev kendiliğinden duraklar.</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>Ajan etkinliği</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>Henüz bir şey yok.</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>Çeviriler kontrol ediliyor</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>Oyun dosyaları yeniden oluşturuluyor</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>Yazı tipleri yeni harfler için kontrol ediliyor</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>Test derlemesi başlatılıyor</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>Çeviriniz kaydediliyor</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>Yazı tipleri: {0} içinde çevirinin bazı harfleri yok; yerine {1} (OFL) kullanılıyor.</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>Ajan aboneliğinizin limiti doldu.</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>Görev ~{0} civarında otomatik olarak sürer.</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>Görev, limit sıfırlanınca otomatik olarak sürer.</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>Duraklatıldı.</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>İlerleme kaydedildi: istediğiniz zaman sürdürün.</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>Görev sırasında uygulama kapatıldı.</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>İlerleme kaydedildi: {0} aşamasından, parça {1} / {2} üzerinden sürdürün.</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>İlerleme kaydedildi: {0} aşamasından sürdürün.</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>{0} aşaması başarısız oldu.</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>Sözlük incelemeniz için hazır</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>Devam ettiğinizde çeviri başlar; değişiklikleriniz siz yazdıkça kaydedilir.</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>Ajan bu adımı tamamlayamadı. Yeniden denemek genellikle işe yarar; şimdiye kadar kaydedilen çeviriler korunur.</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0} oturumu kapalı. Ayarlar → YZ ajanları bölümünden giriş yapıp tekrar deneyin.</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} artık yüklü değil. Ayarlar → YZ ajanları bölümünden yükleyip tekrar deneyin.</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>Araç seti oyun dosyalarını işleyemedi. Nedeni ayrıntılarda.</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>Oyunun çalışma kopyası oluşturulamadı. Nedeni ayrıntılarda.</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>Dosyalar yazılamadı: boş alanı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>Çevrilmiş oyun test çalıştırması sırasında bir hatayla kapandı. Yeniden denemek dosyaları yeniden oluşturur; çevirileriniz korunur.</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>Beklenmedik bir şey ters gitti. Günlük ayrıntılarda.</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>Oluşturma günlüğü: {0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>Görev klasörünü aç</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>Oluşturma iptal edilsin mi?</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>%{0} tamamlandı. İlerlemeyi koruyup daha sonra devam edebilir ya da çalışma kopyasını silip diskte yer açabilirsiniz.</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>İlerlemeyi koru</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>Çalışma kopyasını sil</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>Durduruldu. İlerleme korundu: istediğiniz zaman sürdürün.</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>Oluşturma iptal edildi, çalışma kopyası silindi.</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>Görev başka bir pencerede veya komutta çalışıyor.</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>Bu oyun için oluşturma engellendi.</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>Oyunun klasörüne erişilemiyor: sürücüsünü bağlayıp tekrar deneyin.</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>Görev artık yok: başka bir yerde tamamlandı veya iptal edildi.</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>Görevin dosyaları değiştirilemedi: {0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>Sürdürülemedi: {0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>Oluşturma duraklatıldı: abonelik limiti</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>~{0} civarında otomatik olarak sürer</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>Limit sıfırlanınca otomatik olarak sürer</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>Şimdi sürdür</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>Duraklatıldı</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>Oluşturuluyor · {0}</value>
+  </data>
+  <data name="Gen_Review_Title" xml:space="preserve">
+    <value>Sözlüğü gözden geçirin</value>
+  </data>
+  <data name="Gen_Review_Subtitle" xml:space="preserve">
+    <value>Her parçada kullanılan adlar, yerler ve terimler. Şimdi düzeltin.</value>
+  </data>
+  <data name="Gen_Review_Terms_One" xml:space="preserve">
+    <value>{0} terim</value>
+  </data>
+  <data name="Gen_Review_Terms_Other" xml:space="preserve">
+    <value>{0} terim</value>
+  </data>
+  <data name="Gen_Review_Tone" xml:space="preserve">
+    <value>Üslup</value>
+  </data>
+  <data name="Gen_Review_Tone_Agent" xml:space="preserve">
+    <value>Ajanın seçtiği gibi</value>
+  </data>
+  <data name="Gen_Review_Tone_Informal" xml:space="preserve">
+    <value>Samimi</value>
+  </data>
+  <data name="Gen_Review_Tone_Formal" xml:space="preserve">
+    <value>Resmî</value>
+  </data>
+  <data name="Gen_Review_Tone_WithPronoun" xml:space="preserve">
+    <value>{0} (“{1}”)</value>
+  </data>
+  <data name="Gen_Review_AgentTone" xml:space="preserve">
+    <value>Ajanın üslubu: {0}</value>
+  </data>
+  <data name="Gen_Review_Column_Term" xml:space="preserve">
+    <value>Terim</value>
+  </data>
+  <data name="Gen_Review_Column_Translation" xml:space="preserve">
+    <value>Çeviri</value>
+  </data>
+  <data name="Gen_Review_Column_Note" xml:space="preserve">
+    <value>Not</value>
+  </data>
+  <data name="Gen_Review_KeepAsIs" xml:space="preserve">
+    <value>olduğu gibi kalsın</value>
+  </data>
+  <data name="Gen_Review_Edited" xml:space="preserve">
+    <value>düzenlendi</value>
+  </data>
+  <data name="Gen_Review_Search" xml:space="preserve">
+    <value>Terim ara</value>
+  </data>
+  <data name="Gen_Review_NoMatch" xml:space="preserve">
+    <value>Eşleşen terim yok.</value>
+  </data>
+  <data name="Gen_Review_Empty" xml:space="preserve">
+    <value>Ajan yalnızca üslubu kaydetti, hiç terim yok.</value>
+  </data>
+  <data name="Gen_Review_Blank" xml:space="preserve">
+    <value>Her terimin bir çevirisi olmalı.</value>
+  </data>
+  <data name="Gen_Review_Loading" xml:space="preserve">
+    <value>Sözlük yükleniyor…</value>
+  </data>
+  <data name="Gen_Review_LoadFailed" xml:space="preserve">
+    <value>Sözlük okunamadı: {0}</value>
+  </data>
+  <data name="Gen_Review_SaveFailed" xml:space="preserve">
+    <value>Değişikliğiniz kaydedilemedi: {0}</value>
+  </data>
+  <data name="Gen_Action_Regenerate" xml:space="preserve">
+    <value>Yeniden oluştur</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Title" xml:space="preserve">
+    <value>Sözlük yeniden hazırlansın mı?</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Text" xml:space="preserve">
+    <value>Ajan sözlüğü oyunun satırlarından yeniden hazırlar; mevcut terimlerin yerini yenileri alır.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_One" xml:space="preserve">
+    <value>Ajan sözlüğü oyunun satırlarından yeniden hazırlar; diğer terimlerin yerini yenileri alır, değiştirdiğiniz {0} terim kalır.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Other" xml:space="preserve">
+    <value>Ajan sözlüğü oyunun satırlarından yeniden hazırlar; diğer terimlerin yerini yenileri alır, değiştirdiğiniz {0} terim kalır.</value>
+  </data>
+  <data name="Activity_Event_GlossaryReview" xml:space="preserve">
+    <value>Sözlük incelemeye hazır</value>
+  </data>
+  <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
+    <value>Kontrol ettiğinizde çeviri başlar.</value>
+  </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>Çeviriniz silinmiş veya okunamıyor.</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>Çeviriniz şuradan alındı: {0}.</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>Kapsam</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_One" xml:space="preserve">
+    <value>{0} satır çevrilmeden kalıyor</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Other" xml:space="preserve">
+    <value>{0} satır çevrilmeden kalıyor</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>Tüm satırlar çevrildi</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>Test çalıştırması</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>Başarılı</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>Çevrilmiş oyun kapanmadan {0} sn çalıştı</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>Başarısız</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>Atlandı</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>Oyun klasöründe başlatılacak bir program bulunamadı</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>Oyun başka bir sistem için derlenmiş</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>Oyun yalnızca Steam üzerinden başlıyor</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>Sistem oyunu başlatmadı</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>Oyun çevrilmemiş hâlde bile hemen kapanıyor (mağazasına veya medyasına ihtiyaç duyuyor)</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>Test çalıştırmaları kapalı</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>Yazı tipleri</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>Kontrol edilmedi</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>Araç seti bu motorun yazı tiplerini okuyamıyor</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>Oyunun yazı tipleri uygun</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>Çevirinin tüm harflerini içeriyorlar</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>{0} yerleştirildi</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>{0} içinde çevirinin bazı harfleri yok</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_One" xml:space="preserve">
+    <value>{0} harf hâlâ eksik</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Other" xml:space="preserve">
+    <value>{0} harf hâlâ eksik</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>Doğrulayıcı</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>Uyarı yok</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>Uzunluklar, yer tutucular ve etiketler sorunsuz</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_One" xml:space="preserve">
+    <value>{0} uyarı</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Other" xml:space="preserve">
+    <value>{0} uyarı</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>Çeviri hazır</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>Çeviriniz olarak kaydedildi: Metin → Benimkiler · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>“{0}” · {1}</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_One" xml:space="preserve">
+    <value>{0} uyarıyı göster</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Other" xml:space="preserve">
+    <value>{0} uyarıyı göster</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>Uyarıları gizle</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>Oyunda dil olarak {0} seçeneğini seçin: çeviri o dilin metinlerinin yerini alır.</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>Yeniden oyna</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>Yükle ve oyna</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>Metin'de göster</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>Yeni çeviri</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>Çeviri Metin → Benimkiler bölümünde kalır; çalışma kopyası silinir ve form açılır.</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>Yükleme orijinal dosyaları yedekler; istediğiniz zaman kaldırabilirsiniz.</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>İyi görünüyor mu? Diğer oyuncularla paylaşın.</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>Kataloğa alfa olarak yayımlanır; oyun, derlemeler, hash'ler, ajan ve yazı tipleri otomatik doldurulur.</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>Şimdi değil</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>Yayımla</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>Daha sonra Metin → Benimkiler bölümünden yayımlayabilirsiniz.</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>Çeviri ve çalışma kopyası silindi.</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>Çeviri Metin → Benimkiler bölümünde kalıyor; çalışma kopyası silindi.</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>Çeviri silinsin mi?</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>“{0}” çeviriniz ve görevin çalışma kopyası silinir. Bu işlem geri alınamaz.</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>Çeviri yüklü: önce kaldırın.</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>Dosyalar silinemedi: {0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>Benimkiler</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>Katalogda henüz {0} çeviri yok.</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>{0} çeviri</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>YZ ile oluşturuluyor · YZ ile oluştur sekmesini açın</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>yerel · yayımlanmadı</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>oluşturuluyor %{0}</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>oyunda denendi</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>henüz denenmedi</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>yerel · oluşturulma: {0}</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>Oyunda denendi</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>Oyunu bu çeviriyle oynadınız. Artık paylaşabilirsiniz.</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>Henüz oyunda denenmedi</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>Yükleyip oynayın: denedikten sonra yayımlama açılır.</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>Test çalıştırması</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>Yazı tipleri</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>Doğrulayıcı</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>Boyut</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>Yayımlamadan önce uygulama çeviriyi katalogdaki çevirilerle karşılaştırır: onu bunlardan birinin yeni revizyonu olarak ya da ayrı bir çeviri olarak yayımlayabilirsiniz.</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>Oyunda yüklü: silmeden önce kaldırın.</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>Önce oyunda deneyin: yayımlama bundan sonra açılır.</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>“{0}” silinsin mi?</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>Çeviriniz ve onu oluşturan görevin çalışma kopyası silinir. Bu işlem geri alınamaz.</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>Çeviriniz silindi: “{0}”.</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>Yükle ve oyna</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>Çeviriniz · satırların %{0} kadarı · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>test başarılı</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>test edilmedi</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>“{0}” · çeviriniz</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>Çeviriniz hazır</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>Çeviriniz · satırların %{0} kadarı</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>Çeviriniz · {0}</value>
+  </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>Yeni satırları şu dile çevir</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>Yüklü “{0}” rev. {1} temel alınır: çevirileri korunur, ajana yalnızca yeni ve değişen satırlar gider.</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>Yeni: {0} · Değişen: {1} · Korunan: {2} · Kaldırılan: {3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>Yüklü “{0}” rev. {1} okunamıyor: {2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>Revizyon {0}, rev. {1} güncellemesi · Yeni: {2} · Değişen: {3} · Kaldırılan: {4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>Oyun güncellendi ({0}). Yüklü “{1}” rev. {2} daha önceki bir sürüm için yapılmıştı: güncellemenin eklediği veya değiştirdiği satırlar çevrilmeden görünür.</value>
+  </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Windows Kimlik Bilgisi Yöneticisi</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>macOS Anahtar Zinciri</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>sistem anahtarlığı (Secret Service)</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>geliştirici gizli bilgiler dosyası</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>bellek</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>Tarayıcınızda {0} adresini açın</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>Bu kodu girin ve ailocalpack'i onaylayın</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>GitHub'dan kod isteniyor…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>Tarayıcıda onaylamanız bekleniyor…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>Kopyalandı</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>Tarayıcıyı aç</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>GitHub'a ulaşılamıyor. Bağlantıyı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub girişi reddetti: {0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>Kod onaylanmadan süresi doldu. Yeni bir kod almak için tekrar deneyin.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>Giriş GitHub'da iptal edildi.</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub girişi onayladı ({0}), ancak token şurada saklanamadı: {1}. Bu yüzden oturumunuz kapalı kalıyor (token asla düz metin olarak kaydedilmez): {2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>Hesap</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>Yayımladığım çeviriler</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>GitHub hesabı</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github hesap giriş çıkış oturum token anahtarlık anahtar zinciri profil yayımla account sign in login</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>Giriş yapılmadı</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>Yalnızca çeviri yayımlamak ve çevirileri puanlamak ya da onaylamak için gerekir. Yüklemek için hiçbir zaman hesap gerekmez.</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>Giriş yapıldı · token sistemin güvenli deposunda ({0})</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>Çıkış yapıldı: token bu bilgisayardan silindi. Siz GitHub'da erişimi iptal edene kadar ailocalpack, yetkilendirdiğiniz uygulamalar arasında görünmeye devam eder.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>GitHub'da erişimi iptal et</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub artık uygulamanın {0} hesabı için erişimini kabul etmiyor, bu yüzden uygulamadan çıkış yapıldı. Çeviri yayımlamak veya puanlamak için yeniden giriş yapın.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>GitHub'a şu anda ulaşılamıyor; hesap en son görüldüğü hâliyle gösteriliyor.</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>Token okunamıyor ({0}): {1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>GitHub ile giriş yap</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>Çıkış yap</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>Token silinemiyor ({0}), bu yüzden oturumunuz hâlâ açık: {1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>Yayımladığım çeviriler</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>yayımlanan çeviriler paket pull request pr discussion doğrulandı alfa published verified alpha</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>Henüz hiçbir şey yayımlanmadı. YZ ile bir çeviri oluşturduktan sonra oyunun YZ ile oluştur sekmesinden yayımlayın.</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>Yayımladığınız çevirileri görmek için giriş yapın.</value>
+  </data>
+  <data name="Activity_Event_PackSubmitted" xml:space="preserve">
+    <value>“{0}” kataloğa gönderildi</value>
+  </data>
+  <data name="Activity_Event_PublishFailed" xml:space="preserve">
+    <value>“{0}” yayımlanamadı</value>
+  </data>
+  <data name="Publish_SignIn_Title" xml:space="preserve">
+    <value>ailocalpack kataloğunda yayımla</value>
+  </data>
+  <data name="Publish_SignIn_Intro" xml:space="preserve">
+    <value>Yalnızca ilk seferde. Çeviriler GitHub pull request'leri olarak paylaşılır, bu yüzden GitHub hesabınızla giriş yapın.</value>
+  </data>
+  <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
+    <value>Giriş yapılan hesap: {0}</value>
+  </data>
+  <data name="Publish_SignIn_SignInButton" xml:space="preserve">
+    <value>GitHub ile giriş yap</value>
+  </data>
+  <data name="Publish_SignIn_License" xml:space="preserve">
+    <value>Bu çeviriyi CC BY-SA 4.0 lisansıyla yayımlıyorum</value>
+  </data>
+  <data name="Publish_SignIn_LicenseText" xml:space="preserve">
+    <value>Herkes kaynak göstererek kullanabilir ve uyarlayabilir. Yalnızca çeviriler ve tarifler paylaşılır; asla orijinal metin veya oyun dosyaları paylaşılmaz.</value>
+  </data>
+  <data name="Publish_SignIn_HintWaiting" xml:space="preserve">
+    <value>GitHub bekleniyor…</value>
+  </data>
+  <data name="Publish_SignIn_HintSignIn" xml:space="preserve">
+    <value>Devam etmek için GitHub ile giriş yapın</value>
+  </data>
+  <data name="Publish_SignIn_HintLicense" xml:space="preserve">
+    <value>Devam etmek için lisansı kabul edin</value>
+  </data>
+  <data name="Publish_Continue" xml:space="preserve">
+    <value>Devam</value>
+  </data>
+  <data name="Publish_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Publish_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Publish_Similar_Title" xml:space="preserve">
+    <value>Zaten bir {0} çeviri var</value>
+  </data>
+  <data name="Publish_Similar_Intro" xml:space="preserve">
+    <value>Neredeyse aynısını eklemek yerine onu geliştirmeye ne dersiniz?</value>
+  </data>
+  <data name="Publish_Similar_Existing" xml:space="preserve">
+    <value>“{0}” · {1} · rev. {2}</value>
+  </data>
+  <data name="Publish_Similar_Coverage" xml:space="preserve">
+    <value>%{0} kapsam</value>
+  </data>
+  <data name="Publish_Similar_Build" xml:space="preserve">
+    <value>derleme {0} için yapıldı</value>
+  </data>
+  <data name="Publish_Similar_Base" xml:space="preserve">
+    <value>Çeviriniz bunun bir güncellemesi</value>
+  </data>
+  <data name="Publish_Similar_Recommended" xml:space="preserve">
+    <value>Önerilen</value>
+  </data>
+  <data name="Publish_Similar_RevisionTitle" xml:space="preserve">
+    <value>“{0}” için yeni revizyon (rev. {1})</value>
+  </data>
+  <data name="Publish_Similar_RevisionText" xml:space="preserve">
+    <value>Oyuncuları sizin sürümünüzü güncelleme olarak alır. Yazar {0} olarak kalır, rev. {1} için siz anılırsınız. Durum yeniden alfadan başlar.</value>
+  </data>
+  <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
+    <value>Ayrı bir çeviri</value>
+  </data>
+  <data name="Publish_Similar_SeparateText" xml:space="preserve">
+    <value>“{0}”, “{1}” ile yan yana listelenir; oyuncular seçer. Çeviriniz bilerek farklıysa (üslup, terimler) bunu seçin.</value>
+  </data>
+  <data name="Publish_Similar_Choice" xml:space="preserve">
+    <value>Nasıl yayımlanacak</value>
+  </data>
+  <data name="Publish_Again" xml:space="preserve">
+    <value>Yeniden yayımla</value>
+  </data>
+  <data name="Publish_Step_Fork" xml:space="preserve">
+    <value>Kataloğu fork'la</value>
+  </data>
+  <data name="Publish_Step_Commit" xml:space="preserve">
+    <value>Çeviriyi commit et</value>
+  </data>
+  <data name="Publish_Step_PullRequest" xml:space="preserve">
+    <value>Pull request aç</value>
+  </data>
+  <data name="Publish_Step_Account" xml:space="preserve">
+    <value>GitHub hesabınız kontrol ediliyor</value>
+  </data>
+  <data name="Publish_Doing_Fork" xml:space="preserve">
+    <value>kataloğun fork'lanması</value>
+  </data>
+  <data name="Publish_Doing_Commit" xml:space="preserve">
+    <value>çevirinin commit edilmesi</value>
+  </data>
+  <data name="Publish_Doing_PullRequest" xml:space="preserve">
+    <value>pull request'in açılması</value>
+  </data>
+  <data name="Publish_Doing_Account" xml:space="preserve">
+    <value>hesabınızın kontrolü</value>
+  </data>
+  <data name="Publish_Error_NotSignedIn" xml:space="preserve">
+    <value>Önce GitHub'a giriş yapın: çeviriler hesabınızdan pull request olarak paylaşılır.</value>
+  </data>
+  <data name="Publish_Error_Keychain" xml:space="preserve">
+    <value>GitHub girişiniz anahtarlıktan okunamıyor; kilidini açıp yeniden yayımlayın.</value>
+  </data>
+  <data name="Publish_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub artık girişinizi kabul etmiyor (erişim iptal edildi veya süresi doldu). GitHub'a yeniden giriş yapın.</value>
+  </data>
+  <data name="Publish_Error_Forbidden" xml:space="preserve">
+    <value>GitHub, {0} sırasında erişimi reddetti. Yeniden giriş yapmak uygulamaya gereken erişimi (public_repo) verir.</value>
+  </data>
+  <data name="Publish_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Hesabınızın GitHub istek limiti şu zamana kadar doldu: {0}. Sonra yeniden yayımlayın (hiçbir şey kaybolmaz).</value>
+  </data>
+  <data name="Publish_Error_RateLimited" xml:space="preserve">
+    <value>Hesabınızın GitHub istek limiti şimdilik doldu; birkaç dakika sonra yeniden yayımlayın (hiçbir şey kaybolmaz).</value>
+  </data>
+  <data name="Publish_Error_NoRegistry" xml:space="preserve">
+    <value>{0} kataloğu GitHub'da yok (veya hesabınızla görülemiyor).</value>
+  </data>
+  <data name="Publish_Error_NotFound" xml:space="preserve">
+    <value>GitHub, {0} sırasında bir şeyi bulamadı; yeniden yayımlayın.</value>
+  </data>
+  <data name="Publish_Error_Rejected" xml:space="preserve">
+    <value>GitHub, {0} sırasında isteği reddetti.</value>
+  </data>
+  <data name="Publish_Error_Conflict" xml:space="preserve">
+    <value>GitHub, {0} sırasında isteği tamamlayamadı; birazdan yeniden yayımlayın.</value>
+  </data>
+  <data name="Publish_Error_Network" xml:space="preserve">
+    <value>{0} sırasında GitHub'a ulaşılamadı; bağlantıyı kontrol edip yeniden yayımlayın: kaldığı yerden devam eder.</value>
+  </data>
+  <data name="Publish_Error_Invalid" xml:space="preserve">
+    <value>Katalog bu çeviriyi reddederdi: {0}</value>
+  </data>
+  <data name="Publish_Error_OptedOut" xml:space="preserve">
+    <value>Oyunun yayıncısı hayran çevirilerinin dağıtılmamasını istedi, bu yüzden katalog bu oyun için çeviri kabul etmiyor.</value>
+  </data>
+  <data name="Publish_Error_TargetGone" xml:space="preserve">
+    <value>Güncellemeyi seçtiğiniz çeviri artık katalogda değil; kendi çevirinizi ayrı bir çeviri olarak yayımlayın.</value>
+  </data>
+  <data name="Publish_Error_ForkNotReady" xml:space="preserve">
+    <value>GitHub kataloğun sizin kopyanızı hâlâ oluşturuyor; birkaç dakika sonra yeniden yayımlayın.</value>
+  </data>
+  <data name="Publish_Error_Unexpected" xml:space="preserve">
+    <value>{0} sırasında GitHub'dan beklenmedik yanıt geldi; yeniden yayımlayın.</value>
+  </data>
+  <data name="Publish_Target_Revision" xml:space="preserve">
+    <value>“{1}” rev. {0}</value>
+  </data>
+  <data name="Publish_Target_Pack" xml:space="preserve">
+    <value>“{0}”</value>
+  </data>
+  <data name="Publish_Sending_Title" xml:space="preserve">
+    <value>{0} yayımlanıyor…</value>
+  </data>
+  <data name="Publish_Checking_Title" xml:space="preserve">
+    <value>PR #{0} açıldı · CI çeviriyi kontrol ediyor</value>
+  </data>
+  <data name="Publish_Checking_Text" xml:space="preserve">
+    <value>Şema, hash'ler, çalıştırılabilir dosya yokluğu, yazı tipleri. Kontroller geçince kendiliğinden alfa olarak birleştirilir; bu sayfadan ayrılabilirsiniz, ilerleme Etkinlik'te.</value>
+  </data>
+  <data name="Publish_Failed_Title" xml:space="preserve">
+    <value>“{0}” yayımlanamadı</value>
+  </data>
+  <data name="Publish_Published_Title" xml:space="preserve">
+    <value>Yayımlandı: {0} · {1}</value>
+  </data>
+  <data name="Publish_Published_Text" xml:space="preserve">
+    <value>Oyuncular onu alfa uyarısıyla görür. {0} başka oyuncu çalıştığını onaylayınca doğrulanmış olur.</value>
+  </data>
+  <data name="Publish_Published_VerifiedText" xml:space="preserve">
+    <value>Oyuncular çalıştığını onayladı: çeviri doğrulandı.</value>
+  </data>
+  <data name="Publish_Meter" xml:space="preserve">
+    <value>{0} / {1} oyuncu “çalışıyor” dedi</value>
+  </data>
+  <data name="Publish_CopyLink" xml:space="preserve">
+    <value>Bağlantıyı kopyala</value>
+  </data>
+  <data name="Publish_Discussion" xml:space="preserve">
+    <value>Discussion</value>
+  </data>
+  <data name="Publish_OpenPr" xml:space="preserve">
+    <value>PR'ı aç</value>
+  </data>
+  <data name="Publish_Toast_LinkCopied" xml:space="preserve">
+    <value>Bağlantı kopyalandı</value>
+  </data>
+  <data name="Publish_Toast_Sent" xml:space="preserve">
+    <value>Gönderildi: {0}. PR #{1} açıldı, CI çeviriyi kontrol ediyor.</value>
+  </data>
+  <data name="Publish_Toast_Failed" xml:space="preserve">
+    <value>Yayımlanamadı: {0}.</value>
+  </data>
+  <data name="Publish_Row_Sending" xml:space="preserve">
+    <value>yerel · yayımlanıyor…</value>
+  </data>
+  <data name="Publish_Row_Checking" xml:space="preserve">
+    <value>PR #{0} · CI çalışıyor</value>
+  </data>
+  <data name="Publish_Row_Published" xml:space="preserve">
+    <value>yayımlandı · {0} · rev. {1}</value>
+  </data>
+  <data name="Publish_Row_Failed" xml:space="preserve">
+    <value>yerel · yayımlanmadı (son deneme başarısız)</value>
+  </data>
+  <data name="Publish_Similar_Builds_One" xml:space="preserve">
+    <value>{0} derleme için yapıldı</value>
+  </data>
+  <data name="Publish_Similar_Builds_Other" xml:space="preserve">
+    <value>{0} derleme için yapıldı</value>
+  </data>
+  <data name="Publish_Resubmitted_Detail" xml:space="preserve">
+    <value>Düzeltme PR #{0} içine gönderildi · CI çeviriyi yeniden kontrol ediyor</value>
+  </data>
+  <data name="Publish_Toast_Resubmitted" xml:space="preserve">
+    <value>Yeniden gönderildi: {0}. Düzeltme PR #{1} içinde, CI çeviriyi yeniden kontrol ediyor.</value>
+  </data>
+  <data name="Publish_CiFailed_Title" xml:space="preserve">
+    <value>CI, PR #{0} isteğini reddetti</value>
+  </data>
+  <data name="Publish_Ci_Scope" xml:space="preserve">
+    <value>Pull request, çevirinin klasörü dışındaki dosyaları değiştiriyor. Düzelt ve yeniden gönder, dalı yalnızca bu çeviriyle yeniden oluşturur.</value>
+  </data>
+  <data name="Publish_Ci_Status" xml:space="preserve">
+    <value>Manifest alfa olarak işaretlenmemiş ({0}). Düzelt ve yeniden gönder, onu alfa olarak yeniden gönderir.</value>
+  </data>
+  <data name="Publish_Ci_Patch" xml:space="preserve">
+    <value>Fork'unuzdaki yama arşivi eksik veya manifestle eşleşmiyor ({0}). Düzelt ve yeniden gönder, arşivi yeniden yükler.</value>
+  </data>
+  <data name="Publish_Ci_Pack" xml:space="preserve">
+    <value>Kataloğun kontrolleri çeviriyi reddediyor: {0}. Düzelt ve yeniden gönder, önce burada kontrol edip yeniden gönderir; uygulama bir sorun bulamazsa uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Publish_Ci_Registry" xml:space="preserve">
+    <value>Çevirinizin değil, kataloğun kendi kontrollerinden biri başarısız oldu ({0}). Düzelt ve yeniden gönder, kontrolleri yeniden çalıştırır.</value>
+  </data>
+  <data name="Publish_Ci_Unknown" xml:space="preserve">
+    <value>CI nedenini belirtmeden başarısız oldu. Düzelt ve yeniden gönder, kontrolleri yeniden çalıştırır; PR'ı aç günlüğü gösterir.</value>
+  </data>
+  <data name="Publish_Resubmit" xml:space="preserve">
+    <value>Düzelt ve yeniden gönder</value>
+  </data>
+  <data name="Publish_Merged_Title" xml:space="preserve">
+    <value>PR #{0} birleştirildi: {1} katalogda alfa olarak yer alıyor</value>
+  </data>
+  <data name="Publish_Merged_Text" xml:space="preserve">
+    <value>Çeviri listesi birkaç dakika içinde güncellenir; ardından tüm oyuncular görür.</value>
+  </data>
+  <data name="Publish_Closed_Title" xml:space="preserve">
+    <value>PR #{0} birleştirilmeden kapatıldı</value>
+  </data>
+  <data name="Publish_Closed_Text" xml:space="preserve">
+    <value>Nedenini PR'ı aç gösterir. Yeniden yayımla yeni bir pull request açar.</value>
+  </data>
+  <data name="Publish_Row_CiFailed" xml:space="preserve">
+    <value>PR #{0} · CI başarısız</value>
+  </data>
+  <data name="Publish_Row_Merged" xml:space="preserve">
+    <value>PR #{0} birleştirildi · alfa</value>
+  </data>
+  <data name="Publish_Row_Closed" xml:space="preserve">
+    <value>PR #{0} kapatıldı</value>
+  </data>
+  <data name="Activity_Event_PullRequestFailed" xml:space="preserve">
+    <value>“{0}” için PR #{2} katalog CI tarafından reddedildi</value>
+  </data>
+  <data name="Activity_Event_PackMerged" xml:space="preserve">
+    <value>PR #{2} birleştirildi: “{0}” alfa olarak yayımlandı</value>
+  </data>
+  <data name="Activity_Event_PullRequestClosed" xml:space="preserve">
+    <value>“{0}” için PR #{2} birleştirilmeden kapatıldı</value>
+  </data>
+  <data name="Activity_Event_PackVerified" xml:space="preserve">
+    <value>“{0}” doğrulandı: oyuncular çalıştığını onayladı</value>
+  </data>
+  <data name="Activity_Detail_PackMerged" xml:space="preserve">
+    <value>Çeviri listesi güncellenince tüm oyunculara görünür.</value>
+  </data>
+  <data name="Activity_Action_OpenPr" xml:space="preserve">
+    <value>GitHub'da PR</value>
+  </data>
+  <data name="Settings_PublishedPack_Meta" xml:space="preserve">
+    <value>{0} · {1} · rev. {2}</value>
+  </data>
+  <data name="Settings_PublishedPack_Confirmed" xml:space="preserve">
+    <value>alfa · {0}/{1} onay</value>
+  </data>
+  <data name="Settings_PublishedPack_Likes" xml:space="preserve">
+    <value>{0} beğeni</value>
+  </data>
+  <data name="Settings_PublishedPack_Pr" xml:space="preserve">
+    <value>PR</value>
+  </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>Puanla</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>Puanınız</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>Beğen</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>Beğenildi</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>Çalışıyor</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>Çalışmıyor</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>Ne çalışıyor, ne çalışmıyor? (isteğe bağlı)</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>Çalışıyor / Çalışmıyor, oyununuzun derlemesi ve yorumunuzla birlikte hesabınız adına çevirinin GitHub Discussion sayfasına gönderilir.</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>GitHub'a gönderiliyor…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>“{0}” rev. {1} için raporunuzu {2} tarihinde gönderdiniz. Yeniden göndermek raporunuzu değiştirir.</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>Bu çeviride adınız geçiyor, bu yüzden çalıştığını siz onaylayamazsınız: bunu diğer oyuncular yapar.</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>Katalog bu çeviri için GitHub'da Discussion sayfasını açınca puanlama açılır.</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>“{0}” nasıl? Yanıtınız diğer oyunculara yardımcı olur.</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>Sonra</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>Teşekkürler! Raporunuz çevirinin GitHub Discussion sayfasına gönderildi.</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>Ayrıntı ekle</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>Çevirileri puanlamak için GitHub'a giriş yapın</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>Beğeniler ve raporlar hesabınız adına çevirinin GitHub Discussion sayfasına gider. Çeviri yüklemek için hiçbir zaman hesap gerekmez.</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>GitHub girişi onaylar onaylamaz puanınız gönderilir.</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>Çevirileri puanlamak için GitHub'a giriş yapın.</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>GitHub girişiniz sistem anahtarlığından okunamadı. Tekrar deneyin veya Ayarlar → GitHub bölümünden yeniden giriş yapın.</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub artık girişinizi kabul etmiyor. Yeniden giriş yapın.</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>Çevirinin Discussion sayfası artık GitHub'da yok.</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>Kataloğun yöneticileri çevirinin Discussion sayfasını kilitledi: yeni puan kabul etmiyor.</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub reddetti: {0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>GitHub istek limiti şimdilik doldu; {0} sonrasında tekrar deneyin.</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>GitHub istek limiti şimdilik doldu; bir süre sonra tekrar deneyin.</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>GitHub'a ulaşılamıyor. Bağlantıyı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>Gönderilemedi: {0}</value>
+  </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>Yedeklerin yarıda kalan taşınması tamamlandı</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>disk alan boyut boş kullanılan space size free</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>Disk alanı</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>{0} kullanılıyor</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>Ölçülüyor…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>Yedekler {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>Çalışma kopyaları {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>Önbellek {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>Disk alanı</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>Yedekler</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>Oluşturma çalışma kopyaları</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>Önbellek</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>Üzerine yazılan oyun dosyalarının yedekleri</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>yedek orijinaller kaldır taşı klasör konum backup move location</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>Henüz yedeklenen bir şey yok</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>Yedekler taşınıyor… %{0}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>Konumu değiştir…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>Çevirileri kaldırmak için gerekli olduklarından burada temizlenemezler. Bir yedek, çevirisi kaldırıldığında silinir.</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>Yedekler nerede tutulsun</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>Yedekler taşınsın mı?</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>Yedekler ({1}) şu klasöre taşınır: {0}. Yüklü çeviriler yüklü kalır ve yine kaldırılabilir; oyunlara dokunulmaz. Çeviriler yüklüyken o sürücüyü çıkarmayın.</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>Taşı</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>Taşındı. Eski klasör ({0}) henüz silinemedi; uygulama bir sonraki açılışta yeniden dener.</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>Bir çeviri yükleniyor veya kaldırılıyor. Bittiğinde tekrar deneyin.</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>Önce yarıda kalan bir yükleme veya taşımanın tamamlanması gerekiyor. Uygulamayı yeniden başlatıp tekrar deneyin.</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>Yedekler zaten bu klasörde.</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>Mevcut yedek klasörünün dışında bir klasör seçin.</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>{0} içinde zaten dosyalar var. Başka bir klasör seçin; hiçbir şey taşınmadı.</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>Orada yedekler için yeterli boş alan yok; hiçbir şey taşınmadı.</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>Uygulama o klasöre yazamıyor; hiçbir şey taşınmadı.</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>Kopyalanan bir dosya geri okunduğunda aynı çıkmadı, bu yüzden yedekler yerinde kaldı.</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>Yedeklerin konumunu uygulamanın daha yeni bir sürümü ayarlamış; taşımak için uygulamayı güncelleyin.</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>Yedekler taşınamadı ve yerinde kaldı: {0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>Çalışma kopyası</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>Silmek için oluşturmayı durdurun</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>Yok. Oluşturma başladığında oyun dosyalarının bir kopyası alınır, böylece ajan oyun klasörüne hiç dokunmaz.</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>Yarıda kalan bir başlatmadan kaldı</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>Şu anda oluşturuluyor</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>Limit sıfırlanana kadar duraklatıldı</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>Oluşturma duraklatıldı</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>Sözlük incelemesi bekleniyor</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>Oluşturma yarıda kaldı</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>Oluşturma başarısız oldu</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>İptal edildi</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>“{0}” için çalışma kopyası silinsin mi?</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>{0} yer açılır. Yaptığınız çeviriler ve yüklü çeviriler kalır; oyuna dokunulmaz.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>{0} yer açılır. Duraklatılan çevirinin ilerlemesi kaybolur: sürdürülemez ve baştan başlaması gerekir. Yüklü çeviriler kalır; oyuna dokunulmaz.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>Bu oyun için oluşturma sürüyor. Önce durdurun.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>Silinemedi: {0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>Katalog dizini ve indirilen çeviriler</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>önbellek temizle indirilenler dizin cache clear downloads index</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}. Gerektiğinde yeniden indirilir.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>Temizle</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>Temizleniyor…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>Temizlendi: {0} yer açıldı.</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>{0} yer açıldı. Kullanımdaki {1}, uygulama işini bitirene kadar kalır.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>Bir çeviri yükleniyor. Bittiğinde tekrar deneyin.</value>
+  </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © AI Local Pack katkıcıları</value>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>Kararlı kanal</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>Kanal: {0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0} (taşınabilir)</value>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0} (geliştirme derlemesi)</value>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>Güncellemeler</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>Bağlantılar</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>Yasal</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>güncelleme</value>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>Uygulama güncellemeleri</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>güncelleme, yükseltme, sürüm, yeniden başlat, update, upgrade, version, release, restart, velopack</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>Bu kopya bir sürümden yüklenmedi, bu yüzden kendini güncellemez.</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>Güncellemeler GitHub Releases'tan arka planda indirilir.</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>GitHub Releases kontrol ediliyor…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>En son sürümü kullanıyorsunuz. Son kontrol: {0}.</value>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>{0} indiriliyor… %{1}</value>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>{0} indirildi ve hazır. Uygulama bir sonraki açılışında da yüklenir.</value>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>Yeniden başlatılıyor…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>Güncellemeler kontrol edilemedi: GitHub Releases yanıt vermedi. Uygulama daha sonra yeniden dener.</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>Güncellemeleri kontrol et</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>Yeniden kontrol et</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>Kontrol ediliyor</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>Güncellemek için yeniden başlat</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>Yeniden başlatılıyor</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>Yenilikler</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>Bir çeviri yükleniyor. Bittiğinde yeniden başlatın.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>Güncellemek için şimdi yeniden başlatılsın mı?</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>Süren YZ ile oluşturma veya yayımlama durur. Durdurulan YZ çevirisi, yeniden başlatmadan sonra YZ ile oluştur sekmesinden sürdürülebilir.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>Yeniden başlat</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>Kaynak kodu</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>Çeviri kataloğu</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>Sorun bildir</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA ve kaldırma talepleri</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>Stüdyolar kaldırma talebini nasıl iletebilir</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>github, kaynak, depo, sorun, hata, dmca, kaldırma, source, repository, issues, bug, takedown, opt-out</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>Lisanslar</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>Uygulama: Apache-2.0. Katalog içeriği: CC BY-SA 4.0.</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>lisans, apache, creative commons, cc by-sa, üçüncü taraf, bildirimler, açık kaynak, license, third-party, open source</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>Üçüncü taraf bildirimleri</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>Sorumluluk reddi</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>Topluluk çevirileri oyun stüdyolarıyla bağlantılı değildir ve onlar tarafından onaylanmamıştır. Yalnızca çevrilmiş metin ve tarifler içerir; oyunun kendi kopyanız gerekir. Stüdyolar oyunlarını hariç tutturabilir.</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>yasal, stüdyolar, bağlantılı, onaylı, hariç tutma, legal, studios, opt-out</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>Bu derlemede üçüncü taraf bildirimleri yok. Kaynak depoya bakın.</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} yüklenmeye hazır</value>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>Arka planda indirildi. Yeniden başlatma birkaç saniye sürer.</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>Şimdi yeniden başlat</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>Uygulama güncellemeleri kontrol ediliyor</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>Kapalı: bu kopya bir sürümden yüklenmedi</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>Güncel</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>{0} bulundu, arka planda indiriliyor</value>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>{0} hazır: güncellemek için yeniden başlatın</value>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>GitHub Releases'a ulaşılamadı</value>
+  </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>Tanıtım turu</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>AI Local Pack'e hoş geldiniz</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>Hoş geldiniz</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>Yükleme</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>YZ ile oluştur</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>Topluluk</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>Oyunlarınızı kendi dilinizde oynayın</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack, zaten sahip olduğunuz oyunlar için oyuncuların yaptığı çevirileri yükler.</value>
+  </data>
+  <data name="Welcome_GamesFound_One" xml:space="preserve">
+    <value>Kütüphanenizde {0} oyun bulduk.</value>
+  </data>
+  <data name="Welcome_GamesFound_Other" xml:space="preserve">
+    <value>Kütüphanenizde {0} oyun bulduk.</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>Bunu istediğiniz zaman kütüphaneden veya Ayarlar'dan değiştirebilirsiniz.</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>Buldunuz mu? Tek tıkla</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>Bir oyun açın, bir çeviri seçin ve Yükle'ye basın.</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>Tamamen geri alınabilir.</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>Oyunun dosyaları önce yedeklenir; Kaldır onları geri koyar.</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>Oyun güncellemelerine dayanır.</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>Steam üzerine yazarsa uygulama geri koyar.</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>Hesabınız için güvenli.</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>Hile korumalı oyunlar asla değiştirilmez.</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>Henüz yok mu? YZ ile yapın</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>Kendi YZ ajanınız oyunu kendi bilgisayarınızda, kendi aboneliğinizle çevirir.</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>Gerektiğinde kurulur.</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>İlk kez çeviri oluşturduğunuzda uygulama ajanı yükler ve giriş yaptırır.</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>Duraklar ve sürer:</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>aboneliğinizin limiti dolduğunda.</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>Paylaşın. Oynadıklarınızı puanlayın</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>Çeviriler herkese açık bir katalogda yer alır. Kendi çevirinizi tek tıkla paylaşın; bir çeviriyle oynadıktan sonra çalışıp çalışmadığını söyleyin.</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 oyuncu çalıştığını onaylarsa:</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>çeviri doğrulanmış olur.</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>GitHub hesabı</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>yalnızca paylaşırken veya puanlarken gerekir. Yüklemek için hiç gerekmez.</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>Çevriliyor… %{0}</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{0} / {1} oyuncu çalıştığını onayladı</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>Doğrulandı</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>Başlayalım</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>İleri</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>Atla</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>Kütüphanemi aç</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>Turu kapat</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>Tanıtım turu</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>Çeviri yükleme, YZ ile oluşturma ve paylaşmaya kısa bir bakış.</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>eğitim tanıtım giriş rehber yardım ilk açılış tutorial onboarding intro guide help</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>Yeniden göster</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>Merhaba, yolcu!</value>
+  </data>
+</root>

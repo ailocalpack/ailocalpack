@@ -1,0 +1,4015 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Chrome_BackTo" xml:space="preserve">
+    <value>‹ {0}</value>
+  </data>
+  <data name="Chrome_Activity" xml:space="preserve">
+    <value>Aktivität</value>
+  </data>
+  <data name="Chrome_Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>Bibliothek</value>
+  </data>
+  <data name="Library_GameCount_One" xml:space="preserve">
+    <value>{0} Spiel</value>
+  </data>
+  <data name="Library_GameCount_Other" xml:space="preserve">
+    <value>{0} Spiele</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>System ({0})</value>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>Einstellungen durchsuchen</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>Keine Einstellungen zu „{0}“.</value>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>Dieser Bereich kommt in einer späteren Version von AI Local Pack.</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>Sprachen, Design, Hintergrund, Benachrichtigungen</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>Bibliotheken</value>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Steam-Ordner und manuell hinzugefügte Spiele</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>KI-Agenten</value>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>Claude Code und Codex, um Übersetzungen mit KI zu erstellen</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>Konto und deine veröffentlichten Übersetzungen</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>Speicher</value>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>Sicherungen, Arbeitskopien, Cache</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>Über</value>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>Version, Updates, Lizenzen, Rechtliches</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>Darstellung</value>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>Hintergrund</value>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>Benachrichtigungen</value>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>Sprache der App</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>Anfangs mit KI übersetzt. Fehler entdeckt?</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>Auf GitHub korrigieren</value>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>sprache oberfläche app übersetzung ui locale translation</value>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>Spiele übersetzen in</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>Standard beim Suchen von Übersetzungen und beim Erstellen mit KI. Jede Spielseite kann eine andere Sprache wählen.</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>zielsprache übersetzung sprache target language translation locale</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>„System“ folgt der Hell-/Dunkel-Einstellung des Betriebssystems.</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>dunkel hell modus farben darstellung theme dark light</value>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>Mit dem System starten, im Tray weiterlaufen</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>So bemerkt die App Spiel-Updates auch bei geschlossenem Fenster.</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>tray autostart start anmeldung hintergrund background</value>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>Übersetzungen nach Spiel-Updates neu anwenden</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>Löscht ein Store-Update oder eine Dateiprüfung eine Übersetzung und der Build ist weiter kompatibel, wird sie mit frischer Sicherung neu installiert. Sonst bekommst du eine Benachrichtigung.</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>Nur beim Start der App, weil der Tray aus ist.</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>Du wirst stattdessen benachrichtigt und kannst sie von Hand neu anwenden.</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>update neu installieren wiederherstellen reinstall restore</value>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>Wenn du etwas entscheiden musst</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>Pausierte KI-Übersetzung, inkompatible Übersetzung nach Spiel-Update, fehlgeschlagenes Neuanwenden, abgelehnter PR.</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>Wenn eine Aufgabe fertig ist</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>Übersetzung installiert oder neu angewendet, KI-Übersetzung fertig, PR gemergt, App-Update bereit.</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>Community-Aktivität zu meinen Übersetzungen</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>Neue Bewertungen, „Funktioniert“-Bestätigungen, eine Übersetzung wird verifiziert.</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>benachrichtigungen hinweise meldungen notifications alerts</value>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>Bei geschlossenem Fenster als Systembenachrichtigungen; in der App steht ohnehin alles unter Aktivität.</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>Systembenachrichtigungen brauchen den Tray (Hintergrund oben); bis dahin erscheinen Ereignisse nur unter Aktivität.</value>
+  </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>Spiele suchen</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>Sortieren</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>Nach Name</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>Zuletzt gespielt</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>Ordner</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>Spielordner hinzufügen</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>Suche Spiele in Steam-Bibliotheken…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>Steam-Bibliothek nicht gefunden</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>Wir haben Steam nicht gefunden, oder es enthält keine Spiele. Füge einen Spielordner manuell hinzu oder zeig uns deine Steam-Bibliotheken.</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>Spielordner hinzufügen</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>Einstellungen → Bibliotheken</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>Nichts gefunden</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>Keine Spiele zu „{0}“. Spiel nicht in der Bibliothek? Füge seinen Ordner hinzu.</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>Suche und Filter zurücksetzen</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>Ordner hinzufügen</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>manuell</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>Unbekannte Engine</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>Ordner nicht verfügbar</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0} (gesperrt: {1})</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>Anti-Cheat</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>Spielseite öffnen</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>Spielordner öffnen</value>
+  </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>Aus Bibliothek entfernen</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>Ordner ablegen, um das Spiel hinzuzufügen</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>Ein Spielordner oder ein Ordner mit mehreren Spielen</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>Spiel hinzufügen</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>Schritt {0} von {1}</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>Spielordner hier ablegen</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>Die Engine wird erkannt und die Spieldateien werden geprüft. Sie werden nur gelesen, nichts wird geändert.</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>Ordner wählen…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>Spielordner wählen</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>Du kannst einen Ordner auch direkt auf die Bibliothek ziehen</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>Wo ist mein Spielordner?</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>Desktop-Verknüpfung: Rechtsklick → „Dateipfad öffnen“.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>Dock: Rechtsklick auf das Spiel → Optionen → Im Finder zeigen.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>Desktop-Verknüpfung: Der Spielpfad steht in der Exec-Zeile seiner .desktop-Datei.</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG, itch.io, Epic: Der Launcher hat „Installationsordner öffnen“.</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Steam-Spiele musst du nicht hinzufügen: Sie erscheinen von selbst in der Bibliothek.</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>Keine Spiele in „{0}“ oder seinen Unterordnern gefunden.</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>Wähle den Ordner, der die ausführbare Datei des Spiels enthält.</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>Der Ordner „{0}“ existiert nicht oder lässt sich nicht öffnen.</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>„{0}“ ist zu groß zum Durchsuchen. Wähle einen engeren Ordner.</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>Die Dateien von „{0}“ lassen sich nicht lesen.</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>Dieses Bild lässt sich nicht öffnen. Wähle eine PNG- oder JPEG-Datei.</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>Analysiere „{0}“…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>Spieldateien werden nur gelesen; nichts wird geändert</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>Ausführbare Dateien suchen</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>Engine erkennen</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>Fingerabdruck der Dateien</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>Im Katalog nachsehen</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0} von {1:N0} Dateien</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>in einer späteren Version</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>Engine nicht erkannt</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>Keine ausführbare Datei</value>
+  </data>
+  <data name="AddGame_Files_One" xml:space="preserve">
+    <value>{0} Datei</value>
+  </data>
+  <data name="AddGame_Files_Other" xml:space="preserve">
+    <value>{0} Dateien</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} GB</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>Cover ändern</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>Anderer Ordner</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>„{0}“ enthält ein Spiel, im Unterordner {1}.</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>Die Suche nach Übersetzungen kommt in einer späteren Version.</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>Übersetzungen für dieses Spiel aus dem Katalog erscheinen hier. Du kannst das Spiel jetzt schon hinzufügen.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>Engine nicht erkannt.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>Du kannst trotzdem eine Übersetzung mit KI erstellen: Der Agent findet sich selbst in den Spieldateien zurecht. Kennst du die Engine, wähle sie in den Details.</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>Dieses Spiel ist bereits als „{0}“ in der Bibliothek.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>{0} erkannt.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>Für dieses Spiel können keine Übersetzungen installiert oder erstellt werden: Das Anti-Cheat könnte dein Konto sperren. Du kannst das Spiel trotzdem hinzufügen; die Bibliothek zeigt es als nicht verfügbar.</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>Spieldetails bearbeiten</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>Engine</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>erkannt</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>nicht erkannt</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>Hauptprogramm</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>Bild wählen…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>Spielsymbol nutzen</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>Coverbild wählen</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>Andere / weiß nicht</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>Spiel hinzufügen</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>Als nicht verfügbar hinzufügen</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>Spielseite öffnen</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>Spiele hinzufügen</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>Als „{0}“ zur Bibliothek hinzugefügt.</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>Spiele suchen</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>Suche Spiele in „{0}“…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>{0} von {1} Ordnern durchsucht</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>bis zu 3 Ebenen tief</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>Prüfe Spiel {0} von {1}: {2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>Stopp und anzeigen</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>Als Nächstes ein Spiel nach dem anderen: Details prüfen und hinzufügen. Du kannst jedes Spiel überspringen; Spiele, die schon in der Bibliothek sind, werden automatisch übersprungen.</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>Nichts Neues hinzuzufügen</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>Suche gestoppt: Hier die bisher gefundenen Spiele.</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>Dieser Ordner ist sehr groß, darum wurde die Suche früh beendet. Wähle einen engeren Ordner, um den Rest zu finden.</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>Diese Spiele sind über Steam schon in deiner Bibliothek.</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>Hinzufügen starten</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>keine ausführbaren Dateien</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>Laufzeit-Installer (DirectX, Visual C++…)</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>ein Spiel-Installer, kein installiertes Spiel</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>ein Hilfsprogramm, kein Spiel</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>Spielstände</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>Anti-Cheat</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>In Bibliothek</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>Nicht lesbar</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>Hinzugefügt</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>Übersprungen</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>Alle Spiele</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>Spiel {0} von {1}</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>Überspringen</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>Keine Spiele hinzugefügt</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>Übersprungene Spiele kannst du später aus demselben Ordner hinzufügen.</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>hinzugefügt</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>als nicht verfügbar hinzugefügt (Anti-Cheat)</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>übersprungen</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>bereits in der Bibliothek</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>übersprungen: Dateien nicht lesbar</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>Zur Bibliothek</value>
+  </data>
+  <data name="AddGame_Scanning_Found_One" xml:space="preserve">
+    <value>{0} Spiel gefunden · du kannst stoppen und das Gefundene prüfen</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Other" xml:space="preserve">
+    <value>{0} Spiele gefunden · du kannst stoppen und das Gefundene prüfen</value>
+  </data>
+  <data name="AddGame_Overview_Title_One" xml:space="preserve">
+    <value>{0} Spiel in „{1}“ gefunden</value>
+  </data>
+  <data name="AddGame_Overview_Title_Other" xml:space="preserve">
+    <value>{0} Spiele in „{1}“ gefunden</value>
+  </data>
+  <data name="AddGame_Overview_Queue_One" xml:space="preserve">
+    <value>{0} Spiel, eins nach dem anderen</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Other" xml:space="preserve">
+    <value>{0} Spiele, eins nach dem anderen</value>
+  </data>
+  <data name="AddGame_Skipped_Title_One" xml:space="preserve">
+    <value>{0} Ordner ohne Spiele übersprungen</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Other" xml:space="preserve">
+    <value>{0} Ordner ohne Spiele übersprungen</value>
+  </data>
+  <data name="AddGame_Tally_New_One" xml:space="preserve">
+    <value>{0} neu</value>
+  </data>
+  <data name="AddGame_Tally_New_Other" xml:space="preserve">
+    <value>{0} neu</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_One" xml:space="preserve">
+    <value>{0} mit Anti-Cheat</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Other" xml:space="preserve">
+    <value>{0} mit Anti-Cheat</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_One" xml:space="preserve">
+    <value>{0} schon in der Bibliothek</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Other" xml:space="preserve">
+    <value>{0} schon in der Bibliothek</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_One" xml:space="preserve">
+    <value>{0} nicht lesbar</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Other" xml:space="preserve">
+    <value>{0} nicht lesbar</value>
+  </data>
+  <data name="AddGame_Result_Title_One" xml:space="preserve">
+    <value>{0} Spiel hinzugefügt</value>
+  </data>
+  <data name="AddGame_Result_Title_Other" xml:space="preserve">
+    <value>{0} Spiele hinzugefügt</value>
+  </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>Manuell hinzugefügte Spiele</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>Andere Stores</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>Ein Spiel zu entfernen, entfernt es nur aus AI Local Pack. Spieldateien und installierte Übersetzungen bleiben unverändert.</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>neu scannen, scannen, aktualisieren, steamapps, bibliotheksordner, rescan, library folders</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · wird gescannt…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>Lese Steam-Bibliotheksordner.</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>Zuletzt gescannt um {0}. Steam wird bei jedem Start der App neu gescannt.</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>Noch nicht gescannt.</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>Steam nicht gefunden</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>Ist Steam an einem ungewöhnlichen Ort installiert, füge unten seinen Bibliotheksordner hinzu.</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>Neu scannen</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>Scanne</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Steam-Bibliotheksordner</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · von Steam gefunden</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · von dir hinzugefügt</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>Nicht verfügbar</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_One" xml:space="preserve">
+    <value>{0} Spiel ausgeblendet</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Other" xml:space="preserve">
+    <value>{0} Spiele ausgeblendet</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>Steam-Bibliotheksordner hinzufügen</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>Nur wenn eine Bibliothek auf einem anderen Laufwerk nicht gefunden wurde.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, laufwerk, festplatte, sd-karte, bibliothek, hinzufügen, drive, sd card</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>Steam-Bibliotheksordner wählen</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>„{0}“ ist keine Steam-Bibliothek: Es gibt darin keinen steamapps-Ordner.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>„{0}“ ist schon in der Liste.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>Die Ordnerliste konnte nicht gespeichert werden. Versuch es noch einmal.</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>„{0}“ aus AI Local Pack entfernen?</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>Seine Spiele verlassen die Bibliothek. Ordner, Spiele und installierte Übersetzungen bleiben auf der Festplatte, und Steam wird nicht verändert. Du kannst den Ordner später wieder hinzufügen.</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>Manuell hinzugefügtes Spiel</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>Keine manuell hinzugefügten Spiele. Nutze „Spielordner hinzufügen“ hier oder in der Bibliothek, oder zieh einen Ordner ins Fenster.</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>Spielordner hinzufügen</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>manuell, ordner, spiel, gog, itch, epic, manual, folder</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>„{0}“ aus AI Local Pack entfernen?</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>Der Spielordner und eine installierte Übersetzung bleiben auf der Festplatte. Du kannst den Ordner später wieder hinzufügen.</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games, GOG, EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>Bis dahin füge ihre Spiele als Ordner hinzu.</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, store, galaxy, shop</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>Demnächst</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>Eine Steam-Bibliothek ist nicht verfügbar</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
+    <value>{1}: {0} Spiel ist ausgeblendet, bis der Ordner wieder da ist. Installierte Übersetzungen bleiben unberührt.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Other" xml:space="preserve">
+    <value>{1}: {0} Spiele sind ausgeblendet, bis der Ordner wieder da ist. Installierte Übersetzungen bleiben unberührt.</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Settings_Steam_Folders_One" xml:space="preserve">
+    <value>{0} Ordner</value>
+  </data>
+  <data name="Settings_Steam_Folders_Other" xml:space="preserve">
+    <value>{0} Ordner</value>
+  </data>
+  <data name="Chrome_Activity_Checking" xml:space="preserve">
+    <value>Aktivität: Startprüfungen laufen</value>
+  </data>
+  <data name="Chrome_CheckingForChanges" xml:space="preserve">
+    <value>Suche nach Änderungen…</value>
+  </data>
+  <data name="Startup_Step_Settings" xml:space="preserve">
+    <value>Einstellungen laden</value>
+  </data>
+  <data name="Startup_Step_Catalog" xml:space="preserve">
+    <value>Spielebibliothek öffnen</value>
+  </data>
+  <data name="Startup_Step_Steam" xml:space="preserve">
+    <value>Steam-Bibliotheken scannen</value>
+  </data>
+  <data name="Startup_Step_Detection" xml:space="preserve">
+    <value>Engines und Anti-Cheat erkennen</value>
+  </data>
+  <data name="Startup_Waiting" xml:space="preserve">
+    <value>Wartet</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>Nicht abgeschlossen: Details im Log</value>
+  </data>
+  <data name="Startup_Summary" xml:space="preserve">
+    <value>{0} von {1}</value>
+  </data>
+  <data name="Startup_Checks_Title" xml:space="preserve">
+    <value>Startprüfungen</value>
+  </data>
+  <data name="Startup_Settings_Done" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Startup_Settings_ThemeSystem" xml:space="preserve">
+    <value>System-Design</value>
+  </data>
+  <data name="Startup_Settings_ThemeDark" xml:space="preserve">
+    <value>dunkles Design</value>
+  </data>
+  <data name="Startup_Settings_ThemeLight" xml:space="preserve">
+    <value>helles Design</value>
+  </data>
+  <data name="Startup_Catalog_Missing" xml:space="preserve">
+    <value>Noch keine Spiele: erster Start</value>
+  </data>
+  <data name="Startup_Catalog_Corrupted" xml:space="preserve">
+    <value>Die Spieleliste war beschädigt: Sicherung gespeichert, wird aus Steam neu aufgebaut</value>
+  </data>
+  <data name="Startup_Catalog_Unreadable" xml:space="preserve">
+    <value>Spieleliste nicht lesbar: Start mit leerer Liste, Änderungen werden nicht gespeichert</value>
+  </data>
+  <data name="Startup_Steam_NotFound" xml:space="preserve">
+    <value>Steam nicht gefunden</value>
+  </data>
+  <data name="Startup_Steam_New" xml:space="preserve">
+    <value>{0} · neu: {1}</value>
+  </data>
+  <data name="Startup_Steam_More" xml:space="preserve">
+    <value>{0} +{1}</value>
+  </data>
+  <data name="Startup_Detection_None" xml:space="preserve">
+    <value>Keine neuen oder aktualisierten Spiele</value>
+  </data>
+  <data name="Startup_Detection_Done_One" xml:space="preserve">
+    <value>{0} Spiel geprüft</value>
+  </data>
+  <data name="Startup_Detection_Done_Other" xml:space="preserve">
+    <value>{0} Spiele geprüft</value>
+  </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>Übersetzungsliste aktualisieren</value>
+  </data>
+  <data name="Startup_Index_Done_One" xml:space="preserve">
+    <value>{0} Übersetzung</value>
+  </data>
+  <data name="Startup_Index_Done_Other" xml:space="preserve">
+    <value>{0} Übersetzungen</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>Offline: gespeicherte Liste vom {0}</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>Übersetzungskatalog nicht erreichbar</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>Die Übersetzungsliste braucht eine neuere Version der App</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>Die Adresse des Übersetzungskatalogs ist ungültig: Details im Log</value>
+  </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>Unterbrochene Installation abschließen</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>Schließ die App nicht</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>Die Installation wurde rückgängig gemacht: Die Spieldateien sind wie vorher</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>Die Installation wurde abgeschlossen</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>Die Deinstallation wurde abgeschlossen: Originaldateien wiederhergestellt</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>Noch nicht abgeschlossen: neuer Versuch beim nächsten Start (Details im Log)</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>Eine andere Installation läuft</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>Nichts abzuschließen</value>
+  </data>
+  <data name="Splash_Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="Splash_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Splash_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Splash_HideDetails" xml:space="preserve">
+    <value>Details ausblenden</value>
+  </data>
+  <data name="Splash_Slow" xml:space="preserve">
+    <value>Dauert länger als sonst. Bitte schließ die App nicht: {0} von {1} Schritten erledigt.</value>
+  </data>
+  <data name="Library_CatalogDamaged" xml:space="preserve">
+    <value>Die gespeicherte Spieleliste war beschädigt. Steam-Spiele wurden neu gefunden; manuell hinzugefügte Spiele musst du erneut hinzufügen. Die alte Datei liegt unter {0}.</value>
+  </data>
+  <data name="Library_CatalogDamaged_NoBackup" xml:space="preserve">
+    <value>Die gespeicherte Spieleliste war beschädigt. Steam-Spiele wurden neu gefunden; manuell hinzugefügte Spiele musst du erneut hinzufügen.</value>
+  </data>
+  <data name="Library_Banner_Dismiss" xml:space="preserve">
+    <value>Ausblenden</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>Installiert</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>Übersetzung verfügbar</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>Keine Übersetzung</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>Update nötig</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>In Arbeit</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>Nach Status filtern</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>In Arbeit · {0} %</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>Pausiert · {0} %</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>Nicht verfügbar</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>Installieren</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>Ansehen</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>Mit KI erstellen</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>Studio hat widersprochen</value>
+  </data>
+  <data name="Library_Card_PackCount_One" xml:space="preserve">
+    <value>{0} Übersetzung</value>
+  </data>
+  <data name="Library_Card_PackCount_Other" xml:space="preserve">
+    <value>{0} Übersetzungen</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>verifiziert</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>Alpha</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>≈ {0} übrig</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>{0} Likes</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>Übersetzen in</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>Sprache für Badges und Zähler. Auch unter Einstellungen → Allgemein.</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>Wichtige zuerst</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>Übersetzungskatalog nicht erreichbar. Daten gespeichert am {0}.</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>Übersetzungskatalog nicht erreichbar. Die Status der Übersetzungen erscheinen, sobald er antwortet.</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>Der Übersetzungskatalog nutzt ein neueres Format. Aktualisiere die App, um die aktuellen Übersetzungen zu sehen.</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>Die für die App eingestellte Adresse des Übersetzungskatalogs ist ungültig, daher können keine Status angezeigt werden.</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>Keine Spiele zu diesem Filter. Spiel nicht in der Bibliothek? Füge seinen Ordner hinzu.</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>Keine Spiele zu „{0}“ mit diesem Filter. Spiel nicht in der Bibliothek? Füge seinen Ordner hinzu.</value>
+  </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>Engine unbekannt</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>Manuell hinzugefügt</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>Build {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>Datei-Hash {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>Spielversion: Steam-Build-ID</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_One" xml:space="preserve">
+    <value>Spielversion: Hash von {0} Datei</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Other" xml:space="preserve">
+    <value>Spielversion: Hash von {0} Dateien</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>Übersetzung installieren</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>Übersetzung mit KI erstellen</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>Spielen</value>
+  </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>Startet…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>Läuft</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>läuft seit {0}</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>Spiel konnte nicht gestartet werden: {0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>Der Spielordner ist nicht erreichbar. Schließ das Laufwerk an oder prüfe, ob der Ordner noch da ist.</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>Im Spielordner wurde kein startbares Programm gefunden.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>Das ist ein Windows-Build. Um ihn unter Linux zu spielen, füge ihn in Steam als Nicht-Steam-Spiel hinzu und aktiviere Proton.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>Das ist ein Windows-Build; er läuft nicht auf diesem System.</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>Das ist ein Linux-Build; er läuft nicht auf diesem System.</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>Das ist ein macOS-Build; er läuft nicht auf diesem System.</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>Auf Rev. {0} aktualisieren</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>Neue Texte übersetzen</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>Fortschritt ansehen</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>Nutzt dein Claude-Code- oder Codex-Abo</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>über Steam · mit „{0}“</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>mit „{0}“</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>Ersetzt die installierte Rev. {0}</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>Noch keine Revision für die neue Spielversion</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>„{0}“</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>für deine Version gemacht</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>In Arbeit · {0} %</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>In Arbeit · {0} % · ≈ {1} übrig</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>Pausiert · {0} %</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>Installierte Übersetzung</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>Installiert · inkompatibel mit der neuen Version</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>„{0}“ · {1} · Rev. {2}</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>„{0}“ · Rev. {1}</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>Das Spiel wurde aktualisiert ({0}). Die installierte „{1}“ Rev. {2} ist damit inkompatibel; manche Texte erscheinen evtl. auf Englisch.</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>Sprachausgabe: demnächst</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>Sprachausgabe auf {0} per Text-to-Speech kommt in der nächsten großen Version. Textübersetzung funktioniert schon heute.</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>Texturen: demnächst</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>Text in Bildern übersetzen (Schilder, Menüs, Karten) kommt später. Textübersetzung funktioniert schon heute.</value>
+  </data>
+  <data name="Game_Packs_Count_One" xml:space="preserve">
+    <value>{1}: {0} Übersetzung</value>
+  </data>
+  <data name="Game_Packs_Count_Other" xml:space="preserve">
+    <value>{1}: {0} Übersetzungen</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>Noch keine Übersetzung auf {0}</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>Für dieses Spiel hat noch niemand eine geteilt. Du kannst sie mit deinem KI-Agenten erstellen und mit anderen Spielern teilen.</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>Mit KI erstellen</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>Die Übersetzungsliste ist noch nicht geladen. Übersetzungen erscheinen, sobald der Katalog antwortet.</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>Mit KI erstellen</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>Stimme</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>Texturen</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>bald</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>{0} %</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>Bereiche der Spielseite</value>
+  </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>Lokalisierung</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>Werkzeuge</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>Keine passt dir?</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>Eigene mit KI erstellen</value>
+  </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>Lokalisierung ist für dieses Spiel nicht verfügbar</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>{0} wurde erkannt. Änderungen an Spieldateien können zur Sperre deines Kontos führen, darum installiert und erstellt AI Local Pack keine Übersetzungen für Spiele mit Anti-Cheat.</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>Der Publisher hat gebeten, keine Fan-Übersetzungen für dieses Spiel zu verbreiten, darum installiert und erstellt AI Local Pack keine Übersetzungen dafür.</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>Hältst du das für einen Fehler?</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>Melden</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>Öffnet ein vorausgefülltes Issue im Übersetzungskatalog auf GitHub</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>Übersetzungen in eine andere Sprache zeigen</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>Sprachen suchen</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>Übersetzungen für dieses Spiel</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>Keine Sprache passt zur Suche.</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>Übersetzungen sortieren</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>Status, Bewertung</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>Neueste</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>Abdeckung</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>Katalog</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>Übersetzungen</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>kompatibel</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>wohl kompatibel</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>inkompatibel</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>prüfe…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>nicht geprüft</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>Installiert</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>Rev. {0} · Rev. {1} verfügbar</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>Likes in GitHub Discussions</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>Rev. {0}</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>Kompatibel mit deiner Version</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>Wahrscheinlich kompatibel</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>Inkompatibel mit deiner Version</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>Prüfe Kompatibilität…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>Lese das Manifest der Übersetzung und vergleiche die Dateien, die sie ändert, mit deiner Kopie.</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>Details der Übersetzung nicht lesbar</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>Der Katalog hat nicht geantwortet. Prüfe die Verbindung und versuch es erneut.</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>Der Katalog hat kein Manifest für diese Übersetzung. Vielleicht wurde sie entfernt, seit die Liste gespeichert wurde.</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>Das Manifest der Übersetzung im Katalog ist beschädigt, daher kann die Übersetzung weder geprüft noch installiert werden.</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>Die Übersetzung hat ein neueres Format. Aktualisiere die App, um sie zu installieren.</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>Für Build {0} gemacht – den hast du.</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>Alle Dateien, die sie ändert ({0}), passen zu deiner Kopie.</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>Für Build {0} gemacht, du hast {1}. Geänderte Dateien: {2} von {3}; vom Update hinzugefügte Texte bleiben unübersetzt.</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>Geänderte Dateien seit der Version, für die sie gemacht wurde: {0} von {1}; vom Update hinzugefügte Texte bleiben unübersetzt.</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>Diese Übersetzung ist für ein anderes Spiel.</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>Der Spielordner ist nicht erreichbar. Schließ das Laufwerk an und versuch es erneut.</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>Dateien, die sie ändert, fehlen im Spielordner ({0}), z. B. {1}.</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>{0} im Spielordner ist nicht lesbar.</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>Ein Binärpatch braucht genau die Dateien, aus denen er erstellt wurde; geänderte Dateien: {0} von {1}.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>Die Übersetzung braucht das Toolkit-Werkzeug „{0}“, das diese App nicht hat. Aktualisiere die App.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>Die Übersetzung braucht „{0}“ {1}, neuer als in dieser App. Aktualisiere die App.</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>Erstellt mit</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>Abdeckung</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>Berichte</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>Aktualisiert</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>Schriften</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>Benötigt</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>Revisionen</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>Von Hand</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>{0} % der Texte</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>funktioniert bei {0} · nicht bei {1}</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0} (vom offiziellen Release geladen)</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>Rev. {0} · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>Rev. {0} · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>Installieren</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>Installiert</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>Installieren ist nicht möglich. Du kannst stattdessen die fehlenden Texte mit KI übersetzen.</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>Installieren ist möglich, sobald der Katalog erreichbar ist.</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>Ersetzt die installierte „{0}“.</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>Mit KI übersetzen</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>Bewertungen auf GitHub</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>Öffnet die Discussion der Übersetzung im Browser</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>Katalog nicht erreichbar. Gezeigt wird die Liste vom {0}; Installieren ist erst wieder online möglich.</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>In anderen Sprachen verfügbar:</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>Vorherige Übersetzung „{0}“ Rev. {1} deinstalliert.</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>Kompatibilität mit deinen Dateien: {0}.</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>Übersetzung Rev. {0} aus dem Cache genommen.</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>Übersetzung Rev. {0} heruntergeladen: {1} Bytes.</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>Originaldateien wiederhergestellt: {0}; hinzugefügte Dateien entfernt: {1}.</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>Behalten (seit der Installation geändert): {0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>Spieldateien neu erstellt: {0}; Texte angewendet: {1}.</value>
+  </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>Das Spiel bietet selbst kein {1}: Die Übersetzung ersetzt seine Texte auf {0}. Wähle {0} in den Spieleinstellungen.</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>In dieser Spielversion nicht gefundene Texte: {0}.</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>Dateien ersetzt: {0}; Dateien hinzugefügt: {1}.</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>Abgebrochen: {0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>Die Spieldateien wurden aus der Sicherung wiederhergestellt.</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>Wiederherstellen der Spieldateien fehlgeschlagen; die App versucht es beim nächsten Start erneut.</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>Installiere „{0}“ · Schritt {1} von {2}</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>Wende „{0}“ neu an · Schritt {1} von {2}</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>Deinstalliere „{0}“</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>Übersetzung herunterladen</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>Vorherige Übersetzung deinstallieren</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>Deine Spieldateien prüfen</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>Spieldateien aus den Texten neu erstellen</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>Originaldateien sichern</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>Neue Dateien schreiben</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>Überprüfen</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>Originaldateien wiederherstellen</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>Eine andere Installation oder Deinstallation läuft. Warte, bis sie fertig ist, und versuch es erneut.</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>Installieren ist für dieses Spiel nicht möglich (Anti-Cheat, oder das Studio hat darum gebeten).</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>Die Übersetzung ist nicht mehr in der Liste des Katalogs.</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>Übersetzung konnte nicht geladen werden: keine Verbindung zum Katalog.</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>Übersetzung konnte nicht geladen werden: Der Katalog hat nicht rechtzeitig geantwortet.</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>Übersetzung konnte nicht geladen werden: Der Katalog hat mit einem Fehler geantwortet.</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>Die Dateien der Übersetzung sind nicht mehr im Katalog.</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>Die Übersetzung braucht eine neuere Version von AI Local Pack. Aktualisiere die App.</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>Der Download war beschädigt (Hash-Prüfung fehlgeschlagen) und wurde gelöscht.</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>Download konnte nicht gespeichert werden: In den Cache-Ordner kann nicht geschrieben werden.</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>Die Übersetzung im Katalog ist beschädigt.</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>Die Übersetzung passt nicht zu deiner Spielversion. {0}</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>Die Texttabelle der Übersetzung ist nicht lesbar.</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>{0} konnte nicht aus den Texten neu erstellt werden: Die Spieldatei ist nicht lesbar oder hat ein unerwartetes Format.</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen. Details stehen im Log.</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>Das Spiel läuft. Schließ es und versuch es erneut.</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} wird verwendet; das Spiel scheint zu laufen. Schließ es und versuch es erneut.</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>Nicht genug freier Speicher auf dem Laufwerk des Spiels.</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>Keine Berechtigung, {0} zu ändern.</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} ist schreibgeschützt.</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>Der Spielordner ist nicht erreichbar (Laufwerk getrennt oder Ordner verschoben).</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>Für dieses Spiel ist bereits eine Übersetzung installiert.</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>Für dieses Spiel ist keine Übersetzung installiert.</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>Eine frühere Installation wurde unterbrochen und konnte noch nicht abgeschlossen werden. Starte die App neu, um sie abzuschließen.</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>{0} hatte nach dem Schreiben nicht den erwarteten Inhalt.</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>Die Sicherung von {0} fehlt oder ist beschädigt.</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>{0} konnte nicht gelesen oder geschrieben werden.</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>Alpha: noch nicht von anderen Spielern bestätigt.</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>Wahrscheinlich kompatibel. {0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>Lädt {0} {1} vom offiziellen Release (Hash geprüft).</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>Ersetzt die installierte „{0}“ Rev. {1}.</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>„{0}“ installieren?</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>Originaldateien werden gesichert; du kannst deinstallieren.</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>Installieren</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>Installiert: „{0}“.</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>Wähle im Spiel {0} als Sprache.</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>Neu angewendet: „{0}“.</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>„{0}“ deinstalliert; Originaldateien wiederhergestellt.</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>Installation fehlgeschlagen; Dateien wiederhergestellt.</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>Neu anwenden fehlgeschlagen; Dateien wiederhergestellt.</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>Installation fehlgeschlagen, und das Wiederherstellen der Dateien auch. Die App versucht es beim nächsten Start erneut.</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>Deinstallation fehlgeschlagen.</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>Spielen</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>Rückgängig</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>„{0}“ konnte nicht installiert werden</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>„{0}“ konnte nicht neu angewendet werden</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>„{0}“ konnte nicht deinstalliert werden</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>Die Spieldateien sind wie vorher.</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>Manche Dateien gehören evtl. noch zur Übersetzung; erneutes Deinstallieren erledigt den Rest.</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>Wiederherstellen mancher Dateien fehlgeschlagen; die App versucht es beim nächsten Start erneut.</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>„{0}“ deinstallieren?</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>Die Originaldateien des Spiels werden aus der Sicherung wiederhergestellt. Die Übersetzung bleibt im Katalog und lässt sich erneut installieren; dein Spiel und deine Spielstände bleiben unberührt.</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>Deinstallieren</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>wird installiert</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>Installiere…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>Deinstallieren (Originale zurück)</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>Installiere · {0} %</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>Deinstalliere…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>Aktionen für installierte Übersetzung</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>Neu anwenden</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>Unter Text zeigen</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>Deinstallieren (Originale zurück)</value>
+  </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>Schriften: Die Schriften des Spiels haben alle Buchstaben der Übersetzung.</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>Schriften: „{0}“ fehlen Buchstaben der Übersetzung (fehlend: {1}; {2}); ersetzt durch {3} (offene Schrift).</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>Schriften: „{0}“ fehlen Buchstaben der Übersetzung (fehlend: {1}; {2}).</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>Auch {0} fehlen einige davon (fehlend: {1}; {2}); sie erscheinen evtl. als Kästchen.</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>Schriften: {0} ist nicht lesbar; unverändert gelassen.</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>Die Übersetzung nennt eine Schrift, die diese App nicht kennt: {0} (ignoriert; aktualisiere die App).</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>Der Schrift des Spiels fehlen Buchstaben dieser Übersetzung, und die offene Schrift {0}, die sie hat, konnte nicht vorbereitet werden.</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>Der Schrift des Spiels fehlen Buchstaben dieser Übersetzung, und die offene Schrift {0}, die sie hat, konnte nicht geladen werden. Prüfe die Verbindung und versuch es erneut.</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0} (mitgeliefert)</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0} (wird beim Installieren geladen)</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>Das Toolkit dieser App unterstützt {0}-Spiele auf diesem System vorerst nicht, daher kann es diese Übersetzung nicht installieren.</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>Benötigte Komponenten laden</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>Diese Übersetzung braucht {0}, das nicht auf der Liste erlaubter Komponenten des Katalogs steht, daher kann sie nicht installiert werden.</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>Diese Übersetzung braucht {0}, und sein offizielles Release hat keinen Build für die Version dieses Spiels ({1}).</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>Diese Übersetzung braucht {0}, aber die App konnte nicht erkennen, für welches System der Build dieses Spiels ist (sein Hauptprogramm ist nicht lesbar).</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>{0} konnte nicht vom offiziellen Release geladen werden. Prüfe die Verbindung und versuch es erneut.</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>Das offizielle Release von {0} liegt nicht mehr an der Adresse auf der Liste des Katalogs.</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>Das geladene {0} passt nicht zum Hash auf der Liste des Katalogs; es wurde gelöscht und nichts installiert.</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>Das Release-Archiv von {0} lässt sich nicht sicher entpacken; nichts wurde installiert.</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>Für das Spiel ist eine andere Version einer Komponente installiert, die diese Übersetzung braucht, oder die Komponente würde die eigenen Dateien der Übersetzung überschreiben.</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1} ({2}): {3} Bytes vom offiziellen Release ({4}) geladen, Hash geprüft.</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1} ({2}): aus dem Cache genommen (Hash beim Herunterladen geprüft).</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>{0} {1} ist für dieses Spiel schon installiert; die Übersetzung nutzt es mit.</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} mit der Übersetzung installiert: {2} Dateien.</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>{0} {1} entfernt: Keine andere Übersetzung nutzt es.</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0} (nicht auf der Liste erlaubter Komponenten des Katalogs)</value>
+  </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>Installierte Übersetzungen prüfen</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>Keine installierten Übersetzungen zu prüfen</value>
+  </data>
+  <data name="Startup_Packs_Done_One" xml:space="preserve">
+    <value>{0} Übersetzung intakt</value>
+  </data>
+  <data name="Startup_Packs_Done_Other" xml:space="preserve">
+    <value>{0} Übersetzungen intakt</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>Nach einem Spiel-Update neu angewendet: {0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>Ein Spiel-Update hat die Übersetzung beschädigt: {0}</value>
+  </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>KI-Übersetzungen prüfen</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>Keine KI-Übersetzungen</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>Unterbrochen, während die App geschlossen war: {0}. Auf der Spielseite fortsetzen</value>
+  </data>
+  <data name="Startup_Jobs_Done_One" xml:space="preserve">
+    <value>{0} KI-Übersetzung in Arbeit</value>
+  </data>
+  <data name="Startup_Jobs_Done_Other" xml:space="preserve">
+    <value>{0} KI-Übersetzungen in Arbeit</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>Neu anwenden</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>Schreibt „{0}“ Rev. {1} erneut aus deinen Dateien</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>Installiert · nach dem Spiel-Update nicht angewendet</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>Das Spiel-Update hat die Originaldateien zurückgebracht: „{0}“ Rev. {1} passt noch, ist aber nicht angewendet, daher zeigt das Spiel seinen Originaltext.</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>Das Spiel-Update hat die Originaldateien zurückgebracht, und das Neuanwenden von „{0}“ Rev. {1} ist fehlgeschlagen. {2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>Neu anwenden</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>Binärpatch auf eine Kopie der Spieldateien anwenden</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>Dateien gepatcht: {0}.</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>Schon gepatcht, unverändert gelassen: {0}.</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>Das Patch-Archiv der Übersetzung ist beschädigt.</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>{0} ist zum Patchen nicht lesbar.</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>Gepatchte Dateien konnten nicht geschrieben werden: In den Cache-Ordner kann nicht geschrieben werden.</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>Der Binärpatch konnte nicht auf {0} angewendet werden: Der Patch ist beschädigt oder auf eine Art erstellt, die diese App nicht lesen kann.</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>Aktivität</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>Alle gelesen</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>Benachrichtigungseinstellungen</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>Bei geschlossenem Fenster kommen Ereignisse als Systembenachrichtigungen.</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>Deine Entscheidung nötig</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>Läuft</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>Heute</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>Gestern</value>
+  </data>
+  <data name="Activity_Day_New_One" xml:space="preserve">
+    <value>{0} neu</value>
+  </data>
+  <data name="Activity_Day_New_Other" xml:space="preserve">
+    <value>{0} neu</value>
+  </data>
+  <data name="Activity_ShowMore_One" xml:space="preserve">
+    <value>{0} weitere zeigen</value>
+  </data>
+  <data name="Activity_ShowMore_Other" xml:space="preserve">
+    <value>{0} weitere zeigen</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>Alles ruhig</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>Installationen, mit KI erstellte Übersetzungen, Veröffentlichungen und automatisches Neuanwenden nach Spiel-Updates erscheinen hier.</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>Später entscheiden: in den Verlauf</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>Ausblenden</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>AI Local Pack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>Deine Entscheidung nötig</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>Erledigt</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · {1} %</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>„{0}“ installiert</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>„{0}“ deinstalliert; Originaldateien wiederhergestellt</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>„{0}“ neu angewendet</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>„{0}“ nach dem Spiel-Update neu angewendet</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>„{0}“ konnte nicht installiert werden</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>„{0}“ konnte nicht deinstalliert werden</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>„{0}“ konnte nicht neu angewendet werden</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>Spiel aktualisiert; Neuanwenden von „{0}“ fehlgeschlagen</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>Spiel aktualisiert; „{0}“ Rev. {1} ist jetzt inkompatibel</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>Spiel aktualisiert; „{0}“ ist nicht angewendet</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>Wiederherstellen mancher Dateien fehlgeschlagen; die App versucht es beim nächsten Start erneut.</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>Revision {0} der Übersetzung ist verfügbar.</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>Noch keine neuere Revision: Übersetze die neuen Texte mit KI.</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>Das Spiel hat seine Originaldateien zurückgebracht. Die Übersetzung passt noch zu dieser Version: Wende sie erneut an.</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>Neu anwenden</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>Auf Rev. {0} aktualisieren</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>Neue Texte übersetzen</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_One" xml:space="preserve">
+    <value>Aktivität: {0} Entscheidung nötig</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Other" xml:space="preserve">
+    <value>Aktivität: {0} Entscheidungen nötig</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>Aktivität: {0}</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>AI Local Pack öffnen</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>Nach Spiel-Updates suchen</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>Agenten braucht es nur, um neue Übersetzungen mit KI zu erstellen; zum Installieren nie. Sie laufen über dein eigenes Abo: Das Projekt bezahlt keine KI.</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>Agenten</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>KI-Agent</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai installieren anmelden abmelden login abo update aktualisieren sign in subscription</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>Prüfe…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>Nicht installiert</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>Installiere · {0} %</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>Aktualisiere auf {0} · {1} %</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>Version {0} ist zu alt</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>Installiert · nicht angemeldet</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>Sitzung abgelaufen</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>Anmeldung nicht geprüft</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>Warte auf Anmeldung</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>Bereit · angemeldet</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>Von AI Local Pack installiert</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>Auf deinem System gefunden: {0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>angemeldet als {0}</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>Lädt den offiziellen Build von Anthropic{0} in den Ordner der App und prüft seine Signatur. Kein Node.js, keine Adminrechte.</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>Lädt den offiziellen Build von OpenAI{0} in den Ordner der App und prüft seinen Hash gegen die Prüfsummen des Releases. Kein Node.js, keine Adminrechte.</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>Suche das offizielle Release und prüfe, was dafür bürgt…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>Lade von {0}…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>Hash geprüft, wird eingerichtet…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>AI Local Pack braucht Version {0} oder neuer. Aktualisiere die Kopie der App.</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>AI Local Pack braucht Version {0} oder neuer. Aktualisiere deine Kopie so, wie du sie installiert hast, und prüfe dann erneut.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>Melde dich mit deinem Claude-Abo an. Der eigene Login von Claude Code öffnet sich im Browser; AI Local Pack sieht das Token nie.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>Melde dich mit deinem ChatGPT-Abo an. Der eigene Login von Codex öffnet sich im Browser; AI Local Pack sieht das Token nie.</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>Anmeldung konnte nicht geprüft werden: {0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>Schließ die Anmeldung im Browserfenster ab, das {0} geöffnet hat.</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>Installieren</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>Auf {0} aktualisieren</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>Erneut prüfen</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>{0} konnte nicht installiert werden: {1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>{0} nicht erreichbar. Prüfe die Verbindung und versuch es erneut; der Download geht dort weiter, wo er stoppte.</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>Der Server von {0} hat mit einem Fehler geantwortet. Versuch es später erneut.</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>{0} hat keinen offiziellen Build für dieses System.</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>Der Download hat die Signatur- oder Hash-Prüfung nicht bestanden und wurde gelöscht. Nichts wurde installiert.</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>In den Ordner der App kann nicht geschrieben werden: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>Eine andere Installation von {0} läuft.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>Die Anmeldung wurde ohne Erfolg beendet. Versuch es erneut.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>Die Anmeldung wurde nicht innerhalb von 10 Minuten abgeschlossen und abgebrochen.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>Anmeldung konnte nicht gestartet werden: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>Der Agent meldet sich weiterhin als angemeldet.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>Standard-Agent</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>Im Erstellungsformular vorausgewählt; du kannst pro Spiel wechseln.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>agent erstellung vorausgewählt standard claude codex generation</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>Installiere zuerst einen Agenten und melde dich an</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>Eigener API-Schlüssel oder lokales Modell</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>Für Spieler ohne Claude- oder ChatGPT-Abo.</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>api schlüssel key lokales modell local model ollama</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0} ist abgemeldet</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>Die Sitzung ist abgelaufen. Melde dich erneut an, um die Erstellung zu starten oder fortzusetzen.</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>Vorbereitung</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>Auslesen</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>Glossar</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>Bauen &amp; testen</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>Schritte der Erstellung</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>Übersetzung erstellen in</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>In eine andere Sprache übersetzen</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>Zu übersetzen</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>Agent-Zeit</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>Abo</value>
+  </data>
+  <data name="Gen_Tile_Words_One" xml:space="preserve">
+    <value>Texte · {0} Wort</value>
+  </data>
+  <data name="Gen_Tile_Words_Other" xml:space="preserve">
+    <value>Texte · {0} Wörter</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>grob geschätzt aus Dateigrößen</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>läuft im Hintergrund</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>Tage der Limits eines Einstiegsabos</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>Tage an Nutzungslimits eines Einstiegsabos (Claude Pro, ChatGPT Plus), drei 5-Stunden-Fenster pro Tag</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} Min.</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} Std.</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>Schätze…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>Spielgröße konnte nicht ermittelt werden: {0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>Agent</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>Nicht installiert</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>Nicht angemeldet</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>Lade offiziellen Build · {0} %</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>Schließ die Anmeldung im Browser ab…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>deine Kopie</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>von AI Local Pack installiert</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>Prüfungen</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>Prüfe die Engine des Spiels…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · vom Toolkit unterstützt</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>Unbekannte Engine: Der Agent schreibt seinen eigenen Leser, und die Übersetzung wird ein Binärpatch</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}: auf diesem System nicht vom Toolkit unterstützt, daher schreibt der Agent seinen eigenen Leser (die Übersetzung wird ein Binärpatch)</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}: Das Toolkit kann es nicht lesen, daher schreibt der Agent seinen eigenen Leser (die Übersetzung wird ein Binärpatch)</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}: Das Toolkit konnte das Spiel nicht lesen ({1})</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>Prüfe den Speicherplatz…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>{0} Arbeitskopie</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>{0} Arbeitskopie, geklont: braucht keinen Platz</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · {1} frei</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>Nicht genug Platz: {0} nötig, {1} frei</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} bereit</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} muss eingerichtet werden</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>Wähle einen Agenten</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>Kein Anti-Cheat erkannt</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>Glossar vor dem Übersetzen selbst prüfen</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>Der Agent arbeitet an einer Kopie; deine Spieldateien bleiben unberührt.</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>Erstellung starten</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>Startet…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>Der Spielordner ist nicht verfügbar</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} ist noch nicht bereit</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>Schätze die Größe…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>Die Größe konnte nicht geschätzt werden</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>Das Toolkit konnte die Dateien dieses Spiels nicht lesen</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>Nicht genug Speicherplatz für die Arbeitskopie</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>Erstellung ist für dieses Spiel nicht verfügbar.</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>Für dieses Spiel läuft bereits eine KI-Übersetzung.</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>Ordner für die Erstellung konnte nicht angelegt werden: {0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>Erstellung konnte nicht gestartet werden: {0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>Arbeitskopie anlegen</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>Texte auslesen</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>Glossar erstellen</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>Bauen und testen</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>Wartet auf deine Glossarprüfung</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>Unterbrochen</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>Übersetzung fertig</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>Auf {0} mit {1}</value>
+  </data>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} Min.</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} Std. {1} Min.</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} Std.</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>Schritt wiederholen</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>Glossar prüfen</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>Pausiert: Abo-Limit · {0} %</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>Pausiert: Abo-Limit · weiter um ~{0}</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>Unterbrochen bei {0} %</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>Schritt fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>Wartet auf dich</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>Abo-Limit · weiter um ~{0}</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>Abo-Limit</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>Von dir pausiert</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>Unterbrochen: jederzeit fortsetzbar</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>Ein Schritt ist fehlgeschlagen</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>Das Glossar wartet auf dich</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>Wiederholen</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>Block {0} von {1}</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · ≈ {1} übrig</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>Kopiere das Spiel: Der Agent arbeitet an der Kopie, deine Dateien bleiben unberührt</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>Lese den Text mit dem Toolkit aus</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>Namen, Begriffe und Tonfall, damit das ganze Spiel einheitlich klingt</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>Baue die Spieldateien auf der Kopie neu und starte sie einmal</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>Pausieren</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>Jetzt fortsetzen</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>Schritt wiederholen</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>Weiter zum Übersetzen</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>Gerade übersetzt</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>Zuletzt übersetzt</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>wie Original</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>Leerzeichen</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>Zeilenumbrüche</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>prüfen</value>
+  </data>
+  <data name="Gen_Validator_Count_One" xml:space="preserve">
+    <value>{0} Prüfwarnung</value>
+  </data>
+  <data name="Gen_Validator_Count_Other" xml:space="preserve">
+    <value>{0} Prüfwarnungen</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>Keine Prüfwarnungen</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>Platzhalter, Tags und Längenlimits werden in jedem Block geprüft; Fehler gehen zurück an den Agenten.</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>Zeigen</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>Ausblenden</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>Limit von {0}</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>~{0} % genutzt</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>erreicht</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>Aktuelles 5-Stunden-Fenster, laut Agent</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>Aktuelles 7-Tage-Fenster, laut Agent</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>Aktuelles Nutzungsfenster, laut Agent</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>Wird um ~{0} zurückgesetzt</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} meldet seine Limits nicht; die Erstellung pausiert von selbst, wenn sie aufgebraucht sind.</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>Agent-Aktivität</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>Noch nichts.</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>Prüfe die Übersetzungen</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>Baue die Spieldateien neu</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>Prüfe die Schriften auf neue Buchstaben</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>Starte den Test-Build</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>Speichere deine Übersetzung</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>Schriften: {0} fehlen Buchstaben der Übersetzung; stattdessen wird {1} (OFL) genutzt.</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>Das Limit deines Agent-Abos ist erreicht.</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>Die Erstellung geht um ~{0} automatisch weiter.</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>Die Erstellung geht automatisch weiter, sobald das Limit zurückgesetzt ist.</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>Pausiert.</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>Der Fortschritt ist gespeichert: Setze fort, wann du willst.</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>Die App wurde während der Erstellung geschlossen.</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>Der Fortschritt ist gespeichert: weiter ab Schritt {0}, Block {1} von {2}.</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>Der Fortschritt ist gespeichert: weiter ab Schritt {0}.</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>Schritt {0} ist fehlgeschlagen.</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>Das Glossar ist bereit zur Prüfung</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>Die Übersetzung beginnt, wenn du weitermachst; deine Änderungen werden beim Tippen gespeichert.</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>Der Agent konnte diesen Schritt nicht abschließen. Wiederholen hilft meist; bisherige Übersetzungen bleiben erhalten.</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0} ist abgemeldet. Melde dich unter Einstellungen → KI-Agenten an und wiederhole dann.</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} ist nicht mehr installiert. Installiere es unter Einstellungen → KI-Agenten und wiederhole dann.</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>Das Toolkit konnte die Spieldateien nicht verarbeiten. Der Grund steht in den Details.</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>Die Arbeitskopie des Spiels konnte nicht angelegt werden. Der Grund steht in den Details.</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>Dateien konnten nicht geschrieben werden: Prüfe den freien Speicher und wiederhole dann.</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>Das übersetzte Spiel wurde beim Testlauf mit einem Fehler beendet. Wiederholen baut die Dateien neu; deine Übersetzungen bleiben erhalten.</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>Etwas Unerwartetes ist schiefgelaufen. Das Log steht in den Details.</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>Erstellungs-Log: {0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>Ordner der Erstellung öffnen</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>Erstellung abbrechen?</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>{0} % sind erledigt. Du kannst den Fortschritt behalten und später weitermachen oder die Arbeitskopie löschen und Speicher freigeben.</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>Fortschritt behalten</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>Arbeitskopie löschen</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>Gestoppt. Der Fortschritt bleibt: jederzeit fortsetzbar.</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>Erstellung abgebrochen, Arbeitskopie gelöscht.</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>Die Erstellung läuft in einem anderen Fenster oder Befehl.</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>Erstellung ist für dieses Spiel gesperrt.</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>Der Spielordner ist nicht verfügbar: Schließ das Laufwerk an und versuch es erneut.</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>Die Erstellung ist weg: Sie wurde anderswo beendet oder abgebrochen.</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>Dateien der Erstellung konnten nicht geändert werden: {0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>Fortsetzen nicht möglich: {0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>Erstellung pausiert: Abo-Limit</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>Geht um ~{0} automatisch weiter</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>Geht automatisch weiter, sobald das Limit zurückgesetzt ist</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>Jetzt fortsetzen</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>Erstellung · {0}</value>
+  </data>
+  <data name="Gen_Review_Title" xml:space="preserve">
+    <value>Glossar prüfen</value>
+  </data>
+  <data name="Gen_Review_Subtitle" xml:space="preserve">
+    <value>Namen, Orte und Begriffe, die in jedem Block verwendet werden. Korrigiere sie jetzt.</value>
+  </data>
+  <data name="Gen_Review_Terms_One" xml:space="preserve">
+    <value>{0} Begriff</value>
+  </data>
+  <data name="Gen_Review_Terms_Other" xml:space="preserve">
+    <value>{0} Begriffe</value>
+  </data>
+  <data name="Gen_Review_Tone" xml:space="preserve">
+    <value>Anrede</value>
+  </data>
+  <data name="Gen_Review_Tone_Agent" xml:space="preserve">
+    <value>Wie vom Agenten gewählt</value>
+  </data>
+  <data name="Gen_Review_Tone_Informal" xml:space="preserve">
+    <value>Informell</value>
+  </data>
+  <data name="Gen_Review_Tone_Formal" xml:space="preserve">
+    <value>Formell</value>
+  </data>
+  <data name="Gen_Review_Tone_WithPronoun" xml:space="preserve">
+    <value>{0} („{1}“)</value>
+  </data>
+  <data name="Gen_Review_AgentTone" xml:space="preserve">
+    <value>Ton des Agenten: {0}</value>
+  </data>
+  <data name="Gen_Review_Column_Term" xml:space="preserve">
+    <value>Begriff</value>
+  </data>
+  <data name="Gen_Review_Column_Translation" xml:space="preserve">
+    <value>Übersetzung</value>
+  </data>
+  <data name="Gen_Review_Column_Note" xml:space="preserve">
+    <value>Notiz</value>
+  </data>
+  <data name="Gen_Review_KeepAsIs" xml:space="preserve">
+    <value>unverändert lassen</value>
+  </data>
+  <data name="Gen_Review_Edited" xml:space="preserve">
+    <value>bearbeitet</value>
+  </data>
+  <data name="Gen_Review_Search" xml:space="preserve">
+    <value>Begriffe suchen</value>
+  </data>
+  <data name="Gen_Review_NoMatch" xml:space="preserve">
+    <value>Keine passenden Begriffe.</value>
+  </data>
+  <data name="Gen_Review_Empty" xml:space="preserve">
+    <value>Der Agent hat nur den Ton gespeichert, keine Begriffe.</value>
+  </data>
+  <data name="Gen_Review_Blank" xml:space="preserve">
+    <value>Jeder Begriff braucht eine Übersetzung.</value>
+  </data>
+  <data name="Gen_Review_Loading" xml:space="preserve">
+    <value>Lade das Glossar…</value>
+  </data>
+  <data name="Gen_Review_LoadFailed" xml:space="preserve">
+    <value>Glossar nicht lesbar: {0}</value>
+  </data>
+  <data name="Gen_Review_SaveFailed" xml:space="preserve">
+    <value>Deine Änderung konnte nicht gespeichert werden: {0}</value>
+  </data>
+  <data name="Gen_Action_Regenerate" xml:space="preserve">
+    <value>Neu erstellen</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Title" xml:space="preserve">
+    <value>Glossar neu entwerfen?</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Text" xml:space="preserve">
+    <value>Der Agent entwirft es neu aus den Texten des Spiels; die aktuellen Begriffe werden ersetzt.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_One" xml:space="preserve">
+    <value>Der Agent entwirft es neu aus den Texten des Spiels; die anderen Begriffe werden ersetzt, der {0} von dir geänderte Begriff bleibt.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Other" xml:space="preserve">
+    <value>Der Agent entwirft es neu aus den Texten des Spiels; die anderen Begriffe werden ersetzt, die {0} von dir geänderten Begriffe bleiben.</value>
+  </data>
+  <data name="Activity_Event_GlossaryReview" xml:space="preserve">
+    <value>Glossar bereit zur Prüfung</value>
+  </data>
+  <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
+    <value>Die Übersetzung beginnt, sobald du es geprüft hast.</value>
+  </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>Deine Übersetzung wurde gelöscht oder ist nicht lesbar.</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>Deine Übersetzung aus {0} übernommen.</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>Abdeckung</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_One" xml:space="preserve">
+    <value>{0} Text bleibt unübersetzt</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Other" xml:space="preserve">
+    <value>{0} Texte bleiben unübersetzt</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>Alle Texte sind übersetzt</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>Testlauf</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>Bestanden</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>Das übersetzte Spiel lief {0} s ohne Absturz</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>Übersprungen</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>Im Spielordner wurde kein startbares Programm gefunden</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>Das Spiel ist für ein anderes System gebaut</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>Das Spiel startet nur über Steam</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>Das System hat das Spiel nicht gestartet</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>Das Spiel schließt sich sofort, auch unübersetzt (es braucht seinen Store oder seine Datenträger)</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>Testläufe sind ausgeschaltet</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>Schriften</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>Nicht geprüft</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>Das Toolkit kann die Schriften dieser Engine nicht lesen</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>Spielschriften passen</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>Alle Buchstaben der Übersetzung vorhanden</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>{0} eingesetzt</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>{0} fehlen Buchstaben der Übersetzung</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_One" xml:space="preserve">
+    <value>{0} Buchstabe fehlt noch</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Other" xml:space="preserve">
+    <value>{0} Buchstaben fehlen noch</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>Prüfung</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>Keine Warnungen</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>Längen, Platzhalter und Tags sind in Ordnung</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_One" xml:space="preserve">
+    <value>{0} Warnung</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Other" xml:space="preserve">
+    <value>{0} Warnungen</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>Übersetzung fertig</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>Als deine Übersetzung gespeichert unter Text → Meine · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>„{0}“ auf {1}</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_One" xml:space="preserve">
+    <value>Die {0} Warnung zeigen</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Other" xml:space="preserve">
+    <value>Die {0} Warnungen zeigen</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>Warnungen ausblenden</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>Wähle im Spiel {0} als Sprache: Die Übersetzung ersetzt dessen Texte.</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>Erneut spielen</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>Installieren &amp; spielen</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>Verwerfen</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>Unter Text zeigen</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>Neue Übersetzung</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>Die Übersetzung bleibt unter Text → Meine; die Arbeitskopie wird gelöscht und das Formular öffnet sich.</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>Beim Installieren werden die Originaldateien gesichert; du kannst jederzeit deinstallieren.</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>Sieht gut aus? Teile sie mit anderen Spielern.</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>Wird als Alpha im Katalog veröffentlicht; Spiel, Builds, Hashes, Agent und Schriften werden automatisch eingetragen.</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>Nicht jetzt</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>Veröffentlichen</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>Du kannst sie später unter Text → Meine veröffentlichen.</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>Die Übersetzung und ihre Arbeitskopie wurden gelöscht.</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>Die Übersetzung bleibt unter Text → Meine; die Arbeitskopie wurde gelöscht.</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>Übersetzung verwerfen?</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>Deine Übersetzung „{0}“ und die Arbeitskopie werden gelöscht. Das lässt sich nicht rückgängig machen.</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>Die Übersetzung ist installiert: Deinstalliere sie zuerst.</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>Dateien konnten nicht gelöscht werden: {0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>Meine</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>Noch keine Übersetzungen auf {0} im Katalog.</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>Übersetzung auf {0}</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>Wird mit KI erstellt · öffne den Tab „Mit KI erstellen“</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>lokal · nicht veröffentlicht</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>wird erstellt {0} %</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>im Spiel getestet</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>noch nicht ausprobiert</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>lokal · erstellt {0}</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>Im Spiel getestet</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>Du hast das Spiel mit dieser Übersetzung gespielt. Jetzt kannst du sie teilen.</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>Noch nicht im Spiel ausprobiert</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>Installier sie und spiel: Veröffentlichen ist möglich, sobald du sie ausprobiert hast.</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>Testlauf</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>Schriften</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>Prüfung</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>Vor dem Veröffentlichen vergleicht die App sie mit den Übersetzungen im Katalog: Du kannst sie als neue Revision einer davon oder als eigene Übersetzung veröffentlichen.</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>Im Spiel installiert: Deinstalliere sie vor dem Löschen.</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>Probier sie zuerst im Spiel aus: Danach kannst du veröffentlichen.</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>„{0}“ löschen?</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>Deine Übersetzung und die Arbeitskopie, aus der sie entstand, werden gelöscht. Das lässt sich nicht rückgängig machen.</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>Deine Übersetzung „{0}“ wurde gelöscht.</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>Installieren &amp; spielen</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>Deine Übersetzung · {0} % der Texte · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>Test bestanden</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>nicht getestet</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>„{0}“ · deine Übersetzung</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>Deine Übersetzung ist fertig</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>Deine Übersetzung · {0} % der Texte</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>Deine Übersetzung · {0}</value>
+  </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>Neue Texte übersetzen in</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>Basiert auf der installierten „{0}“ Rev. {1}: Deren Übersetzungen bleiben, nur neue und geänderte Texte gehen an den Agenten.</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>Neu: {0} · Geändert: {1} · Behalten: {2} · Entfernt: {3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>Die installierte „{0}“ Rev. {1} ist nicht lesbar: {2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>Revision {0}, ein Update von Rev. {1} · Neu: {2} · Geändert: {3} · Entfernt: {4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>Das Spiel wurde aktualisiert ({0}). Die installierte „{1}“ Rev. {2} wurde für eine frühere Version gemacht: Vom Update hinzugefügte oder geänderte Texte erscheinen unübersetzt.</value>
+  </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Windows-Anmeldeinformationsverwaltung</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>macOS-Schlüsselbund</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>Systemschlüsselbund (Secret Service)</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>Entwickler-Secrets-Datei</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>Arbeitsspeicher</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>Öffne {0} im Browser</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>Gib diesen Code ein und genehmige ailocalpack</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>Frage GitHub nach einem Code…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>Warte auf deine Genehmigung im Browser…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>Kopiert</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>Browser öffnen</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>GitHub nicht erreichbar. Prüfe die Verbindung und versuch es erneut.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub hat die Anmeldung abgelehnt: {0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>Der Code ist abgelaufen, bevor er genehmigt wurde. Versuch es erneut, um einen neuen zu bekommen.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>Die Anmeldung wurde auf GitHub abgebrochen.</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub hat {0} genehmigt, aber das Token ließ sich nicht speichern ({1}), daher bleibst du abgemeldet (es wird nie im Klartext gespeichert): {2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>Meine veröffentlichten Übersetzungen</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>GitHub-Konto</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github konto anmelden abmelden login logout token schlüsselbund profil veröffentlichen account keychain publish</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>Nicht angemeldet</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>Nur nötig, um Übersetzungen zu veröffentlichen, zu bewerten oder zu bestätigen. Zum Installieren brauchst du nie ein Konto.</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>Angemeldet · Token im Schlüsselbund des Systems ({0})</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>Abgemeldet: Das Token ist von diesem Computer gelöscht. GitHub führt ailocalpack weiter unter deinen autorisierten Apps, bis du den Zugriff dort widerrufst.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>Zugriff auf GitHub widerrufen</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub akzeptiert den Zugriff der App für {0} nicht mehr, daher hat sich die App abgemeldet. Melde dich erneut an, um Übersetzungen zu veröffentlichen oder zu bewerten.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>GitHub ist gerade nicht erreichbar; das Konto wird wie zuletzt gesehen angezeigt.</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>Token nicht lesbar ({0}): {1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>Mit GitHub anmelden</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>Token konnte nicht gelöscht werden ({0}), daher bist du noch angemeldet: {1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>Meine veröffentlichten Übersetzungen</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>veröffentlichte übersetzungen pull request pr discussion verifiziert alpha published packs verified</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>Noch nichts veröffentlicht. Hast du eine Übersetzung mit KI erstellt, veröffentliche sie im Tab „Mit KI erstellen“ des Spiels.</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>Melde dich an, um deine veröffentlichten Übersetzungen zu sehen.</value>
+  </data>
+  <data name="Activity_Event_PackSubmitted" xml:space="preserve">
+    <value>„{0}“ an den Katalog gesendet</value>
+  </data>
+  <data name="Activity_Event_PublishFailed" xml:space="preserve">
+    <value>„{0}“ konnte nicht veröffentlicht werden</value>
+  </data>
+  <data name="Publish_SignIn_Title" xml:space="preserve">
+    <value>Im ailocalpack-Katalog veröffentlichen</value>
+  </data>
+  <data name="Publish_SignIn_Intro" xml:space="preserve">
+    <value>Nur beim ersten Mal. Übersetzungen werden als GitHub-Pull-Requests geteilt, also melde dich mit deinem GitHub-Konto an.</value>
+  </data>
+  <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
+    <value>Angemeldet als {0}</value>
+  </data>
+  <data name="Publish_SignIn_SignInButton" xml:space="preserve">
+    <value>Mit GitHub anmelden</value>
+  </data>
+  <data name="Publish_SignIn_License" xml:space="preserve">
+    <value>Ich veröffentliche diese Übersetzung unter CC BY-SA 4.0</value>
+  </data>
+  <data name="Publish_SignIn_LicenseText" xml:space="preserve">
+    <value>Jeder darf sie mit Namensnennung nutzen und bearbeiten. Geteilt werden nur Übersetzungen und Rezepte, nie Originaltext oder Spieldateien.</value>
+  </data>
+  <data name="Publish_SignIn_HintWaiting" xml:space="preserve">
+    <value>Warte auf GitHub…</value>
+  </data>
+  <data name="Publish_SignIn_HintSignIn" xml:space="preserve">
+    <value>Melde dich mit GitHub an, um fortzufahren</value>
+  </data>
+  <data name="Publish_SignIn_HintLicense" xml:space="preserve">
+    <value>Akzeptiere die Lizenz, um fortzufahren</value>
+  </data>
+  <data name="Publish_Continue" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Publish_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Publish_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Publish_Similar_Title" xml:space="preserve">
+    <value>Eine Übersetzung auf {0} gibt es schon</value>
+  </data>
+  <data name="Publish_Similar_Intro" xml:space="preserve">
+    <value>Lieber die vorhandene verbessern, statt ein Beinahe-Duplikat hinzuzufügen?</value>
+  </data>
+  <data name="Publish_Similar_Existing" xml:space="preserve">
+    <value>„{0}“ von {1} · Rev. {2}</value>
+  </data>
+  <data name="Publish_Similar_Coverage" xml:space="preserve">
+    <value>{0} % Abdeckung</value>
+  </data>
+  <data name="Publish_Similar_Build" xml:space="preserve">
+    <value>für Build {0} gemacht</value>
+  </data>
+  <data name="Publish_Similar_Base" xml:space="preserve">
+    <value>Deine Übersetzung ist ein Update davon</value>
+  </data>
+  <data name="Publish_Similar_Recommended" xml:space="preserve">
+    <value>Empfohlen</value>
+  </data>
+  <data name="Publish_Similar_RevisionTitle" xml:space="preserve">
+    <value>Neue Revision von „{0}“ (Rev. {1})</value>
+  </data>
+  <data name="Publish_Similar_RevisionText" xml:space="preserve">
+    <value>Deren Spieler bekommen deine Version als Update. {0} bleibt Autor, du wirst für Rev. {1} genannt. Der Status beginnt wieder bei Alpha.</value>
+  </data>
+  <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
+    <value>Eine eigene Übersetzung</value>
+  </data>
+  <data name="Publish_Similar_SeparateText" xml:space="preserve">
+    <value>„{0}“ erscheint neben „{1}“; die Spieler wählen. Nimm das, wenn deine Übersetzung bewusst anders ist (Ton, Begriffe).</value>
+  </data>
+  <data name="Publish_Similar_Choice" xml:space="preserve">
+    <value>Wie veröffentlichen</value>
+  </data>
+  <data name="Publish_Again" xml:space="preserve">
+    <value>Erneut veröffentlichen</value>
+  </data>
+  <data name="Publish_Step_Fork" xml:space="preserve">
+    <value>Katalog forken</value>
+  </data>
+  <data name="Publish_Step_Commit" xml:space="preserve">
+    <value>Übersetzung committen</value>
+  </data>
+  <data name="Publish_Step_PullRequest" xml:space="preserve">
+    <value>Pull-Request öffnen</value>
+  </data>
+  <data name="Publish_Step_Account" xml:space="preserve">
+    <value>Prüfe dein GitHub-Konto</value>
+  </data>
+  <data name="Publish_Doing_Fork" xml:space="preserve">
+    <value>Forken des Katalogs</value>
+  </data>
+  <data name="Publish_Doing_Commit" xml:space="preserve">
+    <value>Committen der Übersetzung</value>
+  </data>
+  <data name="Publish_Doing_PullRequest" xml:space="preserve">
+    <value>Öffnen des Pull-Requests</value>
+  </data>
+  <data name="Publish_Doing_Account" xml:space="preserve">
+    <value>Prüfen deines Kontos</value>
+  </data>
+  <data name="Publish_Error_NotSignedIn" xml:space="preserve">
+    <value>Melde dich zuerst bei GitHub an: Übersetzungen werden als Pull-Requests von deinem Konto geteilt.</value>
+  </data>
+  <data name="Publish_Error_Keychain" xml:space="preserve">
+    <value>Deine GitHub-Anmeldung ist im Schlüsselbund nicht lesbar; entsperre ihn und veröffentliche erneut.</value>
+  </data>
+  <data name="Publish_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub akzeptiert deine Anmeldung nicht mehr (Zugriff widerrufen oder abgelaufen). Melde dich erneut bei GitHub an.</value>
+  </data>
+  <data name="Publish_Error_Forbidden" xml:space="preserve">
+    <value>GitHub hat beim {0} den Zugriff verweigert. Eine erneute Anmeldung gibt der App den nötigen Zugriff (public_repo).</value>
+  </data>
+  <data name="Publish_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Das Anfragelimit von GitHub für dein Konto ist bis {0} aufgebraucht; veröffentliche danach erneut (nichts geht verloren).</value>
+  </data>
+  <data name="Publish_Error_RateLimited" xml:space="preserve">
+    <value>Das Anfragelimit von GitHub für dein Konto ist vorerst aufgebraucht; veröffentliche in ein paar Minuten erneut (nichts geht verloren).</value>
+  </data>
+  <data name="Publish_Error_NoRegistry" xml:space="preserve">
+    <value>Der Katalog {0} ist nicht auf GitHub (oder mit deinem Konto nicht sichtbar).</value>
+  </data>
+  <data name="Publish_Error_NotFound" xml:space="preserve">
+    <value>GitHub hat beim {0} etwas nicht gefunden; veröffentliche erneut.</value>
+  </data>
+  <data name="Publish_Error_Rejected" xml:space="preserve">
+    <value>GitHub hat die Anfrage beim {0} abgelehnt.</value>
+  </data>
+  <data name="Publish_Error_Conflict" xml:space="preserve">
+    <value>GitHub konnte die Anfrage beim {0} nicht abschließen; veröffentliche gleich erneut.</value>
+  </data>
+  <data name="Publish_Error_Network" xml:space="preserve">
+    <value>GitHub war beim {0} nicht erreichbar; prüfe die Verbindung und veröffentliche erneut: Es geht dort weiter, wo es stoppte.</value>
+  </data>
+  <data name="Publish_Error_Invalid" xml:space="preserve">
+    <value>Der Katalog würde diese Übersetzung ablehnen: {0}</value>
+  </data>
+  <data name="Publish_Error_OptedOut" xml:space="preserve">
+    <value>Der Publisher des Spiels hat gebeten, keine Fan-Übersetzungen zu verbreiten, daher nimmt der Katalog keine Übersetzungen dafür an.</value>
+  </data>
+  <data name="Publish_Error_TargetGone" xml:space="preserve">
+    <value>Die Übersetzung, die du aktualisieren wolltest, ist nicht mehr im Katalog; veröffentliche deine als eigene Übersetzung.</value>
+  </data>
+  <data name="Publish_Error_ForkNotReady" xml:space="preserve">
+    <value>GitHub erstellt noch deine Kopie des Katalogs; veröffentliche in ein paar Minuten erneut.</value>
+  </data>
+  <data name="Publish_Error_Unexpected" xml:space="preserve">
+    <value>Unerwartete Antwort von GitHub beim {0}; veröffentliche erneut.</value>
+  </data>
+  <data name="Publish_Target_Revision" xml:space="preserve">
+    <value>Rev. {0} von „{1}“</value>
+  </data>
+  <data name="Publish_Target_Pack" xml:space="preserve">
+    <value>„{0}“</value>
+  </data>
+  <data name="Publish_Sending_Title" xml:space="preserve">
+    <value>Veröffentliche {0}…</value>
+  </data>
+  <data name="Publish_Checking_Title" xml:space="preserve">
+    <value>PR #{0} geöffnet · CI prüft die Übersetzung</value>
+  </data>
+  <data name="Publish_Checking_Text" xml:space="preserve">
+    <value>Schema, Hashes, keine ausführbaren Dateien, Schriften. Wenn die Prüfungen bestehen, wird sie automatisch als Alpha gemergt; du kannst diese Seite verlassen, der Fortschritt steht unter Aktivität.</value>
+  </data>
+  <data name="Publish_Failed_Title" xml:space="preserve">
+    <value>„{0}“ konnte nicht veröffentlicht werden</value>
+  </data>
+  <data name="Publish_Published_Title" xml:space="preserve">
+    <value>Veröffentlicht: {0} · {1}</value>
+  </data>
+  <data name="Publish_Published_Text" xml:space="preserve">
+    <value>Spieler sehen sie mit einem Alpha-Hinweis. Verifiziert wird sie, sobald {0} andere Spieler bestätigen, dass sie funktioniert.</value>
+  </data>
+  <data name="Publish_Published_VerifiedText" xml:space="preserve">
+    <value>Spieler haben bestätigt, dass sie funktioniert: Die Übersetzung ist verifiziert.</value>
+  </data>
+  <data name="Publish_Meter" xml:space="preserve">
+    <value>{0} von {1} Spielern haben „Funktioniert“ bestätigt</value>
+  </data>
+  <data name="Publish_CopyLink" xml:space="preserve">
+    <value>Link kopieren</value>
+  </data>
+  <data name="Publish_Discussion" xml:space="preserve">
+    <value>Discussion</value>
+  </data>
+  <data name="Publish_OpenPr" xml:space="preserve">
+    <value>PR öffnen</value>
+  </data>
+  <data name="Publish_Toast_LinkCopied" xml:space="preserve">
+    <value>Link kopiert</value>
+  </data>
+  <data name="Publish_Toast_Sent" xml:space="preserve">
+    <value>{0} gesendet: PR #{1} geöffnet, CI prüft die Übersetzung.</value>
+  </data>
+  <data name="Publish_Toast_Failed" xml:space="preserve">
+    <value>{0} konnte nicht veröffentlicht werden.</value>
+  </data>
+  <data name="Publish_Row_Sending" xml:space="preserve">
+    <value>lokal · wird veröffentlicht…</value>
+  </data>
+  <data name="Publish_Row_Checking" xml:space="preserve">
+    <value>PR #{0} · CI läuft</value>
+  </data>
+  <data name="Publish_Row_Published" xml:space="preserve">
+    <value>veröffentlicht · {0} · Rev. {1}</value>
+  </data>
+  <data name="Publish_Row_Failed" xml:space="preserve">
+    <value>lokal · nicht veröffentlicht (letzter Versuch fehlgeschlagen)</value>
+  </data>
+  <data name="Publish_Similar_Builds_One" xml:space="preserve">
+    <value>für {0} Build gemacht</value>
+  </data>
+  <data name="Publish_Similar_Builds_Other" xml:space="preserve">
+    <value>für {0} Builds gemacht</value>
+  </data>
+  <data name="Publish_Resubmitted_Detail" xml:space="preserve">
+    <value>Korrektur an PR #{0} gepusht · CI prüft die Übersetzung erneut</value>
+  </data>
+  <data name="Publish_Toast_Resubmitted" xml:space="preserve">
+    <value>{0} erneut gesendet: Die Korrektur ist in PR #{1}, CI prüft die Übersetzung erneut.</value>
+  </data>
+  <data name="Publish_CiFailed_Title" xml:space="preserve">
+    <value>CI hat PR #{0} abgelehnt</value>
+  </data>
+  <data name="Publish_Ci_Scope" xml:space="preserve">
+    <value>Der Pull-Request ändert Dateien außerhalb des Ordners der Übersetzung. „Korrigieren &amp; neu senden“ baut seinen Branch nur mit dieser Übersetzung neu.</value>
+  </data>
+  <data name="Publish_Ci_Status" xml:space="preserve">
+    <value>Das Manifest ist nicht als Alpha markiert ({0}). „Korrigieren &amp; neu senden“ sendet es erneut als Alpha.</value>
+  </data>
+  <data name="Publish_Ci_Patch" xml:space="preserve">
+    <value>Das Patch-Archiv in deinem Fork fehlt oder passt nicht zum Manifest ({0}). „Korrigieren &amp; neu senden“ lädt es erneut hoch.</value>
+  </data>
+  <data name="Publish_Ci_Pack" xml:space="preserve">
+    <value>Die Prüfungen des Katalogs lehnen die Übersetzung ab: {0}. „Korrigieren &amp; neu senden“ prüft sie zuerst hier und sendet sie erneut; findet die App keinen Fehler, aktualisiere die App.</value>
+  </data>
+  <data name="Publish_Ci_Registry" xml:space="preserve">
+    <value>Eine Prüfung des Katalogs selbst ist fehlgeschlagen, nicht deiner Übersetzung ({0}). „Korrigieren &amp; neu senden“ führt die Prüfungen erneut aus.</value>
+  </data>
+  <data name="Publish_Ci_Unknown" xml:space="preserve">
+    <value>CI ist ohne Angabe von Gründen fehlgeschlagen. „Korrigieren &amp; neu senden“ führt die Prüfungen erneut aus; „PR öffnen“ zeigt das Log.</value>
+  </data>
+  <data name="Publish_Resubmit" xml:space="preserve">
+    <value>Korrigieren &amp; neu senden</value>
+  </data>
+  <data name="Publish_Merged_Title" xml:space="preserve">
+    <value>PR #{0} gemergt: {1} ist als Alpha im Katalog</value>
+  </data>
+  <data name="Publish_Merged_Text" xml:space="preserve">
+    <value>Die Übersetzungsliste aktualisiert sich in wenigen Minuten; dann sieht jeder Spieler sie.</value>
+  </data>
+  <data name="Publish_Closed_Title" xml:space="preserve">
+    <value>PR #{0} wurde ohne Merge geschlossen</value>
+  </data>
+  <data name="Publish_Closed_Text" xml:space="preserve">
+    <value>„PR öffnen“ zeigt den Grund. „Erneut veröffentlichen“ öffnet einen neuen Pull-Request.</value>
+  </data>
+  <data name="Publish_Row_CiFailed" xml:space="preserve">
+    <value>PR #{0} · CI fehlgeschlagen</value>
+  </data>
+  <data name="Publish_Row_Merged" xml:space="preserve">
+    <value>PR #{0} gemergt · Alpha</value>
+  </data>
+  <data name="Publish_Row_Closed" xml:space="preserve">
+    <value>PR #{0} geschlossen</value>
+  </data>
+  <data name="Activity_Event_PullRequestFailed" xml:space="preserve">
+    <value>Katalog-CI hat PR #{2} von „{0}“ abgelehnt</value>
+  </data>
+  <data name="Activity_Event_PackMerged" xml:space="preserve">
+    <value>PR #{2} gemergt: „{0}“ ist als Alpha veröffentlicht</value>
+  </data>
+  <data name="Activity_Event_PullRequestClosed" xml:space="preserve">
+    <value>PR #{2} von „{0}“ wurde ohne Merge geschlossen</value>
+  </data>
+  <data name="Activity_Event_PackVerified" xml:space="preserve">
+    <value>„{0}“ ist verifiziert: Spieler haben bestätigt, dass sie funktioniert</value>
+  </data>
+  <data name="Activity_Detail_PackMerged" xml:space="preserve">
+    <value>Alle Spieler sehen sie, sobald sich die Übersetzungsliste aktualisiert.</value>
+  </data>
+  <data name="Activity_Action_OpenPr" xml:space="preserve">
+    <value>PR auf GitHub</value>
+  </data>
+  <data name="Settings_PublishedPack_Meta" xml:space="preserve">
+    <value>{0} · {1} · Rev. {2}</value>
+  </data>
+  <data name="Settings_PublishedPack_Confirmed" xml:space="preserve">
+    <value>Alpha · {0}/{1} bestätigt</value>
+  </data>
+  <data name="Settings_PublishedPack_Likes" xml:space="preserve">
+    <value>{0} Likes</value>
+  </data>
+  <data name="Settings_PublishedPack_Pr" xml:space="preserve">
+    <value>PR</value>
+  </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>Bewerten</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>Deine Bewertung</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>Like</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>Geliked</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>Funktioniert</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>Funktioniert nicht</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>Was funktioniert, was nicht? (optional)</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>„Funktioniert“ / „Funktioniert nicht“ geht unter deinem Konto in die GitHub-Discussion der Übersetzung, mit dem Build deines Spiels und deinem Kommentar.</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>Sende an GitHub…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>Du hast am {2} „{0}“ für Rev. {1} gemeldet. Erneutes Senden ersetzt deinen Bericht.</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>Du bist bei dieser Übersetzung als Mitwirkender genannt, daher kannst du nicht bestätigen, dass sie funktioniert: Das tun andere Spieler.</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>Bewerten ist möglich, sobald der Katalog die Discussion dieser Übersetzung auf GitHub anlegt.</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>Wie ist „{0}“? Deine Antwort hilft anderen Spielern.</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>Danke! Dein Bericht wurde an die GitHub-Discussion der Übersetzung gesendet.</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>Details ergänzen</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>Melde dich bei GitHub an, um Übersetzungen zu bewerten</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>Likes und Berichte gehen unter deinem Konto in die GitHub-Discussion der Übersetzung. Zum Installieren brauchst du nie ein Konto.</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>Deine Bewertung wird gesendet, sobald GitHub die Anmeldung bestätigt.</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>Melde dich bei GitHub an, um Übersetzungen zu bewerten.</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>Deine GitHub-Anmeldung ist im Schlüsselbund des Systems nicht lesbar. Versuch es erneut oder melde dich unter Einstellungen → GitHub neu an.</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub akzeptiert deine Anmeldung nicht mehr. Melde dich erneut an.</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>Die Discussion der Übersetzung ist nicht mehr auf GitHub.</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>Die Maintainer des Katalogs haben die Discussion der Übersetzung gesperrt: Sie nimmt keine neuen Bewertungen an.</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub hat es abgelehnt: {0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Das Anfragelimit von GitHub ist vorerst aufgebraucht; versuch es nach {0} erneut.</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>Das Anfragelimit von GitHub ist vorerst aufgebraucht; versuch es später erneut.</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>GitHub nicht erreichbar. Prüfe die Verbindung und versuch es erneut.</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>Senden fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>Ein unterbrochenes Verschieben der Sicherungen wurde abgeschlossen</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>speicherplatz festplatte größe frei belegt disk space size</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>Speicherplatz</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>{0} belegt</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>Messe…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>Sicherungen {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>Arbeitskopien {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>Cache {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>Speicherplatz</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>Sicherungen</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>Arbeitskopien der KI-Übersetzung</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>Cache</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>Sicherungen überschriebener Spieldateien</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>sicherung backup originale deinstallieren verschieben ordner speicherort</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>Noch nichts gesichert</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>Verschiebe die Sicherungen… {0} %</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>Speicherort ändern…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>Zum Deinstallieren von Übersetzungen nötig, daher hier nicht löschbar. Eine Sicherung wird entfernt, wenn ihre Übersetzung deinstalliert wird.</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>Wo die Sicherungen liegen sollen</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>Sicherungen verschieben?</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>Die Sicherungen ({1}) kommen nach {0}. Installierte Übersetzungen bleiben installiert und lassen sich weiter deinstallieren; die Spiele bleiben unberührt. Entferne dieses Laufwerk nicht, solange Übersetzungen installiert sind.</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>Verschieben</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>Verschoben. Der alte Ordner {0} konnte noch nicht gelöscht werden; die App versucht es beim nächsten Start erneut.</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>Eine Übersetzung wird gerade installiert oder deinstalliert. Versuch es erneut, wenn das fertig ist.</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>Eine unterbrochene Installation oder Verschiebung muss zuerst abgeschlossen werden. Starte die App neu und versuch es erneut.</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>Die Sicherungen liegen schon in diesem Ordner.</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>Wähle einen Ordner außerhalb des aktuellen Sicherungsordners.</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>{0} enthält schon Dateien. Wähle einen anderen Ordner; nichts wurde verschoben.</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>Dort ist nicht genug Platz für die Sicherungen; nichts wurde verschoben.</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>Die App kann nicht in diesen Ordner schreiben; nichts wurde verschoben.</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>Eine kopierte Datei ließ sich nicht identisch zurücklesen, daher bleiben die Sicherungen, wo sie waren.</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>Eine neuere Version der App hat den Ort der Sicherungen festgelegt; aktualisiere die App, um sie zu verschieben.</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>Die Sicherungen konnten nicht verschoben werden und bleiben, wo sie waren: {0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>Arbeitskopie</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>Zum Löschen Erstellung stoppen</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>Keine. Beim Start einer Erstellung wird eine Kopie der Spieldateien angelegt, damit der Agent den Spielordner nie anfasst.</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>Übrig von einem unterbrochenen Start</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>Wird gerade erstellt</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>Pausiert bis zum Zurücksetzen des Limits</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>Erstellung pausiert</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>Wartet auf die Glossarprüfung</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>Erstellung unterbrochen</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>Erstellung fehlgeschlagen</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>Abgebrochen</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>Arbeitskopie von {0} löschen?</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>Gibt {0} frei. Deine erstellten und installierten Übersetzungen bleiben; das Spiel bleibt unberührt.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>Gibt {0} frei. Der Fortschritt der pausierten Übersetzung geht verloren: Sie lässt sich nicht fortsetzen und würde neu beginnen. Installierte Übersetzungen bleiben; das Spiel bleibt unberührt.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>Für dieses Spiel läuft eine Erstellung. Stoppe sie zuerst.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>Löschen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>Katalogindex und geladene Übersetzungen</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>cache leeren downloads index clear</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}. Wird bei Bedarf neu geladen.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>Leere…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>Geleert: {0} freigegeben.</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>{0} freigegeben. {1} in Benutzung bleibt, bis die App damit fertig ist.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>Eine Übersetzung wird gerade installiert. Versuch es erneut, wenn das fertig ist.</value>
+  </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © Mitwirkende von AI Local Pack</value>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>Stabiler Kanal</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>Kanal: {0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0} (portabel)</value>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0} (Entwicklungs-Build)</value>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>Rechtliches</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>App-Updates</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>update, aktualisieren, upgrade, version, release, neustart, restart, velopack</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>Diese Kopie wurde nicht aus einem Release installiert, daher aktualisiert sie sich nicht selbst.</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>Updates werden im Hintergrund von GitHub Releases geladen.</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>Prüfe GitHub Releases…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>Du hast die neueste Version. Geprüft um {0}.</value>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>Lade {0}… {1} %</value>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>{0} ist geladen und bereit. Es wird auch beim nächsten Start der App eingespielt.</value>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>Starte neu…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>Suche nach Updates fehlgeschlagen: GitHub Releases hat nicht geantwortet. Die App versucht es später erneut.</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>Nach Updates suchen</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>Erneut prüfen</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>Prüfe</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>Neu starten &amp; updaten</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>Starte neu</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>Was ist neu</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>Eine Übersetzung wird gerade installiert. Starte neu, wenn das fertig ist.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>Jetzt neu starten und updaten?</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>Laufendes Erstellen mit KI oder Veröffentlichen wird gestoppt. Eine gestoppte KI-Übersetzung lässt sich nach dem Neustart im Tab „Mit KI erstellen“ fortsetzen.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>Neu starten</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>Quellcode</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>Übersetzungskatalog</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>Problem melden</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA und Entfernung</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>Wie Studios eine Entfernung beantragen können</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>github, quellcode, source, repository, issues, fehler, bug, dmca, takedown, entfernung, opt-out</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>Lizenzen</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>App: Apache-2.0. Inhalte des Katalogs: CC BY-SA 4.0.</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>lizenz, license, apache, creative commons, cc by-sa, drittanbieter, third-party, hinweise, notices, open source</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>Hinweise zu Drittanbietern</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>Haftungsausschluss</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>Community-Übersetzungen stehen in keiner Verbindung zu den Spielestudios und werden nicht von ihnen unterstützt. Sie enthalten nur übersetzten Text und Rezepte; du brauchst deine eigene Kopie des Spiels. Studios können ihre Spiele ausschließen lassen.</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>rechtliches, legal, studios, verbindung, unterstützt, haftung, opt-out</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>Dieser Build enthält keine Drittanbieter-Hinweise. Siehe das Quellcode-Repository.</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} ist bereit zur Installation</value>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>Im Hintergrund geladen. Der Neustart dauert ein paar Sekunden.</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>Jetzt neu starten</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>Nach App-Updates suchen</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>Aus: Diese Kopie wurde nicht aus einem Release installiert</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>{0} gefunden, wird im Hintergrund geladen</value>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>{0} ist bereit: zum Updaten neu starten</value>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>GitHub Releases nicht erreichbar</value>
+  </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>Einführung</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>Willkommen bei AI Local Pack</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>Willkommen</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>Installieren</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>Mit KI erstellen</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>Spiel deine Spiele in deiner Sprache</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack installiert Übersetzungen, die Spieler für Spiele gemacht haben, die du schon besitzt.</value>
+  </data>
+  <data name="Welcome_GamesFound_One" xml:space="preserve">
+    <value>Wir haben {0} Spiel in deiner Bibliothek gefunden.</value>
+  </data>
+  <data name="Welcome_GamesFound_Other" xml:space="preserve">
+    <value>Wir haben {0} Spiele in deiner Bibliothek gefunden.</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>Du kannst sie jederzeit in der Bibliothek oder in den Einstellungen ändern.</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>Gefunden? Ein Klick</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>Öffne ein Spiel, wähle eine Übersetzung und klick auf „Installieren“.</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>Komplett rückgängig zu machen.</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>Die Spieldateien werden vorher gesichert; „Deinstallieren“ stellt sie wieder her.</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>Übersteht Spiel-Updates.</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>Überschreibt Steam sie, stellt die App sie wieder her.</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>Sicher für dein Konto.</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>Spiele mit Anti-Cheat werden nie verändert.</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>Noch keine da? Mach sie mit KI</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>Dein eigener KI-Agent übersetzt das Spiel auf deinem Computer, mit deinem eigenen Abo.</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>Eingerichtet, wenn du es brauchst.</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>Die App installiert den Agenten und meldet ihn an, wenn du zum ersten Mal eine Übersetzung erstellst.</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>Pausiert und macht weiter,</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>wenn das Limit deines Abos aufgebraucht ist.</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>Teile sie. Bewerte, was du spielst</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>Übersetzungen liegen in einem öffentlichen Katalog. Teile deine mit einem Klick; sag nach dem Spielen, ob eine funktioniert.</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 Spieler bestätigen, dass sie funktioniert:</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>Die Übersetzung wird verifiziert.</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>Ein GitHub-Konto</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>nur zum Teilen oder Bewerten. Zum Installieren nie nötig.</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>Übersetze… {0} %</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{0} von {1} Spielern bestätigen, dass sie funktioniert</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>Verifiziert</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>Los geht’s</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>Überspringen</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>Meine Bibliothek öffnen</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>Einführung schließen</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>Hilfe</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>Einführung</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>Ein kurzer Blick aufs Installieren von Übersetzungen, das Erstellen mit KI und das Teilen.</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>tutorial einführung onboarding intro anleitung hilfe erster start guide</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>Erneut zeigen</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>Hallo, Reisender!</value>
+  </data>
+</root>

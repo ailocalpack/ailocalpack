@@ -74,6 +74,21 @@ Every change comes with tests. There is one `tests/AiLocalPack.<Project>.Tests` 
 
 ## App UI translations
 
+The app ships in English, Deutsch, Español, Français, Italiano, 日本語, 한국어, Polski, Português (Brasil), Русский, Türkçe, Українська and 简体中文. The translations were made with an AI agent, so some strings read awkwardly or don't fit; fixes from native speakers are very welcome (the language picker in Settings → General links here).
+
+**Fixing a string** (no build needed for a one-word fix; the GitHub web editor is enough):
+
+1. Find the English text in `src/AiLocalPack.Desktop/Resources/Strings.resx`; its `name` is the key, and the `<comment>` says where it shows.
+2. Change the `<value>` with the same key in `Strings.<lang>.resx` (`de`, `es`, `fr`, `it`, `ja`, `ko`, `pl`, `pt-BR`, `ru`, `tr`, `uk`, `zh-Hans`).
+3. Keep every `{0}`, `{1:N0}`… placeholder (you may move them). Keep names that are never translated: AI Local Pack, Claude Code, Codex, GitHub, Steam, engine names, commands in backticks.
+4. Keep labels short: the app is designed for 1280×800 (Steam Deck). If a button label changes, change the other strings that quote it too.
+5. Players read **translation**, not "pack": a translation of a game into a language.
+6. In the PR, say which screen you checked; a screenshot helps. `dotnet test` (or CI) checks keys, placeholders and plural forms.
+
+For a whole language that reads badly, open an issue first: we'd rather agree on the terminology than review hundreds of single fixes.
+
+**Rules for code changes:**
+
 - No hard-coded user-visible text: strings live in `src/AiLocalPack.Desktop/Resources/Strings.resx` (English) and `Strings.<lang>.resx`. XAML uses `{l:Loc Key}`, code uses `Localizer` with `nameof(Strings.Key)`.
 - A new key goes into **every** locale file in the same PR.
 - Plurals are `Key_One` / `_Few` / `_Many` / `_Other` with exactly the CLDR forms of the language.

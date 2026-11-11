@@ -233,7 +233,7 @@ public sealed class AppStartup
             {
                 var loaded = _settings.Load();
                 // Native names read ICU data (slow the first time), so the name is looked up here, off the UI thread.
-                return (loaded, LanguageNames.Native(UiLanguages.Resolve(loaded.UiLanguage, UiLanguages.Os).TwoLetterISOLanguageName));
+                return (loaded, LanguageNames.Native(UiLanguages.TagOf(UiLanguages.Resolve(loaded.UiLanguage, UiLanguages.Os))));
             });
             _applier.Start();
             var themeKey = settings.Theme switch

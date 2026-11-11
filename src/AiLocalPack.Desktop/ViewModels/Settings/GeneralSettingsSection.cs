@@ -9,7 +9,7 @@ namespace AiLocalPack.Desktop.ViewModels.Settings;
 public sealed class GeneralSettingsSection : SettingsSection
 {
     /// <summary>Where players fix UI translations.</summary>
-    public static Uri TranslationsUri { get; } = new("https://github.com/ailocalpack/ailocalpack/tree/main/src/AiLocalPack.Desktop/Resources");
+    public static Uri TranslationsUri { get; } = new("https://github.com/ailocalpack/ailocalpack/blob/master/CONTRIBUTING.md#app-ui-translations");
 
     public GeneralSettingsSection(SettingsStore store, Localizer localizer, ILogger<GeneralSettingsSection> logger)
         : base(SettingsSectionId.General, "IconSliders", nameof(Strings.Settings_General_Title), nameof(Strings.Settings_General_Description), localizer)

@@ -29,13 +29,26 @@ public sealed class LanguageOptionsTests
     public void Ui_system_option_names_the_language_the_app_will_actually_use()
     {
         // Arrange
-        var os = C("de-DE");
+        var os = C("nl-NL");
 
         // Act
         var options = LanguageOptions.ForUi(English, os);
 
         // Assert
         options[0].Display.Should().Be("System (English)");
+    }
+
+    [Fact]
+    public void Ui_system_option_names_the_supported_variant_of_the_os_language()
+    {
+        // Arrange
+        var os = C("pt-PT");
+
+        // Act
+        var options = LanguageOptions.ForUi(English, os);
+
+        // Assert
+        options[0].Display.Should().Be("System (Português (Brasil))");
     }
 
     [Fact]
@@ -48,7 +61,8 @@ public sealed class LanguageOptionsTests
         var options = LanguageOptions.ForUi(English, os);
 
         // Assert
-        options.Skip(1).Select(o => o.Display).Should().Equal("English", "Русский");
+        options.Skip(1).Select(o => o.Display).Should().StartWith(["Deutsch", "English"]).And.Contain(["Русский", "日本語"])
+            .And.BeInAscendingOrder(LanguageNames.Order);
         options.Skip(1).Select(o => o.Value).Should().BeEquivalentTo(UiLanguages.Supported);
     }
 

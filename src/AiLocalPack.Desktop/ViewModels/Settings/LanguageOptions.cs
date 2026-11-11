@@ -15,7 +15,7 @@ public static class LanguageOptions
     public static IReadOnlyList<ChoiceOption> ForUi(Localizer localizer, CultureInfo os)
     {
         ArgumentNullException.ThrowIfNull(os);
-        var system = LanguageNames.Native(UiLanguages.Resolve(null, os).TwoLetterISOLanguageName);
+        var system = LanguageNames.Native(UiLanguages.TagOf(UiLanguages.Resolve(null, os)));
         return Build(localizer, system, UiLanguages.Supported);
     }
 

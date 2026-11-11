@@ -1,0 +1,3913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Chrome_BackTo" xml:space="preserve">
+    <value>‹ {0}</value>
+  </data>
+  <data name="Chrome_Activity" xml:space="preserve">
+    <value>アクティビティ</value>
+  </data>
+  <data name="Chrome_Settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>ライブラリ</value>
+  </data>
+  <data name="Library_GameCount_Other" xml:space="preserve">
+    <value>ゲーム {0} 本</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>システム（{0}）</value>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>設定を検索</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>「{0}」に一致する設定はありません。</value>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>このセクションは AI Local Pack の今後のバージョンで追加されます。</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>言語、テーマ、バックグラウンド、通知</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>ライブラリ</value>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Steam フォルダーと手動で追加したゲーム</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>AI エージェント</value>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>AI で翻訳を作成するための Claude Code と Codex</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>アカウントと公開した翻訳</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>ストレージ</value>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>バックアップ、作業コピー、キャッシュ</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>バージョン情報</value>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>バージョン、アップデート、ライセンス、法的情報</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>外観</value>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>バックグラウンド</value>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>表示言語</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>最初は AI で翻訳されています。おかしな表現を見つけましたか？</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>GitHub で修正する</value>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>表示言語 インターフェース 言語 翻訳 UI locale translation</value>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>ゲームの翻訳先</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>翻訳を探すときと AI で作成するときの既定の言語です。ゲームページごとに別の言語を選べます。</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>翻訳先 言語 翻訳 日本語化 target language translation locale</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>「システム」は OS のライト／ダーク設定に従います。</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>ダーク ライト モード 色 外観 dark light</value>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>ダーク</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>ライト</value>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>システム起動時に開始し、トレイで実行し続ける</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>ウィンドウを閉じている間もゲームのアップデートを検知できます。</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>トレイ 自動起動 スタートアップ ログイン バックグラウンド tray autostart</value>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>ゲームのアップデート後に翻訳を再適用する</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>ストアのアップデートやファイルの検証で翻訳が消え、ビルドにまだ互換性がある場合は、新しいバックアップを取ってから再インストールします。互換性がない場合は通知します。</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>トレイがオフのため、アプリの起動時のみ行います。</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>代わりに通知が届き、手動で再適用できます。</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>アップデート 再インストール 復元 再適用 update</value>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>判断が必要なとき</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>AI 翻訳の一時停止、ゲームのアップデート後に互換性がなくなった翻訳、再適用の失敗、却下された PR。</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>タスクが完了したとき</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>翻訳のインストールや再適用、AI 翻訳の完了、PR のマージ、アプリのアップデートの準備完了。</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>自分の翻訳へのコミュニティの反応</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>新しいレビュー、「動作する」の報告、翻訳の検証済み化。</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>通知 アラート notifications</value>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>ウィンドウを閉じている間はシステム通知で表示されます。アプリ内ではいずれにしてもすべてアクティビティに表示されます。</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>システム通知にはトレイが必要です（上の「バックグラウンド」）。それまではイベントはアクティビティにのみ表示されます。</value>
+  </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>ゲームを検索</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>並べ替え</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>名前順</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>最近プレイした順</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>フォルダー</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>ゲームフォルダーを追加</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>Steam ライブラリからゲームを探しています…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>Steam ライブラリが見つかりません</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>Steam が見つからないか、ゲームがありません。ゲームフォルダーを手動で追加するか、Steam ライブラリの場所を指定してください。</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>ゲームフォルダーを追加</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>設定 → ライブラリ</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>見つかりません</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>「{0}」に一致するゲームはありません。ライブラリにないゲームですか？フォルダーを追加してください。</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>検索とフィルターをリセット</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>フォルダーを追加</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>手動</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>不明なエンジン</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>フォルダーを利用できません</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0}（ブロック中: {1}）</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>アンチチート</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>ゲームページを開く</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>ゲームフォルダーを開く</value>
+  </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>ライブラリから削除</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>フォルダーをドロップしてゲームを追加</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>ゲームフォルダー、または複数のゲームを含むフォルダー</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>ゲームを追加</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>ステップ {0}/{1}</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>ここにゲームフォルダーをドロップ</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>エンジンを検出し、ゲームファイルを確認します。読み取るだけで、何も変更しません。</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>フォルダーを選択…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>ゲームフォルダーを選択</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>フォルダーをライブラリに直接ドロップすることもできます</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>ゲームフォルダーはどこ？</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>デスクトップのショートカット: 右クリック →「ファイルの場所を開く」。</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>Dock: ゲームを右クリック → オプション → Finder に表示。</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>デスクトップのショートカット: ゲームのパスは .desktop ファイルの Exec 行にあります。</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG、itch.io、Epic: ランチャーに「インストールフォルダーを開く」があります。</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Steam のゲームは追加不要です。自動でライブラリに表示されます。</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>「{0}」とそのサブフォルダーにゲームが見つかりません。</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>ゲームの実行ファイルがあるフォルダーを選んでください。</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>フォルダー「{0}」が存在しないか、開けません。</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>「{0}」は大きすぎて検索できません。もっと絞ったフォルダーを選んでください。</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>「{0}」のファイルを読み取れません。</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>この画像を開けません。PNG か JPEG ファイルを選んでください。</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>「{0}」を分析しています…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>ゲームファイルは読み取るだけで、何も変更しません</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>実行ファイルを探しています</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>エンジンを検出しています</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>ファイルの指紋を計算しています</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>レジストリを検索しています</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0}/{1:N0} ファイル</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>今後のバージョンで対応</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>エンジンを認識できません</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>実行ファイルなし</value>
+  </data>
+  <data name="AddGame_Files_Other" xml:space="preserve">
+    <value>{0} ファイル</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} GB</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>名前を変更</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>カバーを変更</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>別のフォルダー</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>「{0}」にはゲームが 1 本あります（サブフォルダー {1} 内）。</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>翻訳の検索は今後のバージョンで対応します。</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>このゲームのレジストリの翻訳がここに表示されます。ゲームは今すぐ追加できます。</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>エンジンを認識できません。</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>それでも AI で翻訳を作成できます。エージェントがゲームファイルを自分で解析します。エンジンがわかる場合は、詳細で選んでください。</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>このゲームは「{0}」としてすでにライブラリにあります。</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>{0} を検出しました。</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>このゲームには翻訳をインストールも作成もできません。アンチチートによりアカウントが BAN される恐れがあります。ゲームの追加は可能で、ライブラリには利用不可として表示されます。</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>ゲームの詳細を編集</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>エンジン</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>検出</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>未検出</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>メインの実行ファイル</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>カバー</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>画像を選択…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>ゲームのアイコンを使う</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>カバー画像を選択</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>その他／わからない</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>ゲームを追加</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>利用不可として追加</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>ゲームページを開く</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>ゲームを追加</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>「{0}」としてライブラリに追加しました。</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>ゲームを探す</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>「{0}」でゲームを探しています…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>{1} フォルダー中 {0} をスキャン済み</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>最大 3 階層まで</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>ゲーム {0}/{1} を確認中: {2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>停止して表示</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>次に、ゲームを 1 本ずつ詳細を確認して追加します。どのゲームもスキップでき、ライブラリにあるゲームは自動でスキップされます。</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>新たに追加するものはありません</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>検索を停止しました。これまでに見つかったゲームを表示しています。</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>このフォルダーは非常に大きいため、検索を途中で停止しました。残りを見つけるには、もっと絞ったフォルダーを選んでください。</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>これらのゲームは Steam 経由ですでにライブラリにあります。</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>追加を開始</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>実行ファイルなし</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>ランタイムのインストーラー（DirectX、Visual C++…）</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>インストール済みのゲームではなく、ゲームのインストーラー</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>ゲームではなくユーティリティ</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>セーブデータ</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>新規</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>アンチチート</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>ライブラリにあり</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>読み取れません</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>追加済み</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>すべてのゲーム</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>ゲーム {0}/{1}</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>前へ</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>追加</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>追加したゲームはありません</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>スキップしたゲームは、あとで同じフォルダーから追加できます。</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>追加済み</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>利用不可として追加（アンチチート）</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>すでにライブラリにあります</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>スキップ: ファイルを読み取れません</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>ライブラリへ</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Other" xml:space="preserve">
+    <value>ゲームが {0} 本見つかりました · 停止して見つかったものを確認できます</value>
+  </data>
+  <data name="AddGame_Overview_Title_Other" xml:space="preserve">
+    <value>「{1}」でゲームが {0} 本見つかりました</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Other" xml:space="preserve">
+    <value>ゲーム {0} 本を 1 本ずつ</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Other" xml:space="preserve">
+    <value>ゲームのないフォルダー {0} 個をスキップしました</value>
+  </data>
+  <data name="AddGame_Tally_New_Other" xml:space="preserve">
+    <value>新規 {0}</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Other" xml:space="preserve">
+    <value>アンチチートあり {0}</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Other" xml:space="preserve">
+    <value>ライブラリにあり {0}</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Other" xml:space="preserve">
+    <value>読み取り不可 {0}</value>
+  </data>
+  <data name="AddGame_Result_Title_Other" xml:space="preserve">
+    <value>ゲームを {0} 本追加しました</value>
+  </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>手動で追加したゲーム</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>その他のストア</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>ゲームを削除しても AI Local Pack から外れるだけです。ゲームファイルとインストール済みの翻訳はそのまま残ります。</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>再スキャン, スキャン, 更新, steamapps, ライブラリフォルダー, rescan, library folders</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · スキャン中…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>Steam のライブラリフォルダーを読み取っています。</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>最終スキャン: {0}。Steam はアプリを起動するたびにスキャンされます。</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>まだスキャンしていません。</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>Steam が見つかりません</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>Steam を通常とは違う場所にインストールしている場合は、下でライブラリフォルダーを追加してください。</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>再スキャン</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>スキャン中</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Steam ライブラリフォルダー</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · Steam が検出</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · 手動で追加</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>利用できません</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Other" xml:space="preserve">
+    <value>ゲーム {0} 本を非表示</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>Steam ライブラリフォルダーを追加</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>別のドライブのライブラリが見つからなかった場合のみ。</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, ドライブ, ディスク, SD カード, ライブラリ, 追加, drive, sd card</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>Steam ライブラリフォルダーを選択</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>「{0}」は Steam ライブラリではありません。steamapps フォルダーがありません。</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>「{0}」はすでにリストにあります。</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>フォルダーのリストを保存できませんでした。もう一度お試しください。</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>「{0}」を AI Local Pack から削除しますか？</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>そのゲームはライブラリから外れます。フォルダー、ゲーム、インストール済みの翻訳はディスクに残り、Steam も変更されません。フォルダーはあとで再び追加できます。</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>手動で追加したゲーム</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>手動で追加したゲームはありません。ここかライブラリの「ゲームフォルダーを追加」を使うか、フォルダーをウィンドウにドラッグしてください。</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>ゲームフォルダーを追加</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>手動, フォルダー, ゲーム, gog, itch, epic, manual</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>「{0}」を AI Local Pack から削除しますか？</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>ゲームフォルダーとインストール済みの翻訳はディスクに残ります。フォルダーはあとで再び追加できます。</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games、GOG、EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>それまでは、それらのゲームをフォルダーとして追加してください。</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, ストア, galaxy, store</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>近日対応</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>Steam ライブラリを利用できません</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Other" xml:space="preserve">
+    <value>{1}: フォルダーが戻るまでゲーム {0} 本を非表示にしています。インストール済みの翻訳はそのままです。</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Settings_Steam_Folders_Other" xml:space="preserve">
+    <value>フォルダー {0} 個</value>
+  </data>
+  <data name="Chrome_Activity_Checking" xml:space="preserve">
+    <value>アクティビティ: 起動時チェックを実行中</value>
+  </data>
+  <data name="Chrome_CheckingForChanges" xml:space="preserve">
+    <value>変更を確認しています…</value>
+  </data>
+  <data name="Startup_Step_Settings" xml:space="preserve">
+    <value>設定を読み込んでいます</value>
+  </data>
+  <data name="Startup_Step_Catalog" xml:space="preserve">
+    <value>ゲームライブラリを開いています</value>
+  </data>
+  <data name="Startup_Step_Steam" xml:space="preserve">
+    <value>Steam ライブラリをスキャンしています</value>
+  </data>
+  <data name="Startup_Step_Detection" xml:space="preserve">
+    <value>エンジンとアンチチートを検出しています</value>
+  </data>
+  <data name="Startup_Waiting" xml:space="preserve">
+    <value>待機中</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>完了しませんでした。詳細はログにあります</value>
+  </data>
+  <data name="Startup_Summary" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="Startup_Checks_Title" xml:space="preserve">
+    <value>起動時チェック</value>
+  </data>
+  <data name="Startup_Settings_Done" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Startup_Settings_ThemeSystem" xml:space="preserve">
+    <value>システムのテーマ</value>
+  </data>
+  <data name="Startup_Settings_ThemeDark" xml:space="preserve">
+    <value>ダークテーマ</value>
+  </data>
+  <data name="Startup_Settings_ThemeLight" xml:space="preserve">
+    <value>ライトテーマ</value>
+  </data>
+  <data name="Startup_Catalog_Missing" xml:space="preserve">
+    <value>ゲームはまだありません: 初回起動</value>
+  </data>
+  <data name="Startup_Catalog_Corrupted" xml:space="preserve">
+    <value>ゲームリストが破損していました: バックアップを保存し、Steam から再構築しています</value>
+  </data>
+  <data name="Startup_Catalog_Unreadable" xml:space="preserve">
+    <value>ゲームリストを読み取れません: 空の状態で開始し、変更は保存されません</value>
+  </data>
+  <data name="Startup_Steam_NotFound" xml:space="preserve">
+    <value>Steam が見つかりません</value>
+  </data>
+  <data name="Startup_Steam_New" xml:space="preserve">
+    <value>{0} · 新規: {1}</value>
+  </data>
+  <data name="Startup_Steam_More" xml:space="preserve">
+    <value>{0} +{1}</value>
+  </data>
+  <data name="Startup_Detection_None" xml:space="preserve">
+    <value>新しいゲームや更新されたゲームはありません</value>
+  </data>
+  <data name="Startup_Detection_Done_Other" xml:space="preserve">
+    <value>ゲーム {0} 本を確認しました</value>
+  </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>翻訳リストを更新しています</value>
+  </data>
+  <data name="Startup_Index_Done_Other" xml:space="preserve">
+    <value>翻訳 {0} 件</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>オフライン: {0} に保存したリストを表示しています</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>翻訳レジストリに接続できません</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>翻訳リストには新しいバージョンのアプリが必要です</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>翻訳レジストリのアドレスが無効です。詳細はログにあります</value>
+  </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>中断されたインストールを完了しています</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>アプリを閉じないでください</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>インストールを取り消しました: ゲームファイルは元のままです</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>インストールを完了しました</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>アンインストールを完了しました: 元のファイルを復元しました</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>まだ完了できません: 次回起動時に再試行します（詳細はログ）</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>別のインストールを実行中です</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>完了させるものはありません</value>
+  </data>
+  <data name="Splash_Version" xml:space="preserve">
+    <value>バージョン {0}</value>
+  </data>
+  <data name="Splash_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Splash_Details" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Splash_HideDetails" xml:space="preserve">
+    <value>詳細を隠す</value>
+  </data>
+  <data name="Splash_Slow" xml:space="preserve">
+    <value>いつもより時間がかかっています。アプリを閉じないでください: {1} ステップ中 {0} 完了。</value>
+  </data>
+  <data name="Library_CatalogDamaged" xml:space="preserve">
+    <value>保存されたゲームリストが破損していました。Steam のゲームは再検出しましたが、手動で追加したゲームは追加し直す必要があります。古いファイルは {0} として保存しています。</value>
+  </data>
+  <data name="Library_CatalogDamaged_NoBackup" xml:space="preserve">
+    <value>保存されたゲームリストが破損していました。Steam のゲームは再検出しましたが、手動で追加したゲームは追加し直す必要があります。</value>
+  </data>
+  <data name="Library_Banner_Dismiss" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>翻訳あり</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>翻訳なし</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>要アップデート</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>すべて</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>生成中</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>ステータスで絞り込み</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>生成中 · {0}%</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>一時停止 · {0}%</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>利用不可</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>アップデート</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>再開</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>AI で作成</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>開発元が拒否</value>
+  </data>
+  <data name="Library_Card_PackCount_Other" xml:space="preserve">
+    <value>翻訳 {0} 件</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>検証済み</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>アルファ</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>残り約 {0}</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>いいね {0}</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>翻訳先</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>バッジと件数に使う言語です。設定 → 一般でも変更できます。</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>重要な順</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>翻訳レジストリに接続できません。{0} に保存したデータを表示しています。</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>翻訳レジストリに接続できません。応答があり次第、翻訳のステータスを表示します。</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>翻訳レジストリは新しい形式を使っています。現在の翻訳を見るにはアプリをアップデートしてください。</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>アプリに設定された翻訳レジストリのアドレスが無効なため、翻訳のステータスを表示できません。</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>再試行</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>このフィルターに一致するゲームはありません。ライブラリにないゲームですか？フォルダーを追加してください。</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>このフィルターで「{0}」に一致するゲームはありません。ライブラリにないゲームですか？フォルダーを追加してください。</value>
+  </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>エンジン不明</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>手動で追加</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>ビルド {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>ファイルハッシュ {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>ゲームのバージョン: Steam のビルド ID</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Other" xml:space="preserve">
+    <value>ゲームのバージョン: {0} ファイルのハッシュ</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>翻訳をインストール</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>AI で翻訳を作成</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>プレイ</value>
+  </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>起動中…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>実行中</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>{0} から実行中</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>ゲームを起動できませんでした: {0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>ゲームフォルダーにアクセスできません。ドライブを接続するか、フォルダーがまだあるか確認してください。</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>ゲームフォルダーに起動できるプログラムが見つかりません。</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>これは Windows 版です。Linux でプレイするには、Steam に「Steam 以外のゲーム」として追加し、Proton をオンにしてください。</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>これは Windows 版です。このシステムでは動作しません。</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>これは Linux 版です。このシステムでは動作しません。</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>これは macOS 版です。このシステムでは動作しません。</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>リビジョン {0} にアップデート</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>新しい文字列を翻訳</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>進行状況を表示</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>Claude Code または Codex のサブスクリプションを使います</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>Steam 経由 · 「{0}」を使用</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>「{0}」を使用</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>インストール済みのリビジョン {0} を置き換えます</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>新しいゲームバージョン向けのリビジョンはまだありません</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>「{0}」</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>お使いのバージョン向け</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>生成中 · {0}%</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>生成中 · {0}% · 残り約 {1}</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>一時停止 · {0}%</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>インストール済みの翻訳</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>インストール済み · 新しいバージョンと互換性なし</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>「{0}」 · {1} · リビジョン {2}</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>「{0}」 · リビジョン {1}</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>ゲームがアップデートされました（{0}）。インストール済みの「{1}」リビジョン {2} は互換性がなく、一部のテキストが英語で表示される場合があります。</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>音声: 近日対応</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>音声合成による{0}の音声は次のメジャーバージョンで対応します。テキストの翻訳は今すぐ使えます。</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>テクスチャ: 近日対応</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>画像内のテキスト（看板、メニュー、地図）の翻訳は今後対応します。テキストの翻訳は今すぐ使えます。</value>
+  </data>
+  <data name="Game_Packs_Count_Other" xml:space="preserve">
+    <value>{1}: 翻訳 {0} 件</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>{0}への翻訳はまだありません</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>このゲームの翻訳はまだ誰も公開していません。AI エージェントで作成して、ほかのプレイヤーと共有できます。</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>AI で作成</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>翻訳リストがまだ読み込まれていません。レジストリが応答すると翻訳が表示されます。</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>AI で作成</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>音声</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>テクスチャ</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>近日</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>ゲームページのセクション</value>
+  </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>ローカライズ</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>ツール</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>合うものがありませんか？</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>AI で自分で作成</value>
+  </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>このゲームはローカライズを利用できません</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>{0} を検出しました。ゲームファイルを変更するとアカウントが BAN される恐れがあるため、AI Local Pack はアンチチートのあるゲームに翻訳をインストールしたり作成したりしません。</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>パブリッシャーがこのゲームのファン翻訳の配布を望んでいないため、AI Local Pack はこのゲームの翻訳をインストールも作成もしません。</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>間違いだと思いますか？</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>報告</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>GitHub の翻訳レジストリで、入力済みの Issue を開きます</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>別の言語への翻訳を表示</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>言語を検索</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>このゲームの翻訳</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>検索に一致する言語はありません。</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>翻訳を並べ替え</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>ステータス、評価</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>新しい順</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>カバー率</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>レジストリ</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>翻訳</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>互換性あり</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>おそらく互換性あり</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>互換性なし</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>確認中…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>未確認</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>rev {0} · rev {1} あり</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>GitHub ディスカッションのいいね</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>rev {0}</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>お使いのバージョンと互換性あり</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>おそらく互換性あり</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>お使いのバージョンと互換性なし</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>互換性を確認しています…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>翻訳のマニフェストを読み取り、変更されるファイルをお使いのコピーと比較しています。</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>翻訳の詳細を読み取れませんでした</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>レジストリが応答しませんでした。接続を確認して再試行してください。</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>レジストリにこの翻訳のマニフェストがありません。リストの保存後に削除された可能性があります。</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>レジストリにある翻訳のマニフェストが破損しているため、確認もインストールもできません。</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>この翻訳は新しい形式です。インストールするにはアプリをアップデートしてください。</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>再試行</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>お使いのビルド {0} 向けに作られています。</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>変更されるすべてのファイル（{0}）がお使いのコピーと一致します。</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>ビルド {0} 向けですが、お使いのビルドは {1} です。変更されたファイル: {3} 個中 {2} 個。アップデートで追加された文字列は未翻訳のままになります。</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>作成時のバージョンから変更されたファイル: {1} 個中 {0} 個。アップデートで追加された文字列は未翻訳のままになります。</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>この翻訳は別のゲーム用です。</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>ゲームフォルダーにアクセスできません。ドライブを接続して再試行してください。</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>変更対象のファイルがゲームフォルダーにありません（{0}）。例: {1}。</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>ゲームフォルダーの {0} を読み取れません。</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>バイナリパッチには作成元とまったく同じファイルが必要です。変更されたファイル: {1} 個中 {0} 個。</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>ツールキットのツール「{0}」が必要ですが、このアプリにはありません。アプリをアップデートしてください。</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>「{0}」{1} が必要で、このアプリのものより新しいバージョンです。アプリをアップデートしてください。</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>作者</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>作成ツール</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>カバー率</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>報告</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>更新日</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>フォント</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>必要なもの</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>リビジョン</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>手作業</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>文字列の {0}%</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>動作する {0} · 動作しない {1}</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0}（公式リリースからダウンロード）</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>rev {0} · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>rev {0} · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>インストールできません。代わりに、足りない文字列を AI で翻訳できます。</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>レジストリに接続できるとインストールできるようになります。</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>インストール済みの「{0}」を置き換えます。</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>AI で翻訳</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>GitHub のレビュー</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>翻訳のディスカッションをブラウザーで開きます</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>レジストリに接続できません。{0} に保存したリストを表示しています。オンラインに戻るまでインストールできません。</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>ほかの言語で利用可能:</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0}（{1}）</value>
+  </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>以前の翻訳「{0}」リビジョン {1} をアンインストールしました。</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>お使いのファイルとの互換性: {0}。</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>翻訳のリビジョン {0} をキャッシュから取得しました。</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>翻訳のリビジョン {0} をダウンロードしました: {1} バイト。</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>元のファイルを復元: {0}、追加ファイルを削除: {1}。</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>保持（インストール後に変更あり）: {0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>ゲームファイルを再構築: {0}、適用した文字列: {1}。</value>
+  </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>このゲームには{1}がないため、翻訳は{0}のテキストを置き換えます。ゲームの設定で{0}を選んでください。</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>このバージョンのゲームに見つからない文字列: {0}。</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>置き換えたファイル: {0}、追加したファイル: {1}。</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>停止: {0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>ゲームファイルをバックアップから復元しました。</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>ゲームファイルの復元に失敗しました。次回起動時にアプリが再試行します。</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>「{0}」をインストール中 · ステップ {1}/{2}</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>「{0}」を再適用中 · ステップ {1}/{2}</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>「{0}」をアンインストール中</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>翻訳をダウンロード</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>以前の翻訳をアンインストール</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>ゲームファイルを確認</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>文字列からゲームファイルを再構築</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>元のファイルをバックアップ</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>新しいファイルを書き込み</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>検証</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>元のファイルを復元</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>別のインストールまたはアンインストールを実行中です。完了を待ってから再試行してください。</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>このゲームにはインストールできません（アンチチート、または開発元の要望による）。</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>この翻訳はレジストリのリストにもうありません。</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>翻訳をダウンロードできませんでした: レジストリに接続できません。</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>翻訳をダウンロードできませんでした: レジストリが時間内に応答しませんでした。</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>翻訳をダウンロードできませんでした: レジストリがエラーを返しました。</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>翻訳のファイルがレジストリから消えています。</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>この翻訳には新しいバージョンの AI Local Pack が必要です。アプリをアップデートしてください。</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>ダウンロードしたファイルが破損していたため（ハッシュの不一致）、削除しました。</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>ダウンロードを保存できませんでした: キャッシュフォルダーに書き込めません。</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>レジストリにある翻訳が破損しています。</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>この翻訳はお使いのゲームのバージョンに合いません。{0}</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>翻訳の文字列テーブルを読み取れません。</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>文字列から {0} を再構築できませんでした: ゲームファイルを読み取れないか、想定外の形式です。</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>問題が発生しました。詳細はログにあります。</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>ゲームが実行中です。閉じてから再試行してください。</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} が使用中です。ゲームが実行中のようです。閉じてから再試行してください。</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>ゲームのドライブに十分な空き容量がありません。</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>{0} を変更する権限がありません。</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} は読み取り専用です。</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>ゲームフォルダーにアクセスできません（ドライブが外れているか、フォルダーが移動されました）。</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>このゲームにはすでに翻訳がインストールされています。</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>このゲームには翻訳がインストールされていません。</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>以前のインストールが中断され、まだ完了できていません。アプリを再起動して完了させてください。</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>書き込み後の {0} の内容が想定と一致しませんでした。</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>{0} のバックアップがないか、破損しています。</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>{0} を読み書きできませんでした。</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>アルファ: ほかのプレイヤーによる確認はまだです。</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>おそらく互換性あり。{0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>{0} {1} を公式リリースからダウンロードします（ハッシュを確認）。</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>インストール済みの「{0}」リビジョン {1} を置き換えます。</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>「{0}」をインストールしますか？</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>元のファイルはバックアップされ、アンインストールできます。</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>インストールしました: 「{0}」。</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>ゲーム内で言語に{0}を選んでください。</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>再適用しました: 「{0}」。</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>「{0}」をアンインストールし、元のファイルを復元しました。</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>インストールできませんでした。ファイルは復元しました。</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>再適用できませんでした。ファイルは復元しました。</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>インストールできず、ファイルの復元にも失敗しました。次回起動時にアプリが再試行します。</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>アンインストールできませんでした。</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>プレイ</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>元に戻す</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>再試行</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>「{0}」をインストールできませんでした</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>「{0}」を再適用できませんでした</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>「{0}」をアンインストールできませんでした</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>ゲームファイルは以前の状態のままです。</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>一部のファイルが翻訳のままの可能性があります。もう一度アンインストールすると完了します。</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>一部のファイルの復元に失敗しました。次回起動時にアプリが再試行します。</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>ログ</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>再試行</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>「{0}」をアンインストールしますか？</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>ゲームの元のファイルをバックアップから復元します。翻訳はレジストリに残り、再びインストールできます。ゲームとセーブデータには影響しません。</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>アンインストール</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>インストール中</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>インストール中…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>アンインストール（元に戻す）</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>インストール中 · {0}%</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>アンインストール中…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>インストール済みの翻訳の操作</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>再適用</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>「テキスト」で表示</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>アンインストール（元に戻す）</value>
+  </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>フォント: ゲームのフォントに翻訳のすべての文字が含まれています。</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>フォント: 「{0}」に翻訳の文字が不足しています（不足: {1}、{2}）。{3}（オープンフォント）に置き換えました。</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>フォント: 「{0}」に翻訳の文字が不足しています（不足: {1}、{2}）。</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>{0} にも一部の文字がありません（不足: {1}、{2}）。それらは四角で表示される場合があります。</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>フォント: {0} を読み取れないため、そのままにしました。</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>翻訳がこのアプリの知らないフォントを指定しています: {0}（無視しました。アプリをアップデートしてください）。</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>ゲームのフォントにこの翻訳の文字が不足しており、それを含むオープンフォント {0} を準備できませんでした。</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>ゲームのフォントにこの翻訳の文字が不足しており、それを含むオープンフォント {0} をダウンロードできませんでした。接続を確認して再試行してください。</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0}（同梱）</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0}（インストール時にダウンロード）</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>このアプリのツールキットは現在このシステムで {0} のゲームに対応していないため、この翻訳をインストールできません。</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>必要なコンポーネントをダウンロード</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>この翻訳には {0} が必要ですが、レジストリの許可コンポーネントのリストにないため、インストールできません。</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>この翻訳には {0} が必要ですが、公式リリースにこのゲームのバージョン（{1}）向けのビルドがありません。</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>この翻訳には {0} が必要ですが、このゲームのビルドがどのシステム向けか判別できませんでした（メインの実行ファイルを読み取れません）。</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>{0} を公式リリースからダウンロードできませんでした。接続を確認して再試行してください。</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>{0} の公式リリースが、レジストリのリストにあるアドレスにもうありません。</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>ダウンロードした {0} がレジストリのリストにあるハッシュと一致しないため、削除しました。何もインストールしていません。</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>{0} のリリースアーカイブを安全に展開できません。何もインストールしていません。</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>この翻訳に必要なコンポーネントの別バージョンがこのゲームにインストールされているか、コンポーネントが翻訳自体のファイルを上書きしてしまいます。</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1}（{2}）: 公式リリース（{4}）から {3} バイトをダウンロードし、ハッシュを確認しました。</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1}（{2}）: キャッシュから取得しました（ダウンロード時にハッシュを確認済み）。</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>{0} {1} はこのゲームにすでにインストールされているため、翻訳と共用します。</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} を翻訳とともにインストールしました: {2} ファイル。</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>{0} {1} を削除しました: ほかの翻訳は使っていません。</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0}（レジストリの許可コンポーネントのリストにありません）</value>
+  </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>インストール済みの翻訳を確認しています</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>確認するインストール済みの翻訳はありません</value>
+  </data>
+  <data name="Startup_Packs_Done_Other" xml:space="preserve">
+    <value>翻訳 {0} 件が適用済み</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>ゲームのアップデート後に再適用: {0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>ゲームのアップデートで翻訳が壊れました: {0}</value>
+  </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>生成ジョブを確認しています</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>生成ジョブはありません</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>アプリを閉じている間に中断: {0}。ゲームページで再開してください</value>
+  </data>
+  <data name="Startup_Jobs_Done_Other" xml:space="preserve">
+    <value>進行中の生成ジョブ {0} 件</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>再適用</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>お使いのファイルから「{0}」リビジョン {1} を再び書き込みます</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>インストール済み · ゲームのアップデート後は未適用</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>ゲームのアップデートで元のファイルに戻りました。「{0}」リビジョン {1} はまだ使えますが適用されていないため、ゲームは元のテキストを表示します。</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>ゲームのアップデートで元のファイルに戻り、「{0}」リビジョン {1} の再適用に失敗しました。{2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>再適用</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>ゲームファイルのコピーにバイナリパッチを適用</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>パッチを適用したファイル: {0}。</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>すでにパッチ適用済みのためそのまま: {0}。</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>翻訳のパッチアーカイブが破損しています。</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>パッチを当てる {0} を読み取れません。</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>パッチを当てたファイルを書き込めませんでした: キャッシュフォルダーに書き込めません。</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>{0} にバイナリパッチを適用できませんでした: パッチが破損しているか、このアプリで読めない方法で作られています。</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>アクティビティ</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>すべて既読</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>通知設定</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>ウィンドウを閉じている間は、イベントがシステム通知で届きます。</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>判断が必要</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>実行中</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>昨日</value>
+  </data>
+  <data name="Activity_Day_New_Other" xml:space="preserve">
+    <value>新着 {0}</value>
+  </data>
+  <data name="Activity_ShowMore_Other" xml:space="preserve">
+    <value>さらに {0} 件表示</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>何もありません</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>インストール、AI で作成した翻訳、公開、ゲームのアップデート後の自動再適用がここに表示されます。</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>あとで決める: フィードに移動</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>非表示</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>新着</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>AI Local Pack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>判断が必要</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>情報</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · {1} %</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>「{0}」をインストールしました</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>「{0}」をアンインストールし、元のファイルを復元しました</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>「{0}」を再適用しました</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>ゲームのアップデート後に「{0}」を再適用しました</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>「{0}」をインストールできませんでした</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>「{0}」をアンインストールできませんでした</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>「{0}」を再適用できませんでした</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>ゲームがアップデートされ、「{0}」の再適用に失敗しました</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>ゲームがアップデートされ、「{0}」リビジョン {1} は互換性がなくなりました</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>ゲームがアップデートされ、「{0}」が適用されていません</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>一部のファイルの復元に失敗しました。次回起動時にアプリが再試行します。</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>翻訳のリビジョン {0} が利用できます。</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>新しいリビジョンはまだありません。新しい文字列を AI で翻訳できます。</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>ゲームが元のファイルに戻しました。翻訳はこのバージョンでも使えるので、もう一度適用してください。</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>ログ</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>再適用</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>リビジョン {0} にアップデート</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>新しい文字列を翻訳</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Other" xml:space="preserve">
+    <value>アクティビティ: 判断が必要な項目 {0} 件</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>アクティビティ: {0}</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>AI Local Pack を開く</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>ゲームのアップデートを確認</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>エージェントは AI で新しい翻訳を作成するときだけ使い、翻訳のインストールには不要です。ご自身のサブスクリプションで動作し、プロジェクトが AI の費用を負担することはありません。</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>エージェント</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>既定</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>今後</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>AI エージェント</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai インストール サインイン サインアウト ログイン サブスクリプション アップデート install sign in login subscription update</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>確認中…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>未インストール</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>インストール中 · {0}%</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>{0} にアップデート中 · {1}%</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>バージョン {0} は古すぎます</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>インストール済み · 未サインイン</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>セッションの有効期限切れ</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>サインイン未確認</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>サインイン待ち</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>準備完了 · サインイン済み</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>AI Local Pack がインストール</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>システムで検出: {0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>{0} としてサインイン中</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>Anthropic の公式ビルド{0}をアプリのフォルダーにダウンロードし、署名を確認します。Node.js も管理者権限も不要です。</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>OpenAI の公式ビルド{0}をアプリのフォルダーにダウンロードし、リリースのチェックサムとハッシュを照合します。Node.js も管理者権限も不要です。</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>公式リリースを探し、その正当性を確認しています…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>{0} からダウンロードしています…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>ハッシュを確認しました。配置しています…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>AI Local Pack にはバージョン {0} 以降が必要です。アプリのコピーをアップデートしてください。</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>AI Local Pack にはバージョン {0} 以降が必要です。インストールしたときと同じ方法でアップデートしてから、もう一度確認してください。</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>Claude のサブスクリプションでサインインします。Claude Code 自身のログインがブラウザーで開き、AI Local Pack がトークンを見ることはありません。</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>ChatGPT のサブスクリプションでサインインします。Codex 自身のログインがブラウザーで開き、AI Local Pack がトークンを見ることはありません。</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>サインインを確認できませんでした: {0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>{0} が開いたブラウザーウィンドウでサインインを完了してください。</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>{0} にアップデート</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>サインイン</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>サインアウト</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>再確認</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>{0} をインストールできませんでした: {1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>{0} に接続できませんでした。接続を確認してもう一度お試しください。ダウンロードは中断したところから再開します。</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>{0} のサーバーがエラーを返しました。しばらくしてからもう一度お試しください。</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>{0} にはこのシステム向けの公式ビルドがありません。</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>ダウンロードしたファイルが署名またはハッシュの確認に合格しなかったため、削除しました。何もインストールしていません。</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>アプリのフォルダーに書き込めません: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>{0} の別のインストールを実行中です。</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>サインインせずに終了しました。もう一度お試しください。</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>10 分以内にサインインが完了しなかったため、停止しました。</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>サインインを開始できませんでした: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>エージェントはまだサインイン中と報告しています。</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>既定のエージェント</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>生成フォームで最初に選択されます。ゲームごとに切り替えられます。</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>エージェント 生成 既定 claude codex agent generation</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>まずエージェントをインストールしてサインインしてください</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>独自の API キーまたはローカルモデル</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>Claude や ChatGPT のサブスクリプションがないプレイヤー向けです。</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>API キー ローカルモデル ollama api key local model</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0} からサインアウトされました</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>セッションの有効期限が切れました。生成を開始または再開するには、もう一度サインインしてください。</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>準備</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>抽出</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>用語集</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>翻訳</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>ビルドとテスト</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>生成のステップ</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>翻訳を生成する言語</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>翻訳先</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>別の言語に翻訳</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>翻訳する量</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>エージェントの時間</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>サブスクリプション</value>
+  </data>
+  <data name="Gen_Tile_Words_Other" xml:space="preserve">
+    <value>文字列 · {0} 語</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>ファイルサイズからの大まかな見積もり</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>バックグラウンドで実行</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>入門プランの上限で何日分か</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>入門プラン（Claude Pro、ChatGPT Plus）の利用上限で何日分か。1 日に 5 時間枠を 3 回として計算</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} 分</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} 時間</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>見積もり中…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>ゲームの規模を見積もれませんでした: {0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>もう一度試す</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>エージェント</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>準備完了</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>未インストール</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>未サインイン</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>公式ビルドをダウンロード中 · {0}%</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>ブラウザーでサインインを完了してください…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>お手元のコピー</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>AI Local Pack がインストール</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>チェック</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>ゲームのエンジンを確認しています…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · ツールキット対応</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>不明なエンジン: エージェントが独自の読み取りツールを作成し、翻訳はバイナリパッチになります</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}: このシステムではツールキットが対応していないため、エージェントが独自の読み取りツールを作成します（翻訳はバイナリパッチになります）</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}: ツールキットで読み取れないため、エージェントが独自の読み取りツールを作成します（翻訳はバイナリパッチになります）</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}: ツールキットがゲームを読み取れませんでした（{1}）</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>ディスクの空き容量を確認しています…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>作業コピー {0}</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>作業コピー {0}、クローン: 容量を使いません</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · 空き {1}</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>容量が足りません: 必要 {0}、空き {1}</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} 準備完了</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} の設定が必要です</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>エージェントを選んでください</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>アンチチートは検出されませんでした</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>翻訳の前に用語集を確認する</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>エージェントはコピー上で作業します。ゲームファイルには手を加えません。</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>生成を開始</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>開始中…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>ゲームのフォルダーを利用できません</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} の準備がまだできていません</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>規模を見積もっています…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>規模を見積もれませんでした</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>ツールキットがこのゲームのファイルを読み取れませんでした</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>作業コピー用のディスク容量が足りません</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>このゲームでは生成を利用できません。</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>このゲームにはすでに生成ジョブがあります。</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>ジョブのフォルダーを作成できませんでした: {0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>生成を開始できませんでした: {0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>作業コピーを作成中</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>文字列を抽出中</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>用語集を作成中</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>翻訳中</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>ビルドとテスト中</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>用語集の確認待ち</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>一時停止</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>中断</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>翻訳の準備完了</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>{0}へ · {1} を使用</value>
+  </data>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} 分</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} 時間 {1} 分</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} 時間</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>再開</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>ステージを再試行</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>用語集を確認</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>一時停止: サブスクリプションの上限 · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>一時停止: サブスクリプションの上限 · 約 {0} に再開</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>{0}% で中断</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>ステージ失敗: {0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>確認待ち</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>サブスクリプションの上限 · 約 {0} に再開</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>サブスクリプションの上限</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>手動で一時停止</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>中断: いつでも再開できます</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>ステージが失敗しました</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>用語集の確認待ち</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>再試行</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>チャンク {0}/{1}</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · 残り約 {1}</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>ゲームをコピー中: エージェントはコピー上で作業し、元のファイルには手を加えません</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>ツールキットでテキストを取り出しています</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>ゲーム全体で表現をそろえるための名前、用語、口調</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>コピー上でゲームファイルを再構築し、一度起動します</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>一時停止</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>再開</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>今すぐ再開</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>ステージを再試行</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>翻訳に進む</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>翻訳したばかり</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>最後に翻訳したもの</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>原文と同じ</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>空白</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>改行</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>要確認</value>
+  </data>
+  <data name="Gen_Validator_Count_Other" xml:space="preserve">
+    <value>検証ツールの警告 {0} 件</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>検証ツールの警告はありません</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>プレースホルダー、タグ、長さの上限はチャンクごとに確認され、エラーはエージェントに差し戻されます。</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>非表示</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>{0} の上限</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>約 {0}% 使用</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>到達</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>現在の 5 時間枠（エージェントの報告による）</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>現在の 7 日間枠（エージェントの報告による）</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>現在の利用枠（エージェントの報告による）</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>約 {0} にリセット</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} は上限を報告しません。上限に達するとジョブは自動で一時停止します。</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>エージェントの動作</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>まだ何もありません。</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>翻訳を確認しています</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>ゲームファイルを再構築しています</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>新しい文字がフォントにあるか確認しています</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>テストビルドを起動しています</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>翻訳を保存しています</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>フォント: {0} に翻訳の文字が不足しているため、代わりに {1}（OFL）を使います。</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>エージェントのサブスクリプションの上限に達しました。</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>ジョブは約 {0} に自動で再開します。</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>上限がリセットされるとジョブは自動で再開します。</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>一時停止しました。</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>進行状況は保存されています。いつでも再開できます。</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>ジョブの実行中にアプリが閉じられました。</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>進行状況は保存されています。ステージ「{0}」のチャンク {1}/{2} から再開できます。</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>進行状況は保存されています。ステージ「{0}」から再開できます。</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>ステージ「{0}」が失敗しました。</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>用語集の確認の準備ができました</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>続行すると翻訳が始まります。変更は入力と同時に保存されます。</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>エージェントがこのステップを完了できませんでした。たいていは再試行で解決します。これまでに保存した翻訳は残ります。</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0} からサインアウトされています。設定 → AI エージェントでサインインしてから再試行してください。</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} がインストールされていません。設定 → AI エージェントでインストールしてから再試行してください。</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>ツールキットがゲームファイルを処理できませんでした。理由は詳細にあります。</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>ゲームの作業コピーを作成できませんでした。理由は詳細にあります。</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>ファイルを書き込めませんでした。空き容量を確認してから再試行してください。</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>テスト実行中に翻訳したゲームがエラーで終了しました。再試行するとファイルを再構築します。翻訳は残ります。</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>予期しない問題が発生しました。ログは詳細にあります。</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>生成ログ: {0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>ジョブのフォルダーを開く</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>生成をキャンセルしますか？</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>{0}% 完了しています。進行状況を残してあとで続けるか、作業コピーを削除してディスクを空けることができます。</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>進行状況を残す</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>作業コピーを削除</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>停止しました。進行状況は残っているので、いつでも再開できます。</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>生成をキャンセルし、作業コピーを削除しました。</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>ジョブは別のウィンドウまたはコマンドで実行中です。</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>このゲームでは生成がブロックされています。</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>ゲームのフォルダーを利用できません。ドライブを接続してもう一度お試しください。</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>ジョブがありません。別の場所で完了したか、キャンセルされました。</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>ジョブのファイルを変更できませんでした: {0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>再開できませんでした: {0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>生成を一時停止: サブスクリプションの上限</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>約 {0} に自動で再開します</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>上限がリセットされると自動で再開します</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>今すぐ再開</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>一時停止</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>生成中 · {0}</value>
+  </data>
+  <data name="Gen_Review_Title" xml:space="preserve">
+    <value>用語集を確認</value>
+  </data>
+  <data name="Gen_Review_Subtitle" xml:space="preserve">
+    <value>すべてのチャンクで使う名前、地名、用語です。今のうちに修正してください。</value>
+  </data>
+  <data name="Gen_Review_Terms_Other" xml:space="preserve">
+    <value>用語 {0} 件</value>
+  </data>
+  <data name="Gen_Review_Tone" xml:space="preserve">
+    <value>口調</value>
+  </data>
+  <data name="Gen_Review_Tone_Agent" xml:space="preserve">
+    <value>エージェントの選択どおり</value>
+  </data>
+  <data name="Gen_Review_Tone_Informal" xml:space="preserve">
+    <value>くだけた口調</value>
+  </data>
+  <data name="Gen_Review_Tone_Formal" xml:space="preserve">
+    <value>丁寧な口調</value>
+  </data>
+  <data name="Gen_Review_Tone_WithPronoun" xml:space="preserve">
+    <value>{0}（「{1}」）</value>
+  </data>
+  <data name="Gen_Review_AgentTone" xml:space="preserve">
+    <value>エージェントの口調: {0}</value>
+  </data>
+  <data name="Gen_Review_Column_Term" xml:space="preserve">
+    <value>用語</value>
+  </data>
+  <data name="Gen_Review_Column_Translation" xml:space="preserve">
+    <value>訳語</value>
+  </data>
+  <data name="Gen_Review_Column_Note" xml:space="preserve">
+    <value>メモ</value>
+  </data>
+  <data name="Gen_Review_KeepAsIs" xml:space="preserve">
+    <value>そのまま</value>
+  </data>
+  <data name="Gen_Review_Edited" xml:space="preserve">
+    <value>編集済み</value>
+  </data>
+  <data name="Gen_Review_Search" xml:space="preserve">
+    <value>用語を検索</value>
+  </data>
+  <data name="Gen_Review_NoMatch" xml:space="preserve">
+    <value>一致する用語はありません。</value>
+  </data>
+  <data name="Gen_Review_Empty" xml:space="preserve">
+    <value>エージェントは口調だけを保存し、用語はありません。</value>
+  </data>
+  <data name="Gen_Review_Blank" xml:space="preserve">
+    <value>すべての用語に訳語が必要です。</value>
+  </data>
+  <data name="Gen_Review_Loading" xml:space="preserve">
+    <value>用語集を読み込んでいます…</value>
+  </data>
+  <data name="Gen_Review_LoadFailed" xml:space="preserve">
+    <value>用語集を読み取れませんでした: {0}</value>
+  </data>
+  <data name="Gen_Review_SaveFailed" xml:space="preserve">
+    <value>変更を保存できませんでした: {0}</value>
+  </data>
+  <data name="Gen_Action_Regenerate" xml:space="preserve">
+    <value>再生成</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Title" xml:space="preserve">
+    <value>用語集を作り直しますか？</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Text" xml:space="preserve">
+    <value>エージェントがゲームの文字列から作り直し、現在の用語は置き換えられます。</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Other" xml:space="preserve">
+    <value>エージェントがゲームの文字列から作り直します。ほかの用語は置き換えられますが、変更した {0} 件の用語は残ります。</value>
+  </data>
+  <data name="Activity_Event_GlossaryReview" xml:space="preserve">
+    <value>用語集の確認の準備ができました</value>
+  </data>
+  <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
+    <value>確認すると翻訳が始まります。</value>
+  </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>自分の翻訳が削除されたか、読み取れません。</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>自分の翻訳を {0} から取得しました。</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>カバー率</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Other" xml:space="preserve">
+    <value>{0} 件の文字列が未翻訳のままです</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>すべての文字列を翻訳しました</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>テスト実行</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>合格</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>翻訳したゲームが {0} 秒間終了せずに動作しました</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>ゲームフォルダーに起動できるプログラムが見つかりません</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>ゲームが別のシステム向けにビルドされています</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>ゲームは Steam 経由でしか起動しません</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>システムがゲームを起動しませんでした</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>翻訳なしでもゲームがすぐに終了します（ストアやメディアが必要です）</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>テスト実行はオフです</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>フォント</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>未確認</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>ツールキットはこのエンジンのフォントを読み取れません</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>ゲームのフォントで問題なし</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>翻訳のすべての文字が含まれています</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>{0} に置き換え</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>{0} に翻訳の文字が不足しています</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Other" xml:space="preserve">
+    <value>まだ {0} 文字が不足しています</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>検証ツール</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>警告なし</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>長さ、プレースホルダー、タグは問題ありません</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Other" xml:space="preserve">
+    <value>警告 {0} 件</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>翻訳の準備完了</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>「テキスト → 自分の翻訳」に保存しました · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>「{0}」 · {1}へ</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Other" xml:space="preserve">
+    <value>警告 {0} 件を表示</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>警告を隠す</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>ゲーム内で言語に{0}を選んでください。翻訳はそのテキストを置き換えます。</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>もう一度プレイ</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>インストールしてプレイ</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>破棄</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>「テキスト」で表示</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>新しい翻訳</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>翻訳は「テキスト → 自分の翻訳」に残ります。作業コピーは削除され、フォームが開きます。</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>インストール時に元のファイルをバックアップします。いつでもアンインストールできます。</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>うまくいきましたか？ほかのプレイヤーと共有しましょう。</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>レジストリにアルファとして公開します。ゲーム、ビルド、ハッシュ、エージェント、フォントは自動で入力されます。</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>今はしない</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>公開</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>あとで「テキスト → 自分の翻訳」から公開できます。</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>翻訳とその作業コピーを削除しました。</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>翻訳は「テキスト → 自分の翻訳」に残り、作業コピーは削除しました。</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>翻訳を破棄しますか？</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>自分の翻訳「{0}」とジョブの作業コピーが削除されます。元に戻せません。</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>翻訳がインストールされています。先にアンインストールしてください。</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>ファイルを削除できませんでした: {0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>自分の翻訳</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>レジストリにはまだ{0}への翻訳がありません。</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>{0}への翻訳</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>AI で作成中 · 「AI で作成」タブを開いてください</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>ローカル · 未公開</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>作成中 {0}%</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>ゲームで確認済み</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>まだ試していません</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>ローカル · {0} に作成</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>ゲームで確認済み</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>この翻訳でゲームをプレイしました。これで共有できます。</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>まだゲームで試していません</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>インストールしてプレイしてください。試すと公開できるようになります。</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>テスト実行</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>フォント</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>検証ツール</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>サイズ</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>公開する前に、アプリがレジストリの翻訳と比較します。そのいずれかの新しいリビジョンとして公開するか、別の翻訳として公開できます。</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>ゲームにインストール済みです。削除する前にアンインストールしてください。</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>まずゲームで試してください。そのあと公開できるようになります。</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>「{0}」を削除しますか？</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>自分の翻訳と、それを作成したジョブの作業コピーが削除されます。元に戻せません。</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>自分の翻訳「{0}」を削除しました。</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>インストールしてプレイ</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>自分の翻訳 · 文字列の {0}% · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>テスト合格</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>テスト未実行</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>「{0}」 · 自分の翻訳</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>自分の翻訳の準備完了</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>自分の翻訳 · 文字列の {0}%</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>自分の翻訳 · {0}</value>
+  </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>新しい文字列の翻訳先</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>インストール済みの「{0}」リビジョン {1} がベースです。その翻訳はそのまま使い、新規と変更された文字列だけをエージェントに渡します。</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>新規: {0} · 変更: {1} · 維持: {2} · 削除: {3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>インストール済みの「{0}」リビジョン {1} を読み取れません: {2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>リビジョン {0}（リビジョン {1} の更新） · 新規: {2} · 変更: {3} · 削除: {4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>ゲームがアップデートされました（{0}）。インストール済みの「{1}」リビジョン {2} は以前のバージョン向けのため、アップデートで追加・変更された文字列は未翻訳で表示されます。</value>
+  </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Windows 資格情報マネージャー</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>macOS キーチェーン</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>システムのキーリング（Secret Service）</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>開発用のシークレットファイル</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>メモリ</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>ブラウザーで {0} を開きます</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>このコードを入力して ailocalpack を承認します</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>GitHub にコードを要求しています…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>ブラウザーでの承認を待っています…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>コピーしました</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>ブラウザーを開く</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>もう一度試す</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>GitHub に接続できません。接続を確認してもう一度お試しください。</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub がサインインを拒否しました: {0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>承認される前にコードの有効期限が切れました。もう一度試して新しいコードを取得してください。</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>GitHub でサインインがキャンセルされました。</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub は {0} を承認しましたが、{1} にトークンを保存できなかったため、サインアウトのままです（トークンを平文で保存することはありません）: {2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>アカウント</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>公開した翻訳</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>GitHub アカウント</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github アカウント サインイン サインアウト ログイン ログアウト トークン キーチェーン プロフィール 公開 account sign in login token keychain publish</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>未サインイン</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>翻訳を公開したり、評価・確認したりするときだけ必要です。インストールにアカウントは不要です。</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>サインイン済み · トークンはシステムのキーチェーン（{0}）に保存</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>サインアウトしました: トークンはこのコンピューターから削除されました。GitHub で取り消すまで、ailocalpack は承認済みアプリとして表示されます。</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>GitHub でアクセスを取り消す</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub が {0} に対するアプリのアクセスを受け付けなくなったため、サインアウトしました。翻訳を公開・評価するには、もう一度サインインしてください。</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>現在 GitHub に接続できません。最後に確認したアカウントを表示しています。</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>{0} からトークンを読み取れません: {1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>GitHub でサインイン</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>サインアウト</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>プロフィール</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>{0} からトークンを削除できないため、サインインしたままです: {1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>公開した翻訳</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>公開 翻訳 パック プルリクエスト PR ディスカッション 検証済み アルファ published pull request discussion verified alpha</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>まだ何も公開していません。AI で翻訳を作成したら、ゲームの「AI で作成」タブから公開してください。</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>公開した翻訳を見るにはサインインしてください。</value>
+  </data>
+  <data name="Activity_Event_PackSubmitted" xml:space="preserve">
+    <value>「{0}」をレジストリに送信しました</value>
+  </data>
+  <data name="Activity_Event_PublishFailed" xml:space="preserve">
+    <value>「{0}」を公開できませんでした</value>
+  </data>
+  <data name="Publish_SignIn_Title" xml:space="preserve">
+    <value>ailocalpack レジストリに公開</value>
+  </data>
+  <data name="Publish_SignIn_Intro" xml:space="preserve">
+    <value>初回のみ必要です。翻訳は GitHub のプルリクエストとして共有されるため、GitHub アカウントでサインインしてください。</value>
+  </data>
+  <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
+    <value>{0} としてサインイン中</value>
+  </data>
+  <data name="Publish_SignIn_SignInButton" xml:space="preserve">
+    <value>GitHub でサインイン</value>
+  </data>
+  <data name="Publish_SignIn_License" xml:space="preserve">
+    <value>この翻訳を CC BY-SA 4.0 で公開します</value>
+  </data>
+  <data name="Publish_SignIn_LicenseText" xml:space="preserve">
+    <value>クレジットを表示すれば誰でも利用・改変できます。共有するのは翻訳とレシピだけで、原文やゲームファイルは決して含まれません。</value>
+  </data>
+  <data name="Publish_SignIn_HintWaiting" xml:space="preserve">
+    <value>GitHub を待っています…</value>
+  </data>
+  <data name="Publish_SignIn_HintSignIn" xml:space="preserve">
+    <value>続行するには GitHub でサインインしてください</value>
+  </data>
+  <data name="Publish_SignIn_HintLicense" xml:space="preserve">
+    <value>続行するにはライセンスに同意してください</value>
+  </data>
+  <data name="Publish_Continue" xml:space="preserve">
+    <value>続行</value>
+  </data>
+  <data name="Publish_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Publish_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Publish_Similar_Title" xml:space="preserve">
+    <value>{0}への翻訳はすでにあります</value>
+  </data>
+  <data name="Publish_Similar_Intro" xml:space="preserve">
+    <value>ほぼ同じものを追加する代わりに、既存の翻訳を改善しませんか？</value>
+  </data>
+  <data name="Publish_Similar_Existing" xml:space="preserve">
+    <value>「{0}」 · 作者 {1} · rev {2}</value>
+  </data>
+  <data name="Publish_Similar_Coverage" xml:space="preserve">
+    <value>カバー率 {0}%</value>
+  </data>
+  <data name="Publish_Similar_Build" xml:space="preserve">
+    <value>ビルド {0} 向け</value>
+  </data>
+  <data name="Publish_Similar_Base" xml:space="preserve">
+    <value>あなたの翻訳はこれの更新版です</value>
+  </data>
+  <data name="Publish_Similar_Recommended" xml:space="preserve">
+    <value>おすすめ</value>
+  </data>
+  <data name="Publish_Similar_RevisionTitle" xml:space="preserve">
+    <value>「{0}」の新しいリビジョン（rev {1}）</value>
+  </data>
+  <data name="Publish_Similar_RevisionText" xml:space="preserve">
+    <value>その翻訳のプレイヤーにはアップデートとして届きます。作者は {0} のままで、あなたは rev {1} の作者として記載されます。ステータスはアルファからやり直しです。</value>
+  </data>
+  <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
+    <value>別の翻訳として</value>
+  </data>
+  <data name="Publish_Similar_SeparateText" xml:space="preserve">
+    <value>「{0}」は「{1}」と並んで表示され、プレイヤーが選びます。口調や用語などを意図的に変えている場合はこちらを選んでください。</value>
+  </data>
+  <data name="Publish_Similar_Choice" xml:space="preserve">
+    <value>公開の方法</value>
+  </data>
+  <data name="Publish_Again" xml:space="preserve">
+    <value>もう一度公開</value>
+  </data>
+  <data name="Publish_Step_Fork" xml:space="preserve">
+    <value>レジストリをフォーク</value>
+  </data>
+  <data name="Publish_Step_Commit" xml:space="preserve">
+    <value>翻訳をコミット</value>
+  </data>
+  <data name="Publish_Step_PullRequest" xml:space="preserve">
+    <value>プルリクエストを作成</value>
+  </data>
+  <data name="Publish_Step_Account" xml:space="preserve">
+    <value>GitHub アカウントを確認しています</value>
+  </data>
+  <data name="Publish_Doing_Fork" xml:space="preserve">
+    <value>レジストリのフォーク</value>
+  </data>
+  <data name="Publish_Doing_Commit" xml:space="preserve">
+    <value>翻訳のコミット</value>
+  </data>
+  <data name="Publish_Doing_PullRequest" xml:space="preserve">
+    <value>プルリクエストの作成</value>
+  </data>
+  <data name="Publish_Doing_Account" xml:space="preserve">
+    <value>アカウントの確認</value>
+  </data>
+  <data name="Publish_Error_NotSignedIn" xml:space="preserve">
+    <value>まず GitHub にサインインしてください。翻訳はあなたのアカウントからのプルリクエストとして共有されます。</value>
+  </data>
+  <data name="Publish_Error_Keychain" xml:space="preserve">
+    <value>キーチェーンから GitHub のサインイン情報を読み取れません。ロックを解除して、もう一度公開してください。</value>
+  </data>
+  <data name="Publish_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub がサインインを受け付けなくなりました（アクセスの取り消しまたは期限切れ）。もう一度 GitHub にサインインしてください。</value>
+  </data>
+  <data name="Publish_Error_Forbidden" xml:space="preserve">
+    <value>{0}中に GitHub がアクセスを拒否しました。もう一度サインインすると、アプリに必要なアクセス権（public_repo）が付与されます。</value>
+  </data>
+  <data name="Publish_Error_RateLimitedUntil" xml:space="preserve">
+    <value>アカウントの GitHub リクエスト上限に {0} まで達しています。その後にもう一度公開してください（何も失われません）。</value>
+  </data>
+  <data name="Publish_Error_RateLimited" xml:space="preserve">
+    <value>現在アカウントの GitHub リクエスト上限に達しています。数分後にもう一度公開してください（何も失われません）。</value>
+  </data>
+  <data name="Publish_Error_NoRegistry" xml:space="preserve">
+    <value>レジストリ {0} が GitHub にありません（またはあなたのアカウントから見えません）。</value>
+  </data>
+  <data name="Publish_Error_NotFound" xml:space="preserve">
+    <value>{0}中に GitHub が対象を見つけられませんでした。もう一度公開してください。</value>
+  </data>
+  <data name="Publish_Error_Rejected" xml:space="preserve">
+    <value>{0}中に GitHub がリクエストを拒否しました。</value>
+  </data>
+  <data name="Publish_Error_Conflict" xml:space="preserve">
+    <value>{0}中に GitHub がリクエストを完了できませんでした。少し待ってからもう一度公開してください。</value>
+  </data>
+  <data name="Publish_Error_Network" xml:space="preserve">
+    <value>{0}中に GitHub に接続できませんでした。接続を確認してもう一度公開してください。中断したところから続行します。</value>
+  </data>
+  <data name="Publish_Error_Invalid" xml:space="preserve">
+    <value>この翻訳はレジストリに拒否されます: {0}</value>
+  </data>
+  <data name="Publish_Error_OptedOut" xml:space="preserve">
+    <value>ゲームのパブリッシャーがファン翻訳の配布を望んでいないため、レジストリはこのゲームの翻訳を受け付けません。</value>
+  </data>
+  <data name="Publish_Error_TargetGone" xml:space="preserve">
+    <value>更新先に選んだ翻訳はもうレジストリにありません。別の翻訳として公開してください。</value>
+  </data>
+  <data name="Publish_Error_ForkNotReady" xml:space="preserve">
+    <value>GitHub がまだレジストリのコピーを作成しています。数分後にもう一度公開してください。</value>
+  </data>
+  <data name="Publish_Error_Unexpected" xml:space="preserve">
+    <value>{0}中に GitHub から予期しない応答がありました。もう一度公開してください。</value>
+  </data>
+  <data name="Publish_Target_Revision" xml:space="preserve">
+    <value>「{1}」の rev {0}</value>
+  </data>
+  <data name="Publish_Target_Pack" xml:space="preserve">
+    <value>「{0}」</value>
+  </data>
+  <data name="Publish_Sending_Title" xml:space="preserve">
+    <value>{0}を公開しています…</value>
+  </data>
+  <data name="Publish_Checking_Title" xml:space="preserve">
+    <value>PR #{0} を作成しました · CI が翻訳をチェックしています</value>
+  </data>
+  <data name="Publish_Checking_Text" xml:space="preserve">
+    <value>スキーマ、ハッシュ、実行ファイルがないこと、フォントをチェックします。チェックに合格すると自動でアルファとしてマージされます。このページを離れても大丈夫です。進行状況はアクティビティで確認できます。</value>
+  </data>
+  <data name="Publish_Failed_Title" xml:space="preserve">
+    <value>「{0}」を公開できませんでした</value>
+  </data>
+  <data name="Publish_Published_Title" xml:space="preserve">
+    <value>公開しました: {0} · {1}</value>
+  </data>
+  <data name="Publish_Published_Text" xml:space="preserve">
+    <value>プレイヤーにはアルファの警告付きで表示されます。ほかのプレイヤー {0} 人が動作を確認すると検証済みになります。</value>
+  </data>
+  <data name="Publish_Published_VerifiedText" xml:space="preserve">
+    <value>プレイヤーが動作を確認しました。この翻訳は検証済みです。</value>
+  </data>
+  <data name="Publish_Meter" xml:space="preserve">
+    <value>{1} 人中 {0} 人が「動作する」と確認</value>
+  </data>
+  <data name="Publish_CopyLink" xml:space="preserve">
+    <value>リンクをコピー</value>
+  </data>
+  <data name="Publish_Discussion" xml:space="preserve">
+    <value>ディスカッション</value>
+  </data>
+  <data name="Publish_OpenPr" xml:space="preserve">
+    <value>PR を開く</value>
+  </data>
+  <data name="Publish_Toast_LinkCopied" xml:space="preserve">
+    <value>リンクをコピーしました</value>
+  </data>
+  <data name="Publish_Toast_Sent" xml:space="preserve">
+    <value>{0}を送信しました: PR #{1} を作成し、CI が翻訳をチェックします。</value>
+  </data>
+  <data name="Publish_Toast_Failed" xml:space="preserve">
+    <value>{0}を公開できませんでした。</value>
+  </data>
+  <data name="Publish_Row_Sending" xml:space="preserve">
+    <value>ローカル · 公開中…</value>
+  </data>
+  <data name="Publish_Row_Checking" xml:space="preserve">
+    <value>PR #{0} · CI 実行中</value>
+  </data>
+  <data name="Publish_Row_Published" xml:space="preserve">
+    <value>公開済み · {0} · rev {1}</value>
+  </data>
+  <data name="Publish_Row_Failed" xml:space="preserve">
+    <value>ローカル · 未公開（前回の試行は失敗）</value>
+  </data>
+  <data name="Publish_Similar_Builds_Other" xml:space="preserve">
+    <value>ビルド {0} 個向け</value>
+  </data>
+  <data name="Publish_Resubmitted_Detail" xml:space="preserve">
+    <value>修正を PR #{0} にプッシュしました · CI が翻訳を再チェックします</value>
+  </data>
+  <data name="Publish_Toast_Resubmitted" xml:space="preserve">
+    <value>{0}を再送信しました: 修正は PR #{1} にあり、CI が翻訳を再チェックします。</value>
+  </data>
+  <data name="Publish_CiFailed_Title" xml:space="preserve">
+    <value>CI が PR #{0} を却下しました</value>
+  </data>
+  <data name="Publish_Ci_Scope" xml:space="preserve">
+    <value>プルリクエストが翻訳のフォルダー外のファイルを変更しています。「修正して再送信」で、この翻訳だけのブランチに作り直します。</value>
+  </data>
+  <data name="Publish_Ci_Status" xml:space="preserve">
+    <value>マニフェストがアルファになっていません（{0}）。「修正して再送信」でアルファとして送り直します。</value>
+  </data>
+  <data name="Publish_Ci_Patch" xml:space="preserve">
+    <value>フォークのパッチアーカイブがないか、マニフェストと一致しません（{0}）。「修正して再送信」で再アップロードします。</value>
+  </data>
+  <data name="Publish_Ci_Pack" xml:space="preserve">
+    <value>レジストリのチェックが翻訳を拒否しました: {0}。「修正して再送信」でまずここで確認してから送り直します。アプリが問題を見つけられない場合は、アプリをアップデートしてください。</value>
+  </data>
+  <data name="Publish_Ci_Registry" xml:space="preserve">
+    <value>失敗したのはあなたの翻訳ではなく、レジストリ自体のチェックです（{0}）。「修正して再送信」でチェックを再実行します。</value>
+  </data>
+  <data name="Publish_Ci_Unknown" xml:space="preserve">
+    <value>CI が理由を示さずに失敗しました。「修正して再送信」でチェックを再実行します。「PR を開く」でログを確認できます。</value>
+  </data>
+  <data name="Publish_Resubmit" xml:space="preserve">
+    <value>修正して再送信</value>
+  </data>
+  <data name="Publish_Merged_Title" xml:space="preserve">
+    <value>PR #{0} がマージされました: {1} はアルファとしてレジストリに追加されました</value>
+  </data>
+  <data name="Publish_Merged_Text" xml:space="preserve">
+    <value>数分以内に翻訳リストが更新され、すべてのプレイヤーに表示されます。</value>
+  </data>
+  <data name="Publish_Closed_Title" xml:space="preserve">
+    <value>PR #{0} はマージされずにクローズされました</value>
+  </data>
+  <data name="Publish_Closed_Text" xml:space="preserve">
+    <value>理由は「PR を開く」で確認できます。「もう一度公開」で新しいプルリクエストを作成します。</value>
+  </data>
+  <data name="Publish_Row_CiFailed" xml:space="preserve">
+    <value>PR #{0} · CI 失敗</value>
+  </data>
+  <data name="Publish_Row_Merged" xml:space="preserve">
+    <value>PR #{0} マージ済み · アルファ</value>
+  </data>
+  <data name="Publish_Row_Closed" xml:space="preserve">
+    <value>PR #{0} クローズ</value>
+  </data>
+  <data name="Activity_Event_PullRequestFailed" xml:space="preserve">
+    <value>レジストリの CI が「{0}」の PR #{2} を却下しました</value>
+  </data>
+  <data name="Activity_Event_PackMerged" xml:space="preserve">
+    <value>PR #{2} がマージされました: 「{0}」がアルファとして公開されました</value>
+  </data>
+  <data name="Activity_Event_PullRequestClosed" xml:space="preserve">
+    <value>「{0}」の PR #{2} はマージされずにクローズされました</value>
+  </data>
+  <data name="Activity_Event_PackVerified" xml:space="preserve">
+    <value>「{0}」が検証済みになりました: プレイヤーが動作を確認しました</value>
+  </data>
+  <data name="Activity_Detail_PackMerged" xml:space="preserve">
+    <value>翻訳リストが更新されると、すべてのプレイヤーに表示されます。</value>
+  </data>
+  <data name="Activity_Action_OpenPr" xml:space="preserve">
+    <value>GitHub の PR</value>
+  </data>
+  <data name="Settings_PublishedPack_Meta" xml:space="preserve">
+    <value>{0} · {1} · rev {2}</value>
+  </data>
+  <data name="Settings_PublishedPack_Confirmed" xml:space="preserve">
+    <value>アルファ · {0}/{1} 確認</value>
+  </data>
+  <data name="Settings_PublishedPack_Likes" xml:space="preserve">
+    <value>いいね {0}</value>
+  </data>
+  <data name="Settings_PublishedPack_Pr" xml:space="preserve">
+    <value>PR</value>
+  </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>評価</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>あなたの評価</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>いいね</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>いいね済み</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>動作する</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>動作しない</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>何がうまくいき、何がだめでしたか？（任意）</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>「動作する」／「動作しない」は、ゲームのビルドとコメントとともに、あなたのアカウントで翻訳の GitHub ディスカッションに投稿されます。</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>GitHub に送信しています…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>{2} に「{0}」の rev {1} を報告しました。もう一度送信すると報告が置き換わります。</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>あなたはこの翻訳の作者として記載されているため、動作の確認はできません。確認はほかのプレイヤーが行います。</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>レジストリが GitHub にこの翻訳のディスカッションを作成すると、評価できるようになります。</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>「{0}」はいかがですか？ あなたの回答がほかのプレイヤーの役に立ちます。</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>あとで</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>ありがとうございます！報告を翻訳の GitHub ディスカッションに送信しました。</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>詳細を追加</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>翻訳を評価するには GitHub にサインイン</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>いいねと報告は、あなたのアカウントで翻訳の GitHub ディスカッションに投稿されます。翻訳のインストールにアカウントは不要です。</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>GitHub がサインインを確認するとすぐに評価が送信されます。</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>翻訳を評価するには GitHub にサインインしてください。</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>システムのキーチェーンから GitHub のサインイン情報を読み取れませんでした。もう一度試すか、設定 → GitHub で再度サインインしてください。</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub がサインインを受け付けなくなりました。もう一度サインインしてください。</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>翻訳のディスカッションはもう GitHub にありません。</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>レジストリのメンテナーが翻訳のディスカッションをロックしたため、新しい評価は受け付けていません。</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub に拒否されました: {0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>現在 GitHub のリクエスト上限に達しています。{0} 以降にもう一度お試しください。</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>現在 GitHub のリクエスト上限に達しています。しばらくしてからもう一度お試しください。</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>GitHub に接続できません。接続を確認してもう一度お試しください。</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>送信できませんでした: {0}</value>
+  </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>中断されたバックアップの移動を完了しました</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>ディスク 容量 サイズ 空き 使用量 disk space size</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>ディスク容量</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>{0} 使用中</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>計測中…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>バックアップ {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>作業コピー {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>キャッシュ {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>ディスク容量</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>バックアップ</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>生成の作業コピー</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>キャッシュ</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>上書きしたゲームファイルのバックアップ</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>バックアップ 元のファイル アンインストール 移動 フォルダー 場所 backup move folder location</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>まだ何もバックアップしていません</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>バックアップを移動しています… {0} %</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>場所を変更…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>翻訳のアンインストールに必要なため、ここでは削除できません。バックアップは翻訳をアンインストールすると削除されます。</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>バックアップの保存先</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>バックアップを移動しますか？</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>バックアップ（{1}）を {0} に移動します。インストール済みの翻訳はそのままで、引き続きアンインストールできます。ゲームには手を加えません。翻訳がインストールされている間は、そのドライブを取り外さないでください。</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>移動</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>移動しました。古いフォルダー {0} はまだ削除できていません。次回起動時にアプリが再試行します。</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>翻訳のインストールまたはアンインストール中です。完了してからもう一度お試しください。</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>中断されたインストールまたは移動を先に完了させる必要があります。アプリを再起動してもう一度お試しください。</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>バックアップはすでにこのフォルダーにあります。</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>現在のバックアップフォルダーの外にあるフォルダーを選んでください。</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>{0} にはすでにファイルがあります。別のフォルダーを選んでください。何も移動していません。</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>移動先にバックアップを置く空き容量が足りません。何も移動していません。</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>アプリがそのフォルダーに書き込めません。何も移動していません。</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>コピーしたファイルを読み直した内容が一致しなかったため、バックアップは元の場所に残しました。</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>新しいバージョンのアプリがバックアップの場所を設定しています。移動するにはアプリをアップデートしてください。</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>バックアップを移動できず、元の場所に残しました: {0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>作業コピー</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>削除するには生成を停止してください</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>ありません。生成を開始するとゲームファイルのコピーが作られるため、エージェントがゲームフォルダーに触れることはありません。</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>中断された開始処理の残り</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>生成中</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>上限のリセットまで一時停止</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>生成を一時停止中</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>用語集の確認待ち</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>生成が中断されました</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>生成が失敗しました</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>キャンセル済み</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>{0} の作業コピーを削除しますか？</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>{0} を解放します。作成した翻訳とインストール済みの翻訳は残り、ゲームには手を加えません。</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>{0} を解放します。一時停止中の翻訳の進行状況は失われ、再開できず最初からやり直しになります。インストール済みの翻訳は残り、ゲームには手を加えません。</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>このゲームの生成を実行中です。先に停止してください。</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>削除できませんでした: {0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>レジストリのインデックスとダウンロードした翻訳</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>キャッシュ 削除 クリア ダウンロード インデックス cache clear downloads index</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}。必要なときに再びダウンロードされます。</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>クリア</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>クリア中…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>クリアしました: {0} を解放。</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>{0} を解放しました。使用中の {1} はアプリが使い終わるまで残ります。</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>翻訳をインストール中です。完了してからもう一度お試しください。</value>
+  </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © AI Local Pack contributors</value>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>安定版チャンネル</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>チャンネル: {0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0}（ポータブル）</value>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0}（開発ビルド）</value>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>アップデート</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>リンク</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>法的情報</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>アップデート</value>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>アプリのアップデート</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>アップデート, 更新, バージョン, リリース, 再起動, update, upgrade, version, release, restart, velopack</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>このコピーはリリースからインストールされていないため、自動ではアップデートされません。</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>アップデートは GitHub Releases からバックグラウンドでダウンロードされます。</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>GitHub Releases を確認しています…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>最新バージョンです。{0} に確認しました。</value>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>{0} をダウンロードしています… {1} %</value>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>{0} のダウンロードが完了し、準備ができました。次回アプリを起動したときにも適用されます。</value>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>再起動しています…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>アップデートを確認できませんでした: GitHub Releases が応答しませんでした。あとでアプリが再試行します。</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>アップデートを確認</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>再確認</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>確認中</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>再起動してアップデート</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>再起動中</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>新機能</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>翻訳をインストール中です。完了してから再起動してください。</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>今すぐ再起動してアップデートしますか？</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>実行中の AI での作成や公開は停止します。停止した AI 翻訳は、再起動後に「AI で作成」タブで再開できます。</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>再起動</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>ソースコード</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>翻訳レジストリ</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>問題を報告</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA と削除依頼</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>開発元が削除を依頼する方法</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>github, ソース, リポジトリ, issues, バグ, dmca, 削除依頼, オプトアウト, source, repository, bug, takedown, opt-out</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>ライセンス</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>アプリ: Apache-2.0。レジストリのコンテンツ: CC BY-SA 4.0。</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>ライセンス, apache, クリエイティブ・コモンズ, cc by-sa, サードパーティ, 通知, オープンソース, license, third-party, open source</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>サードパーティの通知</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>免責事項</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>コミュニティの翻訳はゲーム開発元と提携しておらず、承認も受けていません。含まれるのは翻訳したテキストとレシピだけで、ゲーム本体はご自身で所有している必要があります。開発元は自社のゲームを対象外にするよう依頼できます。</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>法的情報, 開発元, スタジオ, 提携, 承認, オプトアウト, legal, opt-out</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>このビルドにはサードパーティの通知が含まれていません。ソースリポジトリを参照してください。</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} をインストールする準備ができました</value>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>バックグラウンドでダウンロードしました。再起動は数秒で終わります。</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>今すぐ再起動</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>アプリのアップデートを確認しています</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>オフ: このコピーはリリースからインストールされていません</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>最新です</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>{0} が見つかりました。バックグラウンドでダウンロードしています</value>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>{0} の準備ができました: 再起動してアップデート</value>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>GitHub Releases に接続できませんでした</value>
+  </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>ようこそツアー</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>AI Local Pack へようこそ</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>ようこそ</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>AI で作成</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>コミュニティ</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>ゲームを自分の言語で遊ぼう</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack は、お持ちのゲーム向けにプレイヤーが作った翻訳をインストールします。</value>
+  </data>
+  <data name="Welcome_GamesFound_Other" xml:space="preserve">
+    <value>ライブラリでゲームが {0} 本見つかりました。</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>ライブラリまたは設定でいつでも変更できます。</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>見つかったら、ワンクリック</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>ゲームを開き、翻訳を選んで「インストール」を押すだけです。</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>完全に元に戻せます。</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>先にゲームのファイルをバックアップし、アンインストールで元に戻します。</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>ゲームのアップデート後も維持。</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>Steam が上書きしても、アプリが元に戻します。</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>アカウントにも安全。</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>アンチチートのあるゲームは一切変更しません。</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>まだない？AI で作ろう</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>あなたの AI エージェントが、あなたのサブスクリプションを使い、あなたのコンピューター上でゲームを翻訳します。</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>必要になったときに準備。</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>初めて翻訳を作成するときに、アプリがエージェントをインストールしてサインインさせます。</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>一時停止と再開:</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>サブスクリプションの上限に達すると一時停止し、あとで再開します。</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>共有して、遊んだものを評価しよう</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>翻訳は公開レジストリにあります。自分の翻訳はワンクリックで共有でき、遊んだ翻訳は動作したかどうかを伝えられます。</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 人のプレイヤーが動作を確認すると、</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>翻訳は検証済みになります。</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>GitHub アカウントは</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>共有や評価のときだけ必要です。インストールには不要です。</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>翻訳中… {0} %</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{1} 人中 {0} 人が動作を確認</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>検証済み</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>はじめる</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>ライブラリを開く</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>ツアーを閉じる</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>ヘルプ</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>ようこそツアー</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>翻訳のインストール、AI での作成、共有を簡単に紹介します。</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>チュートリアル 入門 紹介 ガイド ヘルプ 初回 tutorial onboarding intro guide help</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>もう一度表示</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>やあ、旅人！</value>
+  </data>
+</root>

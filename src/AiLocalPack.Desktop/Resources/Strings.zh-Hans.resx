@@ -1,0 +1,3913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Chrome_BackTo" xml:space="preserve">
+    <value>‹ {0}</value>
+  </data>
+  <data name="Chrome_Activity" xml:space="preserve">
+    <value>动态</value>
+  </data>
+  <data name="Chrome_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>游戏库</value>
+  </data>
+  <data name="Library_GameCount_Other" xml:space="preserve">
+    <value>{0} 款游戏</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>跟随系统（{0}）</value>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>搜索设置</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>没有与“{0}”匹配的设置。</value>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>此部分将在 AI Local Pack 的后续版本中推出。</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>通用</value>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>语言、主题、后台运行、通知</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>游戏库</value>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Steam 文件夹和手动添加的游戏</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>AI 智能体</value>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>用于 AI 制作翻译的 Claude Code 和 Codex</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>帐户和你发布的翻译</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>存储</value>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>备份、工作副本、缓存</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>版本、更新、许可证、法律信息</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>后台运行</value>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>界面语言</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>最初由 AI 翻译。发现翻译有误？</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>在 GitHub 上修正</value>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>界面 语言 本地化 翻译 ui locale translation</value>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>游戏翻译目标语言</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>浏览翻译和用 AI 制作翻译时的默认语言。每个游戏页面都可以另选语言。</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>目标语言 翻译 汉化 语言 target language translation locale</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>“跟随系统”会使用系统的浅色 / 深色设置。</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>深色 浅色 暗色 模式 颜色 外观 dark light</value>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>跟随系统</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>开机启动，并在托盘中保持运行</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>窗口关闭时，应用仍可发现游戏更新。</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>托盘 自启动 开机 启动 登录 后台 tray autostart</value>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>游戏更新后重新应用翻译</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>如果商店更新或文件校验清除了翻译，而版本仍然兼容，就会重新安装翻译并做一份新的备份。否则你会收到通知。</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>托盘已关闭，因此只在应用启动时进行。</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>改为通知你，你可以手动重新应用。</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>更新 重新安装 恢复 重新应用</value>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>需要你做决定时</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>AI 翻译暂停、游戏更新后翻译不兼容、重新应用失败、PR 被拒。</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>任务完成时</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>翻译已安装或重新应用、AI 翻译完成、PR 已合并、应用更新已就绪。</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>社区对我的翻译的动态</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>新评价、“可用”确认、翻译通过验证。</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>通知 提醒 消息 notifications</value>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>窗口关闭时以系统通知显示；在应用内，所有事件都会显示在“动态”中。</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>系统通知需要托盘（见上方“后台运行”）；在此之前，事件只显示在“动态”中。</value>
+  </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>搜索游戏</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>按名称</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>最近玩过</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>文件夹</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>添加游戏文件夹</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>正在 Steam 库中查找游戏…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>未找到 Steam 库</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>找不到 Steam，或者其中没有游戏。你可以手动添加游戏文件夹，或指定 Steam 库的位置。</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>添加游戏文件夹</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>设置 → 游戏库</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>未找到结果</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>没有与“{0}”匹配的游戏。游戏不在库中？添加它的文件夹。</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>重置搜索和筛选</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>添加文件夹</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>手动</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>未知引擎</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>文件夹不可用</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0}（已阻止：{1}）</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>反作弊</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>打开游戏页面</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>打开游戏文件夹</value>
+  </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>从游戏库中移除</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>拖放文件夹以添加游戏</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>一个游戏文件夹，或包含多个游戏的文件夹</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>添加游戏</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>第 {0} 步，共 {1} 步</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>将游戏文件夹拖放到这里</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>将识别引擎并检查游戏文件。文件只会被读取，不会被修改。</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>选择文件夹…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>选择游戏文件夹</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>也可以直接把文件夹拖放到游戏库中</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>游戏文件夹在哪里？</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>桌面快捷方式：右键单击 → “打开文件所在的位置”。</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>程序坞：右键单击游戏 → 选项 → 在访达中显示。</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>桌面快捷方式：游戏路径在其 .desktop 文件的 Exec 行中。</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG、itch.io、Epic：启动器中有“打开安装文件夹”。</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Steam 游戏无需添加：它们会自动出现在游戏库中。</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>在“{0}”及其子文件夹中未找到游戏。</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>请选择包含游戏可执行文件的文件夹。</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>文件夹“{0}”不存在或无法打开。</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>“{0}”太大，无法搜索。请选择范围更小的文件夹。</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>无法读取“{0}”中的文件。</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>无法打开此图片。请选择 PNG 或 JPEG 文件。</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>正在分析“{0}”…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>游戏文件只会被读取，不会被修改</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>查找可执行文件</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>识别引擎</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>计算文件指纹</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>查询翻译库</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0} / {1:N0} 个文件</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>将在后续版本中推出</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>未识别引擎</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>无可执行文件</value>
+  </data>
+  <data name="AddGame_Files_Other" xml:space="preserve">
+    <value>{0} 个文件</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} GB</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>更换封面</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>其他文件夹</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>“{0}”中有一款游戏，位于子文件夹 {1} 中。</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>翻译查询将在后续版本中推出。</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>翻译库中这款游戏的翻译将显示在这里。你现在就可以添加游戏。</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>未识别引擎。</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>你仍然可以用 AI 制作翻译：智能体会自行分析游戏文件。如果你知道引擎，请在详细信息中选择。</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>这款游戏已在游戏库中，名为“{0}”。</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>检测到 {0}。</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>无法为这款游戏安装或制作翻译：反作弊系统可能会封禁你的帐户。你仍然可以添加游戏，它在游戏库中会显示为不可用。</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>编辑游戏信息</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>引擎</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>已识别</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>未识别</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>主程序</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>封面</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>选择图片…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>使用游戏图标</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>选择封面图片</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>其他 / 不知道</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>添加游戏</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>添加为不可用</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>打开游戏页面</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>添加游戏</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>已添加到游戏库，名为“{0}”。</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>查找游戏</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>正在“{0}”中查找游戏…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>已扫描 {0} / {1} 个文件夹</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>最多深入 3 层</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>正在检查第 {0} 款游戏（共 {1} 款）：{2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>停止并显示</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>接下来逐个处理游戏：检查信息并添加。你可以跳过任何游戏；已在游戏库中的游戏会自动跳过。</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>没有可添加的新游戏</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>搜索已停止：显示目前找到的游戏。</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>此文件夹非常大，搜索提前停止。请选择范围更小的文件夹来查找其余游戏。</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>这些游戏已通过 Steam 在你的游戏库中。</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>开始添加</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>没有可执行文件</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>运行库安装程序（DirectX、Visual C++…）</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>游戏安装程序，而非已安装的游戏</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>工具程序，而非游戏</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>游戏存档</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>新</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>反作弊</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>已在库中</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>无法读取</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>已添加</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>已跳过</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>所有游戏</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>第 {0} 款，共 {1} 款</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>上一个</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>跳过</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>下一个</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>未添加任何游戏</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>跳过的游戏以后可以从同一文件夹中添加。</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>已添加</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>已添加为不可用（反作弊）</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>已跳过</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>已在游戏库中</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>已跳过：无法读取其文件</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>前往游戏库</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Other" xml:space="preserve">
+    <value>已找到 {0} 款游戏 · 可以停止并查看已找到的游戏</value>
+  </data>
+  <data name="AddGame_Overview_Title_Other" xml:space="preserve">
+    <value>在“{1}”中找到 {0} 款游戏</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Other" xml:space="preserve">
+    <value>{0} 款游戏，逐个处理</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Other" xml:space="preserve">
+    <value>已跳过 {0} 个不含游戏的文件夹</value>
+  </data>
+  <data name="AddGame_Tally_New_Other" xml:space="preserve">
+    <value>{0} 款新游戏</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Other" xml:space="preserve">
+    <value>{0} 款有反作弊</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Other" xml:space="preserve">
+    <value>{0} 款已在游戏库中</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Other" xml:space="preserve">
+    <value>{0} 款无法读取</value>
+  </data>
+  <data name="AddGame_Result_Title_Other" xml:space="preserve">
+    <value>已添加 {0} 款游戏</value>
+  </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>手动添加的游戏</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>其他商店</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>移除游戏只会将其从 AI Local Pack 中移除。游戏文件和已安装的翻译保持不变。</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>重新扫描, 扫描, 刷新, 游戏库, 文件夹, rescan, steamapps, library folders</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · 正在扫描…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>正在读取 Steam 库文件夹。</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>上次扫描于 {0}。每次启动应用时都会重新扫描 Steam。</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>尚未扫描。</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>未找到 Steam</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>如果 Steam 安装在不常见的位置，请在下方添加它的库文件夹。</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>重新扫描</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>正在扫描</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Steam 库文件夹</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · 由 Steam 找到</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · 由你添加</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>不可用</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Other" xml:space="preserve">
+    <value>已隐藏 {0} 款游戏</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>添加 Steam 库文件夹</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>仅在其他磁盘上的库未被找到时使用。</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, 磁盘, 硬盘, 驱动器, SD 卡, 游戏库, 添加, drive, sd card</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>选择 Steam 库文件夹</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>“{0}”不是 Steam 库：其中没有 steamapps 文件夹。</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>“{0}”已在列表中。</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>无法保存文件夹列表。请重试。</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>要从 AI Local Pack 中移除“{0}”吗？</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>其中的游戏将从游戏库中移除。文件夹、游戏和已安装的翻译仍保留在磁盘上，Steam 也不会被更改。你以后可以再次添加此文件夹。</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>手动添加的游戏</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>没有手动添加的游戏。可以在这里或游戏库中使用“添加游戏文件夹”，也可以将文件夹拖入窗口。</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>添加游戏文件夹</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>手动, 文件夹, 游戏, manual, folder, gog, itch, epic</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>要从 AI Local Pack 中移除“{0}”吗？</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>游戏文件夹和已安装的翻译仍保留在磁盘上。你以后可以再次添加此文件夹。</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games、GOG、EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>在此之前，请以文件夹形式添加它们的游戏。</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, 商店, galaxy, store</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>即将推出</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>有一个 Steam 库不可用</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Other" xml:space="preserve">
+    <value>{1}：{0} 款游戏已隐藏，直到该文件夹恢复。已安装的翻译不受影响。</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Settings_Steam_Folders_Other" xml:space="preserve">
+    <value>{0} 个文件夹</value>
+  </data>
+  <data name="Chrome_Activity_Checking" xml:space="preserve">
+    <value>动态：正在进行启动检查</value>
+  </data>
+  <data name="Chrome_CheckingForChanges" xml:space="preserve">
+    <value>正在检查变化…</value>
+  </data>
+  <data name="Startup_Step_Settings" xml:space="preserve">
+    <value>加载设置</value>
+  </data>
+  <data name="Startup_Step_Catalog" xml:space="preserve">
+    <value>打开你的游戏库</value>
+  </data>
+  <data name="Startup_Step_Steam" xml:space="preserve">
+    <value>扫描 Steam 库</value>
+  </data>
+  <data name="Startup_Step_Detection" xml:space="preserve">
+    <value>识别引擎和反作弊</value>
+  </data>
+  <data name="Startup_Waiting" xml:space="preserve">
+    <value>等待中</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>未完成：详情见日志</value>
+  </data>
+  <data name="Startup_Summary" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Startup_Checks_Title" xml:space="preserve">
+    <value>启动检查</value>
+  </data>
+  <data name="Startup_Settings_Done" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Startup_Settings_ThemeSystem" xml:space="preserve">
+    <value>跟随系统主题</value>
+  </data>
+  <data name="Startup_Settings_ThemeDark" xml:space="preserve">
+    <value>深色主题</value>
+  </data>
+  <data name="Startup_Settings_ThemeLight" xml:space="preserve">
+    <value>浅色主题</value>
+  </data>
+  <data name="Startup_Catalog_Missing" xml:space="preserve">
+    <value>还没有游戏：首次启动</value>
+  </data>
+  <data name="Startup_Catalog_Corrupted" xml:space="preserve">
+    <value>游戏列表已损坏：已保存备份，正在从 Steam 重建</value>
+  </data>
+  <data name="Startup_Catalog_Unreadable" xml:space="preserve">
+    <value>无法读取游戏列表：以空列表启动，更改不会被保存</value>
+  </data>
+  <data name="Startup_Steam_NotFound" xml:space="preserve">
+    <value>未找到 Steam</value>
+  </data>
+  <data name="Startup_Steam_New" xml:space="preserve">
+    <value>{0} · 新增：{1}</value>
+  </data>
+  <data name="Startup_Steam_More" xml:space="preserve">
+    <value>{0} +{1}</value>
+  </data>
+  <data name="Startup_Detection_None" xml:space="preserve">
+    <value>没有新的或已更新的游戏</value>
+  </data>
+  <data name="Startup_Detection_Done_Other" xml:space="preserve">
+    <value>已检查 {0} 款游戏</value>
+  </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>更新翻译列表</value>
+  </data>
+  <data name="Startup_Index_Done_Other" xml:space="preserve">
+    <value>{0} 个翻译</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>离线：显示 {0} 保存的列表</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>无法连接翻译库</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>翻译列表需要更新版本的应用</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>翻译库地址无效：详情见日志</value>
+  </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>完成中断的安装</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>请勿关闭应用</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>安装已撤销：游戏文件已恢复原样</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>安装已完成</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>卸载已完成：原始文件已恢复</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>暂时无法完成：将在下次启动时重试（详情见日志）</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>另一个安装正在进行</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>没有需要完成的操作</value>
+  </data>
+  <data name="Splash_Version" xml:space="preserve">
+    <value>版本 {0}</value>
+  </data>
+  <data name="Splash_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Splash_Details" xml:space="preserve">
+    <value>详情</value>
+  </data>
+  <data name="Splash_HideDetails" xml:space="preserve">
+    <value>隐藏详情</value>
+  </data>
+  <data name="Splash_Slow" xml:space="preserve">
+    <value>耗时比平时更长。请不要关闭应用：已完成 {0} / {1} 步。</value>
+  </data>
+  <data name="Library_CatalogDamaged" xml:space="preserve">
+    <value>保存的游戏列表已损坏。已重新找到 Steam 游戏；手动添加的游戏需要重新添加。旧文件保存为 {0}。</value>
+  </data>
+  <data name="Library_CatalogDamaged_NoBackup" xml:space="preserve">
+    <value>保存的游戏列表已损坏。已重新找到 Steam 游戏；手动添加的游戏需要重新添加。</value>
+  </data>
+  <data name="Library_Banner_Dismiss" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>有翻译</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>无翻译</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>需要更新</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>制作中</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>按状态筛选</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>制作中 · {0}%</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>已暂停 · {0}%</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>不可用</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>用 AI 制作</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>开发商已退出</value>
+  </data>
+  <data name="Library_Card_PackCount_Other" xml:space="preserve">
+    <value>{0} 个翻译</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>已验证</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>alpha</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>剩余约 {0}</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>{0} 个赞</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}：{1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>翻译为</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>徽标和计数所用的语言。也可在 设置 → 通用 中更改。</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>重要的优先</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>无法连接翻译库。显示 {0} 保存的数据。</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>无法连接翻译库。翻译库响应后将显示翻译状态。</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>翻译库使用了更新的格式。请更新应用以查看最新的翻译。</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>应用设置的翻译库地址无效，因此无法显示翻译状态。</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>没有符合此筛选条件的游戏。游戏不在库中？添加它的文件夹。</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>在此筛选条件下没有与“{0}”匹配的游戏。游戏不在库中？添加它的文件夹。</value>
+  </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>未知引擎</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>手动添加</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>版本 {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>文件哈希 {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>游戏版本：Steam 版本 ID（build ID）</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Other" xml:space="preserve">
+    <value>游戏版本：{0} 个文件的哈希</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>安装翻译</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>用 AI 制作翻译</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>开始游戏</value>
+  </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>正在启动…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>自 {0} 起运行</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>无法启动游戏：{0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>无法访问游戏文件夹。请连接磁盘，或检查文件夹是否还在。</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>在游戏文件夹中找不到可启动的程序。</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>这是 Windows 版本。要在 Linux 上玩，请将其作为非 Steam 游戏添加到 Steam 并开启 Proton。</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>这是 Windows 版本，无法在此系统上运行。</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>这是 Linux 版本，无法在此系统上运行。</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>这是 macOS 版本，无法在此系统上运行。</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>更新到第 {0} 版</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>翻译新增文本</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>查看进度</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>使用你的 Claude Code 或 Codex 订阅</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>通过 Steam · 使用“{0}”</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>使用“{0}”</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>替换已安装的第 {0} 版</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>尚无适配新游戏版本的修订版</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>“{0}”</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>适配你的版本</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>制作中 · {0}%</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>制作中 · {0}% · 剩余约 {1}</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>已暂停 · {0}%</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>已安装的翻译</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>已安装 · 与新版本不兼容</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>“{0}” · {1} · 第 {2} 版</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>“{0}” · 第 {1} 版</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>游戏已更新（{0}）。已安装的“{1}”第 {2} 版与其不兼容；部分文本可能会显示为英文。</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>语音：即将推出</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>通过文本转语音生成“{0}”配音的功能将在下一个大版本中推出。文本翻译现已可用。</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>贴图：即将推出</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>翻译图片中的文字（招牌、菜单、地图）将在以后推出。文本翻译现已可用。</value>
+  </data>
+  <data name="Game_Packs_Count_Other" xml:space="preserve">
+    <value>{1}：{0} 个翻译</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>还没有“{0}”的翻译</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>还没有人分享这款游戏的翻译。你可以用自己的 AI 智能体制作，并分享给其他玩家。</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>用 AI 制作</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>翻译列表尚未加载。翻译库响应后将显示翻译。</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>用 AI 制作</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>语音</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>贴图</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>即将推出</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>游戏页面分区</value>
+  </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>本地化</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>这些都不合适？</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>用 AI 自己制作</value>
+  </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>这款游戏无法使用本地化</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>检测到 {0}。修改游戏文件可能导致你的帐户被封禁，因此 AI Local Pack 不会为带反作弊的游戏安装或制作翻译。</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>发行商要求不传播这款游戏的玩家翻译，因此 AI Local Pack 不会为其安装或制作翻译。</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>认为这是个错误？</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>报告</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>在 GitHub 上的翻译库中打开一个预填好的议题</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>显示其他语言的翻译</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>搜索语言</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>这款游戏的翻译</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>没有匹配的语言。</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>翻译排序</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>状态、评分</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>最新</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>覆盖率</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>翻译库</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>兼容</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>可能兼容</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>不兼容</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>检查中…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>未检查</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>第 {0} 版 · 第 {1} 版可用</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>GitHub 讨论中的赞</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>第 {0} 版</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>与你的版本兼容</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>可能兼容</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>与你的版本不兼容</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>正在检查兼容性…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>正在读取翻译的清单，并将其修改的文件与你的游戏副本比较。</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>无法读取翻译的详细信息</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>翻译库没有响应。请检查网络连接后重试。</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>翻译库中没有此翻译的清单。它可能在列表保存后已被移除。</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>翻译库中此翻译的清单已损坏，因此无法检查或安装。</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>此翻译使用了更新的格式。请更新应用后再安装。</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>为版本 {0} 制作，正是你的版本。</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>它修改的所有文件（{0} 个）都与你的副本一致。</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>为版本 {0} 制作，你的是 {1}。已变化的文件：{2} / {3}；更新新增的文本将保持未翻译。</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>自其适配的版本以来已变化的文件：{0} / {1}；更新新增的文本将保持未翻译。</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>此翻译适用于另一款游戏。</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>无法访问游戏文件夹。请连接磁盘后重试。</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>游戏文件夹中缺少它要修改的文件（{0} 个），例如 {1}。</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>无法读取游戏文件夹中的 {0}。</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>二进制补丁需要与制作时完全相同的文件；已变化的文件：{0} / {1}。</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>它需要工具包中的工具“{0}”，而此应用没有。请更新应用。</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>它需要“{0}” {1}，比此应用中的更新。请更新应用。</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>作者</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>制作工具</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>覆盖率</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>反馈</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>更新于</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>依赖</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>修订版</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>手工</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>{0}% 的文本</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>{0} 人可用 · {1} 人不可用</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0}（从官方发布页下载）</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>第 {0} 版 · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>第 {0} 版 · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>无法安装。你可以改为用 AI 翻译缺失的文本。</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>连接到翻译库后即可安装。</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>将替换已安装的“{0}”。</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>用 AI 翻译</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>GitHub 上的评价</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>在浏览器中打开此翻译的讨论</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>无法连接翻译库。显示 {0} 保存的列表；恢复联网前无法安装。</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>其他语言的翻译：</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0}（{1}）</value>
+  </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>已卸载之前的翻译“{0}”第 {1} 版。</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>与你的文件的兼容性：{0}。</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>翻译第 {0} 版取自缓存。</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>翻译第 {0} 版已下载：{1} 字节。</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>已恢复原始文件：{0}；已删除新增文件：{1}。</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>已保留（安装后有改动）：{0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>已重建游戏文件：{0}；已应用文本：{1}。</value>
+  </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>游戏本身没有“{1}”语言：翻译会替换其“{0}”文本。请在游戏设置中选择“{0}”。</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>此游戏版本中找不到的文本：{0}。</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>已替换文件：{0}；已添加文件：{1}。</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>已停止：{0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>已从备份恢复游戏文件。</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>恢复游戏文件失败；应用将在下次启动时重试。</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>正在安装“{0}” · 第 {1} 步，共 {2} 步</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>正在重新应用“{0}” · 第 {1} 步，共 {2} 步</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>正在卸载“{0}”</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>下载翻译</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>卸载之前的翻译</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>检查你的游戏文件</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>根据文本重建游戏文件</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>备份原始文件</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>写入新文件</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>校验</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>恢复原始文件</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>另一个安装或卸载正在进行。请等待其完成后重试。</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>无法为这款游戏安装翻译（反作弊，或开发商要求不提供）。</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>此翻译已不在翻译库的列表中。</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>无法下载翻译：无法连接翻译库。</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>无法下载翻译：翻译库未及时响应。</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>无法下载翻译：翻译库返回了错误。</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>翻译库中此翻译的文件已不存在。</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>此翻译需要更新版本的 AI Local Pack。请更新应用。</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>下载的文件已损坏（哈希校验失败），已被删除。</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>无法保存下载内容：缓存文件夹无法写入。</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>翻译库中的此翻译已损坏。</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>此翻译与你的游戏版本不匹配。{0}</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>无法读取此翻译的文本表。</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>无法根据文本重建 {0}：游戏文件无法读取或格式异常。</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>出了点问题。详情见日志。</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>游戏正在运行。请关闭游戏后重试。</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} 正在被使用，游戏似乎在运行。请关闭游戏后重试。</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>游戏所在磁盘的可用空间不足。</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>没有修改 {0} 的权限。</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} 是只读的。</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>无法访问游戏文件夹（磁盘已断开或文件夹已移动）。</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>这款游戏已安装了一个翻译。</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>这款游戏没有安装翻译。</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>之前的一次安装被中断，暂时无法完成。请重启应用以完成它。</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>写入后 {0} 的内容与预期不符。</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>{0} 的备份缺失或已损坏。</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>无法读取或写入 {0}。</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>Alpha：尚未得到其他玩家确认。</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>可能兼容。{0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>将从官方发布页下载 {0} {1}（校验哈希）。</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>将替换已安装的“{0}”第 {1} 版。</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>要安装“{0}”吗？</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>原始文件会被备份；你可以随时卸载。</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>已安装：“{0}”。</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>请在游戏中将语言设为“{0}”。</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>已重新应用：“{0}”。</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>已卸载“{0}”；原始文件已恢复。</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>无法安装；文件已恢复。</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>无法重新应用；文件已恢复。</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>无法安装，且恢复文件失败。应用将在下次启动时重试。</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>无法卸载。</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>开始游戏</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>撤销</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>详情</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>无法安装“{0}”</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>无法重新应用“{0}”</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>无法卸载“{0}”</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>游戏文件已恢复原样。</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>部分文件可能仍是翻译的文件；再次卸载即可完成。</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>部分文件恢复失败；应用将在下次启动时重试。</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>要卸载“{0}”吗？</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>将从备份恢复游戏的原始文件。翻译仍保留在翻译库中，可以再次安装；你的游戏和存档不受影响。</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>安装中</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>正在安装…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>卸载（恢复原始文件）</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>安装中 · {0}%</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>正在卸载…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>已安装翻译的操作</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>重新应用</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>在“文本”中显示</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>卸载（恢复原始文件）</value>
+  </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>字体：游戏字体包含翻译所需的全部字符。</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>字体：“{0}”缺少翻译所需的字符（缺少：{1}；{2}）；已替换为 {3}（开源字体）。</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>字体：“{0}”缺少翻译所需的字符（缺少：{1}；{2}）。</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>{0} 也缺少其中部分字符（缺少：{1}；{2}）；这些字符可能显示为方框。</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>字体：无法读取 {0}；保持原样。</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>翻译指定了此应用不认识的字体：{0}（已忽略；请更新应用）。</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>游戏字体缺少此翻译所需的字符，而包含这些字符的开源字体 {0} 无法准备好。</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>游戏字体缺少此翻译所需的字符，而包含这些字符的开源字体 {0} 无法下载。请检查网络连接后重试。</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0}（内置）</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0}（安装时下载）</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>此应用的工具包目前在此系统上不支持 {0} 游戏，因此无法安装此翻译。</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>下载所需组件</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>此翻译需要 {0}，但它不在翻译库的允许组件列表中，因此无法安装。</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>此翻译需要 {0}，但其官方发布中没有适用于此游戏版本（{1}）的构建。</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>此翻译需要 {0}，但应用无法判断此游戏版本面向哪个系统（无法读取其主程序）。</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>无法从官方发布页下载 {0}。请检查网络连接后重试。</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>{0} 的官方发布已不在翻译库列表中记录的地址。</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>下载的 {0} 与翻译库列表中的哈希不符；已删除，未安装任何内容。</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>{0} 的发布压缩包无法安全解压；未安装任何内容。</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>这款游戏已安装了此翻译所需组件的另一个版本，或该组件会覆盖翻译自身的文件。</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1}（{2}）：已从官方发布页（{4}）下载 {3} 字节，哈希已校验。</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1}（{2}）：取自缓存（下载时已校验哈希）。</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>这款游戏已安装 {0} {1}；翻译与其共用。</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} 已随翻译安装：{2} 个文件。</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>已移除 {0} {1}：没有其他翻译使用它。</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0}（不在翻译库的允许组件列表中）</value>
+  </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>检查已安装的翻译</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>没有需要检查的已安装翻译</value>
+  </data>
+  <data name="Startup_Packs_Done_Other" xml:space="preserve">
+    <value>{0} 个翻译正常</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>游戏更新后已重新应用：{0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>游戏更新导致翻译失效：{0}</value>
+  </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>检查制作任务</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>没有制作任务</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>应用关闭时被中断：{0}。可在游戏页面继续</value>
+  </data>
+  <data name="Startup_Jobs_Done_Other" xml:space="preserve">
+    <value>{0} 个制作任务进行中</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>重新应用</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>根据你的文件重新写入“{0}”第 {1} 版</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>已安装 · 游戏更新后未应用</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>游戏更新恢复了原始文件：“{0}”第 {1} 版仍然适用但未应用，因此游戏显示的是原文。</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>游戏更新恢复了原始文件，重新应用“{0}”第 {1} 版失败。{2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>重新应用</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>将二进制补丁应用到游戏文件的副本</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>已打补丁的文件：{0}。</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>已打过补丁，保持原样：{0}。</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>此翻译的补丁压缩包已损坏。</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>无法读取 {0} 以打补丁。</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>无法写入打过补丁的文件：缓存文件夹无法写入。</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>无法将二进制补丁应用到 {0}：补丁已损坏，或其制作方式此应用无法读取。</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>动态</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>全部已读</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>通知设置</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>窗口关闭时，事件会以系统通知的形式送达。</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>需要你做决定</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>昨天</value>
+  </data>
+  <data name="Activity_Day_New_Other" xml:space="preserve">
+    <value>{0} 条新动态</value>
+  </data>
+  <data name="Activity_ShowMore_Other" xml:space="preserve">
+    <value>再显示 {0} 条</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>一切平静</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>安装、AI 制作的翻译、发布以及游戏更新后的自动重新应用都会显示在这里。</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>稍后决定：移到动态列表</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>隐藏</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>新</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>AI Local Pack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>需要你做决定</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · {1} %</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>已安装“{0}”</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>已卸载“{0}”；原始文件已恢复</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>已重新应用“{0}”</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>游戏更新后已重新应用“{0}”</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>无法安装“{0}”</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>无法卸载“{0}”</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>无法重新应用“{0}”</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>游戏已更新；重新应用“{0}”失败</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>游戏已更新；“{0}”第 {1} 版现已不兼容</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>游戏已更新；“{0}”未应用</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>部分文件恢复失败；应用将在下次启动时重试。</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>此翻译的第 {0} 版已可用。</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>尚无更新的修订版：用 AI 翻译新增文本。</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>游戏恢复了原始文件。此翻译仍适用于当前版本：请重新应用。</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>重新应用</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>更新到第 {0} 版</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>翻译新增文本</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Other" xml:space="preserve">
+    <value>动态：{0} 项需要你做决定</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>动态：{0}</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>打开 AI Local Pack</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>检查游戏更新</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>智能体仅用于用 AI 制作新翻译；安装翻译从不需要智能体。它们使用你自己的订阅：本项目不为任何 AI 付费。</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>智能体</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>以后推出</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>AI 智能体</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai 安装 登录 退出登录 订阅 更新 智能体 install sign in login subscription</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>正在检查…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>未安装</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>正在安装 · {0}%</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>正在更新到 {0} · {1}%</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>版本 {0} 太旧</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>已安装 · 未登录</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>会话已过期</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>未检查登录状态</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>等待登录</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>就绪 · 已登录</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>由 AI Local Pack 安装</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>在你的系统中找到：{0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>已登录为 {0}</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>将 Anthropic 的官方版本{0}下载到应用的文件夹，并验证其签名。无需 Node.js，无需管理员权限。</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>将 OpenAI 的官方版本{0}下载到应用的文件夹，并根据发布页的校验和核对其哈希。无需 Node.js，无需管理员权限。</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>正在查找官方发布并检查其可信凭据…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>正在从 {0} 下载…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>哈希已校验，正在放置到位…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>AI Local Pack 需要 {0} 或更高版本。请更新应用中的副本。</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>AI Local Pack 需要 {0} 或更高版本。请按原来的安装方式更新你的副本，然后重新检查。</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>使用你的 Claude 订阅登录。Claude Code 自己的登录页会在浏览器中打开；AI Local Pack 永远不会看到令牌。</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>使用你的 ChatGPT 订阅登录。Codex 自己的登录页会在浏览器中打开；AI Local Pack 永远不会看到令牌。</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>无法检查登录状态：{0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>请在 {0} 打开的浏览器窗口中完成登录。</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>更新到 {0}</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>重新检查</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>无法安装 {0}：{1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>无法连接 {0}。请检查网络连接后重试；下载会从中断处继续。</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>{0} 的服务器返回了错误。请稍后重试。</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>{0} 没有适用于此系统的官方版本。</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>下载的文件未通过签名或哈希校验，已被删除。未安装任何内容。</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>无法写入应用的文件夹：{0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>{0} 的另一个安装正在进行。</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>登录流程已结束，但未登录成功。请重试。</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>登录未在 10 分钟内完成，已停止。</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>无法开始登录：{0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>智能体仍显示为已登录。</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>默认智能体</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>在制作表单中预先选中；每款游戏都可以切换。</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>智能体 制作 生成 默认 claude codex agent</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>请先安装并登录一个智能体</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>自己的 API 密钥或本地模型</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>适用于没有 Claude 或 ChatGPT 订阅的玩家。</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>api 密钥 key 本地 模型 local model ollama</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0} 已退出登录</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>会话已过期。请重新登录以开始或继续制作。</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>准备</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>提取</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>术语表</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>构建和测试</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>制作步骤</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>制作翻译，目标语言</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>译为</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>翻译成另一种语言</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>待翻译</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>智能体用时</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="Gen_Tile_Words_Other" xml:space="preserve">
+    <value>条文本 · {0} 个词</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>根据文件大小粗略估算</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>在后台运行</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>天的入门套餐额度</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>入门套餐（Claude Pro、ChatGPT Plus）的用量额度天数，按每天三个 5 小时窗口计算</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} 分钟</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} 小时</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>正在估算…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>无法估算游戏规模：{0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>智能体</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>未安装</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>未登录</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>正在下载官方版本 · {0}%</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>请在浏览器中完成登录…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>你的副本</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>由 AI Local Pack 安装</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>正在检查游戏引擎…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · 工具包支持</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>未知引擎：智能体会自己编写读取程序，翻译将是二进制补丁</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}：工具包在此系统上不支持，因此智能体会自己编写读取程序（翻译将是二进制补丁）</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}：工具包无法读取，因此智能体会自己编写读取程序（翻译将是二进制补丁）</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}：工具包无法读取这款游戏（{1}）</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>正在检查磁盘空间…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>工作副本 {0}</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>工作副本 {0}，克隆方式：不占空间</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · 可用 {1}</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>空间不足：需要 {0}，可用 {1}</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} 已就绪</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} 需要设置</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>选择一个智能体</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>未检测到反作弊</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>翻译前让我审阅术语表</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>智能体在副本上工作；你的游戏文件不会被改动。</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>开始制作</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>正在启动…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>游戏文件夹不可用</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} 尚未就绪</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>正在估算规模…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>无法估算规模</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>工具包无法读取这款游戏的文件</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>磁盘空间不足以存放工作副本</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>这款游戏无法使用 AI 制作。</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>这款游戏已有一个制作任务。</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>无法创建任务文件夹：{0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>无法开始制作：{0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>正在创建工作副本</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>正在提取文本</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>正在建立术语表</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>正在翻译</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>正在构建和测试</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>等待你审阅术语表</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>已暂停</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>已中断</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>翻译已完成</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>译为“{0}”，使用 {1}</value>
+  </data>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} 分钟</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} 小时 {1} 分钟</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} 小时</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>重试此阶段</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>审阅术语表</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>已暂停：订阅额度用尽 · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>已暂停：订阅额度用尽 · 约 {0} 继续</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>在 {0}% 时中断</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>阶段失败：{0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>等待你的操作</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>订阅额度用尽 · 约 {0} 继续</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>订阅额度用尽</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>已由你暂停</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>已中断：可随时继续</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>某个阶段失败</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>术语表等待你审阅</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>第 {0} 块，共 {1} 块</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · 剩余约 {1}</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>正在复制游戏：智能体在副本上工作，你的文件不会被改动</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>正在用工具包提取文本</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>统一人名、术语和语气，让整个游戏读起来一致</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>在副本上重建游戏文件并启动一次</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>立即继续</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>重试此阶段</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>详情</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>继续翻译</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>刚刚翻译</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>最近翻译</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>与原文相同</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>空格</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>换行</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="Gen_Validator_Count_Other" xml:space="preserve">
+    <value>{0} 条校验警告</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>没有校验警告</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>每一块都会检查占位符、标签和长度限制；错误会退回给智能体。</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>显示</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>隐藏</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>{0} 额度</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>已用约 {0}%</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>已用尽</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>当前 5 小时窗口，以智能体报告为准</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>当前 7 天窗口，以智能体报告为准</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>当前用量窗口，以智能体报告为准</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>约 {0} 重置</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} 不报告其额度；额度用尽时任务会自动暂停。</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>智能体活动</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>暂无内容。</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>检查翻译</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>重建游戏文件</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>检查字体是否包含新字符</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>启动测试版本</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>保存你的翻译</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>字体：{0} 缺少翻译所需的字符；改用 {1}（OFL）。</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>你的智能体订阅额度已用尽。</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>任务将在约 {0} 自动继续。</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>额度重置后，任务将自动继续。</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>已暂停。</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>进度已保存：随时可以继续。</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>任务进行期间应用被关闭了。</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>进度已保存：将从“{0}”阶段的第 {1} 块（共 {2} 块）继续。</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>进度已保存：将从“{0}”阶段继续。</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>“{0}”阶段失败。</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>术语表已可供你审阅</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>点击继续后开始翻译；你的修改会在输入时自动保存。</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>智能体无法完成这一步。重试通常有效；已保存的翻译会保留。</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0} 已退出登录。请在 设置 → AI 智能体 中登录，然后重试。</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} 已不再安装。请在 设置 → AI 智能体 中安装，然后重试。</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>工具包无法处理游戏文件。原因见详情。</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>无法创建游戏的工作副本。原因见详情。</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>无法写入文件：请检查可用空间，然后重试。</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>测试运行时，翻译后的游戏因错误而关闭。重试会重建文件；你的翻译会保留。</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>发生了意外错误。日志见详情。</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>制作日志：{0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>打开任务文件夹</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>要取消制作吗？</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>已完成 {0}%。你可以保留进度以后继续，也可以删除工作副本以释放磁盘空间。</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>保留进度</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>删除工作副本</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>已停止。进度已保留：随时可以继续。</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>制作已取消，工作副本已删除。</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>任务正在另一个窗口或命令中运行。</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>这款游戏已禁止 AI 制作。</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>游戏文件夹不可用：请连接其所在磁盘后重试。</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>任务已不存在：它已在别处完成或被取消。</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>无法修改任务文件：{0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>无法继续：{0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>制作已暂停：订阅额度用尽</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>将在约 {0} 自动继续</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>额度重置后将自动继续</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>立即继续</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>已暂停</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>制作中 · {0}</value>
+  </data>
+  <data name="Gen_Review_Title" xml:space="preserve">
+    <value>审阅术语表</value>
+  </data>
+  <data name="Gen_Review_Subtitle" xml:space="preserve">
+    <value>每一块都会用到的人名、地名和术语。现在就修正它们。</value>
+  </data>
+  <data name="Gen_Review_Terms_Other" xml:space="preserve">
+    <value>{0} 个术语</value>
+  </data>
+  <data name="Gen_Review_Tone" xml:space="preserve">
+    <value>语气</value>
+  </data>
+  <data name="Gen_Review_Tone_Agent" xml:space="preserve">
+    <value>由智能体决定</value>
+  </data>
+  <data name="Gen_Review_Tone_Informal" xml:space="preserve">
+    <value>非正式</value>
+  </data>
+  <data name="Gen_Review_Tone_Formal" xml:space="preserve">
+    <value>正式</value>
+  </data>
+  <data name="Gen_Review_Tone_WithPronoun" xml:space="preserve">
+    <value>{0}（“{1}”）</value>
+  </data>
+  <data name="Gen_Review_AgentTone" xml:space="preserve">
+    <value>智能体选择的语气：{0}</value>
+  </data>
+  <data name="Gen_Review_Column_Term" xml:space="preserve">
+    <value>术语</value>
+  </data>
+  <data name="Gen_Review_Column_Translation" xml:space="preserve">
+    <value>译名</value>
+  </data>
+  <data name="Gen_Review_Column_Note" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="Gen_Review_KeepAsIs" xml:space="preserve">
+    <value>保持原样</value>
+  </data>
+  <data name="Gen_Review_Edited" xml:space="preserve">
+    <value>已修改</value>
+  </data>
+  <data name="Gen_Review_Search" xml:space="preserve">
+    <value>搜索术语</value>
+  </data>
+  <data name="Gen_Review_NoMatch" xml:space="preserve">
+    <value>没有匹配的术语。</value>
+  </data>
+  <data name="Gen_Review_Empty" xml:space="preserve">
+    <value>智能体只保存了语气，没有术语。</value>
+  </data>
+  <data name="Gen_Review_Blank" xml:space="preserve">
+    <value>每个术语都需要译名。</value>
+  </data>
+  <data name="Gen_Review_Loading" xml:space="preserve">
+    <value>正在加载术语表…</value>
+  </data>
+  <data name="Gen_Review_LoadFailed" xml:space="preserve">
+    <value>无法读取术语表：{0}</value>
+  </data>
+  <data name="Gen_Review_SaveFailed" xml:space="preserve">
+    <value>无法保存你的修改：{0}</value>
+  </data>
+  <data name="Gen_Action_Regenerate" xml:space="preserve">
+    <value>重新生成</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Title" xml:space="preserve">
+    <value>要重新起草术语表吗？</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Text" xml:space="preserve">
+    <value>智能体会根据游戏文本重新起草；当前的术语将被替换。</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Other" xml:space="preserve">
+    <value>智能体会根据游戏文本重新起草；其他术语将被替换，你修改过的 {0} 个术语会保留。</value>
+  </data>
+  <data name="Activity_Event_GlossaryReview" xml:space="preserve">
+    <value>术语表可供审阅</value>
+  </data>
+  <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
+    <value>你检查后即开始翻译。</value>
+  </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>你的翻译已被删除或无法读取。</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>你的翻译取自 {0}。</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>覆盖率</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Other" xml:space="preserve">
+    <value>{0} 条文本未翻译</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>所有文本都已翻译</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>测试运行</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>通过</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>翻译后的游戏运行了 {0} 秒，未关闭</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>已跳过</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>在游戏文件夹中找不到可启动的程序</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>这款游戏是为其他系统构建的</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>这款游戏只能通过 Steam 启动</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>系统未能启动游戏</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>即使未翻译，游戏也会立即关闭（它需要其商店或光盘）</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>测试运行已关闭</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>未检查</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>工具包无法读取此引擎的字体</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>游戏字体适用</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>包含翻译所需的全部字符</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>已换用 {0}</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>{0} 缺少翻译所需的字符</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Other" xml:space="preserve">
+    <value>仍缺少 {0} 个字符</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>校验</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>无警告</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>长度、占位符和标签均无问题</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Other" xml:space="preserve">
+    <value>{0} 条警告</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}：{1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>翻译已完成</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>已作为你的翻译保存在 文本 → 我的 · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>“{0}”，译为“{1}”</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Other" xml:space="preserve">
+    <value>显示 {0} 条警告</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>隐藏警告</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>请在游戏中将语言设为“{0}”：翻译会替换其文本。</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>再玩一次</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>安装并游玩</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>丢弃</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>在“文本”中显示</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>新翻译</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>翻译保留在 文本 → 我的；工作副本将被删除，并打开制作表单。</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>安装时会备份原始文件；你可以随时卸载。</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>效果不错？分享给其他玩家吧。</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>将以 alpha 状态发布到翻译库；游戏、版本、哈希、智能体和字体会自动填写。</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>以后再说</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>你可以稍后在 文本 → 我的 中发布。</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>翻译及其工作副本已删除。</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>翻译保留在 文本 → 我的；工作副本已删除。</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>要丢弃此翻译吗？</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>你的翻译“{0}”和任务的工作副本将被删除。此操作无法撤销。</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>此翻译已安装：请先卸载。</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>无法删除文件：{0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>我的</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>翻译库中还没有“{0}”的翻译。</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>{0} 翻译</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>正在用 AI 制作 · 打开“用 AI 制作”标签页</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>本地 · 未发布</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>制作中 {0}%</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>已在游戏中试玩</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>尚未试玩</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>本地 · 创建于 {0}</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>已在游戏中试玩</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>你已使用此翻译玩过游戏。现在可以分享它了。</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>尚未在游戏中试玩</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>安装后玩一玩：试玩后即可发布。</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>测试运行</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>校验</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}：{1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>发布前，应用会将其与翻译库中的翻译进行比较：你可以将其作为其中某个翻译的新修订版发布，也可以作为独立的翻译发布。</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>已安装到游戏中：删除前请先卸载。</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>请先在游戏中试玩：之后即可发布。</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>要删除“{0}”吗？</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>你的翻译以及制作它的任务的工作副本将被删除。此操作无法撤销。</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>已删除你的翻译“{0}”。</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>安装并游玩</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>你的翻译 · {0}% 的文本 · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>测试通过</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>未测试运行</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>“{0}” · 你的翻译</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>你的翻译已完成</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>你的翻译 · {0}% 的文本</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>你的翻译 · {0}</value>
+  </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>将新增文本翻译为</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>基于已安装的“{0}”第 {1} 版：保留其已有翻译，只把新增和修改的文本交给智能体。</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>新增：{0} · 修改：{1} · 保留：{2} · 删除：{3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>无法读取已安装的“{0}”第 {1} 版：{2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>第 {0} 版，基于第 {1} 版的更新 · 新增：{2} · 修改：{3} · 删除：{4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>游戏已更新（{0}）。已安装的“{1}”第 {2} 版是为早期版本制作的：更新新增或修改的文本将显示为未翻译。</value>
+  </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Windows 凭据管理器</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>macOS 钥匙串</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>系统密钥环（Secret Service）</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>开发用密钥文件</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>内存</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>在浏览器中打开 {0}</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>输入此代码并授权 ailocalpack</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>正在向 GitHub 请求代码…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>等待你在浏览器中授权…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>打开浏览器</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>无法连接 GitHub。请检查网络连接后重试。</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub 拒绝了登录：{0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>代码在授权前已过期。请重试以获取新代码。</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>已在 GitHub 上取消登录。</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub 已授权 {0}，但 {1} 无法保存令牌，因此你仍处于未登录状态（令牌从不以明文保存）：{2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>帐户</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>我发布的翻译</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>GitHub 帐户</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github 帐户 账号 登录 退出登录 令牌 钥匙串 个人资料 发布 account sign in login token keychain publish</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>未登录</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>仅在发布翻译以及评价或确认翻译时需要。安装翻译从不需要帐户。</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>已登录 · 令牌保存在系统钥匙串中（{0}）</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>已退出登录：令牌已从这台电脑上删除。在你于 GitHub 上撤销之前，ailocalpack 仍会出现在你已授权的应用中。</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>在 GitHub 上撤销访问权限</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub 不再接受此应用对 {0} 的访问，因此应用已退出登录。请重新登录以发布或评价翻译。</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>暂时无法连接 GitHub；显示上次获取的帐户信息。</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>无法从 {0} 读取令牌：{1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>使用 GitHub 登录</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>无法从 {0} 删除令牌，因此你仍处于登录状态：{1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>我发布的翻译</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>已发布 翻译 拉取请求 讨论 已验证 published translations pull request pr discussion verified alpha</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>还没有发布任何内容。用 AI 制作翻译后，可在游戏的“用 AI 制作”标签页中发布。</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>登录后可查看你发布的翻译。</value>
+  </data>
+  <data name="Activity_Event_PackSubmitted" xml:space="preserve">
+    <value>已将“{0}”提交到翻译库</value>
+  </data>
+  <data name="Activity_Event_PublishFailed" xml:space="preserve">
+    <value>无法发布“{0}”</value>
+  </data>
+  <data name="Publish_SignIn_Title" xml:space="preserve">
+    <value>发布到 ailocalpack 翻译库</value>
+  </data>
+  <data name="Publish_SignIn_Intro" xml:space="preserve">
+    <value>仅首次需要。翻译以 GitHub 拉取请求的形式分享，因此请使用你的 GitHub 帐户登录。</value>
+  </data>
+  <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
+    <value>已登录为 {0}</value>
+  </data>
+  <data name="Publish_SignIn_SignInButton" xml:space="preserve">
+    <value>使用 GitHub 登录</value>
+  </data>
+  <data name="Publish_SignIn_License" xml:space="preserve">
+    <value>我以 CC BY-SA 4.0 许可发布此翻译</value>
+  </data>
+  <data name="Publish_SignIn_LicenseText" xml:space="preserve">
+    <value>任何人都可以在署名的前提下使用和改编它。只分享译文和配方，绝不包含原文或游戏文件。</value>
+  </data>
+  <data name="Publish_SignIn_HintWaiting" xml:space="preserve">
+    <value>等待 GitHub…</value>
+  </data>
+  <data name="Publish_SignIn_HintSignIn" xml:space="preserve">
+    <value>使用 GitHub 登录以继续</value>
+  </data>
+  <data name="Publish_SignIn_HintLicense" xml:space="preserve">
+    <value>接受许可以继续</value>
+  </data>
+  <data name="Publish_Continue" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Publish_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Publish_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Publish_Similar_Title" xml:space="preserve">
+    <value>已有“{0}”的翻译</value>
+  </data>
+  <data name="Publish_Similar_Intro" xml:space="preserve">
+    <value>改进它，而不是再添加一个近乎重复的翻译？</value>
+  </data>
+  <data name="Publish_Similar_Existing" xml:space="preserve">
+    <value>“{0}”，作者 {1} · 第 {2} 版</value>
+  </data>
+  <data name="Publish_Similar_Coverage" xml:space="preserve">
+    <value>覆盖率 {0}%</value>
+  </data>
+  <data name="Publish_Similar_Build" xml:space="preserve">
+    <value>适配版本 {0}</value>
+  </data>
+  <data name="Publish_Similar_Base" xml:space="preserve">
+    <value>你的翻译是它的更新</value>
+  </data>
+  <data name="Publish_Similar_Recommended" xml:space="preserve">
+    <value>推荐</value>
+  </data>
+  <data name="Publish_Similar_RevisionTitle" xml:space="preserve">
+    <value>“{0}”的新修订版（第 {1} 版）</value>
+  </data>
+  <data name="Publish_Similar_RevisionText" xml:space="preserve">
+    <value>它的玩家会以更新的形式获得你的版本。{0} 仍是作者，第 {1} 版会署上你的名字。状态从 alpha 重新开始。</value>
+  </data>
+  <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
+    <value>独立的翻译</value>
+  </data>
+  <data name="Publish_Similar_SeparateText" xml:space="preserve">
+    <value>“{0}”会与“{1}”并列显示，由玩家选择。如果你的翻译是有意不同的（语气、术语），请选此项。</value>
+  </data>
+  <data name="Publish_Similar_Choice" xml:space="preserve">
+    <value>发布方式</value>
+  </data>
+  <data name="Publish_Again" xml:space="preserve">
+    <value>重新发布</value>
+  </data>
+  <data name="Publish_Step_Fork" xml:space="preserve">
+    <value>复刻翻译库</value>
+  </data>
+  <data name="Publish_Step_Commit" xml:space="preserve">
+    <value>提交翻译</value>
+  </data>
+  <data name="Publish_Step_PullRequest" xml:space="preserve">
+    <value>创建拉取请求</value>
+  </data>
+  <data name="Publish_Step_Account" xml:space="preserve">
+    <value>检查你的 GitHub 帐户</value>
+  </data>
+  <data name="Publish_Doing_Fork" xml:space="preserve">
+    <value>复刻翻译库</value>
+  </data>
+  <data name="Publish_Doing_Commit" xml:space="preserve">
+    <value>提交翻译</value>
+  </data>
+  <data name="Publish_Doing_PullRequest" xml:space="preserve">
+    <value>创建拉取请求</value>
+  </data>
+  <data name="Publish_Doing_Account" xml:space="preserve">
+    <value>检查你的帐户</value>
+  </data>
+  <data name="Publish_Error_NotSignedIn" xml:space="preserve">
+    <value>请先登录 GitHub：翻译以你帐户的拉取请求形式分享。</value>
+  </data>
+  <data name="Publish_Error_Keychain" xml:space="preserve">
+    <value>无法从钥匙串读取你的 GitHub 登录信息；请解锁钥匙串后重新发布。</value>
+  </data>
+  <data name="Publish_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub 不再接受你的登录（访问权限已撤销或已过期）。请重新登录 GitHub。</value>
+  </data>
+  <data name="Publish_Error_Forbidden" xml:space="preserve">
+    <value>GitHub 在{0}时拒绝了访问。重新登录可为应用授予所需的权限（public_repo）。</value>
+  </data>
+  <data name="Publish_Error_RateLimitedUntil" xml:space="preserve">
+    <value>你的帐户的 GitHub 请求额度已用尽，直到 {0}；之后请重新发布（不会丢失任何内容）。</value>
+  </data>
+  <data name="Publish_Error_RateLimited" xml:space="preserve">
+    <value>你的帐户的 GitHub 请求额度暂时用尽；请过几分钟重新发布（不会丢失任何内容）。</value>
+  </data>
+  <data name="Publish_Error_NoRegistry" xml:space="preserve">
+    <value>翻译库 {0} 不在 GitHub 上（或你的帐户无法看到它）。</value>
+  </data>
+  <data name="Publish_Error_NotFound" xml:space="preserve">
+    <value>GitHub 在{0}时找不到某些内容；请重新发布。</value>
+  </data>
+  <data name="Publish_Error_Rejected" xml:space="preserve">
+    <value>GitHub 在{0}时拒绝了请求。</value>
+  </data>
+  <data name="Publish_Error_Conflict" xml:space="preserve">
+    <value>GitHub 在{0}时无法完成请求；请稍后重新发布。</value>
+  </data>
+  <data name="Publish_Error_Network" xml:space="preserve">
+    <value>在{0}时无法连接 GitHub；请检查网络连接后重新发布：会从中断处继续。</value>
+  </data>
+  <data name="Publish_Error_Invalid" xml:space="preserve">
+    <value>翻译库会拒绝此翻译：{0}</value>
+  </data>
+  <data name="Publish_Error_OptedOut" xml:space="preserve">
+    <value>游戏发行商要求不传播玩家翻译，因此翻译库不接受这款游戏的翻译。</value>
+  </data>
+  <data name="Publish_Error_TargetGone" xml:space="preserve">
+    <value>你选择要更新的翻译已不在翻译库中；请将你的翻译作为独立的翻译发布。</value>
+  </data>
+  <data name="Publish_Error_ForkNotReady" xml:space="preserve">
+    <value>GitHub 仍在创建你的翻译库副本；请过几分钟重新发布。</value>
+  </data>
+  <data name="Publish_Error_Unexpected" xml:space="preserve">
+    <value>GitHub 在{0}时返回了意外的响应；请重新发布。</value>
+  </data>
+  <data name="Publish_Target_Revision" xml:space="preserve">
+    <value>“{1}”的第 {0} 版</value>
+  </data>
+  <data name="Publish_Target_Pack" xml:space="preserve">
+    <value>“{0}”</value>
+  </data>
+  <data name="Publish_Sending_Title" xml:space="preserve">
+    <value>正在发布{0}…</value>
+  </data>
+  <data name="Publish_Checking_Title" xml:space="preserve">
+    <value>已创建 PR #{0} · CI 正在检查翻译</value>
+  </data>
+  <data name="Publish_Checking_Text" xml:space="preserve">
+    <value>检查架构、哈希、可执行文件和字体。检查通过后将自动以 alpha 状态合并；你可以离开此页面，进度会显示在“动态”中。</value>
+  </data>
+  <data name="Publish_Failed_Title" xml:space="preserve">
+    <value>无法发布“{0}”</value>
+  </data>
+  <data name="Publish_Published_Title" xml:space="preserve">
+    <value>已发布：{0} · {1}</value>
+  </data>
+  <data name="Publish_Published_Text" xml:space="preserve">
+    <value>玩家会看到它带有 alpha 警告。在另外 {0} 位玩家确认可用后，它将变为已验证。</value>
+  </data>
+  <data name="Publish_Published_VerifiedText" xml:space="preserve">
+    <value>玩家已确认可用：此翻译已验证。</value>
+  </data>
+  <data name="Publish_Meter" xml:space="preserve">
+    <value>{0} / {1} 位玩家确认“可用”</value>
+  </data>
+  <data name="Publish_CopyLink" xml:space="preserve">
+    <value>复制链接</value>
+  </data>
+  <data name="Publish_Discussion" xml:space="preserve">
+    <value>讨论</value>
+  </data>
+  <data name="Publish_OpenPr" xml:space="preserve">
+    <value>打开 PR</value>
+  </data>
+  <data name="Publish_Toast_LinkCopied" xml:space="preserve">
+    <value>链接已复制</value>
+  </data>
+  <data name="Publish_Toast_Sent" xml:space="preserve">
+    <value>已提交{0}：已创建 PR #{1}，CI 正在检查翻译。</value>
+  </data>
+  <data name="Publish_Toast_Failed" xml:space="preserve">
+    <value>无法发布{0}。</value>
+  </data>
+  <data name="Publish_Row_Sending" xml:space="preserve">
+    <value>本地 · 正在发布…</value>
+  </data>
+  <data name="Publish_Row_Checking" xml:space="preserve">
+    <value>PR #{0} · CI 运行中</value>
+  </data>
+  <data name="Publish_Row_Published" xml:space="preserve">
+    <value>已发布 · {0} · 第 {1} 版</value>
+  </data>
+  <data name="Publish_Row_Failed" xml:space="preserve">
+    <value>本地 · 未发布（上次尝试失败）</value>
+  </data>
+  <data name="Publish_Similar_Builds_Other" xml:space="preserve">
+    <value>适配 {0} 个版本</value>
+  </data>
+  <data name="Publish_Resubmitted_Detail" xml:space="preserve">
+    <value>修复已推送到 PR #{0} · CI 正在重新检查翻译</value>
+  </data>
+  <data name="Publish_Toast_Resubmitted" xml:space="preserve">
+    <value>已重新提交{0}：修复已在 PR #{1} 中，CI 正在重新检查翻译。</value>
+  </data>
+  <data name="Publish_CiFailed_Title" xml:space="preserve">
+    <value>CI 拒绝了 PR #{0}</value>
+  </data>
+  <data name="Publish_Ci_Scope" xml:space="preserve">
+    <value>此拉取请求修改了翻译文件夹之外的文件。“修复并重新提交”会重建其分支，只保留此翻译。</value>
+  </data>
+  <data name="Publish_Ci_Status" xml:space="preserve">
+    <value>清单未标记为 alpha（{0}）。“修复并重新提交”会以 alpha 状态重新提交。</value>
+  </data>
+  <data name="Publish_Ci_Patch" xml:space="preserve">
+    <value>你的复刻中的补丁压缩包缺失或与清单不符（{0}）。“修复并重新提交”会重新上传它。</value>
+  </data>
+  <data name="Publish_Ci_Pack" xml:space="preserve">
+    <value>翻译库的检查拒绝了此翻译：{0}。“修复并重新提交”会先在本地检查再重新提交；如果应用没有发现问题，请更新应用。</value>
+  </data>
+  <data name="Publish_Ci_Registry" xml:space="preserve">
+    <value>失败的是翻译库自身的检查，而不是你的翻译（{0}）。“修复并重新提交”会重新运行检查。</value>
+  </data>
+  <data name="Publish_Ci_Unknown" xml:space="preserve">
+    <value>CI 失败，但未说明原因。“修复并重新提交”会重新运行检查；“打开 PR”可查看日志。</value>
+  </data>
+  <data name="Publish_Resubmit" xml:space="preserve">
+    <value>修复并重新提交</value>
+  </data>
+  <data name="Publish_Merged_Title" xml:space="preserve">
+    <value>PR #{0} 已合并：{1} 已以 alpha 状态进入翻译库</value>
+  </data>
+  <data name="Publish_Merged_Text" xml:space="preserve">
+    <value>翻译列表会在几分钟内更新；之后所有玩家都能看到它。</value>
+  </data>
+  <data name="Publish_Closed_Title" xml:space="preserve">
+    <value>PR #{0} 未合并即被关闭</value>
+  </data>
+  <data name="Publish_Closed_Text" xml:space="preserve">
+    <value>“打开 PR”可查看原因。“重新发布”会创建新的拉取请求。</value>
+  </data>
+  <data name="Publish_Row_CiFailed" xml:space="preserve">
+    <value>PR #{0} · CI 失败</value>
+  </data>
+  <data name="Publish_Row_Merged" xml:space="preserve">
+    <value>PR #{0} 已合并 · alpha</value>
+  </data>
+  <data name="Publish_Row_Closed" xml:space="preserve">
+    <value>PR #{0} 已关闭</value>
+  </data>
+  <data name="Activity_Event_PullRequestFailed" xml:space="preserve">
+    <value>翻译库 CI 拒绝了“{0}”的 PR #{2}</value>
+  </data>
+  <data name="Activity_Event_PackMerged" xml:space="preserve">
+    <value>PR #{2} 已合并：“{0}”已以 alpha 状态发布</value>
+  </data>
+  <data name="Activity_Event_PullRequestClosed" xml:space="preserve">
+    <value>“{0}”的 PR #{2} 未合并即被关闭</value>
+  </data>
+  <data name="Activity_Event_PackVerified" xml:space="preserve">
+    <value>“{0}”已验证：玩家确认可用</value>
+  </data>
+  <data name="Activity_Detail_PackMerged" xml:space="preserve">
+    <value>翻译列表更新后，所有玩家都能看到它。</value>
+  </data>
+  <data name="Activity_Action_OpenPr" xml:space="preserve">
+    <value>GitHub 上的 PR</value>
+  </data>
+  <data name="Settings_PublishedPack_Meta" xml:space="preserve">
+    <value>{0} · {1} · 第 {2} 版</value>
+  </data>
+  <data name="Settings_PublishedPack_Confirmed" xml:space="preserve">
+    <value>alpha · {0}/{1} 已确认</value>
+  </data>
+  <data name="Settings_PublishedPack_Likes" xml:space="preserve">
+    <value>{0} 个赞</value>
+  </data>
+  <data name="Settings_PublishedPack_Pr" xml:space="preserve">
+    <value>PR</value>
+  </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>评价</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>你的评价</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>点赞</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>已赞</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>可用</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>不可用</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>哪些可用，哪些不可用？（可选）</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>“可用 / 不可用”会以你的帐户发布到此翻译的 GitHub 讨论中，附带你的游戏版本和你的评论。</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>正在发送到 GitHub…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>你已于 {2} 为“{0}”第 {1} 版提交反馈。再次发送会替换你的反馈。</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>你是此翻译的署名作者，因此不能确认它可用：这需要其他玩家来确认。</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>翻译库在 GitHub 上为此翻译创建讨论后，即可评价。</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>“{0}”怎么样？你的回答能帮助其他玩家。</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>稍后</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>谢谢！你的反馈已发送到此翻译的 GitHub 讨论。</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>补充详情</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>登录 GitHub 以评价翻译</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>点赞和反馈会以你的帐户发布到此翻译的 GitHub 讨论中。安装翻译从不需要帐户。</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>GitHub 确认登录后，你的评价会立即发送。</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>登录 GitHub 以评价翻译。</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>无法从系统钥匙串读取你的 GitHub 登录信息。请重试，或在 设置 → GitHub 中重新登录。</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub 不再接受你的登录。请重新登录。</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>此翻译的讨论已不在 GitHub 上。</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>翻译库维护者已锁定此翻译的讨论：不再接受新的评价。</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub 拒绝了请求：{0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>GitHub 请求额度暂时用尽；请在 {0} 之后重试。</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>GitHub 请求额度暂时用尽；请稍后重试。</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>无法连接 GitHub。请检查网络连接后重试。</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>无法发送：{0}</value>
+  </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>已完成一次中断的备份迁移</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>磁盘 空间 大小 可用 已用 存储 disk space</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>磁盘空间</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>已用 {0}</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>正在计算…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>备份 {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>工作副本 {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>缓存 {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>磁盘空间</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>备份</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>AI 制作的工作副本</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>缓存</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>被覆盖的游戏文件的备份</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>备份 原始文件 卸载 移动 文件夹 位置 backup move location</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>还没有任何备份</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>正在移动备份… {0} %</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>更改位置…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>卸载翻译时需要用到，因此不能在这里清除。卸载翻译时会移除其备份。</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>选择备份的存放位置</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>要移动备份吗？</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>备份（{1}）将移动到 {0}。已安装的翻译保持安装状态，仍可卸载；游戏不受影响。安装着翻译时，请不要移除该磁盘。</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>移动</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>已移动。旧文件夹 {0} 暂时无法删除；应用将在下次启动时重试。</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>正在安装或卸载翻译。请在完成后重试。</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>需要先完成一次中断的安装或迁移。请重启应用后重试。</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>备份已在此文件夹中。</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>请选择当前备份文件夹之外的文件夹。</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>{0} 中已有文件。请选择其他文件夹；未移动任何内容。</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>该位置的可用空间不足以存放备份；未移动任何内容。</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>应用无法写入该文件夹；未移动任何内容。</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>有一个复制的文件回读不一致，因此备份保留在原处。</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>备份位置是由更新版本的应用设置的；请更新应用后再移动。</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>无法移动备份，备份保留在原处：{0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>工作副本</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>停止制作后才能删除</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>无。开始制作时会复制一份游戏文件，因此智能体从不接触游戏文件夹。</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>中断的启动遗留</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>正在制作</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>暂停至额度重置</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>制作已暂停</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>等待审阅术语表</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>制作已中断</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>制作失败</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>要删除 {0} 的工作副本吗？</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>将释放 {0}。你制作的翻译和已安装的翻译都会保留；游戏不受影响。</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>将释放 {0}。已暂停的翻译进度将丢失：无法继续，只能从头开始。已安装的翻译会保留；游戏不受影响。</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>这款游戏正在制作翻译。请先停止。</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>无法删除：{0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>翻译库索引和已下载的翻译</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>缓存 清除 下载 索引 cache clear downloads index</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}。需要时会重新下载。</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>正在清除…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>已清除：释放了 {0}。</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>已释放 {0}。正在使用的 {1} 会保留，直到应用用完。</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>正在安装翻译。请在完成后重试。</value>
+  </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © AI Local Pack 贡献者</value>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>稳定版渠道</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>渠道：{0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0}（便携版）</value>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0}（开发版）</value>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>链接</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>法律信息</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>应用更新</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>更新, 升级, 版本, 发布, 重启, update, upgrade, version, release, restart, velopack</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>此副本不是从正式发布安装的，因此不会自动更新。</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>更新会从 GitHub Releases 在后台下载。</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>正在检查 GitHub Releases…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>已是最新版本。检查于 {0}。</value>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>正在下载 {0}… {1} %</value>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>{0} 已下载完毕，可以安装。下次启动应用时也会自动安装。</value>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>正在重启…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>无法检查更新：GitHub Releases 没有响应。应用稍后会重试。</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>重新检查</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>正在检查</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>重启以更新</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>正在重启</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>新功能</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>正在安装翻译。请在完成后重启。</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>现在重启以更新？</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>正在进行的 AI 制作或发布将会停止。停止的 AI 翻译可在重启后于“用 AI 制作”标签页中继续。</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>重启</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>源代码</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>翻译库</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>报告问题</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA 与下架</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>开发商如何申请移除</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>github, 源代码, 仓库, 问题, 错误, 下架, 退出, source, repository, issues, bug, dmca, takedown, opt-out</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>许可证</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>应用：Apache-2.0。翻译库内容：CC BY-SA 4.0。</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>许可证, 授权, 开源, 第三方, 声明, license, apache, creative commons, cc by-sa, third-party, notices, open source</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>第三方声明</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>免责声明</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>社区翻译与游戏开发商无关，也未获得其认可。翻译只包含译文和配方；你需要拥有自己的游戏副本。开发商可以让自己的游戏退出。</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>法律, 开发商, 关联, 认可, 退出, legal, studios, opt-out</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>此版本没有第三方声明。请查看源代码仓库。</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} 已可安装</value>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>已在后台下载。重启只需几秒钟。</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>立即重启</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>检查应用更新</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>已关闭：此副本不是从正式发布安装的</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>已是最新</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>发现 {0}，正在后台下载</value>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>{0} 已就绪：重启以更新</value>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>无法连接 GitHub Releases</value>
+  </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>欢迎导览</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>欢迎使用 AI Local Pack</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>欢迎</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>用 AI 制作</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>社区</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>用你的语言玩游戏</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack 为你已拥有的游戏安装玩家制作的翻译。</value>
+  </data>
+  <data name="Welcome_GamesFound_Other" xml:space="preserve">
+    <value>我们在你的游戏库中找到了 {0} 款游戏。</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>你可以随时在游戏库或设置中更改。</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>找到了？一键安装</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>打开一款游戏，选择一个翻译，然后点击“安装”。</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>可完全撤销。</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>会先备份游戏文件；“卸载”会将其恢复。</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>游戏更新后依然有效。</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>如果 Steam 覆盖了翻译，应用会将其恢复。</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>帐户安全。</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>带反作弊的游戏绝不会被修改。</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>还没有翻译？用 AI 制作</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>你自己的 AI 智能体在你的电脑上翻译游戏，使用你自己的订阅。</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>需要时再设置。</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>首次制作翻译时，应用会安装智能体并完成登录。</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>自动暂停和继续：</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>订阅额度用尽时暂停，重置后继续。</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>分享翻译，评价你玩过的</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>翻译存放在公开的翻译库中。一键分享你的翻译；玩过别人的翻译后，告诉大家它是否可用。</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 位玩家确认可用：</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>翻译即变为已验证。</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>GitHub 帐户</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>仅在分享或评价时需要。安装从不需要。</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>正在翻译… {0} %</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{0} / {1} 位玩家确认可用</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>已验证</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>开始吧</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>跳过</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>打开我的游戏库</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>关闭导览</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>欢迎导览</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>简要介绍如何安装翻译、用 AI 制作翻译以及分享翻译。</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>教程 新手 引导 入门 指南 帮助 首次 tutorial onboarding guide</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>再次显示</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>你好，旅行者！</value>
+  </data>
+</root>

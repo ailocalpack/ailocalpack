@@ -1,0 +1,4117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Chrome_BackTo" xml:space="preserve">
+    <value>‹ {0}</value>
+  </data>
+  <data name="Chrome_Activity" xml:space="preserve">
+    <value>Активність</value>
+  </data>
+  <data name="Chrome_Settings" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>Бібліотека</value>
+  </data>
+  <data name="Library_GameCount_One" xml:space="preserve">
+    <value>{0} гра</value>
+  </data>
+  <data name="Library_GameCount_Few" xml:space="preserve">
+    <value>{0} гри</value>
+  </data>
+  <data name="Library_GameCount_Many" xml:space="preserve">
+    <value>{0} ігор</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>Системна ({0})</value>
+  </data>
+  <data name="Settings_Search_Placeholder" xml:space="preserve">
+    <value>Пошук налаштувань</value>
+  </data>
+  <data name="Settings_Search_NoResults" xml:space="preserve">
+    <value>Немає налаштувань за запитом «{0}».</value>
+  </data>
+  <data name="Settings_ComingSoon" xml:space="preserve">
+    <value>Цей розділ з’явиться в одній із наступних версій AI Local Pack.</value>
+  </data>
+  <data name="Settings_General_Title" xml:space="preserve">
+    <value>Загальні</value>
+  </data>
+  <data name="Settings_General_Description" xml:space="preserve">
+    <value>Мови, тема, фонова робота, сповіщення</value>
+  </data>
+  <data name="Settings_Libraries_Title" xml:space="preserve">
+    <value>Бібліотеки</value>
+  </data>
+  <data name="Settings_Libraries_Description" xml:space="preserve">
+    <value>Папки Steam та ігри, додані вручну</value>
+  </data>
+  <data name="Settings_Agents_Title" xml:space="preserve">
+    <value>Агенти ШІ</value>
+  </data>
+  <data name="Settings_Agents_Description" xml:space="preserve">
+    <value>Claude Code і Codex для створення перекладів за допомогою ШІ</value>
+  </data>
+  <data name="Settings_GitHub_Title" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Settings_GitHub_Description" xml:space="preserve">
+    <value>Обліковий запис і опубліковані вами переклади</value>
+  </data>
+  <data name="Settings_Storage_Title" xml:space="preserve">
+    <value>Сховище</value>
+  </data>
+  <data name="Settings_Storage_Description" xml:space="preserve">
+    <value>Резервні копії, робочі копії, кеш</value>
+  </data>
+  <data name="Settings_About_Title" xml:space="preserve">
+    <value>Про програму</value>
+  </data>
+  <data name="Settings_About_Description" xml:space="preserve">
+    <value>Версія, оновлення, ліцензії, правова інформація</value>
+  </data>
+  <data name="Settings_Group_Language" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="Settings_Group_Appearance" xml:space="preserve">
+    <value>Вигляд</value>
+  </data>
+  <data name="Settings_Group_Background" xml:space="preserve">
+    <value>Фонова робота</value>
+  </data>
+  <data name="Settings_Group_Notifications" xml:space="preserve">
+    <value>Сповіщення</value>
+  </data>
+  <data name="Settings_UiLanguage_Label" xml:space="preserve">
+    <value>Мова інтерфейсу</value>
+  </data>
+  <data name="Settings_UiLanguage_Help" xml:space="preserve">
+    <value>Спочатку перекладено за допомогою ШІ. Помітили невдалий рядок?</value>
+  </data>
+  <data name="Settings_UiLanguage_FixLink" xml:space="preserve">
+    <value>Виправте на GitHub</value>
+  </data>
+  <data name="Settings_UiLanguage_Keywords" xml:space="preserve">
+    <value>інтерфейс локаль переклад мова ui locale</value>
+  </data>
+  <data name="Settings_GameLanguage_Label" xml:space="preserve">
+    <value>Перекладати ігри на</value>
+  </data>
+  <data name="Settings_GameLanguage_Help" xml:space="preserve">
+    <value>Типова мова для перегляду перекладів і їх створення за допомогою ШІ. На сторінці кожної гри можна вибрати іншу.</value>
+  </data>
+  <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
+    <value>цільова мова переклад локалізація локаль</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Settings_Theme_Help" xml:space="preserve">
+    <value>«Системна» відповідає світлій чи темній темі ОС.</value>
+  </data>
+  <data name="Settings_Theme_Keywords" xml:space="preserve">
+    <value>темна світла режим кольори вигляд dark light</value>
+  </data>
+  <data name="Settings_Theme_System" xml:space="preserve">
+    <value>Системна</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Темна</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Світла</value>
+  </data>
+  <data name="Settings_RunInBackground_Label" xml:space="preserve">
+    <value>Запускати разом із системою і працювати в треї</value>
+  </data>
+  <data name="Settings_RunInBackground_Help" xml:space="preserve">
+    <value>Так програма помічає оновлення ігор, навіть коли її вікно закрите.</value>
+  </data>
+  <data name="Settings_RunInBackground_Keywords" xml:space="preserve">
+    <value>трей автозапуск автозавантаження фон</value>
+  </data>
+  <data name="Settings_Reapply_Label" xml:space="preserve">
+    <value>Повторно встановлювати переклади після оновлень ігор</value>
+  </data>
+  <data name="Settings_Reapply_Help" xml:space="preserve">
+    <value>Якщо оновлення з магазину чи перевірка файлів зітре переклад, а збірка досі сумісна, його буде встановлено знову зі свіжою резервною копією. Інакше ви отримаєте сповіщення.</value>
+  </data>
+  <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
+    <value>Лише під час запуску програми, бо роботу в треї вимкнено.</value>
+  </data>
+  <data name="Settings_Reapply_HelpOff" xml:space="preserve">
+    <value>Натомість ви отримаєте сповіщення й зможете встановити переклад повторно вручну.</value>
+  </data>
+  <data name="Settings_Reapply_Keywords" xml:space="preserve">
+    <value>оновлення перевстановлення відновлення</value>
+  </data>
+  <data name="Settings_NotifyDecision_Label" xml:space="preserve">
+    <value>Коли потрібне ваше рішення</value>
+  </data>
+  <data name="Settings_NotifyDecision_Help" xml:space="preserve">
+    <value>Створення перекладу ШІ призупинено, переклад несумісний після оновлення гри, повторне встановлення не вдалося, PR відхилено.</value>
+  </data>
+  <data name="Settings_NotifyFinished_Label" xml:space="preserve">
+    <value>Коли завдання завершено</value>
+  </data>
+  <data name="Settings_NotifyFinished_Help" xml:space="preserve">
+    <value>Переклад встановлено або встановлено повторно, створення перекладу ШІ завершено, PR прийнято, оновлення програми готове.</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
+    <value>Активність спільноти щодо моїх перекладів</value>
+  </data>
+  <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
+    <value>Нові відгуки, підтвердження «працює», переклад став перевіреним.</value>
+  </data>
+  <data name="Settings_Notify_Keywords" xml:space="preserve">
+    <value>сповіщення повідомлення оповіщення</value>
+  </data>
+  <data name="Settings_Notifications_Note" xml:space="preserve">
+    <value>Показуються як системні сповіщення, поки вікно закрите; у самій програмі все одно все є в «Активності».</value>
+  </data>
+  <data name="Settings_Notifications_NoteTrayOff" xml:space="preserve">
+    <value>Системним сповіщенням потрібна робота в треї (розділ «Фонова робота» вище); доти події видно лише в «Активності».</value>
+  </data>
+  <data name="Library_Search_Placeholder" xml:space="preserve">
+    <value>Пошук ігор</value>
+  </data>
+  <data name="Library_Sort_Label" xml:space="preserve">
+    <value>Сортування</value>
+  </data>
+  <data name="Library_Sort_ByName" xml:space="preserve">
+    <value>За назвою</value>
+  </data>
+  <data name="Library_Sort_RecentlyPlayed" xml:space="preserve">
+    <value>Нещодавні</value>
+  </data>
+  <data name="Library_AddFolder" xml:space="preserve">
+    <value>Папка</value>
+  </data>
+  <data name="Library_AddFolder_Tip" xml:space="preserve">
+    <value>Додати папку з грою</value>
+  </data>
+  <data name="Library_Scanning" xml:space="preserve">
+    <value>Шукаємо ігри в бібліотеках Steam…</value>
+  </data>
+  <data name="Library_Empty_Title" xml:space="preserve">
+    <value>Бібліотеку Steam не знайдено</value>
+  </data>
+  <data name="Library_Empty_Text" xml:space="preserve">
+    <value>Не вдалося знайти Steam, або в ньому немає ігор. Додайте папку з грою вручну або вкажіть бібліотеки Steam.</value>
+  </data>
+  <data name="Library_Empty_AddFolder" xml:space="preserve">
+    <value>Додати папку з грою</value>
+  </data>
+  <data name="Library_Empty_Libraries" xml:space="preserve">
+    <value>Налаштування → Бібліотеки</value>
+  </data>
+  <data name="Library_NoResults_Title" xml:space="preserve">
+    <value>Нічого не знайдено</value>
+  </data>
+  <data name="Library_NoResults_Text" xml:space="preserve">
+    <value>Немає ігор за запитом «{0}». Гри немає в бібліотеці? Додайте її папку.</value>
+  </data>
+  <data name="Library_NoResults_Reset" xml:space="preserve">
+    <value>Скинути пошук і фільтр</value>
+  </data>
+  <data name="Library_NoResults_AddFolder" xml:space="preserve">
+    <value>Додати папку</value>
+  </data>
+  <data name="Library_Card_Manual" xml:space="preserve">
+    <value>вручну</value>
+  </data>
+  <data name="Library_Card_EngineUnknown" xml:space="preserve">
+    <value>Невідомий рушій</value>
+  </data>
+  <data name="Library_Card_Unavailable" xml:space="preserve">
+    <value>Папка недоступна</value>
+  </data>
+  <data name="Library_Card_BlockedName" xml:space="preserve">
+    <value>{0} (заблоковано: {1})</value>
+  </data>
+  <data name="Library_Badge_AntiCheat" xml:space="preserve">
+    <value>Античит</value>
+  </data>
+  <data name="Library_Menu_OpenPage" xml:space="preserve">
+    <value>Відкрити сторінку гри</value>
+  </data>
+  <data name="Library_Menu_OpenFolder" xml:space="preserve">
+    <value>Відкрити папку гри</value>
+  </data>
+  <data name="Library_Menu_Remove" xml:space="preserve">
+    <value>Прибрати з бібліотеки</value>
+  </data>
+  <data name="Library_Drop_Title" xml:space="preserve">
+    <value>Відпустіть папку, щоб додати гру</value>
+  </data>
+  <data name="Library_Drop_Text" xml:space="preserve">
+    <value>Папку гри або папку з кількома іграми</value>
+  </data>
+  <data name="AddGame_Title" xml:space="preserve">
+    <value>Додати гру</value>
+  </data>
+  <data name="AddGame_StepOf" xml:space="preserve">
+    <value>Крок {0} з {1}</value>
+  </data>
+  <data name="AddGame_Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="AddGame_Drop_Title" xml:space="preserve">
+    <value>Перетягніть сюди папку гри</value>
+  </data>
+  <data name="AddGame_Drop_Text" xml:space="preserve">
+    <value>Ми визначимо рушій і перевіримо файли гри. Файли лише читаються, нічого не змінюється.</value>
+  </data>
+  <data name="AddGame_ChooseFolder" xml:space="preserve">
+    <value>Вибрати папку…</value>
+  </data>
+  <data name="AddGame_PickFolder_Title" xml:space="preserve">
+    <value>Виберіть папку гри</value>
+  </data>
+  <data name="AddGame_DropHint" xml:space="preserve">
+    <value>Папку можна перетягнути й просто на бібліотеку</value>
+  </data>
+  <data name="AddGame_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="AddGame_Hint_Title" xml:space="preserve">
+    <value>Де папка гри?</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Windows" xml:space="preserve">
+    <value>Ярлик на робочому столі: клацніть правою кнопкою → «Розташування файлу».</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_MacOS" xml:space="preserve">
+    <value>Dock: клацніть гру правою кнопкою → Параметри → Показати у Finder.</value>
+  </data>
+  <data name="AddGame_Hint_Shortcut_Linux" xml:space="preserve">
+    <value>Ярлик на робочому столі: шлях до гри вказано в рядку Exec його файлу .desktop.</value>
+  </data>
+  <data name="AddGame_Hint_Launchers" xml:space="preserve">
+    <value>GOG, itch.io, Epic: у лаунчері є «Відкрити папку встановлення».</value>
+  </data>
+  <data name="AddGame_Hint_Steam" xml:space="preserve">
+    <value>Ігри Steam додавати не потрібно: вони з’являються в бібліотеці самі.</value>
+  </data>
+  <data name="AddGame_Error_NoGames" xml:space="preserve">
+    <value>У «{0}» та її підпапках ігор не знайдено.</value>
+  </data>
+  <data name="AddGame_Error_NoGames_Detail" xml:space="preserve">
+    <value>Виберіть папку, де лежить виконуваний файл гри.</value>
+  </data>
+  <data name="AddGame_Error_Missing" xml:space="preserve">
+    <value>Папка «{0}» не існує або не відкривається.</value>
+  </data>
+  <data name="AddGame_Error_TooLarge" xml:space="preserve">
+    <value>«{0}» завелика для пошуку. Виберіть вужчу папку.</value>
+  </data>
+  <data name="AddGame_Error_Unreadable" xml:space="preserve">
+    <value>Не вдається прочитати файли «{0}».</value>
+  </data>
+  <data name="AddGame_Error_Image" xml:space="preserve">
+    <value>Не вдається відкрити це зображення. Виберіть файл PNG або JPEG.</value>
+  </data>
+  <data name="AddGame_Analyzing_Title" xml:space="preserve">
+    <value>Аналізуємо «{0}»…</value>
+  </data>
+  <data name="AddGame_Analyzing_Note" xml:space="preserve">
+    <value>Файли гри лише читаються, нічого не змінюється</value>
+  </data>
+  <data name="AddGame_Stage_Executables" xml:space="preserve">
+    <value>Шукаємо виконувані файли</value>
+  </data>
+  <data name="AddGame_Stage_Engine" xml:space="preserve">
+    <value>Визначаємо рушій</value>
+  </data>
+  <data name="AddGame_Stage_Fingerprint" xml:space="preserve">
+    <value>Знімаємо відбиток файлів</value>
+  </data>
+  <data name="AddGame_Stage_Registry" xml:space="preserve">
+    <value>Шукаємо в реєстрі</value>
+  </data>
+  <data name="AddGame_Stage_FilesOf" xml:space="preserve">
+    <value>{0:N0} з {1:N0} файлів</value>
+  </data>
+  <data name="AddGame_Stage_Later" xml:space="preserve">
+    <value>у наступній версії</value>
+  </data>
+  <data name="AddGame_EngineUnknown" xml:space="preserve">
+    <value>Рушій не розпізнано</value>
+  </data>
+  <data name="AddGame_NoExecutable" xml:space="preserve">
+    <value>Немає виконуваного файлу</value>
+  </data>
+  <data name="AddGame_Files_One" xml:space="preserve">
+    <value>{0} файл</value>
+  </data>
+  <data name="AddGame_Files_Few" xml:space="preserve">
+    <value>{0} файли</value>
+  </data>
+  <data name="AddGame_Files_Many" xml:space="preserve">
+    <value>{0} файлів</value>
+  </data>
+  <data name="AddGame_Size_Bytes" xml:space="preserve">
+    <value>{0} Б</value>
+  </data>
+  <data name="AddGame_Size_KB" xml:space="preserve">
+    <value>{0} КБ</value>
+  </data>
+  <data name="AddGame_Size_MB" xml:space="preserve">
+    <value>{0} МБ</value>
+  </data>
+  <data name="AddGame_Size_GB" xml:space="preserve">
+    <value>{0} ГБ</value>
+  </data>
+  <data name="AddGame_Rename" xml:space="preserve">
+    <value>Перейменувати</value>
+  </data>
+  <data name="AddGame_ChangeCover" xml:space="preserve">
+    <value>Змінити обкладинку</value>
+  </data>
+  <data name="AddGame_OtherFolder" xml:space="preserve">
+    <value>Інша папка</value>
+  </data>
+  <data name="AddGame_Subfolder" xml:space="preserve">
+    <value>У «{0}» одна гра, у підпапці {1}.</value>
+  </data>
+  <data name="AddGame_Registry_Title" xml:space="preserve">
+    <value>Пошук перекладів з’явиться в наступній версії.</value>
+  </data>
+  <data name="AddGame_Registry_Text" xml:space="preserve">
+    <value>Тут будуть переклади цієї гри з реєстру. Гру можна додати вже зараз.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Title" xml:space="preserve">
+    <value>Рушій не розпізнано.</value>
+  </data>
+  <data name="AddGame_EngineWarning_Text" xml:space="preserve">
+    <value>Переклад однаково можна створити за допомогою ШІ: агент сам розбереться у файлах гри. Якщо ви знаєте рушій, виберіть його в параметрах.</value>
+  </data>
+  <data name="AddGame_Duplicate" xml:space="preserve">
+    <value>Ця гра вже є в бібліотеці як «{0}».</value>
+  </data>
+  <data name="AddGame_AntiCheat_Title" xml:space="preserve">
+    <value>Виявлено {0}.</value>
+  </data>
+  <data name="AddGame_AntiCheat_Text" xml:space="preserve">
+    <value>Для цієї гри не можна встановлювати чи створювати переклади: античит може заблокувати ваш обліковий запис. Гру все одно можна додати, у бібліотеці вона буде недоступна.</value>
+  </data>
+  <data name="AddGame_Details" xml:space="preserve">
+    <value>Змінити параметри гри</value>
+  </data>
+  <data name="AddGame_Details_Name" xml:space="preserve">
+    <value>Назва</value>
+  </data>
+  <data name="AddGame_Details_Engine" xml:space="preserve">
+    <value>Рушій</value>
+  </data>
+  <data name="AddGame_Details_Detected" xml:space="preserve">
+    <value>визначено</value>
+  </data>
+  <data name="AddGame_Details_NotDetected" xml:space="preserve">
+    <value>не визначено</value>
+  </data>
+  <data name="AddGame_Details_Executable" xml:space="preserve">
+    <value>Головний виконуваний файл</value>
+  </data>
+  <data name="AddGame_Details_Cover" xml:space="preserve">
+    <value>Обкладинка</value>
+  </data>
+  <data name="AddGame_Details_ChooseImage" xml:space="preserve">
+    <value>Вибрати зображення…</value>
+  </data>
+  <data name="AddGame_Details_UseIcon" xml:space="preserve">
+    <value>Значок гри</value>
+  </data>
+  <data name="AddGame_PickImage_Title" xml:space="preserve">
+    <value>Виберіть зображення для обкладинки</value>
+  </data>
+  <data name="AddGame_Engine_DontKnow" xml:space="preserve">
+    <value>Інший / не знаю</value>
+  </data>
+  <data name="AddGame_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="AddGame_Add" xml:space="preserve">
+    <value>Додати гру</value>
+  </data>
+  <data name="AddGame_AddUnavailable" xml:space="preserve">
+    <value>Додати як недоступну</value>
+  </data>
+  <data name="AddGame_OpenGamePage" xml:space="preserve">
+    <value>Відкрити сторінку гри</value>
+  </data>
+  <data name="AddGame_TitleSeveral" xml:space="preserve">
+    <value>Додати ігри</value>
+  </data>
+  <data name="AddGame_Added" xml:space="preserve">
+    <value>Додано до бібліотеки як «{0}».</value>
+  </data>
+  <data name="AddGame_Scanning_Step" xml:space="preserve">
+    <value>Пошук ігор</value>
+  </data>
+  <data name="AddGame_Scanning_Title" xml:space="preserve">
+    <value>Шукаємо ігри в «{0}»…</value>
+  </data>
+  <data name="AddGame_Scanning_Progress" xml:space="preserve">
+    <value>Переглянуто папок: {0} з {1}</value>
+  </data>
+  <data name="AddGame_Scanning_Depth" xml:space="preserve">
+    <value>до 3 рівнів углиб</value>
+  </data>
+  <data name="AddGame_Scanning_Checking" xml:space="preserve">
+    <value>Перевіряємо гру {0} з {1}: {2}…</value>
+  </data>
+  <data name="AddGame_Scanning_Stop" xml:space="preserve">
+    <value>Зупинити й показати</value>
+  </data>
+  <data name="AddGame_Overview_Next" xml:space="preserve">
+    <value>Далі — по одній грі: перевірте дані й додайте. Будь-яку гру можна пропустити; ігри, які вже є в бібліотеці, пропускаються автоматично.</value>
+  </data>
+  <data name="AddGame_Overview_Nothing" xml:space="preserve">
+    <value>Нічого нового додати</value>
+  </data>
+  <data name="AddGame_Overview_Stopped" xml:space="preserve">
+    <value>Пошук зупинено: показано ігри, знайдені досі.</value>
+  </data>
+  <data name="AddGame_Overview_TooLarge" xml:space="preserve">
+    <value>Ця папка дуже велика, тому пошук зупинився раніше. Щоб знайти решту, виберіть вужчу папку.</value>
+  </data>
+  <data name="AddGame_Overview_Steam" xml:space="preserve">
+    <value>Ці ігри вже є у вашій бібліотеці через Steam.</value>
+  </data>
+  <data name="AddGame_Overview_Start" xml:space="preserve">
+    <value>Почати додавання</value>
+  </data>
+  <data name="AddGame_Skip_NoGame" xml:space="preserve">
+    <value>немає виконуваних файлів</value>
+  </data>
+  <data name="AddGame_Skip_Redistributable" xml:space="preserve">
+    <value>інсталятори бібліотек (DirectX, Visual C++…)</value>
+  </data>
+  <data name="AddGame_Skip_Installer" xml:space="preserve">
+    <value>інсталятор гри, а не встановлена гра</value>
+  </data>
+  <data name="AddGame_Skip_Utility" xml:space="preserve">
+    <value>утиліта, а не гра</value>
+  </data>
+  <data name="AddGame_Skip_Saves" xml:space="preserve">
+    <value>збереження</value>
+  </data>
+  <data name="AddGame_Status_New" xml:space="preserve">
+    <value>Нова</value>
+  </data>
+  <data name="AddGame_Status_AntiCheat" xml:space="preserve">
+    <value>Античит</value>
+  </data>
+  <data name="AddGame_Status_InLibrary" xml:space="preserve">
+    <value>У бібліотеці</value>
+  </data>
+  <data name="AddGame_Status_Unreadable" xml:space="preserve">
+    <value>Не читається</value>
+  </data>
+  <data name="AddGame_Status_Added" xml:space="preserve">
+    <value>Додано</value>
+  </data>
+  <data name="AddGame_Status_Skipped" xml:space="preserve">
+    <value>Пропущено</value>
+  </data>
+  <data name="AddGame_Review_AllGames" xml:space="preserve">
+    <value>Усі ігри</value>
+  </data>
+  <data name="AddGame_Review_GameOf" xml:space="preserve">
+    <value>Гра {0} з {1}</value>
+  </data>
+  <data name="AddGame_Review_Previous" xml:space="preserve">
+    <value>Попередня</value>
+  </data>
+  <data name="AddGame_Review_Skip" xml:space="preserve">
+    <value>Пропустити</value>
+  </data>
+  <data name="AddGame_Review_Add" xml:space="preserve">
+    <value>Додати</value>
+  </data>
+  <data name="AddGame_Review_Next" xml:space="preserve">
+    <value>Наступна</value>
+  </data>
+  <data name="AddGame_Result_None" xml:space="preserve">
+    <value>Жодної гри не додано</value>
+  </data>
+  <data name="AddGame_Result_Note" xml:space="preserve">
+    <value>Пропущені ігри можна додати пізніше з тієї самої папки.</value>
+  </data>
+  <data name="AddGame_Result_Added" xml:space="preserve">
+    <value>додано</value>
+  </data>
+  <data name="AddGame_Result_AddedBlocked" xml:space="preserve">
+    <value>додано як недоступну (античит)</value>
+  </data>
+  <data name="AddGame_Result_Skipped" xml:space="preserve">
+    <value>пропущено</value>
+  </data>
+  <data name="AddGame_Result_InLibrary" xml:space="preserve">
+    <value>уже в бібліотеці</value>
+  </data>
+  <data name="AddGame_Result_Unreadable" xml:space="preserve">
+    <value>пропущено: файли не читаються</value>
+  </data>
+  <data name="AddGame_ToLibrary" xml:space="preserve">
+    <value>До бібліотеки</value>
+  </data>
+  <data name="AddGame_Scanning_Found_One" xml:space="preserve">
+    <value>Знайдено {0} гру · можна зупинитися й переглянути знайдене</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Few" xml:space="preserve">
+    <value>Знайдено {0} гри · можна зупинитися й переглянути знайдене</value>
+  </data>
+  <data name="AddGame_Scanning_Found_Many" xml:space="preserve">
+    <value>Знайдено {0} ігор · можна зупинитися й переглянути знайдене</value>
+  </data>
+  <data name="AddGame_Overview_Title_One" xml:space="preserve">
+    <value>Знайдено {0} гру в «{1}»</value>
+  </data>
+  <data name="AddGame_Overview_Title_Few" xml:space="preserve">
+    <value>Знайдено {0} гри в «{1}»</value>
+  </data>
+  <data name="AddGame_Overview_Title_Many" xml:space="preserve">
+    <value>Знайдено {0} ігор у «{1}»</value>
+  </data>
+  <data name="AddGame_Overview_Queue_One" xml:space="preserve">
+    <value>{0} гра, по одній</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Few" xml:space="preserve">
+    <value>{0} гри, по одній</value>
+  </data>
+  <data name="AddGame_Overview_Queue_Many" xml:space="preserve">
+    <value>{0} ігор, по одній</value>
+  </data>
+  <data name="AddGame_Skipped_Title_One" xml:space="preserve">
+    <value>Пропущено {0} папку без ігор</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Few" xml:space="preserve">
+    <value>Пропущено {0} папки без ігор</value>
+  </data>
+  <data name="AddGame_Skipped_Title_Many" xml:space="preserve">
+    <value>Пропущено {0} папок без ігор</value>
+  </data>
+  <data name="AddGame_Tally_New_One" xml:space="preserve">
+    <value>{0} нова</value>
+  </data>
+  <data name="AddGame_Tally_New_Few" xml:space="preserve">
+    <value>{0} нові</value>
+  </data>
+  <data name="AddGame_Tally_New_Many" xml:space="preserve">
+    <value>{0} нових</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_One" xml:space="preserve">
+    <value>{0} з античитом</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Few" xml:space="preserve">
+    <value>{0} з античитом</value>
+  </data>
+  <data name="AddGame_Tally_AntiCheat_Many" xml:space="preserve">
+    <value>{0} з античитом</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_One" xml:space="preserve">
+    <value>{0} уже в бібліотеці</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Few" xml:space="preserve">
+    <value>{0} уже в бібліотеці</value>
+  </data>
+  <data name="AddGame_Tally_InLibrary_Many" xml:space="preserve">
+    <value>{0} уже в бібліотеці</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_One" xml:space="preserve">
+    <value>{0} не читається</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Few" xml:space="preserve">
+    <value>{0} не читаються</value>
+  </data>
+  <data name="AddGame_Tally_Unreadable_Many" xml:space="preserve">
+    <value>{0} не читаються</value>
+  </data>
+  <data name="AddGame_Result_Title_One" xml:space="preserve">
+    <value>Додано {0} гру</value>
+  </data>
+  <data name="AddGame_Result_Title_Few" xml:space="preserve">
+    <value>Додано {0} гри</value>
+  </data>
+  <data name="AddGame_Result_Title_Many" xml:space="preserve">
+    <value>Додано {0} ігор</value>
+  </data>
+  <data name="Settings_Group_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Group_ManualGames" xml:space="preserve">
+    <value>Ігри, додані вручну</value>
+  </data>
+  <data name="Settings_Group_OtherStores" xml:space="preserve">
+    <value>Інші магазини</value>
+  </data>
+  <data name="Settings_ManualGames_Note" xml:space="preserve">
+    <value>Видалення гри прибирає її лише з AI Local Pack. Файли гри та встановлені переклади залишаються як є.</value>
+  </data>
+  <data name="Settings_Steam_Label" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Settings_Steam_Keywords" xml:space="preserve">
+    <value>пересканувати, сканувати, оновити, steamapps, папки бібліотеки, rescan</value>
+  </data>
+  <data name="Settings_Steam_Summary" xml:space="preserve">
+    <value>Steam · {0} · {1}</value>
+  </data>
+  <data name="Settings_Steam_Scanning" xml:space="preserve">
+    <value>Steam · сканування…</value>
+  </data>
+  <data name="Settings_Steam_ScanningHelp" xml:space="preserve">
+    <value>Читаємо папки бібліотек Steam.</value>
+  </data>
+  <data name="Settings_Steam_LastScan" xml:space="preserve">
+    <value>Останнє сканування о {0}. Steam сканується щоразу під час запуску програми.</value>
+  </data>
+  <data name="Settings_Steam_NotScanned" xml:space="preserve">
+    <value>Ще не скановано.</value>
+  </data>
+  <data name="Settings_Steam_NotFound" xml:space="preserve">
+    <value>Steam не знайдено</value>
+  </data>
+  <data name="Settings_Steam_NotFoundHelp" xml:space="preserve">
+    <value>Якщо Steam встановлено в незвичному місці, додайте папку його бібліотеки нижче.</value>
+  </data>
+  <data name="Settings_Rescan" xml:space="preserve">
+    <value>Пересканувати</value>
+  </data>
+  <data name="Settings_Scanning" xml:space="preserve">
+    <value>Сканування</value>
+  </data>
+  <data name="Settings_Open" xml:space="preserve">
+    <value>Відкрити</value>
+  </data>
+  <data name="Settings_Remove" xml:space="preserve">
+    <value>Прибрати</value>
+  </data>
+  <data name="Settings_SteamFolder_Label" xml:space="preserve">
+    <value>Папка бібліотеки Steam</value>
+  </data>
+  <data name="Settings_SteamFolder_Found" xml:space="preserve">
+    <value>{0} · знайдено Steam</value>
+  </data>
+  <data name="Settings_SteamFolder_Added" xml:space="preserve">
+    <value>{0} · додано вами</value>
+  </data>
+  <data name="Settings_SteamFolder_NotAvailable" xml:space="preserve">
+    <value>Недоступна</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_One" xml:space="preserve">
+    <value>{0} гру приховано</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Few" xml:space="preserve">
+    <value>{0} гри приховано</value>
+  </data>
+  <data name="Settings_SteamFolder_Hidden_Many" xml:space="preserve">
+    <value>{0} ігор приховано</value>
+  </data>
+  <data name="Settings_AddSteamFolder" xml:space="preserve">
+    <value>Додати папку бібліотеки Steam</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Help" xml:space="preserve">
+    <value>Лише якщо бібліотеку на іншому диску не знайдено.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_Keywords" xml:space="preserve">
+    <value>steamapps, диск, накопичувач, sd-карта, бібліотека, додати</value>
+  </data>
+  <data name="Settings_AddSteamFolder_PickerTitle" xml:space="preserve">
+    <value>Виберіть папку бібліотеки Steam</value>
+  </data>
+  <data name="Settings_AddSteamFolder_NotLibrary" xml:space="preserve">
+    <value>«{0}» не є бібліотекою Steam: у ній немає папки steamapps.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_AlreadyListed" xml:space="preserve">
+    <value>«{0}» уже є в списку.</value>
+  </data>
+  <data name="Settings_AddSteamFolder_SaveFailed" xml:space="preserve">
+    <value>Не вдалося зберегти список папок. Спробуйте ще раз.</value>
+  </data>
+  <data name="Settings_RemoveFolder_Title" xml:space="preserve">
+    <value>Прибрати «{0}» з AI Local Pack?</value>
+  </data>
+  <data name="Settings_RemoveFolder_Text" xml:space="preserve">
+    <value>Її ігри зникнуть із бібліотеки. Папка, ігри та встановлені переклади залишаться на диску, Steam не зміниться. Папку можна буде додати знову пізніше.</value>
+  </data>
+  <data name="Settings_ManualGame_Label" xml:space="preserve">
+    <value>Гра, додана вручну</value>
+  </data>
+  <data name="Settings_ManualGames_Empty" xml:space="preserve">
+    <value>Немає ігор, доданих вручну. Скористайтеся кнопкою «Додати папку з грою» тут або в бібліотеці чи перетягніть папку у вікно.</value>
+  </data>
+  <data name="Settings_AddGameFolder" xml:space="preserve">
+    <value>Додати папку з грою</value>
+  </data>
+  <data name="Settings_AddGameFolder_Keywords" xml:space="preserve">
+    <value>вручну, папка, гра, gog, itch, epic</value>
+  </data>
+  <data name="Settings_RemoveGame_Title" xml:space="preserve">
+    <value>Прибрати «{0}» з AI Local Pack?</value>
+  </data>
+  <data name="Settings_RemoveGame_Text" xml:space="preserve">
+    <value>Папка гри та встановлений переклад залишаться на диску. Папку можна буде додати знову пізніше.</value>
+  </data>
+  <data name="Settings_OtherStores_Label" xml:space="preserve">
+    <value>Epic Games, GOG, EA app</value>
+  </data>
+  <data name="Settings_OtherStores_Help" xml:space="preserve">
+    <value>А поки що додавайте їхні ігри як папки.</value>
+  </data>
+  <data name="Settings_OtherStores_Keywords" xml:space="preserve">
+    <value>epic, gog, ea, origin, магазин, galaxy</value>
+  </data>
+  <data name="Settings_ComingSoonPill" xml:space="preserve">
+    <value>Незабаром</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Title" xml:space="preserve">
+    <value>Бібліотека Steam недоступна</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
+    <value>{1}: {0} гру приховано, доки папка не повернеться. Встановлені переклади не зачеплено.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Few" xml:space="preserve">
+    <value>{1}: {0} гри приховано, доки папка не повернеться. Встановлені переклади не зачеплено.</value>
+  </data>
+  <data name="Settings_Alert_LibraryUnavailable_Text_Many" xml:space="preserve">
+    <value>{1}: {0} ігор приховано, доки папка не повернеться. Встановлені переклади не зачеплено.</value>
+  </data>
+  <data name="Confirm_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="Settings_Steam_Folders_One" xml:space="preserve">
+    <value>{0} папка</value>
+  </data>
+  <data name="Settings_Steam_Folders_Few" xml:space="preserve">
+    <value>{0} папки</value>
+  </data>
+  <data name="Settings_Steam_Folders_Many" xml:space="preserve">
+    <value>{0} папок</value>
+  </data>
+  <data name="Chrome_Activity_Checking" xml:space="preserve">
+    <value>Активність: тривають перевірки під час запуску</value>
+  </data>
+  <data name="Chrome_CheckingForChanges" xml:space="preserve">
+    <value>Перевіряємо зміни…</value>
+  </data>
+  <data name="Startup_Step_Settings" xml:space="preserve">
+    <value>Завантаження налаштувань</value>
+  </data>
+  <data name="Startup_Step_Catalog" xml:space="preserve">
+    <value>Відкриття бібліотеки ігор</value>
+  </data>
+  <data name="Startup_Step_Steam" xml:space="preserve">
+    <value>Сканування бібліотек Steam</value>
+  </data>
+  <data name="Startup_Step_Detection" xml:space="preserve">
+    <value>Визначення рушіїв і античитів</value>
+  </data>
+  <data name="Startup_Waiting" xml:space="preserve">
+    <value>Очікування</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>Не завершено: подробиці в журналі</value>
+  </data>
+  <data name="Startup_Summary" xml:space="preserve">
+    <value>{0} з {1}</value>
+  </data>
+  <data name="Startup_Checks_Title" xml:space="preserve">
+    <value>Перевірки під час запуску</value>
+  </data>
+  <data name="Startup_Settings_Done" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Startup_Settings_ThemeSystem" xml:space="preserve">
+    <value>системна тема</value>
+  </data>
+  <data name="Startup_Settings_ThemeDark" xml:space="preserve">
+    <value>темна тема</value>
+  </data>
+  <data name="Startup_Settings_ThemeLight" xml:space="preserve">
+    <value>світла тема</value>
+  </data>
+  <data name="Startup_Catalog_Missing" xml:space="preserve">
+    <value>Ігор ще немає: перший запуск</value>
+  </data>
+  <data name="Startup_Catalog_Corrupted" xml:space="preserve">
+    <value>Список ігор пошкоджено: резервну копію збережено, відновлюємо зі Steam</value>
+  </data>
+  <data name="Startup_Catalog_Unreadable" xml:space="preserve">
+    <value>Не вдається прочитати список ігор: починаємо з порожнього, зміни не зберігаються</value>
+  </data>
+  <data name="Startup_Steam_NotFound" xml:space="preserve">
+    <value>Steam не знайдено</value>
+  </data>
+  <data name="Startup_Steam_New" xml:space="preserve">
+    <value>{0} · нові: {1}</value>
+  </data>
+  <data name="Startup_Steam_More" xml:space="preserve">
+    <value>{0} +{1}</value>
+  </data>
+  <data name="Startup_Detection_None" xml:space="preserve">
+    <value>Немає нових чи оновлених ігор</value>
+  </data>
+  <data name="Startup_Detection_Done_One" xml:space="preserve">
+    <value>Перевірено {0} гру</value>
+  </data>
+  <data name="Startup_Detection_Done_Few" xml:space="preserve">
+    <value>Перевірено {0} гри</value>
+  </data>
+  <data name="Startup_Detection_Done_Many" xml:space="preserve">
+    <value>Перевірено {0} ігор</value>
+  </data>
+  <data name="Startup_Step_Index" xml:space="preserve">
+    <value>Оновлення списку перекладів</value>
+  </data>
+  <data name="Startup_Index_Done_One" xml:space="preserve">
+    <value>{0} переклад</value>
+  </data>
+  <data name="Startup_Index_Done_Few" xml:space="preserve">
+    <value>{0} переклади</value>
+  </data>
+  <data name="Startup_Index_Done_Many" xml:space="preserve">
+    <value>{0} перекладів</value>
+  </data>
+  <data name="Startup_Index_Stale" xml:space="preserve">
+    <value>Офлайн: показано збережений список від {0}</value>
+  </data>
+  <data name="Startup_Index_Unavailable" xml:space="preserve">
+    <value>Немає зв’язку з реєстром перекладів</value>
+  </data>
+  <data name="Startup_Index_NewerFormat" xml:space="preserve">
+    <value>Для списку перекладів потрібна новіша версія програми</value>
+  </data>
+  <data name="Startup_Index_BadAddress" xml:space="preserve">
+    <value>Адреса реєстру перекладів недійсна: подробиці в журналі</value>
+  </data>
+  <data name="Startup_Step_Recovery" xml:space="preserve">
+    <value>Завершення перерваного встановлення</value>
+  </data>
+  <data name="Startup_Recovery_Running" xml:space="preserve">
+    <value>Не закривайте програму</value>
+  </data>
+  <data name="Startup_Recovery_RolledBack" xml:space="preserve">
+    <value>Встановлення скасовано: файли гри такі, як були</value>
+  </data>
+  <data name="Startup_Recovery_Completed" xml:space="preserve">
+    <value>Встановлення завершено</value>
+  </data>
+  <data name="Startup_Recovery_UninstallFinished" xml:space="preserve">
+    <value>Видалення завершено: оригінальні файли відновлено</value>
+  </data>
+  <data name="Startup_Recovery_Failed" xml:space="preserve">
+    <value>Поки не вдалося завершити: повторимо під час наступного запуску (подробиці в журналі)</value>
+  </data>
+  <data name="Startup_Recovery_Busy" xml:space="preserve">
+    <value>Триває інше встановлення</value>
+  </data>
+  <data name="Startup_Recovery_Nothing" xml:space="preserve">
+    <value>Нічого завершувати</value>
+  </data>
+  <data name="Splash_Version" xml:space="preserve">
+    <value>Версія {0}</value>
+  </data>
+  <data name="Splash_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Splash_Details" xml:space="preserve">
+    <value>Подробиці</value>
+  </data>
+  <data name="Splash_HideDetails" xml:space="preserve">
+    <value>Сховати подробиці</value>
+  </data>
+  <data name="Splash_Slow" xml:space="preserve">
+    <value>Триває довше, ніж зазвичай. Будь ласка, не закривайте програму: виконано {0} з {1} кроків.</value>
+  </data>
+  <data name="Library_CatalogDamaged" xml:space="preserve">
+    <value>Збережений список ігор було пошкоджено. Ігри Steam знайдено знову; ігри, додані вручну, треба додати ще раз. Старий файл збережено як {0}.</value>
+  </data>
+  <data name="Library_CatalogDamaged_NoBackup" xml:space="preserve">
+    <value>Збережений список ігор було пошкоджено. Ігри Steam знайдено знову; ігри, додані вручну, треба додати ще раз.</value>
+  </data>
+  <data name="Library_Banner_Dismiss" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="Library_Status_Installed" xml:space="preserve">
+    <value>Встановлено</value>
+  </data>
+  <data name="Library_Status_PackAvailable" xml:space="preserve">
+    <value>Є переклад</value>
+  </data>
+  <data name="Library_Status_NoPack" xml:space="preserve">
+    <value>Немає перекладу</value>
+  </data>
+  <data name="Library_Status_NeedsUpdate" xml:space="preserve">
+    <value>Потрібне оновлення</value>
+  </data>
+  <data name="Library_Filter_All" xml:space="preserve">
+    <value>Усі</value>
+  </data>
+  <data name="Library_Filter_Generating" xml:space="preserve">
+    <value>Створюється</value>
+  </data>
+  <data name="Library_Filter_Label" xml:space="preserve">
+    <value>Фільтр за статусом</value>
+  </data>
+  <data name="Library_Badge_Generating" xml:space="preserve">
+    <value>Створюється · {0}%</value>
+  </data>
+  <data name="Library_Badge_Paused" xml:space="preserve">
+    <value>Пауза · {0}%</value>
+  </data>
+  <data name="Library_Badge_Unavailable" xml:space="preserve">
+    <value>Недоступна</value>
+  </data>
+  <data name="Library_Action_Install" xml:space="preserve">
+    <value>Встановити</value>
+  </data>
+  <data name="Library_Action_Update" xml:space="preserve">
+    <value>Оновити</value>
+  </data>
+  <data name="Library_Action_View" xml:space="preserve">
+    <value>Переглянути</value>
+  </data>
+  <data name="Library_Action_Resume" xml:space="preserve">
+    <value>Продовжити</value>
+  </data>
+  <data name="Library_Action_Generate" xml:space="preserve">
+    <value>Створити з ШІ</value>
+  </data>
+  <data name="Library_Card_OptedOut" xml:space="preserve">
+    <value>Студія відмовилася</value>
+  </data>
+  <data name="Library_Card_PackCount_One" xml:space="preserve">
+    <value>{0} переклад</value>
+  </data>
+  <data name="Library_Card_PackCount_Few" xml:space="preserve">
+    <value>{0} переклади</value>
+  </data>
+  <data name="Library_Card_PackCount_Many" xml:space="preserve">
+    <value>{0} перекладів</value>
+  </data>
+  <data name="Library_Card_Verified" xml:space="preserve">
+    <value>перевірений</value>
+  </data>
+  <data name="Library_Card_Alpha" xml:space="preserve">
+    <value>альфа</value>
+  </data>
+  <data name="Library_Card_Remaining" xml:space="preserve">
+    <value>≈ ще {0}</value>
+  </data>
+  <data name="Library_Card_Likes" xml:space="preserve">
+    <value>Вподобань: {0}</value>
+  </data>
+  <data name="Library_Card_StatusName" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Library_Language_Label" xml:space="preserve">
+    <value>Мова перекладу</value>
+  </data>
+  <data name="Library_Language_Tip" xml:space="preserve">
+    <value>Мова для позначок і лічильників. Також у Налаштування → Загальні.</value>
+  </data>
+  <data name="Library_Sort_ImportantFirst" xml:space="preserve">
+    <value>Спершу важливі</value>
+  </data>
+  <data name="Library_Registry_Stale" xml:space="preserve">
+    <value>Немає зв’язку з реєстром перекладів. Показано дані, збережені {0}.</value>
+  </data>
+  <data name="Library_Registry_Unavailable" xml:space="preserve">
+    <value>Немає зв’язку з реєстром перекладів. Статуси перекладів з’являться, щойно він відповість.</value>
+  </data>
+  <data name="Library_Registry_NewerFormat" xml:space="preserve">
+    <value>Реєстр перекладів використовує новіший формат. Оновіть програму, щоб бачити актуальні переклади.</value>
+  </data>
+  <data name="Library_Registry_InvalidAddress" xml:space="preserve">
+    <value>Адреса реєстру перекладів, задана для програми, недійсна, тому статуси перекладів не можна показати.</value>
+  </data>
+  <data name="Library_Registry_Retry" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="Library_NoResults_Filter" xml:space="preserve">
+    <value>Немає ігор за цим фільтром. Гри немає в бібліотеці? Додайте її папку.</value>
+  </data>
+  <data name="Library_NoResults_SearchAndFilter" xml:space="preserve">
+    <value>Немає ігор за запитом «{0}» із цим фільтром. Гри немає в бібліотеці? Додайте її папку.</value>
+  </data>
+  <data name="Game_Chip_EngineUnknown" xml:space="preserve">
+    <value>Рушій невідомий</value>
+  </data>
+  <data name="Game_Chip_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Game_Chip_Manual" xml:space="preserve">
+    <value>Додано вручну</value>
+  </data>
+  <data name="Game_Chip_Build" xml:space="preserve">
+    <value>збірка {0}</value>
+  </data>
+  <data name="Game_Chip_FilesHash" xml:space="preserve">
+    <value>хеш файлів {0}</value>
+  </data>
+  <data name="Game_Chip_Build_Tip" xml:space="preserve">
+    <value>Версія гри: ідентифікатор збірки Steam</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_One" xml:space="preserve">
+    <value>Версія гри: хеш {0} файлу</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Few" xml:space="preserve">
+    <value>Версія гри: хеш {0} файлів</value>
+  </data>
+  <data name="Game_Chip_FilesHash_Tip_Many" xml:space="preserve">
+    <value>Версія гри: хеш {0} файлів</value>
+  </data>
+  <data name="Game_Action_Install" xml:space="preserve">
+    <value>Встановити переклад</value>
+  </data>
+  <data name="Game_Action_Generate" xml:space="preserve">
+    <value>Створити переклад з ШІ</value>
+  </data>
+  <data name="Game_Action_Play" xml:space="preserve">
+    <value>Грати</value>
+  </data>
+  <data name="Game_Action_Starting" xml:space="preserve">
+    <value>Запуск…</value>
+  </data>
+  <data name="Game_Action_Running" xml:space="preserve">
+    <value>Запущено</value>
+  </data>
+  <data name="Game_Caption_RunningSince" xml:space="preserve">
+    <value>запущено з {0}</value>
+  </data>
+  <data name="Game_Launch_Failed" xml:space="preserve">
+    <value>Не вдалося запустити гру: {0}</value>
+  </data>
+  <data name="Game_Launch_Unavailable" xml:space="preserve">
+    <value>Немає доступу до папки гри. Підключіть диск або перевірте, чи папка ще на місці.</value>
+  </data>
+  <data name="Game_Launch_NoExecutable" xml:space="preserve">
+    <value>У папці гри не знайдено програми для запуску.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnlyLinux" xml:space="preserve">
+    <value>Це збірка для Windows. Щоб грати в неї на Linux, додайте її до Steam як сторонню гру й увімкніть Proton.</value>
+  </data>
+  <data name="Game_Launch_WindowsOnly" xml:space="preserve">
+    <value>Це збірка для Windows; у цій системі вона не запускається.</value>
+  </data>
+  <data name="Game_Launch_LinuxOnly" xml:space="preserve">
+    <value>Це збірка для Linux; у цій системі вона не запускається.</value>
+  </data>
+  <data name="Game_Launch_MacOnly" xml:space="preserve">
+    <value>Це збірка для macOS; у цій системі вона не запускається.</value>
+  </data>
+  <data name="Game_Action_Update" xml:space="preserve">
+    <value>Оновити до ред. {0}</value>
+  </data>
+  <data name="Game_Action_TranslateNew" xml:space="preserve">
+    <value>Перекласти нові рядки</value>
+  </data>
+  <data name="Game_Action_ViewProgress" xml:space="preserve">
+    <value>Переглянути перебіг</value>
+  </data>
+  <data name="Game_Caption_Generate" xml:space="preserve">
+    <value>Використовує вашу підписку Claude Code або Codex</value>
+  </data>
+  <data name="Game_Caption_PlaySteam" xml:space="preserve">
+    <value>через Steam · з «{0}»</value>
+  </data>
+  <data name="Game_Caption_Play" xml:space="preserve">
+    <value>з «{0}»</value>
+  </data>
+  <data name="Game_Caption_Update" xml:space="preserve">
+    <value>Замінює встановлену ред. {0}</value>
+  </data>
+  <data name="Game_Caption_TranslateNew" xml:space="preserve">
+    <value>Редакції для нової версії гри ще немає</value>
+  </data>
+  <data name="Game_Caption_PackTitle" xml:space="preserve">
+    <value>«{0}»</value>
+  </data>
+  <data name="Game_Caption_ForYourVersion" xml:space="preserve">
+    <value>зроблено для вашої версії</value>
+  </data>
+  <data name="Game_Caption_Generating" xml:space="preserve">
+    <value>Створюється · {0}%</value>
+  </data>
+  <data name="Game_Caption_GeneratingEta" xml:space="preserve">
+    <value>Створюється · {0}% · ≈ ще {1}</value>
+  </data>
+  <data name="Game_Caption_Paused" xml:space="preserve">
+    <value>Пауза · {0}%</value>
+  </data>
+  <data name="Game_Installed_Label" xml:space="preserve">
+    <value>Встановлений переклад</value>
+  </data>
+  <data name="Game_Installed_Broken" xml:space="preserve">
+    <value>Встановлено · несумісний з новою версією</value>
+  </data>
+  <data name="Game_Installed_Text" xml:space="preserve">
+    <value>«{0}» · {1} · ред. {2}</value>
+  </data>
+  <data name="Game_Installed_TextNoAuthor" xml:space="preserve">
+    <value>«{0}» · ред. {1}</value>
+  </data>
+  <data name="Game_UpdateBanner" xml:space="preserve">
+    <value>Гру оновлено ({0}). Встановлений «{1}» ред. {2} із нею несумісний; частина тексту може відображатися англійською.</value>
+  </data>
+  <data name="Game_Soon_AudioTitle" xml:space="preserve">
+    <value>Озвучення: незабаром</value>
+  </data>
+  <data name="Game_Soon_AudioText" xml:space="preserve">
+    <value>Озвучення мовою «{0}» через синтез мовлення з’явиться в наступній великій версії. Переклад тексту працює вже зараз.</value>
+  </data>
+  <data name="Game_Soon_TexturesTitle" xml:space="preserve">
+    <value>Текстури: незабаром</value>
+  </data>
+  <data name="Game_Soon_TexturesText" xml:space="preserve">
+    <value>Переклад тексту на зображеннях (вивіски, меню, мапи) з’явиться пізніше. Переклад тексту працює вже зараз.</value>
+  </data>
+  <data name="Game_Packs_Count_One" xml:space="preserve">
+    <value>{1}: {0} переклад</value>
+  </data>
+  <data name="Game_Packs_Count_Few" xml:space="preserve">
+    <value>{1}: {0} переклади</value>
+  </data>
+  <data name="Game_Packs_Count_Many" xml:space="preserve">
+    <value>{1}: {0} перекладів</value>
+  </data>
+  <data name="Game_Packs_None" xml:space="preserve">
+    <value>Перекладу мовою «{0}» ще немає</value>
+  </data>
+  <data name="Game_Packs_NoneText" xml:space="preserve">
+    <value>Для цієї гри ще ніхто ним не поділився. Ви можете створити його своїм агентом ШІ й поділитися з іншими гравцями.</value>
+  </data>
+  <data name="Game_Packs_Generate" xml:space="preserve">
+    <value>Створити з ШІ</value>
+  </data>
+  <data name="Game_Packs_Unknown" xml:space="preserve">
+    <value>Список перекладів ще не завантажився. Переклади з’являться, щойно відповість реєстр.</value>
+  </data>
+  <data name="Game_Tab_Packs" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="Game_Tab_Generation" xml:space="preserve">
+    <value>Створити з ШІ</value>
+  </data>
+  <data name="Game_Tab_Audio" xml:space="preserve">
+    <value>Озвучення</value>
+  </data>
+  <data name="Game_Tab_Textures" xml:space="preserve">
+    <value>Текстури</value>
+  </data>
+  <data name="Game_Tab_Soon" xml:space="preserve">
+    <value>незабаром</value>
+  </data>
+  <data name="Game_Tab_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="Game_Tabs_Label" xml:space="preserve">
+    <value>Розділи сторінки гри</value>
+  </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>Локалізація</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>Інструменти</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>Жоден не підходить?</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>Створіть власний з ШІ</value>
+  </data>
+  <data name="Game_Blocked_Title" xml:space="preserve">
+    <value>Локалізація для цієї гри недоступна</value>
+  </data>
+  <data name="Game_Blocked_AntiCheat" xml:space="preserve">
+    <value>Виявлено {0}. За зміну файлів гри можна отримати блокування облікового запису, тому AI Local Pack не встановлює й не створює переклади для ігор з античитом.</value>
+  </data>
+  <data name="Game_Blocked_OptOut" xml:space="preserve">
+    <value>Видавець попросив не поширювати фанатські переклади цієї гри, тому AI Local Pack не встановлює й не створює для неї переклади.</value>
+  </data>
+  <data name="Game_Blocked_Mistake" xml:space="preserve">
+    <value>Вважаєте, що це помилка?</value>
+  </data>
+  <data name="Game_Blocked_Report" xml:space="preserve">
+    <value>Повідомити</value>
+  </data>
+  <data name="Game_Blocked_Report_Tip" xml:space="preserve">
+    <value>Відкриває заздалегідь заповнений issue в реєстрі перекладів на GitHub</value>
+  </data>
+  <data name="Packs_Language_Label" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="Packs_Language_Tip" xml:space="preserve">
+    <value>Показати переклади іншою мовою</value>
+  </data>
+  <data name="Packs_Language_Search" xml:space="preserve">
+    <value>Пошук мов</value>
+  </data>
+  <data name="Packs_Language_Caption" xml:space="preserve">
+    <value>Переклади цієї гри</value>
+  </data>
+  <data name="Packs_Language_NoMatch" xml:space="preserve">
+    <value>Жодна мова не відповідає запиту.</value>
+  </data>
+  <data name="Packs_Sort_Label" xml:space="preserve">
+    <value>Сортування перекладів</value>
+  </data>
+  <data name="Packs_Sort_StatusRating" xml:space="preserve">
+    <value>Статус, рейтинг</value>
+  </data>
+  <data name="Packs_Sort_Newest" xml:space="preserve">
+    <value>Найновіші</value>
+  </data>
+  <data name="Packs_Sort_Coverage" xml:space="preserve">
+    <value>Повнота</value>
+  </data>
+  <data name="Packs_Section_Registry" xml:space="preserve">
+    <value>Реєстр</value>
+  </data>
+  <data name="Packs_List_Label" xml:space="preserve">
+    <value>Переклади</value>
+  </data>
+  <data name="Packs_Compat_Compatible" xml:space="preserve">
+    <value>сумісний</value>
+  </data>
+  <data name="Packs_Compat_Probably" xml:space="preserve">
+    <value>імовірно сумісний</value>
+  </data>
+  <data name="Packs_Compat_Incompatible" xml:space="preserve">
+    <value>несумісний</value>
+  </data>
+  <data name="Packs_Compat_Checking" xml:space="preserve">
+    <value>перевірка…</value>
+  </data>
+  <data name="Packs_Compat_Failed" xml:space="preserve">
+    <value>не перевірено</value>
+  </data>
+  <data name="Packs_Tag_Installed" xml:space="preserve">
+    <value>Встановлено</value>
+  </data>
+  <data name="Packs_Tag_Broken" xml:space="preserve">
+    <value>ред. {0} · є ред. {1}</value>
+  </data>
+  <data name="Packs_Likes_Tip" xml:space="preserve">
+    <value>Вподобання в GitHub Discussions</value>
+  </data>
+  <data name="Packs_Revision" xml:space="preserve">
+    <value>ред. {0}</value>
+  </data>
+  <data name="Packs_Box_Compatible" xml:space="preserve">
+    <value>Сумісний з вашою версією</value>
+  </data>
+  <data name="Packs_Box_Probably" xml:space="preserve">
+    <value>Імовірно сумісний</value>
+  </data>
+  <data name="Packs_Box_Incompatible" xml:space="preserve">
+    <value>Несумісний з вашою версією</value>
+  </data>
+  <data name="Packs_Box_Checking" xml:space="preserve">
+    <value>Перевіряємо сумісність…</value>
+  </data>
+  <data name="Packs_Box_CheckingText" xml:space="preserve">
+    <value>Читаємо маніфест перекладу й порівнюємо файли, які він змінює, з вашою копією.</value>
+  </data>
+  <data name="Packs_Box_Failed" xml:space="preserve">
+    <value>Не вдалося прочитати дані перекладу</value>
+  </data>
+  <data name="Packs_Failed_Offline" xml:space="preserve">
+    <value>Реєстр не відповів. Перевірте з’єднання й повторіть спробу.</value>
+  </data>
+  <data name="Packs_Failed_Missing" xml:space="preserve">
+    <value>У реєстрі немає маніфесту цього перекладу. Можливо, його видалили після збереження списку.</value>
+  </data>
+  <data name="Packs_Failed_Invalid" xml:space="preserve">
+    <value>Маніфест перекладу в реєстрі пошкоджено, тому переклад не можна перевірити чи встановити.</value>
+  </data>
+  <data name="Packs_Failed_NewerFormat" xml:space="preserve">
+    <value>Переклад має новіший формат. Оновіть програму, щоб його встановити.</value>
+  </data>
+  <data name="Packs_Retry" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="Packs_Why_BuildListed" xml:space="preserve">
+    <value>Зроблено для збірки {0}, яка у вас.</value>
+  </data>
+  <data name="Packs_Why_FilesMatch" xml:space="preserve">
+    <value>Усі файли, які він змінює ({0}), збігаються з вашою копією.</value>
+  </data>
+  <data name="Packs_Why_FilesChanged" xml:space="preserve">
+    <value>Зроблено для збірки {0}, у вас {1}. Змінено файлів: {2} з {3}; рядки, додані оновленням, залишаться неперекладеними.</value>
+  </data>
+  <data name="Packs_Why_FilesChangedNoBuild" xml:space="preserve">
+    <value>Змінено файлів відтоді, як його зроблено: {0} з {1}; рядки, додані оновленням, залишаться неперекладеними.</value>
+  </data>
+  <data name="Packs_Why_WrongGame" xml:space="preserve">
+    <value>Цей переклад для іншої гри.</value>
+  </data>
+  <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
+    <value>Немає доступу до папки гри. Підключіть диск і повторіть спробу.</value>
+  </data>
+  <data name="Packs_Why_FilesMissing" xml:space="preserve">
+    <value>У папці гри бракує файлів, які він змінює ({0}), наприклад {1}.</value>
+  </data>
+  <data name="Packs_Why_FileUnreadable" xml:space="preserve">
+    <value>Не вдається прочитати {0} у папці гри.</value>
+  </data>
+  <data name="Packs_Why_PatchFilesChanged" xml:space="preserve">
+    <value>Бінарному патчу потрібні саме ті файли, з яких його зроблено; змінено файлів: {0} з {1}.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolUnknown" xml:space="preserve">
+    <value>Йому потрібен інструмент «{0}», якого в цій програмі немає. Оновіть програму.</value>
+  </data>
+  <data name="Packs_Why_RecipeToolTooNew" xml:space="preserve">
+    <value>Йому потрібен «{0}» {1}, новіший, ніж у цій програмі. Оновіть програму.</value>
+  </data>
+  <data name="Packs_Kv_Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="Packs_Kv_Agent" xml:space="preserve">
+    <value>Створено за допомогою</value>
+  </data>
+  <data name="Packs_Kv_Coverage" xml:space="preserve">
+    <value>Повнота</value>
+  </data>
+  <data name="Packs_Kv_Reports" xml:space="preserve">
+    <value>Відгуки</value>
+  </data>
+  <data name="Packs_Kv_Updated" xml:space="preserve">
+    <value>Оновлено</value>
+  </data>
+  <data name="Packs_Kv_Fonts" xml:space="preserve">
+    <value>Шрифти</value>
+  </data>
+  <data name="Packs_Kv_Requires" xml:space="preserve">
+    <value>Потребує</value>
+  </data>
+  <data name="Packs_Kv_Revisions" xml:space="preserve">
+    <value>Редакції</value>
+  </data>
+  <data name="Packs_Agent_ByHand" xml:space="preserve">
+    <value>Вручну</value>
+  </data>
+  <data name="Packs_Coverage" xml:space="preserve">
+    <value>{0}% рядків</value>
+  </data>
+  <data name="Packs_Reports" xml:space="preserve">
+    <value>працює в {0} · не працює в {1}</value>
+  </data>
+  <data name="Packs_Requires" xml:space="preserve">
+    <value>{0} (завантажується з офіційного релізу)</value>
+  </data>
+  <data name="Packs_RevisionLine" xml:space="preserve">
+    <value>ред. {0} · {1} · {2}</value>
+  </data>
+  <data name="Packs_RevisionLine_NoNotes" xml:space="preserve">
+    <value>ред. {0} · {1}</value>
+  </data>
+  <data name="Packs_Install" xml:space="preserve">
+    <value>Встановити</value>
+  </data>
+  <data name="Packs_Installed" xml:space="preserve">
+    <value>Встановлено</value>
+  </data>
+  <data name="Packs_Hint_Incompatible" xml:space="preserve">
+    <value>Встановлення недоступне. Натомість можна перекласти відсутні рядки за допомогою ШІ.</value>
+  </data>
+  <data name="Packs_Hint_Offline" xml:space="preserve">
+    <value>Встановлення стане доступним, щойно з’явиться зв’язок із реєстром.</value>
+  </data>
+  <data name="Packs_Hint_Replaces" xml:space="preserve">
+    <value>Замінює встановлений «{0}».</value>
+  </data>
+  <data name="Packs_TranslateMissing" xml:space="preserve">
+    <value>Перекласти з ШІ</value>
+  </data>
+  <data name="Packs_Reviews" xml:space="preserve">
+    <value>Відгуки на GitHub</value>
+  </data>
+  <data name="Packs_Reviews_Tip" xml:space="preserve">
+    <value>Відкриває обговорення перекладу в браузері</value>
+  </data>
+  <data name="Packs_Offline" xml:space="preserve">
+    <value>Немає зв’язку з реєстром. Показано список, збережений {0}; встановлення недоступне, доки ви не повернетеся в мережу.</value>
+  </data>
+  <data name="Packs_OtherLanguages" xml:space="preserve">
+    <value>Доступно іншими мовами:</value>
+  </data>
+  <data name="Packs_OtherLanguage" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Install_Log_Removed" xml:space="preserve">
+    <value>Видалено попередній переклад «{0}» ред. {1}.</value>
+  </data>
+  <data name="Install_Log_Checked" xml:space="preserve">
+    <value>Сумісність із вашими файлами: {0}.</value>
+  </data>
+  <data name="Install_Log_FromCache" xml:space="preserve">
+    <value>Переклад ред. {0} узято з кешу.</value>
+  </data>
+  <data name="Install_Log_Downloaded" xml:space="preserve">
+    <value>Переклад ред. {0} завантажено: {1} байт.</value>
+  </data>
+  <data name="Install_Log_Uninstalled" xml:space="preserve">
+    <value>Відновлено оригінальних файлів: {0}; видалено доданих файлів: {1}.</value>
+  </data>
+  <data name="Install_Log_Kept" xml:space="preserve">
+    <value>Залишено (змінено після встановлення): {0}</value>
+  </data>
+  <data name="Install_Log_Rebuilt" xml:space="preserve">
+    <value>Перезібрано файлів гри: {0}; застосовано рядків: {1}.</value>
+  </data>
+  <data name="Install_Log_InGameLanguage" xml:space="preserve">
+    <value>У грі немає власної мови «{1}»: переклад замінює її тексти мовою «{0}». Виберіть «{0}» у налаштуваннях гри.</value>
+  </data>
+  <data name="Install_Log_UnknownKeys" xml:space="preserve">
+    <value>Рядки, яких немає в цій версії гри: {0}.</value>
+  </data>
+  <data name="Install_Log_Installed" xml:space="preserve">
+    <value>Замінено файлів: {0}; додано файлів: {1}.</value>
+  </data>
+  <data name="Install_Log_Failed" xml:space="preserve">
+    <value>Зупинено: {0}</value>
+  </data>
+  <data name="Install_Log_Restored" xml:space="preserve">
+    <value>Файли гри відновлено з резервної копії.</value>
+  </data>
+  <data name="Install_Log_NotRestored" xml:space="preserve">
+    <value>Не вдалося відновити файли гри; програма повторить спробу під час наступного запуску.</value>
+  </data>
+  <data name="Install_Progress_Installing" xml:space="preserve">
+    <value>Встановлення «{0}» · крок {1} з {2}</value>
+  </data>
+  <data name="Install_Progress_Reapplying" xml:space="preserve">
+    <value>Повторне встановлення «{0}» · крок {1} з {2}</value>
+  </data>
+  <data name="Install_Progress_Uninstalling" xml:space="preserve">
+    <value>Видалення «{0}»</value>
+  </data>
+  <data name="Install_Step_Download" xml:space="preserve">
+    <value>Завантаження перекладу</value>
+  </data>
+  <data name="Install_Step_RemovePrevious" xml:space="preserve">
+    <value>Видалення попереднього перекладу</value>
+  </data>
+  <data name="Install_Step_Check" xml:space="preserve">
+    <value>Перевірка файлів гри</value>
+  </data>
+  <data name="Install_Step_Rebuild" xml:space="preserve">
+    <value>Перезбирання файлів гри з рядків</value>
+  </data>
+  <data name="Install_Step_BackUp" xml:space="preserve">
+    <value>Резервне копіювання оригінальних файлів</value>
+  </data>
+  <data name="Install_Step_Write" xml:space="preserve">
+    <value>Запис нових файлів</value>
+  </data>
+  <data name="Install_Step_Verify" xml:space="preserve">
+    <value>Перевірка</value>
+  </data>
+  <data name="Install_Step_Restore" xml:space="preserve">
+    <value>Відновлення оригінальних файлів</value>
+  </data>
+  <data name="Install_Why_Busy" xml:space="preserve">
+    <value>Триває інше встановлення чи видалення. Дочекайтеся завершення й повторіть спробу.</value>
+  </data>
+  <data name="Install_Why_Blocked" xml:space="preserve">
+    <value>Встановлення для цієї гри недоступне (античит або студія попросила цього не робити).</value>
+  </data>
+  <data name="Install_Why_NotInRegistry" xml:space="preserve">
+    <value>Перекладу більше немає в списку реєстру.</value>
+  </data>
+  <data name="Install_Why_Offline" xml:space="preserve">
+    <value>Не вдалося завантажити переклад: немає з’єднання з реєстром.</value>
+  </data>
+  <data name="Install_Why_Timeout" xml:space="preserve">
+    <value>Не вдалося завантажити переклад: реєстр не відповів вчасно.</value>
+  </data>
+  <data name="Install_Why_HttpError" xml:space="preserve">
+    <value>Не вдалося завантажити переклад: реєстр відповів помилкою.</value>
+  </data>
+  <data name="Install_Why_FileMissing" xml:space="preserve">
+    <value>Файли перекладу зникли з реєстру.</value>
+  </data>
+  <data name="Install_Why_NewerFormat" xml:space="preserve">
+    <value>Для перекладу потрібна новіша версія AI Local Pack. Оновіть програму.</value>
+  </data>
+  <data name="Install_Why_HashMismatch" xml:space="preserve">
+    <value>Завантажений файл пошкоджено (перевірка хешу не пройшла), його видалено.</value>
+  </data>
+  <data name="Install_Why_CacheError" xml:space="preserve">
+    <value>Не вдалося зберегти завантаження: у папку кешу неможливо записувати.</value>
+  </data>
+  <data name="Install_Why_Damaged" xml:space="preserve">
+    <value>Переклад у реєстрі пошкоджено.</value>
+  </data>
+  <data name="Install_Why_Incompatible" xml:space="preserve">
+    <value>Переклад не підходить до вашої версії гри. {0}</value>
+  </data>
+  <data name="Install_Why_InvalidStrings" xml:space="preserve">
+    <value>Не вдається прочитати таблицю рядків перекладу.</value>
+  </data>
+  <data name="Install_Why_Recipe" xml:space="preserve">
+    <value>Не вдалося перезібрати {0} з рядків: файл гри не читається або має неочікуваний формат.</value>
+  </data>
+  <data name="Install_Why_Unexpected" xml:space="preserve">
+    <value>Щось пішло не так. Подробиці в журналі.</value>
+  </data>
+  <data name="Install_Why_GameRunning" xml:space="preserve">
+    <value>Гру запущено. Закрийте її й повторіть спробу.</value>
+  </data>
+  <data name="Install_Why_FileInUse" xml:space="preserve">
+    <value>{0} використовується; схоже, гру запущено. Закрийте її й повторіть спробу.</value>
+  </data>
+  <data name="Install_Why_DiskFull" xml:space="preserve">
+    <value>Недостатньо вільного місця на диску гри.</value>
+  </data>
+  <data name="Install_Why_PermissionDenied" xml:space="preserve">
+    <value>Немає дозволу змінювати {0}.</value>
+  </data>
+  <data name="Install_Why_ReadOnly" xml:space="preserve">
+    <value>{0} доступний лише для читання.</value>
+  </data>
+  <data name="Install_Why_GameUnavailable" xml:space="preserve">
+    <value>Немає доступу до папки гри (диск від’єднано або папку переміщено).</value>
+  </data>
+  <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
+    <value>Для цієї гри вже встановлено переклад.</value>
+  </data>
+  <data name="Install_Why_NotInstalled" xml:space="preserve">
+    <value>Для цієї гри не встановлено перекладу.</value>
+  </data>
+  <data name="Install_Why_Interrupted" xml:space="preserve">
+    <value>Попереднє встановлення було перервано, і його ще не вдалося завершити. Перезапустіть програму, щоб завершити його.</value>
+  </data>
+  <data name="Install_Why_VerifyFailed" xml:space="preserve">
+    <value>Після запису {0} має не той вміст, що очікувався.</value>
+  </data>
+  <data name="Install_Why_BackupDamaged" xml:space="preserve">
+    <value>Резервна копія {0} відсутня або пошкоджена.</value>
+  </data>
+  <data name="Install_Why_IoError" xml:space="preserve">
+    <value>Не вдалося прочитати або записати {0}.</value>
+  </data>
+  <data name="Install_Risk_Alpha" xml:space="preserve">
+    <value>Альфа: інші гравці ще не підтвердили, що він працює.</value>
+  </data>
+  <data name="Install_Risk_Probably" xml:space="preserve">
+    <value>Імовірно сумісний. {0}</value>
+  </data>
+  <data name="Install_Risk_Dependency" xml:space="preserve">
+    <value>Завантажує {0} {1} з офіційного релізу (з перевіркою хешу).</value>
+  </data>
+  <data name="Install_Risk_Replaces" xml:space="preserve">
+    <value>Замінює встановлений «{0}» ред. {1}.</value>
+  </data>
+  <data name="Install_Confirm_Title" xml:space="preserve">
+    <value>Встановити «{0}»?</value>
+  </data>
+  <data name="Install_Confirm_Note" xml:space="preserve">
+    <value>Оригінальні файли буде збережено в резервній копії; переклад можна видалити.</value>
+  </data>
+  <data name="Install_Confirm_Install" xml:space="preserve">
+    <value>Встановити</value>
+  </data>
+  <data name="Install_Toast_Installed" xml:space="preserve">
+    <value>Встановлено: «{0}».</value>
+  </data>
+  <data name="Install_Toast_InGameLanguage" xml:space="preserve">
+    <value>У грі виберіть мову «{0}».</value>
+  </data>
+  <data name="Install_Toast_Reapplied" xml:space="preserve">
+    <value>Встановлено повторно: «{0}».</value>
+  </data>
+  <data name="Install_Toast_Uninstalled" xml:space="preserve">
+    <value>«{0}» видалено; оригінальні файли відновлено.</value>
+  </data>
+  <data name="Install_Toast_Failed" xml:space="preserve">
+    <value>Не вдалося встановити; файли відновлено.</value>
+  </data>
+  <data name="Install_Toast_ReapplyFailed" xml:space="preserve">
+    <value>Не вдалося встановити повторно; файли відновлено.</value>
+  </data>
+  <data name="Install_Toast_FailedNotRestored" xml:space="preserve">
+    <value>Не вдалося встановити, і відновити файли теж не вдалося. Програма повторить спробу під час наступного запуску.</value>
+  </data>
+  <data name="Install_Toast_UninstallFailed" xml:space="preserve">
+    <value>Не вдалося видалити.</value>
+  </data>
+  <data name="Install_Toast_Play" xml:space="preserve">
+    <value>Грати</value>
+  </data>
+  <data name="Install_Toast_Undo" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="Install_Toast_Retry" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="Install_Toast_Details" xml:space="preserve">
+    <value>Подробиці</value>
+  </data>
+  <data name="Install_Toast_Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="Install_Details_TitleInstall" xml:space="preserve">
+    <value>Не вдалося встановити «{0}»</value>
+  </data>
+  <data name="Install_Details_TitleReapply" xml:space="preserve">
+    <value>Не вдалося повторно встановити «{0}»</value>
+  </data>
+  <data name="Install_Details_TitleUninstall" xml:space="preserve">
+    <value>Не вдалося видалити «{0}»</value>
+  </data>
+  <data name="Install_Details_Restored" xml:space="preserve">
+    <value>Файли гри такі самі, як були раніше.</value>
+  </data>
+  <data name="Install_Details_UninstallStopped" xml:space="preserve">
+    <value>Деякі файли можуть досі бути з перекладу; повторне видалення завершить справу.</value>
+  </data>
+  <data name="Install_Details_NotRestored" xml:space="preserve">
+    <value>Деякі файли не вдалося відновити; програма повторить спробу під час наступного запуску.</value>
+  </data>
+  <data name="Install_Details_Log" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="Install_Details_Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="Install_Details_Retry" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="Install_Uninstall_Title" xml:space="preserve">
+    <value>Видалити «{0}»?</value>
+  </data>
+  <data name="Install_Uninstall_Message" xml:space="preserve">
+    <value>Оригінальні файли гри буде відновлено з резервної копії. Переклад залишиться в реєстрі, і його можна встановити знову; ваша гра та її збереження не постраждають.</value>
+  </data>
+  <data name="Install_Uninstall_Confirm" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Packs_Tag_Installing" xml:space="preserve">
+    <value>встановлення</value>
+  </data>
+  <data name="Packs_Installing" xml:space="preserve">
+    <value>Встановлення…</value>
+  </data>
+  <data name="Packs_Uninstall" xml:space="preserve">
+    <value>Видалити (відновити оригінали)</value>
+  </data>
+  <data name="Library_Badge_Installing" xml:space="preserve">
+    <value>Встановлення · {0}%</value>
+  </data>
+  <data name="Library_Badge_Uninstalling" xml:space="preserve">
+    <value>Видалення…</value>
+  </data>
+  <data name="Game_Installed_Menu" xml:space="preserve">
+    <value>Дії зі встановленим перекладом</value>
+  </data>
+  <data name="Game_Installed_Reapply" xml:space="preserve">
+    <value>Встановити повторно</value>
+  </data>
+  <data name="Game_Installed_ShowInPacks" xml:space="preserve">
+    <value>Показати в «Тексті»</value>
+  </data>
+  <data name="Game_Installed_Uninstall" xml:space="preserve">
+    <value>Видалити (відновити оригінали)</value>
+  </data>
+  <data name="Install_Log_FontsOk" xml:space="preserve">
+    <value>Шрифти: у шрифтах гри є всі літери перекладу.</value>
+  </data>
+  <data name="Install_Log_FontSwapped" xml:space="preserve">
+    <value>Шрифти: у «{0}» бракує літер перекладу (відсутні: {1}; {2}); замінено на {3} (відкритий шрифт).</value>
+  </data>
+  <data name="Install_Log_FontMissing" xml:space="preserve">
+    <value>Шрифти: у «{0}» бракує літер перекладу (відсутні: {1}; {2}).</value>
+  </data>
+  <data name="Install_Log_FontUncovered" xml:space="preserve">
+    <value>У {0} теж бракує деяких із них (відсутні: {1}; {2}); вони можуть відображатися як квадратики.</value>
+  </data>
+  <data name="Install_Log_FontUnreadable" xml:space="preserve">
+    <value>Шрифти: {0} не вдається прочитати; залишено як є.</value>
+  </data>
+  <data name="Install_Log_FontUnknown" xml:space="preserve">
+    <value>Переклад вказує шрифт, якого ця програма не знає: {0} (пропущено; оновіть програму).</value>
+  </data>
+  <data name="Install_Why_Font" xml:space="preserve">
+    <value>У шрифті гри бракує літер цього перекладу, а відкритий шрифт {0}, у якому вони є, не вдалося підготувати.</value>
+  </data>
+  <data name="Install_Why_FontOffline" xml:space="preserve">
+    <value>У шрифті гри бракує літер цього перекладу, а відкритий шрифт {0}, у якому вони є, не вдалося завантажити. Перевірте з’єднання й повторіть спробу.</value>
+  </data>
+  <data name="Packs_Font_Bundled" xml:space="preserve">
+    <value>{0} (вбудований)</value>
+  </data>
+  <data name="Packs_Font_Download" xml:space="preserve">
+    <value>{0} (завантажується під час встановлення)</value>
+  </data>
+  <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
+    <value>Інструменти цієї програми поки не працюють з іграми на {0} у цій системі, тому цей переклад не можна встановити.</value>
+  </data>
+  <data name="Install_Step_Dependency" xml:space="preserve">
+    <value>Завантаження потрібних компонентів</value>
+  </data>
+  <data name="Install_Why_DependencyUnknown" xml:space="preserve">
+    <value>Цьому перекладу потрібен {0}, якого немає в списку дозволених компонентів реєстру, тому його не можна встановити.</value>
+  </data>
+  <data name="Install_Why_DependencyPlatform" xml:space="preserve">
+    <value>Цьому перекладу потрібен {0}, а в його офіційному релізі немає збірки для версії цієї гри ({1}).</value>
+  </data>
+  <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
+    <value>Цьому перекладу потрібен {0}, але програма не змогла визначити, для якої системи ця збірка гри (її головний виконуваний файл не читається).</value>
+  </data>
+  <data name="Install_Why_DependencyOffline" xml:space="preserve">
+    <value>Не вдалося завантажити {0} з офіційного релізу. Перевірте з’єднання й повторіть спробу.</value>
+  </data>
+  <data name="Install_Why_DependencyMissing" xml:space="preserve">
+    <value>Офіційного релізу {0} більше немає за адресою зі списку реєстру.</value>
+  </data>
+  <data name="Install_Why_DependencyHash" xml:space="preserve">
+    <value>Завантажений {0} не відповідає хешу зі списку реєстру; його видалено, нічого не встановлено.</value>
+  </data>
+  <data name="Install_Why_DependencyArchive" xml:space="preserve">
+    <value>Архів релізу {0} не можна безпечно розпакувати; нічого не встановлено.</value>
+  </data>
+  <data name="Install_Why_DependencyConflict" xml:space="preserve">
+    <value>Для гри встановлено іншу версію компонента, потрібного цьому перекладу, або компонент перезаписав би власні файли перекладу.</value>
+  </data>
+  <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
+    <value>{0} {1} ({2}): завантажено {3} байт з офіційного релізу ({4}), хеш перевірено.</value>
+  </data>
+  <data name="Install_Log_DependencyCached" xml:space="preserve">
+    <value>{0} {1} ({2}): узято з кешу (хеш перевірено під час завантаження).</value>
+  </data>
+  <data name="Install_Log_DependencyShared" xml:space="preserve">
+    <value>{0} {1} уже встановлено для цієї гри; переклад використовує його спільно.</value>
+  </data>
+  <data name="Install_Log_DependencyInstalled" xml:space="preserve">
+    <value>{0} {1} встановлено разом із перекладом: файлів — {2}.</value>
+  </data>
+  <data name="Install_Log_DependencyRemoved" xml:space="preserve">
+    <value>{0} {1} видалено: жоден інший переклад його не використовує.</value>
+  </data>
+  <data name="Packs_RequiresUnknown" xml:space="preserve">
+    <value>{0} (немає в списку дозволених компонентів реєстру)</value>
+  </data>
+  <data name="Startup_Step_Packs" xml:space="preserve">
+    <value>Перевірка встановлених перекладів</value>
+  </data>
+  <data name="Startup_Packs_None" xml:space="preserve">
+    <value>Немає встановлених перекладів для перевірки</value>
+  </data>
+  <data name="Startup_Packs_Done_One" xml:space="preserve">
+    <value>{0} переклад на місці</value>
+  </data>
+  <data name="Startup_Packs_Done_Few" xml:space="preserve">
+    <value>{0} переклади на місці</value>
+  </data>
+  <data name="Startup_Packs_Done_Many" xml:space="preserve">
+    <value>{0} перекладів на місці</value>
+  </data>
+  <data name="Startup_Packs_Reapplied" xml:space="preserve">
+    <value>Повторно встановлено після оновлення гри: {0}</value>
+  </data>
+  <data name="Startup_Packs_Attention" xml:space="preserve">
+    <value>Оновлення гри зламало переклад: {0}</value>
+  </data>
+  <data name="Startup_Step_Jobs" xml:space="preserve">
+    <value>Перевірка завдань створення</value>
+  </data>
+  <data name="Startup_Jobs_None" xml:space="preserve">
+    <value>Немає завдань створення</value>
+  </data>
+  <data name="Startup_Jobs_Interrupted" xml:space="preserve">
+    <value>Перервано, поки програма була закрита: {0}. Продовжте на сторінці гри</value>
+  </data>
+  <data name="Startup_Jobs_Done_One" xml:space="preserve">
+    <value>{0} завдання створення в роботі</value>
+  </data>
+  <data name="Startup_Jobs_Done_Few" xml:space="preserve">
+    <value>{0} завдання створення в роботі</value>
+  </data>
+  <data name="Startup_Jobs_Done_Many" xml:space="preserve">
+    <value>{0} завдань створення в роботі</value>
+  </data>
+  <data name="Game_Action_Reapply" xml:space="preserve">
+    <value>Встановити повторно</value>
+  </data>
+  <data name="Game_Caption_Reapply" xml:space="preserve">
+    <value>Записує «{0}» ред. {1} знову з ваших файлів</value>
+  </data>
+  <data name="Game_Installed_Wiped" xml:space="preserve">
+    <value>Встановлено · не застосовано після оновлення гри</value>
+  </data>
+  <data name="Game_UpdateBanner_Wiped" xml:space="preserve">
+    <value>Оновлення гри повернуло оригінальні файли: «{0}» ред. {1} досі підходить, але не застосований, тож гра показує свій оригінальний текст.</value>
+  </data>
+  <data name="Game_UpdateBanner_ReapplyFailed" xml:space="preserve">
+    <value>Оновлення гри повернуло оригінальні файли, а повторно встановити «{0}» ред. {1} не вдалося. {2}</value>
+  </data>
+  <data name="Library_Action_Reapply" xml:space="preserve">
+    <value>Встановити знову</value>
+  </data>
+  <data name="Install_Step_Patch" xml:space="preserve">
+    <value>Застосування бінарного патча до копії файлів гри</value>
+  </data>
+  <data name="Install_Log_Patched" xml:space="preserve">
+    <value>Пропатчено файлів: {0}.</value>
+  </data>
+  <data name="Install_Log_AlreadyPatched" xml:space="preserve">
+    <value>Уже пропатчені, залишено як є: {0}.</value>
+  </data>
+  <data name="Install_Why_PatchArchive" xml:space="preserve">
+    <value>Архів патча перекладу пошкоджено.</value>
+  </data>
+  <data name="Install_Why_PatchUnreadable" xml:space="preserve">
+    <value>Не вдається прочитати {0}, щоб його пропатчити.</value>
+  </data>
+  <data name="Install_Why_StagingError" xml:space="preserve">
+    <value>Не вдалося записати пропатчені файли: у папку кешу неможливо записувати.</value>
+  </data>
+  <data name="Install_Why_Patch" xml:space="preserve">
+    <value>Не вдалося застосувати бінарний патч до {0}: патч пошкоджено або створено так, що ця програма не може його прочитати.</value>
+  </data>
+  <data name="Activity_Title" xml:space="preserve">
+    <value>Активність</value>
+  </data>
+  <data name="Activity_ReadAll" xml:space="preserve">
+    <value>Прочитати все</value>
+  </data>
+  <data name="Activity_Settings" xml:space="preserve">
+    <value>Налаштування сповіщень</value>
+  </data>
+  <data name="Activity_Footer" xml:space="preserve">
+    <value>Коли вікно закрите, події надходять як системні сповіщення.</value>
+  </data>
+  <data name="Activity_Section_Decisions" xml:space="preserve">
+    <value>Потрібне ваше рішення</value>
+  </data>
+  <data name="Activity_Section_Running" xml:space="preserve">
+    <value>Виконується</value>
+  </data>
+  <data name="Activity_Day_Today" xml:space="preserve">
+    <value>Сьогодні</value>
+  </data>
+  <data name="Activity_Day_Yesterday" xml:space="preserve">
+    <value>Учора</value>
+  </data>
+  <data name="Activity_Day_New_One" xml:space="preserve">
+    <value>нових: {0}</value>
+  </data>
+  <data name="Activity_Day_New_Few" xml:space="preserve">
+    <value>нових: {0}</value>
+  </data>
+  <data name="Activity_Day_New_Many" xml:space="preserve">
+    <value>нових: {0}</value>
+  </data>
+  <data name="Activity_ShowMore_One" xml:space="preserve">
+    <value>Показати ще {0}</value>
+  </data>
+  <data name="Activity_ShowMore_Few" xml:space="preserve">
+    <value>Показати ще {0}</value>
+  </data>
+  <data name="Activity_ShowMore_Many" xml:space="preserve">
+    <value>Показати ще {0}</value>
+  </data>
+  <data name="Activity_Empty_Title" xml:space="preserve">
+    <value>Усе спокійно</value>
+  </data>
+  <data name="Activity_Empty_Text" xml:space="preserve">
+    <value>Тут з’являтимуться встановлення, переклади, створені з ШІ, публікації та автоматичні повторні встановлення після оновлень ігор.</value>
+  </data>
+  <data name="Activity_DecideLater" xml:space="preserve">
+    <value>Вирішити пізніше: перенести у стрічку</value>
+  </data>
+  <data name="Activity_Hide" xml:space="preserve">
+    <value>Сховати</value>
+  </data>
+  <data name="Activity_Unread" xml:space="preserve">
+    <value>Нове</value>
+  </data>
+  <data name="Activity_App" xml:space="preserve">
+    <value>AI Local Pack</value>
+  </data>
+  <data name="Activity_Tone_Attention" xml:space="preserve">
+    <value>Потрібне ваше рішення</value>
+  </data>
+  <data name="Activity_Tone_Bad" xml:space="preserve">
+    <value>Помилка</value>
+  </data>
+  <data name="Activity_Tone_Ok" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="Activity_Tone_Info" xml:space="preserve">
+    <value>Інформація</value>
+  </data>
+  <data name="Activity_Running_Step" xml:space="preserve">
+    <value>{0} · {1} %</value>
+  </data>
+  <data name="Activity_Event_PackInstalled" xml:space="preserve">
+    <value>Встановлено «{0}»</value>
+  </data>
+  <data name="Activity_Event_PackUninstalled" xml:space="preserve">
+    <value>«{0}» видалено; оригінальні файли відновлено</value>
+  </data>
+  <data name="Activity_Event_PackReapplied" xml:space="preserve">
+    <value>«{0}» встановлено повторно</value>
+  </data>
+  <data name="Activity_Event_PackAutoReapplied" xml:space="preserve">
+    <value>«{0}» встановлено повторно після оновлення гри</value>
+  </data>
+  <data name="Activity_Event_InstallFailed" xml:space="preserve">
+    <value>Не вдалося встановити «{0}»</value>
+  </data>
+  <data name="Activity_Event_UninstallFailed" xml:space="preserve">
+    <value>Не вдалося видалити «{0}»</value>
+  </data>
+  <data name="Activity_Event_ReapplyFailed" xml:space="preserve">
+    <value>Не вдалося повторно встановити «{0}»</value>
+  </data>
+  <data name="Activity_Event_AutoReapplyFailed" xml:space="preserve">
+    <value>Гру оновлено; повторно встановити «{0}» не вдалося</value>
+  </data>
+  <data name="Activity_Event_PackIncompatible" xml:space="preserve">
+    <value>Гру оновлено; «{0}» ред. {1} тепер несумісний</value>
+  </data>
+  <data name="Activity_Event_PackNotApplied" xml:space="preserve">
+    <value>Гру оновлено; «{0}» не застосовано</value>
+  </data>
+  <data name="Activity_Detail_NotRestored" xml:space="preserve">
+    <value>Деякі файли не вдалося відновити; програма повторить спробу під час наступного запуску.</value>
+  </data>
+  <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
+    <value>Доступна редакція перекладу {0}.</value>
+  </data>
+  <data name="Activity_Detail_Translate" xml:space="preserve">
+    <value>Новішої редакції ще немає: перекладіть нові рядки за допомогою ШІ.</value>
+  </data>
+  <data name="Activity_Detail_NotApplied" xml:space="preserve">
+    <value>Гра повернула свої оригінальні файли. Переклад досі підходить до цієї версії: застосуйте його знову.</value>
+  </data>
+  <data name="Activity_Action_Log" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="Activity_Action_Reapply" xml:space="preserve">
+    <value>Встановити повторно</value>
+  </data>
+  <data name="Activity_Action_Update" xml:space="preserve">
+    <value>Оновити до ред. {0}</value>
+  </data>
+  <data name="Activity_Action_Translate" xml:space="preserve">
+    <value>Перекласти нові рядки</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_One" xml:space="preserve">
+    <value>Активність: {0} потребує вашого рішення</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Few" xml:space="preserve">
+    <value>Активність: {0} потребують вашого рішення</value>
+  </data>
+  <data name="Chrome_Activity_Decisions_Many" xml:space="preserve">
+    <value>Активність: {0} потребують вашого рішення</value>
+  </data>
+  <data name="Chrome_Activity_Count" xml:space="preserve">
+    <value>Активність: {0}</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Відкрити AI Local Pack</value>
+  </data>
+  <data name="Tray_CheckUpdates" xml:space="preserve">
+    <value>Перевірити оновлення ігор</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+  <data name="Settings_Agents_Lead" xml:space="preserve">
+    <value>Агенти потрібні лише для створення нових перекладів за допомогою ШІ; для встановлення перекладів вони не потрібні. Вони працюють за вашою власною підпискою: проєкт не платить за ШІ.</value>
+  </data>
+  <data name="Settings_Group_Agents" xml:space="preserve">
+    <value>Агенти</value>
+  </data>
+  <data name="Settings_Group_DefaultAgent" xml:space="preserve">
+    <value>Типовий</value>
+  </data>
+  <data name="Settings_Group_Later" xml:space="preserve">
+    <value>Пізніше</value>
+  </data>
+  <data name="Settings_Agent_Label" xml:space="preserve">
+    <value>Агент ШІ</value>
+  </data>
+  <data name="Settings_Agent_Keywords" xml:space="preserve">
+    <value>claude code codex anthropic openai встановити увійти вийти вхід підписка оновити install sign in login</value>
+  </data>
+  <data name="Settings_Agent_Status_Checking" xml:space="preserve">
+    <value>Перевірка…</value>
+  </data>
+  <data name="Settings_Agent_Status_NotInstalled" xml:space="preserve">
+    <value>Не встановлено</value>
+  </data>
+  <data name="Settings_Agent_Status_Installing" xml:space="preserve">
+    <value>Встановлення · {0}%</value>
+  </data>
+  <data name="Settings_Agent_Status_Updating" xml:space="preserve">
+    <value>Оновлення до {0} · {1}%</value>
+  </data>
+  <data name="Settings_Agent_Status_TooOld" xml:space="preserve">
+    <value>Версія {0} застаріла</value>
+  </data>
+  <data name="Settings_Agent_Status_NotSignedIn" xml:space="preserve">
+    <value>Встановлено · вхід не виконано</value>
+  </data>
+  <data name="Settings_Agent_Status_Expired" xml:space="preserve">
+    <value>Сеанс завершився</value>
+  </data>
+  <data name="Settings_Agent_Status_Unknown" xml:space="preserve">
+    <value>Вхід не перевірено</value>
+  </data>
+  <data name="Settings_Agent_Status_SigningIn" xml:space="preserve">
+    <value>Очікування входу</value>
+  </data>
+  <data name="Settings_Agent_Status_Ready" xml:space="preserve">
+    <value>Готово · вхід виконано</value>
+  </data>
+  <data name="Settings_Agent_Source_Managed" xml:space="preserve">
+    <value>Встановлено AI Local Pack</value>
+  </data>
+  <data name="Settings_Agent_Source_Path" xml:space="preserve">
+    <value>Знайдено у вашій системі: {0}</value>
+  </data>
+  <data name="Settings_Agent_Account" xml:space="preserve">
+    <value>вхід як {0}</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Claude" xml:space="preserve">
+    <value>Завантажує офіційну збірку Anthropic{0} у папку програми й перевіряє її підпис. Без Node.js і без прав адміністратора.</value>
+  </data>
+  <data name="Settings_Agent_InstallHelp_Codex" xml:space="preserve">
+    <value>Завантажує офіційну збірку OpenAI{0} у папку програми й звіряє її хеш із контрольними сумами релізу. Без Node.js і без прав адміністратора.</value>
+  </data>
+  <data name="Settings_Agent_Stage_Resolving" xml:space="preserve">
+    <value>Шукаємо офіційний реліз і перевіряємо, що засвідчує його справжність…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Downloading" xml:space="preserve">
+    <value>Завантажуємо з {0}…</value>
+  </data>
+  <data name="Settings_Agent_Stage_Unpacking" xml:space="preserve">
+    <value>Хеш перевірено, розміщуємо файли…</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Managed" xml:space="preserve">
+    <value>AI Local Pack потрібна версія {0} або новіша. Оновіть копію програми.</value>
+  </data>
+  <data name="Settings_Agent_TooOld_Own" xml:space="preserve">
+    <value>AI Local Pack потрібна версія {0} або новіша. Оновіть свою копію тим самим способом, яким її встановлювали, і перевірте ще раз.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Claude" xml:space="preserve">
+    <value>Увійдіть зі своєю підпискою Claude. Вхід Claude Code відкриється в браузері; AI Local Pack ніколи не бачить токен.</value>
+  </data>
+  <data name="Settings_Agent_SignInHelp_Codex" xml:space="preserve">
+    <value>Увійдіть зі своєю підпискою ChatGPT. Вхід Codex відкриється в браузері; AI Local Pack ніколи не бачить токен.</value>
+  </data>
+  <data name="Settings_Agent_UnknownHelp" xml:space="preserve">
+    <value>Не вдалося перевірити вхід: {0}</value>
+  </data>
+  <data name="Settings_Agent_SigningInHelp" xml:space="preserve">
+    <value>Завершіть вхід у вікні браузера, яке відкрив {0}.</value>
+  </data>
+  <data name="Settings_Agent_Install" xml:space="preserve">
+    <value>Встановити</value>
+  </data>
+  <data name="Settings_Agent_Update" xml:space="preserve">
+    <value>Оновити до {0}</value>
+  </data>
+  <data name="Settings_Agent_SignIn" xml:space="preserve">
+    <value>Увійти</value>
+  </data>
+  <data name="Settings_Agent_SignOut" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+  <data name="Settings_Agent_CheckAgain" xml:space="preserve">
+    <value>Перевірити знову</value>
+  </data>
+  <data name="Settings_Agent_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="Settings_Agent_Error_Install" xml:space="preserve">
+    <value>Не вдалося встановити {0}: {1}</value>
+  </data>
+  <data name="Settings_Agent_Error_Offline" xml:space="preserve">
+    <value>Немає зв’язку з {0}. Перевірте з’єднання й спробуйте ще раз; завантаження продовжиться з місця зупинки.</value>
+  </data>
+  <data name="Settings_Agent_Error_Server" xml:space="preserve">
+    <value>Сервер {0} відповів помилкою. Спробуйте пізніше.</value>
+  </data>
+  <data name="Settings_Agent_Error_NoBuild" xml:space="preserve">
+    <value>{0} не має офіційної збірки для цієї системи.</value>
+  </data>
+  <data name="Settings_Agent_Error_Check" xml:space="preserve">
+    <value>Завантажений файл не пройшов перевірку підпису чи хешу, його видалено. Нічого не встановлено.</value>
+  </data>
+  <data name="Settings_Agent_Error_Disk" xml:space="preserve">
+    <value>У папку програми неможливо записувати: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_Busy" xml:space="preserve">
+    <value>Уже триває інше встановлення {0}.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInExited" xml:space="preserve">
+    <value>Вхід завершився, але ви не ввійшли. Спробуйте ще раз.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInTimedOut" xml:space="preserve">
+    <value>Вхід не було завершено за 10 хвилин, тому його зупинено.</value>
+  </data>
+  <data name="Settings_Agent_Error_SignInStart" xml:space="preserve">
+    <value>Не вдалося почати вхід: {0}</value>
+  </data>
+  <data name="Settings_Agent_Error_SignOut" xml:space="preserve">
+    <value>Агент досі повідомляє, що вхід виконано.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Label" xml:space="preserve">
+    <value>Типовий агент</value>
+  </data>
+  <data name="Settings_DefaultAgent_Help" xml:space="preserve">
+    <value>Вибирається заздалегідь у формі створення; для кожної гри можна змінити.</value>
+  </data>
+  <data name="Settings_DefaultAgent_Keywords" xml:space="preserve">
+    <value>агент створення генерація типовий claude codex</value>
+  </data>
+  <data name="Settings_DefaultAgent_None" xml:space="preserve">
+    <value>Спершу встановіть агента й увійдіть</value>
+  </data>
+  <data name="Settings_OwnKey_Label" xml:space="preserve">
+    <value>Власний ключ API або локальна модель</value>
+  </data>
+  <data name="Settings_OwnKey_Help" xml:space="preserve">
+    <value>Для гравців без підписки Claude чи ChatGPT.</value>
+  </data>
+  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
+    <value>ключ api локальна модель ollama api key</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
+    <value>{0}: вхід не виконано</value>
+  </data>
+  <data name="Settings_Alert_AgentExpired_Text" xml:space="preserve">
+    <value>Сеанс завершився. Увійдіть знову, щоб почати чи продовжити створення перекладу.</value>
+  </data>
+  <data name="Gen_Step_Setup" xml:space="preserve">
+    <value>Підготовка</value>
+  </data>
+  <data name="Gen_Step_Extract" xml:space="preserve">
+    <value>Видобування</value>
+  </data>
+  <data name="Gen_Step_Glossary" xml:space="preserve">
+    <value>Глосарій</value>
+  </data>
+  <data name="Gen_Step_Translate" xml:space="preserve">
+    <value>Переклад</value>
+  </data>
+  <data name="Gen_Step_Build" xml:space="preserve">
+    <value>Збирання й тест</value>
+  </data>
+  <data name="Gen_Steps_Label" xml:space="preserve">
+    <value>Етапи створення</value>
+  </data>
+  <data name="Gen_Title" xml:space="preserve">
+    <value>Створити переклад</value>
+  </data>
+  <data name="Gen_Language_Into" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="Gen_Language_Tip" xml:space="preserve">
+    <value>Перекласти іншою мовою</value>
+  </data>
+  <data name="Gen_Tile_Strings" xml:space="preserve">
+    <value>Перекласти</value>
+  </data>
+  <data name="Gen_Tile_Time" xml:space="preserve">
+    <value>Час агента</value>
+  </data>
+  <data name="Gen_Tile_Limits" xml:space="preserve">
+    <value>Підписка</value>
+  </data>
+  <data name="Gen_Tile_Words_One" xml:space="preserve">
+    <value>рядків · {0} слово</value>
+  </data>
+  <data name="Gen_Tile_Words_Few" xml:space="preserve">
+    <value>рядків · {0} слова</value>
+  </data>
+  <data name="Gen_Tile_Words_Many" xml:space="preserve">
+    <value>рядків · {0} слів</value>
+  </data>
+  <data name="Gen_Tile_Guess" xml:space="preserve">
+    <value>приблизна оцінка за розміром файлів</value>
+  </data>
+  <data name="Gen_Tile_TimeDetail" xml:space="preserve">
+    <value>працює у фоні</value>
+  </data>
+  <data name="Gen_Tile_LimitsDetail" xml:space="preserve">
+    <value>днів лімітів базового тарифу</value>
+  </data>
+  <data name="Gen_Tile_LimitsTip" xml:space="preserve">
+    <value>Днів лімітів використання базового тарифу (Claude Pro, ChatGPT Plus), три 5-годинні вікна на день</value>
+  </data>
+  <data name="Gen_Tile_Minutes" xml:space="preserve">
+    <value>{0} хв</value>
+  </data>
+  <data name="Gen_Tile_Hours" xml:space="preserve">
+    <value>{0} год</value>
+  </data>
+  <data name="Gen_Estimating" xml:space="preserve">
+    <value>Оцінюємо…</value>
+  </data>
+  <data name="Gen_Estimate_Failed" xml:space="preserve">
+    <value>Не вдалося оцінити розмір гри: {0}</value>
+  </data>
+  <data name="Gen_Estimate_Retry" xml:space="preserve">
+    <value>Спробувати ще раз</value>
+  </data>
+  <data name="Gen_Agents_Label" xml:space="preserve">
+    <value>Агент</value>
+  </data>
+  <data name="Gen_Agent_Ready" xml:space="preserve">
+    <value>Готовий</value>
+  </data>
+  <data name="Gen_Agent_NotInstalled" xml:space="preserve">
+    <value>Не встановлено</value>
+  </data>
+  <data name="Gen_Agent_NotSignedIn" xml:space="preserve">
+    <value>Вхід не виконано</value>
+  </data>
+  <data name="Gen_Agent_Installing" xml:space="preserve">
+    <value>Завантаження офіційної збірки · {0}%</value>
+  </data>
+  <data name="Gen_Agent_SigningIn" xml:space="preserve">
+    <value>Завершіть вхід у браузері…</value>
+  </data>
+  <data name="Gen_Agent_Source_Own" xml:space="preserve">
+    <value>ваша копія</value>
+  </data>
+  <data name="Gen_Agent_Source_Managed" xml:space="preserve">
+    <value>встановлено AI Local Pack</value>
+  </data>
+  <data name="Gen_Checks_Label" xml:space="preserve">
+    <value>Перевірки</value>
+  </data>
+  <data name="Gen_Check_Engine_Pending" xml:space="preserve">
+    <value>Перевіряємо рушій гри…</value>
+  </data>
+  <data name="Gen_Check_Engine_Supported" xml:space="preserve">
+    <value>{0} · підтримується інструментами</value>
+  </data>
+  <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
+    <value>Невідомий рушій: агент напише власний зчитувач, а переклад буде бінарним патчем</value>
+  </data>
+  <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
+    <value>{0}: у цій системі інструменти його не підтримують, тому агент напише власний зчитувач (переклад буде бінарним патчем)</value>
+  </data>
+  <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
+    <value>{0}: інструменти не можуть його прочитати, тому агент напише власний зчитувач (переклад буде бінарним патчем)</value>
+  </data>
+  <data name="Gen_Check_Engine_Failed" xml:space="preserve">
+    <value>{0}: інструментам не вдалося прочитати гру ({1})</value>
+  </data>
+  <data name="Gen_Check_Disk_Pending" xml:space="preserve">
+    <value>Перевіряємо місце на диску…</value>
+  </data>
+  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
+    <value>Робоча копія: {0}</value>
+  </data>
+  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
+    <value>Робоча копія: {0}, клонована: місця не займає</value>
+  </data>
+  <data name="Gen_Check_Disk_Free" xml:space="preserve">
+    <value>{0} · вільно {1}</value>
+  </data>
+  <data name="Gen_Check_Disk_Short" xml:space="preserve">
+    <value>Недостатньо місця: потрібно {0}, вільно {1}</value>
+  </data>
+  <data name="Gen_Check_Agent_Ready" xml:space="preserve">
+    <value>{0} готовий</value>
+  </data>
+  <data name="Gen_Check_Agent_Setup" xml:space="preserve">
+    <value>{0} потребує налаштування</value>
+  </data>
+  <data name="Gen_Check_Agent_None" xml:space="preserve">
+    <value>Виберіть агента</value>
+  </data>
+  <data name="Gen_Check_NoAntiCheat" xml:space="preserve">
+    <value>Античит не виявлено</value>
+  </data>
+  <data name="Gen_ReviewGlossary" xml:space="preserve">
+    <value>Дати мені переглянути глосарій перед перекладом</value>
+  </data>
+  <data name="Gen_CopyNote" xml:space="preserve">
+    <value>Агент працює з копією; файли вашої гри не змінюються.</value>
+  </data>
+  <data name="Gen_Start" xml:space="preserve">
+    <value>Почати створення</value>
+  </data>
+  <data name="Gen_Start_Starting" xml:space="preserve">
+    <value>Запуск…</value>
+  </data>
+  <data name="Gen_Start_GameUnavailable" xml:space="preserve">
+    <value>Папка гри недоступна</value>
+  </data>
+  <data name="Gen_Start_AgentNotReady" xml:space="preserve">
+    <value>{0} ще не готовий</value>
+  </data>
+  <data name="Gen_Start_Estimating" xml:space="preserve">
+    <value>Оцінюємо розмір…</value>
+  </data>
+  <data name="Gen_Start_EstimateFailed" xml:space="preserve">
+    <value>Не вдалося оцінити розмір</value>
+  </data>
+  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
+    <value>Інструментам не вдалося прочитати файли цієї гри</value>
+  </data>
+  <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
+    <value>Недостатньо місця на диску для робочої копії</value>
+  </data>
+  <data name="Gen_StartError_Blocked" xml:space="preserve">
+    <value>Створення перекладу для цієї гри недоступне.</value>
+  </data>
+  <data name="Gen_StartError_Exists" xml:space="preserve">
+    <value>Для цієї гри вже є завдання створення.</value>
+  </data>
+  <data name="Gen_StartError_Disk" xml:space="preserve">
+    <value>Не вдалося створити папку завдання: {0}</value>
+  </data>
+  <data name="Gen_StartError_Unexpected" xml:space="preserve">
+    <value>Не вдалося почати створення: {0}</value>
+  </data>
+  <data name="Gen_Stage_Setup" xml:space="preserve">
+    <value>Створюємо робочу копію</value>
+  </data>
+  <data name="Gen_Stage_Extract" xml:space="preserve">
+    <value>Видобуваємо рядки</value>
+  </data>
+  <data name="Gen_Stage_Glossary" xml:space="preserve">
+    <value>Складаємо глосарій</value>
+  </data>
+  <data name="Gen_Stage_Translate" xml:space="preserve">
+    <value>Перекладаємо</value>
+  </data>
+  <data name="Gen_Stage_Build" xml:space="preserve">
+    <value>Збираємо й тестуємо</value>
+  </data>
+  <data name="Gen_Progress_Review" xml:space="preserve">
+    <value>Чекаємо, поки ви переглянете глосарій</value>
+  </data>
+  <data name="Gen_Progress_Paused" xml:space="preserve">
+    <value>Призупинено</value>
+  </data>
+  <data name="Gen_Progress_Interrupted" xml:space="preserve">
+    <value>Перервано</value>
+  </data>
+  <data name="Gen_Progress_Failed" xml:space="preserve">
+    <value>Помилка</value>
+  </data>
+  <data name="Gen_Progress_Completed" xml:space="preserve">
+    <value>Переклад готовий</value>
+  </data>
+  <data name="Gen_Progress_Detail" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Gen_Duration_Minutes" xml:space="preserve">
+    <value>{0} хв</value>
+  </data>
+  <data name="Gen_Duration_Hours" xml:space="preserve">
+    <value>{0} год {1} хв</value>
+  </data>
+  <data name="Gen_Duration_HoursExact" xml:space="preserve">
+    <value>{0} год</value>
+  </data>
+  <data name="Game_Action_Resume" xml:space="preserve">
+    <value>Продовжити</value>
+  </data>
+  <data name="Game_Action_RetryStage" xml:space="preserve">
+    <value>Повторити етап</value>
+  </data>
+  <data name="Game_Action_ReviewGlossary" xml:space="preserve">
+    <value>Переглянути глосарій</value>
+  </data>
+  <data name="Game_Caption_PausedLimit" xml:space="preserve">
+    <value>Пауза: ліміт підписки · {0}%</value>
+  </data>
+  <data name="Game_Caption_PausedLimitAt" xml:space="preserve">
+    <value>Пауза: ліміт підписки · продовження ~{0}</value>
+  </data>
+  <data name="Game_Caption_Interrupted" xml:space="preserve">
+    <value>Перервано на {0}%</value>
+  </data>
+  <data name="Game_Caption_Failed" xml:space="preserve">
+    <value>Етап не вдався: {0}</value>
+  </data>
+  <data name="Game_Caption_Review" xml:space="preserve">
+    <value>Чекає на вас</value>
+  </data>
+  <data name="Library_Card_PausedLimit" xml:space="preserve">
+    <value>Ліміт підписки · продовження ~{0}</value>
+  </data>
+  <data name="Library_Card_PausedLimitSoon" xml:space="preserve">
+    <value>Ліміт підписки</value>
+  </data>
+  <data name="Library_Card_PausedPlayer" xml:space="preserve">
+    <value>Призупинено вами</value>
+  </data>
+  <data name="Library_Card_Interrupted" xml:space="preserve">
+    <value>Перервано: можна продовжити будь-коли</value>
+  </data>
+  <data name="Library_Card_Failed" xml:space="preserve">
+    <value>Етап не вдався</value>
+  </data>
+  <data name="Library_Card_Review" xml:space="preserve">
+    <value>Глосарій чекає на вас</value>
+  </data>
+  <data name="Library_Action_Retry" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="Gen_Progress_Counter_Chunks" xml:space="preserve">
+    <value>Частина {0} з {1}</value>
+  </data>
+  <data name="Gen_Progress_Eta" xml:space="preserve">
+    <value>{0} · ≈ ще {1}</value>
+  </data>
+  <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
+    <value>Копіюємо гру: агент працює з копією, ваші файли залишаються недоторканими</value>
+  </data>
+  <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
+    <value>Видобуваємо текст за допомогою інструментів</value>
+  </data>
+  <data name="Gen_Progress_Sub_Glossary" xml:space="preserve">
+    <value>Імена, терміни й тон, щоб уся гра звучала однаково</value>
+  </data>
+  <data name="Gen_Progress_Sub_Build" xml:space="preserve">
+    <value>Перезбираємо файли гри в копії й один раз її запускаємо</value>
+  </data>
+  <data name="Gen_Action_Pause" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="Gen_Action_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="Gen_Action_Resume" xml:space="preserve">
+    <value>Продовжити</value>
+  </data>
+  <data name="Gen_Action_ResumeNow" xml:space="preserve">
+    <value>Продовжити зараз</value>
+  </data>
+  <data name="Gen_Action_Retry" xml:space="preserve">
+    <value>Повторити етап</value>
+  </data>
+  <data name="Gen_Action_Details" xml:space="preserve">
+    <value>Подробиці</value>
+  </data>
+  <data name="Gen_Action_ContinueTranslation" xml:space="preserve">
+    <value>Перейти до перекладу</value>
+  </data>
+  <data name="Gen_Recent_Title" xml:space="preserve">
+    <value>Щойно перекладено</value>
+  </data>
+  <data name="Gen_Recent_TitleStopped" xml:space="preserve">
+    <value>Перекладено останнім</value>
+  </data>
+  <data name="Gen_Warning_Rule_Untranslated" xml:space="preserve">
+    <value>як в оригіналі</value>
+  </data>
+  <data name="Gen_Warning_Rule_Whitespace" xml:space="preserve">
+    <value>пробіли</value>
+  </data>
+  <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
+    <value>розриви рядків</value>
+  </data>
+  <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
+    <value>перевірити</value>
+  </data>
+  <data name="Gen_Validator_Count_One" xml:space="preserve">
+    <value>{0} попередження валідатора</value>
+  </data>
+  <data name="Gen_Validator_Count_Few" xml:space="preserve">
+    <value>{0} попередження валідатора</value>
+  </data>
+  <data name="Gen_Validator_Count_Many" xml:space="preserve">
+    <value>{0} попереджень валідатора</value>
+  </data>
+  <data name="Gen_Validator_None" xml:space="preserve">
+    <value>Валідатор не має попереджень</value>
+  </data>
+  <data name="Gen_Validator_Hint" xml:space="preserve">
+    <value>Заповнювачі, теги й обмеження довжини перевіряються в кожній частині; помилки повертаються агентові.</value>
+  </data>
+  <data name="Gen_Validator_Show" xml:space="preserve">
+    <value>Показати</value>
+  </data>
+  <data name="Gen_Validator_Hide" xml:space="preserve">
+    <value>Сховати</value>
+  </data>
+  <data name="Gen_Limit_Title" xml:space="preserve">
+    <value>Ліміт {0}</value>
+  </data>
+  <data name="Gen_Limit_Used" xml:space="preserve">
+    <value>використано ~{0}%</value>
+  </data>
+  <data name="Gen_Limit_Reached" xml:space="preserve">
+    <value>вичерпано</value>
+  </data>
+  <data name="Gen_Limit_FiveHour" xml:space="preserve">
+    <value>Поточне 5-годинне вікно, за даними агента</value>
+  </data>
+  <data name="Gen_Limit_SevenDay" xml:space="preserve">
+    <value>Поточне 7-денне вікно, за даними агента</value>
+  </data>
+  <data name="Gen_Limit_Window" xml:space="preserve">
+    <value>Поточне вікно використання, за даними агента</value>
+  </data>
+  <data name="Gen_Limit_Resets" xml:space="preserve">
+    <value>Скинеться ~{0}</value>
+  </data>
+  <data name="Gen_Limit_Unknown" xml:space="preserve">
+    <value>{0} не повідомляє про свої ліміти; завдання саме стане на паузу, якщо вони вичерпаються.</value>
+  </data>
+  <data name="Gen_Log_Title" xml:space="preserve">
+    <value>Дії агента</value>
+  </data>
+  <data name="Gen_Log_Empty" xml:space="preserve">
+    <value>Поки нічого.</value>
+  </data>
+  <data name="Gen_Build_Checking" xml:space="preserve">
+    <value>Перевіряємо переклади</value>
+  </data>
+  <data name="Gen_Build_Rebuilding" xml:space="preserve">
+    <value>Перезбираємо файли гри</value>
+  </data>
+  <data name="Gen_Build_Fonts" xml:space="preserve">
+    <value>Перевіряємо шрифти на нові літери</value>
+  </data>
+  <data name="Gen_Build_TestRun" xml:space="preserve">
+    <value>Запускаємо тестову збірку</value>
+  </data>
+  <data name="Gen_Build_Packing" xml:space="preserve">
+    <value>Зберігаємо ваш переклад</value>
+  </data>
+  <data name="Gen_Build_FontSwap" xml:space="preserve">
+    <value>Шрифти: у {0} бракує літер перекладу; натомість використовується {1} (OFL).</value>
+  </data>
+  <data name="Gen_Banner_Limit" xml:space="preserve">
+    <value>Вичерпано ліміт підписки вашого агента.</value>
+  </data>
+  <data name="Gen_Banner_LimitAt" xml:space="preserve">
+    <value>Завдання автоматично продовжиться ~{0}.</value>
+  </data>
+  <data name="Gen_Banner_LimitSoon" xml:space="preserve">
+    <value>Завдання автоматично продовжиться, щойно ліміт скинеться.</value>
+  </data>
+  <data name="Gen_Banner_Paused" xml:space="preserve">
+    <value>Призупинено.</value>
+  </data>
+  <data name="Gen_Banner_PausedText" xml:space="preserve">
+    <value>Прогрес збережено: продовжуйте, коли захочете.</value>
+  </data>
+  <data name="Gen_Banner_Interrupted" xml:space="preserve">
+    <value>Програму було закрито під час виконання завдання.</value>
+  </data>
+  <data name="Gen_Banner_ResumeChunk" xml:space="preserve">
+    <value>Прогрес збережено: продовження з етапу «{0}», частина {1} з {2}.</value>
+  </data>
+  <data name="Gen_Banner_ResumeStage" xml:space="preserve">
+    <value>Прогрес збережено: продовження з етапу «{0}».</value>
+  </data>
+  <data name="Gen_Banner_Failed" xml:space="preserve">
+    <value>Етап «{0}» не вдався.</value>
+  </data>
+  <data name="Gen_Banner_Review" xml:space="preserve">
+    <value>Глосарій готовий до вашого перегляду</value>
+  </data>
+  <data name="Gen_Banner_ReviewText" xml:space="preserve">
+    <value>Переклад почнеться, коли ви продовжите; ваші зміни зберігаються одразу під час введення.</value>
+  </data>
+  <data name="Gen_Failure_Agent" xml:space="preserve">
+    <value>Агенту не вдалося завершити цей крок. Зазвичай допомагає повторна спроба; уже збережені переклади залишаться.</value>
+  </data>
+  <data name="Gen_Failure_SignedOut" xml:space="preserve">
+    <value>{0}: вхід не виконано. Увійдіть у Налаштування → Агенти ШІ й повторіть спробу.</value>
+  </data>
+  <data name="Gen_Failure_AgentMissing" xml:space="preserve">
+    <value>{0} більше не встановлено. Встановіть його в Налаштування → Агенти ШІ й повторіть спробу.</value>
+  </data>
+  <data name="Gen_Failure_Toolkit" xml:space="preserve">
+    <value>Інструментам не вдалося обробити файли гри. Причина — у подробицях.</value>
+  </data>
+  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
+    <value>Не вдалося створити робочу копію гри. Причина — у подробицях.</value>
+  </data>
+  <data name="Gen_Failure_Disk" xml:space="preserve">
+    <value>Не вдалося записати файли: перевірте вільне місце й повторіть спробу.</value>
+  </data>
+  <data name="Gen_Failure_TestRun" xml:space="preserve">
+    <value>Перекладена гра закрилася з помилкою під час тестового запуску. Повторна спроба перезбере файли; ваші переклади залишаться.</value>
+  </data>
+  <data name="Gen_Failure_Unexpected" xml:space="preserve">
+    <value>Сталася неочікувана помилка. Журнал — у подробицях.</value>
+  </data>
+  <data name="Gen_Details_Title" xml:space="preserve">
+    <value>Журнал створення: {0}</value>
+  </data>
+  <data name="Gen_Details_Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="Gen_Details_OpenFolder" xml:space="preserve">
+    <value>Відкрити папку завдання</value>
+  </data>
+  <data name="Gen_Cancel_Title" xml:space="preserve">
+    <value>Скасувати створення?</value>
+  </data>
+  <data name="Gen_Cancel_Text" xml:space="preserve">
+    <value>Виконано {0}%. Можна зберегти прогрес і продовжити пізніше або видалити робочу копію й звільнити місце на диску.</value>
+  </data>
+  <data name="Gen_Cancel_Keep" xml:space="preserve">
+    <value>Зберегти прогрес</value>
+  </data>
+  <data name="Gen_Cancel_Delete" xml:space="preserve">
+    <value>Видалити робочу копію</value>
+  </data>
+  <data name="Gen_Cancel_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Gen_Toast_Kept" xml:space="preserve">
+    <value>Зупинено. Прогрес збережено: продовжуйте будь-коли.</value>
+  </data>
+  <data name="Gen_Toast_Deleted" xml:space="preserve">
+    <value>Створення скасовано, робочу копію видалено.</value>
+  </data>
+  <data name="Gen_ActionError_Busy" xml:space="preserve">
+    <value>Завдання виконується в іншому вікні чи команді.</value>
+  </data>
+  <data name="Gen_ActionError_Blocked" xml:space="preserve">
+    <value>Створення перекладу для цієї гри заблоковано.</value>
+  </data>
+  <data name="Gen_ActionError_GameUnavailable" xml:space="preserve">
+    <value>Папка гри недоступна: підключіть її диск і спробуйте ще раз.</value>
+  </data>
+  <data name="Gen_ActionError_NotFound" xml:space="preserve">
+    <value>Завдання більше немає: його завершено або скасовано деінде.</value>
+  </data>
+  <data name="Gen_ActionError_Disk" xml:space="preserve">
+    <value>Не вдалося змінити файли завдання: {0}</value>
+  </data>
+  <data name="Gen_ActionError_Unexpected" xml:space="preserve">
+    <value>Не вдалося продовжити: {0}</value>
+  </data>
+  <data name="Activity_Event_GenerationPaused" xml:space="preserve">
+    <value>Створення призупинено: ліміт підписки</value>
+  </data>
+  <data name="Activity_Detail_GenerationPausedAt" xml:space="preserve">
+    <value>Автоматично продовжиться ~{0}</value>
+  </data>
+  <data name="Activity_Detail_GenerationPaused" xml:space="preserve">
+    <value>Автоматично продовжиться, щойно ліміт скинеться</value>
+  </data>
+  <data name="Activity_Action_ResumeNow" xml:space="preserve">
+    <value>Продовжити зараз</value>
+  </data>
+  <data name="Activity_Tone_Paused" xml:space="preserve">
+    <value>Призупинено</value>
+  </data>
+  <data name="Activity_Task_Generation" xml:space="preserve">
+    <value>Створення · {0}</value>
+  </data>
+  <data name="Gen_Review_Title" xml:space="preserve">
+    <value>Перегляньте глосарій</value>
+  </data>
+  <data name="Gen_Review_Subtitle" xml:space="preserve">
+    <value>Імена, місця й терміни, що використовуються в кожній частині. Виправте їх зараз.</value>
+  </data>
+  <data name="Gen_Review_Terms_One" xml:space="preserve">
+    <value>{0} термін</value>
+  </data>
+  <data name="Gen_Review_Terms_Few" xml:space="preserve">
+    <value>{0} терміни</value>
+  </data>
+  <data name="Gen_Review_Terms_Many" xml:space="preserve">
+    <value>{0} термінів</value>
+  </data>
+  <data name="Gen_Review_Tone" xml:space="preserve">
+    <value>Тон</value>
+  </data>
+  <data name="Gen_Review_Tone_Agent" xml:space="preserve">
+    <value>Як вибрав агент</value>
+  </data>
+  <data name="Gen_Review_Tone_Informal" xml:space="preserve">
+    <value>Неформальний</value>
+  </data>
+  <data name="Gen_Review_Tone_Formal" xml:space="preserve">
+    <value>Формальний</value>
+  </data>
+  <data name="Gen_Review_Tone_WithPronoun" xml:space="preserve">
+    <value>{0} («{1}»)</value>
+  </data>
+  <data name="Gen_Review_AgentTone" xml:space="preserve">
+    <value>Тон агента: {0}</value>
+  </data>
+  <data name="Gen_Review_Column_Term" xml:space="preserve">
+    <value>Термін</value>
+  </data>
+  <data name="Gen_Review_Column_Translation" xml:space="preserve">
+    <value>Переклад</value>
+  </data>
+  <data name="Gen_Review_Column_Note" xml:space="preserve">
+    <value>Примітка</value>
+  </data>
+  <data name="Gen_Review_KeepAsIs" xml:space="preserve">
+    <value>залишити як є</value>
+  </data>
+  <data name="Gen_Review_Edited" xml:space="preserve">
+    <value>змінено</value>
+  </data>
+  <data name="Gen_Review_Search" xml:space="preserve">
+    <value>Пошук термінів</value>
+  </data>
+  <data name="Gen_Review_NoMatch" xml:space="preserve">
+    <value>Немає відповідних термінів.</value>
+  </data>
+  <data name="Gen_Review_Empty" xml:space="preserve">
+    <value>Агент зберіг лише тон, без термінів.</value>
+  </data>
+  <data name="Gen_Review_Blank" xml:space="preserve">
+    <value>Кожен термін потребує перекладу.</value>
+  </data>
+  <data name="Gen_Review_Loading" xml:space="preserve">
+    <value>Завантажуємо глосарій…</value>
+  </data>
+  <data name="Gen_Review_LoadFailed" xml:space="preserve">
+    <value>Не вдалося прочитати глосарій: {0}</value>
+  </data>
+  <data name="Gen_Review_SaveFailed" xml:space="preserve">
+    <value>Не вдалося зберегти зміну: {0}</value>
+  </data>
+  <data name="Gen_Action_Regenerate" xml:space="preserve">
+    <value>Створити заново</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Title" xml:space="preserve">
+    <value>Скласти глосарій заново?</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Text" xml:space="preserve">
+    <value>Агент складе його заново з рядків гри; поточні терміни буде замінено.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_One" xml:space="preserve">
+    <value>Агент складе його заново з рядків гри; інші терміни буде замінено, а {0} змінений вами термін залишиться.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Few" xml:space="preserve">
+    <value>Агент складе його заново з рядків гри; інші терміни буде замінено, а {0} змінені вами терміни залишаться.</value>
+  </data>
+  <data name="Gen_Review_Regenerate_Kept_Many" xml:space="preserve">
+    <value>Агент складе його заново з рядків гри; інші терміни буде замінено, а {0} змінених вами термінів залишаться.</value>
+  </data>
+  <data name="Activity_Event_GlossaryReview" xml:space="preserve">
+    <value>Глосарій готовий до перегляду</value>
+  </data>
+  <data name="Activity_Detail_GlossaryReview" xml:space="preserve">
+    <value>Переклад почнеться, щойно ви його перевірите.</value>
+  </data>
+  <data name="Install_Why_LocalMissing" xml:space="preserve">
+    <value>Ваш переклад видалено або він не читається.</value>
+  </data>
+  <data name="Install_Log_Local" xml:space="preserve">
+    <value>Ваш переклад узято з {0}.</value>
+  </data>
+  <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
+    <value>Повнота</value>
+  </data>
+  <data name="Gen_Result_Coverage_Value" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_One" xml:space="preserve">
+    <value>{0} рядок залишається неперекладеним</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Few" xml:space="preserve">
+    <value>{0} рядки залишаються неперекладеними</value>
+  </data>
+  <data name="Gen_Result_Coverage_Untranslated_Many" xml:space="preserve">
+    <value>{0} рядків залишаються неперекладеними</value>
+  </data>
+  <data name="Gen_Result_Coverage_All" xml:space="preserve">
+    <value>Усі рядки перекладено</value>
+  </data>
+  <data name="Gen_Result_Tile_TestRun" xml:space="preserve">
+    <value>Тестовий запуск</value>
+  </data>
+  <data name="Gen_Result_TestRun_Passed" xml:space="preserve">
+    <value>Пройдено</value>
+  </data>
+  <data name="Gen_Result_TestRun_PassedDetail" xml:space="preserve">
+    <value>Перекладена гра пропрацювала {0} с і не закрилася</value>
+  </data>
+  <data name="Gen_Result_TestRun_Crashed" xml:space="preserve">
+    <value>Не пройдено</value>
+  </data>
+  <data name="Gen_Result_TestRun_Skipped" xml:space="preserve">
+    <value>Пропущено</value>
+  </data>
+  <data name="Gen_Result_Skip_NoExecutable" xml:space="preserve">
+    <value>У папці гри не знайдено програми для запуску</value>
+  </data>
+  <data name="Gen_Result_Skip_OtherPlatform" xml:space="preserve">
+    <value>Гру зібрано для іншої системи</value>
+  </data>
+  <data name="Gen_Result_Skip_SteamDrm" xml:space="preserve">
+    <value>Гра запускається лише через Steam</value>
+  </data>
+  <data name="Gen_Result_Skip_StartFailed" xml:space="preserve">
+    <value>Система не запустила гру</value>
+  </data>
+  <data name="Gen_Result_Skip_ClosesUntranslated" xml:space="preserve">
+    <value>Гра одразу закривається навіть без перекладу (їй потрібен її магазин або носій)</value>
+  </data>
+  <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
+    <value>Тестові запуски вимкнено</value>
+  </data>
+  <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
+    <value>Шрифти</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotChecked" xml:space="preserve">
+    <value>Не перевірено</value>
+  </data>
+  <data name="Gen_Result_Fonts_NotCheckedDetail" xml:space="preserve">
+    <value>Інструменти не вміють читати шрифти цього рушія</value>
+  </data>
+  <data name="Gen_Result_Fonts_Fit" xml:space="preserve">
+    <value>Шрифти гри підходять</value>
+  </data>
+  <data name="Gen_Result_Fonts_FitDetail" xml:space="preserve">
+    <value>У них є всі літери перекладу</value>
+  </data>
+  <data name="Gen_Result_Fonts_Swapped" xml:space="preserve">
+    <value>Підставлено {0}</value>
+  </data>
+  <data name="Gen_Result_Fonts_SwappedDetail" xml:space="preserve">
+    <value>У {0} бракує літер перекладу</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_One" xml:space="preserve">
+    <value>Досі бракує {0} літери</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Few" xml:space="preserve">
+    <value>Досі бракує {0} літер</value>
+  </data>
+  <data name="Gen_Result_Fonts_Uncovered_Many" xml:space="preserve">
+    <value>Досі бракує {0} літер</value>
+  </data>
+  <data name="Gen_Result_Tile_Validator" xml:space="preserve">
+    <value>Валідатор</value>
+  </data>
+  <data name="Gen_Result_Validator_None" xml:space="preserve">
+    <value>Без попереджень</value>
+  </data>
+  <data name="Gen_Result_Validator_NoneDetail" xml:space="preserve">
+    <value>Довжини, заповнювачі й теги в порядку</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_One" xml:space="preserve">
+    <value>{0} попередження</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Few" xml:space="preserve">
+    <value>{0} попередження</value>
+  </data>
+  <data name="Gen_Result_Validator_Count_Many" xml:space="preserve">
+    <value>{0} попереджень</value>
+  </data>
+  <data name="Gen_Result_Validator_Rule" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Gen_Result_Title" xml:space="preserve">
+    <value>Переклад готовий</value>
+  </data>
+  <data name="Gen_Result_Saved" xml:space="preserve">
+    <value>Збережено як ваш переклад у «Текст → Мої» · {0}</value>
+  </data>
+  <data name="Gen_Result_PackLine" xml:space="preserve">
+    <value>«{0}» · {1}</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_One" xml:space="preserve">
+    <value>Показати {0} попередження</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Few" xml:space="preserve">
+    <value>Показати {0} попередження</value>
+  </data>
+  <data name="Gen_Result_ShowWarnings_Many" xml:space="preserve">
+    <value>Показати {0} попереджень</value>
+  </data>
+  <data name="Gen_Result_HideWarnings" xml:space="preserve">
+    <value>Сховати попередження</value>
+  </data>
+  <data name="Gen_Result_InGame" xml:space="preserve">
+    <value>У грі виберіть мову «{0}»: переклад замінює її тексти.</value>
+  </data>
+  <data name="Gen_Result_PlayAgain" xml:space="preserve">
+    <value>Грати знову</value>
+  </data>
+  <data name="Gen_Result_InstallPlay" xml:space="preserve">
+    <value>Встановити й грати</value>
+  </data>
+  <data name="Gen_Result_Discard" xml:space="preserve">
+    <value>Відкинути</value>
+  </data>
+  <data name="Gen_Result_ShowInPacks" xml:space="preserve">
+    <value>Показати в «Тексті»</value>
+  </data>
+  <data name="Gen_Result_NewTranslation" xml:space="preserve">
+    <value>Новий переклад</value>
+  </data>
+  <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
+    <value>Переклад залишиться в «Текст → Мої»; робочу копію буде видалено, і відкриється форма.</value>
+  </data>
+  <data name="Gen_Result_CopyNote" xml:space="preserve">
+    <value>Під час встановлення оригінальні файли зберігаються в резервній копії; переклад можна будь-коли видалити.</value>
+  </data>
+  <data name="Gen_Result_Share_Title" xml:space="preserve">
+    <value>Усе гаразд? Поділіться з іншими гравцями.</value>
+  </data>
+  <data name="Gen_Result_Share_Text" xml:space="preserve">
+    <value>Публікується в реєстрі як альфа; гра, збірки, хеші, агент і шрифти заповнюються автоматично.</value>
+  </data>
+  <data name="Gen_Result_NotNow" xml:space="preserve">
+    <value>Не зараз</value>
+  </data>
+  <data name="Gen_Result_Publish" xml:space="preserve">
+    <value>Опублікувати</value>
+  </data>
+  <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
+    <value>Опублікувати можна пізніше в «Текст → Мої».</value>
+  </data>
+  <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
+    <value>Переклад і його робочу копію видалено.</value>
+  </data>
+  <data name="Gen_Result_Toast_Closed" xml:space="preserve">
+    <value>Переклад залишився в «Текст → Мої»; робочу копію видалено.</value>
+  </data>
+  <data name="Gen_Result_Discard_Title" xml:space="preserve">
+    <value>Відкинути переклад?</value>
+  </data>
+  <data name="Gen_Result_Discard_Text" xml:space="preserve">
+    <value>Ваш переклад «{0}» і робочу копію завдання буде видалено. Це не можна скасувати.</value>
+  </data>
+  <data name="Gen_Result_Error_Installed" xml:space="preserve">
+    <value>Переклад встановлено: спершу видаліть його з гри.</value>
+  </data>
+  <data name="Gen_Result_Error_Disk" xml:space="preserve">
+    <value>Не вдалося видалити файли: {0}</value>
+  </data>
+  <data name="Packs_Mine_Section" xml:space="preserve">
+    <value>Мої</value>
+  </data>
+  <data name="Packs_Registry_None" xml:space="preserve">
+    <value>У реєстрі ще немає перекладів мовою «{0}».</value>
+  </data>
+  <data name="Packs_Mine_JobTitle" xml:space="preserve">
+    <value>Переклад мовою «{0}»</value>
+  </data>
+  <data name="Packs_Mine_JobMeta" xml:space="preserve">
+    <value>Створюється з ШІ · відкрийте вкладку «Створити з ШІ»</value>
+  </data>
+  <data name="Packs_Mine_LocalMeta" xml:space="preserve">
+    <value>локальний · не опубліковано</value>
+  </data>
+  <data name="Packs_Mine_Creating" xml:space="preserve">
+    <value>створення {0}%</value>
+  </data>
+  <data name="Packs_Mine_Tested" xml:space="preserve">
+    <value>перевірено в грі</value>
+  </data>
+  <data name="Packs_Mine_NotTried" xml:space="preserve">
+    <value>ще не випробувано</value>
+  </data>
+  <data name="Packs_Mine_Created" xml:space="preserve">
+    <value>локальний · створено {0}</value>
+  </data>
+  <data name="Packs_Mine_TestedTitle" xml:space="preserve">
+    <value>Перевірено в грі</value>
+  </data>
+  <data name="Packs_Mine_TestedText" xml:space="preserve">
+    <value>Ви грали з цим перекладом. Тепер ним можна поділитися.</value>
+  </data>
+  <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
+    <value>Ще не випробувано в грі</value>
+  </data>
+  <data name="Packs_Mine_NotTriedText" xml:space="preserve">
+    <value>Встановіть його й пограйте: публікація стане доступною, щойно ви його спробуєте.</value>
+  </data>
+  <data name="Packs_Mine_TestRun" xml:space="preserve">
+    <value>Тестовий запуск</value>
+  </data>
+  <data name="Packs_Mine_Fonts" xml:space="preserve">
+    <value>Шрифти</value>
+  </data>
+  <data name="Packs_Mine_Validator" xml:space="preserve">
+    <value>Валідатор</value>
+  </data>
+  <data name="Packs_Mine_Size" xml:space="preserve">
+    <value>Розмір</value>
+  </data>
+  <data name="Packs_Mine_ValueDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Packs_Mine_PublishNote" xml:space="preserve">
+    <value>Перед публікацією програма порівняє його з перекладами в реєстрі: його можна опублікувати як нову редакцію одного з них або як окремий переклад.</value>
+  </data>
+  <data name="Packs_Mine_Delete" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
+    <value>Встановлено в грі: видаліть його з гри, перш ніж видаляти.</value>
+  </data>
+  <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
+    <value>Спершу спробуйте в грі: після цього стане доступною публікація.</value>
+  </data>
+  <data name="Packs_Mine_Delete_Title" xml:space="preserve">
+    <value>Видалити «{0}»?</value>
+  </data>
+  <data name="Packs_Mine_Delete_Text" xml:space="preserve">
+    <value>Ваш переклад і робочу копію завдання, яке його створило, буде видалено. Це не можна скасувати.</value>
+  </data>
+  <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
+    <value>Ваш переклад «{0}» видалено.</value>
+  </data>
+  <data name="Game_Action_InstallPlay" xml:space="preserve">
+    <value>Встановити й грати</value>
+  </data>
+  <data name="Game_Caption_LocalPack" xml:space="preserve">
+    <value>Ваш переклад · {0}% рядків · {1}</value>
+  </data>
+  <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
+    <value>тест пройдено</value>
+  </data>
+  <data name="Game_Caption_LocalTestSkipped" xml:space="preserve">
+    <value>без тестового запуску</value>
+  </data>
+  <data name="Game_Installed_TextLocal" xml:space="preserve">
+    <value>«{0}» · ваш переклад</value>
+  </data>
+  <data name="Library_Badge_LocalReady" xml:space="preserve">
+    <value>Ваш переклад готовий</value>
+  </data>
+  <data name="Library_Card_LocalPack" xml:space="preserve">
+    <value>Ваш переклад · {0}% рядків</value>
+  </data>
+  <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
+    <value>Ваш переклад · {0}</value>
+  </data>
+  <data name="Gen_Update_Title" xml:space="preserve">
+    <value>Перекласти нові рядки мовою</value>
+  </data>
+  <data name="Gen_Update_Banner" xml:space="preserve">
+    <value>На основі встановленого «{0}» ред. {1}: його переклади залишаються, агентові передаються лише нові й змінені рядки.</value>
+  </data>
+  <data name="Gen_Update_Diff" xml:space="preserve">
+    <value>Нові: {0} · Змінені: {1} · Збережені: {2} · Видалені: {3}</value>
+  </data>
+  <data name="Gen_Update_BaseFailed" xml:space="preserve">
+    <value>Не вдається прочитати встановлений «{0}» ред. {1}: {2}</value>
+  </data>
+  <data name="Gen_Result_Update" xml:space="preserve">
+    <value>Редакція {0}, оновлення ред. {1} · Нові: {2} · Змінені: {3} · Видалені: {4}</value>
+  </data>
+  <data name="Game_UpdateBanner_OtherVersion" xml:space="preserve">
+    <value>Гру оновлено ({0}). Встановлений «{1}» ред. {2} зроблено для попередньої версії: рядки, додані чи змінені оновленням, показуються без перекладу.</value>
+  </data>
+  <data name="GitHub_Keychain_Windows" xml:space="preserve">
+    <value>Диспетчер облікових даних Windows</value>
+  </data>
+  <data name="GitHub_Keychain_Mac" xml:space="preserve">
+    <value>Зв’язка ключів macOS</value>
+  </data>
+  <data name="GitHub_Keychain_SecretService" xml:space="preserve">
+    <value>системна в’язка ключів (Secret Service)</value>
+  </data>
+  <data name="GitHub_Keychain_File" xml:space="preserve">
+    <value>файл секретів для розробки</value>
+  </data>
+  <data name="GitHub_Keychain_Memory" xml:space="preserve">
+    <value>пам’ять</value>
+  </data>
+  <data name="GitHubSignIn_StepOpen" xml:space="preserve">
+    <value>Відкрийте {0} у браузері</value>
+  </data>
+  <data name="GitHubSignIn_StepEnter" xml:space="preserve">
+    <value>Введіть цей код і підтвердьте ailocalpack</value>
+  </data>
+  <data name="GitHubSignIn_Requesting" xml:space="preserve">
+    <value>Запитуємо код у GitHub…</value>
+  </data>
+  <data name="GitHubSignIn_Waiting" xml:space="preserve">
+    <value>Чекаємо, поки ви підтвердите в браузері…</value>
+  </data>
+  <data name="GitHubSignIn_Copy" xml:space="preserve">
+    <value>Копіювати</value>
+  </data>
+  <data name="GitHubSignIn_Copied" xml:space="preserve">
+    <value>Скопійовано</value>
+  </data>
+  <data name="GitHubSignIn_OpenBrowser" xml:space="preserve">
+    <value>Відкрити браузер</value>
+  </data>
+  <data name="GitHubSignIn_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="GitHubSignIn_TryAgain" xml:space="preserve">
+    <value>Спробувати ще раз</value>
+  </data>
+  <data name="GitHubSignIn_Error_Network" xml:space="preserve">
+    <value>Немає зв’язку з GitHub. Перевірте з’єднання й спробуйте ще раз.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Refused" xml:space="preserve">
+    <value>GitHub відхилив вхід: {0}</value>
+  </data>
+  <data name="GitHubSignIn_Error_Expired" xml:space="preserve">
+    <value>Термін дії коду минув до підтвердження. Спробуйте ще раз, щоб отримати новий.</value>
+  </data>
+  <data name="GitHubSignIn_Error_Denied" xml:space="preserve">
+    <value>Вхід скасовано на GitHub.</value>
+  </data>
+  <data name="GitHubSignIn_Error_NotSaved" xml:space="preserve">
+    <value>GitHub підтвердив {0}, але {1} не вдалося зберегти токен, тому вхід не виконано (у відкритому вигляді він ніколи не зберігається): {2}</value>
+  </data>
+  <data name="Settings_Group_GitHubAccount" xml:space="preserve">
+    <value>Обліковий запис</value>
+  </data>
+  <data name="Settings_Group_PublishedPacks" xml:space="preserve">
+    <value>Мої опубліковані переклади</value>
+  </data>
+  <data name="Settings_GitHubAccount_Label" xml:space="preserve">
+    <value>Обліковий запис GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_Keywords" xml:space="preserve">
+    <value>github обліковий запис акаунт увійти вийти вхід вихід токен в’язка ключів профіль опублікувати sign in login token</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOut" xml:space="preserve">
+    <value>Вхід не виконано</value>
+  </data>
+  <data name="Settings_GitHubAccount_Why" xml:space="preserve">
+    <value>Потрібен лише для публікації перекладів, а також щоб оцінювати чи підтверджувати їх. Для встановлення обліковий запис не потрібен.</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
+    <value>Вхід виконано · токен зберігається в системній в’язці ключів ({0})</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignedOutHere" xml:space="preserve">
+    <value>Ви вийшли: токен видалено з цього комп’ютера. GitHub досі показує ailocalpack серед ваших авторизованих програм, доки ви не відкличете доступ там.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoke" xml:space="preserve">
+    <value>Відкликати доступ на GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
+    <value>GitHub більше не приймає доступ програми для {0}, тому програма виконала вихід. Увійдіть знову, щоб публікувати чи оцінювати переклади.</value>
+  </data>
+  <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
+    <value>Зараз немає зв’язку з GitHub; обліковий запис показано таким, яким його бачили востаннє.</value>
+  </data>
+  <data name="Settings_GitHubAccount_KeychainProblem" xml:space="preserve">
+    <value>Не вдається прочитати токен із {0}: {1}</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignIn" xml:space="preserve">
+    <value>Увійти через GitHub</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOut" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+  <data name="Settings_GitHubAccount_Profile" xml:space="preserve">
+    <value>Профіль</value>
+  </data>
+  <data name="Settings_GitHubAccount_SignOutFailed" xml:space="preserve">
+    <value>Не вдається видалити токен із {0}, тому вхід досі виконано: {1}</value>
+  </data>
+  <data name="Settings_PublishedPacks_Label" xml:space="preserve">
+    <value>Мої опубліковані переклади</value>
+  </data>
+  <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
+    <value>опубліковані переклади pull request pr обговорення discussion перевірений альфа verified alpha</value>
+  </data>
+  <data name="Settings_PublishedPacks_None" xml:space="preserve">
+    <value>Ще нічого не опубліковано. Створивши переклад за допомогою ШІ, опублікуйте його на вкладці гри «Створити з ШІ».</value>
+  </data>
+  <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
+    <value>Увійдіть, щоб побачити опубліковані вами переклади.</value>
+  </data>
+  <data name="Activity_Event_PackSubmitted" xml:space="preserve">
+    <value>«{0}» надіслано до реєстру</value>
+  </data>
+  <data name="Activity_Event_PublishFailed" xml:space="preserve">
+    <value>Не вдалося опублікувати «{0}»</value>
+  </data>
+  <data name="Publish_SignIn_Title" xml:space="preserve">
+    <value>Публікація в реєстрі ailocalpack</value>
+  </data>
+  <data name="Publish_SignIn_Intro" xml:space="preserve">
+    <value>Лише першого разу. Переклади надсилаються як pull request на GitHub, тому увійдіть через свій обліковий запис GitHub.</value>
+  </data>
+  <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
+    <value>Вхід виконано як {0}</value>
+  </data>
+  <data name="Publish_SignIn_SignInButton" xml:space="preserve">
+    <value>Увійти через GitHub</value>
+  </data>
+  <data name="Publish_SignIn_License" xml:space="preserve">
+    <value>Я публікую цей переклад за ліцензією CC BY-SA 4.0</value>
+  </data>
+  <data name="Publish_SignIn_LicenseText" xml:space="preserve">
+    <value>Будь-хто може використовувати й змінювати його із зазначенням авторства. Поширюються лише переклади й рецепти, ніколи — оригінальний текст чи файли гри.</value>
+  </data>
+  <data name="Publish_SignIn_HintWaiting" xml:space="preserve">
+    <value>Чекаємо на GitHub…</value>
+  </data>
+  <data name="Publish_SignIn_HintSignIn" xml:space="preserve">
+    <value>Увійдіть через GitHub, щоб продовжити</value>
+  </data>
+  <data name="Publish_SignIn_HintLicense" xml:space="preserve">
+    <value>Прийміть ліцензію, щоб продовжити</value>
+  </data>
+  <data name="Publish_Continue" xml:space="preserve">
+    <value>Продовжити</value>
+  </data>
+  <data name="Publish_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="Publish_Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="Publish_Similar_Title" xml:space="preserve">
+    <value>Переклад мовою «{0}» уже існує</value>
+  </data>
+  <data name="Publish_Similar_Intro" xml:space="preserve">
+    <value>Покращити його замість додавати майже дублікат?</value>
+  </data>
+  <data name="Publish_Similar_Existing" xml:space="preserve">
+    <value>«{0}» від {1} · ред. {2}</value>
+  </data>
+  <data name="Publish_Similar_Coverage" xml:space="preserve">
+    <value>Повнота {0}%</value>
+  </data>
+  <data name="Publish_Similar_Build" xml:space="preserve">
+    <value>зроблено для збірки {0}</value>
+  </data>
+  <data name="Publish_Similar_Base" xml:space="preserve">
+    <value>Ваш переклад — його оновлення</value>
+  </data>
+  <data name="Publish_Similar_Recommended" xml:space="preserve">
+    <value>Рекомендовано</value>
+  </data>
+  <data name="Publish_Similar_RevisionTitle" xml:space="preserve">
+    <value>Нова редакція «{0}» (ред. {1})</value>
+  </data>
+  <data name="Publish_Similar_RevisionText" xml:space="preserve">
+    <value>Його гравці отримають вашу версію як оновлення. {0} залишається автором, вас буде зазначено як автора ред. {1}. Статус знову починається з альфи.</value>
+  </data>
+  <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
+    <value>Окремий переклад</value>
+  </data>
+  <data name="Publish_Similar_SeparateText" xml:space="preserve">
+    <value>«{0}» буде показано поруч із «{1}»; гравці виберуть самі. Обирайте це, якщо ваш переклад відрізняється навмисно (тон, терміни).</value>
+  </data>
+  <data name="Publish_Similar_Choice" xml:space="preserve">
+    <value>Як опублікувати</value>
+  </data>
+  <data name="Publish_Again" xml:space="preserve">
+    <value>Опублікувати знову</value>
+  </data>
+  <data name="Publish_Step_Fork" xml:space="preserve">
+    <value>Форк реєстру</value>
+  </data>
+  <data name="Publish_Step_Commit" xml:space="preserve">
+    <value>Коміт перекладу</value>
+  </data>
+  <data name="Publish_Step_PullRequest" xml:space="preserve">
+    <value>Відкриття pull request</value>
+  </data>
+  <data name="Publish_Step_Account" xml:space="preserve">
+    <value>Перевірка облікового запису GitHub</value>
+  </data>
+  <data name="Publish_Doing_Fork" xml:space="preserve">
+    <value>створення форку реєстру</value>
+  </data>
+  <data name="Publish_Doing_Commit" xml:space="preserve">
+    <value>коміту перекладу</value>
+  </data>
+  <data name="Publish_Doing_PullRequest" xml:space="preserve">
+    <value>відкриття pull request</value>
+  </data>
+  <data name="Publish_Doing_Account" xml:space="preserve">
+    <value>перевірки облікового запису</value>
+  </data>
+  <data name="Publish_Error_NotSignedIn" xml:space="preserve">
+    <value>Спершу увійдіть у GitHub: переклади надсилаються як pull request з вашого облікового запису.</value>
+  </data>
+  <data name="Publish_Error_Keychain" xml:space="preserve">
+    <value>Не вдається прочитати ваш вхід GitHub із в’язки ключів; розблокуйте її й опублікуйте знову.</value>
+  </data>
+  <data name="Publish_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub більше не приймає ваш вхід (доступ відкликано або він сплив). Увійдіть у GitHub знову.</value>
+  </data>
+  <data name="Publish_Error_Forbidden" xml:space="preserve">
+    <value>GitHub відмовив у доступі під час {0}. Повторний вхід надасть програмі потрібний доступ (public_repo).</value>
+  </data>
+  <data name="Publish_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Ліміт запитів GitHub для вашого облікового запису вичерпано до {0}; опублікуйте знову після цього (нічого не втрачено).</value>
+  </data>
+  <data name="Publish_Error_RateLimited" xml:space="preserve">
+    <value>Ліміт запитів GitHub для вашого облікового запису поки вичерпано; опублікуйте знову за кілька хвилин (нічого не втрачено).</value>
+  </data>
+  <data name="Publish_Error_NoRegistry" xml:space="preserve">
+    <value>Реєстру {0} немає на GitHub (або його не видно з вашого облікового запису).</value>
+  </data>
+  <data name="Publish_Error_NotFound" xml:space="preserve">
+    <value>GitHub чогось не знайшов під час {0}; опублікуйте знову.</value>
+  </data>
+  <data name="Publish_Error_Rejected" xml:space="preserve">
+    <value>GitHub відхилив запит під час {0}.</value>
+  </data>
+  <data name="Publish_Error_Conflict" xml:space="preserve">
+    <value>GitHub не зміг завершити запит під час {0}; опублікуйте знову за хвилину.</value>
+  </data>
+  <data name="Publish_Error_Network" xml:space="preserve">
+    <value>Немає зв’язку з GitHub під час {0}; перевірте з’єднання й опублікуйте знову: публікація продовжиться з місця зупинки.</value>
+  </data>
+  <data name="Publish_Error_Invalid" xml:space="preserve">
+    <value>Реєстр відхилив би цей переклад: {0}</value>
+  </data>
+  <data name="Publish_Error_OptedOut" xml:space="preserve">
+    <value>Видавець гри попросив не поширювати фанатські переклади, тому реєстр не приймає переклади для неї.</value>
+  </data>
+  <data name="Publish_Error_TargetGone" xml:space="preserve">
+    <value>Перекладу, який ви вибрали для оновлення, більше немає в реєстрі; опублікуйте свій як окремий переклад.</value>
+  </data>
+  <data name="Publish_Error_ForkNotReady" xml:space="preserve">
+    <value>GitHub ще створює вашу копію реєстру; опублікуйте знову за кілька хвилин.</value>
+  </data>
+  <data name="Publish_Error_Unexpected" xml:space="preserve">
+    <value>Неочікувана відповідь GitHub під час {0}; опублікуйте знову.</value>
+  </data>
+  <data name="Publish_Target_Revision" xml:space="preserve">
+    <value>ред. {0} «{1}»</value>
+  </data>
+  <data name="Publish_Target_Pack" xml:space="preserve">
+    <value>«{0}»</value>
+  </data>
+  <data name="Publish_Sending_Title" xml:space="preserve">
+    <value>Публікуємо {0}…</value>
+  </data>
+  <data name="Publish_Checking_Title" xml:space="preserve">
+    <value>PR #{0} відкрито · CI перевіряє переклад</value>
+  </data>
+  <data name="Publish_Checking_Text" xml:space="preserve">
+    <value>Схема, хеші, відсутність виконуваних файлів, шрифти. Коли перевірки пройдуть, його буде злито як альфа автоматично; цю сторінку можна покинути, перебіг видно в «Активності».</value>
+  </data>
+  <data name="Publish_Failed_Title" xml:space="preserve">
+    <value>Не вдалося опублікувати «{0}»</value>
+  </data>
+  <data name="Publish_Published_Title" xml:space="preserve">
+    <value>Опубліковано: {0} · {1}</value>
+  </data>
+  <data name="Publish_Published_Text" xml:space="preserve">
+    <value>Гравці бачать його з попередженням «альфа». Він стане перевіреним, коли {0} інших гравців підтвердять, що він працює.</value>
+  </data>
+  <data name="Publish_Published_VerifiedText" xml:space="preserve">
+    <value>Гравці підтвердили, що він працює: переклад перевірений.</value>
+  </data>
+  <data name="Publish_Meter" xml:space="preserve">
+    <value>{0} з {1} гравців підтвердили «працює»</value>
+  </data>
+  <data name="Publish_CopyLink" xml:space="preserve">
+    <value>Копіювати посилання</value>
+  </data>
+  <data name="Publish_Discussion" xml:space="preserve">
+    <value>Обговорення</value>
+  </data>
+  <data name="Publish_OpenPr" xml:space="preserve">
+    <value>Відкрити PR</value>
+  </data>
+  <data name="Publish_Toast_LinkCopied" xml:space="preserve">
+    <value>Посилання скопійовано</value>
+  </data>
+  <data name="Publish_Toast_Sent" xml:space="preserve">
+    <value>{0} надіслано: PR #{1} відкрито, CI перевіряє переклад.</value>
+  </data>
+  <data name="Publish_Toast_Failed" xml:space="preserve">
+    <value>Не вдалося опублікувати {0}.</value>
+  </data>
+  <data name="Publish_Row_Sending" xml:space="preserve">
+    <value>локальний · публікація…</value>
+  </data>
+  <data name="Publish_Row_Checking" xml:space="preserve">
+    <value>PR #{0} · триває CI</value>
+  </data>
+  <data name="Publish_Row_Published" xml:space="preserve">
+    <value>опубліковано · {0} · ред. {1}</value>
+  </data>
+  <data name="Publish_Row_Failed" xml:space="preserve">
+    <value>локальний · не опубліковано (остання спроба не вдалася)</value>
+  </data>
+  <data name="Publish_Similar_Builds_One" xml:space="preserve">
+    <value>зроблено для {0} збірки</value>
+  </data>
+  <data name="Publish_Similar_Builds_Few" xml:space="preserve">
+    <value>зроблено для {0} збірок</value>
+  </data>
+  <data name="Publish_Similar_Builds_Many" xml:space="preserve">
+    <value>зроблено для {0} збірок</value>
+  </data>
+  <data name="Publish_Resubmitted_Detail" xml:space="preserve">
+    <value>Виправлення надіслано в PR #{0} · CI знову перевіряє переклад</value>
+  </data>
+  <data name="Publish_Toast_Resubmitted" xml:space="preserve">
+    <value>{0} надіслано знову: виправлення в PR #{1}, CI знову перевіряє переклад.</value>
+  </data>
+  <data name="Publish_CiFailed_Title" xml:space="preserve">
+    <value>CI відхилив PR #{0}</value>
+  </data>
+  <data name="Publish_Ci_Scope" xml:space="preserve">
+    <value>Pull request змінює файли поза папкою перекладу. «Виправити й надіслати знову» перезбере його гілку лише з цим перекладом.</value>
+  </data>
+  <data name="Publish_Ci_Status" xml:space="preserve">
+    <value>Маніфест не позначено як альфа ({0}). «Виправити й надіслати знову» надішле його знову як альфа.</value>
+  </data>
+  <data name="Publish_Ci_Patch" xml:space="preserve">
+    <value>Архіву патча у вашому форку немає або він не відповідає маніфесту ({0}). «Виправити й надіслати знову» завантажить його ще раз.</value>
+  </data>
+  <data name="Publish_Ci_Pack" xml:space="preserve">
+    <value>Перевірки реєстру відхиляють переклад: {0}. «Виправити й надіслати знову» спершу перевірить його тут і надішле знову; якщо програма не знайде проблем, оновіть програму.</value>
+  </data>
+  <data name="Publish_Ci_Registry" xml:space="preserve">
+    <value>Не пройшла перевірка самого реєстру, а не вашого перекладу ({0}). «Виправити й надіслати знову» запустить перевірки ще раз.</value>
+  </data>
+  <data name="Publish_Ci_Unknown" xml:space="preserve">
+    <value>CI не пройшов і не вказав причини. «Виправити й надіслати знову» запустить перевірки ще раз; «Відкрити PR» покаже журнал.</value>
+  </data>
+  <data name="Publish_Resubmit" xml:space="preserve">
+    <value>Виправити й надіслати знову</value>
+  </data>
+  <data name="Publish_Merged_Title" xml:space="preserve">
+    <value>PR #{0} злито: {1} є в реєстрі як альфа</value>
+  </data>
+  <data name="Publish_Merged_Text" xml:space="preserve">
+    <value>Список перекладів оновиться за кілька хвилин; тоді його побачать усі гравці.</value>
+  </data>
+  <data name="Publish_Closed_Title" xml:space="preserve">
+    <value>PR #{0} закрито без злиття</value>
+  </data>
+  <data name="Publish_Closed_Text" xml:space="preserve">
+    <value>«Відкрити PR» покаже причину. «Опублікувати знову» відкриє новий pull request.</value>
+  </data>
+  <data name="Publish_Row_CiFailed" xml:space="preserve">
+    <value>PR #{0} · CI не пройдено</value>
+  </data>
+  <data name="Publish_Row_Merged" xml:space="preserve">
+    <value>PR #{0} злито · альфа</value>
+  </data>
+  <data name="Publish_Row_Closed" xml:space="preserve">
+    <value>PR #{0} закрито</value>
+  </data>
+  <data name="Activity_Event_PullRequestFailed" xml:space="preserve">
+    <value>CI реєстру відхилив PR #{2} для «{0}»</value>
+  </data>
+  <data name="Activity_Event_PackMerged" xml:space="preserve">
+    <value>PR #{2} злито: «{0}» опубліковано як альфа</value>
+  </data>
+  <data name="Activity_Event_PullRequestClosed" xml:space="preserve">
+    <value>PR #{2} для «{0}» закрито без злиття</value>
+  </data>
+  <data name="Activity_Event_PackVerified" xml:space="preserve">
+    <value>«{0}» перевірений: гравці підтвердили, що він працює</value>
+  </data>
+  <data name="Activity_Detail_PackMerged" xml:space="preserve">
+    <value>Його побачать усі гравці, щойно оновиться список перекладів.</value>
+  </data>
+  <data name="Activity_Action_OpenPr" xml:space="preserve">
+    <value>PR на GitHub</value>
+  </data>
+  <data name="Settings_PublishedPack_Meta" xml:space="preserve">
+    <value>{0} · {1} · ред. {2}</value>
+  </data>
+  <data name="Settings_PublishedPack_Confirmed" xml:space="preserve">
+    <value>альфа · підтверджено {0}/{1}</value>
+  </data>
+  <data name="Settings_PublishedPack_Likes" xml:space="preserve">
+    <value>Вподобань: {0}</value>
+  </data>
+  <data name="Settings_PublishedPack_Pr" xml:space="preserve">
+    <value>PR</value>
+  </data>
+  <data name="Game_Installed_Rate" xml:space="preserve">
+    <value>Оцінити</value>
+  </data>
+  <data name="Rating_Title" xml:space="preserve">
+    <value>Ваша оцінка</value>
+  </data>
+  <data name="Rating_Like" xml:space="preserve">
+    <value>Подобається</value>
+  </data>
+  <data name="Rating_Liked" xml:space="preserve">
+    <value>Вам подобається</value>
+  </data>
+  <data name="Rating_Works" xml:space="preserve">
+    <value>Працює</value>
+  </data>
+  <data name="Rating_DoesNotWork" xml:space="preserve">
+    <value>Не працює</value>
+  </data>
+  <data name="Rating_Comment" xml:space="preserve">
+    <value>Що працює, а що ні? (необов’язково)</value>
+  </data>
+  <data name="Rating_Hint" xml:space="preserve">
+    <value>«Працює» / «Не працює» потрапляє в обговорення перекладу на GitHub від вашого імені, разом зі збіркою вашої гри та вашим коментарем.</value>
+  </data>
+  <data name="Rating_Sending" xml:space="preserve">
+    <value>Надсилаємо на GitHub…</value>
+  </data>
+  <data name="Rating_Reported" xml:space="preserve">
+    <value>Ви залишили відгук про «{0}» для ред. {1} {2}. Повторне надсилання замінить ваш відгук.</value>
+  </data>
+  <data name="Rating_Author" xml:space="preserve">
+    <value>Вас зазначено серед авторів цього перекладу, тому ви не можете підтвердити, що він працює: це роблять інші гравці.</value>
+  </data>
+  <data name="Rating_NoDiscussion" xml:space="preserve">
+    <value>Оцінювання стане доступним, щойно реєстр створить обговорення цього перекладу на GitHub.</value>
+  </data>
+  <data name="Rating_Prompt" xml:space="preserve">
+    <value>Як вам «{0}»? Ваша відповідь допоможе іншим гравцям.</value>
+  </data>
+  <data name="Rating_Later" xml:space="preserve">
+    <value>Пізніше</value>
+  </data>
+  <data name="Rating_Toast_Sent" xml:space="preserve">
+    <value>Дякуємо! Ваш відгук надіслано в обговорення перекладу на GitHub.</value>
+  </data>
+  <data name="Rating_Toast_AddDetails" xml:space="preserve">
+    <value>Додати подробиці</value>
+  </data>
+  <data name="Rating_Toast_Open" xml:space="preserve">
+    <value>Відкрити</value>
+  </data>
+  <data name="Rating_SignIn_Title" xml:space="preserve">
+    <value>Увійдіть у GitHub, щоб оцінювати переклади</value>
+  </data>
+  <data name="Rating_SignIn_Intro" xml:space="preserve">
+    <value>Вподобання й відгуки потрапляють в обговорення перекладу на GitHub від вашого імені. Для встановлення перекладів обліковий запис не потрібен.</value>
+  </data>
+  <data name="Rating_SignIn_Hint" xml:space="preserve">
+    <value>Вашу оцінку буде надіслано, щойно GitHub підтвердить вхід.</value>
+  </data>
+  <data name="Rating_Error_NotSignedIn" xml:space="preserve">
+    <value>Увійдіть у GitHub, щоб оцінювати переклади.</value>
+  </data>
+  <data name="Rating_Error_Keychain" xml:space="preserve">
+    <value>Не вдалося прочитати ваш вхід GitHub із системної в’язки ключів. Спробуйте ще раз або увійдіть знову в Налаштування → GitHub.</value>
+  </data>
+  <data name="Rating_Error_Unauthorized" xml:space="preserve">
+    <value>GitHub більше не приймає ваш вхід. Увійдіть знову.</value>
+  </data>
+  <data name="Rating_Error_NotFound" xml:space="preserve">
+    <value>Обговорення перекладу більше немає на GitHub.</value>
+  </data>
+  <data name="Rating_Error_Locked" xml:space="preserve">
+    <value>Супровідники реєстру заблокували обговорення перекладу: нові оцінки не приймаються.</value>
+  </data>
+  <data name="Rating_Error_Forbidden" xml:space="preserve">
+    <value>GitHub відхилив запит: {0}</value>
+  </data>
+  <data name="Rating_Error_RateLimitedUntil" xml:space="preserve">
+    <value>Ліміт запитів GitHub поки вичерпано; спробуйте знову після {0}.</value>
+  </data>
+  <data name="Rating_Error_RateLimited" xml:space="preserve">
+    <value>Ліміт запитів GitHub поки вичерпано; спробуйте знову трохи згодом.</value>
+  </data>
+  <data name="Rating_Error_Network" xml:space="preserve">
+    <value>Немає зв’язку з GitHub. Перевірте з’єднання й спробуйте ще раз.</value>
+  </data>
+  <data name="Rating_Error_Unexpected" xml:space="preserve">
+    <value>Не вдалося надіслати: {0}</value>
+  </data>
+  <data name="Startup_Recovery_BackupMove" xml:space="preserve">
+    <value>Перерване перенесення резервних копій завершено</value>
+  </data>
+  <data name="Settings_Storage_Keywords" xml:space="preserve">
+    <value>диск місце розмір вільно зайнято</value>
+  </data>
+  <data name="Settings_Storage_Summary_Label" xml:space="preserve">
+    <value>Місце на диску</value>
+  </data>
+  <data name="Settings_Storage_Used" xml:space="preserve">
+    <value>Зайнято {0}</value>
+  </data>
+  <data name="Settings_Storage_Measuring" xml:space="preserve">
+    <value>Вимірюємо…</value>
+  </data>
+  <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
+    <value>Резервні копії {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
+    <value>Робочі копії {0}</value>
+  </data>
+  <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
+    <value>Кеш {0}</value>
+  </data>
+  <data name="Settings_Group_DiskSpace" xml:space="preserve">
+    <value>Місце на диску</value>
+  </data>
+  <data name="Settings_Group_Backups" xml:space="preserve">
+    <value>Резервні копії</value>
+  </data>
+  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
+    <value>Робочі копії для створення</value>
+  </data>
+  <data name="Settings_Group_Cache" xml:space="preserve">
+    <value>Кеш</value>
+  </data>
+  <data name="Settings_Storage_Backups_Label" xml:space="preserve">
+    <value>Резервні копії перезаписаних файлів ігор</value>
+  </data>
+  <data name="Settings_Storage_Backups_Keywords" xml:space="preserve">
+    <value>резервна копія бекап оригінали видалення перенести папка розташування backup</value>
+  </data>
+  <data name="Settings_Storage_Backups_None" xml:space="preserve">
+    <value>Резервних копій ще немає</value>
+  </data>
+  <data name="Settings_Storage_Backups_Size" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_Backups_Moving" xml:space="preserve">
+    <value>Переносимо резервні копії… {0} %</value>
+  </data>
+  <data name="Settings_Storage_Backups_Change" xml:space="preserve">
+    <value>Змінити розташування…</value>
+  </data>
+  <data name="Settings_Storage_Backups_Note" xml:space="preserve">
+    <value>Потрібні, щоб видаляти переклади, тому їх не можна очистити тут. Резервну копію буде прибрано, коли її переклад видалять.</value>
+  </data>
+  <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
+    <value>Де зберігати резервні копії</value>
+  </data>
+  <data name="Settings_Storage_Move_Title" xml:space="preserve">
+    <value>Перенести резервні копії?</value>
+  </data>
+  <data name="Settings_Storage_Move_Text" xml:space="preserve">
+    <value>Резервні копії ({1}) буде перенесено в {0}. Встановлені переклади залишаться встановленими, і їх так само можна буде видалити; ігри не зачіпаються. Не від’єднуйте цей диск, поки встановлено переклади.</value>
+  </data>
+  <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
+    <value>Перенести</value>
+  </data>
+  <data name="Settings_Storage_Move_LeftBehind" xml:space="preserve">
+    <value>Перенесено. Стару папку {0} поки не вдалося видалити; програма спробує ще раз під час наступного запуску.</value>
+  </data>
+  <data name="Settings_Storage_Move_Busy" xml:space="preserve">
+    <value>Зараз встановлюється чи видаляється переклад. Спробуйте ще раз, коли це завершиться.</value>
+  </data>
+  <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
+    <value>Спершу треба завершити перерване встановлення чи перенесення. Перезапустіть програму й спробуйте ще раз.</value>
+  </data>
+  <data name="Settings_Storage_Move_SameFolder" xml:space="preserve">
+    <value>Резервні копії вже в цій папці.</value>
+  </data>
+  <data name="Settings_Storage_Move_Nested" xml:space="preserve">
+    <value>Виберіть папку поза поточною папкою резервних копій.</value>
+  </data>
+  <data name="Settings_Storage_Move_NotEmpty" xml:space="preserve">
+    <value>У {0} уже є файли. Виберіть іншу папку; нічого не перенесено.</value>
+  </data>
+  <data name="Settings_Storage_Move_DiskFull" xml:space="preserve">
+    <value>Там недостатньо вільного місця для резервних копій; нічого не перенесено.</value>
+  </data>
+  <data name="Settings_Storage_Move_Denied" xml:space="preserve">
+    <value>Програма не може записувати в цю папку; нічого не перенесено.</value>
+  </data>
+  <data name="Settings_Storage_Move_VerifyFailed" xml:space="preserve">
+    <value>Скопійований файл не збігся з оригіналом, тому резервні копії залишилися на місці.</value>
+  </data>
+  <data name="Settings_Storage_Move_NewerFormat" xml:space="preserve">
+    <value>Розташування резервних копій задала новіша версія програми; оновіть програму, щоб їх перенести.</value>
+  </data>
+  <data name="Settings_Storage_Move_Failed" xml:space="preserve">
+    <value>Не вдалося перенести резервні копії, вони залишилися на місці: {0}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
+    <value>Робоча копія</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+    <value>Зупиніть створення, щоб видалити</value>
+  </data>
+  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
+    <value>Немає. Копія файлів гри створюється на початку створення перекладу, тож агент ніколи не торкається папки гри.</value>
+  </data>
+  <data name="Settings_Storage_State_NoJob" xml:space="preserve">
+    <value>Залишилася після перерваного запуску</value>
+  </data>
+  <data name="Settings_Storage_State_Running" xml:space="preserve">
+    <value>Зараз створюється</value>
+  </data>
+  <data name="Settings_Storage_State_PausedLimit" xml:space="preserve">
+    <value>Пауза до скидання ліміту</value>
+  </data>
+  <data name="Settings_Storage_State_Paused" xml:space="preserve">
+    <value>Створення призупинено</value>
+  </data>
+  <data name="Settings_Storage_State_Review" xml:space="preserve">
+    <value>Чекає на перегляд глосарію</value>
+  </data>
+  <data name="Settings_Storage_State_Interrupted" xml:space="preserve">
+    <value>Створення перервано</value>
+  </data>
+  <data name="Settings_Storage_State_Failed" xml:space="preserve">
+    <value>Створення не вдалося</value>
+  </data>
+  <data name="Settings_Storage_State_Cancelled" xml:space="preserve">
+    <value>Скасовано</value>
+  </data>
+  <data name="Settings_Storage_State_Finished" xml:space="preserve">
+    <value>Завершено</value>
+  </data>
+  <data name="Settings_Storage_Delete" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
+    <value>Видалити робочу копію {0}?</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+    <value>Звільнить {0}. Створені вами й встановлені переклади залишаться; гру не буде змінено.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+    <value>Звільнить {0}. Прогрес призупиненого перекладу буде втрачено: його не можна буде продовжити, лише почати заново. Встановлені переклади залишаться; гру не буде змінено.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+    <value>Для цієї гри зараз створюється переклад. Спершу зупиніть його.</value>
+  </data>
+  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+    <value>Не вдалося видалити: {0}</value>
+  </data>
+  <data name="Settings_Storage_Cache_Label" xml:space="preserve">
+    <value>Індекс реєстру й завантажені переклади</value>
+  </data>
+  <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
+    <value>кеш очистити завантаження індекс cache</value>
+  </data>
+  <data name="Settings_Storage_Cache_Help" xml:space="preserve">
+    <value>{0}. За потреби завантажиться знову.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clear" xml:space="preserve">
+    <value>Очистити</value>
+  </data>
+  <data name="Settings_Storage_Cache_Clearing" xml:space="preserve">
+    <value>Очищення…</value>
+  </data>
+  <data name="Settings_Storage_Cache_Cleared" xml:space="preserve">
+    <value>Очищено: звільнено {0}.</value>
+  </data>
+  <data name="Settings_Storage_Cache_ClearedSome" xml:space="preserve">
+    <value>Звільнено {0}. Ще {1} використовується й залишиться, доки програмі це потрібно.</value>
+  </data>
+  <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
+    <value>Зараз встановлюється переклад. Спробуйте ще раз, коли це завершиться.</value>
+  </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © учасники AI Local Pack</value>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>Стабільний канал</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>Канал: {0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0} (портативна)</value>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0} (збірка для розробки)</value>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>Оновлення</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>Посилання</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>Правова інформація</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>оновлення</value>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>Оновлення програми</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>оновлення, оновити, версія, реліз, перезапуск, velopack, update</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>Цю копію встановлено не з релізу, тому вона не оновлюється сама.</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>Оновлення завантажуються у фоні з GitHub Releases.</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>Перевіряємо GitHub Releases…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>У вас остання версія. Перевірено о {0}.</value>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>Завантажуємо {0}… {1} %</value>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>{0} завантажено й готово. Оновлення також встановиться під час наступного запуску програми.</value>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>Перезапуск…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>Не вдалося перевірити оновлення: GitHub Releases не відповів. Програма спробує пізніше.</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>Перевірити оновлення</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>Перевірити знову</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>Перевірка</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>Перезапустити й оновити</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>Перезапуск</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>Що нового</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>Зараз встановлюється переклад. Перезапустіть, коли це завершиться.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>Перезапустити й оновити зараз?</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>Створення з ШІ чи публікацію, що триває, буде зупинено. Зупинений переклад ШІ можна буде продовжити на вкладці «Створити з ШІ» після перезапуску.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>Перезапустити</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>Вихідний код</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>Реєстр перекладів</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>Повідомити про проблему</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA і вилучення</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>Як студії можуть попросити про вилучення</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>github, вихідний код, репозиторій, issues, помилка, баг, dmca, вилучення, відмова, opt-out</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>Ліцензії</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>Програма: Apache-2.0. Вміст реєстру: CC BY-SA 4.0.</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>ліцензія, apache, creative commons, cc by-sa, сторонні, повідомлення, відкритий код, open source</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>Сторонні компоненти</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>Застереження</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>Переклади спільноти не пов’язані з ігровими студіями й не схвалені ними. Вони містять лише перекладений текст і рецепти; потрібна ваша власна копія гри. Студії можуть вилучити свої ігри.</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>правова інформація, студії, пов’язані, схвалені, відмова, opt-out</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>У цій збірці немає відомостей про сторонні компоненти. Див. репозиторій із вихідним кодом.</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} готовий до встановлення</value>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>Завантажено у фоні. Перезапуск займе кілька секунд.</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>Перезапустити</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>Перевірка оновлень програми</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>Вимкнено: цю копію встановлено не з релізу</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>Остання версія</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>Знайдено {0}, завантажується у фоні</value>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>{0} готовий: перезапустіть, щоб оновити</value>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>Немає зв’язку з GitHub Releases</value>
+  </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>Знайомство</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>Ласкаво просимо до AI Local Pack</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>Вітаємо</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>Встановлення</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>Створити з ШІ</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>Спільнота</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>Грайте у свої ігри своєю мовою</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack встановлює переклади, які гравці зробили для ігор, що вже є у вас.</value>
+  </data>
+  <data name="Welcome_GamesFound_One" xml:space="preserve">
+    <value>Ми знайшли {0} гру у вашій бібліотеці.</value>
+  </data>
+  <data name="Welcome_GamesFound_Few" xml:space="preserve">
+    <value>Ми знайшли {0} гри у вашій бібліотеці.</value>
+  </data>
+  <data name="Welcome_GamesFound_Many" xml:space="preserve">
+    <value>Ми знайшли {0} ігор у вашій бібліотеці.</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>Її можна будь-коли змінити в бібліотеці або в налаштуваннях.</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>Знайшли? Один клік</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>Відкрийте гру, виберіть переклад і натисніть «Встановити».</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>Усе можна скасувати.</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>Файли гри спершу зберігаються в резервній копії; «Видалити» повертає їх.</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>Переживає оновлення гри.</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>Якщо Steam перезапише переклад, програма поверне його.</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>Безпечно для облікового запису.</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>Ігри з античитом ніколи не змінюються.</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>Ще немає? Створіть з ШІ</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>Ваш власний агент ШІ перекладає гру на вашому комп’ютері за вашою власною підпискою.</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>Налаштування — коли знадобиться.</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>Програма встановить агента й виконає вхід, коли ви вперше створюватимете переклад.</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>Стає на паузу й продовжує</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>коли вичерпується ліміт вашої підписки.</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>Діліться. Оцінюйте те, у що граєте</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>Переклади зберігаються в публічному реєстрі. Поділіться своїм в один клік; а пограючи з чужим, скажіть, чи він працює.</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 гравці підтверджують, що він працює:</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>переклад стає перевіреним.</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>Обліковий запис GitHub</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>потрібен лише, щоб ділитися чи оцінювати. Для встановлення він не потрібен.</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>Перекладаємо… {0} %</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{0} з {1} гравців підтвердили, що він працює</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>Перевірений</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>Почнімо</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>Далі</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>Пропустити</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>Відкрити бібліотеку</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>Закрити знайомство</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>Довідка</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>Знайомство</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>Короткий огляд: як встановлювати переклади, створювати їх з ШІ й ділитися ними.</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>навчання знайомство вступ посібник довідка перший запуск tutorial onboarding</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>Показати знову</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>Вітаю, мандрівнику!</value>
+  </data>
+</root>
