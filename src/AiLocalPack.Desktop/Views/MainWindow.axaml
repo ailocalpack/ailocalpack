@@ -36,6 +36,11 @@
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
                         <TextBlock x:Name="StartupNote" Text="{l:Loc Chrome_CheckingForChanges}" IsVisible="{Binding Startup.IsBackgroundRunning}"
                                    FontSize="12" Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" Margin="0,0,2,0" />
+                        <!-- ?: the welcome tour again (design §10) -->
+                        <Button x:Name="WelcomeTourButton" Classes="icon" Command="{Binding ShowWelcomeTourCommand}"
+                                ToolTip.Tip="{l:Loc Chrome_WelcomeTour}" AutomationProperties.Name="{l:Loc Chrome_WelcomeTour}">
+                            <Path Data="{StaticResource IconHelp}" />
+                        </Button>
                         <!-- 🔔: the Activity panel (design §5); badge amber with the decisions waiting, otherwise running + unread -->
                         <Button x:Name="ActivityButton" Classes="icon"
                                 ToolTip.Tip="{l:Loc Chrome_Activity}" AutomationProperties.Name="{Binding Activity.BellName, FallbackValue=''}">

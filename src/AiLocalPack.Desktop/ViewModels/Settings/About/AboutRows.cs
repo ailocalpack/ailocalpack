@@ -207,3 +207,26 @@ public sealed class InfoSettingRow(SettingRowServices services, string labelKey,
 {
     public override string? Help => Localizer[textKey];
 }
+
+/// <summary>The welcome tour (design §10): what it is and <c>Show again</c>.</summary>
+public sealed class WelcomeTourRow : SettingRow
+{
+    public WelcomeTourRow(SettingRowServices services, Action show)
+        : base(services, nameof(Strings.Settings_About_Tour_Label), nameof(Strings.Settings_About_Tour_Keywords))
+    {
+        ArgumentNullException.ThrowIfNull(show);
+        ShowCommand = new RelayCommand(show);
+    }
+
+    public override string? Help => Localizer[nameof(Strings.Settings_About_Tour_Help)];
+
+    public IRelayCommand ShowCommand { get; }
+
+    public string ShowText => Localizer[nameof(Strings.Settings_About_Tour_Show)];
+
+    protected override void OnCultureChanged()
+    {
+        base.OnCultureChanged();
+        OnPropertyChanged(nameof(ShowText));
+    }
+}

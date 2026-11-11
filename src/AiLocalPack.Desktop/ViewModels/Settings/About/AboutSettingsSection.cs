@@ -7,6 +7,7 @@ using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.Updates;
+using AiLocalPack.Desktop.Welcome;
 using Microsoft.Extensions.Logging;
 
 namespace AiLocalPack.Desktop.ViewModels.Settings.About;
@@ -14,7 +15,7 @@ namespace AiLocalPack.Desktop.ViewModels.Settings.About;
 /// <summary>
 /// Settings → About (design §8, task 67): the header (logo, version, channel · platform), <em>Updates</em>
 /// (<see cref="AppUpdateRow"/> over <see cref="AppUpdater"/>), <em>Links</em> (source, registry, report a problem, DMCA
-/// and takedowns), <em>Legal</em> (licenses with <c>Third-party notices</c>, the disclaimer). The section list shows the
+/// and takedowns), <em>Help</em> (the welcome tour again, design §10), <em>Legal</em> (licenses with <c>Third-party notices</c>, the disclaimer). The section list shows the
 /// quiet hint "update" while a downloaded update waits; nothing here is a problem to act on, so no badge.
 /// </summary>
 public sealed class AboutSettingsSection : SettingsSection
@@ -31,6 +32,7 @@ public sealed class AboutSettingsSection : SettingsSection
         AppUpdateRestart restart,
         ISystemShell shell,
         IDialogService dialogs,
+        WelcomeTour welcome,
         IUiDispatcher ui,
         TimeProvider time,
         SettingsStore store,
@@ -41,6 +43,7 @@ public sealed class AboutSettingsSection : SettingsSection
         ArgumentNullException.ThrowIfNull(restart);
         ArgumentNullException.ThrowIfNull(shell);
         ArgumentNullException.ThrowIfNull(dialogs);
+        ArgumentNullException.ThrowIfNull(welcome);
         _updater = updater;
         var services = new SettingRowServices(store, localizer, logger);
         void Open(Uri uri) => shell.OpenUrl(uri);
@@ -54,11 +57,13 @@ public sealed class AboutSettingsSection : SettingsSection
             new LinkSettingRow(services, nameof(Strings.Settings_About_Report), nameof(Strings.Settings_About_Report_Help), null, "IconBug", ReportUri, Open),
             new LinkSettingRow(services, nameof(Strings.Settings_About_Dmca), nameof(Strings.Settings_About_Dmca_Help), null, "IconScale", LegalUri, Open),
         ];
+        WelcomeTour = new WelcomeTourRow(services, welcome.Show);
         Licenses = new LicensesRow(services, () => dialogs.Show<ThirdPartyNoticesDialogViewModel>());
         Disclaimer = new InfoSettingRow(services, nameof(Strings.Settings_About_Disclaimer_Label), nameof(Strings.Settings_About_Disclaimer), nameof(Strings.Settings_About_Disclaimer_Keywords));
         Groups =
         [
             new SettingsGroup(services, nameof(Strings.Settings_Group_Updates), [Updates]),
+            new SettingsGroup(services, nameof(Strings.Settings_Group_Help), [WelcomeTour]),
             new SettingsGroup(services, nameof(Strings.Settings_Group_Links), Links),
             new SettingsGroup(services, nameof(Strings.Settings_Group_Legal), [Licenses, Disclaimer]),
         ];
@@ -74,6 +79,8 @@ public sealed class AboutSettingsSection : SettingsSection
     public AppUpdateRow Updates { get; }
 
     public IReadOnlyList<LinkSettingRow> Links { get; }
+
+    public WelcomeTourRow WelcomeTour { get; }
 
     public LicensesRow Licenses { get; }
 

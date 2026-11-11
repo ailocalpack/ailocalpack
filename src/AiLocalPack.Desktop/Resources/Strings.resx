@@ -3909,4 +3909,145 @@
   <data name="Startup_Updates_Failed" xml:space="preserve">
     <value>Couldn't reach GitHub Releases</value>
   </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>Welcome tour</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>Welcome to AI Local Pack</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>Create with AI</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>Play your games in your language</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack installs translations that players made for games you already own.</value>
+  </data>
+  <data name="Welcome_GamesFound_One" xml:space="preserve">
+    <value>We found {0} game in your library.</value>
+  </data>
+  <data name="Welcome_GamesFound_Other" xml:space="preserve">
+    <value>We found {0} games in your library.</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>You can change it any time in the library or in Settings.</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>Found one? One click</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>Open a game, pick a translation and press Install.</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>Fully undoable.</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>The game's files are backed up first; Uninstall puts them back.</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>Survives game updates.</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>If Steam overwrites it, the app puts it back.</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>Safe for your account.</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>Games with anti-cheat are never changed.</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>Nothing yet? Make it with AI</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>Your own AI agent translates the game on your computer, with your own subscription.</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>Set up when you need it.</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>The app installs the agent and signs it in the first time you create a translation.</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>Pauses and resumes</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>when your subscription's limit runs out.</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>Share it. Rate what you play</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>Translations live in a public registry. Share yours in one click; after playing one, say whether it works.</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 players confirm it works:</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>the translation becomes verified.</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>A GitHub account</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>only when you share or rate. Installing never needs one.</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>Translating… {0} %</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{0} of {1} players confirmed it works</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>Let's go</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>Open my library</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>Close the tour</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>Welcome tour</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>A short look at installing translations, creating them with AI and sharing them.</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>tutorial onboarding intro guide help first start</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>Show again</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>Hello, traveller!</value>
+  </data>
 </root>

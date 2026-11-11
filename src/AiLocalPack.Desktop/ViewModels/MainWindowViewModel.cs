@@ -5,6 +5,7 @@ using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
+using AiLocalPack.Desktop.Welcome;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -97,6 +98,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
             _navigation.GoBack();
         }
     }
+
+    /// <summary><c>?</c> in the chrome: the welcome tour again (design §10).</summary>
+    [RelayCommand]
+    private void ShowWelcomeTour() => _dialogs.Show<WelcomeTourViewModel>();
 
     [RelayCommand]
     private void OpenSettings() => _navigation.NavigateTo(_pages.Create<SettingsViewModel>());

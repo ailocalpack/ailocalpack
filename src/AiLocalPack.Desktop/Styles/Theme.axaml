@@ -121,6 +121,25 @@
     <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
     <CornerRadius x:Key="OverlayCornerRadius">12</CornerRadius>
 
+    <!-- Made-up covers in the welcome tour's illustrations (design §10): the placeholder cover gradients (Covers/PlaceholderColors) -->
+    <!-- Drawn on those covers in both themes: a dark dialogue box, light lines, text and icons -->
+    <SolidColorBrush x:Key="WelcomeArtBoxBrush" Color="#a60a0c12" />
+    <SolidColorBrush x:Key="WelcomeArtLineBrush" Color="#47ffffff" />
+    <SolidColorBrush x:Key="WelcomeArtTextBrush" Color="#f2ffffff" />
+    <SolidColorBrush x:Key="WelcomeArtIconBrush" Color="#8cffffff" />
+    <LinearGradientBrush x:Key="WelcomeCoverABrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#3b4a8c" />
+        <GradientStop Offset="1" Color="#1b2140" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WelcomeCoverBBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#2f6f73" />
+        <GradientStop Offset="1" Color="#132c33" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WelcomeCoverCBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#7a3f6b" />
+        <GradientStop Offset="1" Color="#2c1530" />
+    </LinearGradientBrush>
+
     <LinearGradientBrush x:Key="AppLogoBrush" StartPoint="0%,0%" EndPoint="100%,100%">
         <GradientStop Offset="0" Color="#5566f0" />
         <GradientStop Offset="1" Color="#9a5cf0" />
@@ -138,6 +157,7 @@
     <StreamGeometry x:Key="IconHardDrive">M22 12H2 M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z M6 16h.01 M10 16h.01</StreamGeometry>
     <StreamGeometry x:Key="IconBug">m8 2 1.88 1.88 M14.12 3.88 16 2 M9 7.13v-1a3 3 0 1 1 6 0v1 M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6 M12 20v-9 M6.53 9C4.6 8.8 3 7.1 3 5 M6 13H2 M3 21c0-2.1 1.7-3.9 3.8-4 M20.97 5c0 2.1-1.6 3.8-3.5 4 M22 13h-4 M17.2 17c2.1.1 3.8 1.9 3.8 4</StreamGeometry>
     <StreamGeometry x:Key="IconScale">m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z M7 21h10 M12 3v18 M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2</StreamGeometry>
+    <StreamGeometry x:Key="IconHelp">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3 M12 17h.01</StreamGeometry>
     <StreamGeometry x:Key="IconInfo">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M12 16v-4 M12 8h.01</StreamGeometry>
     <StreamGeometry x:Key="IconFolderPlus">M12 10v6 M9 13h6 M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z</StreamGeometry>
     <StreamGeometry x:Key="IconLock">M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z M7 11V7a5 5 0 0 1 10 0v4</StreamGeometry>

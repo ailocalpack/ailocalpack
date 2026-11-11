@@ -1,0 +1,332 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:w="using:AiLocalPack.Desktop.Welcome"
+             xmlns:s="using:AiLocalPack.Desktop.ViewModels.Settings"
+             xmlns:agents="using:AiLocalPack.Desktop.Agents"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             x:Class="AiLocalPack.Desktop.Views.WelcomeTourView"
+             x:DataType="w:WelcomeTourViewModel"
+             Width="780" Height="500"
+             AutomationProperties.Name="{l:Loc Welcome_DialogName}">
+    <!-- Design §10: the welcome tour, four slides in one dialog. ← → move, Esc closes (MainWindow). The slide's tint:
+         accent (welcome, install), generation teal (AI), green (community). -->
+    <UserControl.KeyBindings>
+        <KeyBinding Gesture="Right" Command="{Binding NextCommand}" />
+        <KeyBinding Gesture="Left" Command="{Binding BackCommand}" />
+    </UserControl.KeyBindings>
+
+    <UserControl.Styles>
+        <Style Selector="Border.tour TextBlock.step">
+            <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+        </Style>
+        <Style Selector="Border.tour.gen TextBlock.step">
+            <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+        </Style>
+        <Style Selector="Border.tour.ok TextBlock.step">
+            <Setter Property="Foreground" Value="{DynamicResource AppOkBrush}" />
+        </Style>
+        <Style Selector="Border.tour Path.pointIcon">
+            <Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" />
+        </Style>
+        <Style Selector="Border.tour.gen Path.pointIcon">
+            <Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" />
+        </Style>
+        <Style Selector="Border.tour.ok Path.pointIcon">
+            <Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" />
+        </Style>
+        <Style Selector="Border.tour Border.tint">
+            <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        </Style>
+        <Style Selector="Border.tour.gen Border.tint">
+            <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+        </Style>
+        <Style Selector="Border.tour.ok Border.tint">
+            <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+        </Style>
+        <Style Selector="Border.miniCover">
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BoxShadow" Value="0 14 32 0 #66000000" />
+        </Style>
+        <Style Selector="Border.medallion">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Background" Value="{DynamicResource AppBadgeBrush}" />
+        </Style>
+        <Style Selector="Border.speech">
+            <Setter Property="Margin" Value="6" />
+            <Setter Property="Padding" Value="8,7" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Background" Value="{StaticResource WelcomeArtBoxBrush}" />
+        </Style>
+        <Style Selector="Border.artLine">
+            <Setter Property="Height" Value="5" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Background" Value="{StaticResource WelcomeArtLineBrush}" />
+        </Style>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="BoxShadow" Value="0 10 30 0 #40000000" />
+        </Style>
+        <Style Selector="Border.line">
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        </Style>
+        <Style Selector="Border.line.translated">
+            <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+        </Style>
+        <Style Selector="Border.dot">
+            <Setter Property="Width" Value="7" />
+            <Setter Property="Height" Value="7" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        </Style>
+        <Style Selector="Border.dot.done">
+            <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        </Style>
+        <Style Selector="Border.dot.current">
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Background" Value="{DynamicResource AppAccentBrush}" />
+        </Style>
+        <Style Selector="Border.meter">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Background" Value="{DynamicResource AppOkBrush}" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border x:Name="Tour" Classes="dialog tour" Classes.gen="{Binding IsCreateWithAi}" Classes.ok="{Binding IsCommunity}">
+        <Grid ColumnDefinitions="340,*">
+            <!-- Illustrations: made of the app's own parts (covers, badges, buttons); decorative -->
+            <Border x:Name="Illustrations" Background="{DynamicResource AppSurface2Brush}" AutomationProperties.AccessibilityView="Raw">
+                <Border Classes="tint">
+                    <Panel Width="260" Height="300">
+                        <!-- Welcome: three game covers. The side ones are half under the middle one, so they carry no text: a status
+                             medallion in the card's middle (partly under the middle card) and an empty dialogue box; the middle one is the installed game speaking
+                             the player's language. Texts are trimmed so no language spills out of a card. -->
+                        <Canvas x:Name="WelcomeIllustration" IsVisible="{Binding IsWelcome}">
+                            <Border Classes="miniCover" Canvas.Left="0" Canvas.Top="54" Width="112" Height="168" Background="{StaticResource WelcomeCoverABrush}">
+                                <Border.RenderTransform><RotateTransform Angle="-12" /></Border.RenderTransform>
+                                <Panel>
+                                    <Border Classes="medallion" Margin="0,0,0,18" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Viewbox Classes="icon" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"><Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{DynamicResource AppAccentBrush}" /></Viewbox>
+                                    </Border>
+                                    <Border Classes="speech" VerticalAlignment="Bottom">
+                                        <StackPanel Spacing="5">
+                                            <Border Classes="artLine" Width="60" />
+                                            <Border Classes="artLine" Width="40" />
+                                        </StackPanel>
+                                    </Border>
+                                </Panel>
+                            </Border>
+                            <Border Classes="miniCover" Canvas.Left="148" Canvas.Top="54" Width="112" Height="168" Background="{StaticResource WelcomeCoverCBrush}">
+                                <Border.RenderTransform><RotateTransform Angle="12" /></Border.RenderTransform>
+                                <Panel>
+                                    <Border Classes="medallion" Margin="0,0,0,18" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Viewbox Classes="icon" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"><Path Classes="icon" Data="{StaticResource IconCircleDashed}" Stroke="{DynamicResource AppMutedBrush}" /></Viewbox>
+                                    </Border>
+                                    <Border Classes="speech" VerticalAlignment="Bottom">
+                                        <StackPanel Spacing="5" HorizontalAlignment="Right">
+                                            <Border Classes="artLine" Width="60" HorizontalAlignment="Right" />
+                                            <Border Classes="artLine" Width="40" HorizontalAlignment="Right" />
+                                        </StackPanel>
+                                    </Border>
+                                </Panel>
+                            </Border>
+                            <Border x:Name="InstalledCover" Classes="miniCover" Canvas.Left="70" Canvas.Top="26" Width="120" Height="180" Background="{StaticResource WelcomeCoverBBrush}">
+                                <Panel>
+                                    <Border Classes="statusBadge ok" Margin="6" MaxWidth="108">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <Viewbox Classes="icon" Width="12" Height="12"><Path Classes="icon" Data="{StaticResource IconCheck}" /></Viewbox>
+                                            <TextBlock Text="{Binding InstalledText}" FontSize="11" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="76" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Viewbox Classes="icon" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,18">
+                                        <Path Classes="icon" Data="{StaticResource IconGamepad}" Stroke="{StaticResource WelcomeArtIconBrush}" />
+                                    </Viewbox>
+                                    <Border Classes="speech" VerticalAlignment="Bottom">
+                                        <TextBlock x:Name="Greeting" Text="{Binding GreetingText}" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource WelcomeArtTextBrush}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                                    </Border>
+                                </Panel>
+                            </Border>
+                            <Border Classes="card" Canvas.Left="20" Canvas.Top="238" Width="220" Padding="12,10">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconGlobe}" Stroke="{DynamicResource AppAccentBrush}" /></Viewbox>
+                                    <TextBlock x:Name="LanguageChip" Text="{Binding GameLanguage.SelectedOption.Display, FallbackValue=''}" FontWeight="Bold"
+                                               TextTrimming="CharacterEllipsis" MaxWidth="170" />
+                                </StackPanel>
+                            </Border>
+                        </Canvas>
+
+                        <!-- Install: an installed cover with Play -->
+                        <Panel x:Name="InstallIllustration" IsVisible="{Binding IsInstall}">
+                            <Border Classes="miniCover" Width="150" Height="225" Background="{StaticResource WelcomeCoverABrush}"
+                                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,4,0,0">
+                                <Panel>
+                                    <Border Classes="statusBadge ok" Margin="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <Viewbox Classes="icon" Width="12" Height="12"><Path Classes="icon" Data="{StaticResource IconCheck}" /></Viewbox>
+                                            <TextBlock Text="{Binding InstalledText}" FontSize="11" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="{DynamicResource AppAccentFillBrush}" CornerRadius="9" Height="34" Margin="8" VerticalAlignment="Bottom">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Viewbox Classes="icon" Width="13" Height="13"><Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{DynamicResource AccentButtonForeground}" /></Viewbox>
+                                            <TextBlock Text="{Binding PlayText}" Foreground="{DynamicResource AccentButtonForeground}" FontWeight="Bold" FontSize="13" />
+                                        </StackPanel>
+                                    </Border>
+                                </Panel>
+                            </Border>
+                            <Border Classes="card" VerticalAlignment="Bottom" Margin="20,0" Padding="12,10">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{DynamicResource AppOkBrush}" /></Viewbox>
+                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{DynamicResource AppOkBrush}" /></Viewbox>
+                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconShield}" Stroke="{DynamicResource AppOkBrush}" /></Viewbox>
+                                </StackPanel>
+                            </Border>
+                        </Panel>
+
+                        <!-- Create with AI: a translation in progress and the two agents -->
+                        <StackPanel x:Name="AiIllustration" IsVisible="{Binding IsCreateWithAi}" Spacing="16" VerticalAlignment="Center">
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <DockPanel>
+                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="14" Height="14" Margin="0,0,8,0">
+                                            <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{DynamicResource AppGenBrush}" />
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding TranslatingText}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                    <ProgressBar Value="42" Maximum="100" MinHeight="6" Height="6" CornerRadius="3" Foreground="{DynamicResource AppGenBrush}" />
+                                    <Border Classes="line" Width="200" />
+                                    <Border Classes="line translated" Width="170" />
+                                    <Border Classes="line" Width="140" />
+                                    <Border Classes="line translated" Width="184" />
+                                </StackPanel>
+                            </Border>
+                            <ItemsControl ItemsSource="{Binding Agents}" Background="Transparent">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><UniformGrid Rows="1" /></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="agents:AgentInfo">
+                                        <Border Classes="card" Padding="10" Margin="0,0,8,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <views:AgentLogo IsSmall="True" />
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="70" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- Community: likes, three confirmations, verified -->
+                        <StackPanel x:Name="CommunityIllustration" IsVisible="{Binding IsCommunity}" Spacing="16" VerticalAlignment="Center">
+                            <Border Classes="card">
+                                <StackPanel Spacing="12">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Border Background="{DynamicResource AppOkSoftBrush}" CornerRadius="15" Height="30" Padding="10,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{DynamicResource AppOkBrush}" /></Viewbox>
+                                                <TextBlock Text="148" FontWeight="Bold" Foreground="{DynamicResource AppOkBrush}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="statusBadge ok" Margin="0" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <Viewbox Classes="icon" Width="12" Height="12"><Path Classes="icon" Data="{StaticResource IconCheckCircle}" /></Viewbox>
+                                                <TextBlock Text="{Binding VerifiedText}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                    <UniformGrid Rows="1">
+                                        <Border Classes="meter" Margin="0,0,4,0" />
+                                        <Border Classes="meter" Margin="0,0,4,0" />
+                                        <Border Classes="meter" />
+                                    </UniformGrid>
+                                    <TextBlock Text="{Binding ConfirmedText}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Panel>
+                </Border>
+            </Border>
+
+            <!-- The slide's text and the buttons -->
+            <DockPanel Grid.Column="1" Margin="28,24,28,20">
+                <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+                    <ItemsControl x:Name="Dots" ItemsSource="{Binding Dots}" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="6" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="w:WelcomeDot">
+                                <Border Classes="dot" Classes.current="{Binding IsCurrent}" Classes.done="{Binding IsDone}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button x:Name="SkipButton" Grid.Column="1" Classes="bare" Command="{Binding SkipCommand}" IsVisible="{Binding !IsLast}"
+                            Content="{l:Loc Welcome_Skip}" />
+                    <Button x:Name="BackButton" Grid.Column="2" Classes="ghost" Command="{Binding BackCommand}" IsVisible="{Binding !IsFirst}"
+                            Content="{l:Loc Welcome_Back}" />
+                    <Button x:Name="NextButton" Grid.Column="3" Classes="accent" Command="{Binding NextCommand}" Content="{Binding NextText}" />
+                </Grid>
+
+                <Button x:Name="CloseButton" DockPanel.Dock="Top" Classes="icon sm" HorizontalAlignment="Right" Margin="0,-12,-16,-20"
+                        Command="{Binding SkipCommand}" ToolTip.Tip="{l:Loc Welcome_Close}" AutomationProperties.Name="{l:Loc Welcome_Close}">
+                    <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconX}" /></Viewbox>
+                </Button>
+
+                <StackPanel Spacing="10">
+                    <TextBlock x:Name="StepText" Classes="step" Text="{Binding StepText}" FontSize="12" FontWeight="Bold" />
+                    <TextBlock x:Name="SlideTitle" Text="{Binding Title}" FontSize="26" FontWeight="Bold" TextWrapping="Wrap" LineHeight="31" />
+                    <TextBlock x:Name="SlideBody" Classes="muted" Text="{Binding Body}" FontSize="15" TextWrapping="Wrap" />
+                    <TextBlock x:Name="GamesFound" Text="{Binding GamesFound}" FontWeight="SemiBold" TextWrapping="Wrap"
+                               IsVisible="{Binding IsWelcome}" Margin="0,-2,0,0" />
+
+                    <!-- Welcome: the translation language (the same setting as Settings → General and the library's picker) -->
+                    <StackPanel x:Name="LanguageChoice" Spacing="6" Margin="0,8,0,0" IsVisible="{Binding IsWelcome}">
+                        <TextBlock Text="{Binding GameLanguage.Label}" FontWeight="SemiBold" FontSize="13" />
+                        <ComboBox x:Name="GameLanguageBox" Classes="toolbar" MinWidth="260" HorizontalAlignment="Left"
+                                  ItemsSource="{Binding GameLanguage.Options}" SelectedItem="{Binding GameLanguage.SelectedOption}"
+                                  AutomationProperties.Name="{Binding GameLanguage.Label}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="s:ChoiceOption"><TextBlock Text="{Binding Display}" /></DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Classes="muted" Text="{Binding GameLanguage.Help}" FontSize="12" TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <ItemsControl x:Name="Points" ItemsSource="{Binding Points}" Margin="0,8,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Spacing="10" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="w:WelcomePoint">
+                                <DockPanel>
+                                    <Viewbox DockPanel.Dock="Left" Classes="icon" Width="18" Height="18" Margin="0,1,10,0" VerticalAlignment="Top">
+                                        <Path Classes="icon pointIcon" Data="{Binding IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                    </Viewbox>
+                                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AppMutedBrush}">
+                                        <Run Text="{Binding Lead}" FontWeight="Bold" Foreground="{DynamicResource AppTextBrush}" /> <Run Text="{Binding Text}" />
+                                    </TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+    </Border>
+</UserControl>

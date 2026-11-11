@@ -3970,4 +3970,148 @@
   <data name="Startup_Updates_Failed" xml:space="preserve">
     <value>Не удалось связаться с GitHub Releases</value>
   </data>
+  <data name="Chrome_WelcomeTour" xml:space="preserve">
+    <value>Знакомство с приложением</value>
+  </data>
+  <data name="Welcome_DialogName" xml:space="preserve">
+    <value>Добро пожаловать в AI Local Pack</value>
+  </data>
+  <data name="Welcome_Step" xml:space="preserve">
+    <value>{0} / {1} · {2}</value>
+  </data>
+  <data name="Welcome_Step_Welcome" xml:space="preserve">
+    <value>Добро пожаловать</value>
+  </data>
+  <data name="Welcome_Step_Install" xml:space="preserve">
+    <value>Установка</value>
+  </data>
+  <data name="Welcome_Step_CreateWithAi" xml:space="preserve">
+    <value>Создать с ИИ</value>
+  </data>
+  <data name="Welcome_Step_Community" xml:space="preserve">
+    <value>Сообщество</value>
+  </data>
+  <data name="Welcome_Title_Welcome" xml:space="preserve">
+    <value>Играйте на своём языке</value>
+  </data>
+  <data name="Welcome_Body_Welcome" xml:space="preserve">
+    <value>AI Local Pack устанавливает переводы, сделанные игроками, для игр, которые у вас уже есть.</value>
+  </data>
+  <data name="Welcome_GamesFound_One" xml:space="preserve">
+    <value>В вашей библиотеке нашлась {0} игра.</value>
+  </data>
+  <data name="Welcome_GamesFound_Few" xml:space="preserve">
+    <value>В вашей библиотеке нашлось {0} игры.</value>
+  </data>
+  <data name="Welcome_GamesFound_Many" xml:space="preserve">
+    <value>В вашей библиотеке нашлось {0} игр.</value>
+  </data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve">
+    <value>Язык можно сменить в любой момент в библиотеке или в настройках.</value>
+  </data>
+  <data name="Welcome_Title_Install" xml:space="preserve">
+    <value>Нашли перевод? Один клик</value>
+  </data>
+  <data name="Welcome_Body_Install" xml:space="preserve">
+    <value>Откройте игру, выберите перевод и нажмите «Установить».</value>
+  </data>
+  <data name="Welcome_Install_Undo_Lead" xml:space="preserve">
+    <value>Всё можно вернуть.</value>
+  </data>
+  <data name="Welcome_Install_Undo" xml:space="preserve">
+    <value>Файлы игры сначала копируются; удаление перевода возвращает их на место.</value>
+  </data>
+  <data name="Welcome_Install_Updates_Lead" xml:space="preserve">
+    <value>Переживает обновления игры.</value>
+  </data>
+  <data name="Welcome_Install_Updates" xml:space="preserve">
+    <value>Если Steam перезапишет перевод, приложение вернёт его.</value>
+  </data>
+  <data name="Welcome_Install_Safe_Lead" xml:space="preserve">
+    <value>Безопасно для аккаунта.</value>
+  </data>
+  <data name="Welcome_Install_Safe" xml:space="preserve">
+    <value>Игры с античитом никогда не изменяются.</value>
+  </data>
+  <data name="Welcome_Title_CreateWithAi" xml:space="preserve">
+    <value>Перевода нет? Сделайте его с ИИ</value>
+  </data>
+  <data name="Welcome_Body_CreateWithAi" xml:space="preserve">
+    <value>Ваш собственный ИИ-агент переводит игру на вашем компьютере, по вашей подписке.</value>
+  </data>
+  <data name="Welcome_Ai_Setup_Lead" xml:space="preserve">
+    <value>Настройка — когда понадобится.</value>
+  </data>
+  <data name="Welcome_Ai_Setup" xml:space="preserve">
+    <value>Приложение установит агента и поможет войти в него, когда вы впервые создадите перевод.</value>
+  </data>
+  <data name="Welcome_Ai_Resume_Lead" xml:space="preserve">
+    <value>Пауза и продолжение,</value>
+  </data>
+  <data name="Welcome_Ai_Resume" xml:space="preserve">
+    <value>когда заканчивается лимит подписки.</value>
+  </data>
+  <data name="Welcome_Title_Community" xml:space="preserve">
+    <value>Делитесь. Оценивайте то, во что играли</value>
+  </data>
+  <data name="Welcome_Body_Community" xml:space="preserve">
+    <value>Переводы хранятся в открытом реестре. Поделитесь своим в один клик, а сыграв с чужим, скажите, работает ли он.</value>
+  </data>
+  <data name="Welcome_Community_Verified_Lead" xml:space="preserve">
+    <value>3 игрока подтвердили, что работает:</value>
+  </data>
+  <data name="Welcome_Community_Verified" xml:space="preserve">
+    <value>перевод становится проверенным.</value>
+  </data>
+  <data name="Welcome_Community_GitHub_Lead" xml:space="preserve">
+    <value>Аккаунт GitHub</value>
+  </data>
+  <data name="Welcome_Community_GitHub" xml:space="preserve">
+    <value>нужен, только чтобы делиться и оценивать. Для установки он не нужен.</value>
+  </data>
+  <data name="Welcome_Ill_Translating" xml:space="preserve">
+    <value>Перевод… {0} %</value>
+  </data>
+  <data name="Welcome_Ill_Confirmed" xml:space="preserve">
+    <value>{0} из {1} игроков подтвердили, что работает</value>
+  </data>
+  <data name="Welcome_Ill_Verified" xml:space="preserve">
+    <value>Проверен</value>
+  </data>
+  <data name="Welcome_Start" xml:space="preserve">
+    <value>Поехали</value>
+  </data>
+  <data name="Welcome_Next" xml:space="preserve">
+    <value>Далее</value>
+  </data>
+  <data name="Welcome_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Welcome_Skip" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
+  <data name="Welcome_Finish" xml:space="preserve">
+    <value>Открыть библиотеку</value>
+  </data>
+  <data name="Welcome_Close" xml:space="preserve">
+    <value>Закрыть знакомство</value>
+  </data>
+  <data name="Settings_Group_Help" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="Settings_About_Tour_Label" xml:space="preserve">
+    <value>Знакомство с приложением</value>
+  </data>
+  <data name="Settings_About_Tour_Help" xml:space="preserve">
+    <value>Коротко о том, как устанавливать переводы, создавать их с ИИ и делиться ими.</value>
+  </data>
+  <data name="Settings_About_Tour_Keywords" xml:space="preserve">
+    <value>обучение туториал знакомство справка помощь первый запуск</value>
+  </data>
+  <data name="Settings_About_Tour_Show" xml:space="preserve">
+    <value>Показать снова</value>
+  </data>
+  <data name="Welcome_Ill_Greeting" xml:space="preserve">
+    <value>Привет, путник!</value>
+  </data>
 </root>

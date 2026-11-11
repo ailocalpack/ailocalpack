@@ -479,6 +479,21 @@
                 </Button>
             </Border>
         </DataTemplate>
+        <DataTemplate DataType="ab:WelcomeTourRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <Button x:Name="ShowWelcomeTour" Grid.Column="1" Classes="ghost sm" VerticalAlignment="Center" Command="{Binding ShowCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconHelp}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding ShowText}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
         <DataTemplate DataType="ab:LicensesRow">
             <Border Classes="settingRow">
                 <Grid ColumnDefinitions="*,Auto">

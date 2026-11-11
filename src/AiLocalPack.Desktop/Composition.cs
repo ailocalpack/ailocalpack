@@ -28,6 +28,7 @@ using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Publishing;
+using AiLocalPack.Desktop.Welcome;
 using AiLocalPack.Desktop.Ratings;
 using AiLocalPack.Core.Ratings;
 using AiLocalPack.Core.Publishing;
@@ -82,6 +83,7 @@ internal static class Composition
         services.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>();
         services.AddSingleton<ISystemShell, SystemShell>();
         services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<WelcomeTour>();
         services.AddSingleton<IFilePicker, AvaloniaFilePicker>();
         AddGames(services);
         services.AddSingleton(sp => new RegistryIndexClient(

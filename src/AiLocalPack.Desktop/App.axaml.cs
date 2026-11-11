@@ -109,6 +109,8 @@ public sealed class App : Application
         mainOpened = true;
         // Once the window is up, so the first frame isn't delayed: Settings then opens without a pause.
         main.Opened += (_, _) => _ = services.GetRequiredService<SettingsPreloader>().PreloadAsync();
+        // The welcome tour on the first start (design §10): when the window is first shown, also after a start in the tray.
+        main.Opened += (_, _) => services.GetRequiredService<AiLocalPack.Desktop.Welcome.WelcomeTour>().ShowOnFirstRun();
         var tray = services.GetRequiredService<TrayHost>();
         if (OsEnvironment.Current.Os == OsKind.Linux)
         {

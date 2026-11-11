@@ -10,6 +10,7 @@
              xmlns:startup="using:AiLocalPack.Desktop.Startup"
              xmlns:rate="using:AiLocalPack.Desktop.Ratings"
              xmlns:about="using:AiLocalPack.Desktop.ViewModels.Settings.About"
+             xmlns:welcome="using:AiLocalPack.Desktop.Welcome"
              x:Class="AiLocalPack.Desktop.App"
              Name="AI Local Pack"
              RequestedThemeVariant="Default">
@@ -49,6 +50,7 @@
         <DataTemplate DataType="pub:SimilarPackDialogViewModel"><views:SimilarPackDialogView /></DataTemplate>
         <DataTemplate DataType="rate:RatingSignInDialogViewModel"><views:RatingSignInDialogView /></DataTemplate>
         <DataTemplate DataType="about:ThirdPartyNoticesDialogViewModel"><views:ThirdPartyNoticesDialogView /></DataTemplate>
+        <DataTemplate DataType="welcome:WelcomeTourViewModel"><views:WelcomeTourView /></DataTemplate>
         <!-- Startup checklist rows (splash details, startup checks under the bell) -->
         <DataTemplate DataType="startup:StartupStep"><views:StartupStepView /></DataTemplate>
     </Application.DataTemplates>

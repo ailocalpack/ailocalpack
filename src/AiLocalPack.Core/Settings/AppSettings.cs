@@ -44,6 +44,10 @@ namespace AiLocalPack.Core.Settings;
 /// <param name="PublishLicenseAccepted">
 /// The player ticked "I publish under CC BY-SA 4.0" in the first publish dialog (task 61): later publishes don't ask again.
 /// </param>
+/// <param name="WelcomeTourShown">
+/// The welcome tour was shown and closed (finished, skipped or Esc): it no longer opens by itself on start (design §10);
+/// <c>?</c> in the chrome and Settings → About still show it.
+/// </param>
 public sealed record AppSettings(
     int SchemaVersion = AppSettings.CurrentSchemaVersion,
     string? UiLanguage = null,
@@ -59,7 +63,8 @@ public sealed record AppSettings(
     string? RegistryIndexUrl = null,
     string? DefaultAgent = null,
     IReadOnlyList<string>? SignedInAgents = null,
-    bool PublishLicenseAccepted = false)
+    bool PublishLicenseAccepted = false,
+    bool WelcomeTourShown = false)
 {
     public const int CurrentSchemaVersion = 1;
 
