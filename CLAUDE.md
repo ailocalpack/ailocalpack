@@ -60,6 +60,7 @@ Synthetic test games: `ailocalpack dev fixture rpgmaker|renpy|godot|unity|unreal
 ## Naming
 
 - **AI Local Pack** is the name players read: window titles, the header logo, tray, OS notifications, autostart entries, UI text in every language, README, social previews (`AppInfo.DisplayName` in Core; resx strings write it out).
+- **Translation**, not "pack", is what players read (RU «перевод»): "Install translation", "3 translations", "translation registry"; the game page's tab of text translations is **Text** («Текст»), beside Voice and Textures in the group "Localization", and AI generation is the tab **Create with AI** in the group "Tools" (decided with the split-tabs game page, design §3). "Pack" stays the technical term: code, CLI, manifests, registry, these docs.
 - **`ailocalpack`** stays the technical name: the CLI command, the GitHub organization and repositories, app folders (`AppPaths.AppFolderName`), keychain service, MCP server, notification / autostart IDs (`io.github.ailocalpack`), file suffixes and names the toolkit writes into games, agent prompts, User-Agent. Renaming any of them breaks existing installs or packs.
 
 ## Domain terms

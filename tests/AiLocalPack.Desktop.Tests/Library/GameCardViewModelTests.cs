@@ -180,8 +180,8 @@ public sealed class GameCardStatusTests
 
     [Theory]
     [InlineData(LocalizationStatusKind.Installed, "Installed", "")]
-    [InlineData(LocalizationStatusKind.PackAvailable, "Pack available", "Install")]
-    [InlineData(LocalizationStatusKind.NoPack, "No pack", "Generate with AI")]
+    [InlineData(LocalizationStatusKind.PackAvailable, "Translation available", "Install")]
+    [InlineData(LocalizationStatusKind.NoPack, "No translation", "Create with AI")]
     [InlineData(LocalizationStatusKind.NeedsUpdate, "Needs update", "Update")]
     public void Badge_and_quick_action_follow_the_status(LocalizationStatusKind kind, string badge, string action)
     {
@@ -299,7 +299,7 @@ public sealed class GameCardStatusTests
         var card = Card(Status(LocalizationStatusKind.PackAvailable, Pack("a"), Pack("b"), Pack("c")));
 
         // Assert
-        card.ContextLine.Should().Be("3 packs");
+        card.ContextLine.Should().Be("3 translations");
     }
 
     [Fact]
@@ -339,7 +339,7 @@ public sealed class GameCardStatusTests
         var card = Card(Status(LocalizationStatusKind.PackAvailable, Pack("full")));
 
         // Assert
-        card.AccessibleName.Should().Be("Alpha: Pack available");
+        card.AccessibleName.Should().Be("Alpha: Translation available");
     }
 
     [Fact]
@@ -379,6 +379,6 @@ public sealed class GameCardStatusTests
         card.ApplyStatus(Status(LocalizationStatusKind.PackAvailable, Pack("full")), stale: false);
 
         // Assert
-        (changed.Count > 0, card.BadgeText).Should().Be((true, "Pack available"));
+        (changed.Count > 0, card.BadgeText).Should().Be((true, "Translation available"));
     }
 }

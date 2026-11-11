@@ -75,7 +75,7 @@ public sealed class PublishStripTests
         // Assert
         var publish = page.Generation.Result!.Publish;
         (page.Generation.Result.ShowShare, publish.IsChecking, publish.Title, publish.ShowOpenPr, publish.ShowPublish)
-            .Should().Be((false, true, "PR #7 opened · CI is checking the pack", true, false));
+            .Should().Be((false, true, "PR #7 opened · CI is checking the translation", true, false));
     }
 
     [Fact]

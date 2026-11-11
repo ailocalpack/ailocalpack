@@ -388,7 +388,7 @@ public sealed class ActivityPanelViewModelTests
 
         // Assert
         (services.GetRequiredService<ToastService>().Items.Single().Text, services.GetRequiredService<FakeAppQuit>().Quits)
-            .Should().Be(("A pack is being installed. Restart when it finishes.", 0));
+            .Should().Be(("A translation is being installed. Restart when it finishes.", 0));
     }
 
     [Fact]

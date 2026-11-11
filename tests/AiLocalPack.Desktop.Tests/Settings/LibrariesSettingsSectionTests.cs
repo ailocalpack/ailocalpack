@@ -150,7 +150,7 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
         await section.RescanAsync();
 
         // Assert
-        section.Alerts.Should().ContainSingle().Which.Text.Should().Be($"{card}: 1 game is hidden until the folder is back. Installed packs are untouched.");
+        section.Alerts.Should().ContainSingle().Which.Text.Should().Be($"{card}: 1 game is hidden until the folder is back. Installed translations are untouched.");
         section.Folders[1].Help.Should().Be("1 game hidden");
     }
 
@@ -281,7 +281,7 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
         var dialog = Confirmation();
         dialog.Title.Should().Be($"Remove «{extra}» from AI Local Pack?");
         dialog.Message.Should().Be(
-            "Its games leave the library. The folder, the games and installed packs stay on disk, and Steam is not changed. You can add the folder again later.");
+            "Its games leave the library. The folder, the games and installed translations stay on disk, and Steam is not changed. You can add the folder again later.");
         dialog.ConfirmText.Should().Be("Remove");
         Get<SettingsStore>().Current.SteamLibraryFolders.Should().Equal(extra);
     }
@@ -407,7 +407,7 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
         // Assert
         var dialog = Confirmation();
         dialog.Title.Should().Be("Remove «Wren and Whistle» from AI Local Pack?");
-        dialog.Message.Should().Be("The game folder and any installed pack stay on disk. You can add the folder again later.");
+        dialog.Message.Should().Be("The game folder and any installed translation stay on disk. You can add the folder again later.");
         Get<GameCatalog>().Games.Should().ContainSingle();
     }
 

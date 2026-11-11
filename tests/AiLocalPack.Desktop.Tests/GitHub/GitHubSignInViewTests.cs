@@ -146,7 +146,7 @@ public sealed class GitHubSignInViewTests
         // Assert
         (Find<HighlightTextBlock>(window, "GitHubLogin").Source, Find<GitHubSignInView>(window, "GitHubDeviceFlow").IsVisible,
                 Find<Button>(window, "GitHubSignIn").IsVisible, Find<TextBlock>(window, "PublishedPacksEmpty").Text)
-            .Should().Be(("octocat", false, false, "Nothing published yet. After generating a pack, publish it from the game's Generation tab."));
+            .Should().Be(("octocat", false, false, "Nothing published yet. After creating a translation with AI, publish it from the game's Create with AI tab."));
         window.Close();
     });
 }

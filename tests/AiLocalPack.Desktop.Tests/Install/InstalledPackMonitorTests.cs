@@ -240,7 +240,7 @@ public sealed class InstalledPackMonitorTests
         await Wait.UntilAsync(() => step.IsFinished);
 
         // Assert
-        (step.IsWarn, step.Detail).Should().Be((true, "A game update broke the pack: Alpha"));
+        (step.IsWarn, step.Detail).Should().Be((true, "A game update broke the translation: Alpha"));
     }
 
     [Fact]
@@ -257,6 +257,6 @@ public sealed class InstalledPackMonitorTests
         await Wait.UntilAsync(() => step.IsFinished);
 
         // Assert
-        (step.IsSkipped, step.Detail).Should().Be((true, "No installed packs to check"));
+        (step.IsSkipped, step.Detail).Should().Be((true, "No installed translations to check"));
     }
 }

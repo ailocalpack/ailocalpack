@@ -192,7 +192,7 @@ public sealed class PacksTabViewModelTests : IDisposable
         var packs = await PacksAsync(services);
 
         // Assert
-        packs.CountText.Should().Be("Русский: 3 packs");
+        packs.CountText.Should().Be("Русский: 3 translations");
     }
 
     // ---------- Language ----------
@@ -624,7 +624,7 @@ public sealed class PacksTabViewModelTests : IDisposable
         // Assert
         (row.State, row.FailureText, row.CanRetry, row.CanInstall).Should().Be((
             PackCheckState.Failed,
-            "The registry has no manifest for this pack. It may have been removed since the list was saved.",
+            "The registry has no manifest for this translation. It may have been removed since the list was saved.",
             true,
             false));
     }
@@ -658,7 +658,7 @@ public sealed class PacksTabViewModelTests : IDisposable
 
         // Assert
         (row.FailureText, row.CanRetry).Should().Be((
-            "The pack's manifest in the registry is damaged, so the pack can't be checked or installed.", false));
+            "The translation's manifest in the registry is damaged, so the translation can't be checked or installed.", false));
     }
 
     [Fact]
@@ -673,7 +673,7 @@ public sealed class PacksTabViewModelTests : IDisposable
         var row = (await PacksAsync(services)).Selected!;
 
         // Assert
-        row.FailureText.Should().Be("The pack is in a newer format. Update the app to install it.");
+        row.FailureText.Should().Be("The translation is in a newer format. Update the app to install it.");
     }
 
     [Fact]

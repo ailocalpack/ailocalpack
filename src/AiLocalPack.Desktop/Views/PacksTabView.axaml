@@ -513,7 +513,20 @@
             </ContentControl>
         </Grid>
 
-        <!-- No packs for this language -->
+        <!-- Under the registry's list: AI as the way out when none of them suits (design §3) -->
+        <StackPanel x:Name="CreateOwnHint" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" IsVisible="{Binding ShowCreateOwn}">
+            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Packs_CreateOwn_Text}" VerticalAlignment="Center" />
+            <Button x:Name="CreateOwnButton" Classes="link" FontSize="13" Command="{Binding OpenGenerationCommand}" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Viewbox Classes="icon" Width="13" Height="13">
+                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                    </Viewbox>
+                    <TextBlock Text="{l:Loc Packs_CreateOwn}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- No translation into this language -->
         <Panel x:Name="NoPacks" IsVisible="{Binding ShowEmpty}">
             <Rectangle Classes="dropzone" StrokeThickness="1" />
             <StackPanel Margin="16,36" Spacing="10" HorizontalAlignment="Center" MaxWidth="560">
@@ -524,7 +537,7 @@
                 </Border>
                 <TextBlock x:Name="NoPacksTitle" Classes="h2" FontSize="18" Text="{Binding EmptyTitle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
                 <TextBlock Classes="muted" Text="{l:Loc Game_Packs_NoneText}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-                <Button Classes="accent" HorizontalAlignment="Center" Margin="0,6,0,0" Command="{Binding OpenGenerationCommand}">
+                <Button x:Name="EmptyCreateWithAi" Classes="ghost gen" HorizontalAlignment="Center" Margin="0,6,0,0" Command="{Binding OpenGenerationCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Viewbox Classes="icon" Width="16" Height="16">
                             <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />

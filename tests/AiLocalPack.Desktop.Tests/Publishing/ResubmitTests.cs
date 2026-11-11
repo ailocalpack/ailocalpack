@@ -250,7 +250,7 @@ public sealed class ResubmitTests
 
         // Assert
         bed.Services.GetRequiredService<ActivityStore>().Feed.First(e => e.Kind == ActivityEventKind.PackSubmitted).Detail
-            .Should().Be("Fix pushed to PR #7 · CI checks the pack again");
+            .Should().Be("Fix pushed to PR #7 · CI checks the translation again");
     }
 
     // ---------- Activity ----------
@@ -331,6 +331,6 @@ public sealed class ResubmitTests
         section.OnShown();
 
         // Assert
-        (section.PublishedPacks.IsEmpty, section.PublishedPacks.Text).Should().Be((true, "Sign in to see packs you published."));
+        (section.PublishedPacks.IsEmpty, section.PublishedPacks.Text).Should().Be((true, "Sign in to see translations you published."));
     }
 }

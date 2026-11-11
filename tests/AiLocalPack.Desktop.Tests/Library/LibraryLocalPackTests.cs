@@ -36,7 +36,7 @@ public sealed class LibraryLocalPackTests
 
         // Assert
         (card.StatusKind, card.BadgeText, card.ContextLine, card.QuickActionText, card.IsQuickPrimary)
-            .Should().Be((LocalizationStatusKind.PackAvailable, "Your pack ready", "Your pack · 100% of strings", "Install & play", true));
+            .Should().Be((LocalizationStatusKind.PackAvailable, "Your translation ready", "Your translation · 100% of strings", "Install & play", true));
     }
 
     [Fact]
@@ -100,6 +100,6 @@ public sealed class LibraryLocalPackTests
 
         // Assert
         (card.StatusKind, card.BadgeText, card.ContextLine, card.HasQuickAction)
-            .Should().Be((LocalizationStatusKind.Installed, "Installed", "Your pack · Русский", false));
+            .Should().Be((LocalizationStatusKind.Installed, "Installed", "Your translation · Русский", false));
     }
 }

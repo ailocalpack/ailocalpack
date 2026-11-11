@@ -218,6 +218,9 @@ public sealed partial class PacksTabViewModel : ObservableObject
     /// <summary>Only Mine has rows: a line under the Registry heading says the registry has none.</summary>
     public bool ShowRegistryNone => HasMine && !HasRows && !IsUnknown;
 
+    /// <summary>"Not happy with these? Create your own with AI" under the registry's translations (none while a job or local pack is in Mine).</summary>
+    public bool ShowCreateOwn => !IsUnknown && HasRows && !HasMine;
+
     /// <summary>"No translation into Русский yet".</summary>
     public bool ShowEmpty => !IsUnknown && !HasRows && !HasMine;
 

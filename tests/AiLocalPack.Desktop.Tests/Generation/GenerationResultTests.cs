@@ -189,7 +189,7 @@ public sealed class GenerationResultTests
         var page = Page(bed);
 
         // Assert
-        (page.SelectedTab, page.PrimaryText, page.PrimaryCaption).Should().Be((GamePageTab.Generation, "Install & play", "Your pack · 100% of strings · test passed"));
+        (page.SelectedTab, page.PrimaryText, page.PrimaryCaption).Should().Be((GamePageTab.Generation, "Install & play", "Your translation · 100% of strings · test passed"));
     }
 
     [Fact]
@@ -287,7 +287,7 @@ public sealed class GenerationResultTests
         await tab.DiscardAsync(pack);
 
         // Assert
-        (Directory.Exists(pack.Folder), tab.ActionError).Should().Be((true, "The pack is installed: uninstall it first."));
+        (Directory.Exists(pack.Folder), tab.ActionError).Should().Be((true, "The translation is installed: uninstall it first."));
     }
 
     [Fact]

@@ -64,7 +64,7 @@ public sealed class LibraryStatusTests : IDisposable
         var vm = Create(services);
 
         // Assert
-        (CardOf(vm, "Alpha").StatusKind, CardOf(vm, "Alpha").BadgeText).Should().Be((LocalizationStatusKind.PackAvailable, "Pack available"));
+        (CardOf(vm, "Alpha").StatusKind, CardOf(vm, "Alpha").BadgeText).Should().Be((LocalizationStatusKind.PackAvailable, "Translation available"));
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public sealed class LibraryStatusTests : IDisposable
 
         // Assert
         vm.FilterChips.Select(c => (c.Label, c.Count)).Should().Equal(
-            ("All", 3), ("Installed", 0), ("Pack available", 2), ("No pack", 1), ("Needs update", 0), ("Generating", 0));
+            ("All", 3), ("Installed", 0), ("Translation available", 2), ("No translation", 1), ("Needs update", 0), ("Generating", 0));
     }
 
     [Fact]
@@ -359,7 +359,7 @@ public sealed class LibraryStatusTests : IDisposable
         // Assert
         var saved = fresh.FetchedAt!.Value.ToLocalTime().ToString("g", System.Globalization.CultureInfo.GetCultureInfo("en"));
         (vm.ShowRegistryBanner, vm.RegistryBannerText, CardOf(vm, "Alpha").StatusKind, CardOf(vm, "Alpha").IsStale).Should().Be(
-            (true, $"Can't reach the pack registry. Showing data saved on {saved}.", LocalizationStatusKind.PackAvailable, true));
+            (true, $"Can't reach the translation registry. Showing data saved on {saved}.", LocalizationStatusKind.PackAvailable, true));
     }
 
     [Fact]
@@ -375,7 +375,7 @@ public sealed class LibraryStatusTests : IDisposable
 
         // Assert
         (vm.RegistryBannerText, CardOf(vm, "Alpha").ShowBadge).Should().Be(
-            ("Can't reach the pack registry. Pack statuses appear once it answers.", false));
+            ("Can't reach the translation registry. Translation statuses appear once it answers.", false));
     }
 
     [Fact]
@@ -390,7 +390,7 @@ public sealed class LibraryStatusTests : IDisposable
         await services.GetRequiredService<PackIndex>().RefreshAsync();
 
         // Assert
-        vm.RegistryBannerText.Should().Be("The pack registry uses a newer format. Update the app to see the current packs.");
+        vm.RegistryBannerText.Should().Be("The translation registry uses a newer format. Update the app to see the current translations.");
     }
 
     [Fact]

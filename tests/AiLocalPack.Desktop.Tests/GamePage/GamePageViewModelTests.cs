@@ -48,11 +48,11 @@ public sealed class GamePageViewModelTests : IDisposable
         var page = Open(services, 10);
 
         // Assert
-        (page.PrimaryText, page.PrimaryCaption).Should().Be(("Install best pack", "«lanterns» · verified · made for your version"));
+        (page.PrimaryText, page.PrimaryCaption).Should().Be(("Install translation", "«lanterns» · verified · made for your version"));
     }
 
     [Fact]
-    public async Task Game_without_a_pack_offers_generation()
+    public async Task Game_without_a_pack_has_no_header_action()
     {
         // Arrange
         using var services = await BuildAsync(r => r.Pack(10, "ru", "lanterns"));
@@ -61,7 +61,7 @@ public sealed class GamePageViewModelTests : IDisposable
         var page = Open(services, 20);
 
         // Assert
-        (page.HasPrimaryAction, page.PrimaryText).Should().Be((true, "Generate translation with AI"));
+        (page.Action.Kind, page.HasPrimaryAction).Should().Be((GamePrimaryActionKind.Generate, false));
     }
 
     [Fact]
@@ -140,7 +140,21 @@ public sealed class GamePageViewModelTests : IDisposable
 
         // Assert
         page.Tabs.Select(t => (t.Tab, t.Counter)).Should().Equal(
-            (GamePageTab.Packs, "2"), (GamePageTab.Generation, ""), (GamePageTab.Audio, ""), (GamePageTab.Textures, ""));
+            (GamePageTab.Packs, "2"), (GamePageTab.Audio, ""), (GamePageTab.Textures, ""), (GamePageTab.Generation, ""));
+    }
+
+    [Fact]
+    public async Task Tab_bar_groups_localization_apart_from_the_ai_tool()
+    {
+        // Arrange
+        using var services = await BuildAsync();
+
+        // Act
+        var page = Open(services, 10);
+
+        // Assert
+        (page.LocalizationTabs.Select(t => t.Label), page.ToolTabs.Select(t => t.Label)).Should().BeEquivalentTo(
+            (new[] { "Text", "Voice", "Textures" }, new[] { "Create with AI" }), o => o.WithStrictOrdering());
     }
 
     [Fact]
@@ -347,7 +361,7 @@ public sealed class GamePageViewModelTests : IDisposable
         (page.IsBlocked, page.ShowTabs, page.BlockedText).Should().Be((
             true,
             false,
-            "Easy Anti-Cheat was detected. Modifying game files can get your account banned, so AI Local Pack doesn't install or generate packs for games with anti-cheat."));
+            "Easy Anti-Cheat was detected. Modifying game files can get your account banned, so AI Local Pack doesn't install or create translations for games with anti-cheat."));
     }
 
     [Fact]

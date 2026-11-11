@@ -175,7 +175,7 @@ public sealed class PublishFlowTests
         // Assert
         var task = bed.Services.GetRequiredService<ActivityStore>().Tasks.Single();
         (Flow(bed).StatusOf(pack).Phase, task.Kind, task.Title, task.Step)
-            .Should().Be((PublishPhase.Sending, ActivityTaskKind.Publish, "Publishing «Claude Code translation»…", "Commit the pack"));
+            .Should().Be((PublishPhase.Sending, ActivityTaskKind.Publish, "Publishing «Claude Code translation»…", "Commit the translation"));
         Publisher(bed).Release();
     }
 
@@ -196,7 +196,7 @@ public sealed class PublishFlowTests
         (result, Flow(bed).StatusOf(Fresh(bed)).Phase, sent.Kind, sent.Detail, store.Tasks.Count)
             .Should().Match<(PublishResult?, PublishPhase, ActivityEventKind, string?, int)>(x =>
                 x.Item1 is PublishResult.Published && x.Item2 == PublishPhase.Checking && x.Item3 == ActivityEventKind.PackSubmitted
-                && x.Item4 == "PR #7 opened · CI is checking the pack" && x.Item5 == 0);
+                && x.Item4 == "PR #7 opened · CI is checking the translation" && x.Item5 == 0);
     }
 
     [Fact]

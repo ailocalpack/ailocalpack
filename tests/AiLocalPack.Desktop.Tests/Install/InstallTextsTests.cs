@@ -31,7 +31,7 @@ public sealed class InstallTextsTests
         var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.Fetch, Fetch: PackFetchProblem.Offline), En);
 
         // Assert
-        reason.Should().Be("Couldn't download the pack: no connection to the registry.");
+        reason.Should().Be("Couldn't download the translation: no connection to the registry.");
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public sealed class InstallTextsTests
         var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.Patch, Patch: PatchProblem.ArchiveInvalid), En);
 
         // Assert
-        reason.Should().Be("The pack's patch archive is damaged.");
+        reason.Should().Be("The translation's patch archive is damaged.");
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public sealed class InstallTextsTests
         var reason = InstallTexts.Reason(new InstallError(InstallErrorKind.DependencyUnknown, Dependencies: [new("bepinex", "5.4.22")]), En);
 
         // Assert
-        reason.Should().Be("This pack needs bepinex 5.4.22, which isn't on the registry's list of allowed components, so it can't be installed.");
+        reason.Should().Be("This translation needs bepinex 5.4.22, which isn't on the registry's list of allowed components, so it can't be installed.");
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public sealed class InstallTextsTests
             new InstallError(InstallErrorKind.DependencyPlatform, Dependencies: [new("bepinex", "5.4.23.2")], DependencyName: "BepInEx", Platform: "linux-arm64"), En);
 
         // Assert
-        reason.Should().Be("This pack needs BepInEx 5.4.23.2, and its official release has no build for this game's version (linux-arm64).");
+        reason.Should().Be("This translation needs BepInEx 5.4.23.2, and its official release has no build for this game's version (linux-arm64).");
     }
 
     [Fact]

@@ -64,12 +64,12 @@ public sealed class GamePageViewTests : IDisposable
 
         // Assert
         (ButtonText(Find<Button>(window, "PrimaryAction")), Find<TextBlock>(window, "PrimaryCaption").Text)
-            .Should().Be(("Install best pack", "«lanterns» · alpha · made for your version"));
+            .Should().Be(("Install translation", "«lanterns» · alpha · made for your version"));
         window.Close();
     });
 
     [Fact]
-    public Task Game_without_a_pack_shows_generate() => HeadlessUi.RunAsync(() =>
+    public Task Game_without_a_pack_offers_ai_only_in_the_text_tab() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
         using var services = Build(r => r.Pack(10, "ru", "lanterns"));
@@ -78,7 +78,8 @@ public sealed class GamePageViewTests : IDisposable
         var window = OpenGame(services, 20);
 
         // Assert
-        ButtonText(Find<Button>(window, "PrimaryAction")).Should().Be("Generate translation with AI");
+        (Find<Button>(window, "PrimaryAction").IsEffectivelyVisible, Find<Button>(window, "EmptyCreateWithAi").IsEffectivelyVisible)
+            .Should().Be((false, true));
         window.Close();
     });
 
@@ -138,7 +139,7 @@ public sealed class GamePageViewTests : IDisposable
         var window = OpenGame(services, 10);
 
         // Assert
-        var audio = TabButton(window, "Audio");
+        var audio = TabButton(window, "Voice");
         (audio.Classes.Contains("soon"), audio.IsEffectivelyEnabled).Should().Be((true, true));
         window.Close();
     });
@@ -151,12 +152,12 @@ public sealed class GamePageViewTests : IDisposable
         var window = OpenGame(services, 10);
 
         // Act
-        TabButton(window, "Audio").Command!.Execute(null);
+        TabButton(window, "Voice").Command!.Execute(null);
         Dispatcher.UIThread.RunJobs();
 
         // Assert
         (Find<StackPanel>(window, "SoonPanel").IsEffectivelyVisible, Find<TextBlock>(window, "SoonTitle").Text)
-            .Should().Be((true, "Audio: coming soon"));
+            .Should().Be((true, "Voice: coming soon"));
         window.Close();
     });
 
@@ -188,7 +189,7 @@ public sealed class GamePageViewTests : IDisposable
 
         // Assert
         (Find<Border>(window, "StickyBar").IsVisible, ButtonText(Find<Button>(window, "StickyPrimaryAction")))
-            .Should().Be((true, "Install best pack"));
+            .Should().Be((true, "Install translation"));
         window.Close();
     });
 }

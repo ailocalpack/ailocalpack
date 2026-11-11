@@ -131,7 +131,7 @@ public sealed class PacksTabMineTests
         // Assert
         await Until(() => page.Packs.Mine.SingleOrDefault()?.InstallText == "Installed");
         (page.Packs.Mine.Single().InstallText, page.Packs.Mine.Single().CanDelete, page.InstalledText)
-            .Should().Be(("Installed", false, "«Claude Code translation» · your pack"));
+            .Should().Be(("Installed", false, "«Claude Code translation» · your translation"));
     }
 
     [Fact]

@@ -95,7 +95,7 @@ public sealed class PackCompatibilityTextsTests
         var text = PackCompatibilityTexts.Explain(result, L);
 
         // Assert
-        text.Should().Be("This app's toolkit doesn't handle RPG Maker MZ games on this system for now, so it can't install this pack.");
+        text.Should().Be("This app's toolkit doesn't handle RPG Maker MZ games on this system for now, so it can't install this translation.");
     }
 
     [Fact]

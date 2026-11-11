@@ -257,7 +257,7 @@ public sealed class AppStartupTests
         var step = await RunIndexStep(services);
 
         // Assert
-        (step.IsOk, step.Detail).Should().Be((true, "1 pack"));
+        (step.IsOk, step.Detail).Should().Be((true, "1 translation"));
     }
 
     [Fact]
@@ -270,7 +270,7 @@ public sealed class AppStartupTests
         var step = await RunIndexStep(services);
 
         // Assert
-        (step.IsWarn, step.Detail).Should().Be((true, "Can't reach the pack registry"));
+        (step.IsWarn, step.Detail).Should().Be((true, "Can't reach the translation registry"));
     }
 
     [Fact]
@@ -305,7 +305,7 @@ public sealed class AppStartupTests
         var step = await RunIndexStep(services);
 
         // Assert
-        (step.IsWarn, step.Detail).Should().Be((true, "The pack registry address is not valid: details are in the log"));
+        (step.IsWarn, step.Detail).Should().Be((true, "The translation registry address is not valid: details are in the log"));
     }
 
     /// <summary>Installs one file into a temp game folder and crashes while writing it, leaving the journal behind.</summary>

@@ -87,7 +87,7 @@ public sealed class PublishViewTests
 
         // Assert
         (Find<Border>(window, "ShareStrip").IsEffectivelyVisible, Find<TextBlock>(window, "PublishTitle").Text, Find<Button>(window, "PublishOpenPr").IsEffectivelyVisible)
-            .Should().Be((false, "PR #7 opened · CI is checking the pack", true));
+            .Should().Be((false, "PR #7 opened · CI is checking the translation", true));
         window.Close();
     });
 
@@ -117,7 +117,7 @@ public sealed class PublishViewTests
         // Assert
         (Find<TextBlock>(window, "PublishTitle").Text, Find<TextBlock>(window, "PublishText").Text,
                 Find<Button>(window, "PublishResubmit").IsEffectivelyVisible, Find<Button>(window, "PublishAgain").IsEffectivelyVisible)
-            .Should().Be(("CI rejected PR #7", "The pull request changes files outside the pack's folder. Fix and resubmit rebuilds its branch with only this pack.", true, false));
+            .Should().Be(("CI rejected PR #7", "The pull request changes files outside the translation's folder. Fix and resubmit rebuilds its branch with only this translation.", true, false));
         window.Close();
     });
 

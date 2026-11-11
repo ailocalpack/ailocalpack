@@ -306,7 +306,7 @@ public sealed class GenerationTabViewModelTests
 
         // Assert
         (tab.StartBlock, tab.Checks[0].IsWarning, tab.Checks[0].Text)
-            .Should().Be(((GenerationStartBlock?)null, true, "Unknown engine: the agent writes its own reader, and the pack is a binary patch"));
+            .Should().Be(((GenerationStartBlock?)null, true, "Unknown engine: the agent writes its own reader, and the translation is a binary patch"));
     }
 
     [Fact]

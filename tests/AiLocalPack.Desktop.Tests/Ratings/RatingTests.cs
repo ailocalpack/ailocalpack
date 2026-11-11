@@ -84,7 +84,7 @@ public sealed class RatingTests
 
         // Assert
         (block.ShowConfirm, block.ShowComment, block.LikeCommand.CanExecute(null), block.StatusText).Should().Be(
-            (false, false, true, "You're credited on this pack, so you can't confirm it works: other players do."));
+            (false, false, true, "You're credited on this translation, so you can't confirm it works: other players do."));
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class RatingTests
 
         // Assert
         (block.WorksCommand.CanExecute(null), block.LikeCommand.CanExecute(null), block.StatusText).Should().Be(
-            (false, false, "Rating opens once the registry creates this pack's Discussion on GitHub."));
+            (false, false, "Rating opens once the registry creates this translation's Discussion on GitHub."));
     }
 
     [Fact]
@@ -152,7 +152,7 @@ public sealed class RatingTests
 
         // Assert
         await RatingBed.Until(() => bed.Toasts.Items.Any(t => t.Key == "rating:steam:10"));
-        bed.Toasts.Items.Should().ContainSingle(t => t.Text == "Thanks! Your report was sent to the pack's GitHub Discussion.").Which.Tone.Should().Be(ToastTone.Ok);
+        bed.Toasts.Items.Should().ContainSingle(t => t.Text == "Thanks! Your report was sent to the translation's GitHub Discussion.").Which.Tone.Should().Be(ToastTone.Ok);
     }
 
     [Fact]

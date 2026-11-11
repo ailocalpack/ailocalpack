@@ -380,16 +380,16 @@
     <value>В «{0}» одна игра, в подпапке {1}.</value>
   </data>
   <data name="AddGame_Registry_Title" xml:space="preserve">
-    <value>Поиск пакетов появится в следующей версии.</value>
+    <value>Поиск переводов появится в следующей версии.</value>
   </data>
   <data name="AddGame_Registry_Text" xml:space="preserve">
-    <value>Здесь будут пакеты для этой игры из реестра. Игру можно добавить уже сейчас.</value>
+    <value>Здесь будут переводы этой игры из реестра. Игру можно добавить уже сейчас.</value>
   </data>
   <data name="AddGame_EngineWarning_Title" xml:space="preserve">
     <value>Движок не распознан.</value>
   </data>
   <data name="AddGame_EngineWarning_Text" xml:space="preserve">
-    <value>Пакет всё равно можно сгенерировать: агент сам разберётся в файлах игры. Если вы знаете движок, выберите его в параметрах.</value>
+    <value>Перевод всё равно можно создать с ИИ: агент сам разберётся в файлах игры. Если вы знаете движок, выберите его в параметрах.</value>
   </data>
   <data name="AddGame_Duplicate" xml:space="preserve">
     <value>Эта игра уже есть в библиотеке: «{0}».</value>
@@ -398,7 +398,7 @@
     <value>Обнаружен {0}.</value>
   </data>
   <data name="AddGame_AntiCheat_Text" xml:space="preserve">
-    <value>Для этой игры нельзя устанавливать и генерировать пакеты: античит может заблокировать аккаунт. Игру всё равно можно добавить, в библиотеке она будет недоступной.</value>
+    <value>Для этой игры нельзя устанавливать и создавать переводы: античит может заблокировать аккаунт. Игру всё равно можно добавить, в библиотеке она будет недоступной.</value>
   </data>
   <data name="AddGame_Details" xml:space="preserve">
     <value>Изменить параметры игры</value>
@@ -653,7 +653,7 @@
     <value>Другие магазины</value>
   </data>
   <data name="Settings_ManualGames_Note" xml:space="preserve">
-    <value>Удаление убирает игру только из AI Local Pack. Файлы игры и установленные пакеты остаются как есть.</value>
+    <value>Удаление убирает игру только из AI Local Pack. Файлы игры и установленные переводы остаются как есть.</value>
   </data>
   <data name="Settings_Steam_Label" xml:space="preserve">
     <value>Steam</value>
@@ -740,7 +740,7 @@
     <value>Убрать «{0}» из AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveFolder_Text" xml:space="preserve">
-    <value>Её игры пропадут из библиотеки. Папка, игры и установленные пакеты остаются на диске, Steam не меняется. Папку можно добавить снова позже.</value>
+    <value>Её игры пропадут из библиотеки. Папка, игры и установленные переводы остаются на диске, Steam не меняется. Папку можно добавить снова позже.</value>
   </data>
   <data name="Settings_ManualGame_Label" xml:space="preserve">
     <value>Добавленная вручную игра</value>
@@ -758,7 +758,7 @@
     <value>Убрать «{0}» из AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveGame_Text" xml:space="preserve">
-    <value>Папка игры и установленный пакет остаются на диске. Папку можно добавить снова позже.</value>
+    <value>Папка игры и установленный перевод остаются на диске. Папку можно добавить снова позже.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
     <value>Epic Games, GOG, EA app</value>
@@ -776,13 +776,13 @@
     <value>Библиотека Steam недоступна</value>
   </data>
   <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
-    <value>{1}: {0} игра скрыта, пока папка не вернётся. Установленные пакеты не тронуты.</value>
+    <value>{1}: {0} игра скрыта, пока папка не вернётся. Установленные переводы не тронуты.</value>
   </data>
   <data name="Settings_Alert_LibraryUnavailable_Text_Few" xml:space="preserve">
-    <value>{1}: {0} игры скрыты, пока папка не вернётся. Установленные пакеты не тронуты.</value>
+    <value>{1}: {0} игры скрыты, пока папка не вернётся. Установленные переводы не тронуты.</value>
   </data>
   <data name="Settings_Alert_LibraryUnavailable_Text_Many" xml:space="preserve">
-    <value>{1}: {0} игр скрыто, пока папка не вернётся. Установленные пакеты не тронуты.</value>
+    <value>{1}: {0} игр скрыто, пока папка не вернётся. Установленные переводы не тронуты.</value>
   </data>
   <data name="Confirm_Cancel" xml:space="preserve">
     <value>Отмена</value>
@@ -869,28 +869,28 @@
     <value>Проверено {0} игр</value>
   </data>
   <data name="Startup_Step_Index" xml:space="preserve">
-    <value>Обновление списка пакетов</value>
+    <value>Обновление списка переводов</value>
   </data>
   <data name="Startup_Index_Done_One" xml:space="preserve">
-    <value>{0} пакет</value>
+    <value>{0} перевод</value>
   </data>
   <data name="Startup_Index_Done_Few" xml:space="preserve">
-    <value>{0} пакета</value>
+    <value>{0} перевода</value>
   </data>
   <data name="Startup_Index_Done_Many" xml:space="preserve">
-    <value>{0} пакетов</value>
+    <value>{0} переводов</value>
   </data>
   <data name="Startup_Index_Stale" xml:space="preserve">
     <value>Нет связи: показан сохранённый список от {0}</value>
   </data>
   <data name="Startup_Index_Unavailable" xml:space="preserve">
-    <value>Реестр пакетов недоступен</value>
+    <value>Реестр переводов недоступен</value>
   </data>
   <data name="Startup_Index_NewerFormat" xml:space="preserve">
-    <value>Для списка пакетов нужна новая версия приложения</value>
+    <value>Для списка переводов нужна новая версия приложения</value>
   </data>
   <data name="Startup_Index_BadAddress" xml:space="preserve">
-    <value>Адрес реестра пакетов неверен: подробности в журнале</value>
+    <value>Адрес реестра переводов неверен: подробности в журнале</value>
   </data>
   <data name="Startup_Step_Recovery" xml:space="preserve">
     <value>Завершаем прерванную установку</value>
@@ -944,10 +944,10 @@
     <value>Установлен</value>
   </data>
   <data name="Library_Status_PackAvailable" xml:space="preserve">
-    <value>Есть пакет</value>
+    <value>Есть перевод</value>
   </data>
   <data name="Library_Status_NoPack" xml:space="preserve">
-    <value>Нет пакета</value>
+    <value>Нет перевода</value>
   </data>
   <data name="Library_Status_NeedsUpdate" xml:space="preserve">
     <value>Нужно обновить</value>
@@ -989,13 +989,13 @@
     <value>Студия против переводов</value>
   </data>
   <data name="Library_Card_PackCount_One" xml:space="preserve">
-    <value>{0} пакет</value>
+    <value>{0} перевод</value>
   </data>
   <data name="Library_Card_PackCount_Few" xml:space="preserve">
-    <value>{0} пакета</value>
+    <value>{0} перевода</value>
   </data>
   <data name="Library_Card_PackCount_Many" xml:space="preserve">
-    <value>{0} пакетов</value>
+    <value>{0} переводов</value>
   </data>
   <data name="Library_Card_Verified" xml:space="preserve">
     <value>проверен</value>
@@ -1022,16 +1022,16 @@
     <value>Сначала важное</value>
   </data>
   <data name="Library_Registry_Stale" xml:space="preserve">
-    <value>Не удаётся связаться с реестром пакетов. Показаны данные, сохранённые {0}.</value>
+    <value>Не удаётся связаться с реестром переводов. Показаны данные, сохранённые {0}.</value>
   </data>
   <data name="Library_Registry_Unavailable" xml:space="preserve">
-    <value>Не удаётся связаться с реестром пакетов. Статусы пакетов появятся, когда он ответит.</value>
+    <value>Не удаётся связаться с реестром переводов. Статусы переводов появятся, когда он ответит.</value>
   </data>
   <data name="Library_Registry_NewerFormat" xml:space="preserve">
-    <value>Реестр пакетов использует более новый формат. Обновите приложение, чтобы видеть актуальные пакеты.</value>
+    <value>Реестр переводов использует более новый формат. Обновите приложение, чтобы видеть актуальные переводы.</value>
   </data>
   <data name="Library_Registry_InvalidAddress" xml:space="preserve">
-    <value>Адрес реестра пакетов, заданный приложению, неверный, поэтому статусы пакетов не показать.</value>
+    <value>Адрес реестра переводов, заданный приложению, неверный, поэтому статусы переводов не показать.</value>
   </data>
   <data name="Library_Registry_Retry" xml:space="preserve">
     <value>Повторить</value>
@@ -1070,7 +1070,7 @@
     <value>Версия игры: хеш {0} файлов</value>
   </data>
   <data name="Game_Action_Install" xml:space="preserve">
-    <value>Установить лучший пак</value>
+    <value>Установить перевод</value>
   </data>
   <data name="Game_Action_Generate" xml:space="preserve">
     <value>Создать перевод с ИИ</value>
@@ -1148,7 +1148,7 @@
     <value>На паузе · {0}%</value>
   </data>
   <data name="Game_Installed_Label" xml:space="preserve">
-    <value>Установленный пак</value>
+    <value>Установленный перевод</value>
   </data>
   <data name="Game_Installed_Broken" xml:space="preserve">
     <value>Установлен · несовместим с новой версией</value>
@@ -1175,31 +1175,31 @@
     <value>Перевод текста на картинках (вывески, меню, карты) появится позже. Перевод текста работает уже сейчас.</value>
   </data>
   <data name="Game_Packs_Count_One" xml:space="preserve">
-    <value>{1}: {0} пак</value>
+    <value>{1}: {0} перевод</value>
   </data>
   <data name="Game_Packs_Count_Few" xml:space="preserve">
-    <value>{1}: {0} пака</value>
+    <value>{1}: {0} перевода</value>
   </data>
   <data name="Game_Packs_Count_Many" xml:space="preserve">
-    <value>{1}: {0} паков</value>
+    <value>{1}: {0} переводов</value>
   </data>
   <data name="Game_Packs_None" xml:space="preserve">
     <value>Перевода на язык «{0}» пока нет</value>
   </data>
   <data name="Game_Packs_NoneText" xml:space="preserve">
-    <value>Создайте его с ИИ-агентом и поделитесь с другими игроками.</value>
+    <value>Для этой игры его ещё никто не выложил. Можно создать его с ИИ-агентом и поделиться с другими игроками.</value>
   </data>
   <data name="Game_Packs_Generate" xml:space="preserve">
     <value>Создать с ИИ</value>
   </data>
   <data name="Game_Packs_Unknown" xml:space="preserve">
-    <value>Список паков ещё не загружен. Паки появятся, когда реестр ответит.</value>
+    <value>Список переводов ещё не загружен. Переводы появятся, когда реестр ответит.</value>
   </data>
   <data name="Game_Tab_Packs" xml:space="preserve">
-    <value>Паки</value>
+    <value>Текст</value>
   </data>
   <data name="Game_Tab_Generation" xml:space="preserve">
-    <value>Генерация</value>
+    <value>Создать с ИИ</value>
   </data>
   <data name="Game_Tab_Audio" xml:space="preserve">
     <value>Озвучка</value>
@@ -1216,14 +1216,26 @@
   <data name="Game_Tabs_Label" xml:space="preserve">
     <value>Разделы страницы игры</value>
   </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>Локализация</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>Инструменты</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>Ни один не подошёл?</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>Создайте свой с ИИ</value>
+  </data>
   <data name="Game_Blocked_Title" xml:space="preserve">
     <value>Локализация для этой игры недоступна</value>
   </data>
   <data name="Game_Blocked_AntiCheat" xml:space="preserve">
-    <value>Обнаружен {0}. Изменение файлов игры может привести к блокировке аккаунта, поэтому AI Local Pack не устанавливает и не создаёт паки для игр с античитом.</value>
+    <value>Обнаружен {0}. Изменение файлов игры может привести к блокировке аккаунта, поэтому AI Local Pack не устанавливает и не создаёт переводы для игр с античитом.</value>
   </data>
   <data name="Game_Blocked_OptOut" xml:space="preserve">
-    <value>Издатель попросил не распространять любительские переводы этой игры, поэтому AI Local Pack не устанавливает и не создаёт для неё паки.</value>
+    <value>Издатель попросил не распространять любительские переводы этой игры, поэтому AI Local Pack не устанавливает и не создаёт для неё переводы.</value>
   </data>
   <data name="Game_Blocked_Mistake" xml:space="preserve">
     <value>Считаете, что это ошибка?</value>
@@ -1232,25 +1244,25 @@
     <value>Сообщить</value>
   </data>
   <data name="Game_Blocked_Report_Tip" xml:space="preserve">
-    <value>Откроет на GitHub заполненное обращение в реестр паков</value>
+    <value>Откроет на GitHub заполненное обращение в реестр переводов</value>
   </data>
   <data name="Packs_Language_Label" xml:space="preserve">
     <value>Язык</value>
   </data>
   <data name="Packs_Language_Tip" xml:space="preserve">
-    <value>Показать паки на другом языке</value>
+    <value>Показать переводы на другой язык</value>
   </data>
   <data name="Packs_Language_Search" xml:space="preserve">
     <value>Поиск языка</value>
   </data>
   <data name="Packs_Language_Caption" xml:space="preserve">
-    <value>Паки для этой игры</value>
+    <value>Переводы этой игры</value>
   </data>
   <data name="Packs_Language_NoMatch" xml:space="preserve">
     <value>Такого языка нет.</value>
   </data>
   <data name="Packs_Sort_Label" xml:space="preserve">
-    <value>Сортировка паков</value>
+    <value>Сортировка переводов</value>
   </data>
   <data name="Packs_Sort_StatusRating" xml:space="preserve">
     <value>Статус, рейтинг</value>
@@ -1265,7 +1277,7 @@
     <value>Реестр</value>
   </data>
   <data name="Packs_List_Label" xml:space="preserve">
-    <value>Паки</value>
+    <value>Переводы</value>
   </data>
   <data name="Packs_Compat_Compatible" xml:space="preserve">
     <value>совместим</value>
@@ -1307,22 +1319,22 @@
     <value>Проверяем совместимость…</value>
   </data>
   <data name="Packs_Box_CheckingText" xml:space="preserve">
-    <value>Читаем манифест пака и сравниваем файлы, которые он меняет, с вашей копией игры.</value>
+    <value>Читаем манифест перевода и сравниваем файлы, которые он меняет, с вашей копией игры.</value>
   </data>
   <data name="Packs_Box_Failed" xml:space="preserve">
-    <value>Не удалось прочитать данные пака</value>
+    <value>Не удалось прочитать данные перевода</value>
   </data>
   <data name="Packs_Failed_Offline" xml:space="preserve">
     <value>Реестр не ответил. Проверьте подключение и повторите.</value>
   </data>
   <data name="Packs_Failed_Missing" xml:space="preserve">
-    <value>В реестре нет манифеста этого пака. Возможно, его удалили после того, как список был сохранён.</value>
+    <value>В реестре нет манифеста этого перевода. Возможно, его удалили после того, как список был сохранён.</value>
   </data>
   <data name="Packs_Failed_Invalid" xml:space="preserve">
-    <value>Манифест пака в реестре повреждён, поэтому пак нельзя проверить и установить.</value>
+    <value>Манифест перевода в реестре повреждён, поэтому перевод нельзя проверить и установить.</value>
   </data>
   <data name="Packs_Failed_NewerFormat" xml:space="preserve">
-    <value>Пак в более новом формате. Обновите приложение, чтобы установить его.</value>
+    <value>Перевод в более новом формате. Обновите приложение, чтобы установить его.</value>
   </data>
   <data name="Packs_Retry" xml:space="preserve">
     <value>Повторить</value>
@@ -1340,7 +1352,7 @@
     <value>С версии, для которой он сделан, изменилось файлов: {0} из {1}; строки, добавленные обновлением, останутся без перевода.</value>
   </data>
   <data name="Packs_Why_WrongGame" xml:space="preserve">
-    <value>Этот пак для другой игры.</value>
+    <value>Этот перевод для другой игры.</value>
   </data>
   <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
     <value>Папка игры недоступна. Подключите диск и повторите.</value>
@@ -1424,7 +1436,7 @@
     <value>Отзывы на GitHub</value>
   </data>
   <data name="Packs_Reviews_Tip" xml:space="preserve">
-    <value>Открывает обсуждение пака в браузере</value>
+    <value>Открывает обсуждение перевода в браузере</value>
   </data>
   <data name="Packs_Offline" xml:space="preserve">
     <value>Реестр недоступен. Показан список, сохранённый {0}; установка недоступна, пока нет связи.</value>
@@ -1436,16 +1448,16 @@
     <value>{0} ({1})</value>
   </data>
   <data name="Install_Log_Removed" xml:space="preserve">
-    <value>Удалён прежний пак «{0}», ред. {1}.</value>
+    <value>Удалён прежний перевод «{0}», ред. {1}.</value>
   </data>
   <data name="Install_Log_Checked" xml:space="preserve">
     <value>Совместимость с вашими файлами: {0}.</value>
   </data>
   <data name="Install_Log_FromCache" xml:space="preserve">
-    <value>Пак ред. {0} взят из кэша.</value>
+    <value>Перевод ред. {0} взят из кэша.</value>
   </data>
   <data name="Install_Log_Downloaded" xml:space="preserve">
-    <value>Пак ред. {0} скачан: {1} байт.</value>
+    <value>Перевод ред. {0} скачан: {1} байт.</value>
   </data>
   <data name="Install_Log_Uninstalled" xml:space="preserve">
     <value>Восстановлено исходных файлов: {0}; удалено добавленных: {1}.</value>
@@ -1484,10 +1496,10 @@
     <value>Удаление «{0}»</value>
   </data>
   <data name="Install_Step_Download" xml:space="preserve">
-    <value>Скачивание пака</value>
+    <value>Скачивание перевода</value>
   </data>
   <data name="Install_Step_RemovePrevious" xml:space="preserve">
-    <value>Удаление прежнего пака</value>
+    <value>Удаление прежнего перевода</value>
   </data>
   <data name="Install_Step_Check" xml:space="preserve">
     <value>Проверка файлов игры</value>
@@ -1514,22 +1526,22 @@
     <value>Установка для этой игры недоступна (античит или просьба студии).</value>
   </data>
   <data name="Install_Why_NotInRegistry" xml:space="preserve">
-    <value>Пака больше нет в списке реестра.</value>
+    <value>Перевода больше нет в списке реестра.</value>
   </data>
   <data name="Install_Why_Offline" xml:space="preserve">
-    <value>Не удалось скачать пак: нет связи с реестром.</value>
+    <value>Не удалось скачать перевод: нет связи с реестром.</value>
   </data>
   <data name="Install_Why_Timeout" xml:space="preserve">
-    <value>Не удалось скачать пак: реестр не ответил вовремя.</value>
+    <value>Не удалось скачать перевод: реестр не ответил вовремя.</value>
   </data>
   <data name="Install_Why_HttpError" xml:space="preserve">
-    <value>Не удалось скачать пак: реестр ответил ошибкой.</value>
+    <value>Не удалось скачать перевод: реестр ответил ошибкой.</value>
   </data>
   <data name="Install_Why_FileMissing" xml:space="preserve">
-    <value>Файлов пака больше нет в реестре.</value>
+    <value>Файлов перевода больше нет в реестре.</value>
   </data>
   <data name="Install_Why_NewerFormat" xml:space="preserve">
-    <value>Паку нужна более новая версия AI Local Pack. Обновите приложение.</value>
+    <value>Переводу нужна более новая версия AI Local Pack. Обновите приложение.</value>
   </data>
   <data name="Install_Why_HashMismatch" xml:space="preserve">
     <value>Загрузка повреждена (не сошлась контрольная сумма) и удалена.</value>
@@ -1538,13 +1550,13 @@
     <value>Не удалось сохранить загрузку: в папку кэша нельзя записать.</value>
   </data>
   <data name="Install_Why_Damaged" xml:space="preserve">
-    <value>Пак в реестре повреждён.</value>
+    <value>Перевод в реестре повреждён.</value>
   </data>
   <data name="Install_Why_Incompatible" xml:space="preserve">
-    <value>Пак не подходит к вашей версии игры. {0}</value>
+    <value>Перевод не подходит к вашей версии игры. {0}</value>
   </data>
   <data name="Install_Why_InvalidStrings" xml:space="preserve">
-    <value>Таблицу строк пака не удаётся прочитать.</value>
+    <value>Таблицу строк перевода не удаётся прочитать.</value>
   </data>
   <data name="Install_Why_Recipe" xml:space="preserve">
     <value>Не удалось собрать {0} из строк: файл игры не читается или имеет неожиданный формат.</value>
@@ -1571,10 +1583,10 @@
     <value>Папка игры недоступна (диск отключён или папка перемещена).</value>
   </data>
   <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
-    <value>Для этой игры уже установлен пак.</value>
+    <value>Для этой игры уже установлен перевод.</value>
   </data>
   <data name="Install_Why_NotInstalled" xml:space="preserve">
-    <value>Для этой игры не установлен пак.</value>
+    <value>Для этой игры не установлен перевод.</value>
   </data>
   <data name="Install_Why_Interrupted" xml:space="preserve">
     <value>Прошлая установка прервалась и пока не завершена. Перезапустите приложение, чтобы завершить её.</value>
@@ -1589,7 +1601,7 @@
     <value>Не удалось прочитать или записать {0}.</value>
   </data>
   <data name="Install_Risk_Alpha" xml:space="preserve">
-    <value>Альфа: другие игроки ещё не подтвердили, что пак работает.</value>
+    <value>Альфа: другие игроки ещё не подтвердили, что перевод работает.</value>
   </data>
   <data name="Install_Risk_Probably" xml:space="preserve">
     <value>Вероятно совместим. {0}</value>
@@ -1604,7 +1616,7 @@
     <value>Установить «{0}»?</value>
   </data>
   <data name="Install_Confirm_Note" xml:space="preserve">
-    <value>Исходные файлы сохраняются в резервную копию; пак можно удалить.</value>
+    <value>Исходные файлы сохраняются в резервную копию; перевод можно удалить.</value>
   </data>
   <data name="Install_Confirm_Install" xml:space="preserve">
     <value>Установить</value>
@@ -1661,7 +1673,7 @@
     <value>Файлы игры остались такими же, как до установки.</value>
   </data>
   <data name="Install_Details_UninstallStopped" xml:space="preserve">
-    <value>Часть файлов может остаться от пака; повторное удаление завершит работу.</value>
+    <value>Часть файлов может остаться от перевода; повторное удаление завершит работу.</value>
   </data>
   <data name="Install_Details_NotRestored" xml:space="preserve">
     <value>Часть файлов восстановить не удалось; приложение повторит при следующем запуске.</value>
@@ -1679,7 +1691,7 @@
     <value>Удалить «{0}»?</value>
   </data>
   <data name="Install_Uninstall_Message" xml:space="preserve">
-    <value>Исходные файлы игры восстановятся из резервной копии. Пак остаётся в реестре, его можно установить снова; игра и её сохранения не затрагиваются.</value>
+    <value>Исходные файлы игры восстановятся из резервной копии. Перевод остаётся в реестре, его можно установить снова; игра и её сохранения не затрагиваются.</value>
   </data>
   <data name="Install_Uninstall_Confirm" xml:space="preserve">
     <value>Удалить</value>
@@ -1700,13 +1712,13 @@
     <value>Удаление…</value>
   </data>
   <data name="Game_Installed_Menu" xml:space="preserve">
-    <value>Действия с установленным паком</value>
+    <value>Действия с установленным переводом</value>
   </data>
   <data name="Game_Installed_Reapply" xml:space="preserve">
     <value>Применить повторно</value>
   </data>
   <data name="Game_Installed_ShowInPacks" xml:space="preserve">
-    <value>Показать в паках</value>
+    <value>Показать в «Тексте»</value>
   </data>
   <data name="Game_Installed_Uninstall" xml:space="preserve">
     <value>Удалить (вернуть оригиналы)</value>
@@ -1727,7 +1739,7 @@
     <value>Шрифты: {0} не читается; оставлен как есть.</value>
   </data>
   <data name="Install_Log_FontUnknown" xml:space="preserve">
-    <value>Пак называет шрифт, неизвестный этой версии приложения: {0} (пропущен; обновите приложение).</value>
+    <value>Перевод называет шрифт, неизвестный этой версии приложения: {0} (пропущен; обновите приложение).</value>
   </data>
   <data name="Install_Why_Font" xml:space="preserve">
     <value>В шрифте игры нет букв этого перевода, а открытый шрифт {0}, в котором они есть, подготовить не удалось.</value>
@@ -1742,19 +1754,19 @@
     <value>{0} (скачивается при установке)</value>
   </data>
   <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
-    <value>Тулкит приложения пока не работает с играми на {0} на этой системе, поэтому этот пак установить нельзя.</value>
+    <value>Тулкит приложения пока не работает с играми на {0} на этой системе, поэтому этот перевод установить нельзя.</value>
   </data>
   <data name="Install_Step_Dependency" xml:space="preserve">
     <value>Скачивание нужных компонентов</value>
   </data>
   <data name="Install_Why_DependencyUnknown" xml:space="preserve">
-    <value>Паку нужен {0}, которого нет в списке разрешённых компонентов реестра, поэтому его нельзя установить.</value>
+    <value>Переводу нужен {0}, которого нет в списке разрешённых компонентов реестра, поэтому его нельзя установить.</value>
   </data>
   <data name="Install_Why_DependencyPlatform" xml:space="preserve">
-    <value>Паку нужен {0}, но в его официальном релизе нет сборки для этой версии игры ({1}).</value>
+    <value>Переводу нужен {0}, но в его официальном релизе нет сборки для этой версии игры ({1}).</value>
   </data>
   <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
-    <value>Паку нужен {0}, но приложение не смогло понять, для какой системы эта сборка игры (не читается её основной исполняемый файл).</value>
+    <value>Переводу нужен {0}, но приложение не смогло понять, для какой системы эта сборка игры (не читается её основной исполняемый файл).</value>
   </data>
   <data name="Install_Why_DependencyOffline" xml:space="preserve">
     <value>Не удалось скачать {0} из официального релиза. Проверьте подключение и повторите.</value>
@@ -1769,7 +1781,7 @@
     <value>Архив релиза {0} нельзя безопасно распаковать; ничего не установлено.</value>
   </data>
   <data name="Install_Why_DependencyConflict" xml:space="preserve">
-    <value>Для игры уже установлена другая версия нужного паку компонента, или компонент перезаписал бы файлы самого пака.</value>
+    <value>Для игры уже установлена другая версия нужного переводу компонента, или компонент перезаписал бы файлы самого перевода.</value>
   </data>
   <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
     <value>{0} {1} ({2}): скачано {3} байт из официального релиза ({4}), контрольная сумма сошлась.</value>
@@ -1778,37 +1790,37 @@
     <value>{0} {1} ({2}): взят из кеша (контрольная сумма проверена при скачивании).</value>
   </data>
   <data name="Install_Log_DependencyShared" xml:space="preserve">
-    <value>{0} {1} уже установлен для этой игры; пак использует его.</value>
+    <value>{0} {1} уже установлен для этой игры; перевод использует его.</value>
   </data>
   <data name="Install_Log_DependencyInstalled" xml:space="preserve">
-    <value>{0} {1} установлен вместе с паком: файлов — {2}.</value>
+    <value>{0} {1} установлен вместе с переводом: файлов — {2}.</value>
   </data>
   <data name="Install_Log_DependencyRemoved" xml:space="preserve">
-    <value>{0} {1} удалён: другие паки его не используют.</value>
+    <value>{0} {1} удалён: другие переводы его не используют.</value>
   </data>
   <data name="Packs_RequiresUnknown" xml:space="preserve">
     <value>{0} (нет в списке разрешённых компонентов реестра)</value>
   </data>
   <data name="Startup_Step_Packs" xml:space="preserve">
-    <value>Проверяем установленные пакеты</value>
+    <value>Проверяем установленные переводы</value>
   </data>
   <data name="Startup_Packs_None" xml:space="preserve">
-    <value>Установленных пакетов нет</value>
+    <value>Установленных переводов нет</value>
   </data>
   <data name="Startup_Packs_Done_One" xml:space="preserve">
-    <value>{0} пакет на месте</value>
+    <value>{0} перевод на месте</value>
   </data>
   <data name="Startup_Packs_Done_Few" xml:space="preserve">
-    <value>{0} пакета на месте</value>
+    <value>{0} перевода на месте</value>
   </data>
   <data name="Startup_Packs_Done_Many" xml:space="preserve">
-    <value>{0} пакетов на месте</value>
+    <value>{0} переводов на месте</value>
   </data>
   <data name="Startup_Packs_Reapplied" xml:space="preserve">
     <value>Применены заново после обновления игры: {0}</value>
   </data>
   <data name="Startup_Packs_Attention" xml:space="preserve">
-    <value>Обновление игры сломало пакет: {0}</value>
+    <value>Обновление игры сломало перевод: {0}</value>
   </data>
   <data name="Startup_Step_Jobs" xml:space="preserve">
     <value>Проверка заданий генерации</value>
@@ -1856,7 +1868,7 @@
     <value>Уже пропатчены, оставлены как есть: {0}.</value>
   </data>
   <data name="Install_Why_PatchArchive" xml:space="preserve">
-    <value>Архив патча в паке повреждён.</value>
+    <value>Архив патча в переводе повреждён.</value>
   </data>
   <data name="Install_Why_PatchUnreadable" xml:space="preserve">
     <value>Не удаётся прочитать {0}, чтобы пропатчить его.</value>
@@ -1913,7 +1925,7 @@
     <value>Всё спокойно</value>
   </data>
   <data name="Activity_Empty_Text" xml:space="preserve">
-    <value>Здесь появятся установки, генерация пакетов, публикация и автоматическое повторное применение после обновлений игр.</value>
+    <value>Здесь появятся установки, создание переводов с ИИ, публикация и автоматическое повторное применение после обновлений игр.</value>
   </data>
   <data name="Activity_DecideLater" xml:space="preserve">
     <value>Решить позже: перенести в ленту</value>
@@ -1976,13 +1988,13 @@
     <value>Часть файлов восстановить не удалось; приложение повторит при следующем запуске.</value>
   </data>
   <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
-    <value>Доступна редакция {0} пакета.</value>
+    <value>Доступна редакция {0} перевода.</value>
   </data>
   <data name="Activity_Detail_Translate" xml:space="preserve">
     <value>Новой редакции пока нет: переведите новые строки с ИИ.</value>
   </data>
   <data name="Activity_Detail_NotApplied" xml:space="preserve">
-    <value>Игра вернула свои оригинальные файлы. Пакет по-прежнему подходит к этой версии: примените его заново.</value>
+    <value>Игра вернула свои оригинальные файлы. Перевод по-прежнему подходит к этой версии: примените его заново.</value>
   </data>
   <data name="Activity_Action_Log" xml:space="preserve">
     <value>Журнал</value>
@@ -2291,13 +2303,13 @@
     <value>{0} · поддерживается инструментами</value>
   </data>
   <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
-    <value>Движок неизвестен: агент напишет свой разборщик, пак будет бинарным патчем</value>
+    <value>Движок неизвестен: агент напишет свой разборщик, перевод будет бинарным патчем</value>
   </data>
   <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
-    <value>{0}: на этой системе инструменты его не поддерживают, агент напишет свой разборщик (пак — бинарный патч)</value>
+    <value>{0}: на этой системе инструменты его не поддерживают, агент напишет свой разборщик (перевод — бинарный патч)</value>
   </data>
   <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
-    <value>{0}: инструменты его не читают, агент напишет свой разборщик (пак — бинарный патч)</value>
+    <value>{0}: инструменты его не читают, агент напишет свой разборщик (перевод — бинарный патч)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
     <value>{0}: инструменты не смогли прочитать игру ({1})</value>
@@ -2579,7 +2591,7 @@
     <value>Запуск тестовой сборки</value>
   </data>
   <data name="Gen_Build_Packing" xml:space="preserve">
-    <value>Сохранение локального пакета</value>
+    <value>Сохранение вашего перевода</value>
   </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Шрифты: в {0} нет букв перевода, вместо них используется {1} (OFL).</value>
@@ -2801,10 +2813,10 @@
     <value>Перевод начнётся после вашей проверки.</value>
   </data>
   <data name="Install_Why_LocalMissing" xml:space="preserve">
-    <value>Локальный пак удалён или не читается.</value>
+    <value>Ваш перевод удалён или не читается.</value>
   </data>
   <data name="Install_Log_Local" xml:space="preserve">
-    <value>Локальный пак взят из {0}.</value>
+    <value>Ваш перевод взят из {0}.</value>
   </data>
   <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
     <value>Охват</value>
@@ -2912,7 +2924,7 @@
     <value>Перевод готов</value>
   </data>
   <data name="Gen_Result_Saved" xml:space="preserve">
-    <value>Сохранён как локальный пак в «Паки → Мои» · {0}</value>
+    <value>Сохранён как ваш перевод в «Текст → Мои» · {0}</value>
   </data>
   <data name="Gen_Result_PackLine" xml:space="preserve">
     <value>«{0}» на {1}</value>
@@ -2942,13 +2954,13 @@
     <value>Удалить</value>
   </data>
   <data name="Gen_Result_ShowInPacks" xml:space="preserve">
-    <value>Показать в паках</value>
+    <value>Показать в «Тексте»</value>
   </data>
   <data name="Gen_Result_NewTranslation" xml:space="preserve">
     <value>Новый перевод</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>Пак остаётся в «Паки → Мои»; рабочая копия удаляется, открывается форма запуска.</value>
+    <value>Перевод остаётся в «Текст → Мои»; рабочая копия удаляется, открывается форма запуска.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Установка сохраняет оригинальные файлы; удалить перевод можно в любой момент.</value>
@@ -2966,22 +2978,22 @@
     <value>Опубликовать</value>
   </data>
   <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
-    <value>Опубликовать можно позже в «Паки → Мои».</value>
+    <value>Опубликовать можно позже в «Текст → Мои».</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>Пак и его рабочая копия удалены.</value>
+    <value>Перевод и его рабочая копия удалены.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>Пак остался в «Паки → Мои»; рабочая копия удалена.</value>
+    <value>Перевод остался в «Текст → Мои»; рабочая копия удалена.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Удалить перевод?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>Локальный пак «{0}» и рабочая копия задания будут удалены. Это нельзя отменить.</value>
+    <value>Ваш перевод «{0}» и рабочая копия задания будут удалены. Это нельзя отменить.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
-    <value>Пак установлен: сначала удалите его из игры.</value>
+    <value>Перевод установлен: сначала удалите его из игры.</value>
   </data>
   <data name="Gen_Result_Error_Disk" xml:space="preserve">
     <value>Не удалось удалить файлы: {0}</value>
@@ -2990,13 +3002,13 @@
     <value>Мои</value>
   </data>
   <data name="Packs_Registry_None" xml:space="preserve">
-    <value>В реестре пока нет паков на {0}.</value>
+    <value>В реестре пока нет переводов на {0}.</value>
   </data>
   <data name="Packs_Mine_JobTitle" xml:space="preserve">
     <value>Перевод на {0}</value>
   </data>
   <data name="Packs_Mine_JobMeta" xml:space="preserve">
-    <value>Создаётся с ИИ · открыть вкладку генерации</value>
+    <value>Создаётся с ИИ · открыть вкладку «Создать с ИИ»</value>
   </data>
   <data name="Packs_Mine_LocalMeta" xml:space="preserve">
     <value>локальный · не опубликован</value>
@@ -3017,7 +3029,7 @@
     <value>Проверен в игре</value>
   </data>
   <data name="Packs_Mine_TestedText" xml:space="preserve">
-    <value>Вы поиграли с этим паком. Теперь им можно поделиться.</value>
+    <value>Вы поиграли с этим переводом. Теперь им можно поделиться.</value>
   </data>
   <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
     <value>Ещё не опробован в игре</value>
@@ -3041,13 +3053,13 @@
     <value>{0}: {1}</value>
   </data>
   <data name="Packs_Mine_PublishNote" xml:space="preserve">
-    <value>Перед публикацией приложение сравнит его с паками реестра: можно выпустить его новой редакцией одного из них или отдельным паком.</value>
+    <value>Перед публикацией приложение сравнит его с переводами реестра: можно выпустить его новой редакцией одного из них или отдельным переводом.</value>
   </data>
   <data name="Packs_Mine_Delete" xml:space="preserve">
     <value>Удалить</value>
   </data>
   <data name="Packs_Mine_DeleteInstalled" xml:space="preserve">
-    <value>Установлен в игру: удалите его из игры, прежде чем удалять пак.</value>
+    <value>Установлен в игру: удалите его из игры, прежде чем удалять перевод.</value>
   </data>
   <data name="Packs_Mine_PublishAfterTry" xml:space="preserve">
     <value>Сначала опробуйте его в игре: после этого откроется публикация.</value>
@@ -3056,16 +3068,16 @@
     <value>Удалить «{0}»?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>Локальный пак и рабочая копия задания, которое его сделало, будут удалены. Это нельзя отменить.</value>
+    <value>Ваш перевод и рабочая копия задания, которое его сделало, будут удалены. Это нельзя отменить.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
-    <value>Локальный пак «{0}» удалён.</value>
+    <value>Ваш перевод «{0}» удалён.</value>
   </data>
   <data name="Game_Action_InstallPlay" xml:space="preserve">
     <value>Установить и играть</value>
   </data>
   <data name="Game_Caption_LocalPack" xml:space="preserve">
-    <value>Ваш пак · {0}% строк · {1}</value>
+    <value>Ваш перевод · {0}% строк · {1}</value>
   </data>
   <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
     <value>проверка пройдена</value>
@@ -3074,16 +3086,16 @@
     <value>без пробного запуска</value>
   </data>
   <data name="Game_Installed_TextLocal" xml:space="preserve">
-    <value>«{0}» · ваш пак</value>
+    <value>«{0}» · ваш перевод</value>
   </data>
   <data name="Library_Badge_LocalReady" xml:space="preserve">
-    <value>Ваш пак готов</value>
+    <value>Ваш перевод готов</value>
   </data>
   <data name="Library_Card_LocalPack" xml:space="preserve">
-    <value>Ваш пак · {0}% строк</value>
+    <value>Ваш перевод · {0}% строк</value>
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
-    <value>Ваш пак · {0}</value>
+    <value>Ваш перевод · {0}</value>
   </data>
   <data name="Gen_Update_Title" xml:space="preserve">
     <value>Перевести новые строки</value>
@@ -3215,7 +3227,7 @@
     <value>опубликованные переводы пулл-реквест pr обсуждение проверен alpha</value>
   </data>
   <data name="Settings_PublishedPacks_None" xml:space="preserve">
-    <value>Пока ничего не опубликовано. Сгенерировав перевод, опубликуйте его на вкладке «Генерация» игры.</value>
+    <value>Пока ничего не опубликовано. Создав перевод с ИИ, опубликуйте его на вкладке «Создать с ИИ» игры.</value>
   </data>
   <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
     <value>Войдите, чтобы увидеть опубликованные вами переводы.</value>
@@ -3230,7 +3242,7 @@
     <value>Публикация в реестре ailocalpack</value>
   </data>
   <data name="Publish_SignIn_Intro" xml:space="preserve">
-    <value>Только в первый раз. Паки публикуются как pull request на GitHub, поэтому войдите в свой аккаунт GitHub.</value>
+    <value>Только в первый раз. Переводы публикуются как pull request на GitHub, поэтому войдите в свой аккаунт GitHub.</value>
   </data>
   <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
     <value>Вы вошли как {0}</value>
@@ -3263,7 +3275,7 @@
     <value>Закрыть</value>
   </data>
   <data name="Publish_Similar_Title" xml:space="preserve">
-    <value>Пак на языке «{0}» уже есть</value>
+    <value>Перевод на язык «{0}» уже есть</value>
   </data>
   <data name="Publish_Similar_Intro" xml:space="preserve">
     <value>Улучшить его вместо того, чтобы добавлять почти такой же?</value>
@@ -3278,7 +3290,7 @@
     <value>сделан для сборки {0}</value>
   </data>
   <data name="Publish_Similar_Base" xml:space="preserve">
-    <value>Ваш пак — обновление этого пака</value>
+    <value>Ваш перевод — обновление этого перевода</value>
   </data>
   <data name="Publish_Similar_Recommended" xml:space="preserve">
     <value>Рекомендуется</value>
@@ -3290,7 +3302,7 @@
     <value>Его игроки получат вашу версию как обновление. {0} остаётся автором, вы указаны автором ред. {1}. Статус начинается заново с alpha.</value>
   </data>
   <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
-    <value>Отдельный пак</value>
+    <value>Отдельный перевод</value>
   </data>
   <data name="Publish_Similar_SeparateText" xml:space="preserve">
     <value>«{0}» появится рядом с «{1}», игроки выберут сами. Выберите это, если ваш перевод отличается намеренно (тон, термины).</value>
@@ -3305,7 +3317,7 @@
     <value>Форк реестра</value>
   </data>
   <data name="Publish_Step_Commit" xml:space="preserve">
-    <value>Коммит пака</value>
+    <value>Коммит перевода</value>
   </data>
   <data name="Publish_Step_PullRequest" xml:space="preserve">
     <value>Pull request</value>
@@ -3317,7 +3329,7 @@
     <value>создании форка реестра</value>
   </data>
   <data name="Publish_Doing_Commit" xml:space="preserve">
-    <value>коммите пака</value>
+    <value>коммите перевода</value>
   </data>
   <data name="Publish_Doing_PullRequest" xml:space="preserve">
     <value>открытии pull request</value>
@@ -3326,7 +3338,7 @@
     <value>проверке аккаунта</value>
   </data>
   <data name="Publish_Error_NotSignedIn" xml:space="preserve">
-    <value>Сначала войдите в GitHub: паки публикуются как pull request с вашего аккаунта.</value>
+    <value>Сначала войдите в GitHub: переводы публикуются как pull request с вашего аккаунта.</value>
   </data>
   <data name="Publish_Error_Keychain" xml:space="preserve">
     <value>Не удалось прочитать вход в GitHub из хранилища паролей; разблокируйте его и опубликуйте снова.</value>
@@ -3359,13 +3371,13 @@
     <value>Не удалось связаться с GitHub при {0}; проверьте подключение и опубликуйте снова: публикация продолжится с того же места.</value>
   </data>
   <data name="Publish_Error_Invalid" xml:space="preserve">
-    <value>Реестр не примет этот пак: {0}</value>
+    <value>Реестр не примет этот перевод: {0}</value>
   </data>
   <data name="Publish_Error_OptedOut" xml:space="preserve">
-    <value>Издатель игры попросил не распространять любительские переводы, поэтому реестр не принимает для неё паки.</value>
+    <value>Издатель игры попросил не распространять любительские переводы, поэтому реестр не принимает их для этой игры.</value>
   </data>
   <data name="Publish_Error_TargetGone" xml:space="preserve">
-    <value>Пака, который вы выбрали для обновления, больше нет в реестре; опубликуйте свой как отдельный пак.</value>
+    <value>Перевода, который вы выбрали для обновления, больше нет в реестре; опубликуйте свой как отдельный перевод.</value>
   </data>
   <data name="Publish_Error_ForkNotReady" xml:space="preserve">
     <value>GitHub ещё создаёт вашу копию реестра; опубликуйте снова через несколько минут.</value>
@@ -3374,7 +3386,7 @@
     <value>Неожиданный ответ GitHub при {0}; опубликуйте снова.</value>
   </data>
   <data name="Publish_Target_Revision" xml:space="preserve">
-    <value>ред. {0} пака «{1}»</value>
+    <value>ред. {0} перевода «{1}»</value>
   </data>
   <data name="Publish_Target_Pack" xml:space="preserve">
     <value>«{0}»</value>
@@ -3383,10 +3395,10 @@
     <value>Публикуем {0}…</value>
   </data>
   <data name="Publish_Checking_Title" xml:space="preserve">
-    <value>PR #{0} открыт · CI проверяет пак</value>
+    <value>PR #{0} открыт · CI проверяет перевод</value>
   </data>
   <data name="Publish_Checking_Text" xml:space="preserve">
-    <value>Схема, хеши, отсутствие исполняемых файлов, шрифты. Когда проверки пройдут, пак сам попадёт в реестр как alpha; страницу можно закрыть, ход виден в Активности.</value>
+    <value>Схема, хеши, отсутствие исполняемых файлов, шрифты. Когда проверки пройдут, перевод сам попадёт в реестр как alpha; страницу можно закрыть, ход виден в Активности.</value>
   </data>
   <data name="Publish_Failed_Title" xml:space="preserve">
     <value>Не удалось опубликовать «{0}»</value>
@@ -3398,7 +3410,7 @@
     <value>Игроки видят его с предупреждением alpha. Он станет verified, когда {0} других игрока подтвердят, что он работает.</value>
   </data>
   <data name="Publish_Published_VerifiedText" xml:space="preserve">
-    <value>Игроки подтвердили, что он работает: пак verified.</value>
+    <value>Игроки подтвердили, что он работает: перевод verified.</value>
   </data>
   <data name="Publish_Meter" xml:space="preserve">
     <value>{0} из {1} игроков подтвердили «работает»</value>
@@ -3416,7 +3428,7 @@
     <value>Ссылка скопирована</value>
   </data>
   <data name="Publish_Toast_Sent" xml:space="preserve">
-    <value>Отправлено: {0}, открыт PR #{1}, CI проверяет пак.</value>
+    <value>Отправлено: {0}, открыт PR #{1}, CI проверяет перевод.</value>
   </data>
   <data name="Publish_Toast_Failed" xml:space="preserve">
     <value>Не удалось опубликовать {0}.</value>
@@ -3443,16 +3455,16 @@
     <value>сделан для {0} сборок</value>
   </data>
   <data name="Publish_Resubmitted_Detail" xml:space="preserve">
-    <value>Исправление отправлено в PR #{0} · CI проверяет пак заново</value>
+    <value>Исправление отправлено в PR #{0} · CI проверяет перевод заново</value>
   </data>
   <data name="Publish_Toast_Resubmitted" xml:space="preserve">
-    <value>{0}: отправлено снова, исправление в PR #{1}, CI проверяет пак заново.</value>
+    <value>{0}: отправлено снова, исправление в PR #{1}, CI проверяет перевод заново.</value>
   </data>
   <data name="Publish_CiFailed_Title" xml:space="preserve">
     <value>CI отклонил PR #{0}</value>
   </data>
   <data name="Publish_Ci_Scope" xml:space="preserve">
-    <value>PR меняет файлы вне папки пака. «Исправить и отправить снова» пересоберёт его ветку только с этим паком.</value>
+    <value>PR меняет файлы вне папки перевода. «Исправить и отправить снова» пересоберёт его ветку только с этим переводом.</value>
   </data>
   <data name="Publish_Ci_Status" xml:space="preserve">
     <value>Манифест не помечен как alpha ({0}). «Исправить и отправить снова» отправит его заново как alpha.</value>
@@ -3461,10 +3473,10 @@
     <value>Архива патча в вашем форке нет или он не совпадает с манифестом ({0}). «Исправить и отправить снова» загрузит его заново.</value>
   </data>
   <data name="Publish_Ci_Pack" xml:space="preserve">
-    <value>Проверки реестра не принимают пак: {0}. «Исправить и отправить снова» сначала проверит его здесь и отправит заново; если приложение ошибок не найдёт, обновите приложение.</value>
+    <value>Проверки реестра не принимают перевод: {0}. «Исправить и отправить снова» сначала проверит его здесь и отправит заново; если приложение ошибок не найдёт, обновите приложение.</value>
   </data>
   <data name="Publish_Ci_Registry" xml:space="preserve">
-    <value>Не прошла проверка самого реестра, а не вашего пака ({0}). «Исправить и отправить снова» запустит проверки заново.</value>
+    <value>Не прошла проверка самого реестра, а не вашего перевода ({0}). «Исправить и отправить снова» запустит проверки заново.</value>
   </data>
   <data name="Publish_Ci_Unknown" xml:space="preserve">
     <value>CI не прошёл и не указал причину. «Исправить и отправить снова» запустит проверки заново; лог — по кнопке «Открыть PR».</value>
@@ -3476,7 +3488,7 @@
     <value>PR #{0} принят: {1} в реестре как alpha</value>
   </data>
   <data name="Publish_Merged_Text" xml:space="preserve">
-    <value>Список паков обновится в течение нескольких минут, после этого пак увидят все игроки.</value>
+    <value>Список переводов обновится в течение нескольких минут, после этого перевод увидят все игроки.</value>
   </data>
   <data name="Publish_Closed_Title" xml:space="preserve">
     <value>PR #{0} закрыт без слияния</value>
@@ -3506,7 +3518,7 @@
     <value>«{0}» проверен: игроки подтвердили, что он работает</value>
   </data>
   <data name="Activity_Detail_PackMerged" xml:space="preserve">
-    <value>Пак увидят все игроки, когда обновится список паков.</value>
+    <value>Перевод увидят все игроки, когда обновится список переводов.</value>
   </data>
   <data name="Activity_Action_OpenPr" xml:space="preserve">
     <value>PR на GitHub</value>
@@ -3545,7 +3557,7 @@
     <value>Что работает, а что нет? (необязательно)</value>
   </data>
   <data name="Rating_Hint" xml:space="preserve">
-    <value>«Работает» / «Не работает» уходит в обсуждение пакета на GitHub от вашего имени, с версией игры и вашим комментарием.</value>
+    <value>«Работает» / «Не работает» уходит в обсуждение перевода на GitHub от вашего имени, с версией игры и вашим комментарием.</value>
   </data>
   <data name="Rating_Sending" xml:space="preserve">
     <value>Отправляем на GitHub…</value>
@@ -3554,10 +3566,10 @@
     <value>Вы отметили «{0}» для ревизии {1} ({2}). Новая отправка заменит ваш отчёт.</value>
   </data>
   <data name="Rating_Author" xml:space="preserve">
-    <value>Вы среди авторов пакета, поэтому не можете подтвердить, что он работает: это делают другие игроки.</value>
+    <value>Вы среди авторов перевода, поэтому не можете подтвердить, что он работает: это делают другие игроки.</value>
   </data>
   <data name="Rating_NoDiscussion" xml:space="preserve">
-    <value>Оценки откроются, когда реестр создаст обсуждение этого пакета на GitHub.</value>
+    <value>Оценки откроются, когда реестр создаст обсуждение этого перевода на GitHub.</value>
   </data>
   <data name="Rating_Prompt" xml:space="preserve">
     <value>Как вам «{0}»? Ваш ответ поможет другим игрокам.</value>
@@ -3566,7 +3578,7 @@
     <value>Позже</value>
   </data>
   <data name="Rating_Toast_Sent" xml:space="preserve">
-    <value>Спасибо! Отчёт отправлен в обсуждение пакета на GitHub.</value>
+    <value>Спасибо! Отчёт отправлен в обсуждение перевода на GitHub.</value>
   </data>
   <data name="Rating_Toast_AddDetails" xml:space="preserve">
     <value>Добавить подробности</value>
@@ -3575,16 +3587,16 @@
     <value>Открыть</value>
   </data>
   <data name="Rating_SignIn_Title" xml:space="preserve">
-    <value>Войдите в GitHub, чтобы оценивать пакеты</value>
+    <value>Войдите в GitHub, чтобы оценивать переводы</value>
   </data>
   <data name="Rating_SignIn_Intro" xml:space="preserve">
-    <value>Оценки и отчёты публикуются в обсуждении пакета на GitHub от вашего имени. Для установки пакетов аккаунт не нужен.</value>
+    <value>Оценки и отчёты публикуются в обсуждении перевода на GitHub от вашего имени. Для установки переводов аккаунт не нужен.</value>
   </data>
   <data name="Rating_SignIn_Hint" xml:space="preserve">
     <value>Оценка отправится, как только GitHub подтвердит вход.</value>
   </data>
   <data name="Rating_Error_NotSignedIn" xml:space="preserve">
-    <value>Войдите в GitHub, чтобы оценивать пакеты.</value>
+    <value>Войдите в GitHub, чтобы оценивать переводы.</value>
   </data>
   <data name="Rating_Error_Keychain" xml:space="preserve">
     <value>Не удалось прочитать вход в GitHub из системной связки ключей. Попробуйте ещё раз или войдите заново в «Настройки → GitHub».</value>
@@ -3593,10 +3605,10 @@
     <value>GitHub больше не принимает ваш вход. Войдите снова.</value>
   </data>
   <data name="Rating_Error_NotFound" xml:space="preserve">
-    <value>Обсуждения этого пакета больше нет на GitHub.</value>
+    <value>Обсуждения этого перевода больше нет на GitHub.</value>
   </data>
   <data name="Rating_Error_Locked" xml:space="preserve">
-    <value>Мейнтейнеры реестра закрыли обсуждение пакета: новые оценки не принимаются.</value>
+    <value>Мейнтейнеры реестра закрыли обсуждение перевода: новые оценки не принимаются.</value>
   </data>
   <data name="Rating_Error_Forbidden" xml:space="preserve">
     <value>GitHub отказал: {0}</value>
@@ -3668,7 +3680,7 @@
     <value>Перенести…</value>
   </data>
   <data name="Settings_Storage_Backups_Note" xml:space="preserve">
-    <value>Нужны, чтобы удалять пакеты, поэтому здесь их не очистить. Копия удаляется вместе со своим пакетом.</value>
+    <value>Нужны, чтобы удалять переводы, поэтому здесь их не очистить. Копия удаляется вместе со своим переводом.</value>
   </data>
   <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
     <value>Где хранить резервные копии</value>
@@ -3677,7 +3689,7 @@
     <value>Перенести резервные копии?</value>
   </data>
   <data name="Settings_Storage_Move_Text" xml:space="preserve">
-    <value>Резервные копии ({1}) переедут в {0}. Установленные пакеты останутся на месте и по-прежнему удаляются; игры не затрагиваются. Не отключайте этот диск, пока пакеты установлены.</value>
+    <value>Резервные копии ({1}) переедут в {0}. Установленные переводы останутся на месте и по-прежнему удаляются; игры не затрагиваются. Не отключайте этот диск, пока переводы установлены.</value>
   </data>
   <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
     <value>Перенести</value>
@@ -3686,7 +3698,7 @@
     <value>Перенесено. Старую папку {0} пока не удалось удалить; приложение попробует снова при следующем запуске.</value>
   </data>
   <data name="Settings_Storage_Move_Busy" xml:space="preserve">
-    <value>Сейчас устанавливается или удаляется пакет. Попробуйте, когда он закончит.</value>
+    <value>Сейчас устанавливается или удаляется перевод. Попробуйте, когда он закончит.</value>
   </data>
   <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
     <value>Сначала нужно завершить прерванную установку или перенос. Перезапустите приложение и попробуйте снова.</value>
@@ -3761,10 +3773,10 @@
     <value>Удалить рабочую копию {0}?</value>
   </data>
   <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
-    <value>Освободится {0}. Созданные и установленные пакеты останутся; игра не затрагивается.</value>
+    <value>Освободится {0}. Созданные и установленные переводы останутся; игра не затрагивается.</value>
   </data>
   <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
-    <value>Освободится {0}. Прогресс приостановленного перевода будет потерян: продолжить его не получится, только начать заново. Установленные пакеты останутся; игра не затрагивается.</value>
+    <value>Освободится {0}. Прогресс приостановленного перевода будет потерян: продолжить его не получится, только начать заново. Установленные переводы останутся; игра не затрагивается.</value>
   </data>
   <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
     <value>Для этой игры идёт генерация. Сначала остановите её.</value>
@@ -3773,7 +3785,7 @@
     <value>Не удалось удалить: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
-    <value>Индекс реестра и скачанные пакеты</value>
+    <value>Индекс реестра и скачанные переводы</value>
   </data>
   <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
     <value>кэш очистить загрузки индекс</value>
@@ -3794,7 +3806,7 @@
     <value>Освобождено {0}. {1} сейчас используется и останется, пока приложение с ним работает.</value>
   </data>
   <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
-    <value>Сейчас устанавливается пакет. Попробуйте, когда он закончит.</value>
+    <value>Сейчас устанавливается перевод. Попробуйте, когда он закончит.</value>
   </data>
   <data name="Settings_About_Meta" xml:space="preserve">
     <value>{0} · {1} · © участники AI Local Pack</value>
@@ -3872,13 +3884,13 @@
     <value>Что нового</value>
   </data>
   <data name="Settings_About_Restart_Installing" xml:space="preserve">
-    <value>Сейчас устанавливается пак. Перезапустите, когда установка закончится.</value>
+    <value>Сейчас устанавливается перевод. Перезапустите, когда установка закончится.</value>
   </data>
   <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
     <value>Перезапустить и обновить сейчас?</value>
   </data>
   <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
-    <value>Идущие генерация или публикация остановятся. Остановленную генерацию можно продолжить на вкладке «Генерация» после перезапуска.</value>
+    <value>Идущие создание перевода с ИИ или публикация остановятся. Остановленное создание можно продолжить на вкладке «Создать с ИИ» после перезапуска.</value>
   </data>
   <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
     <value>Перезапустить</value>
@@ -3887,7 +3899,7 @@
     <value>Исходный код</value>
   </data>
   <data name="Settings_About_Registry" xml:space="preserve">
-    <value>Реестр паков</value>
+    <value>Реестр переводов</value>
   </data>
   <data name="Settings_About_Report" xml:space="preserve">
     <value>Сообщить о проблеме</value>
@@ -3920,7 +3932,7 @@
     <value>Отказ от ответственности</value>
   </data>
   <data name="Settings_About_Disclaimer" xml:space="preserve">
-    <value>Переводы сообщества не связаны со студиями-разработчиками игр и не одобрены ими. Паки содержат только переводы и рецепты; нужна ваша собственная копия игры. Студии могут исключить свои игры.</value>
+    <value>Переводы сообщества не связаны со студиями-разработчиками игр и не одобрены ими. Они содержат только переведённый текст и рецепты; нужна ваша собственная копия игры. Студии могут исключить свои игры.</value>
   </data>
   <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
     <value>правовая, студии, одобрение, исключение</value>

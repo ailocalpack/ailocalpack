@@ -64,14 +64,14 @@
     <comment>Settings section.</comment>
   </data>
   <data name="Settings_Agents_Description" xml:space="preserve">
-    <value>Claude Code and Codex for generating packs</value>
+    <value>Claude Code and Codex for creating translations with AI</value>
   </data>
   <data name="Settings_GitHub_Title" xml:space="preserve">
     <value>GitHub</value>
     <comment>Settings section.</comment>
   </data>
   <data name="Settings_GitHub_Description" xml:space="preserve">
-    <value>Account and the packs you published</value>
+    <value>Account and the translations you published</value>
   </data>
   <data name="Settings_Storage_Title" xml:space="preserve">
     <value>Storage</value>
@@ -121,10 +121,10 @@
     <value>Translate games into</value>
   </data>
   <data name="Settings_GameLanguage_Help" xml:space="preserve">
-    <value>Default for browsing packs and for generation. Each game page can pick another language.</value>
+    <value>Default for browsing translations and for creating them with AI. Each game page can pick another language.</value>
   </data>
   <data name="Settings_GameLanguage_Keywords" xml:space="preserve">
-    <value>target language pack locale</value>
+    <value>target language translation pack locale</value>
     <comment>Extra search words for the row, space-separated.</comment>
   </data>
   <data name="Settings_Theme_Label" xml:space="preserve">
@@ -160,10 +160,10 @@
     <comment>Extra search words for the row, space-separated.</comment>
   </data>
   <data name="Settings_Reapply_Label" xml:space="preserve">
-    <value>Re-apply packs after game updates</value>
+    <value>Re-apply translations after game updates</value>
   </data>
   <data name="Settings_Reapply_Help" xml:space="preserve">
-    <value>If a store update or file check wipes a pack and the build is still compatible, it’s re-installed with a fresh backup. Otherwise you get a notification.</value>
+    <value>If a store update or file check wipes a translation and the build is still compatible, it’s re-installed with a fresh backup. Otherwise you get a notification.</value>
   </data>
   <data name="Settings_Reapply_HelpTrayOff" xml:space="preserve">
     <value>Only when the app starts, because the tray is off.</value>
@@ -179,19 +179,19 @@
     <value>When something needs your decision</value>
   </data>
   <data name="Settings_NotifyDecision_Help" xml:space="preserve">
-    <value>Paused generation, incompatible pack after a game update, failed re-apply, rejected PR.</value>
+    <value>Paused AI translation, incompatible translation after a game update, failed re-apply, rejected PR.</value>
   </data>
   <data name="Settings_NotifyFinished_Label" xml:space="preserve">
     <value>When a task finishes</value>
   </data>
   <data name="Settings_NotifyFinished_Help" xml:space="preserve">
-    <value>Pack installed or re-applied, generation finished, PR merged, app update ready.</value>
+    <value>Translation installed or re-applied, AI translation finished, PR merged, app update ready.</value>
   </data>
   <data name="Settings_NotifyCommunity_Label" xml:space="preserve">
-    <value>Community activity on my packs</value>
+    <value>Community activity on my translations</value>
   </data>
   <data name="Settings_NotifyCommunity_Help" xml:space="preserve">
-    <value>New reviews, “works” confirmations, a pack becoming verified.</value>
+    <value>New reviews, “works” confirmations, a translation becoming verified.</value>
   </data>
   <data name="Settings_Notify_Keywords" xml:space="preserve">
     <value>notifications alerts</value>
@@ -402,16 +402,16 @@
     <value>“{0}” holds one game, in the subfolder {1}.</value>
   </data>
   <data name="AddGame_Registry_Title" xml:space="preserve">
-    <value>Pack lookup comes in a later version.</value>
+    <value>Translation lookup comes in a later version.</value>
   </data>
   <data name="AddGame_Registry_Text" xml:space="preserve">
-    <value>Packs for this game from the registry will show here. You can add the game now.</value>
+    <value>Translations for this game from the registry will show here. You can add the game now.</value>
   </data>
   <data name="AddGame_EngineWarning_Title" xml:space="preserve">
     <value>Engine not recognized.</value>
   </data>
   <data name="AddGame_EngineWarning_Text" xml:space="preserve">
-    <value>You can still generate a pack: the agent will figure out the game files itself. If you know the engine, pick it in the details.</value>
+    <value>You can still create a translation with AI: the agent will figure out the game files itself. If you know the engine, pick it in the details.</value>
   </data>
   <data name="AddGame_Duplicate" xml:space="preserve">
     <value>This game is already in the library as “{0}”.</value>
@@ -420,7 +420,7 @@
     <value>{0} detected.</value>
   </data>
   <data name="AddGame_AntiCheat_Text" xml:space="preserve">
-    <value>Packs can't be installed or generated for this game: the anti-cheat may ban your account. You can still add the game; the library shows it as unavailable.</value>
+    <value>Translations can't be installed or created for this game: the anti-cheat may ban your account. You can still add the game; the library shows it as unavailable.</value>
   </data>
   <data name="AddGame_Details" xml:space="preserve">
     <value>Edit game details</value>
@@ -648,7 +648,7 @@
     <value>Other stores</value>
   </data>
   <data name="Settings_ManualGames_Note" xml:space="preserve">
-    <value>Removing a game only removes it from AI Local Pack. Game files and installed packs stay as they are.</value>
+    <value>Removing a game only removes it from AI Local Pack. Game files and installed translations stay as they are.</value>
   </data>
   <data name="Settings_Steam_Label" xml:space="preserve">
     <value>Steam</value>
@@ -732,7 +732,7 @@
     <value>Remove «{0}» from AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveFolder_Text" xml:space="preserve">
-    <value>Its games leave the library. The folder, the games and installed packs stay on disk, and Steam is not changed. You can add the folder again later.</value>
+    <value>Its games leave the library. The folder, the games and installed translations stay on disk, and Steam is not changed. You can add the folder again later.</value>
   </data>
   <data name="Settings_ManualGame_Label" xml:space="preserve">
     <value>Manually added game</value>
@@ -750,7 +750,7 @@
     <value>Remove «{0}» from AI Local Pack?</value>
   </data>
   <data name="Settings_RemoveGame_Text" xml:space="preserve">
-    <value>The game folder and any installed pack stay on disk. You can add the folder again later.</value>
+    <value>The game folder and any installed translation stay on disk. You can add the folder again later.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
     <value>Epic Games, GOG, EA app</value>
@@ -768,10 +768,10 @@
     <value>A Steam library isn't available</value>
   </data>
   <data name="Settings_Alert_LibraryUnavailable_Text_One" xml:space="preserve">
-    <value>{1}: {0} game is hidden until the folder is back. Installed packs are untouched.</value>
+    <value>{1}: {0} game is hidden until the folder is back. Installed translations are untouched.</value>
   </data>
   <data name="Settings_Alert_LibraryUnavailable_Text_Other" xml:space="preserve">
-    <value>{1}: {0} games are hidden until the folder is back. Installed packs are untouched.</value>
+    <value>{1}: {0} games are hidden until the folder is back. Installed translations are untouched.</value>
   </data>
   <data name="Confirm_Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -852,25 +852,25 @@
     <value>Checked {0} games</value>
   </data>
   <data name="Startup_Step_Index" xml:space="preserve">
-    <value>Updating the pack list</value>
+    <value>Updating the translation list</value>
   </data>
   <data name="Startup_Index_Done_One" xml:space="preserve">
-    <value>{0} pack</value>
+    <value>{0} translation</value>
   </data>
   <data name="Startup_Index_Done_Other" xml:space="preserve">
-    <value>{0} packs</value>
+    <value>{0} translations</value>
   </data>
   <data name="Startup_Index_Stale" xml:space="preserve">
     <value>Offline: showing the saved list from {0}</value>
   </data>
   <data name="Startup_Index_Unavailable" xml:space="preserve">
-    <value>Can't reach the pack registry</value>
+    <value>Can't reach the translation registry</value>
   </data>
   <data name="Startup_Index_NewerFormat" xml:space="preserve">
-    <value>The pack list needs a newer version of the app</value>
+    <value>The translation list needs a newer version of the app</value>
   </data>
   <data name="Startup_Index_BadAddress" xml:space="preserve">
-    <value>The pack registry address is not valid: details are in the log</value>
+    <value>The translation registry address is not valid: details are in the log</value>
   </data>
   <data name="Startup_Step_Recovery" xml:space="preserve">
     <value>Finishing an interrupted install</value>
@@ -924,10 +924,10 @@
     <value>Installed</value>
   </data>
   <data name="Library_Status_PackAvailable" xml:space="preserve">
-    <value>Pack available</value>
+    <value>Translation available</value>
   </data>
   <data name="Library_Status_NoPack" xml:space="preserve">
-    <value>No pack</value>
+    <value>No translation</value>
   </data>
   <data name="Library_Status_NeedsUpdate" xml:space="preserve">
     <value>Needs update</value>
@@ -963,16 +963,16 @@
     <value>Resume</value>
   </data>
   <data name="Library_Action_Generate" xml:space="preserve">
-    <value>Generate with AI</value>
+    <value>Create with AI</value>
   </data>
   <data name="Library_Card_OptedOut" xml:space="preserve">
     <value>Studio opted out</value>
   </data>
   <data name="Library_Card_PackCount_One" xml:space="preserve">
-    <value>{0} pack</value>
+    <value>{0} translation</value>
   </data>
   <data name="Library_Card_PackCount_Other" xml:space="preserve">
-    <value>{0} packs</value>
+    <value>{0} translations</value>
   </data>
   <data name="Library_Card_Verified" xml:space="preserve">
     <value>verified</value>
@@ -999,16 +999,16 @@
     <value>Important first</value>
   </data>
   <data name="Library_Registry_Stale" xml:space="preserve">
-    <value>Can't reach the pack registry. Showing data saved on {0}.</value>
+    <value>Can't reach the translation registry. Showing data saved on {0}.</value>
   </data>
   <data name="Library_Registry_Unavailable" xml:space="preserve">
-    <value>Can't reach the pack registry. Pack statuses appear once it answers.</value>
+    <value>Can't reach the translation registry. Translation statuses appear once it answers.</value>
   </data>
   <data name="Library_Registry_NewerFormat" xml:space="preserve">
-    <value>The pack registry uses a newer format. Update the app to see the current packs.</value>
+    <value>The translation registry uses a newer format. Update the app to see the current translations.</value>
   </data>
   <data name="Library_Registry_InvalidAddress" xml:space="preserve">
-    <value>The pack registry address set for the app is not valid, so pack statuses can't be shown.</value>
+    <value>The translation registry address set for the app is not valid, so translation statuses can't be shown.</value>
   </data>
   <data name="Library_Registry_Retry" xml:space="preserve">
     <value>Retry</value>
@@ -1044,10 +1044,10 @@
     <value>Game version: hash of {0} files</value>
   </data>
   <data name="Game_Action_Install" xml:space="preserve">
-    <value>Install best pack</value>
+    <value>Install translation</value>
   </data>
   <data name="Game_Action_Generate" xml:space="preserve">
-    <value>Generate translation with AI</value>
+    <value>Create translation with AI</value>
   </data>
   <data name="Game_Action_Play" xml:space="preserve">
     <value>Play</value>
@@ -1122,7 +1122,7 @@
     <value>Paused · {0}%</value>
   </data>
   <data name="Game_Installed_Label" xml:space="preserve">
-    <value>Installed pack</value>
+    <value>Installed translation</value>
   </data>
   <data name="Game_Installed_Broken" xml:space="preserve">
     <value>Installed · incompatible with the new version</value>
@@ -1137,7 +1137,7 @@
     <value>The game updated ({0}). The installed «{1}» rev {2} is incompatible with it; some text may show in English.</value>
   </data>
   <data name="Game_Soon_AudioTitle" xml:space="preserve">
-    <value>Audio: coming soon</value>
+    <value>Voice: coming soon</value>
   </data>
   <data name="Game_Soon_AudioText" xml:space="preserve">
     <value>Voice-over in {0} through text-to-speech comes in the next major version. Text translation works today.</value>
@@ -1149,31 +1149,31 @@
     <value>Translating text inside images (signs, menus, maps) comes later. Text translation works today.</value>
   </data>
   <data name="Game_Packs_Count_One" xml:space="preserve">
-    <value>{1}: {0} pack</value>
+    <value>{1}: {0} translation</value>
   </data>
   <data name="Game_Packs_Count_Other" xml:space="preserve">
-    <value>{1}: {0} packs</value>
+    <value>{1}: {0} translations</value>
   </data>
   <data name="Game_Packs_None" xml:space="preserve">
     <value>No translation into {0} yet</value>
   </data>
   <data name="Game_Packs_NoneText" xml:space="preserve">
-    <value>Generate one with an AI agent, then share it with other players.</value>
+    <value>Nobody has shared one for this game yet. You can create it with your AI agent and share it with other players.</value>
   </data>
   <data name="Game_Packs_Generate" xml:space="preserve">
-    <value>Generate with AI</value>
+    <value>Create with AI</value>
   </data>
   <data name="Game_Packs_Unknown" xml:space="preserve">
-    <value>The pack list hasn't loaded yet. Packs show up once the registry answers.</value>
+    <value>The translation list hasn't loaded yet. Translations show up once the registry answers.</value>
   </data>
   <data name="Game_Tab_Packs" xml:space="preserve">
-    <value>Packs</value>
+    <value>Text</value>
   </data>
   <data name="Game_Tab_Generation" xml:space="preserve">
-    <value>Generation</value>
+    <value>Create with AI</value>
   </data>
   <data name="Game_Tab_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>Voice</value>
   </data>
   <data name="Game_Tab_Textures" xml:space="preserve">
     <value>Textures</value>
@@ -1187,14 +1187,26 @@
   <data name="Game_Tabs_Label" xml:space="preserve">
     <value>Game page sections</value>
   </data>
+  <data name="Game_TabGroup_Localization" xml:space="preserve">
+    <value>Localization</value>
+  </data>
+  <data name="Game_TabGroup_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Packs_CreateOwn_Text" xml:space="preserve">
+    <value>None of these suits you?</value>
+  </data>
+  <data name="Packs_CreateOwn" xml:space="preserve">
+    <value>Create your own with AI</value>
+  </data>
   <data name="Game_Blocked_Title" xml:space="preserve">
     <value>Localization is unavailable for this game</value>
   </data>
   <data name="Game_Blocked_AntiCheat" xml:space="preserve">
-    <value>{0} was detected. Modifying game files can get your account banned, so AI Local Pack doesn't install or generate packs for games with anti-cheat.</value>
+    <value>{0} was detected. Modifying game files can get your account banned, so AI Local Pack doesn't install or create translations for games with anti-cheat.</value>
   </data>
   <data name="Game_Blocked_OptOut" xml:space="preserve">
-    <value>The publisher asked not to distribute fan translations for this game, so AI Local Pack doesn't install or generate packs for it.</value>
+    <value>The publisher asked not to distribute fan translations for this game, so AI Local Pack doesn't install or create translations for it.</value>
   </data>
   <data name="Game_Blocked_Mistake" xml:space="preserve">
     <value>Think this is a mistake?</value>
@@ -1203,25 +1215,25 @@
     <value>Report</value>
   </data>
   <data name="Game_Blocked_Report_Tip" xml:space="preserve">
-    <value>Opens a prefilled issue in the pack registry on GitHub</value>
+    <value>Opens a prefilled issue in the translation registry on GitHub</value>
   </data>
   <data name="Packs_Language_Label" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="Packs_Language_Tip" xml:space="preserve">
-    <value>Show packs in another language</value>
+    <value>Show translations into another language</value>
   </data>
   <data name="Packs_Language_Search" xml:space="preserve">
     <value>Search languages</value>
   </data>
   <data name="Packs_Language_Caption" xml:space="preserve">
-    <value>Packs for this game</value>
+    <value>Translations for this game</value>
   </data>
   <data name="Packs_Language_NoMatch" xml:space="preserve">
     <value>No language matches the search.</value>
   </data>
   <data name="Packs_Sort_Label" xml:space="preserve">
-    <value>Sort packs</value>
+    <value>Sort translations</value>
   </data>
   <data name="Packs_Sort_StatusRating" xml:space="preserve">
     <value>Status, rating</value>
@@ -1236,7 +1248,7 @@
     <value>Registry</value>
   </data>
   <data name="Packs_List_Label" xml:space="preserve">
-    <value>Packs</value>
+    <value>Translations</value>
   </data>
   <data name="Packs_Compat_Compatible" xml:space="preserve">
     <value>compatible</value>
@@ -1278,22 +1290,22 @@
     <value>Checking compatibility…</value>
   </data>
   <data name="Packs_Box_CheckingText" xml:space="preserve">
-    <value>Reading the pack's manifest and comparing the files it changes with your copy.</value>
+    <value>Reading the translation's manifest and comparing the files it changes with your copy.</value>
   </data>
   <data name="Packs_Box_Failed" xml:space="preserve">
-    <value>Couldn't read the pack's details</value>
+    <value>Couldn't read the translation's details</value>
   </data>
   <data name="Packs_Failed_Offline" xml:space="preserve">
     <value>The registry didn't answer. Check the connection and retry.</value>
   </data>
   <data name="Packs_Failed_Missing" xml:space="preserve">
-    <value>The registry has no manifest for this pack. It may have been removed since the list was saved.</value>
+    <value>The registry has no manifest for this translation. It may have been removed since the list was saved.</value>
   </data>
   <data name="Packs_Failed_Invalid" xml:space="preserve">
-    <value>The pack's manifest in the registry is damaged, so the pack can't be checked or installed.</value>
+    <value>The translation's manifest in the registry is damaged, so the translation can't be checked or installed.</value>
   </data>
   <data name="Packs_Failed_NewerFormat" xml:space="preserve">
-    <value>The pack is in a newer format. Update the app to install it.</value>
+    <value>The translation is in a newer format. Update the app to install it.</value>
   </data>
   <data name="Packs_Retry" xml:space="preserve">
     <value>Retry</value>
@@ -1311,7 +1323,7 @@
     <value>Changed files since the version it was made for: {0} of {1}; strings the update added stay untranslated.</value>
   </data>
   <data name="Packs_Why_WrongGame" xml:space="preserve">
-    <value>This pack is for another game.</value>
+    <value>This translation is for another game.</value>
   </data>
   <data name="Packs_Why_GameNotAvailable" xml:space="preserve">
     <value>The game folder can't be reached. Connect the drive and retry.</value>
@@ -1395,7 +1407,7 @@
     <value>Reviews on GitHub</value>
   </data>
   <data name="Packs_Reviews_Tip" xml:space="preserve">
-    <value>Opens the pack's discussion in the browser</value>
+    <value>Opens the translation's discussion in the browser</value>
   </data>
   <data name="Packs_Offline" xml:space="preserve">
     <value>Can't reach the registry. Showing the list saved on {0}; installing is unavailable until you're back online.</value>
@@ -1407,16 +1419,16 @@
     <value>{0} ({1})</value>
   </data>
   <data name="Install_Log_Removed" xml:space="preserve">
-    <value>Uninstalled the previous pack «{0}» rev {1}.</value>
+    <value>Uninstalled the previous translation «{0}» rev {1}.</value>
   </data>
   <data name="Install_Log_Checked" xml:space="preserve">
     <value>Compatibility with your files: {0}.</value>
   </data>
   <data name="Install_Log_FromCache" xml:space="preserve">
-    <value>Pack rev {0} taken from the cache.</value>
+    <value>Translation rev {0} taken from the cache.</value>
   </data>
   <data name="Install_Log_Downloaded" xml:space="preserve">
-    <value>Pack rev {0} downloaded: {1} bytes.</value>
+    <value>Translation rev {0} downloaded: {1} bytes.</value>
   </data>
   <data name="Install_Log_Uninstalled" xml:space="preserve">
     <value>Original files restored: {0}; added files removed: {1}.</value>
@@ -1455,10 +1467,10 @@
     <value>Uninstalling «{0}»</value>
   </data>
   <data name="Install_Step_Download" xml:space="preserve">
-    <value>Downloading the pack</value>
+    <value>Downloading the translation</value>
   </data>
   <data name="Install_Step_RemovePrevious" xml:space="preserve">
-    <value>Uninstalling the previous pack</value>
+    <value>Uninstalling the previous translation</value>
   </data>
   <data name="Install_Step_Check" xml:space="preserve">
     <value>Checking your game files</value>
@@ -1485,22 +1497,22 @@
     <value>Installing is unavailable for this game (anti-cheat, or the studio asked not to).</value>
   </data>
   <data name="Install_Why_NotInRegistry" xml:space="preserve">
-    <value>The pack is no longer in the registry's list.</value>
+    <value>The translation is no longer in the registry's list.</value>
   </data>
   <data name="Install_Why_Offline" xml:space="preserve">
-    <value>Couldn't download the pack: no connection to the registry.</value>
+    <value>Couldn't download the translation: no connection to the registry.</value>
   </data>
   <data name="Install_Why_Timeout" xml:space="preserve">
-    <value>Couldn't download the pack: the registry didn't answer in time.</value>
+    <value>Couldn't download the translation: the registry didn't answer in time.</value>
   </data>
   <data name="Install_Why_HttpError" xml:space="preserve">
-    <value>Couldn't download the pack: the registry answered with an error.</value>
+    <value>Couldn't download the translation: the registry answered with an error.</value>
   </data>
   <data name="Install_Why_FileMissing" xml:space="preserve">
-    <value>The pack's files are gone from the registry.</value>
+    <value>The translation's files are gone from the registry.</value>
   </data>
   <data name="Install_Why_NewerFormat" xml:space="preserve">
-    <value>The pack needs a newer version of AI Local Pack. Update the app.</value>
+    <value>The translation needs a newer version of AI Local Pack. Update the app.</value>
   </data>
   <data name="Install_Why_HashMismatch" xml:space="preserve">
     <value>The download was damaged (hash check failed) and was deleted.</value>
@@ -1509,13 +1521,13 @@
     <value>Couldn't save the download: the cache folder can't be written.</value>
   </data>
   <data name="Install_Why_Damaged" xml:space="preserve">
-    <value>The pack in the registry is damaged.</value>
+    <value>The translation in the registry is damaged.</value>
   </data>
   <data name="Install_Why_Incompatible" xml:space="preserve">
-    <value>The pack doesn't fit your version of the game. {0}</value>
+    <value>The translation doesn't fit your version of the game. {0}</value>
   </data>
   <data name="Install_Why_InvalidStrings" xml:space="preserve">
-    <value>The pack's string table can't be read.</value>
+    <value>The translation's string table can't be read.</value>
   </data>
   <data name="Install_Why_Recipe" xml:space="preserve">
     <value>Couldn't rebuild {0} from the strings: the game file can't be read or has an unexpected format.</value>
@@ -1542,10 +1554,10 @@
     <value>The game folder can't be reached (drive unplugged or folder moved).</value>
   </data>
   <data name="Install_Why_AlreadyInstalled" xml:space="preserve">
-    <value>A pack is already installed for this game.</value>
+    <value>A translation is already installed for this game.</value>
   </data>
   <data name="Install_Why_NotInstalled" xml:space="preserve">
-    <value>No pack is installed for this game.</value>
+    <value>No translation is installed for this game.</value>
   </data>
   <data name="Install_Why_Interrupted" xml:space="preserve">
     <value>An earlier install was interrupted and couldn't be finished yet. Restart the app to finish it.</value>
@@ -1632,7 +1644,7 @@
     <value>The game files are as they were before.</value>
   </data>
   <data name="Install_Details_UninstallStopped" xml:space="preserve">
-    <value>Some files may still be the pack's; uninstalling again finishes the job.</value>
+    <value>Some files may still be the translation's; uninstalling again finishes the job.</value>
   </data>
   <data name="Install_Details_NotRestored" xml:space="preserve">
     <value>Restoring some files failed; the app retries on the next start.</value>
@@ -1650,7 +1662,7 @@
     <value>Uninstall «{0}»?</value>
   </data>
   <data name="Install_Uninstall_Message" xml:space="preserve">
-    <value>The game's original files are restored from the backup. The pack stays in the registry and can be installed again; your game and its saves are untouched.</value>
+    <value>The game's original files are restored from the backup. The translation stays in the registry and can be installed again; your game and its saves are untouched.</value>
   </data>
   <data name="Install_Uninstall_Confirm" xml:space="preserve">
     <value>Uninstall</value>
@@ -1671,13 +1683,13 @@
     <value>Uninstalling…</value>
   </data>
   <data name="Game_Installed_Menu" xml:space="preserve">
-    <value>Installed pack actions</value>
+    <value>Installed translation actions</value>
   </data>
   <data name="Game_Installed_Reapply" xml:space="preserve">
     <value>Re-apply</value>
   </data>
   <data name="Game_Installed_ShowInPacks" xml:space="preserve">
-    <value>Show in Packs</value>
+    <value>Show in Text</value>
   </data>
   <data name="Game_Installed_Uninstall" xml:space="preserve">
     <value>Uninstall (restore originals)</value>
@@ -1698,7 +1710,7 @@
     <value>Fonts: {0} can't be read; left as it is.</value>
   </data>
   <data name="Install_Log_FontUnknown" xml:space="preserve">
-    <value>The pack names a font this app doesn't know: {0} (ignored; update the app).</value>
+    <value>The translation names a font this app doesn't know: {0} (ignored; update the app).</value>
   </data>
   <data name="Install_Why_Font" xml:space="preserve">
     <value>The game's font lacks letters of this translation, and the open font {0} that has them couldn't be prepared.</value>
@@ -1713,19 +1725,19 @@
     <value>{0} (downloaded when installing)</value>
   </data>
   <data name="Packs_Why_EngineUnsupported" xml:space="preserve">
-    <value>This app's toolkit doesn't handle {0} games on this system for now, so it can't install this pack.</value>
+    <value>This app's toolkit doesn't handle {0} games on this system for now, so it can't install this translation.</value>
   </data>
   <data name="Install_Step_Dependency" xml:space="preserve">
     <value>Downloading required components</value>
   </data>
   <data name="Install_Why_DependencyUnknown" xml:space="preserve">
-    <value>This pack needs {0}, which isn't on the registry's list of allowed components, so it can't be installed.</value>
+    <value>This translation needs {0}, which isn't on the registry's list of allowed components, so it can't be installed.</value>
   </data>
   <data name="Install_Why_DependencyPlatform" xml:space="preserve">
-    <value>This pack needs {0}, and its official release has no build for this game's version ({1}).</value>
+    <value>This translation needs {0}, and its official release has no build for this game's version ({1}).</value>
   </data>
   <data name="Install_Why_DependencyPlatformUnknown" xml:space="preserve">
-    <value>This pack needs {0}, but the app couldn't tell which system this game's build is for (its main executable can't be read).</value>
+    <value>This translation needs {0}, but the app couldn't tell which system this game's build is for (its main executable can't be read).</value>
   </data>
   <data name="Install_Why_DependencyOffline" xml:space="preserve">
     <value>Couldn't download {0} from its official release. Check the connection and retry.</value>
@@ -1740,7 +1752,7 @@
     <value>The release archive of {0} can't be unpacked safely; nothing was installed.</value>
   </data>
   <data name="Install_Why_DependencyConflict" xml:space="preserve">
-    <value>Another version of a component this pack needs is installed for the game, or the component would overwrite the pack's own files.</value>
+    <value>Another version of a component this translation needs is installed for the game, or the component would overwrite the translation's own files.</value>
   </data>
   <data name="Install_Log_DependencyDownloaded" xml:space="preserve">
     <value>{0} {1} ({2}): downloaded {3} bytes from its official release ({4}), hash checked.</value>
@@ -1749,34 +1761,34 @@
     <value>{0} {1} ({2}): taken from the cache (hash checked when it was downloaded).</value>
   </data>
   <data name="Install_Log_DependencyShared" xml:space="preserve">
-    <value>{0} {1} is already installed for this game; the pack shares it.</value>
+    <value>{0} {1} is already installed for this game; the translation shares it.</value>
   </data>
   <data name="Install_Log_DependencyInstalled" xml:space="preserve">
-    <value>{0} {1} installed with the pack: {2} files.</value>
+    <value>{0} {1} installed with the translation: {2} files.</value>
   </data>
   <data name="Install_Log_DependencyRemoved" xml:space="preserve">
-    <value>{0} {1} removed: no other pack uses it.</value>
+    <value>{0} {1} removed: no other translation uses it.</value>
   </data>
   <data name="Packs_RequiresUnknown" xml:space="preserve">
     <value>{0} (not on the registry's list of allowed components)</value>
   </data>
   <data name="Startup_Step_Packs" xml:space="preserve">
-    <value>Checking installed packs</value>
+    <value>Checking installed translations</value>
   </data>
   <data name="Startup_Packs_None" xml:space="preserve">
-    <value>No installed packs to check</value>
+    <value>No installed translations to check</value>
   </data>
   <data name="Startup_Packs_Done_One" xml:space="preserve">
-    <value>{0} pack in place</value>
+    <value>{0} translation in place</value>
   </data>
   <data name="Startup_Packs_Done_Other" xml:space="preserve">
-    <value>{0} packs in place</value>
+    <value>{0} translations in place</value>
   </data>
   <data name="Startup_Packs_Reapplied" xml:space="preserve">
     <value>Re-applied after a game update: {0}</value>
   </data>
   <data name="Startup_Packs_Attention" xml:space="preserve">
-    <value>A game update broke the pack: {0}</value>
+    <value>A game update broke the translation: {0}</value>
   </data>
   <data name="Startup_Step_Jobs" xml:space="preserve">
     <value>Checking generation jobs</value>
@@ -1821,7 +1833,7 @@
     <value>Already patched, left as they are: {0}.</value>
   </data>
   <data name="Install_Why_PatchArchive" xml:space="preserve">
-    <value>The pack's patch archive is damaged.</value>
+    <value>The translation's patch archive is damaged.</value>
   </data>
   <data name="Install_Why_PatchUnreadable" xml:space="preserve">
     <value>Can't read {0} to patch it.</value>
@@ -1872,7 +1884,7 @@
     <value>All quiet</value>
   </data>
   <data name="Activity_Empty_Text" xml:space="preserve">
-    <value>Installs, pack generation, publishing and automatic re-applies after game updates show up here.</value>
+    <value>Installs, translations made with AI, publishing and automatic re-applies after game updates show up here.</value>
   </data>
   <data name="Activity_DecideLater" xml:space="preserve">
     <value>Decide later: move to the feed</value>
@@ -1935,13 +1947,13 @@
     <value>Restoring some files failed; the app retries on the next start.</value>
   </data>
   <data name="Activity_Detail_UpdateAvailable" xml:space="preserve">
-    <value>Revision {0} of the pack is available.</value>
+    <value>Revision {0} of the translation is available.</value>
   </data>
   <data name="Activity_Detail_Translate" xml:space="preserve">
     <value>No newer revision yet: translate the new strings with AI.</value>
   </data>
   <data name="Activity_Detail_NotApplied" xml:space="preserve">
-    <value>The game put its original files back. The pack still fits this version: apply it again.</value>
+    <value>The game put its original files back. The translation still fits this version: apply it again.</value>
   </data>
   <data name="Activity_Action_Log" xml:space="preserve">
     <value>Log</value>
@@ -1974,7 +1986,7 @@
     <value>Quit</value>
   </data>
   <data name="Settings_Agents_Lead" xml:space="preserve">
-    <value>Agents are only used to generate new packs; installing packs never needs one. They run on your own subscription: the project pays for no AI.</value>
+    <value>Agents are only used to create new translations with AI; installing translations never needs one. They run on your own subscription: the project pays for no AI.</value>
   </data>
   <data name="Settings_Group_Agents" xml:space="preserve">
     <value>Agents</value>
@@ -2244,13 +2256,13 @@
     <value>{0} · supported by the toolkit</value>
   </data>
   <data name="Gen_Check_Engine_Unknown" xml:space="preserve">
-    <value>Unknown engine: the agent writes its own reader, and the pack is a binary patch</value>
+    <value>Unknown engine: the agent writes its own reader, and the translation is a binary patch</value>
   </data>
   <data name="Gen_Check_Engine_Disabled" xml:space="preserve">
-    <value>{0}: not handled by the toolkit on this system, so the agent writes its own reader (binary patch pack)</value>
+    <value>{0}: not handled by the toolkit on this system, so the agent writes its own reader (the translation is a binary patch)</value>
   </data>
   <data name="Gen_Check_Engine_NoTool" xml:space="preserve">
-    <value>{0}: the toolkit can't read it, so the agent writes its own reader (binary patch pack)</value>
+    <value>{0}: the toolkit can't read it, so the agent writes its own reader (the translation is a binary patch)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
     <value>{0}: the toolkit couldn't read the game ({1})</value>
@@ -2529,7 +2541,7 @@
     <value>Launching the test build</value>
   </data>
   <data name="Gen_Build_Packing" xml:space="preserve">
-    <value>Saving the local pack</value>
+    <value>Saving your translation</value>
   </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Fonts: {0} lack letters of the translation; {1} (OFL) is used instead.</value>
@@ -2745,10 +2757,10 @@
     <value>Translation starts once you check it.</value>
   </data>
   <data name="Install_Why_LocalMissing" xml:space="preserve">
-    <value>The local pack was deleted or can't be read.</value>
+    <value>Your translation was deleted or can't be read.</value>
   </data>
   <data name="Install_Log_Local" xml:space="preserve">
-    <value>Local pack taken from {0}.</value>
+    <value>Your translation taken from {0}.</value>
   </data>
   <data name="Gen_Result_Tile_Coverage" xml:space="preserve">
     <value>Coverage</value>
@@ -2847,7 +2859,7 @@
     <value>Translation ready</value>
   </data>
   <data name="Gen_Result_Saved" xml:space="preserve">
-    <value>Saved as a local pack in Packs → Mine · {0}</value>
+    <value>Saved as your translation in Text → Mine · {0}</value>
   </data>
   <data name="Gen_Result_PackLine" xml:space="preserve">
     <value>«{0}» into {1}</value>
@@ -2874,13 +2886,13 @@
     <value>Discard</value>
   </data>
   <data name="Gen_Result_ShowInPacks" xml:space="preserve">
-    <value>Show in Packs</value>
+    <value>Show in Text</value>
   </data>
   <data name="Gen_Result_NewTranslation" xml:space="preserve">
     <value>New translation</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>The pack stays in Packs → Mine; the working copy is deleted and the form opens.</value>
+    <value>The translation stays in Text → Mine; the working copy is deleted and the form opens.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Installing backs up the original files; you can uninstall any time.</value>
@@ -2898,22 +2910,22 @@
     <value>Publish</value>
   </data>
   <data name="Gen_Result_Toast_NotNow" xml:space="preserve">
-    <value>You can publish it later from Packs → Mine.</value>
+    <value>You can publish it later from Text → Mine.</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>The pack and its working copy were deleted.</value>
+    <value>The translation and its working copy were deleted.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>The pack stays in Packs → Mine; the working copy was deleted.</value>
+    <value>The translation stays in Text → Mine; the working copy was deleted.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Discard the translation?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>The local pack «{0}» and the job's working copy are deleted. This can't be undone.</value>
+    <value>Your translation «{0}» and the job's working copy are deleted. This can't be undone.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
-    <value>The pack is installed: uninstall it first.</value>
+    <value>The translation is installed: uninstall it first.</value>
   </data>
   <data name="Gen_Result_Error_Disk" xml:space="preserve">
     <value>Couldn't delete the files: {0}</value>
@@ -2922,13 +2934,13 @@
     <value>Mine</value>
   </data>
   <data name="Packs_Registry_None" xml:space="preserve">
-    <value>No packs into {0} in the registry yet.</value>
+    <value>No translations into {0} in the registry yet.</value>
   </data>
   <data name="Packs_Mine_JobTitle" xml:space="preserve">
     <value>Translation into {0}</value>
   </data>
   <data name="Packs_Mine_JobMeta" xml:space="preserve">
-    <value>Generating with AI · open the Generation tab</value>
+    <value>Creating with AI · open the Create with AI tab</value>
   </data>
   <data name="Packs_Mine_LocalMeta" xml:space="preserve">
     <value>local · not published</value>
@@ -2949,7 +2961,7 @@
     <value>Tested in game</value>
   </data>
   <data name="Packs_Mine_TestedText" xml:space="preserve">
-    <value>You played the game with this pack. Now you can share it.</value>
+    <value>You played the game with this translation. Now you can share it.</value>
   </data>
   <data name="Packs_Mine_NotTriedTitle" xml:space="preserve">
     <value>Not tried in game yet</value>
@@ -2973,7 +2985,7 @@
     <value>{0}: {1}</value>
   </data>
   <data name="Packs_Mine_PublishNote" xml:space="preserve">
-    <value>Before publishing, the app compares it with the registry's packs: you can publish it as a new revision of one of them or as a separate pack.</value>
+    <value>Before publishing, the app compares it with the registry's translations: you can publish it as a new revision of one of them or as a separate translation.</value>
   </data>
   <data name="Packs_Mine_Delete" xml:space="preserve">
     <value>Delete</value>
@@ -2988,16 +3000,16 @@
     <value>Delete «{0}»?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>The local pack and the working copy of the job that made it are deleted. This can't be undone.</value>
+    <value>Your translation and the working copy of the job that made it are deleted. This can't be undone.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
-    <value>Deleted the local pack «{0}».</value>
+    <value>Deleted your translation «{0}».</value>
   </data>
   <data name="Game_Action_InstallPlay" xml:space="preserve">
     <value>Install &amp; play</value>
   </data>
   <data name="Game_Caption_LocalPack" xml:space="preserve">
-    <value>Your pack · {0}% of strings · {1}</value>
+    <value>Your translation · {0}% of strings · {1}</value>
   </data>
   <data name="Game_Caption_LocalTestPassed" xml:space="preserve">
     <value>test passed</value>
@@ -3006,16 +3018,16 @@
     <value>not test-run</value>
   </data>
   <data name="Game_Installed_TextLocal" xml:space="preserve">
-    <value>«{0}» · your pack</value>
+    <value>«{0}» · your translation</value>
   </data>
   <data name="Library_Badge_LocalReady" xml:space="preserve">
-    <value>Your pack ready</value>
+    <value>Your translation ready</value>
   </data>
   <data name="Library_Card_LocalPack" xml:space="preserve">
-    <value>Your pack · {0}% of strings</value>
+    <value>Your translation · {0}% of strings</value>
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
-    <value>Your pack · {0}</value>
+    <value>Your translation · {0}</value>
   </data>
   <data name="Gen_Update_Title" xml:space="preserve">
     <value>Translate the new strings into</value>
@@ -3096,7 +3108,7 @@
     <value>Account</value>
   </data>
   <data name="Settings_Group_PublishedPacks" xml:space="preserve">
-    <value>My published packs</value>
+    <value>My published translations</value>
   </data>
   <data name="Settings_GitHubAccount_Label" xml:space="preserve">
     <value>GitHub account</value>
@@ -3108,7 +3120,7 @@
     <value>Not signed in</value>
   </data>
   <data name="Settings_GitHubAccount_Why" xml:space="preserve">
-    <value>Only needed to publish packs and to rate or confirm them. Installing never needs an account.</value>
+    <value>Only needed to publish translations and to rate or confirm them. Installing never needs an account.</value>
   </data>
   <data name="Settings_GitHubAccount_SignedInHelp" xml:space="preserve">
     <value>Signed in · token kept in the system keychain ({0})</value>
@@ -3120,7 +3132,7 @@
     <value>Revoke access on GitHub</value>
   </data>
   <data name="Settings_GitHubAccount_Revoked" xml:space="preserve">
-    <value>GitHub no longer accepts the app's access for {0}, so the app signed out. Sign in again to publish or rate packs.</value>
+    <value>GitHub no longer accepts the app's access for {0}, so the app signed out. Sign in again to publish or rate translations.</value>
   </data>
   <data name="Settings_GitHubAccount_Unverified" xml:space="preserve">
     <value>GitHub can't be reached right now; showing the account as last seen.</value>
@@ -3141,16 +3153,16 @@
     <value>Can't delete the token from {0}, so you are still signed in: {1}</value>
   </data>
   <data name="Settings_PublishedPacks_Label" xml:space="preserve">
-    <value>My published packs</value>
+    <value>My published translations</value>
   </data>
   <data name="Settings_PublishedPacks_Keywords" xml:space="preserve">
-    <value>published packs pull request pr discussion verified alpha</value>
+    <value>published translations packs pull request pr discussion verified alpha</value>
   </data>
   <data name="Settings_PublishedPacks_None" xml:space="preserve">
-    <value>Nothing published yet. After generating a pack, publish it from the game's Generation tab.</value>
+    <value>Nothing published yet. After creating a translation with AI, publish it from the game's Create with AI tab.</value>
   </data>
   <data name="Settings_PublishedPacks_SignIn" xml:space="preserve">
-    <value>Sign in to see packs you published.</value>
+    <value>Sign in to see translations you published.</value>
   </data>
   <data name="Activity_Event_PackSubmitted" xml:space="preserve">
     <value>Sent «{0}» to the registry</value>
@@ -3162,7 +3174,7 @@
     <value>Publish to the ailocalpack registry</value>
   </data>
   <data name="Publish_SignIn_Intro" xml:space="preserve">
-    <value>First time only. Packs are shared as GitHub pull requests, so sign in with your GitHub account.</value>
+    <value>First time only. Translations are shared as GitHub pull requests, so sign in with your GitHub account.</value>
   </data>
   <data name="Publish_SignIn_SignedInAs" xml:space="preserve">
     <value>Signed in as {0}</value>
@@ -3195,7 +3207,7 @@
     <value>Close</value>
   </data>
   <data name="Publish_Similar_Title" xml:space="preserve">
-    <value>A pack for {0} already exists</value>
+    <value>A translation into {0} already exists</value>
   </data>
   <data name="Publish_Similar_Intro" xml:space="preserve">
     <value>Improve it instead of adding a near-duplicate?</value>
@@ -3210,7 +3222,7 @@
     <value>built for build {0}</value>
   </data>
   <data name="Publish_Similar_Base" xml:space="preserve">
-    <value>Your pack is an update of it</value>
+    <value>Your translation is an update of it</value>
   </data>
   <data name="Publish_Similar_Recommended" xml:space="preserve">
     <value>Recommended</value>
@@ -3222,7 +3234,7 @@
     <value>Its players get your version as an update. {0} stays the author, you're credited for rev {1}. Status starts over at alpha.</value>
   </data>
   <data name="Publish_Similar_SeparateTitle" xml:space="preserve">
-    <value>A separate pack</value>
+    <value>A separate translation</value>
   </data>
   <data name="Publish_Similar_SeparateText" xml:space="preserve">
     <value>«{0}» is listed next to «{1}»; players choose. Pick this if your translation differs on purpose (tone, terms).</value>
@@ -3237,7 +3249,7 @@
     <value>Fork the registry</value>
   </data>
   <data name="Publish_Step_Commit" xml:space="preserve">
-    <value>Commit the pack</value>
+    <value>Commit the translation</value>
   </data>
   <data name="Publish_Step_PullRequest" xml:space="preserve">
     <value>Open a pull request</value>
@@ -3249,7 +3261,7 @@
     <value>forking the registry</value>
   </data>
   <data name="Publish_Doing_Commit" xml:space="preserve">
-    <value>committing the pack</value>
+    <value>committing the translation</value>
   </data>
   <data name="Publish_Doing_PullRequest" xml:space="preserve">
     <value>opening the pull request</value>
@@ -3258,7 +3270,7 @@
     <value>checking your account</value>
   </data>
   <data name="Publish_Error_NotSignedIn" xml:space="preserve">
-    <value>Sign in to GitHub first: packs are shared as pull requests from your account.</value>
+    <value>Sign in to GitHub first: translations are shared as pull requests from your account.</value>
   </data>
   <data name="Publish_Error_Keychain" xml:space="preserve">
     <value>Can't read your GitHub sign-in from the keychain; unlock it and publish again.</value>
@@ -3291,13 +3303,13 @@
     <value>GitHub couldn't be reached while {0}; check the connection and publish again: it continues where it stopped.</value>
   </data>
   <data name="Publish_Error_Invalid" xml:space="preserve">
-    <value>The registry would refuse this pack: {0}</value>
+    <value>The registry would refuse this translation: {0}</value>
   </data>
   <data name="Publish_Error_OptedOut" xml:space="preserve">
-    <value>The game's publisher asked not to distribute fan translations, so the registry doesn't take packs for it.</value>
+    <value>The game's publisher asked not to distribute fan translations, so the registry doesn't take translations for it.</value>
   </data>
   <data name="Publish_Error_TargetGone" xml:space="preserve">
-    <value>The pack you chose to update isn't in the registry any more; publish yours as a separate pack.</value>
+    <value>The translation you chose to update isn't in the registry any more; publish yours as a separate translation.</value>
   </data>
   <data name="Publish_Error_ForkNotReady" xml:space="preserve">
     <value>GitHub is still making your copy of the registry; publish again in a few minutes.</value>
@@ -3315,7 +3327,7 @@
     <value>Publishing {0}…</value>
   </data>
   <data name="Publish_Checking_Title" xml:space="preserve">
-    <value>PR #{0} opened · CI is checking the pack</value>
+    <value>PR #{0} opened · CI is checking the translation</value>
   </data>
   <data name="Publish_Checking_Text" xml:space="preserve">
     <value>Schema, hashes, no executables, fonts. It merges as alpha on its own when the checks pass; you can leave this page, progress is in Activity.</value>
@@ -3330,7 +3342,7 @@
     <value>Players see it with an alpha warning. It becomes verified after {0} other players confirm it works.</value>
   </data>
   <data name="Publish_Published_VerifiedText" xml:space="preserve">
-    <value>Players confirmed it works: the pack is verified.</value>
+    <value>Players confirmed it works: the translation is verified.</value>
   </data>
   <data name="Publish_Meter" xml:space="preserve">
     <value>{0} of {1} players confirmed “works”</value>
@@ -3348,7 +3360,7 @@
     <value>Link copied</value>
   </data>
   <data name="Publish_Toast_Sent" xml:space="preserve">
-    <value>Sent {0}: PR #{1} opened, CI checks the pack.</value>
+    <value>Sent {0}: PR #{1} opened, CI checks the translation.</value>
   </data>
   <data name="Publish_Toast_Failed" xml:space="preserve">
     <value>Couldn't publish {0}.</value>
@@ -3372,16 +3384,16 @@
     <value>built for {0} builds</value>
   </data>
   <data name="Publish_Resubmitted_Detail" xml:space="preserve">
-    <value>Fix pushed to PR #{0} · CI checks the pack again</value>
+    <value>Fix pushed to PR #{0} · CI checks the translation again</value>
   </data>
   <data name="Publish_Toast_Resubmitted" xml:space="preserve">
-    <value>Sent {0} again: the fix is in PR #{1}, CI checks the pack again.</value>
+    <value>Sent {0} again: the fix is in PR #{1}, CI checks the translation again.</value>
   </data>
   <data name="Publish_CiFailed_Title" xml:space="preserve">
     <value>CI rejected PR #{0}</value>
   </data>
   <data name="Publish_Ci_Scope" xml:space="preserve">
-    <value>The pull request changes files outside the pack's folder. Fix and resubmit rebuilds its branch with only this pack.</value>
+    <value>The pull request changes files outside the translation's folder. Fix and resubmit rebuilds its branch with only this translation.</value>
   </data>
   <data name="Publish_Ci_Status" xml:space="preserve">
     <value>The manifest isn't marked alpha ({0}). Fix and resubmit sends it again as alpha.</value>
@@ -3390,10 +3402,10 @@
     <value>The patch archive in your fork is missing or doesn't match the manifest ({0}). Fix and resubmit uploads it again.</value>
   </data>
   <data name="Publish_Ci_Pack" xml:space="preserve">
-    <value>The registry's checks refuse the pack: {0}. Fix and resubmit checks it here first and sends it again; if the app finds nothing wrong, update the app.</value>
+    <value>The registry's checks refuse the translation: {0}. Fix and resubmit checks it here first and sends it again; if the app finds nothing wrong, update the app.</value>
   </data>
   <data name="Publish_Ci_Registry" xml:space="preserve">
-    <value>A check of the registry itself failed, not of your pack ({0}). Fix and resubmit runs the checks again.</value>
+    <value>A check of the registry itself failed, not of your translation ({0}). Fix and resubmit runs the checks again.</value>
   </data>
   <data name="Publish_Ci_Unknown" xml:space="preserve">
     <value>CI failed without saying why. Fix and resubmit runs the checks again; Open PR shows the log.</value>
@@ -3405,7 +3417,7 @@
     <value>PR #{0} merged: {1} is in the registry as alpha</value>
   </data>
   <data name="Publish_Merged_Text" xml:space="preserve">
-    <value>The pack list updates within a few minutes; then every player sees it.</value>
+    <value>The translation list updates within a few minutes; then every player sees it.</value>
   </data>
   <data name="Publish_Closed_Title" xml:space="preserve">
     <value>PR #{0} was closed without merging</value>
@@ -3435,7 +3447,7 @@
     <value>«{0}» is verified: players confirmed it works</value>
   </data>
   <data name="Activity_Detail_PackMerged" xml:space="preserve">
-    <value>It shows for every player once the pack list updates.</value>
+    <value>It shows for every player once the translation list updates.</value>
   </data>
   <data name="Activity_Action_OpenPr" xml:space="preserve">
     <value>PR on GitHub</value>
@@ -3474,7 +3486,7 @@
     <value>What works or doesn't? (optional)</value>
   </data>
   <data name="Rating_Hint" xml:space="preserve">
-    <value>Works / Doesn't work goes to the pack's GitHub Discussion under your account, with your game's build and your comment.</value>
+    <value>Works / Doesn't work goes to the translation's GitHub Discussion under your account, with your game's build and your comment.</value>
   </data>
   <data name="Rating_Sending" xml:space="preserve">
     <value>Sending to GitHub…</value>
@@ -3483,10 +3495,10 @@
     <value>You reported «{0}» for rev {1} on {2}. Sending again replaces your report.</value>
   </data>
   <data name="Rating_Author" xml:space="preserve">
-    <value>You're credited on this pack, so you can't confirm it works: other players do.</value>
+    <value>You're credited on this translation, so you can't confirm it works: other players do.</value>
   </data>
   <data name="Rating_NoDiscussion" xml:space="preserve">
-    <value>Rating opens once the registry creates this pack's Discussion on GitHub.</value>
+    <value>Rating opens once the registry creates this translation's Discussion on GitHub.</value>
   </data>
   <data name="Rating_Prompt" xml:space="preserve">
     <value>How is «{0}»? Your answer helps other players.</value>
@@ -3495,7 +3507,7 @@
     <value>Later</value>
   </data>
   <data name="Rating_Toast_Sent" xml:space="preserve">
-    <value>Thanks! Your report was sent to the pack's GitHub Discussion.</value>
+    <value>Thanks! Your report was sent to the translation's GitHub Discussion.</value>
   </data>
   <data name="Rating_Toast_AddDetails" xml:space="preserve">
     <value>Add details</value>
@@ -3504,16 +3516,16 @@
     <value>Open</value>
   </data>
   <data name="Rating_SignIn_Title" xml:space="preserve">
-    <value>Sign in to GitHub to rate packs</value>
+    <value>Sign in to GitHub to rate translations</value>
   </data>
   <data name="Rating_SignIn_Intro" xml:space="preserve">
-    <value>Likes and reports go to the pack's GitHub Discussion under your account. Installing packs never needs an account.</value>
+    <value>Likes and reports go to the translation's GitHub Discussion under your account. Installing translations never needs an account.</value>
   </data>
   <data name="Rating_SignIn_Hint" xml:space="preserve">
     <value>Your rating is sent as soon as GitHub confirms the sign-in.</value>
   </data>
   <data name="Rating_Error_NotSignedIn" xml:space="preserve">
-    <value>Sign in to GitHub to rate packs.</value>
+    <value>Sign in to GitHub to rate translations.</value>
   </data>
   <data name="Rating_Error_Keychain" xml:space="preserve">
     <value>Couldn't read your GitHub sign-in from the system keychain. Try again, or sign in again in Settings → GitHub.</value>
@@ -3522,10 +3534,10 @@
     <value>GitHub no longer accepts your sign-in. Sign in again.</value>
   </data>
   <data name="Rating_Error_NotFound" xml:space="preserve">
-    <value>The pack's Discussion is no longer on GitHub.</value>
+    <value>The translation's Discussion is no longer on GitHub.</value>
   </data>
   <data name="Rating_Error_Locked" xml:space="preserve">
-    <value>The registry's maintainers locked the pack's Discussion: it takes no new ratings.</value>
+    <value>The registry's maintainers locked the translation's Discussion: it takes no new ratings.</value>
   </data>
   <data name="Rating_Error_Forbidden" xml:space="preserve">
     <value>GitHub refused it: {0}</value>
@@ -3597,7 +3609,7 @@
     <value>Change location…</value>
   </data>
   <data name="Settings_Storage_Backups_Note" xml:space="preserve">
-    <value>Needed to uninstall packs, so they can't be cleared here. A backup is removed when its pack is uninstalled.</value>
+    <value>Needed to uninstall translations, so they can't be cleared here. A backup is removed when its translation is uninstalled.</value>
   </data>
   <data name="Settings_Storage_Backups_PickerTitle" xml:space="preserve">
     <value>Where to keep the backups</value>
@@ -3606,7 +3618,7 @@
     <value>Move the backups?</value>
   </data>
   <data name="Settings_Storage_Move_Text" xml:space="preserve">
-    <value>The backups ({1}) move into {0}. Installed packs stay installed and can still be uninstalled; the games aren't touched. Don't remove that drive while packs are installed.</value>
+    <value>The backups ({1}) move into {0}. Installed translations stay installed and can still be uninstalled; the games aren't touched. Don't remove that drive while translations are installed.</value>
   </data>
   <data name="Settings_Storage_Move_Confirm" xml:space="preserve">
     <value>Move</value>
@@ -3615,7 +3627,7 @@
     <value>Moved. The old folder {0} couldn't be deleted yet; the app tries again on the next start.</value>
   </data>
   <data name="Settings_Storage_Move_Busy" xml:space="preserve">
-    <value>A pack is being installed or uninstalled. Try again when it has finished.</value>
+    <value>A translation is being installed or uninstalled. Try again when it has finished.</value>
   </data>
   <data name="Settings_Storage_Move_Interrupted" xml:space="preserve">
     <value>An interrupted install or move has to be finished first. Restart the app and try again.</value>
@@ -3690,10 +3702,10 @@
     <value>Delete the working copy of {0}?</value>
   </data>
   <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
-    <value>Frees {0}. Packs you made and installed packs stay; the game isn't touched.</value>
+    <value>Frees {0}. Translations you made and installed translations stay; the game isn't touched.</value>
   </data>
   <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
-    <value>Frees {0}. The paused translation's progress is lost: it can't be resumed and would start over. Installed packs stay; the game isn't touched.</value>
+    <value>Frees {0}. The paused translation's progress is lost: it can't be resumed and would start over. Installed translations stay; the game isn't touched.</value>
   </data>
   <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
     <value>Generation is running for this game. Stop it first.</value>
@@ -3702,7 +3714,7 @@
     <value>Couldn't delete it: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
-    <value>Registry index and downloaded packs</value>
+    <value>Registry index and downloaded translations</value>
   </data>
   <data name="Settings_Storage_Cache_Keywords" xml:space="preserve">
     <value>cache clear downloads index</value>
@@ -3723,7 +3735,7 @@
     <value>Freed {0}. {1} in use stays until the app is done with it.</value>
   </data>
   <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
-    <value>A pack is being installed. Try again when it has finished.</value>
+    <value>A translation is being installed. Try again when it has finished.</value>
   </data>
   <data name="Settings_About_Meta" xml:space="preserve">
     <value>{0} · {1} · © AI Local Pack contributors</value>
@@ -3808,13 +3820,13 @@
     <value>What's new</value>
   </data>
   <data name="Settings_About_Restart_Installing" xml:space="preserve">
-    <value>A pack is being installed. Restart when it finishes.</value>
+    <value>A translation is being installed. Restart when it finishes.</value>
   </data>
   <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
     <value>Restart to update now?</value>
   </data>
   <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
-    <value>Generation or publishing in progress stops. A stopped generation can be resumed on the Generation tab after the restart.</value>
+    <value>Creating with AI or publishing in progress stops. A stopped AI translation can be resumed on the Create with AI tab after the restart.</value>
   </data>
   <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
     <value>Restart</value>
@@ -3823,7 +3835,7 @@
     <value>Source code</value>
   </data>
   <data name="Settings_About_Registry" xml:space="preserve">
-    <value>Pack registry</value>
+    <value>Translation registry</value>
   </data>
   <data name="Settings_About_Report" xml:space="preserve">
     <value>Report a problem</value>
@@ -3856,7 +3868,7 @@
     <value>Disclaimer</value>
   </data>
   <data name="Settings_About_Disclaimer" xml:space="preserve">
-    <value>Community translations are not affiliated with or endorsed by game studios. Packs contain only translations and recipes; your own game copy is required. Studios can opt their games out.</value>
+    <value>Community translations are not affiliated with or endorsed by game studios. They contain only translated text and recipes; your own game copy is required. Studios can opt their games out.</value>
   </data>
   <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
     <value>legal, studios, affiliated, endorsed, opt-out</value>

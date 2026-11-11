@@ -145,8 +145,10 @@ public sealed partial class GamePageViewModel : PageViewModel
         _toasts = toasts;
         _time = time;
         _logger = logger ?? NullLogger<GamePageViewModel>.Instance;
-        Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Generation, GamePageTab.Audio, GamePageTab.Textures }
+        Tabs = [.. new[] { GamePageTab.Packs, GamePageTab.Audio, GamePageTab.Textures, GamePageTab.Generation }
             .Select(t => new GameTabViewModel(t, tab => SelectedTab = tab))];
+        LocalizationTabs = [.. Tabs.Where(t => !t.IsTool)];
+        ToolTabs = [.. Tabs.Where(t => t.IsTool)];
         PrimaryCommand = new RelayCommand(RunPrimary, () => CanRunPrimary);
         Status = statuses.Resolve(game);
         Action = GamePrimaryActions.Resolve(Status);
@@ -192,7 +194,14 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>The target language (exact tag) the page is for.</summary>
     public string Language => _statuses.Language;
 
+    /// <summary>Every tab: Text, Voice, Textures, then Create with AI.</summary>
     public IReadOnlyList<GameTabViewModel> Tabs { get; }
+
+    /// <summary>The bar's left group "Localization": what the player installs (Text; Voice and Textures soon).</summary>
+    public IReadOnlyList<GameTabViewModel> LocalizationTabs { get; }
+
+    /// <summary>The bar's right group "Tools", set apart by a divider: Create with AI.</summary>
+    public IReadOnlyList<GameTabViewModel> ToolTabs { get; }
 
     /// <summary>The Packs tab (design §4): list, details, language and sort.</summary>
     public PacksTabViewModel Packs { get; }
@@ -278,9 +287,11 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     // ---------- Primary action ----------
 
-    /// <summary>None on the Generation tab's start form (design §6: its own button starts the job).</summary>
-    public bool HasPrimaryAction => Action.Kind != GamePrimaryActionKind.None
-        && !(Action.Kind == GamePrimaryActionKind.Generate && IsGenerationTab);
+    /// <summary>
+    /// Never "Generate" (design §3: AI is a helper, not the page's main action; the empty Text tab and the Create with AI
+    /// tab offer it), so a game without a translation has no header action.
+    /// </summary>
+    public bool HasPrimaryAction => Action.Kind is not (GamePrimaryActionKind.None or GamePrimaryActionKind.Generate);
 
     /// <summary>
     /// "Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "View progress"…; Play reads
@@ -594,7 +605,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         ? _localizer[nameof(Strings.Game_Soon_TexturesText)]
         : _localizer.Format(nameof(Strings.Game_Soon_AudioText), LanguageName);
 
-    public string SoonIcon => SelectedTab == GamePageTab.Textures ? "IconImage" : "IconMusic";
+    public string SoonIcon => SelectedTab == GamePageTab.Textures ? "IconImage" : "IconMic";
 
     /// <summary>The pack list isn't known (first fetch running, registry never answered).</summary>
     public bool IsStatusUnknown => Status.Kind == LocalizationStatusKind.Unknown;

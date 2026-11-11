@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AiLocalPack.Desktop.ViewModels.GamePage;
 
-/// <summary>The game page's tabs (design §3).</summary>
+/// <summary>The game page's tabs (design §3): Text (<see cref="Packs"/>), Voice, Textures | Create with AI (<see cref="Generation"/>).</summary>
 public enum GamePageTab
 {
     /// <summary>Pick by the rule: Generation while a job exists, otherwise Packs.</summary>
@@ -50,8 +50,20 @@ public sealed partial class GameTabViewModel : ObservableObject
 
     public bool HasCounter => Counter.Length > 0;
 
-    /// <summary>The generation % is teal, the pack count plain.</summary>
+    /// <summary>The generation % is teal, the translation count plain.</summary>
     public bool IsGenCounter => Tab == GamePageTab.Generation;
+
+    /// <summary>Create with AI: the "Tools" group, teal icon and underline.</summary>
+    public bool IsTool => Tab == GamePageTab.Generation;
+
+    /// <summary>Resource key of the tab's icon: Text, Voice (mic), Textures (image), Create with AI (sparkles).</summary>
+    public string Icon => Tab switch
+    {
+        GamePageTab.Audio => "IconMic",
+        GamePageTab.Textures => "IconImage",
+        GamePageTab.Generation => "IconSparkles",
+        _ => "IconType",
+    };
 
     public IRelayCommand SelectCommand { get; }
 }

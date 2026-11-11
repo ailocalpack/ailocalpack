@@ -33,7 +33,7 @@ public sealed class GitHubSettingsSectionTests : IDisposable
 
         // Assert
         (section.Account.Title, section.Account.Help, section.Account.CanSignIn, section.BadgeCount).Should().Be(
-            ("Not signed in", "Only needed to publish packs and to rate or confirm them. Installing never needs an account.", true, 0));
+            ("Not signed in", "Only needed to publish translations and to rate or confirm them. Installing never needs an account.", true, 0));
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public sealed class GitHubSettingsSectionTests : IDisposable
 
         // Assert
         (row.IsSignedIn, row.Help, row.CanSignIn).Should().Be(
-            (false, "GitHub no longer accepts the app's access for octocat, so the app signed out. Sign in again to publish or rate packs.", true));
+            (false, "GitHub no longer accepts the app's access for octocat, so the app signed out. Sign in again to publish or rate translations.", true));
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public sealed class GitHubSettingsSectionTests : IDisposable
 
         // Assert
         (section.Account.Title, section.Account.SignIn.IsActive, section.PublishedPacks.Text).Should().Be(
-            ("octocat", false, "Nothing published yet. After generating a pack, publish it from the game's Generation tab."));
+            ("octocat", false, "Nothing published yet. After creating a translation with AI, publish it from the game's Create with AI tab."));
     }
 
     [Fact]
@@ -199,7 +199,7 @@ public sealed class GitHubSettingsSectionTests : IDisposable
         var text = Section().PublishedPacks.Text;
 
         // Assert
-        text.Should().Be("Sign in to see packs you published.");
+        text.Should().Be("Sign in to see translations you published.");
     }
 
     [Fact]

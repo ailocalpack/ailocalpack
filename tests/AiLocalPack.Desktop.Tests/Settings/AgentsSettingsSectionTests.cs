@@ -447,6 +447,6 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         var lead = Section().Lead;
 
         // Assert
-        lead.Should().StartWith("Agents are only used to generate new packs");
+        lead.Should().StartWith("Agents are only used to create new translations with AI");
     }
 }

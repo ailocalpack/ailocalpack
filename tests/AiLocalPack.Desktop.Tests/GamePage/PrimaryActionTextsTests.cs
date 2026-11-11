@@ -46,7 +46,7 @@ public sealed class PrimaryActionTextsTests
         var texts = Texts(action);
 
         // Assert
-        texts.Should().Be(("Install best pack", "«Фонарщики» · verified · made for your version"));
+        texts.Should().Be(("Install translation", "«Фонарщики» · verified · made for your version"));
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public sealed class PrimaryActionTextsTests
         var texts = Texts(action);
 
         // Assert
-        texts.Should().Be(("Install best pack", "«Фонарщики» · alpha"));
+        texts.Should().Be(("Install translation", "«Фонарщики» · alpha"));
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public sealed class PrimaryActionTextsTests
         var texts = Texts(action);
 
         // Assert
-        texts.Should().Be(("Generate translation with AI", "Uses your Claude Code or Codex subscription"));
+        texts.Should().Be(("Create translation with AI", "Uses your Claude Code or Codex subscription"));
     }
 
     [Fact]

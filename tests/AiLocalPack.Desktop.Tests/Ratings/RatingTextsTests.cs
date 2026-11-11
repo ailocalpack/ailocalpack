@@ -8,8 +8,8 @@ namespace AiLocalPack.Desktop.Tests.Ratings;
 public sealed class RatingTextsTests
 {
     [Theory]
-    [InlineData(RatingProblem.Locked, "The registry's maintainers locked the pack's Discussion: it takes no new ratings.")]
-    [InlineData(RatingProblem.NotFound, "The pack's Discussion is no longer on GitHub.")]
+    [InlineData(RatingProblem.Locked, "The registry's maintainers locked the translation's Discussion: it takes no new ratings.")]
+    [InlineData(RatingProblem.NotFound, "The translation's Discussion is no longer on GitHub.")]
     [InlineData(RatingProblem.Network, "Can't reach GitHub. Check the connection and try again.")]
     [InlineData(RatingProblem.RateLimited, "GitHub's request limit is used up for now; try again in a while.")]
     [InlineData(RatingProblem.Forbidden, "GitHub refused it: nope")]

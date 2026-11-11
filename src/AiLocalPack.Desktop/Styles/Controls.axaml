@@ -714,6 +714,16 @@
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Foreground" Value="White" />
     </Style>
+    <!-- Secondary teal button (Create with AI on the empty Text tab): a ghost button in the generation colour, never the accent fill -->
+    <Style Selector="Button.ghost.gen">
+        <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Button.ghost.gen:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.ghost.gen:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+    </Style>
     <!-- Square icon tile at the start of a settings row (Steam, a library folder, a game) -->
     <Style Selector="Border.rowPic">
         <Setter Property="Width" Value="40" />
@@ -1296,6 +1306,35 @@
     </Style>
     <Style Selector="Button.pageTab TextBlock.counter.gen">
         <Setter Property="Foreground" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <!-- Tab icons follow the tab's text colour; Create with AI (the "Tools" group) is teal with a teal underline -->
+    <Style Selector="Button.pageTab Viewbox.tabIcon Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab:pointerover Viewbox.tabIcon Path.icon, Button.pageTab.on Viewbox.tabIcon Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.soon Viewbox.tabIcon Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppFaintBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.tool Viewbox.tabIcon Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.tool.on">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <Style Selector="Button.pageTab.tool.on:pointerover /template/ ContentPresenter, Button.pageTab.tool.on:pressed /template/ ContentPresenter">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenBrush}" />
+    </Style>
+    <!-- The tab bar's "Tools" group: set apart from "Localization" by a divider -->
+    <Style Selector="Border.tabToolGroup">
+        <Setter Property="Padding" Value="14,0,0,0" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+    </Style>
+    <!-- The sticky copy of the tab bar has no group captions -->
+    <Style Selector="ContentControl.stickyTabs TextBlock.tabGroupCaption">
+        <Setter Property="IsVisible" Value="False" />
     </Style>
     <Style Selector="Border.tabSoon">
         <Setter Property="Height" Value="20" />

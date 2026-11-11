@@ -230,7 +230,7 @@ public sealed class AboutSettingsSectionTests : IDisposable
         section.Updates.RestartCommand.Execute(null);
 
         // Assert
-        (section.Updates.Error, Get<FakeAppQuit>().Quits).Should().Be(("A pack is being installed. Restart when it finishes.", 0));
+        (section.Updates.Error, Get<FakeAppQuit>().Quits).Should().Be(("A translation is being installed. Restart when it finishes.", 0));
     }
 
     [Fact]
