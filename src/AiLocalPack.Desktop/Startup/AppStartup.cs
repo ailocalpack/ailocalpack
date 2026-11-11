@@ -12,6 +12,7 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
+using AiLocalPack.Desktop.Updates;
 using Microsoft.Extensions.Logging;
 
 namespace AiLocalPack.Desktop.Startup;
@@ -34,6 +35,7 @@ public sealed class AppStartup
     public const string IndexStep = "index";
     public const string PacksStep = "packs";
     public const string JobsStep = "jobs";
+    public const string UpdatesStep = "updates";
 
     /// <summary>New games named in the Steam step's result; more are counted ("+3").</summary>
     private const int NamedNewGames = 3;
@@ -46,6 +48,7 @@ public sealed class AppStartup
     private readonly PackIndex _index;
     private readonly InstalledPackMonitor _monitor;
     private readonly GenerationService _jobs;
+    private readonly AppUpdater _updates;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
@@ -57,6 +60,7 @@ public sealed class AppStartup
     private readonly StartupStep _indexStep;
     private readonly StartupStep _packsStep;
     private readonly StartupStep _jobsStep;
+    private readonly StartupStep _updatesStep;
     private bool _backgroundStarted;
     private bool _libraryDone;
     private bool _indexDone;
@@ -70,6 +74,7 @@ public sealed class AppStartup
         PackIndex index,
         InstalledPackMonitor monitor,
         GenerationService jobs,
+        AppUpdater updates,
         Localizer localizer,
         IUiDispatcher ui,
         TimeProvider time,
@@ -83,6 +88,7 @@ public sealed class AppStartup
         _index = index;
         _monitor = monitor;
         _jobs = jobs;
+        _updates = updates;
         _localizer = localizer;
         _ui = ui;
         _logger = logger;
@@ -97,8 +103,9 @@ public sealed class AppStartup
         _indexStep = new(IndexStep, StartupPhase.Background, nameof(Strings.Startup_Step_Index), localizer, time);
         _packsStep = new(PacksStep, StartupPhase.Background, nameof(Strings.Startup_Step_Packs), localizer, time);
         _jobsStep = new(JobsStep, StartupPhase.Background, nameof(Strings.Startup_Step_Jobs), localizer, time);
+        _updatesStep = new(UpdatesStep, StartupPhase.Background, nameof(Strings.Startup_Step_Updates), localizer, time);
         Progress = new StartupProgress(
-            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep, _packsStep, _jobsStep],
+            [_settingsStep, .. _recoveryStep is null ? Array.Empty<StartupStep>() : [_recoveryStep], _catalogStep, _steamStep, _detectionStep, _indexStep, _packsStep, _jobsStep, _updatesStep],
             localizer);
     }
 
@@ -152,6 +159,44 @@ public sealed class AppStartup
                     _logger.LogError(t.Exception, "Checking the generation jobs failed");
                     Fail(_jobsStep);
                 }
+            }),
+            CancellationToken.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
+        StartUpdateCheck();
+    }
+
+    /// <summary>
+    /// The app's own update (task 67): the step ends once the release feed answered (a newer version keeps downloading
+    /// in the background); later checks run every few hours while the app runs.
+    /// </summary>
+    private void StartUpdateCheck()
+    {
+        _updatesStep.Start();
+        _ = _updates.CheckAsync().ContinueWith(
+            t => _ui.Post(() =>
+            {
+                var version = _updates.Version;
+                switch (t.IsCompletedSuccessfully ? t.Result : AppUpdateStatus.Failed)
+                {
+                    case AppUpdateStatus.Off:
+                        _updatesStep.Skip(() => _localizer[nameof(Strings.Startup_Updates_Off)]);
+                        break;
+                    case AppUpdateStatus.UpToDate:
+                        _updatesStep.Complete(StartupTone.Ok, () => _localizer[nameof(Strings.Startup_Updates_Latest)]);
+                        break;
+                    case AppUpdateStatus.Downloading:
+                        _updatesStep.Complete(StartupTone.Ok, () => _localizer.Format(nameof(Strings.Startup_Updates_Found), version ?? string.Empty));
+                        break;
+                    case AppUpdateStatus.Ready or AppUpdateStatus.Restarting:
+                        _updatesStep.Complete(StartupTone.Ok, () => _localizer.Format(nameof(Strings.Startup_Updates_Ready), version ?? string.Empty));
+                        break;
+                    default:
+                        _updatesStep.Complete(StartupTone.Warn, () => _localizer[nameof(Strings.Startup_Updates_Failed)]);
+                        break;
+                }
+
+                _updates.StartSchedule();
             }),
             CancellationToken.None,
             TaskContinuationOptions.None,

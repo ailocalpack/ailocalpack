@@ -38,6 +38,8 @@ using AiLocalPack.Desktop.Startup;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using AiLocalPack.Desktop.ViewModels.GitHub;
+using AiLocalPack.Desktop.Updates;
+using AiLocalPack.Desktop.ViewModels.Settings.About;
 using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using AiLocalPack.Desktop.ViewModels.Settings.GitHub;
 using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
@@ -137,6 +139,11 @@ internal static class Composition
         services.AddSingleton<InstallFlow>();
         services.AddSingleton<ActivityPanelViewModel>();
         services.AddSingleton<GameStatuses>();
+        // App updates (task 67): Velopack over GitHub Releases (AILOCALPACK_UPDATE_URL: a dev feed).
+        services.AddSingleton<IAppUpdateSource, VelopackUpdateSource>();
+        services.AddSingleton<IAppQuit, DesktopAppQuit>();
+        services.AddSingleton<AppUpdater>();
+        services.AddSingleton<AppUpdateRestart>();
         AddBackground(services, env, paths, loggerFactory);
         AddAgents(services);
         AddGitHub(services);
@@ -311,9 +318,7 @@ internal static class Composition
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<GitHubSettingsSection>());
         services.AddSingleton<StorageSettingsSection>();
         services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<StorageSettingsSection>());
-        AddPlaceholder(SettingsSectionId.About, "IconInfo", nameof(Strings.Settings_About_Title), nameof(Strings.Settings_About_Description));
-
-        void AddPlaceholder(SettingsSectionId id, string icon, string title, string description) =>
-            services.AddSingleton(sp => new SettingsSection(id, icon, title, description, sp.GetRequiredService<Localizer>()));
+        services.AddSingleton<AboutSettingsSection>();
+        services.AddSingleton<SettingsSection>(sp => sp.GetRequiredService<AboutSettingsSection>());
     }
 }

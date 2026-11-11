@@ -26,6 +26,7 @@
         <PackageReference Include="Serilog.Extensions.Logging" />
         <PackageReference Include="Serilog.Sinks.File" />
         <PackageReference Include="Tmds.DBus.Protocol" />
+        <PackageReference Include="Velopack" />
     </ItemGroup>
 
     <!-- UI strings: Strings.resx (English, neutral) + Strings.<lang>.resx. The build generates the typed Strings class. -->
@@ -42,6 +43,44 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
+
+    <!--
+      Third-party notices (task 67): generated at build time from the .nuspec of every NuGet package that ships in the
+      app (ResolvePackageAssets' runtime and native items) plus the components below, embedded as
+      AiLocalPack.ThirdPartyNotices.txt (Settings → About). A package whose license has no text in build/licenses, or
+      that names only a license URL, fails the build: add the text, or check the license and add a NoticeLicense.
+    -->
+    <ItemGroup>
+        <NoticeLicense Include="K4os.Compression.LZ4;K4os.Compression.LZ4.Streams;K4os.Hash.xxHash;Mono.Cecil;VGAudio" License="MIT" />
+        <NoticeExtra Include="Noto Sans fonts (bundled)" Version="2.x" License="OFL-1.1" Copyright="Copyright The Noto Project Authors" ProjectUrl="https://github.com/notofonts" />
+    </ItemGroup>
+
+    <UsingTask TaskName="AiLocalPack.Build.GenerateThirdPartyNotices" TaskFactory="RoslynCodeTaskFactory"
+               AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+        <Task>
+            <Code Type="Class" Language="cs" Source="$(MSBuildThisFileDirectory)../../build/ThirdPartyNotices.cs" />
+        </Task>
+    </UsingTask>
+
+    <Target Name="GenerateThirdPartyNotices" DependsOnTargets="ResolvePackageAssets" BeforeTargets="PrepareResources">
+        <PropertyGroup>
+            <_NoticesFile>$(IntermediateOutputPath)ThirdPartyNotices.txt</_NoticesFile>
+        </PropertyGroup>
+        <ItemGroup>
+            <_NoticePackage Include="@(RuntimeCopyLocalItems->'%(NuGetPackageId)')" Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' != ''" />
+            <_NoticePackage Include="@(NativeCopyLocalItems->'%(NuGetPackageId)')" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' != ''" />
+            <_NoticeExtra Include="@(NoticeExtra)" />
+            <_NoticeExtra Include=".NET runtime" Version="$(BundledNETCoreAppPackageVersion)" License="MIT"
+                          Copyright="Copyright (c) .NET Foundation and Contributors" ProjectUrl="https://github.com/dotnet/runtime" />
+        </ItemGroup>
+        <GenerateThirdPartyNotices Packages="@(_NoticePackage)" Extra="@(_NoticeExtra)" Overrides="@(NoticeLicense)"
+                                   PackageRoot="$(NuGetPackageRoot)" LicensesFolder="$(MSBuildThisFileDirectory)../../build/licenses"
+                                   OutputFile="$(_NoticesFile)" />
+        <ItemGroup>
+            <EmbeddedResource Include="$(_NoticesFile)" LogicalName="AiLocalPack.ThirdPartyNotices.txt" WithCulture="false" Type="Non-Resx" />
+            <FileWrites Include="$(_NoticesFile)" />
+        </ItemGroup>
+    </Target>
 
     <ItemGroup>
         <InternalsVisibleTo Include="AiLocalPack.Desktop.Tests" />

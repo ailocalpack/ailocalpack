@@ -44,6 +44,9 @@ public class SettingsSection : ObservableObject, ISearchableSection
     /// <summary>A paragraph above the groups (AI agents: what agents are for); <c>null</c> for none.</summary>
     public virtual string? Lead => null;
 
+    /// <summary>Content above the groups with a view of its own (About: logo and version); <c>null</c> for none.</summary>
+    public virtual object? Header => null;
+
     /// <summary>Called each time the section is opened (selected in the list, deep link), so it can check its state again.</summary>
     public virtual void OnShown()
     {

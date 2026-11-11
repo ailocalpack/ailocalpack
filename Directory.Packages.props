@@ -12,6 +12,8 @@
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <!-- Linux notifications and the keychain (Secret Service) over D-Bus: the same library and version Avalonia.FreeDesktop brings in -->
     <PackageVersion Include="Tmds.DBus.Protocol" Version="0.94.1" />
+    <!-- App updates from GitHub Releases (task 67); the Release workflow packs with the vpk tool of the same version -->
+    <PackageVersion Include="Velopack" Version="1.2.161" />
   </ItemGroup>
 
   <ItemGroup Label="Hosting and logging">

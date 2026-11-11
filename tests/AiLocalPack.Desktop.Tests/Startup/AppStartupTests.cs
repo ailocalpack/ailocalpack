@@ -6,6 +6,8 @@ using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Startup;
+using AiLocalPack.Desktop.Tests.Updates;
+using AiLocalPack.Desktop.Updates;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Startup;
@@ -423,5 +425,71 @@ public sealed class AppStartupTests
             Detail = "Interrupted while the app was closed: Sample Quest. Resume on the game page",
             Status = GenerationJobStatus.Interrupted,
         });
+    }
+
+    private static async Task<StartupStep> RunUpdatesStep(Action<FakeUpdateSource> source)
+    {
+        var fake = new FakeUpdateSource();
+        source(fake);
+        using var services = Build(configure: s => s.AddSingleton(fake));
+        var startup = services.GetRequiredService<AppStartup>();
+        await startup.RunBlockingAsync();
+        startup.StartBackground();
+        var step = Step(services, AppStartup.UpdatesStep);
+        await WaitUntilFinished(step);
+        await services.GetRequiredService<AppUpdater>().Download;
+        return step;
+    }
+
+    [Fact]
+    public async Task Updates_step_is_skipped_in_a_development_build()
+    {
+        // Arrange
+        static void Source(FakeUpdateSource s) => s.Install = AppInstallKind.Development;
+
+        // Act
+        var step = await RunUpdatesStep(Source);
+
+        // Assert
+        (step.IsSkipped, step.Detail).Should().Be((true, "Off: this copy wasn't installed from a release"));
+    }
+
+    [Fact]
+    public async Task Updates_step_says_up_to_date()
+    {
+        // Arrange
+        static void Source(FakeUpdateSource s) => s.Offer = null;
+
+        // Act
+        var step = await RunUpdatesStep(Source);
+
+        // Assert
+        (step.IsOk, step.Detail).Should().Be((true, "Up to date"));
+    }
+
+    [Fact]
+    public async Task Updates_step_names_the_version_found()
+    {
+        // Arrange
+        static void Source(FakeUpdateSource s) => s.Offer = "0.5.0";
+
+        // Act
+        var step = await RunUpdatesStep(Source);
+
+        // Assert
+        (step.IsOk, step.Detail).Should().Be((true, "0.5.0 found, downloading in the background"));
+    }
+
+    [Fact]
+    public async Task Updates_step_warns_when_the_feed_is_unreachable()
+    {
+        // Arrange
+        static void Source(FakeUpdateSource s) => s.CheckFailure = new HttpRequestException("offline");
+
+        // Act
+        var step = await RunUpdatesStep(Source);
+
+        // Assert
+        (step.IsWarn, step.Detail).Should().Be((true, "Couldn't reach GitHub Releases"));
     }
 }

@@ -74,6 +74,12 @@ public enum ActivityEventKind
 
     /// <summary>The player's published pack became <c>verified</c> (the index says so).</summary>
     PackVerified,
+
+    /// <summary>
+    /// A new version of the app was downloaded in the background (task 67): <c>Restart now</c> while it waits;
+    /// <see cref="ActivityEvent.Version"/> names it.
+    /// </summary>
+    AppUpdateReady,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -125,6 +131,9 @@ public sealed record ActivityEvent
 
     /// <summary>A page on GitHub it is about (the pull request); https only.</summary>
     public Uri? Link { get; init; }
+
+    /// <summary>The app version an app update event is about (<see cref="ActivityEventKind.AppUpdateReady"/>).</summary>
+    public string? Version { get; init; }
 
     /// <summary>When a paused generation goes on by itself (<see cref="ActivityEventKind.GenerationPaused"/>).</summary>
     public DateTimeOffset? Until { get; init; }
@@ -243,7 +252,8 @@ public static class ActivityEvents
     public static ActivityTone ToneOf(ActivityEventKind kind) => kind switch
     {
         ActivityEventKind.PackInstalled or ActivityEventKind.PackReapplied or ActivityEventKind.PackAutoReapplied
-            or ActivityEventKind.PackSubmitted or ActivityEventKind.PackMerged or ActivityEventKind.PackVerified => ActivityTone.Ok,
+            or ActivityEventKind.PackSubmitted or ActivityEventKind.PackMerged or ActivityEventKind.PackVerified
+            or ActivityEventKind.AppUpdateReady => ActivityTone.Ok,
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
             or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed or ActivityEventKind.PullRequestFailed => ActivityTone.Bad,
         ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied or ActivityEventKind.GlossaryReview => ActivityTone.Attention,

@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ab="using:AiLocalPack.Desktop.ViewModels.Settings.About"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.ThirdPartyNoticesDialogView"
+             x:DataType="ab:ThirdPartyNoticesDialogViewModel"
+             Width="720">
+    <!-- Settings → About → Third-party notices (task 67): the generated list, scrollable, selectable. -->
+    <Border Classes="dialog">
+        <DockPanel Margin="24,22,24,20">
+            <TextBlock DockPanel.Dock="Top" x:Name="NoticesTitle" Classes="dialogTitle" FontSize="18" Margin="0,0,0,12"
+                       Text="{l:Loc Settings_About_Notices}" />
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button x:Name="CloseButton" Classes="ghost" Command="{Binding CloseCommand}" Content="{l:Loc Notices_Close}" />
+            </StackPanel>
+            <TextBox x:Name="NoticesText" Classes="log" MaxHeight="460" Height="460" Text="{Binding Text, Mode=OneWay}"
+                     AutomationProperties.Name="{l:Loc Settings_About_Notices}" />
+        </DockPanel>
+    </Border>
+</UserControl>

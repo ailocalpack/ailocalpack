@@ -5,6 +5,7 @@ using AiLocalPack.Desktop.Logging;
 using AiLocalPack.Mcp;
 using Avalonia;
 using Microsoft.Extensions.Logging;
+using Velopack;
 
 namespace AiLocalPack.Desktop;
 
@@ -19,6 +20,10 @@ internal static class Program
         {
             return ToolkitServerLaunch.Run(args, OsEnvironment.Current, Console.Error);
         }
+
+        // Velopack (task 67): install / update / uninstall hooks exit here before any UI, and an update downloaded
+        // earlier is applied on start. After the MCP server check, so an agent's toolkit server never restarts into one.
+        VelopackApp.Build().Run();
 
         var paths = AppPaths.Resolve(OsEnvironment.Current);
         using var loggerFactory = AppLogging.CreateFactory(paths.Logs);

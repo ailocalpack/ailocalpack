@@ -6,6 +6,7 @@
              xmlns:ag="using:AiLocalPack.Desktop.ViewModels.Settings.Agents"
              xmlns:gh="using:AiLocalPack.Desktop.ViewModels.Settings.GitHub"
              xmlns:st="using:AiLocalPack.Desktop.ViewModels.Settings.Storage"
+             xmlns:ab="using:AiLocalPack.Desktop.ViewModels.Settings.About"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
              x:Class="AiLocalPack.Desktop.Views.SettingsView"
@@ -387,6 +388,118 @@
             </Border>
         </DataTemplate>
 
+        <!-- Settings → About (task 67) -->
+        <DataTemplate DataType="ab:AboutHeader">
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <Image Source="/Assets/logo.png" Width="56" Height="56" RenderOptions.BitmapInterpolationMode="HighQuality" />
+                <StackPanel Spacing="2" VerticalAlignment="Center">
+                    <SelectableTextBlock x:Name="AboutVersion" Classes="h1" FontSize="22" Text="{Binding Title}" />
+                    <SelectableTextBlock x:Name="AboutMeta" Classes="muted" FontSize="13" Text="{Binding Meta}" TextWrapping="Wrap" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="ab:AppUpdateRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" IsVisible="{Binding IsLatest}">
+                                <Path Classes="icon" Data="{StaticResource IconCheckCircle}" Stroke="{DynamicResource AppOkBrush}" />
+                            </Viewbox>
+                            <TextBlock x:Name="UpdateHelp" Classes="rowHelp" Classes.bad="{Binding IsFailed}" Text="{Binding Help}" />
+                        </StackPanel>
+                        <HyperlinkButton x:Name="WhatsNew" Classes="inline" Content="{Binding WhatsNewText}" Command="{Binding WhatsNewCommand}" IsVisible="{Binding IsReady}" />
+                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Percent}"
+                                     IsVisible="{Binding IsDownloading}" Height="4" MinHeight="4" Margin="0,4,0,0" />
+                        <TextBlock x:Name="UpdateError" Classes="error" Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Panel Grid.Column="1" VerticalAlignment="Center">
+                        <Button x:Name="CheckUpdates" Classes="ghost sm" Command="{Binding CheckCommand}" IsVisible="{Binding CanCheck}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding CheckText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="ghost sm" IsEnabled="False" IsVisible="{Binding IsChecking}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon spin" Width="14" Height="14">
+                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding CheckingText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="RestartToUpdate" Classes="accent sm" Command="{Binding RestartCommand}" IsVisible="{Binding IsReady}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding RestartText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="accent sm" IsEnabled="False" IsVisible="{Binding IsRestarting}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon spin" Width="14" Height="14">
+                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{Binding $parent[Button].Foreground}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding RestartingText}" />
+                            </StackPanel>
+                        </Button>
+                    </Panel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="ab:LinkSettingRow">
+            <Border Classes="settingRow" Padding="0">
+                <Button Classes="bare rowLink" Command="{Binding OpenCommand}" AutomationProperties.Name="{Binding Label}" ToolTip.Tip="{Binding Uri}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                        <Border Classes="rowPic">
+                            <Viewbox Classes="icon" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Panel>
+                                    <Path Classes="brand" Data="{Binding IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" IsVisible="{Binding IsBrand}" />
+                                    <Path Classes="icon" Data="{Binding IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                          Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding !IsBrand}" />
+                                </Panel>
+                            </Viewbox>
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                            <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}"
+                                                      Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding Help}" />
+                        </StackPanel>
+                        <Viewbox Grid.Column="2" Classes="icon" Width="14" Height="14" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </Grid>
+                </Button>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="ab:LicensesRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <Button x:Name="ThirdPartyNotices" Grid.Column="1" Classes="bare sm" VerticalAlignment="Center" Command="{Binding NoticesCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding NoticesText}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="ab:InfoSettingRow">
+            <Border Classes="settingRow">
+                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+            </Border>
+        </DataTemplate>
+
         <!-- Settings → GitHub -->
         <DataTemplate DataType="gh:GitHubAccountRow">
             <Border Classes="settingRow">
@@ -544,6 +657,8 @@
                         <TextBlock x:Name="SectionTitle" Classes="h1" FontSize="26" Text="{Binding SelectedSection.Title}" />
                         <TextBlock Classes="muted" Text="{Binding SelectedSection.Description}" TextWrapping="Wrap" />
                     </StackPanel>
+                    <ContentControl x:Name="SectionHeader" Content="{Binding SelectedSection.Header}"
+                                    IsVisible="{Binding SelectedSection.Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <TextBlock x:Name="SectionLead" Classes="lead" Text="{Binding SelectedSection.Lead}"
                                IsVisible="{Binding SelectedSection.Lead, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                     <!-- The section's own alerts: tone card, the reason, the fixing button -->

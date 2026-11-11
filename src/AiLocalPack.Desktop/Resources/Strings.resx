@@ -3725,4 +3725,176 @@
   <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
     <value>A pack is being installed. Try again when it has finished.</value>
   </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © AI Local Pack contributors</value>
+    <comment>{0} = channel, {1} = platform.</comment>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>Stable channel</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>Channel: {0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0} (portable)</value>
+    <comment>{0} = OS name.</comment>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0} (development build)</value>
+    <comment>{0} = OS name.</comment>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>Legal</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>update</value>
+    <comment>Quiet hint next to About in the section list while an app update waits.</comment>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>App updates</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>update, upgrade, version, release, restart, velopack</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>This copy wasn't installed from a release, so it doesn't update itself.</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>Updates download in the background from GitHub Releases.</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>Checking GitHub Releases…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>You're on the latest version. Checked at {0}.</value>
+    <comment>{0} = time of day.</comment>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>Downloading {0}… {1} %</value>
+    <comment>{0} = version, {1} = percent.</comment>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>{0} is downloaded and ready. It also goes in the next time the app starts.</value>
+    <comment>{0} = version.</comment>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>Restarting…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>Couldn't check for updates: GitHub Releases didn't answer. The app tries again later.</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>Check again</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>Checking</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>Restart to update</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>Restarting</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>A pack is being installed. Restart when it finishes.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>Restart to update now?</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>Generation or publishing in progress stops. A stopped generation can be resumed on the Generation tab after the restart.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>Source code</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>Pack registry</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>Report a problem</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA and takedowns</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>How studios can request removal</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>github, source, repository, issues, bug, dmca, takedown, opt-out</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>App: Apache-2.0. Registry content: CC BY-SA 4.0.</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>license, apache, creative commons, cc by-sa, third-party, notices, open source</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>Third-party notices</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>Disclaimer</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>Community translations are not affiliated with or endorsed by game studios. Packs contain only translations and recipes; your own game copy is required. Studios can opt their games out.</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>legal, studios, affiliated, endorsed, opt-out</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>This build has no third-party notices. See the source repository.</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} is ready to install</value>
+    <comment>{0} = version.</comment>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>Downloaded in the background. Restart takes a few seconds.</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>Restart now</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>Checking for app updates</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>Off: this copy wasn't installed from a release</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>Up to date</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>{0} found, downloading in the background</value>
+    <comment>{0} = version.</comment>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>{0} is ready: restart to update</value>
+    <comment>{0} = version.</comment>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>Couldn't reach GitHub Releases</value>
+  </data>
 </root>

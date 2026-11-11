@@ -2,7 +2,13 @@
 
     <PropertyGroup>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <!-- build/ThirdPartyNotices.cs without its MSBuild task: the notices writer only -->
+        <DefineConstants>$(DefineConstants);NOTICES_WRITER_ONLY</DefineConstants>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\build\ThirdPartyNotices.cs" Link="Build\ThirdPartyNotices.cs" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Headless" />

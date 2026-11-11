@@ -1,5 +1,6 @@
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
+using AiLocalPack.Desktop.ViewModels.Settings.About;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Settings;
@@ -55,7 +56,7 @@ public sealed class SettingsViewModelTests : IDisposable
 
         // Assert
         vm.SelectedSection.Id.Should().Be(section);
-        vm.SelectedSection.IsComingSoon.Should().BeTrue();
+        vm.SelectedSection.Should().BeOfType<AboutSettingsSection>();
     }
 
     [Fact]

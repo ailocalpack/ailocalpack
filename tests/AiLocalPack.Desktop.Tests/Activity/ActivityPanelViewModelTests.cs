@@ -7,6 +7,9 @@ using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Tests.Install;
+using AiLocalPack.Desktop.Services;
+using AiLocalPack.Desktop.Tests.Updates;
+using AiLocalPack.Desktop.Updates;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -328,5 +331,93 @@ public sealed class ActivityPanelViewModelTests
         outcome.Succeeded.Should().BeTrue();
         _ = Panel(bed.Services);
         File.WriteAllBytes(path, original);
+    }
+
+    /// <summary>The app updater found and downloaded 0.5.0 (which adds its feed event).</summary>
+    private static async Task<AppUpdater> UpdateReadyAsync(IServiceProvider services)
+    {
+        services.GetRequiredService<FakeUpdateSource>().Offer = "0.5.0";
+        var updater = services.GetRequiredService<AppUpdater>();
+        await updater.CheckAsync(TestContext.Current.CancellationToken);
+        await updater.Download;
+        return updater;
+    }
+
+    [Fact]
+    public async Task App_update_shows_in_the_feed_with_restart_now()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = Panel(services);
+
+        // Act
+        await UpdateReadyAsync(services);
+
+        // Assert
+        var row = panel.Days.Single().Rows.Single();
+        (row.Title, row.Detail, row.GameName, row.IsOk, row.Actions.Single().Text)
+            .Should().Be(("AI Local Pack 0.5.0 is ready to install", "Downloaded in the background. Restart takes a few seconds.", "AI Local Pack", true, "Restart now"));
+    }
+
+    [Fact]
+    public async Task Restart_now_restarts_into_the_update()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = Panel(services);
+        await UpdateReadyAsync(services);
+
+        // Act
+        panel.Days.Single().Rows.Single().Actions.Single().Command.Execute(null);
+
+        // Assert
+        (services.GetRequiredService<FakeUpdateSource>().Applied?.Version, services.GetRequiredService<FakeAppQuit>().Quits).Should().Be(("0.5.0", 1));
+    }
+
+    [Fact]
+    public async Task Restart_now_during_an_install_says_why_in_a_toast()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = Panel(services);
+        await UpdateReadyAsync(services);
+        Store(services).SetTask(new ActivityTask("i", ActivityTaskKind.Install, GameId.Steam(10), "Alpha", "Installing", null, null, Now));
+
+        // Act
+        panel.Days.Single().Rows.Single().Actions.Single().Command.Execute(null);
+
+        // Assert
+        (services.GetRequiredService<ToastService>().Items.Single().Text, services.GetRequiredService<FakeAppQuit>().Quits)
+            .Should().Be(("A pack is being installed. Restart when it finishes.", 0));
+    }
+
+    [Fact]
+    public void App_update_already_applied_has_no_restart()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = Panel(services);
+
+        // Act
+        Store(services).Add(ActivityEvent.Create(ActivityEventKind.AppUpdateReady, Now) with { Id = "old", Version = "0.3.0" });
+
+        // Assert
+        panel.Days.Single().Rows.Single().Actions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task App_update_row_opens_settings_about()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = Panel(services);
+        await UpdateReadyAsync(services);
+
+        // Act
+        panel.Days.Single().Rows.Single().OpenCommand.Execute(null);
+
+        // Assert
+        services.GetRequiredService<INavigationService>().Current.Should().BeOfType<SettingsViewModel>()
+            .Which.SelectedSection.Id.Should().Be(SettingsSectionId.About);
     }
 }

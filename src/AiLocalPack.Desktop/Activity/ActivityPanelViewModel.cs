@@ -15,6 +15,7 @@ using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
+using AiLocalPack.Desktop.Updates;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.ViewModels.Settings;
@@ -45,6 +46,9 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private readonly GenerationService _jobs;
     private readonly PublishFlow _publish;
     private readonly LocalPacks _localPacks;
+    private readonly AppUpdater _updates;
+    private readonly AppUpdateRestart _restart;
+    private readonly ToastService _toasts;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly TimeProvider _time;
@@ -65,6 +69,9 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         GenerationService jobs,
         PublishFlow publish,
         LocalPacks localPacks,
+        AppUpdater updates,
+        AppUpdateRestart restart,
+        ToastService toasts,
         StartupProgress startup,
         Localizer localizer,
         IUiDispatcher ui,
@@ -83,12 +90,17 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         _jobs = jobs;
         _publish = publish;
         _localPacks = localPacks;
+        _updates = updates;
+        _restart = restart;
+        _toasts = toasts;
         _localizer = localizer;
         _ui = ui;
         _time = time;
         Startup = startup;
         _store.Changed += (_, _) => QueueRefresh();
         _packIndex.Changed += (_, _) => QueueRefresh(events: true);
+        // Restart now shows only while the update it names waits.
+        _updates.Changed += (_, _) => QueueRefresh(events: true);
         _localizer.CultureChanged += (_, _) => Refresh(events: true);
         Startup.PropertyChanged += OnStartupChanged;
         Refresh(events: true);
@@ -302,7 +314,9 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         row.Detail = ActivityTexts.Detail(activity, later?.Revision, _localizer, _time);
         row.Time = ActivityTexts.Time(activity.Time, _time.LocalTimeZone, _localizer);
         row.IsUnread = kind == ActivityRowKind.Event && !activity.IsRead;
-        row.Actions = game is null ? [] : Actions(activity, game, later, kind == ActivityRowKind.Decision);
+        row.Actions = activity.Kind == ActivityEventKind.AppUpdateReady ? AppUpdateActions(activity)
+            : game is null ? []
+            : Actions(activity, game, later, kind == ActivityRowKind.Decision);
         LoadCover(row);
         return row;
     }
@@ -406,6 +420,27 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             }));
     }
 
+    /// <summary><c>Restart now</c> while the update the event names is downloaded and waiting (task 67).</summary>
+    private List<ActivityActionViewModel> AppUpdateActions(ActivityEvent activity)
+    {
+        if (_updates.Status != AppUpdateStatus.Ready || _updates.Version != activity.Version)
+        {
+            return [];
+        }
+
+        return
+        [
+            new(_localizer[nameof(Strings.Activity_Action_RestartNow)], "IconRefresh", true, new RelayCommand(() =>
+            {
+                _store.MarkRead(activity.Id);
+                if (_restart.Request() is { } reason)
+                {
+                    _toasts.Show(new ToastViewModel(ToastTone.Bad, reason, []));
+                }
+            })),
+        ];
+    }
+
     /// <summary>The local pack whose report records the event's PR (task 62), else <c>null</c>.</summary>
     private Core.Packs.LocalPack? PublishedPack(ActivityEvent activity) =>
         activity.Game is { } game && activity.PullRequest is { } number
@@ -457,6 +492,13 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private void Open(ActivityEvent activity)
     {
         _store.MarkRead(activity.Id);
+        if (activity.Kind == ActivityEventKind.AppUpdateReady)
+        {
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+            _navigation.NavigateTo(_pages.Create<SettingsViewModel>(SettingsSectionId.About));
+            return;
+        }
+
         var generation = activity.Kind is ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview
             || (activity.Kind == ActivityEventKind.PackIncompatible && LaterRevision(activity) is null);
         OpenGame(activity.Game, generation ? GamePageTab.Generation : GamePageTab.Packs);

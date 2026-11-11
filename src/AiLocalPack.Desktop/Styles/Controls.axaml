@@ -107,6 +107,18 @@
         <Setter Property="MinHeight" Value="64" />
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
     </Style>
+    <!-- A whole row that opens a page (Settings → About links): hover tint, focus ring from the button -->
+    <Style Selector="Button.rowLink">
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="MinHeight" Value="64" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.rowLink:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
     <Style Selector="ItemsControl.rows > ContentPresenter:nth-child(n+2) Border.settingRow">
         <Setter Property="BorderThickness" Value="0,1,0,0" />
     </Style>

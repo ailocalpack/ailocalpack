@@ -12,6 +12,11 @@ public static class ActivityTexts
     {
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(localizer);
+        if (activity.Kind == ActivityEventKind.AppUpdateReady)
+        {
+            return localizer.Format(nameof(Strings.Activity_Event_AppUpdateReady), activity.Version ?? string.Empty);
+        }
+
         var key = activity.Kind switch
         {
             ActivityEventKind.PackInstalled => nameof(Strings.Activity_Event_PackInstalled),
@@ -56,6 +61,7 @@ public static class ActivityTexts
                 : localizer[nameof(Strings.Activity_Detail_Translate)],
             ActivityEventKind.PackNotApplied => localizer[nameof(Strings.Activity_Detail_NotApplied)],
             ActivityEventKind.PackMerged => localizer[nameof(Strings.Activity_Detail_PackMerged)],
+            ActivityEventKind.AppUpdateReady => localizer[nameof(Strings.Activity_Detail_AppUpdateReady)],
             _ when activity.Detail is { } detail => activity.FilesRestored ? detail : detail + " " + localizer[nameof(Strings.Activity_Detail_NotRestored)],
             _ => null,
         };

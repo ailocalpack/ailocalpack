@@ -3796,4 +3796,166 @@
   <data name="Settings_Storage_Cache_Busy" xml:space="preserve">
     <value>Сейчас устанавливается пакет. Попробуйте, когда он закончит.</value>
   </data>
+  <data name="Settings_About_Meta" xml:space="preserve">
+    <value>{0} · {1} · © участники AI Local Pack</value>
+  </data>
+  <data name="Settings_About_ChannelStable" xml:space="preserve">
+    <value>Стабильный канал</value>
+  </data>
+  <data name="Settings_About_Channel" xml:space="preserve">
+    <value>Канал: {0}</value>
+  </data>
+  <data name="Settings_About_Platform_Portable" xml:space="preserve">
+    <value>{0} (портативная)</value>
+  </data>
+  <data name="Settings_About_Platform_Development" xml:space="preserve">
+    <value>{0} (сборка для разработки)</value>
+  </data>
+  <data name="Settings_Group_Updates" xml:space="preserve">
+    <value>Обновления</value>
+  </data>
+  <data name="Settings_Group_Links" xml:space="preserve">
+    <value>Ссылки</value>
+  </data>
+  <data name="Settings_Group_Legal" xml:space="preserve">
+    <value>Правовая информация</value>
+  </data>
+  <data name="Settings_About_Hint_Update" xml:space="preserve">
+    <value>обновление</value>
+  </data>
+  <data name="Settings_About_Updates_Label" xml:space="preserve">
+    <value>Обновления приложения</value>
+  </data>
+  <data name="Settings_About_Updates_Keywords" xml:space="preserve">
+    <value>обновление, обновить, версия, релиз, перезапуск</value>
+  </data>
+  <data name="Settings_About_Updates_Off" xml:space="preserve">
+    <value>Эта копия установлена не из релиза, поэтому сама не обновляется.</value>
+  </data>
+  <data name="Settings_About_Updates_Idle" xml:space="preserve">
+    <value>Обновления скачиваются в фоне из GitHub Releases.</value>
+  </data>
+  <data name="Settings_About_Updates_Checking" xml:space="preserve">
+    <value>Проверяем GitHub Releases…</value>
+  </data>
+  <data name="Settings_About_Updates_Latest" xml:space="preserve">
+    <value>У вас последняя версия. Проверено в {0}.</value>
+  </data>
+  <data name="Settings_About_Updates_Downloading" xml:space="preserve">
+    <value>Скачиваем {0}… {1} %</value>
+  </data>
+  <data name="Settings_About_Updates_Ready" xml:space="preserve">
+    <value>Версия {0} скачана и готова. Она установится и при следующем запуске приложения.</value>
+  </data>
+  <data name="Settings_About_Updates_Restarting" xml:space="preserve">
+    <value>Перезапуск…</value>
+  </data>
+  <data name="Settings_About_Updates_Failed" xml:space="preserve">
+    <value>Не удалось проверить обновления: GitHub Releases не ответил. Приложение попробует позже.</value>
+  </data>
+  <data name="Settings_About_Check" xml:space="preserve">
+    <value>Проверить обновления</value>
+  </data>
+  <data name="Settings_About_CheckAgain" xml:space="preserve">
+    <value>Проверить снова</value>
+  </data>
+  <data name="Settings_About_Checking" xml:space="preserve">
+    <value>Проверяем</value>
+  </data>
+  <data name="Settings_About_Restart" xml:space="preserve">
+    <value>Перезапустить и обновить</value>
+  </data>
+  <data name="Settings_About_Restarting" xml:space="preserve">
+    <value>Перезапуск</value>
+  </data>
+  <data name="Settings_About_WhatsNew" xml:space="preserve">
+    <value>Что нового</value>
+  </data>
+  <data name="Settings_About_Restart_Installing" xml:space="preserve">
+    <value>Сейчас устанавливается пак. Перезапустите, когда установка закончится.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Title" xml:space="preserve">
+    <value>Перезапустить и обновить сейчас?</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Text" xml:space="preserve">
+    <value>Идущие генерация или публикация остановятся. Остановленную генерацию можно продолжить на вкладке «Генерация» после перезапуска.</value>
+  </data>
+  <data name="Settings_About_RestartConfirm_Confirm" xml:space="preserve">
+    <value>Перезапустить</value>
+  </data>
+  <data name="Settings_About_Source" xml:space="preserve">
+    <value>Исходный код</value>
+  </data>
+  <data name="Settings_About_Registry" xml:space="preserve">
+    <value>Реестр паков</value>
+  </data>
+  <data name="Settings_About_Report" xml:space="preserve">
+    <value>Сообщить о проблеме</value>
+  </data>
+  <data name="Settings_About_Report_Help" xml:space="preserve">
+    <value>GitHub Issues</value>
+  </data>
+  <data name="Settings_About_Dmca" xml:space="preserve">
+    <value>DMCA и удаление</value>
+  </data>
+  <data name="Settings_About_Dmca_Help" xml:space="preserve">
+    <value>Как студии могут запросить удаление</value>
+  </data>
+  <data name="Settings_About_Links_Keywords" xml:space="preserve">
+    <value>гитхаб, исходники, репозиторий, ошибка, баг, dmca, удаление</value>
+  </data>
+  <data name="Settings_About_Licenses_Label" xml:space="preserve">
+    <value>Лицензии</value>
+  </data>
+  <data name="Settings_About_Licenses_Help" xml:space="preserve">
+    <value>Приложение: Apache-2.0. Содержимое реестра: CC BY-SA 4.0.</value>
+  </data>
+  <data name="Settings_About_Licenses_Keywords" xml:space="preserve">
+    <value>лицензия, apache, creative commons, сторонние, открытый код</value>
+  </data>
+  <data name="Settings_About_Notices" xml:space="preserve">
+    <value>Сторонние компоненты</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Label" xml:space="preserve">
+    <value>Отказ от ответственности</value>
+  </data>
+  <data name="Settings_About_Disclaimer" xml:space="preserve">
+    <value>Переводы сообщества не связаны со студиями-разработчиками игр и не одобрены ими. Паки содержат только переводы и рецепты; нужна ваша собственная копия игры. Студии могут исключить свои игры.</value>
+  </data>
+  <data name="Settings_About_Disclaimer_Keywords" xml:space="preserve">
+    <value>правовая, студии, одобрение, исключение</value>
+  </data>
+  <data name="Notices_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Notices_Missing" xml:space="preserve">
+    <value>В этой сборке нет списка сторонних компонентов. Смотрите репозиторий с исходным кодом.</value>
+  </data>
+  <data name="Activity_Event_AppUpdateReady" xml:space="preserve">
+    <value>AI Local Pack {0} готов к установке</value>
+  </data>
+  <data name="Activity_Detail_AppUpdateReady" xml:space="preserve">
+    <value>Скачано в фоне. Перезапуск займёт несколько секунд.</value>
+  </data>
+  <data name="Activity_Action_RestartNow" xml:space="preserve">
+    <value>Перезапустить</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>Проверка обновлений приложения</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>Выключено: копия установлена не из релиза</value>
+  </data>
+  <data name="Startup_Updates_Latest" xml:space="preserve">
+    <value>Последняя версия</value>
+  </data>
+  <data name="Startup_Updates_Found" xml:space="preserve">
+    <value>Найдена версия {0}, скачивается в фоне</value>
+  </data>
+  <data name="Startup_Updates_Ready" xml:space="preserve">
+    <value>Версия {0} готова: перезапустите для обновления</value>
+  </data>
+  <data name="Startup_Updates_Failed" xml:space="preserve">
+    <value>Не удалось связаться с GitHub Releases</value>
+  </data>
 </root>

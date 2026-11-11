@@ -365,7 +365,8 @@ public sealed class ActivityStore
         e.IsHidden,
         e.Until?.ToUniversalTime(),
         e.PullRequest,
-        e.Link?.AbsoluteUri);
+        e.Link?.AbsoluteUri,
+        e.Version);
 
     private static ActivityEvent? FromJson(ActivityEventJson? json)
     {
@@ -403,6 +404,7 @@ public sealed class ActivityStore
             Until = json.Until,
             PullRequest = json.PullRequest is > 0 ? json.PullRequest : null,
             Link = Uri.TryCreate(json.Link, UriKind.Absolute, out var link) && link.Scheme == Uri.UriSchemeHttps ? link : null,
+            Version = json.Version,
         };
     }
 }

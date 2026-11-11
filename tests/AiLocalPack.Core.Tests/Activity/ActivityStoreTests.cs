@@ -244,6 +244,19 @@ public sealed class ActivityStoreTests : IDisposable
     }
 
     [Fact]
+    public void An_app_updates_version_round_trips_without_a_game()
+    {
+        // Arrange
+        Store().Add(ActivityEvent.Create(ActivityEventKind.AppUpdateReady, Noon) with { Id = "app", Version = "0.5.0", Key = "app-update:0.5.0" });
+
+        // Act
+        var read = Store().Feed.Single();
+
+        // Assert
+        (read.Kind, read.Version, read.Game, read.IsDecision, read.Tone).Should().Be((ActivityEventKind.AppUpdateReady, "0.5.0", (GameId?)null, false, ActivityTone.Ok));
+    }
+
+    [Fact]
     public void Hidden_and_set_aside_state_round_trips()
     {
         // Arrange

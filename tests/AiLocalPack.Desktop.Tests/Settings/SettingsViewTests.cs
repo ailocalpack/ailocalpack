@@ -94,6 +94,57 @@ public sealed class SettingsViewTests
     });
 
     [Fact]
+    public Task About_section_shows_the_version_and_the_update_button() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = TestServices.Build();
+
+        // Act
+        var window = Open(services, SettingsSectionId.About);
+
+        // Assert
+        (Find<SelectableTextBlock>(window, "AboutVersion").Text, Find<TextBlock>(window, "UpdateHelp").Text,
+            Find<Button>(window, "CheckUpdates").IsEffectivelyVisible, Find<Button>(window, "RestartToUpdate").IsEffectivelyVisible,
+            Find<Button>(window, "ThirdPartyNotices").IsEffectivelyVisible)
+            .Should().Be(("AI Local Pack 0.4.0", "Updates download in the background from GitHub Releases.", true, false, true));
+        window.Close();
+    });
+
+    [Fact]
+    public Task About_section_offers_restart_once_an_update_is_downloaded() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        // An update downloaded earlier (blocking on a download here would hold the UI thread it continues on).
+        var source = new Tests.Updates.FakeUpdateSource { PendingRestart = new Desktop.Updates.AppUpdateOffer("0.5.0", null) };
+        using var services = TestServices.Build(s => s.AddSingleton(source));
+
+        // Act
+        var window = Open(services, SettingsSectionId.About);
+
+        // Assert
+        (Find<Button>(window, "CheckUpdates").IsEffectivelyVisible, Find<Button>(window, "RestartToUpdate").IsEffectivelyVisible,
+            Find<HyperlinkButton>(window, "WhatsNew").IsEffectivelyVisible)
+            .Should().Be((false, true, true));
+        window.Close();
+    });
+
+    [Fact]
+    public Task Third_party_notices_dialog_shows_the_list() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = TestServices.Build();
+        var window = Open(services, SettingsSectionId.About);
+
+        // Act
+        Find<Button>(window, "ThirdPartyNotices").Command!.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        Find<TextBox>(window, "NoticesText").Text.Should().StartWith("AI Local Pack: third-party notices");
+        window.Close();
+    });
+
+    [Fact]
     public Task Agents_section_shows_each_agent_with_its_status() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
