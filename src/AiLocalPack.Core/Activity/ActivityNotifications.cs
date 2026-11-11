@@ -25,7 +25,14 @@ public static class ActivityNotifications
     public static NotificationCategory CategoryOf(ActivityEvent activity)
     {
         ArgumentNullException.ThrowIfNull(activity);
-        return activity.IsDecision ? NotificationCategory.NeedsDecision : NotificationCategory.TaskFinished;
+        if (activity.IsDecision)
+        {
+            return NotificationCategory.NeedsDecision;
+        }
+
+        return activity.Kind is ActivityEventKind.PackMerged or ActivityEventKind.PackVerified or ActivityEventKind.PullRequestClosed
+            ? NotificationCategory.Community
+            : NotificationCategory.TaskFinished;
     }
 
     /// <param name="windowActive">The app's window is shown and active: the player sees the panel and the toasts.</param>

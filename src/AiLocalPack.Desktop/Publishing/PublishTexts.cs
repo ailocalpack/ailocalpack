@@ -58,6 +58,26 @@ public static class PublishTexts
         };
     }
 
+    /// <summary>
+    /// Why registry CI rejected the PR and what <c>Fix and resubmit</c> does about it (task 62). CI's own words (English,
+    /// from the registry's checks) are quoted as they are.
+    /// </summary>
+    public static string CiFailure(CiFailure failure, Localizer localizer)
+    {
+        ArgumentNullException.ThrowIfNull(failure);
+        ArgumentNullException.ThrowIfNull(localizer);
+        var problem = failure.FirstProblem ?? string.Empty;
+        return failure.Kind switch
+        {
+            CiFailureKind.Scope => localizer[nameof(Strings.Publish_Ci_Scope)],
+            CiFailureKind.Status => localizer.Format(nameof(Strings.Publish_Ci_Status), problem),
+            CiFailureKind.Patch => localizer.Format(nameof(Strings.Publish_Ci_Patch), problem),
+            CiFailureKind.Pack => localizer.Format(nameof(Strings.Publish_Ci_Pack), problem),
+            CiFailureKind.Registry => localizer.Format(nameof(Strings.Publish_Ci_Registry), problem),
+            _ => localizer[nameof(Strings.Publish_Ci_Unknown)],
+        };
+    }
+
     /// <summary>"rev 4 of «Неон»" for a new revision, "«Курьер 2087»" for a new pack.</summary>
     public static string Target(string title, int? revision, Localizer localizer)
     {

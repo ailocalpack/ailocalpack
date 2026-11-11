@@ -11,7 +11,7 @@ namespace AiLocalPack.TestKit;
 /// <summary>
 /// An in-memory GitHub REST API for the publish client (task 60): repositories sharing one object store (a fork
 /// network), refs, blobs / trees / commits of the Git Data API, the contents API (folder listings and raw files),
-/// forks, merge-upstream, Releases with assets and uploads, pull requests, <c>/user</c>. Trees are flat
+/// forks, merge-upstream, compare, Releases with assets and uploads, pull requests, <c>/user</c>. Trees are flat
 /// (path → blob). <see cref="Fail"/> injects an error answer for the next matching calls. Every call is recorded.
 /// Usable as an <see cref="HttpMessageHandler"/> or through <see cref="HandleAsync"/> (the CLI's loopback server).
 /// </summary>
@@ -283,6 +283,7 @@ public sealed partial class FakeGitHubApi : HttpMessageHandler
             ("POST", "releases") => CreateRelease(repo, json!),
             ("GET", _) when ReleaseAssetsPattern().Match(rest) is { Success: true } assets => ListAssets(repo, long.Parse(assets.Groups["id"].Value, CultureInfo.InvariantCulture), query),
             ("DELETE", _) when rest.StartsWith("releases/assets/", StringComparison.Ordinal) => DeleteAsset(repo, long.Parse(rest["releases/assets/".Length..], CultureInfo.InvariantCulture)),
+            ("GET", _) when rest.StartsWith("compare/", StringComparison.Ordinal) => Compare(rest["compare/".Length..]),
             ("GET", "pulls") => Ok(new JsonArray([.. repo.Pulls.Where(p => p.State == "open" && (!query.TryGetValue("head", out var head) || p.Head == head)).Select(PullJson)])),
             ("POST", "pulls") => CreatePull(repo, json!),
             _ => NotFound(),
@@ -365,6 +366,19 @@ public sealed partial class FakeGitHubApi : HttpMessageHandler
 
         repo.Refs[branch] = sha;
         return Ok(RefJson(branch, sha));
+    }
+
+    /// <summary><c>compare/base...head</c>: <c>ahead</c> when base is an ancestor of head, <c>identical</c>, else <c>diverged</c>.</summary>
+    private HttpResponseMessage Compare(string range)
+    {
+        var parts = range.Split("...");
+        if (parts.Length != 2 || !_commits.ContainsKey(parts[0]) || !_commits.ContainsKey(parts[1]))
+        {
+            return NotFound();
+        }
+
+        var status = parts[0] == parts[1] ? "identical" : IsAncestor(parts[0], parts[1]) ? "ahead" : "diverged";
+        return Ok(new JsonObject { ["status"] = status });
     }
 
     private bool IsAncestor(string ancestor, string sha)

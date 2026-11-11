@@ -363,7 +363,9 @@ public sealed class ActivityStore
         e.IsDecision,
         e.IsRead,
         e.IsHidden,
-        e.Until?.ToUniversalTime());
+        e.Until?.ToUniversalTime(),
+        e.PullRequest,
+        e.Link?.AbsoluteUri);
 
     private static ActivityEvent? FromJson(ActivityEventJson? json)
     {
@@ -399,6 +401,8 @@ public sealed class ActivityStore
             IsRead = json.Read,
             IsHidden = json.Hidden,
             Until = json.Until,
+            PullRequest = json.PullRequest is > 0 ? json.PullRequest : null,
+            Link = Uri.TryCreate(json.Link, UriKind.Absolute, out var link) && link.Scheme == Uri.UriSchemeHttps ? link : null,
         };
     }
 }

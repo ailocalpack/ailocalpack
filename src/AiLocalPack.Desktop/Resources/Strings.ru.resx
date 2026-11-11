@@ -3442,4 +3442,85 @@
   <data name="Publish_Similar_Builds_Many" xml:space="preserve">
     <value>сделан для {0} сборок</value>
   </data>
+  <data name="Publish_Resubmitted_Detail" xml:space="preserve">
+    <value>Исправление отправлено в PR #{0} · CI проверяет пак заново</value>
+  </data>
+  <data name="Publish_Toast_Resubmitted" xml:space="preserve">
+    <value>{0}: отправлено снова, исправление в PR #{1}, CI проверяет пак заново.</value>
+  </data>
+  <data name="Publish_CiFailed_Title" xml:space="preserve">
+    <value>CI отклонил PR #{0}</value>
+  </data>
+  <data name="Publish_Ci_Scope" xml:space="preserve">
+    <value>PR меняет файлы вне папки пака. «Исправить и отправить снова» пересоберёт его ветку только с этим паком.</value>
+  </data>
+  <data name="Publish_Ci_Status" xml:space="preserve">
+    <value>Манифест не помечен как alpha ({0}). «Исправить и отправить снова» отправит его заново как alpha.</value>
+  </data>
+  <data name="Publish_Ci_Patch" xml:space="preserve">
+    <value>Архива патча в вашем форке нет или он не совпадает с манифестом ({0}). «Исправить и отправить снова» загрузит его заново.</value>
+  </data>
+  <data name="Publish_Ci_Pack" xml:space="preserve">
+    <value>Проверки реестра не принимают пак: {0}. «Исправить и отправить снова» сначала проверит его здесь и отправит заново; если приложение ошибок не найдёт, обновите приложение.</value>
+  </data>
+  <data name="Publish_Ci_Registry" xml:space="preserve">
+    <value>Не прошла проверка самого реестра, а не вашего пака ({0}). «Исправить и отправить снова» запустит проверки заново.</value>
+  </data>
+  <data name="Publish_Ci_Unknown" xml:space="preserve">
+    <value>CI не прошёл и не указал причину. «Исправить и отправить снова» запустит проверки заново; лог — по кнопке «Открыть PR».</value>
+  </data>
+  <data name="Publish_Resubmit" xml:space="preserve">
+    <value>Исправить и отправить снова</value>
+  </data>
+  <data name="Publish_Merged_Title" xml:space="preserve">
+    <value>PR #{0} принят: {1} в реестре как alpha</value>
+  </data>
+  <data name="Publish_Merged_Text" xml:space="preserve">
+    <value>Список паков обновится в течение нескольких минут, после этого пак увидят все игроки.</value>
+  </data>
+  <data name="Publish_Closed_Title" xml:space="preserve">
+    <value>PR #{0} закрыт без слияния</value>
+  </data>
+  <data name="Publish_Closed_Text" xml:space="preserve">
+    <value>Причину видно по кнопке «Открыть PR». «Опубликовать снова» откроет новый PR.</value>
+  </data>
+  <data name="Publish_Row_CiFailed" xml:space="preserve">
+    <value>PR #{0} · CI не прошёл</value>
+  </data>
+  <data name="Publish_Row_Merged" xml:space="preserve">
+    <value>PR #{0} принят · alpha</value>
+  </data>
+  <data name="Publish_Row_Closed" xml:space="preserve">
+    <value>PR #{0} закрыт</value>
+  </data>
+  <data name="Activity_Event_PullRequestFailed" xml:space="preserve">
+    <value>CI реестра отклонил PR #{2} перевода «{0}»</value>
+  </data>
+  <data name="Activity_Event_PackMerged" xml:space="preserve">
+    <value>PR #{2} принят: «{0}» опубликован как alpha</value>
+  </data>
+  <data name="Activity_Event_PullRequestClosed" xml:space="preserve">
+    <value>PR #{2} перевода «{0}» закрыт без слияния</value>
+  </data>
+  <data name="Activity_Event_PackVerified" xml:space="preserve">
+    <value>«{0}» проверен: игроки подтвердили, что он работает</value>
+  </data>
+  <data name="Activity_Detail_PackMerged" xml:space="preserve">
+    <value>Пак увидят все игроки, когда обновится список паков.</value>
+  </data>
+  <data name="Activity_Action_OpenPr" xml:space="preserve">
+    <value>PR на GitHub</value>
+  </data>
+  <data name="Settings_PublishedPack_Meta" xml:space="preserve">
+    <value>{0} · {1} · ред. {2}</value>
+  </data>
+  <data name="Settings_PublishedPack_Confirmed" xml:space="preserve">
+    <value>alpha · подтвердили {0}/{1}</value>
+  </data>
+  <data name="Settings_PublishedPack_Likes" xml:space="preserve">
+    <value>Лайков: {0}</value>
+  </data>
+  <data name="Settings_PublishedPack_Pr" xml:space="preserve">
+    <value>PR</value>
+  </data>
 </root>

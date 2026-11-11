@@ -72,11 +72,15 @@ public sealed class GitHubUserClient(HttpClient http, GitHubOAuthApp app)
         }
     }
 
-    /// <summary>A REST request with the token and the headers GitHub asks for.</summary>
-    public static HttpRequestMessage CreateRequest(HttpMethod method, Uri url, string token)
+    /// <summary>A REST request with the token (none: an anonymous read of public data) and the headers GitHub asks for.</summary>
+    public static HttpRequestMessage CreateRequest(HttpMethod method, Uri url, string? token)
     {
         var request = new HttpRequestMessage(method, url);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        if (token is not null)
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         request.Headers.Add("X-GitHub-Api-Version", ApiVersion);
         return request;

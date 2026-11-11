@@ -6,9 +6,10 @@
              x:Class="AiLocalPack.Desktop.Views.PublishStatusView"
              x:DataType="gp:PackPublishViewModel"
              IsVisible="{Binding ShowStatus, FallbackValue=False}">
-    <!-- The publish strip after sending (task 61, design §7): sending with mini-steps, CI running, failed, published. Used by
+    <!-- The publish strip after sending (task 61, design §7): sending with mini-steps, CI running, failed, CI failed, merged,
+         closed (task 62), published. Used by
          the Generation result and the Packs → Mine details. -->
-    <Border x:Name="PublishStrip" Classes="genBanner" Classes.bad="{Binding IsFailed}" Classes.ok="{Binding IsPublished}"
+    <Border x:Name="PublishStrip" Classes="genBanner" Classes.bad="{Binding IsBad}" Classes.ok="{Binding IsOk}"
             AutomationProperties.LiveSetting="Polite">
         <DockPanel>
             <Viewbox DockPanel.Dock="Left" Classes="icon" Classes.spin="{Binding IsSending}" Width="20" Height="20" Margin="0,0,12,0" VerticalAlignment="Top">
@@ -67,7 +68,15 @@
                             <TextBlock Text="{l:Loc Publish_OpenPr}" VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    <Button x:Name="PublishAgain" Classes="accent sm" Command="{Binding PublishCommand}" IsVisible="{Binding IsFailed}">
+                    <Button x:Name="PublishResubmit" Classes="accent sm" Command="{Binding ResubmitCommand}" IsVisible="{Binding ShowResubmit}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Publish_Resubmit}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="PublishAgain" Classes="accent sm" Command="{Binding PublishCommand}" IsVisible="{Binding ShowPublishAgain}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
                                 <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />

@@ -337,9 +337,57 @@
             </Border>
         </DataTemplate>
         <DataTemplate DataType="gh:PublishedPacksRow">
-            <Border Classes="settingRow">
-                <TextBlock x:Name="PublishedPacksEmpty" Classes="rowHelp" VerticalAlignment="Center" Text="{Binding Text}" TextWrapping="Wrap" />
-            </Border>
+            <StackPanel>
+                <Border Classes="settingRow" IsVisible="{Binding IsEmpty}">
+                    <TextBlock x:Name="PublishedPacksEmpty" Classes="rowHelp" VerticalAlignment="Center" Text="{Binding Text}" TextWrapping="Wrap" />
+                </Border>
+                <!-- Task 62: name, game · language · rev, status, 👍, Discussion / PR / Fix and resubmit -->
+                <ItemsControl x:Name="PublishedPacksList" ItemsSource="{Binding Packs}" IsVisible="{Binding HasPacks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gh:PublishedPackItem">
+                            <Border Classes="settingRow">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel Spacing="4" Margin="0,0,16,0" VerticalAlignment="Center">
+                                        <TextBlock Classes="rowLabel" Text="{Binding Title}" TextWrapping="Wrap" />
+                                        <TextBlock Classes="rowHelp" Text="{Binding Meta}" TextWrapping="Wrap" />
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock x:Name="PublishedPackStatus" Classes="rowHelp" Text="{Binding StatusText}"
+                                                       Classes.bad="{Binding IsBad}" Classes.ok="{Binding IsOk}" VerticalAlignment="Center" />
+                                            <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasLikes}"
+                                                        ToolTip.Tip="{Binding LikesName}" AutomationProperties.Name="{Binding LikesName}">
+                                                <Viewbox Classes="icon" Width="13" Height="13" VerticalAlignment="Center">
+                                                    <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{DynamicResource AppMutedBrush}" />
+                                                </Viewbox>
+                                                <TextBlock Classes="rowHelp" Text="{Binding Likes}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                        <Button x:Name="PublishedPackResubmit" Classes="accent sm" Command="{Binding ResubmitCommand}" IsVisible="{Binding CanResubmit}"
+                                                Content="{l:Loc Publish_Resubmit}" />
+                                        <Button Classes="bare sm" Command="{Binding DiscussionCommand}" IsVisible="{Binding HasDiscussion}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Publish_Discussion}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="PublishedPackPr" Classes="bare sm" Command="{Binding OpenPrCommand}" IsVisible="{Binding HasPr}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Settings_PublishedPack_Pr}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </DataTemplate>
     </UserControl.DataTemplates>
 

@@ -90,4 +90,53 @@ public sealed class PublishViewTests
             .Should().Be((false, "PR #7 opened · CI is checking the pack", true));
         window.Close();
     });
+
+    private static async Task RejectedAsync(InstallBed bed)
+    {
+        bed.LocalPack(tried: Tried);
+        bed.Services.GetRequiredService<Core.Packs.LocalPackStore>().UpdateReport(InstallBed.Alpha, "ru", "claude-code", r => r with
+        {
+            Published = new Core.Packs.LocalPackPublication("ailocalpack/registry-test", "claude-code", 1, 7, FakePackPublishing.PrUrl, "octocat/registry-test", "b", Tried),
+        });
+        bed.Services.GetRequiredService<GenerationService>().Recover();
+        bed.Services.GetRequiredService<FakePullRequestStatus>().Answer(7, PullRequestState.Open, CiState.Failed, "h1",
+            new CiAnnotation(null, CiAnnotationLevel.Failure, CiFailures.ScopeTitle, "This pull request can't be accepted: README.md is outside games/."));
+        await bed.Services.GetRequiredService<PullRequestTracker>().CheckAsync(all: true);
+    }
+
+    [Fact]
+    public Task A_rejected_pr_shows_the_reason_and_Fix_and_resubmit() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        await RejectedAsync(bed);
+
+        // Act
+        var window = Open(bed, GamePageTab.Generation);
+
+        // Assert
+        (Find<TextBlock>(window, "PublishTitle").Text, Find<TextBlock>(window, "PublishText").Text,
+                Find<Button>(window, "PublishResubmit").IsEffectivelyVisible, Find<Button>(window, "PublishAgain").IsEffectivelyVisible)
+            .Should().Be(("CI rejected PR #7", "The pull request changes files outside the pack's folder. Fix and resubmit rebuilds its branch with only this pack.", true, false));
+        window.Close();
+    });
+
+    [Fact]
+    public Task My_published_packs_lists_the_rejected_pr_with_Fix_and_resubmit() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        await RejectedAsync(bed);
+        var window = new MainWindow { DataContext = bed.Services.GetRequiredService<MainWindowViewModel>(), Width = 1280, Height = 800 };
+        window.Show();
+
+        // Act
+        bed.Services.GetRequiredService<INavigationService>().NavigateTo(bed.Services.GetRequiredService<IPageFactory>().Create<SettingsViewModel>(ViewModels.Settings.SettingsSectionId.GitHub));
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<TextBlock>(window, "PublishedPackStatus").Text, Find<Button>(window, "PublishedPackResubmit").IsEffectivelyVisible, Find<TextBlock>(window, "PublishedPacksEmpty").IsEffectivelyVisible)
+            .Should().Be(("PR #7 · CI failed", true, false));
+        window.Close();
+    });
 }

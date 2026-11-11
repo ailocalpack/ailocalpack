@@ -230,6 +230,20 @@ public sealed class ActivityStoreTests : IDisposable
     }
 
     [Fact]
+    public void A_rejected_prs_number_and_link_round_trip()
+    {
+        // Arrange
+        var link = new Uri("https://github.com/ailocalpack/registry/pull/7");
+        Store().Add(Event("ci", ActivityEventKind.PullRequestFailed) with { PullRequest = 7, Link = link });
+
+        // Act
+        var read = Store().Decisions.Single();
+
+        // Assert
+        (read.Kind, read.PullRequest, read.Link, read.Tone).Should().Be((ActivityEventKind.PullRequestFailed, (int?)7, link, ActivityTone.Bad));
+    }
+
+    [Fact]
     public void Hidden_and_set_aside_state_round_trips()
     {
         // Arrange

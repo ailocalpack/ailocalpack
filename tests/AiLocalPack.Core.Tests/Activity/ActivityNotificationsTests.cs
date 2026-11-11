@@ -22,6 +22,22 @@ public sealed class ActivityNotificationsTests
         notify.Should().BeTrue();
     }
 
+    [Theory]
+    [InlineData(ActivityEventKind.PackMerged, NotificationCategory.Community)]
+    [InlineData(ActivityEventKind.PackVerified, NotificationCategory.Community)]
+    [InlineData(ActivityEventKind.PullRequestFailed, NotificationCategory.NeedsDecision)]
+    public void Pr_events_fall_under_their_toggle(ActivityEventKind kind, NotificationCategory category)
+    {
+        // Arrange
+        var activity = ActivityEvent.Create(kind, DateTimeOffset.UnixEpoch);
+
+        // Act
+        var result = ActivityNotifications.CategoryOf(activity);
+
+        // Assert
+        result.Should().Be(category);
+    }
+
     [Fact]
     public void Nothing_is_sent_while_the_window_is_in_front()
     {

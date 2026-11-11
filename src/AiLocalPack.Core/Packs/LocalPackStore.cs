@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Core.Publishing;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Storage;
 using Microsoft.Extensions.Logging;
@@ -60,6 +61,8 @@ public sealed record LocalPackUpdate(int BaseRevision, int Added, int Changed, i
 /// <param name="PackId">The pack's ID in the registry (another than the local one when it was taken).</param>
 /// <param name="Revision">The revision sent.</param>
 /// <param name="Fork">The player's fork (<c>login/registry</c>) holding <paramref name="Branch"/>.</param>
+/// <param name="State">What became of the PR, once it was merged or closed (task 62: no longer followed then).</param>
+/// <param name="StateAt">When it was merged or closed.</param>
 public sealed record LocalPackPublication(
     string Registry,
     string PackId,
@@ -68,7 +71,9 @@ public sealed record LocalPackPublication(
     Uri PullRequestUrl,
     string Fork,
     string Branch,
-    DateTimeOffset At);
+    DateTimeOffset At,
+    PullRequestState State = PullRequestState.Open,
+    DateTimeOffset? StateAt = null);
 
 /// <param name="Checked">Whether the engine's fonts could be checked at all (no font hook = not checked).</param>
 /// <param name="Replacement">The whitelisted font swapped in, or <c>null</c>.</param>
@@ -92,8 +97,8 @@ public sealed record LocalPackString(string Key, string Original);
 /// (<c>{schemaVersion: 1, job, created, testRun {outcome, skip?, detail?, ranMs?, exitCode?}, fonts {checked,
 /// replacement?, swapped, uncovered}, warnings [{key, rule, message, original, translation}], untranslated [{key,
 /// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?, update? {baseRevision, added, changed,
-/// removed}, published? {registry, packId, revision, pullRequest, pullRequestUrl, fork, branch, at}}</c>; tried and
-/// shareDismissed are the player's, task 55; update is task 56's; published task 60's), since a pack folder holds
+/// removed}, published? {registry, packId, revision, pullRequest, pullRequestUrl, fork, branch, at, state?, stateAt?}}</c>; tried and
+/// shareDismissed are the player's, task 55; update is task 56's; published task 60's, its state (<c>merged</c> / <c>closed</c>) task 62's), since a pack folder holds
 /// nothing else; a binary patch pack's archive (task 57) is in <c>releases/&lt;Release asset name&gt;</c>
 /// (<see cref="PatchArchiveName"/>), as a local registry keeps it (<c>PackFetcher.LocalReleasesFolder</c>); beside the
 /// report <c>&lt;id&gt;.glossary.json</c>, the glossary the pack was made with (task 56: an update of
@@ -442,7 +447,17 @@ public sealed class LocalPackStore
             report.Tried?.ToUniversalTime(),
             report.ShareDismissed ? true : null,
             report.Update is { } u ? new UpdateJson(u.BaseRevision, u.Added, u.Changed, u.Removed) : null,
-            report.Published is { } p ? new PublishedJson(p.Registry, p.PackId, p.Revision, p.PullRequest, p.PullRequestUrl.AbsoluteUri, p.Fork, p.Branch, p.At.ToUniversalTime()) : null);
+            report.Published is { } p ? new PublishedJson(
+                p.Registry,
+                p.PackId,
+                p.Revision,
+                p.PullRequest,
+                p.PullRequestUrl.AbsoluteUri,
+                p.Fork,
+                p.Branch,
+                p.At.ToUniversalTime(),
+                p.State == PullRequestState.Open ? null : p.State.ToString().ToLowerInvariant(),
+                p.StateAt?.ToUniversalTime()) : null);
         AtomicFile.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(LocalPackReportJson))));
     }
 
@@ -491,7 +506,17 @@ public sealed class LocalPackStore
     private static LocalPackPublication? ReadPublished(PublishedJson? json) =>
         json is { Registry: { Length: > 0 } registry, PackId: { Length: > 0 } packId, Revision: >= 1, PullRequest: >= 1, Fork: { Length: > 0 } fork, Branch: { Length: > 0 } branch }
         && Uri.TryCreate(json.PullRequestUrl, UriKind.Absolute, out var url)
-            ? new LocalPackPublication(registry, packId, json.Revision, json.PullRequest, url, fork, branch, json.At)
+            ? new LocalPackPublication(
+                registry,
+                packId,
+                json.Revision,
+                json.PullRequest,
+                url,
+                fork,
+                branch,
+                json.At,
+                Enum.TryParse<PullRequestState>(json.State, ignoreCase: true, out var state) ? state : PullRequestState.Open,
+                json.StateAt)
             : null;
 }
 
@@ -511,7 +536,17 @@ internal sealed record LocalPackReportJson(
     UpdateJson? Update = null,
     PublishedJson? Published = null);
 
-internal sealed record PublishedJson(string? Registry, string? PackId, int Revision, int PullRequest, string? PullRequestUrl, string? Fork, string? Branch, DateTimeOffset At);
+internal sealed record PublishedJson(
+    string? Registry,
+    string? PackId,
+    int Revision,
+    int PullRequest,
+    string? PullRequestUrl,
+    string? Fork,
+    string? Branch,
+    DateTimeOffset At,
+    string? State = null,
+    DateTimeOffset? StateAt = null);
 
 internal sealed record UpdateJson(int BaseRevision, int Added, int Changed, int Removed);
 

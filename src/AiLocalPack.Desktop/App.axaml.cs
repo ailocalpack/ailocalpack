@@ -143,6 +143,8 @@ public sealed class App : Application
         services.GetRequiredService<ActivityNotifier>();
         startup.StartBackground();
         services.GetRequiredService<BackgroundChecks>().Start();
+        // The player's open pack PRs: CI result, merged, closed (task 62).
+        services.GetRequiredService<AiLocalPack.Desktop.Publishing.PullRequestTracker>().Start();
         // Jobs paused by the agent's limit go on by themselves once it resets (task 53).
         services.GetRequiredService<AiLocalPack.Desktop.Generation.GenerationService>().StartAutoResume();
     }

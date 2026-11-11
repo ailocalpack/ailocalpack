@@ -178,7 +178,7 @@ internal static class Composition
 
     private static ProductInfoHeaderValue UserAgent => new("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0");
 
-    /// <summary>GitHub sign-in: the session (token in the OS keychain), the Device Flow panel (tasks 58–59), publishing (tasks 60–61).</summary>
+    /// <summary>GitHub sign-in: the session (token in the OS keychain), the Device Flow panel (tasks 58–59), publishing (tasks 60–61), PR tracking (task 62).</summary>
     private static void AddGitHub(IServiceCollection services)
     {
         // One session for sign-in and publishing; the publish client has its own client (uploads take longer than 30 s).
@@ -217,6 +217,12 @@ internal static class Composition
                 RegistryRepo.Resolve(sp.GetRequiredService<OsEnvironment>()));
         });
         services.AddSingleton<PublishFlow>();
+
+        // PR tracking (task 62): conditional reads with the player's token when signed in, else anonymous.
+        services.AddSingleton<IPullRequestStatus>(sp => new PullRequestStatusSource(
+            new PullRequestStatusClient(GitHubOAuthApp.CreateHttpClient(UserAgent), sp.GetRequiredService<GitHubSession>().App, sp.GetRequiredService<TimeProvider>()),
+            sp.GetRequiredService<GitHubSession>()));
+        services.AddSingleton<PullRequestTracker>();
     }
 
     /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>

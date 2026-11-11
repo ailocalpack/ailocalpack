@@ -23,11 +23,14 @@ namespace AiLocalPack.Desktop.Publishing;
 /// running item; the outcome is a toast and an Activity feed entry. The PR the client records in the pack's report makes
 /// the pack <see cref="PublishPhase.Checking"/>, the index listing its revision <see cref="PublishPhase.Published"/>
 /// (<see cref="PublishStatuses.Of"/>); a failure is kept in memory until the next try. Publishing is never offered
-/// before the pack was tried in game. <see cref="Changed"/> tells the pages (any thread).
+/// before the pack was tried in game. Task 62: the <see cref="PullRequestTracker"/> follows the PR (CI failed, merged,
+/// closed); <see cref="Resubmit"/> (<c>Fix and resubmit</c>) sends the pack again to the same PR, the branch rebuilt
+/// on the registry's head. <see cref="Changed"/> tells the pages (any thread).
 /// </summary>
 public sealed class PublishFlow
 {
     private readonly IPackPublishing _publisher;
+    private readonly PullRequestTracker _tracker;
     private readonly IGitHubHost _github;
     private readonly SettingsStore _settings;
     private readonly PackIndex _packIndex;
@@ -47,6 +50,7 @@ public sealed class PublishFlow
 
     public PublishFlow(
         IPackPublishing publisher,
+        PullRequestTracker tracker,
         IGitHubHost github,
         SettingsStore settings,
         PackIndex packIndex,
@@ -61,6 +65,7 @@ public sealed class PublishFlow
         ILogger<PublishFlow> logger)
     {
         _publisher = publisher;
+        _tracker = tracker;
         _github = github;
         _settings = settings;
         _packIndex = packIndex;
@@ -73,6 +78,7 @@ public sealed class PublishFlow
         _ui = ui;
         _time = time;
         _logger = logger;
+        _tracker.Changed += (_, game) => Changed?.Invoke(this, game);
     }
 
     /// <summary>A publish started, moved on a step or ended, for the game's pages; any thread.</summary>
@@ -98,7 +104,8 @@ public sealed class PublishFlow
         ArgumentNullException.ThrowIfNull(pack);
         lock (_lock)
         {
-            return PublishStatuses.Of(pack, _packIndex.Current?.Index, _running, _failures.GetValueOrDefault(PublishStatuses.KeyOf(pack)));
+            var tracked = pack.Report.Published is { } publication ? _tracker.Find(publication) : null;
+            return PublishStatuses.Of(pack, _packIndex.Current?.Index, _running, _failures.GetValueOrDefault(PublishStatuses.KeyOf(pack)), tracked);
         }
     }
 
@@ -132,6 +139,32 @@ public sealed class PublishFlow
         ChooseTarget(game, pack);
     }
 
+    /// <summary>
+    /// <c>Fix and resubmit</c> (UI thread, task 62): the pack checked again with the registry's own checks and pushed to
+    /// the rejected PR's branch, rebuilt as one commit on the registry's head (only the pack's folder, a fresh patch
+    /// upload), so CI runs again on the same PR. Signed out (or the license never accepted), the first-time dialog comes
+    /// first. Nothing happens unless CI rejected the PR, or while another publish runs.
+    /// </summary>
+    public void Resubmit(Game game, LocalPack pack)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(pack);
+        var status = StatusOf(pack);
+        if (IsBusy || !PublishStatuses.CanResubmit(status))
+        {
+            return;
+        }
+
+        var target = PublishStatuses.TargetOf(status.Publication!);
+        if (PublishRules.NeedsSignInDialog(_github.Account is not null, _settings.Current.PublishLicenseAccepted))
+        {
+            _dialogs.Show<PublishSignInDialogViewModel>(new PublishSignInRequest(() => _ = SendAsync(game, Fresh(pack), target, fresh: true)));
+            return;
+        }
+
+        _ = SendAsync(game, Fresh(pack), target, fresh: true);
+    }
+
     /// <summary>Opens the PR or the Discussion in the browser.</summary>
     public void Open(Uri url)
     {
@@ -153,7 +186,8 @@ public sealed class PublishFlow
     /// Sends the pack to <paramref name="target"/> (after the dialogs). Returns once the publish ended; <c>null</c> when
     /// another one runs.
     /// </summary>
-    public async Task<PublishResult?> SendAsync(Game game, LocalPack pack, PublishTarget target)
+    /// <param name="fresh">A resubmit: an open PR's branch is rebuilt on the registry's head (<see cref="PublishRequest.Fresh"/>).</param>
+    public async Task<PublishResult?> SendAsync(Game game, LocalPack pack, PublishTarget target, bool fresh = false)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(pack);
@@ -199,7 +233,7 @@ public sealed class PublishFlow
         try
         {
             _logger.LogInformation("Publishing {Pack} of {Game} to {Registry} as {Target}", key, game.Id, _publisher.Registry, target);
-            result = await Task.Run(() => _publisher.PublishAsync(new PublishRequest(pack, target, _publisher.Registry, index, game.Name), progress));
+            result = await Task.Run(() => _publisher.PublishAsync(new PublishRequest(pack, target, _publisher.Registry, index, game.Name, fresh), progress));
         }
         catch (Exception e) when (e is not OperationCanceledException)
         {
@@ -219,6 +253,11 @@ public sealed class PublishFlow
 
         EndTask();
         Report(game, pack, run, result);
+        if (result is PublishResult.Published)
+        {
+            // CI starts over on the new head: the tracker drops the old result and reads the PR again soon.
+            _tracker.Sent(Fresh(pack));
+        }
 
         // The client wrote the PR into the pack's report: Mine and the result read it again.
         _localPacks.Refresh(game.Id);
@@ -226,16 +265,27 @@ public sealed class PublishFlow
         return result;
     }
 
+    private LocalPack Fresh(LocalPack pack) => _localPacks.Find(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id) ?? pack;
+
     private async Task SignOutThenAskAsync(Game game, LocalPack pack)
     {
         await _github.SignOutAsync();
         _ui.Post(() => _dialogs.Show<PublishSignInDialogViewModel>(new PublishSignInRequest(() => ChooseTarget(game, pack))));
     }
 
-    /// <summary>The similar-pack dialog when the index has packs of the game + language, else the send right away.</summary>
+    /// <summary>
+    /// The similar-pack dialog when the index has packs of the game + language, else the send right away. A pack whose PR
+    /// is still open (a try to push to it failed) goes to that PR again, without asking.
+    /// </summary>
     private void ChooseTarget(Game game, LocalPack pack)
     {
-        var fresh = _localPacks.Find(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id) ?? pack;
+        var fresh = Fresh(pack);
+        if (fresh.Report.Published is { State: Core.Publishing.PullRequestState.Open } open)
+        {
+            _ = SendAsync(game, fresh, PublishStatuses.TargetOf(open), fresh: true);
+            return;
+        }
+
         var similar = _packIndex.Current?.Index is { } index ? SimilarPacks.Find(index, fresh) : [];
         if (similar.Count == 0)
         {
@@ -295,7 +345,7 @@ public sealed class PublishFlow
         switch (result)
         {
             case PublishResult.Published published:
-                var detail = _localizer.Format(nameof(Strings.Publish_Checking_Title), published.PullRequest);
+                var detail = _localizer.Format(published.Resubmitted ? nameof(Strings.Publish_Resubmitted_Detail) : nameof(Strings.Publish_Checking_Title), published.PullRequest);
                 _activity.Add(ActivityEvent.Create(ActivityEventKind.PackSubmitted, _time.GetUtcNow()) with
                 {
                     Game = game.Id,
@@ -307,7 +357,7 @@ public sealed class PublishFlow
                 });
                 _ui.Post(() => _toasts.Show(new ToastViewModel(
                     ToastTone.Ok,
-                    _localizer.Format(nameof(Strings.Publish_Toast_Sent), what, published.PullRequest),
+                    _localizer.Format(published.Resubmitted ? nameof(Strings.Publish_Toast_Resubmitted) : nameof(Strings.Publish_Toast_Sent), what, published.PullRequest),
                     [new ToastAction(_localizer[nameof(Strings.Publish_OpenPr)], () => Open(published.PullRequestUrl), "IconExternal")],
                     key: $"publish:{run.Key}")));
                 break;

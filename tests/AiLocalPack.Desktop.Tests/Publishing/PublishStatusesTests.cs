@@ -183,4 +183,124 @@ public sealed class PublishStatusesTests
         // Assert
         can.Should().BeFalse();
     }
+
+    // ---------- Task 62: the PR as tracked ----------
+
+    private static TrackedPullRequest Tracked(PullRequestState state, CiState ci, CiFailure? failure = null) =>
+        new(new PullRequestStatus(7, state, "h1", ci, []), failure);
+
+    private static readonly CiFailure Rejected = new(CiFailureKind.Status, [new CiAnnotation("games/steam-10/ru/claude-code/manifest.json", CiAnnotationLevel.Failure, "status", "must be alpha")]);
+
+    [Fact]
+    public void A_pr_ci_rejected_is_ci_failed_with_the_reason()
+    {
+        // Arrange
+        var pack = Pack(published: Publication());
+
+        // Act
+        var status = PublishStatuses.Of(pack, null, null, null, Tracked(PullRequestState.Open, CiState.Failed, Rejected));
+
+        // Assert
+        (status.Phase, status.CiFailure).Should().Be((PublishPhase.CiFailed, Rejected));
+    }
+
+    [Fact]
+    public void A_pr_with_ci_passed_but_not_merged_is_still_checked()
+    {
+        // Arrange
+        var pack = Pack(published: Publication());
+
+        // Act
+        var status = PublishStatuses.Of(pack, null, null, null, Tracked(PullRequestState.Open, CiState.Passed));
+
+        // Assert
+        status.Phase.Should().Be(PublishPhase.Checking);
+    }
+
+    [Fact]
+    public void A_pr_the_report_records_merged_is_merged_until_the_index_lists_it()
+    {
+        // Arrange
+        var pack = Pack(published: Publication() with { State = PullRequestState.Merged });
+
+        // Act
+        var status = PublishStatuses.Of(pack, Index("other", 1), null, null);
+
+        // Assert
+        status.Phase.Should().Be(PublishPhase.Merged);
+    }
+
+    [Fact]
+    public void A_merged_pr_the_index_lists_is_published()
+    {
+        // Arrange
+        var pack = Pack(published: Publication() with { State = PullRequestState.Merged });
+
+        // Act
+        var status = PublishStatuses.Of(pack, Index("claude-code", 1), null, null);
+
+        // Assert
+        status.Phase.Should().Be(PublishPhase.Published);
+    }
+
+    [Fact]
+    public void A_pr_the_tracker_read_closed_is_closed()
+    {
+        // Arrange
+        var pack = Pack(published: Publication());
+
+        // Act
+        var status = PublishStatuses.Of(pack, null, null, null, Tracked(PullRequestState.Closed, CiState.Passed));
+
+        // Assert
+        status.Phase.Should().Be(PublishPhase.Closed);
+    }
+
+    [Fact]
+    public void A_closed_pr_offers_Publish_again()
+    {
+        // Arrange
+        var pack = Pack(published: Publication() with { State = PullRequestState.Closed });
+
+        // Act
+        var can = PublishStatuses.CanPublish(pack, PublishStatuses.Of(pack, null, null, null));
+
+        // Assert
+        can.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(CiState.Failed, true)]
+    [InlineData(CiState.Pending, false)]
+    public void Fix_and_resubmit_is_offered_only_for_a_rejected_pr(CiState ci, bool expected)
+    {
+        // Arrange
+        var pack = Pack(published: Publication());
+
+        // Act
+        var can = PublishStatuses.CanResubmit(PublishStatuses.Of(pack, null, null, null, Tracked(PullRequestState.Open, ci, ci == CiState.Failed ? Rejected : null)));
+
+        // Assert
+        can.Should().Be(expected);
+    }
+
+    [Fact]
+    public void A_later_revision_goes_again_as_a_revision_of_the_same_pack()
+    {
+        // Act
+        var target = PublishStatuses.TargetOf(Publication("neon", 4));
+
+        // Assert
+        target.Should().Be(new PublishTarget.RevisionOf("neon"));
+    }
+
+    [Fact]
+    public void A_first_revision_goes_again_as_a_new_pack()
+    {
+        // Act
+        var target = PublishStatuses.TargetOf(Publication());
+
+        // Assert
+        target.Should().Be(new PublishTarget.NewPack());
+    }
 }

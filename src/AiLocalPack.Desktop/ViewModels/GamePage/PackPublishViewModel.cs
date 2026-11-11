@@ -20,7 +20,9 @@ public sealed record PublishMiniStep(string Text, bool IsDone, bool IsCurrent)
 /// A local pack's publish state as the result strip and the Packs → Mine details show it (task 61, design §7):
 /// <i>Sending</i> (teal, "Publishing rev 4 of «Неон»…" with the mini-steps), <i>CI running</i> (teal, "PR #214 opened ·
 /// CI is checking the pack", <c>Open PR</c>), <i>Failed</i> (red, the reason, <c>Publish again</c>), <i>Published</i>
-/// (green, "Published: … · alpha", the 0/3 confirmations meter, <c>Copy link</c>, <c>Discussion</c>). Not shown while the
+/// (green, "Published: … · alpha", the 0/3 confirmations meter, <c>Copy link</c>, <c>Discussion</c>); task 62: <i>CI
+/// failed</i> (red, "CI rejected PR #214", the reason and what the app fixes, <c>Open PR</c>, <c>Fix and resubmit</c>),
+/// <i>Merged</i> (green, until the index lists it), <i>Closed</i> (red, <c>Publish again</c>). Not shown while the
 /// pack was never sent (the "Looks good?" strip and <c>Publish</c> are). The state comes from <see cref="PublishFlow"/>;
 /// the owner calls <see cref="Update"/> when the pack, the flow or the index changed.
 /// </summary>
@@ -40,6 +42,7 @@ public sealed partial class PackPublishViewModel : ObservableObject
         Pack = pack;
         Status = flow.StatusOf(pack);
         PublishCommand = new RelayCommand(() => _flow.Publish(_game(), Pack), () => CanPublish);
+        ResubmitCommand = new RelayCommand(() => _flow.Resubmit(_game(), Pack), () => CanResubmit);
         OpenPrCommand = new RelayCommand(() => _flow.Open(Status.Publication!.PullRequestUrl), () => Status.Publication is not null);
         DiscussionCommand = new RelayCommand(() => _flow.Open(Status.Live!.Discussion!), () => HasDiscussion);
         CopyLinkCommand = new AsyncRelayCommand(() => _flow.CopyLinkAsync(Link!), () => Link is not null);
@@ -62,6 +65,18 @@ public sealed partial class PackPublishViewModel : ObservableObject
 
     public bool IsPublished => Phase == PublishPhase.Published;
 
+    public bool IsCiFailed => Phase == PublishPhase.CiFailed;
+
+    public bool IsMerged => Phase == PublishPhase.Merged;
+
+    public bool IsClosed => Phase == PublishPhase.Closed;
+
+    /// <summary>Red: the last try failed, CI rejected the PR, or it was closed.</summary>
+    public bool IsBad => IsFailed || IsCiFailed || IsClosed;
+
+    /// <summary>Green: merged or published.</summary>
+    public bool IsOk => IsPublished || IsMerged;
+
     /// <summary>Teal while sending or CI runs (the strip's <c>gen</c> look).</summary>
     public bool IsTeal => IsSending || IsChecking;
 
@@ -71,14 +86,23 @@ public sealed partial class PackPublishViewModel : ObservableObject
     /// <summary><c>Publish</c> is shown (it may be off while another pack is sent).</summary>
     public bool ShowPublish => PublishStatuses.CanPublish(Pack, Status);
 
-    public string PublishText => _localizer[IsFailed ? nameof(Strings.Publish_Again) : nameof(Strings.Gen_Result_Publish)];
+    public string PublishText => _localizer[IsFailed || IsClosed ? nameof(Strings.Publish_Again) : nameof(Strings.Gen_Result_Publish)];
+
+    /// <summary><c>Publish again</c> in the strip: the last try failed, or the PR was closed.</summary>
+    public bool ShowPublishAgain => (IsFailed || IsClosed) && ShowPublish;
+
+    /// <summary><c>Fix and resubmit</c> is shown: CI rejected the PR (task 62).</summary>
+    public bool ShowResubmit => PublishStatuses.CanResubmit(Status);
+
+    /// <summary><c>Fix and resubmit</c> can be pressed: nothing else is being sent.</summary>
+    public bool CanResubmit => ShowResubmit && !_flow.IsBusy;
 
     public string Icon => Phase switch
     {
         PublishPhase.Sending => "IconLoader",
         PublishPhase.Checking => "IconPullRequest",
-        PublishPhase.Failed => "IconXCircle",
-        PublishPhase.Published => "IconCheckCircle",
+        PublishPhase.Failed or PublishPhase.CiFailed or PublishPhase.Closed => "IconXCircle",
+        PublishPhase.Published or PublishPhase.Merged => "IconCheckCircle",
         _ => "IconUpload",
     };
 
@@ -89,6 +113,9 @@ public sealed partial class PackPublishViewModel : ObservableObject
         PublishPhase.Checking => _localizer.Format(nameof(Strings.Publish_Checking_Title), Status.Publication!.PullRequest),
         PublishPhase.Failed => _localizer.Format(nameof(Strings.Publish_Failed_Title), Pack.Manifest.Title),
         PublishPhase.Published => _localizer.Format(nameof(Strings.Publish_Published_Title), PublishedTarget, StatusName),
+        PublishPhase.CiFailed => _localizer.Format(nameof(Strings.Publish_CiFailed_Title), Status.Publication!.PullRequest),
+        PublishPhase.Merged => _localizer.Format(nameof(Strings.Publish_Merged_Title), Status.Publication!.PullRequest, PublishedTarget),
+        PublishPhase.Closed => _localizer.Format(nameof(Strings.Publish_Closed_Title), Status.Publication!.PullRequest),
         _ => string.Empty,
     };
 
@@ -99,6 +126,9 @@ public sealed partial class PackPublishViewModel : ObservableObject
         PublishPhase.Failed => PublishTexts.Failure(Status.Failure!, _flow.Registry, _localizer),
         PublishPhase.Published when Status.Live!.Status == PackStatus.Verified => _localizer[nameof(Strings.Publish_Published_VerifiedText)],
         PublishPhase.Published => _localizer.Format(nameof(Strings.Publish_Published_Text), PublishStatuses.VerifiedConfirmations),
+        PublishPhase.CiFailed => PublishTexts.CiFailure(Status.CiFailure!, _localizer),
+        PublishPhase.Merged => _localizer[nameof(Strings.Publish_Merged_Text)],
+        PublishPhase.Closed => _localizer[nameof(Strings.Publish_Closed_Text)],
         _ => string.Empty,
     };
 
@@ -143,8 +173,8 @@ public sealed partial class PackPublishViewModel : ObservableObject
     /// <summary>What <c>Copy link</c> copies: the pack's Discussion, else its PR.</summary>
     public Uri? Link => IsPublished ? Status.Live?.Discussion ?? Status.Publication?.PullRequestUrl : null;
 
-    /// <summary><c>Open PR</c> while CI runs or after a failure that left a PR.</summary>
-    public bool ShowOpenPr => (IsChecking || IsFailed) && Status.Publication is not null;
+    /// <summary><c>Open PR</c> while CI runs, after CI rejected it, once merged or closed, or after a failure that left a PR.</summary>
+    public bool ShowOpenPr => (IsChecking || IsFailed || IsCiFailed || IsMerged || IsClosed) && Status.Publication is not null;
 
     public bool ShowCopyLink => Link is not null;
 
@@ -157,10 +187,15 @@ public sealed partial class PackPublishViewModel : ObservableObject
         PublishPhase.Checking => _localizer.Format(nameof(Strings.Publish_Row_Checking), Status.Publication!.PullRequest),
         PublishPhase.Published => _localizer.Format(nameof(Strings.Publish_Row_Published), StatusName, Status.Live!.Revision),
         PublishPhase.Failed => _localizer[nameof(Strings.Publish_Row_Failed)],
+        PublishPhase.CiFailed => _localizer.Format(nameof(Strings.Publish_Row_CiFailed), Status.Publication!.PullRequest),
+        PublishPhase.Merged => _localizer.Format(nameof(Strings.Publish_Row_Merged), Status.Publication!.PullRequest),
+        PublishPhase.Closed => _localizer.Format(nameof(Strings.Publish_Row_Closed), Status.Publication!.PullRequest),
         _ => null,
     };
 
     public IRelayCommand PublishCommand { get; }
+
+    public IRelayCommand ResubmitCommand { get; }
 
     public IRelayCommand OpenPrCommand { get; }
 
@@ -188,6 +223,7 @@ public sealed partial class PackPublishViewModel : ObservableObject
     {
         OnPropertyChanged(string.Empty);
         PublishCommand.NotifyCanExecuteChanged();
+        ResubmitCommand.NotifyCanExecuteChanged();
         OpenPrCommand.NotifyCanExecuteChanged();
         DiscussionCommand.NotifyCanExecuteChanged();
         CopyLinkCommand.NotifyCanExecuteChanged();

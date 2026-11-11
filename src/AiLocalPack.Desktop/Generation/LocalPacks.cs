@@ -2,6 +2,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Library;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -49,6 +50,18 @@ public sealed class LocalPacks
 
     /// <summary>The game's local packs, by language and ID. Reads the disk.</summary>
     public IReadOnlyList<LocalPack> List(GameId game) => _store.List(game);
+
+    /// <summary>Every game's local packs (Settings → GitHub, PR tracking). Reads the disk.</summary>
+    public IReadOnlyList<LocalPack> ListAll() => _store.List();
+
+    /// <summary>Records what became of the pack's PR (merged or closed, task 62); nothing when the pack was sent again since.</summary>
+    public void RecordPullRequest(LocalPack pack, int pullRequest, PullRequestState state, DateTimeOffset at)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        Change(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id, r => r.Published is { } p && p.PullRequest == pullRequest && p.State != state
+            ? r with { Published = p with { State = state, StateAt = at } }
+            : r);
+    }
 
     /// <summary>The local pack, or <c>null</c> when it is gone. Reads the disk.</summary>
     public LocalPack? Find(GameId game, string language, string id) => _store.Find(game, language, id);

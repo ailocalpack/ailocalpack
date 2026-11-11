@@ -24,7 +24,11 @@ public enum PublishStep
 /// <summary>What to publish and where.</summary>
 /// <param name="Index">The registry index, for the publisher's opt-out flag (none: not checked here; registry CI checks it).</param>
 /// <param name="GameName">The game's name for the PR title and body (the game ID when absent).</param>
-public sealed record PublishRequest(LocalPack Pack, PublishTarget Target, RegistryRepo Registry, RegistryIndex? Index = null, string? GameName = null);
+/// <param name="Fresh">
+/// <c>Fix and resubmit</c> (task 62): with an open PR the branch is still rebuilt as one commit on the registry's head
+/// (force-pushed; the PR stays), so nothing but the pack's folder is in it and CI checks it from scratch.
+/// </param>
+public sealed record PublishRequest(LocalPack Pack, PublishTarget Target, RegistryRepo Registry, RegistryIndex? Index = null, string? GameName = null, bool Fresh = false);
 
 /// <summary>How <see cref="PackPublisher.PublishAsync"/> ended.</summary>
 public abstract record PublishResult
@@ -57,7 +61,7 @@ public abstract record PublishResult
 /// an asset (replaced when its digest differs); then Git Data API: blobs → tree (on the parent's tree, the pack
 /// folder's old files not in the pack deleted) → commit → ref. Branch <see cref="PublishPayload.Branch"/>: with an
 /// open PR from it the commit goes on top (a fix: same PR); without one (an earlier try, a closed PR) it is reset to
-/// the new commit on the registry's head. <b>Pull request</b>: opened against the default branch with
+/// the new commit on the registry's head (also with an open PR for <see cref="PublishRequest.Fresh"/>). <b>Pull request</b>: opened against the default branch with
 /// <c>maintainer_can_modify</c>, or the open one reused. The local pack's report records the PR. Never throws except
 /// for cancellation; every problem is a <see cref="PublishResult.Failed"/> with a plain message. Running it again
 /// after a failure continues where it stopped (every step is idempotent).
@@ -153,7 +157,8 @@ public sealed class PackPublisher
             }
 
             var openPr = await OpenPullRequestAsync(api, registry, fork.Owner, plan.Branch, cancellationToken).ConfigureAwait(false);
-            var (committed, unchanged) = await CommitAsync(api, fork, plan, baseSha, openPr is not null, cancellationToken).ConfigureAwait(false);
+            var commitBase = await CommitBaseAsync(api, registry, fork, defaultBranch, baseSha, cancellationToken).ConfigureAwait(false);
+            var (committed, unchanged) = await CommitAsync(api, fork, plan, commitBase, onTop: openPr is not null && !request.Fresh, cancellationToken).ConfigureAwait(false);
             _logger.LogInformation("Committed {Folder} rev {Revision} to {Fork}:{Branch} ({Commit}{Unchanged})", plan.Folder, plan.Manifest.Revision, fork.FullName, plan.Branch, committed, unchanged ? ", unchanged" : "");
 
             step = PublishStep.PullRequest;
@@ -253,6 +258,32 @@ public sealed class PackPublisher
         }
 
         return fork;
+    }
+
+    /// <summary>
+    /// The commit the pack branch starts from: the registry's head, unless the fork's default branch is behind it (an
+    /// ancestor; <c>GET /compare</c>), then the fork's head. GitHub refuses to sync a fork whose upstream changed workflow
+    /// files with a token lacking the <c>workflow</c> scope (<c>merge-upstream</c> 422), and refuses a ref on a commit
+    /// that brings those changes into the fork (404), so a fork can stay behind for good; the PR's diff still holds only
+    /// the pack folder (it is taken from the merge base), and the pack's content is resolved against the registry's
+    /// head anyway. A fork branch with commits of its own (not an ancestor) keeps the registry's head.
+    /// </summary>
+    private async Task<string> CommitBaseAsync(GitHubRestClient api, RegistryRepo registry, Repo fork, string defaultBranch, string baseSha, CancellationToken cancellationToken)
+    {
+        var head = await api.TryGetAsync($"repos/{fork.FullName}/git/ref/heads/{defaultBranch}", cancellationToken).ConfigureAwait(false);
+        if (head is not { } found || Text(Property(found, "object"), "sha") is not { } forkSha || forkSha == baseSha)
+        {
+            return baseSha;
+        }
+
+        var compare = await api.TryGetAsync($"repos/{registry.FullName}/compare/{forkSha}...{baseSha}", cancellationToken).ConfigureAwait(false);
+        if (compare is { } answer && Text(answer, "status") is "ahead" or "identical")
+        {
+            _logger.LogInformation("Fork {Fork} is behind the registry ({ForkHead} → {Base}); the pack branch starts from the fork's {Branch}", fork.FullName, forkSha, baseSha, defaultBranch);
+            return forkSha;
+        }
+
+        return baseSha;
     }
 
     private async Task<(PublishPayload? Plan, PublishResult.Failed? Refused)> PayloadAsync(GitHubRestClient api, PublishRequest request, PackAuthor player, string baseSha, CancellationToken cancellationToken)
@@ -388,13 +419,14 @@ public sealed class PackPublisher
         return list.ValueKind == JsonValueKind.Array ? list.EnumerateArray().Select(PullRequestOf).FirstOrDefault(p => p is not null) : null;
     }
 
-    private static async Task<(string Commit, bool Unchanged)> CommitAsync(GitHubRestClient api, Repo fork, PublishPayload plan, string baseSha, bool prOpen, CancellationToken cancellationToken)
+    /// <param name="onTop">An open PR gets the commit on top of its branch (a fast-forward); otherwise the branch is reset to it.</param>
+    private static async Task<(string Commit, bool Unchanged)> CommitAsync(GitHubRestClient api, Repo fork, PublishPayload plan, string baseSha, bool onTop, CancellationToken cancellationToken)
     {
         var branchRef = await api.TryGetAsync($"repos/{fork.FullName}/git/ref/heads/{plan.Branch}", cancellationToken).ConfigureAwait(false);
         var branchSha = branchRef is { } found ? Text(Property(found, "object"), "sha") : null;
 
         // A fix of an open PR goes on top of its branch; otherwise the branch starts again from the registry's head.
-        var parent = prOpen && branchSha is not null ? branchSha : baseSha;
+        var parent = onTop && branchSha is not null ? branchSha : baseSha;
         var parentCommit = await api.GetAsync($"repos/{fork.FullName}/git/commits/{parent}", cancellationToken).ConfigureAwait(false);
         var parentTree = Text(Property(parentCommit, "tree"), "sha") ?? throw Unexpected("GitHub's commit answer has no tree.");
 
@@ -447,7 +479,7 @@ public sealed class PackPublisher
             }
         }
 
-        await api.PatchAsync($"repos/{fork.FullName}/git/refs/heads/{plan.Branch}", new JsonObject { ["sha"] = commitSha, ["force"] = !prOpen }, cancellationToken).ConfigureAwait(false);
+        await api.PatchAsync($"repos/{fork.FullName}/git/refs/heads/{plan.Branch}", new JsonObject { ["sha"] = commitSha, ["force"] = !onTop }, cancellationToken).ConfigureAwait(false);
         return (commitSha, false);
     }
 

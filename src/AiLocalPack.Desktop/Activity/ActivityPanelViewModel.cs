@@ -10,6 +10,7 @@ using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
+using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
@@ -42,6 +43,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private readonly IDialogService _dialogs;
     private readonly ICoverLoader _covers;
     private readonly GenerationService _jobs;
+    private readonly PublishFlow _publish;
+    private readonly LocalPacks _localPacks;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly TimeProvider _time;
@@ -60,6 +63,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         IDialogService dialogs,
         ICoverLoader covers,
         GenerationService jobs,
+        PublishFlow publish,
+        LocalPacks localPacks,
         StartupProgress startup,
         Localizer localizer,
         IUiDispatcher ui,
@@ -76,6 +81,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         _dialogs = dialogs;
         _covers = covers;
         _jobs = jobs;
+        _publish = publish;
+        _localPacks = localPacks;
         _localizer = localizer;
         _ui = ui;
         _time = time;
@@ -349,6 +356,24 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             case ActivityEventKind.GlossaryReview:
                 actions.Add(Action(nameof(Strings.Game_Action_ReviewGlossary), "IconPencil", true, () => OpenGame(activity.Game, GamePageTab.Generation)));
                 break;
+            case ActivityEventKind.PullRequestFailed:
+                if (PublishedPack(activity) is { } pack)
+                {
+                    actions.Add(Action(nameof(Strings.Publish_Resubmit), "IconRefresh", true, () =>
+                    {
+                        _store.Resolve(activity.Id);
+                        _publish.Resubmit(Fresh(game), pack);
+                    }));
+                }
+
+                AddLink(nameof(Strings.Activity_Action_OpenPr));
+                break;
+            case ActivityEventKind.PackMerged or ActivityEventKind.PullRequestClosed:
+                AddLink(nameof(Strings.Activity_Action_OpenPr));
+                break;
+            case ActivityEventKind.PackVerified:
+                AddLink(nameof(Strings.Publish_Discussion));
+                break;
             case ActivityEventKind.PackNotApplied:
                 actions.Add(Action(nameof(Strings.Activity_Action_Reapply), "IconRefresh", true, () => _ = _install.ReapplyAsync(Fresh(game))));
                 break;
@@ -365,6 +390,14 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
 
         return actions;
 
+        void AddLink(string key)
+        {
+            if (activity.Link is { } link)
+            {
+                actions.Add(Action(key, "IconExternal", false, () => _publish.Open(link)));
+            }
+        }
+
         ActivityActionViewModel Action(string key, string? icon, bool primary, Action run) =>
             new(_localizer[key], icon, primary, new RelayCommand(() =>
             {
@@ -372,6 +405,12 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
                 run();
             }));
     }
+
+    /// <summary>The local pack whose report records the event's PR (task 62), else <c>null</c>.</summary>
+    private Core.Packs.LocalPack? PublishedPack(ActivityEvent activity) =>
+        activity.Game is { } game && activity.PullRequest is { } number
+            ? _localPacks.List(game).FirstOrDefault(p => p.Report.Published is { } published && published.PullRequest == number && published.PullRequestUrl == activity.Link)
+            : null;
 
     /// <summary>The registry's newer revision of the installed pack (same ID and language), else <c>null</c>.</summary>
     private Core.Registry.RegistryPack? LaterRevision(ActivityEvent activity)

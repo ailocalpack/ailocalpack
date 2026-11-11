@@ -27,9 +27,13 @@ public static class ActivityTexts
             ActivityEventKind.GlossaryReview => nameof(Strings.Activity_Event_GlossaryReview),
             ActivityEventKind.PackSubmitted => nameof(Strings.Activity_Event_PackSubmitted),
             ActivityEventKind.PublishFailed => nameof(Strings.Activity_Event_PublishFailed),
+            ActivityEventKind.PullRequestFailed => nameof(Strings.Activity_Event_PullRequestFailed),
+            ActivityEventKind.PackMerged => nameof(Strings.Activity_Event_PackMerged),
+            ActivityEventKind.PullRequestClosed => nameof(Strings.Activity_Event_PullRequestClosed),
+            ActivityEventKind.PackVerified => nameof(Strings.Activity_Event_PackVerified),
             _ => nameof(Strings.Activity_Event_PackNotApplied),
         };
-        return localizer.Format(key, activity.PackTitle ?? activity.PackId ?? string.Empty, activity.Revision ?? 0);
+        return localizer.Format(key, activity.PackTitle ?? activity.PackId ?? string.Empty, activity.Revision ?? 0, activity.PullRequest ?? 0);
     }
 
     /// <summary>
@@ -51,6 +55,7 @@ public static class ActivityTexts
                 ? localizer.Format(nameof(Strings.Activity_Detail_UpdateAvailable), revision)
                 : localizer[nameof(Strings.Activity_Detail_Translate)],
             ActivityEventKind.PackNotApplied => localizer[nameof(Strings.Activity_Detail_NotApplied)],
+            ActivityEventKind.PackMerged => localizer[nameof(Strings.Activity_Detail_PackMerged)],
             _ when activity.Detail is { } detail => activity.FilesRestored ? detail : detail + " " + localizer[nameof(Strings.Activity_Detail_NotRestored)],
             _ => null,
         };

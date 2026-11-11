@@ -119,6 +119,12 @@
         <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
+    <Style Selector="TextBlock.rowHelp.bad">
+        <Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="TextBlock.rowHelp.ok">
+        <Setter Property="Foreground" Value="{DynamicResource AppOkBrush}" />
+    </Style>
     <Style Selector="HyperlinkButton.inline">
         <Setter Property="Padding" Value="0" />
         <Setter Property="FontSize" Value="13" />

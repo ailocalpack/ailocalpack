@@ -94,9 +94,11 @@ public sealed class GitHubApiException : Exception
 /// <c>x-ratelimit-remaining: 0</c> (reset from <c>x-ratelimit-reset</c>), a <c>retry-after</c> header or a "rate limit"
 /// message → <see cref="PublishProblem.RateLimited"/>; other 403 → <see cref="PublishProblem.Forbidden"/>; 404, 409,
 /// 422 (GitHub's message and its <c>errors[].message</c>), 5xx / 408 / no answer → <see cref="PublishProblem.Network"/>.
-/// Cancellation is never turned into an error.
+/// Cancellation is never turned into an error. Without a token (<c>null</c>) it reads public data anonymously. A GET
+/// given a <see cref="GitHubEtagCache"/> is conditional (<c>If-None-Match</c>): a 304, which GitHub doesn't count
+/// against the rate limit, answers the cached body (task 62's polling).
 /// </summary>
-public sealed class GitHubRestClient(HttpClient http, GitHubOAuthApp app, string token, TimeProvider? time = null)
+public sealed class GitHubRestClient(HttpClient http, GitHubOAuthApp app, string? token, TimeProvider? time = null)
 {
     private readonly TimeProvider _time = time ?? TimeProvider.System;
 
@@ -104,6 +106,35 @@ public sealed class GitHubRestClient(HttpClient http, GitHubOAuthApp app, string
 
     public Task<JsonElement> GetAsync(string path, CancellationToken cancellationToken) =>
         SendAsync(HttpMethod.Get, Api(path), null, cancellationToken);
+
+    /// <summary>A conditional GET: the cached ETag is sent, a 304 answers the cached body, a 200 replaces it.</summary>
+    public async Task<JsonElement> GetAsync(string path, GitHubEtagCache cache, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(cache);
+        var url = Api(path);
+        var cached = cache.Find(url);
+        using var request = GitHubUserClient.CreateRequest(HttpMethod.Get, url, token);
+        if (cached is not null)
+        {
+            request.Headers.TryAddWithoutValidation("If-None-Match", cached.Value.ETag);
+        }
+
+        var (status, body, headers) = await RoundTripAsync(request, cancellationToken).ConfigureAwait(false);
+        if (status == HttpStatusCode.NotModified && cached is not null)
+        {
+            body = cached.Value.Body;
+        }
+        else if (!IsSuccess(status))
+        {
+            throw new GitHubApiException(ErrorOf(status, body, headers));
+        }
+        else if (headers.ETag is { } etag)
+        {
+            cache.Put(url, etag.ToString(), body);
+        }
+
+        return Parse(HttpMethod.Get, url, status, body);
+    }
 
     /// <summary>GET that answers <c>null</c> for 404 (and for 409 "Git Repository is empty" when <paramref name="emptyIsMissing"/>).</summary>
     public async Task<JsonElement?> TryGetAsync(string path, CancellationToken cancellationToken, bool emptyIsMissing = false)
@@ -165,6 +196,11 @@ public sealed class GitHubRestClient(HttpClient http, GitHubOAuthApp app, string
             throw new GitHubApiException(ErrorOf(status, body, headers));
         }
 
+        return Parse(method, url, status, body);
+    }
+
+    private static JsonElement Parse(HttpMethod method, Uri url, HttpStatusCode status, byte[] body)
+    {
         if (body.Length == 0)
         {
             return default;
@@ -283,6 +319,46 @@ public sealed class GitHubRestClient(HttpClient http, GitHubOAuthApp app, string
         catch (JsonException)
         {
             return null;
+        }
+    }
+}
+
+/// <summary>
+/// The ETags and bodies of earlier GETs (by URL), for conditional requests; thread-safe, at most
+/// <see cref="Capacity"/> entries (the oldest dropped first).
+/// </summary>
+public sealed class GitHubEtagCache
+{
+    public const int Capacity = 256;
+
+    private readonly Lock _lock = new();
+    private readonly Dictionary<string, (string ETag, byte[] Body)> _entries = new(StringComparer.Ordinal);
+    private readonly Queue<string> _order = new();
+
+    public (string ETag, byte[] Body)? Find(Uri url)
+    {
+        ArgumentNullException.ThrowIfNull(url);
+        lock (_lock)
+        {
+            return _entries.TryGetValue(url.AbsoluteUri, out var entry) ? entry : null;
+        }
+    }
+
+    public void Put(Uri url, string etag, byte[] body)
+    {
+        ArgumentNullException.ThrowIfNull(url);
+        lock (_lock)
+        {
+            if (!_entries.ContainsKey(url.AbsoluteUri))
+            {
+                _order.Enqueue(url.AbsoluteUri);
+                while (_order.Count > Capacity && _order.TryDequeue(out var oldest))
+                {
+                    _entries.Remove(oldest);
+                }
+            }
+
+            _entries[url.AbsoluteUri] = (etag, body);
         }
     }
 }

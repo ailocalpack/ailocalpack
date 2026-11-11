@@ -234,6 +234,51 @@ public sealed class PackPublisherTests : IDisposable
     }
 
     [Fact]
+    public async Task A_fork_github_wont_sync_gets_the_branch_on_its_own_head()
+    {
+        // Arrange: the fork exists, then the registry moves on with a change the fork can't take (workflow files).
+        _bed.Api.AddFork(Fork, PublishBed.Registry);
+        _bed.Api.Commit(PublishBed.Registry, "master", new Dictionary<string, string?> { [".github/workflows/validate.yml"] = "on: pull_request" }, "CI");
+        _bed.Api.Fail("POST", "^repos/octo/registry/merge-upstream$", HttpStatusCode.UnprocessableEntity, """{"message":"refusing to allow an OAuth App to create or update workflow without workflow scope"}""");
+
+        // Act
+        var result = await _bed.PublishAsync(_bed.SaveLocal());
+
+        // Assert
+        (result is PublishResult.Published, _bed.Api.History(Fork, Branch)).Should().BeEquivalentTo((true, new[] { "Claude Code translation: new pack (ru, steam:620)", "Initial commit" }), o => o.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task A_resubmit_rebuilds_the_branch_on_the_registrys_head()
+    {
+        // Arrange
+        var pack = _bed.SaveLocal();
+        await _bed.PublishAsync(pack);
+        _bed.Api.Commit(Fork, Branch, new Dictionary<string, string?> { ["README.md"] = "stray change" }, "Stray");
+
+        // Act
+        await _bed.Publisher().PublishAsync(new PublishRequest(pack, new PublishTarget.NewPack(), RegistryRepo.Default, Fresh: true), cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        _bed.Api.History(Fork, Branch).Should().Equal("Claude Code translation: new pack (ru, steam:620)", "Initial commit");
+    }
+
+    [Fact]
+    public async Task A_resubmit_keeps_the_open_pull_request()
+    {
+        // Arrange
+        var pack = _bed.SaveLocal();
+        await _bed.PublishAsync(pack);
+
+        // Act
+        var result = await _bed.Publisher().PublishAsync(new PublishRequest(pack, new PublishTarget.NewPack(), RegistryRepo.Default, Fresh: true), cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Should().BeOfType<PublishResult.Published>().Which.Resubmitted.Should().BeTrue();
+        _bed.Api.PullRequests.Should().ContainSingle();
+    }
+
+    [Fact]
     public async Task Sending_the_same_files_again_commits_nothing()
     {
         // Arrange

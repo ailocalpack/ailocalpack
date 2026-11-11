@@ -58,6 +58,22 @@ public enum ActivityEventKind
 
     /// <summary>Publishing a local pack stopped before its PR (offline, rate limit, refused): the reason in <see cref="ActivityEvent.Detail"/>.</summary>
     PublishFailed,
+
+    /// <summary>
+    /// Registry CI rejected the player's PR (task 62): a decision (<c>Fix and resubmit</c>, <c>PR on GitHub</c>) until the
+    /// player resubmits, the PR passes after a fix on GitHub, or it is merged or closed; the reason in
+    /// <see cref="ActivityEvent.Detail"/>.
+    /// </summary>
+    PullRequestFailed,
+
+    /// <summary>The player's PR was merged: the pack is in the registry as <c>alpha</c>.</summary>
+    PackMerged,
+
+    /// <summary>The player's PR was closed without merging.</summary>
+    PullRequestClosed,
+
+    /// <summary>The player's published pack became <c>verified</c> (the index says so).</summary>
+    PackVerified,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -103,6 +119,12 @@ public sealed record ActivityEvent
     public string? PackTitle { get; init; }
 
     public int? Revision { get; init; }
+
+    /// <summary>The registry pull request it is about (task 62).</summary>
+    public int? PullRequest { get; init; }
+
+    /// <summary>A page on GitHub it is about (the pull request); https only.</summary>
+    public Uri? Link { get; init; }
 
     /// <summary>When a paused generation goes on by itself (<see cref="ActivityEventKind.GenerationPaused"/>).</summary>
     public DateTimeOffset? Until { get; init; }
@@ -221,9 +243,9 @@ public static class ActivityEvents
     public static ActivityTone ToneOf(ActivityEventKind kind) => kind switch
     {
         ActivityEventKind.PackInstalled or ActivityEventKind.PackReapplied or ActivityEventKind.PackAutoReapplied
-            or ActivityEventKind.PackSubmitted => ActivityTone.Ok,
+            or ActivityEventKind.PackSubmitted or ActivityEventKind.PackMerged or ActivityEventKind.PackVerified => ActivityTone.Ok,
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
-            or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed => ActivityTone.Bad,
+            or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed or ActivityEventKind.PullRequestFailed => ActivityTone.Bad,
         ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied or ActivityEventKind.GlossaryReview => ActivityTone.Attention,
         ActivityEventKind.GenerationPaused => ActivityTone.Paused,
         _ => ActivityTone.Info,
@@ -235,7 +257,7 @@ public static class ActivityEvents
     /// </summary>
     public static bool IsDecisionKind(ActivityEventKind kind) =>
         kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied
-            or ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview;
+            or ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview or ActivityEventKind.PullRequestFailed;
 
     /// <summary>Decisions about a game's installed pack: settled once the pack is installed, re-applied or uninstalled again.</summary>
     public static bool IsPackProblem(ActivityEventKind kind) =>

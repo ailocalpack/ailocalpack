@@ -1,6 +1,7 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Publishing;
 using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Packs;
@@ -247,6 +248,35 @@ public sealed class LocalPackStoreTests : IDisposable
 
         // Assert
         pack!.Report.ShareDismissed.Should().BeTrue();
+    }
+
+    [Fact]
+    public void A_merged_pull_request_reads_back()
+    {
+        // Arrange
+        var publication = new LocalPackPublication("ailocalpack/registry", "claude-code", 1, 7, new Uri("https://github.com/ailocalpack/registry/pull/7"), "octo/registry", "pack/steam-620/ru/claude-code/rev-1", T0, PullRequestState.Merged, T0.AddHours(2));
+        _store.Save(Manifest(), Table, Report());
+        _store.UpdateReport(Game, "ru", "claude-code", r => r with { Published = publication });
+
+        // Act
+        var pack = _store.Find(Game, "ru", "claude-code");
+
+        // Assert
+        pack!.Report.Published.Should().Be(publication);
+    }
+
+    [Fact]
+    public void A_publication_without_a_state_reads_as_open()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+        _store.UpdateReport(Game, "ru", "claude-code", r => r with { Published = new LocalPackPublication("ailocalpack/registry", "claude-code", 1, 7, new Uri("https://github.com/ailocalpack/registry/pull/7"), "octo/registry", "b", T0) });
+
+        // Act
+        var json = File.ReadAllText(_store.ReportPath(Game, "ru", "claude-code"));
+
+        // Assert
+        (json.Contains("\"state\"", StringComparison.Ordinal), _store.Find(Game, "ru", "claude-code")!.Report.Published!.State).Should().Be((false, PullRequestState.Open));
     }
 
     [Fact]
