@@ -35,7 +35,9 @@ public sealed class StorageSettingsSection : SettingsSection
     private readonly SettingRowServices _services;
     private readonly ObservableCollection<SettingRow> _copyRows = [];
     private readonly Dictionary<string, WorkingCopyRow> _copies = new(PathNames.Comparer);
+    private readonly Lock _refreshLock = new();
     private int _version;
+    private Task _latestRefresh = Task.CompletedTask;
     private StorageUsage? _usage;
 
     public StorageSettingsSection(
@@ -98,11 +100,23 @@ public sealed class StorageSettingsSection : SettingsSection
 
     public override void OnShown() => _ = RefreshAsync();
 
-    /// <summary>Measures the disk use again (off the UI thread); a newer measure started meanwhile wins. Never throws.</summary>
-    public async Task RefreshAsync()
+    /// <summary>
+    /// Measures the disk use again (off the UI thread); a newer measure started meanwhile wins, and this one completes
+    /// when that one did (so awaiting it after a change shows the change). Never throws.
+    /// </summary>
+    public Task RefreshAsync()
     {
-        var version = Interlocked.Increment(ref _version);
-        StorageUsage usage;
+        // The version and its task change together, so a superseded measure always waits for a newer one, never itself.
+        lock (_refreshLock)
+        {
+            _latestRefresh = MeasureAsync(++_version);
+            return _latestRefresh;
+        }
+    }
+
+    private async Task MeasureAsync(int version)
+    {
+        StorageUsage? usage = null;
         try
         {
             usage = await Task.Run(() => StorageUsage.Measure(_paths)).ConfigureAwait(false);
@@ -110,10 +124,19 @@ public sealed class StorageSettingsSection : SettingsSection
         catch (Exception e)
         {
             _logger.LogWarning(e, "Measuring the disk use failed");
-            return;
         }
 
-        if (version == Volatile.Read(ref _version))
+        Task? newer;
+        lock (_refreshLock)
+        {
+            newer = version == _version ? null : _latestRefresh;
+        }
+
+        if (newer is not null)
+        {
+            await newer.ConfigureAwait(false);
+        }
+        else if (usage is not null)
         {
             _ui.Post(() => Apply(usage));
         }

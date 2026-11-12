@@ -141,7 +141,8 @@ public sealed class GitHubSignInViewTests
         Click(Find<Button>(window, "GitHubSignIn"));
         await RunUntilAsync(() => window.GetVisualDescendants().OfType<SelectableTextBlock>().Any(t => t.Name == "UserCode" && t.Text == "WDJB-MJHT"));
         services.GetRequiredService<FakeGitHubHost>().Approve(FakeGitHubHost.Octocat);
-        await RunUntilAsync(() => window.GetVisualDescendants().OfType<Button>().Any(b => b.Name == "GitHubSignOut" && b.IsEffectivelyVisible));
+        await RunUntilAsync(() => window.GetVisualDescendants().OfType<Button>().Any(b => b.Name == "GitHubSignOut" && b.IsEffectivelyVisible)
+            && !Find<GitHubSignInView>(window, "GitHubDeviceFlow").IsVisible);
 
         // Assert
         (Find<HighlightTextBlock>(window, "GitHubLogin").Source, Find<GitHubSignInView>(window, "GitHubDeviceFlow").IsVisible,
