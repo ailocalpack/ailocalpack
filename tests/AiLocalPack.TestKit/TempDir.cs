@@ -103,9 +103,11 @@ public sealed class TempDir : IDisposable
             return;
         }
 
-        // Windows refuses to delete read-only files; a file closed a moment ago can also still be locked briefly.
-        const int attempts = 5;
-        for (var attempt = 1; ; attempt++)
+        // Windows refuses to delete read-only files; a file closed a moment ago, or one a background read the test
+        // started still holds (a manifest load outliving the service graph), stays locked for a while. Retried for
+        // about 4 s; after that the folder is left to the OS temp cleanup rather than failing a test over its cleanup.
+        const int attempts = 12;
+        for (var attempt = 1; attempt <= attempts; attempt++)
         {
             try
             {
@@ -113,9 +115,9 @@ public sealed class TempDir : IDisposable
                 Directory.Delete(Path, recursive: true);
                 return;
             }
-            catch (Exception e) when (attempt < attempts && e is IOException or UnauthorizedAccessException)
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {
-                Thread.Sleep(50 * attempt);
+                Thread.Sleep(Math.Min(50 * attempt, 500));
             }
         }
     }
