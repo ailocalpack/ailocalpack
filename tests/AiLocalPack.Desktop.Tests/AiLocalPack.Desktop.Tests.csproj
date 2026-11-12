@@ -17,6 +17,8 @@
     <ItemGroup>
         <None Include="..\..\src\AiLocalPack.Desktop\Styles\Theme.axaml;..\..\src\AiLocalPack.Desktop\Styles\BrandIcons.axaml"
               LinkBase="styles" CopyToOutputDirectory="PreserveNewest" />
+        <!-- The release workflow's tool pin and the package versions it must match (task 71). -->
+        <None Include="..\..\.config\dotnet-tools.json;..\..\Directory.Packages.props" LinkBase="release" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>

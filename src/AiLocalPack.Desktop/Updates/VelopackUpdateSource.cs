@@ -44,7 +44,24 @@ public sealed class VelopackUpdateSource : IAppUpdateSource
     public string? CurrentVersion => _manager.CurrentVersion?.ToString();
 
     /// <summary>Velopack names each OS's default channel after it; any other channel is shown by name.</summary>
-    public string? Channel => InstalledChannel is { } channel && channel is not ("win" or "osx" or "linux") ? channel : null;
+    public string? Channel => ShownChannel(InstalledChannel);
+
+    /// <summary>
+    /// The channel the About page names, <c>null</c> for a stable one: Velopack's per-OS default (<c>win</c>, <c>osx</c>,
+    /// <c>linux</c>) and the release workflow's per-architecture channels (<c>win-x64</c>, <c>osx-arm64</c>…, task 71).
+    /// </summary>
+    internal static string? ShownChannel(string? installed)
+    {
+        if (installed is null)
+        {
+            return null;
+        }
+
+        var dash = installed.IndexOf('-', StringComparison.Ordinal);
+        var os = dash < 0 ? installed : installed[..dash];
+        var arch = dash < 0 ? null : installed[(dash + 1)..];
+        return os is "win" or "osx" or "linux" && arch is null or "x64" or "arm64" ? null : installed;
+    }
 
     private string? InstalledChannel => _manager.IsInstalled ? VelopackLocator.Current.Channel : null;
 

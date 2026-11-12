@@ -18,6 +18,8 @@
         <PackageReference Include="Avalonia" />
         <PackageReference Include="Avalonia.Desktop" />
         <PackageReference Include="Avalonia.Fonts.Inter" />
+        <!-- The headless platform for the smoke test (task 71, smoke-test argument): the release workflow runs the packaged app without a display. -->
+        <PackageReference Include="Avalonia.Headless" />
         <PackageReference Include="Avalonia.Themes.Fluent" />
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />

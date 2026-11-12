@@ -1,0 +1,361 @@
+name: Release
+
+# Task 71. A tag v<version> (SemVer 2: v0.1.0, v0.2.0-beta.1) builds the app for every platform, packs it with Velopack
+# (installers, portable bundles, full and delta update packages per channel), checks every package with the app's
+# --smoke-test, builds the CLI archives and publishes everything as the GitHub Release of the tag (a pre-release when
+# the version has a pre-release part: the app's update check skips those). Run by hand (workflow_dispatch) it builds,
+# packs and checks without releasing; the packages stay as the run's artifacts.
+#
+# Signing is on when its repository variables are set (see docs/desktop-app.md, _Release packages_), else the packages
+# are unsigned and the run says so:
+# - macOS: vars APPLE_SIGN_APP_IDENTITY, APPLE_SIGN_INSTALLER_IDENTITY; secrets APPLE_CERTIFICATES_P12 (base64),
+#   APPLE_CERTIFICATES_PASSWORD, APPLE_NOTARY_KEY_P8 (base64), APPLE_NOTARY_KEY_ID, APPLE_NOTARY_ISSUER_ID.
+# - Windows (SignPath Foundation): vars SIGNPATH_ORGANIZATION_ID, SIGNPATH_PROJECT_SLUG, SIGNPATH_POLICY_SLUG; secret
+#   SIGNPATH_API_TOKEN. Artifact configurations: "app" (a ZIP of the published folder) and "setup" (a ZIP of Setup.exe).
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to build (no release is made)
+        default: 0.0.0-dev
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+
+env:
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  PACK_ID: AiLocalPack
+  PACK_TITLE: AI Local Pack
+  PACK_AUTHORS: AI Local Pack contributors
+  REPO_URL: https://github.com/ailocalpack/ailocalpack
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      prerelease: ${{ steps.v.outputs.prerelease }}
+      release: ${{ steps.v.outputs.release }}
+    steps:
+      - id: v
+        shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"; release=true
+          else
+            version="$INPUT_VERSION"; release=false
+          fi
+          # SemVer 2 without build metadata: what Velopack and the app's version display read.
+          if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::'$version' is not a version like 0.1.0 or 0.2.0-beta.1"
+            exit 1
+          fi
+          prerelease=false; [[ "$version" == *-* ]] && prerelease=true
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "Version $version (pre-release: $prerelease, release: $release)" >> "$GITHUB_STEP_SUMMARY"
+
+  app:
+    name: app ${{ matrix.rid }}
+    needs: version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { rid: win-x64, os: windows-latest }
+          - { rid: win-arm64, os: windows-11-arm }
+          - { rid: osx-x64, os: macos-15-intel }
+          - { rid: osx-arm64, os: macos-latest }
+          - { rid: linux-x64, os: ubuntu-latest }
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      RID: ${{ matrix.rid }}
+      # One Velopack channel per OS and architecture: an installed copy updates within its own.
+      CHANNEL: ${{ matrix.rid }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools (vpk)
+        run: dotnet tool restore
+
+      - name: Publish
+        shell: bash
+        run: |
+          dotnet publish src/AiLocalPack.Desktop -c Release -r "$RID" --self-contained \
+            -p:Version="$VERSION" -p:DebugType=none -o "$RUNNER_TEMP/publish"
+
+      # Deltas are made against the previous release of the channel; none on the first release.
+      - name: Previous release (for deltas)
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ needs.version.outputs.prerelease }}
+        run: |
+          pre=(); [ "$PRERELEASE" = "true" ] && pre=(--pre)
+          dotnet vpk download github --repoUrl "$REPO_URL" --channel "$CHANNEL" --token "$GITHUB_TOKEN" "${pre[@]}" \
+            -o "$RUNNER_TEMP/releases" || echo "::warning::No previous release of $CHANNEL: full packages only"
+
+      # --- Windows ------------------------------------------------------------------------------------------------
+      - name: Windows signing on?
+        id: winsign
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if [ -n "${{ vars.SIGNPATH_ORGANIZATION_ID }}" ]; then echo "on=true" >> "$GITHUB_OUTPUT"
+          else echo "on=false" >> "$GITHUB_OUTPUT"; echo "::warning::SignPath isn't set up: the Windows packages are unsigned"; fi
+
+      - name: Upload the published app for signing
+        id: unsigned-app
+        if: steps.winsign.outputs.on == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-app-${{ matrix.rid }}
+          path: ${{ runner.temp }}/publish/
+          retention-days: 1
+
+      - name: Sign the app (SignPath)
+        if: steps.winsign.outputs.on == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: app
+          github-artifact-id: ${{ steps.unsigned-app.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: ${{ runner.temp }}/publish
+
+      - name: Pack (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          dotnet vpk pack -u "$PACK_ID" -v "$VERSION" -p "$RUNNER_TEMP/publish" -e AiLocalPack.exe -r "$RID" -c "$CHANNEL" \
+            --packTitle "$PACK_TITLE" --packAuthors "$PACK_AUTHORS" -i src/AiLocalPack.Desktop/Assets/app-icon.ico \
+            --aumid io.github.ailocalpack -o "$RUNNER_TEMP/releases"
+
+      - name: Upload Setup.exe for signing
+        id: unsigned-setup
+        if: steps.winsign.outputs.on == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-setup-${{ matrix.rid }}
+          path: ${{ runner.temp }}/releases/${{ env.PACK_ID }}-${{ matrix.rid }}-Setup.exe
+          retention-days: 1
+
+      - name: Sign Setup.exe (SignPath)
+        if: steps.winsign.outputs.on == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: setup
+          github-artifact-id: ${{ steps.unsigned-setup.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: ${{ runner.temp }}/releases
+
+      - name: Smoke test (Windows portable)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          dir="$RUNNER_TEMP/smoke"; mkdir -p "$dir"
+          unzip -q "$RUNNER_TEMP/releases/$PACK_ID-$CHANNEL-Portable.zip" -d "$dir"
+          # The portable root's AiLocalPack.exe only starts current/AiLocalPack.exe and exits; run the app itself.
+          "$dir/current/AiLocalPack.exe" --smoke-test | tee "$RUNNER_TEMP/smoke.txt"
+          grep -qx "version: $VERSION (Portable)" "$RUNNER_TEMP/smoke.txt"
+
+      # --- macOS --------------------------------------------------------------------------------------------------
+      - name: macOS signing
+        id: macsign
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          APP_IDENTITY: ${{ vars.APPLE_SIGN_APP_IDENTITY }}
+          CERTIFICATES_P12: ${{ secrets.APPLE_CERTIFICATES_P12 }}
+          CERTIFICATES_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          NOTARY_KEY_P8: ${{ secrets.APPLE_NOTARY_KEY_P8 }}
+          NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
+          NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+        run: |
+          if [ -z "$APP_IDENTITY" ]; then
+            echo "on=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Apple signing isn't set up: the macOS packages are ad-hoc signed and not notarized"
+            exit 0
+          fi
+          keychain="$RUNNER_TEMP/signing.keychain-db"; password="$(uuidgen)"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          echo "$CERTIFICATES_P12" | base64 --decode > "$RUNNER_TEMP/certificates.p12"
+          security import "$RUNNER_TEMP/certificates.p12" -k "$keychain" -P "$CERTIFICATES_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/productsign -T /usr/bin/pkgbuild
+          rm "$RUNNER_TEMP/certificates.p12"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" > /dev/null
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          echo "$NOTARY_KEY_P8" | base64 --decode > "$RUNNER_TEMP/notary.p8"
+          xcrun notarytool store-credentials ailocalpack --key "$RUNNER_TEMP/notary.p8" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID"
+          rm "$RUNNER_TEMP/notary.p8"
+          echo "on=true" >> "$GITHUB_OUTPUT"
+
+      - name: Pack (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          SIGNED: ${{ steps.macsign.outputs.on }}
+          APP_IDENTITY: ${{ vars.APPLE_SIGN_APP_IDENTITY }}
+          INSTALLER_IDENTITY: ${{ vars.APPLE_SIGN_INSTALLER_IDENTITY }}
+        run: |
+          sign=()
+          if [ "$SIGNED" = "true" ]; then
+            sign=(--signAppIdentity "$APP_IDENTITY" --signInstallIdentity "$INSTALLER_IDENTITY"
+                  --signEntitlements build/macos/entitlements.plist --notaryProfile ailocalpack)
+          fi
+          dotnet vpk pack -u "$PACK_ID" -v "$VERSION" -p "$RUNNER_TEMP/publish" -e AiLocalPack -r "$RID" -c "$CHANNEL" \
+            --packTitle "$PACK_TITLE" --packAuthors "$PACK_AUTHORS" -i assets/branding/app-icon.icns \
+            --bundleId io.github.ailocalpack "${sign[@]}" -o "$RUNNER_TEMP/releases"
+
+      - name: Smoke test (macOS portable)
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          SIGNED: ${{ steps.macsign.outputs.on }}
+        run: |
+          dir="$RUNNER_TEMP/smoke"; mkdir -p "$dir"
+          ditto -x -k "$RUNNER_TEMP/releases/$PACK_ID-$CHANNEL-Portable.zip" "$dir"
+          app="$dir/$PACK_TITLE.app"
+          "$app/Contents/MacOS/AiLocalPack" --smoke-test | tee "$RUNNER_TEMP/smoke.txt"
+          grep -qx "version: $VERSION (Portable)" "$RUNNER_TEMP/smoke.txt"
+          if [ "$SIGNED" = "true" ]; then
+            spctl --assess --type execute --verbose=2 "$app"   # Gatekeeper: signed and notarized
+          fi
+
+      # --- Linux --------------------------------------------------------------------------------------------------
+      - name: Pack (Linux AppImage)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          dotnet vpk pack -u "$PACK_ID" -v "$VERSION" -p "$RUNNER_TEMP/publish" -e AiLocalPack -r "$RID" -c "$CHANNEL" \
+            --packTitle "$PACK_TITLE" --packAuthors "$PACK_AUTHORS" -i assets/branding/app-icon-512.png \
+            --categories "Game;Utility" -o "$RUNNER_TEMP/releases"
+
+      - name: Smoke test (Linux AppImage)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          appimage="$RUNNER_TEMP/releases/$PACK_ID.AppImage"
+          [ -f "$appimage" ] || appimage="$(ls "$RUNNER_TEMP"/releases/*.AppImage | head -n 1)"
+          chmod +x "$appimage"
+          # No FUSE on the runner: the AppImage's own runtime unpacks it and runs it from there.
+          APPIMAGE_EXTRACT_AND_RUN=1 "$appimage" --smoke-test | tee "$RUNNER_TEMP/smoke.txt"
+          grep -qx "version: $VERSION (Installed)" "$RUNNER_TEMP/smoke.txt"
+
+      # --- every OS -----------------------------------------------------------------------------------------------
+      - name: Packages
+        shell: bash
+        run: |
+          # Only this version's files go into the release (the download step also brought the previous one).
+          mkdir -p "$RUNNER_TEMP/out"
+          find "$RUNNER_TEMP/releases" -maxdepth 1 -type f ! -name "*-full.nupkg" -exec cp {} "$RUNNER_TEMP/out/" \;
+          cp "$RUNNER_TEMP/releases/$PACK_ID-$VERSION-$CHANNEL-full.nupkg" "$RUNNER_TEMP/out/"
+          ls -la "$RUNNER_TEMP/out" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ matrix.rid }}
+          path: ${{ runner.temp }}/out/
+          if-no-files-found: error
+          retention-days: 14
+
+  cli:
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # One self-contained single file per OS (the csproj turns it on when a RID is given) with the JSON Schemas it
+      # validates against: the registry CI downloads the linux-x64 archive (pinned version + SHA-256) instead of
+      # building the CLI.
+      - name: Publish the CLI
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/out"
+          for rid in linux-x64 linux-arm64 osx-x64 osx-arm64 win-x64 win-arm64; do
+            dir="$RUNNER_TEMP/cli/$rid"
+            dotnet publish src/AiLocalPack.Cli -c Release -r "$rid" -p:Version="$VERSION" -p:DebugType=none -o "$dir"
+            cp -r schemas "$dir/schemas"
+            name="ailocalpack-cli-$VERSION-$rid"
+            if [[ "$rid" == win-* ]]; then
+              (cd "$dir" && zip -qr "$RUNNER_TEMP/out/$name.zip" .)
+            else
+              tar -C "$dir" -czf "$RUNNER_TEMP/out/$name.tar.gz" .
+            fi
+          done
+          "$RUNNER_TEMP/cli/linux-x64/ailocalpack" --version | tee "$RUNNER_TEMP/cli-version.txt"
+          grep -q "^$VERSION" "$RUNNER_TEMP/cli-version.txt"
+          "$RUNNER_TEMP/cli/linux-x64/ailocalpack" index build tests/fixtures/registry \
+            --generated 2026-11-04T12:00:00Z --ratings tests/fixtures/registry-ratings.json --out "$RUNNER_TEMP/index.json"
+          diff "$RUNNER_TEMP/index.json" tests/fixtures/registry/index.json
+          (cd "$RUNNER_TEMP/out" && sha256sum ailocalpack-cli-* > "ailocalpack-cli-$VERSION-SHA256SUMS.txt")
+          cat "$RUNNER_TEMP/out/ailocalpack-cli-$VERSION-SHA256SUMS.txt" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cli
+          path: ${{ runner.temp }}/out/
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    needs: [version, app, cli]
+    if: needs.version.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      PRERELEASE: ${{ needs.version.outputs.prerelease }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "{app-*,cli}"
+          path: assets
+          merge-multiple: true
+
+      # A draft first, published once every file is up: the app never sees a release with half its packages.
+      - name: Publish the release
+        shell: bash
+        run: |
+          pre=(); [ "$PRERELEASE" = "true" ] && pre=(--prerelease)
+          tag="v$VERSION"
+          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --title "AI Local Pack $VERSION" \
+            --generate-notes "${pre[@]}"
+          gh release upload "$tag" --repo "$GITHUB_REPOSITORY" assets/*
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false
+          echo "Released [$tag]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag)" >> "$GITHUB_STEP_SUMMARY"

@@ -25,6 +25,13 @@ internal static class Program
         // earlier is applied on start. After the MCP server check, so an agent's toolkit server never restarts into one.
         VelopackApp.Build().Run();
 
+        // The release workflow's check of the packaged app (task 71): headless, in a throwaway home; after Velopack, whose
+        // locator tells the version and channel the package was made with.
+        if (SmokeTest.IsRequested(args))
+        {
+            return SmokeTest.Run(Console.Out);
+        }
+
         var paths = AppPaths.Resolve(OsEnvironment.Current);
         using var loggerFactory = AppLogging.CreateFactory(paths.Logs);
         var logger = loggerFactory.CreateLogger("AiLocalPack");
