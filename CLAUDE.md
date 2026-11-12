@@ -52,7 +52,7 @@ Synthetic test games: `ailocalpack dev fixture rpgmaker|renpy|godot|unity|unreal
 
 ## Constraints
 
-- Every platform is first-class: Windows, macOS, Linux (including Steam Deck). Store discovery, file paths, and agent installation all differ per OS.
+- Every platform is first-class: Windows, macOS, Linux (Steam Deck support after MVP, see _Roadmap_). Store discovery, file paths, and agent installation all differ per OS.
 - No server of our own: the app, GitHub, and the player's AI agent account are the whole system.
 - AI usage goes through the player's own agent subscription or API key; the project pays for no inference.
 - Open source.
@@ -78,7 +78,7 @@ Synthetic test games: `ailocalpack dev fixture rpgmaker|renpy|godot|unity|unreal
 
 - **MVP**: text only. Steam + manually added folders. All three OSes. Install from the registry, generate with an agent (Claude Code and Codex), publish.
 - **Phase 2**: audio (TTS). **Phase 3**: textures (localized images). The UI shows both as "coming soon" from day one.
-- Post-MVP: more stores (Epic, GOG, EA app), "own API key / local model" agent adapter, manual string editor, cross-store game matching.
+- Post-MVP: Steam Deck and keyboard pass (1280×800 without horizontal scrolling, touch-sized targets, full keyboard reach and screen reader names, a run on a Deck; task 69), gamepad navigation and Game Mode, more stores (Epic, GOG, EA app), "own API key / local model" agent adapter, manual string editor, cross-store game matching.
 
 ## Core flow
 
