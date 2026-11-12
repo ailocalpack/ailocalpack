@@ -12,7 +12,9 @@
   <a href="#download"><b>Download</b></a> ·
   <a href="#how-to-use-it">How to use it</a> ·
   <a href="#questions">Questions</a> ·
-  <a href="https://github.com/ailocalpack/registry">Translations</a>
+  <a href="https://github.com/ailocalpack/registry">Translations</a> ·
+  <a href="#privacy">Privacy</a> ·
+  <a href="#code-signing-policy">Code signing policy</a>
 </p>
 
 <p align="center"><img src="assets/screenshots/library.png" width="860" alt="The AI Local Pack library: your Steam games with their covers, engines and whether a translation exists for your language"></p>
@@ -35,7 +37,7 @@
 | **Mac with Intel** | [Download `.pkg`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-osx-x64-Setup.pkg) | [Portable `.zip`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-osx-x64-Portable.zip) |
 | **Linux** (64-bit) | [Download `.AppImage`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-linux-x64.AppImage) | the AppImage needs no installing |
 
-The links always point to the latest version. All versions and what changed: [Releases](https://github.com/ailocalpack/ailocalpack/releases).
+The links always point to the latest version. All versions and what changed: [Releases](https://github.com/ailocalpack/ailocalpack/releases). How releases are signed: [Code signing policy](#code-signing-policy). What the app connects to: [Privacy](#privacy).
 
 **Which Mac do I have?** Apple menu → *About This Mac*. *Chip: Apple M…* means Apple chip; *Processor: Intel…* means Intel.
 
@@ -116,6 +118,29 @@ The app is C# / .NET 10 with [Avalonia UI](https://avaloniaui.net/). Building, t
 
 - **App UI translations**, bug reports and code go to this repository ([CONTRIBUTING.md](CONTRIBUTING.md)).
 - **Game translations** go to the [registry](https://github.com/ailocalpack/registry) as pull requests (the app does this for you).
+
+## Privacy
+
+AI Local Pack collects no telemetry and has no server of its own. It sends none of your data anywhere unless you ask it to. It connects only to:
+
+- **GitHub Pages** (`ailocalpack.github.io`): the list of translations, read at start and from time to time.
+- **GitHub** (`github.com`, `raw.githubusercontent.com`): the translation files you install, app updates (checked at start and every 6 hours), fonts a translation needs, and the official downloads of Claude Code / Codex when you ask the app to install one.
+- **Steam's image servers** (`steamstatic.com`): game covers.
+- **The GitHub API** (`api.github.com`), only after you sign in with GitHub: publishing your translations, rating translations and following your pull requests. Your GitHub token is kept only in your system's keychain.
+- **Your AI agent** (Claude Code from `downloads.claude.ai`, or Codex), only when you create a translation. The agent sends the game's text to its vendor (Anthropic or OpenAI) under that vendor's privacy policy and your own account.
+
+What you publish (your translation and your GitHub user name as its author, ratings and comments) is public on GitHub.
+
+## Code signing policy
+
+Windows releases get free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/). (Signing is being set up; until it is, releases are unsigned, see [First start](#first-start-unknown-app-warnings).)
+
+Only the app built from this repository by its [release workflow](.github/workflows/release.yml) is signed: `AiLocalPack.exe`, the `AiLocalPack.*.dll` files and the `Setup.exe` installer. Third-party libraries are not signed by us.
+
+- **Committers and reviewers**: [members of the ailocalpack organization](https://github.com/orgs/ailocalpack/people)
+- **Approvers**: [owners of the ailocalpack organization](https://github.com/orgs/ailocalpack/people?query=role%3Aowner)
+
+Every signing request is approved by hand by an approver. All team members use two-factor authentication on GitHub and SignPath.
 
 ## Licenses
 
