@@ -361,6 +361,12 @@ jobs:
           tag="v$VERSION"
           gh release create "$tag" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --title "AI Local Pack $VERSION" \
             --generate-notes "${pre[@]}"
+          # SignPath Foundation wants the code signing policy linked from the download page.
+          repo_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          { gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json body --jq .body
+            printf '\n\n---\n\n[Code signing policy](%s#code-signing-policy) · [Privacy](%s#privacy)\n' "$repo_url" "$repo_url"
+          } > "$RUNNER_TEMP/notes.md"
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --notes-file "$RUNNER_TEMP/notes.md"
           gh release upload "$tag" --repo "$GITHUB_REPOSITORY" assets/*
           gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false
           echo "Released [$tag]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag)" >> "$GITHUB_STEP_SUMMARY"
