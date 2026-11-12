@@ -33,9 +33,18 @@ public sealed class GenerationRunnerTests : IDisposable
     private GenerationStages Stages(
         Func<GenerationStepContext, CancellationToken, Task<GenerationStepResult>>? translate = null,
         Func<GenerationStepResult>? glossary = null,
-        GenerationStage? pauseBefore = null) => new(
+        GenerationStage? pauseBefore = null,
+        Task? setupGate = null) => new(
     [
-        new Step(GenerationStage.Setup, (_, _) => Done()),
+        new Step(GenerationStage.Setup, async (_, _) =>
+        {
+            if (setupGate is not null)
+            {
+                await setupGate;
+            }
+
+            return await Done();
+        }),
         new Step(GenerationStage.Extract, (_, _) => Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone(new GenerationCounters(30, 0, 3, 0)))),
         new Step(GenerationStage.Glossary, (_, _) => glossary is null ? Done() : Task.FromResult(glossary())),
         new Step(GenerationStage.Translate, translate ?? ((context, _) =>
@@ -112,8 +121,10 @@ public sealed class GenerationRunnerTests : IDisposable
     {
         // Arrange
         var saved = new List<GenerationStage>();
-        var run = Start(Stages());
+        var subscribed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var run = Start(Stages(setupGate: subscribed.Task));
         run.Changed += (_, _) => saved.Add(GenerationJobStore.Read(run.Folder).Stage);
+        subscribed.SetResult();
 
         // Act
         await run.Completion;
