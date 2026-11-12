@@ -261,22 +261,27 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          appimage="$RUNNER_TEMP/releases/$PACK_ID.AppImage"
-          [ -f "$appimage" ] || appimage="$(ls "$RUNNER_TEMP"/releases/*.AppImage | head -n 1)"
+          appimage="$(ls "$RUNNER_TEMP"/releases/*.AppImage)"
           chmod +x "$appimage"
           # No FUSE on the runner: the AppImage's own runtime unpacks it and runs it from there.
           APPIMAGE_EXTRACT_AND_RUN=1 "$appimage" --smoke-test | tee "$RUNNER_TEMP/smoke.txt"
-          grep -qx "version: $VERSION (Installed)" "$RUNNER_TEMP/smoke.txt"
+          grep -qx "version: $VERSION (Portable)" "$RUNNER_TEMP/smoke.txt"
 
       # --- every OS -----------------------------------------------------------------------------------------------
       - name: Packages
         shell: bash
         run: |
-          # Only this version's files go into the release (the download step also brought the previous one).
-          mkdir -p "$RUNNER_TEMP/out"
-          find "$RUNNER_TEMP/releases" -maxdepth 1 -type f ! -name "*-full.nupkg" -exec cp {} "$RUNNER_TEMP/out/" \;
-          cp "$RUNNER_TEMP/releases/$PACK_ID-$VERSION-$CHANNEL-full.nupkg" "$RUNNER_TEMP/out/"
-          ls -la "$RUNNER_TEMP/out" | tee -a "$GITHUB_STEP_SUMMARY"
+          # Only this version's files go into the release (the download step also brought the previous one). Velopack's
+          # GitHub source reads the feed of every release and fetches each entry from the release whose feed lists it,
+          # so this release's feed lists only its own packages; the legacy RELEASES file isn't read by Velopack.
+          shopt -s nullglob
+          src="$RUNNER_TEMP/releases"; out="$RUNNER_TEMP/out"; mkdir -p "$out"
+          for f in "$src/$PACK_ID-$VERSION-$CHANNEL-"*.nupkg "$src/$PACK_ID-$CHANNEL-"* "$src/"*.AppImage "$src/assets.$CHANNEL.json"; do
+            cp "$f" "$out/"
+          done
+          jq -c --arg v "$VERSION" '.Assets |= map(select(.Version == $v))' "$src/releases.$CHANNEL.json" > "$out/releases.$CHANNEL.json"
+          jq -e --arg v "$VERSION" '[.Assets[] | select(.Type == "Full")] | length == 1' "$out/releases.$CHANNEL.json" > /dev/null
+          ls -la "$out" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         with:
