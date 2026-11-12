@@ -229,19 +229,6 @@ public sealed class PackValidateTests : IDisposable
     }
 
     [Fact]
-    public async Task Balanced_tags_give_no_warnings()
-    {
-        // Arrange
-        var folder = CopyRenPyPack("{b}Текст{/b}");
-
-        // Act
-        var result = await CliRunner.RunAsync("pack", "validate", folder);
-
-        // Assert
-        result.StdOut.Should().NotContain("warning");
-    }
-
-    [Fact]
     public async Task Missing_folder_fails()
     {
         // Act

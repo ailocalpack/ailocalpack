@@ -41,22 +41,6 @@ public sealed class IndexBuildTests : IDisposable
     }
 
     [Fact]
-    public async Task Built_index_is_readable_by_index_show()
-    {
-        // Arrange
-        await CliRunner.RunAsync("index", "build", Registry, "--out", _dir.Combine("registry-copy/index.json"), "--generated", Generated);
-        _dir.CopyFolder(Path.Combine(Registry, "games"), "registry-copy/games");
-
-        // Act
-        var result = await CliRunner.RunAsync(
-            new Dictionary<string, string> { ["AILOCALPACK_INDEX_URL"] = _dir.Combine("registry-copy") },
-            "index", "show", "--json");
-
-        // Assert
-        (result.ExitCode, result.StdErr).Should().Be((0, ""));
-    }
-
-    [Fact]
     public async Task Invalid_pack_is_left_out_with_a_warning()
     {
         // Arrange

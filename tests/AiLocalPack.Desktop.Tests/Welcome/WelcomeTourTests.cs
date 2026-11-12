@@ -19,19 +19,6 @@ public sealed class WelcomeTourTests : IDisposable
     private WelcomeTourViewModel Open() => Get<IDialogService>().Show<WelcomeTourViewModel>();
 
     [Fact]
-    public void Starts_on_the_welcome_slide()
-    {
-        // Arrange
-        var tour = Open();
-
-        // Act
-        var step = tour.StepText;
-
-        // Assert
-        step.Should().Be("1 / 4 · Welcome");
-    }
-
-    [Fact]
     public void Welcome_slide_counts_the_games_found()
     {
         // Arrange

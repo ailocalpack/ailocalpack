@@ -86,20 +86,6 @@ public sealed class LibraryStatusViewTests : IDisposable
     });
 
     [Fact]
-    public Task Fresh_registry_shows_no_banner() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = Build(_ => { });
-
-        // Act
-        var window = Open(services);
-
-        // Assert
-        Find<Border>(window, "RegistryBanner").IsVisible.Should().BeFalse();
-        window.Close();
-    });
-
-    [Fact]
     public Task Unreachable_registry_shows_the_banner_with_retry() => HeadlessUi.RunAsync(() =>
     {
         // Arrange

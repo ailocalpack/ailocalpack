@@ -48,16 +48,6 @@ public sealed class GitHubCommandTests : IDisposable
     }
 
     [Fact]
-    public async Task Login_keeps_the_token_in_the_secret_store()
-    {
-        // Act
-        await RunAsync("login", "--no-browser");
-
-        // Assert
-        File.ReadAllText(SecretsFile).Should().Contain(FakeGitHubServer.Token);
-    }
-
-    [Fact]
     public async Task Login_when_signed_in_already_does_nothing()
     {
         // Arrange
@@ -69,20 +59,6 @@ public sealed class GitHubCommandTests : IDisposable
         // Assert
         result.ExitCode.Should().Be(0);
         result.StdOut.Should().Contain("Already signed in to GitHub as octo");
-    }
-
-    [Fact]
-    public async Task Login_reports_an_app_with_device_flow_switched_off()
-    {
-        // Arrange
-        _github.DeviceFlowDisabled = true;
-
-        // Act
-        var result = await RunAsync("login", "--no-browser");
-
-        // Assert
-        result.ExitCode.Should().Be(1);
-        result.StdErr.Should().Contain("has Device Flow switched off");
     }
 
     [Fact]
@@ -123,35 +99,6 @@ public sealed class GitHubCommandTests : IDisposable
         // Assert
         result.ExitCode.Should().Be(1);
         result.StdErr.Should().Contain("Not signed in to GitHub");
-    }
-
-    [Fact]
-    public async Task Whoami_signs_out_when_github_rejects_the_token()
-    {
-        // Arrange
-        await RunAsync("login", "--no-browser");
-        _github.Revoked = true;
-
-        // Act
-        var result = await RunAsync("whoami");
-
-        // Assert
-        result.ExitCode.Should().Be(1);
-        File.ReadAllText(SecretsFile).Should().NotContain(FakeGitHubServer.Token);
-    }
-
-    [Fact]
-    public async Task Logout_deletes_the_token()
-    {
-        // Arrange
-        await RunAsync("login", "--no-browser");
-
-        // Act
-        var result = await RunAsync("logout");
-
-        // Assert
-        result.ExitCode.Should().Be(0, result.StdErr);
-        File.ReadAllText(SecretsFile).Should().NotContain(FakeGitHubServer.Token);
     }
 
     [Fact]

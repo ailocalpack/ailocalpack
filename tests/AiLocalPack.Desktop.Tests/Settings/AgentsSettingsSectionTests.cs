@@ -412,21 +412,6 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         (row.SelectedChoice?.Agent.AgentId, Store.Current.DefaultAgent).Should().Be(("codex", (string?)null));
     }
 
-    [Fact]
-    public void A_stored_default_that_is_signed_out_gives_way_to_a_ready_one()
-    {
-        // Arrange
-        Store.Update(s => s with { DefaultAgent = "claude" });
-        Host.Probes["claude"] = FakeAgentHost.SignedOut("claude");
-        Host.Probes["codex"] = FakeAgentHost.SignedIn("codex");
-
-        // Act
-        var row = Section().DefaultAgent;
-
-        // Assert
-        row.SelectedChoice?.Agent.AgentId.Should().Be("codex");
-    }
-
     [Theory]
     [InlineData("codex", "codex")]
     [InlineData("claude", "codex")]

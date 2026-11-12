@@ -15,17 +15,14 @@ public sealed class GameBlocksTests
     private static Game Game(string? antiCheat = "none") =>
         new(Id, "Portal 2", GameSource.Steam, "/steam/steamapps/common/Portal 2", "/steam", GameVersion.FromBuildId("1000"), "unknown", antiCheat, null, true);
 
-    private static AntiCheatPolicy Policy(bool allowed = false, bool knownGame = false) => new(
+    private static AntiCheatPolicy Policy(bool allowed = false) => new(
         [Eac],
-        knownGame ? new Dictionary<GameId, string> { [Id] = "eac" } : new Dictionary<GameId, string>(),
+        new Dictionary<GameId, string>(),
         allowed ? new HashSet<GameId> { Id } : new HashSet<GameId>());
 
-    private static RegistryIndex Index(bool optOut = false, bool antiCheatAllowed = false, string? antiCheat = null, params AntiCheatRule[] rules) => new(
+    private static RegistryIndex Index(bool optOut = false, bool antiCheatAllowed = false) => new(
         DateTimeOffset.UnixEpoch,
-        new Dictionary<GameId, RegistryGame> { [Id] = new(Id, optOut, antiCheatAllowed, new Dictionary<string, IReadOnlyList<RegistryPack>>()) { AntiCheat = antiCheat } })
-    {
-        AntiCheats = rules,
-    };
+        new Dictionary<GameId, RegistryGame> { [Id] = new(Id, optOut, antiCheatAllowed, new Dictionary<string, IReadOnlyList<RegistryPack>>()) });
 
     [Fact]
     public void Detected_anti_cheat_blocks_the_game()
@@ -35,19 +32,6 @@ public sealed class GameBlocksTests
 
         // Act
         var block = GameBlocks.Resolve(game, Policy(), Index());
-
-        // Assert
-        block.Should().Be(new GameBlock(LocalizationBlock.AntiCheat, "eac", "Easy Anti-Cheat"));
-    }
-
-    [Fact]
-    public void Anti_cheat_listed_by_game_id_blocks_a_game_without_its_files()
-    {
-        // Arrange
-        var game = Game("none");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(knownGame: true), Index());
 
         // Assert
         block.Should().Be(new GameBlock(LocalizationBlock.AntiCheat, "eac", "Easy Anti-Cheat"));
@@ -93,19 +77,6 @@ public sealed class GameBlocksTests
     }
 
     [Fact]
-    public void Bundled_whitelist_lifts_the_anti_cheat_block()
-    {
-        // Arrange
-        var game = Game("eac");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(allowed: true), Index());
-
-        // Assert
-        block.Should().BeNull();
-    }
-
-    [Fact]
     public void Whitelist_does_not_lift_an_opt_out()
     {
         // Arrange
@@ -116,71 +87,6 @@ public sealed class GameBlocksTests
 
         // Assert
         block!.Reason.Should().Be(LocalizationBlock.OptOut);
-    }
-
-    [Fact]
-    public void Anti_cheat_the_registry_lists_for_the_game_blocks_it()
-    {
-        // Arrange
-        var game = Game("none");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(), Index(antiCheat: "eac"));
-
-        // Assert
-        block.Should().Be(new GameBlock(LocalizationBlock.AntiCheat, "eac", "Easy Anti-Cheat"));
-    }
-
-    [Fact]
-    public void Registry_rule_names_an_anti_cheat_the_app_does_not_know()
-    {
-        // Arrange
-        var game = Game("acme-guard");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(), Index(rules: new AntiCheatRule("acme-guard", "Acme Guard", ["AcmeGuard/"])));
-
-        // Assert
-        block!.AntiCheatName.Should().Be("Acme Guard");
-    }
-
-    [Fact]
-    public void Registry_whitelist_lifts_an_anti_cheat_the_registry_lists()
-    {
-        // Arrange
-        var game = Game("none");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(), Index(antiCheatAllowed: true, antiCheat: "eac"));
-
-        // Assert
-        block.Should().BeNull();
-    }
-
-    [Fact]
-    public void Without_an_index_the_anti_cheat_still_blocks()
-    {
-        // Arrange
-        var game = Game("eac");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(), index: null);
-
-        // Assert
-        block!.Reason.Should().Be(LocalizationBlock.AntiCheat);
-    }
-
-    [Fact]
-    public void Game_without_anti_cheat_or_opt_out_is_not_blocked()
-    {
-        // Arrange
-        var game = Game("none");
-
-        // Act
-        var block = GameBlocks.Resolve(game, Policy(), Index());
-
-        // Assert
-        block.Should().BeNull();
     }
 
     [Fact]

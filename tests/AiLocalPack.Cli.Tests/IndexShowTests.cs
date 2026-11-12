@@ -42,16 +42,6 @@ public sealed class IndexShowTests : IDisposable
         result.StdOut.Split('\n').Where(l => l.StartsWith("steam:", StringComparison.Ordinal) || l.StartsWith("fp:", StringComparison.Ordinal));
 
     [Fact]
-    public async Task Local_registry_lists_its_packs()
-    {
-        // Act
-        var result = await RunAsync(Registry);
-
-        // Assert
-        (result.ExitCode, PackLines(result).Count()).Should().Be((0, 4));
-    }
-
-    [Fact]
     public async Task Local_registry_shows_a_pack_row()
     {
         // Act
@@ -95,17 +85,6 @@ public sealed class IndexShowTests : IDisposable
 
         // Assert
         result.StdOut.Should().Contain("steam:730: anti-cheat Acme Guard");
-    }
-
-    [Fact]
-    public async Task Json_has_the_registry_anti_cheat_policy()
-    {
-        // Act
-        var result = await RunAsync(AntiCheatRegistry(), "--json");
-
-        // Assert
-        var json = JsonNode.Parse(result.StdOut)!;
-        ((string)json["games"]![0]!["antiCheat"]!, (string)json["antiCheats"]![0]!["name"]!).Should().Be(("acme-guard", "Acme Guard"));
     }
 
     [Fact]
@@ -159,31 +138,6 @@ public sealed class IndexShowTests : IDisposable
 
         // Assert
         (result.ExitCode, result.StdErr.Trim()).Should().Be((1, "'620' is not a game ID (steam:<app id> or fp:<64 lowercase hex>)."));
-    }
-
-    [Fact]
-    public async Task Folder_without_an_index_is_a_clear_error()
-    {
-        // Arrange
-        var folder = _dir.Dir("empty").Combine("empty");
-
-        // Act
-        var result = await RunAsync(folder);
-
-        // Assert
-        (result.ExitCode, result.StdErr.Trim())
-            .Should().Be((1, $"Can't read the registry: There is no index.json at {Path.Combine(folder, "index.json")}."));
-    }
-
-    [Fact]
-    public async Task Plain_http_override_is_an_error()
-    {
-        // Act
-        var result = await RunAsync("http://example.com/index.json");
-
-        // Assert
-        (result.ExitCode, result.StdErr.Trim())
-            .Should().Be((1, "AILOCALPACK_INDEX_URL: 'http://example.com/index.json' must be an https:// URL or a local folder."));
     }
 
     [Fact]

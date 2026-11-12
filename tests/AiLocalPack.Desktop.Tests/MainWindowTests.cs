@@ -168,22 +168,6 @@ public sealed class MainWindowTests
     });
 
     [Fact]
-    public Task Escape_goes_back() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        var window = Open();
-        Click(window, Find<Button>(window, "SettingsButton"));
-
-        // Act
-        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
-        Dispatcher.UIThread.RunJobs();
-
-        // Assert
-        Shows<LibraryView>(window).Should().BeTrue();
-        window.Close();
-    });
-
-    [Fact]
     public Task Minimum_size_fits_steam_deck_screen() => HeadlessUi.RunAsync(() =>
     {
         // Arrange

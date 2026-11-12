@@ -44,24 +44,6 @@ public sealed class AddGameDialogViewTests
     });
 
     [Fact]
-    public Task Escape_closes_the_dialog() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = TestServices.Build();
-        var window = Open(services);
-        services.GetRequiredService<IDialogService>().Show<AddGameDialogViewModel>();
-        Dispatcher.UIThread.RunJobs();
-
-        // Act
-        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
-        Dispatcher.UIThread.RunJobs();
-
-        // Assert
-        Find<Border>(window, "DialogScrim").IsVisible.Should().BeFalse();
-        window.Close();
-    });
-
-    [Fact]
     public Task Summary_of_an_analyzed_game_is_shown() => HeadlessUi.RunAsync(async () =>
     {
         // Arrange

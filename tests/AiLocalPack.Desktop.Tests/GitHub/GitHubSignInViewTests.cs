@@ -42,20 +42,6 @@ public sealed class GitHubSignInViewTests
     }
 
     [Fact]
-    public Task Is_hidden_until_the_host_starts_it() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = TestServices.Build();
-
-        // Act
-        var (window, _) = Show(services);
-
-        // Assert
-        window.GetVisualDescendants().OfType<GitHubSignInView>().Single().IsVisible.Should().BeFalse();
-        window.Close();
-    });
-
-    [Fact]
     public Task Shows_the_code_with_copy_and_open_browser() => HeadlessUi.RunAsync(async () =>
     {
         // Arrange

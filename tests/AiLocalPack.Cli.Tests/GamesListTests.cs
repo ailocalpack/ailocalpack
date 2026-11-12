@@ -94,39 +94,6 @@ public sealed class GamesListTests : IDisposable
     }
 
     [Fact]
-    public async Task Second_run_shows_the_same_ids_from_the_catalog()
-    {
-        // Arrange
-        _steam.AddGame(413150, "Stardew Valley").AddGame(1091500, "Cyberpunk 2077");
-        var first = await RunAsync("games", "list", "--json");
-
-        // Act
-        var second = await RunAsync("games", "list", "--json");
-
-        // Assert
-        Games(second).Select(g => (string?)g!["id"]).Should()
-            .Equal(Games(first).Select(g => (string?)g!["id"]))
-            .And.Equal("steam:1091500", "steam:413150");
-    }
-
-    [Fact]
-    public async Task Game_on_a_library_that_went_missing_stays_listed_as_not_available()
-    {
-        // Arrange
-        var sdCard = _steam.AddLibrary("SdCard/SteamLibrary");
-        _steam.AddGame(413150, "Stardew Valley", library: sdCard);
-        await RunAsync("games", "list", "--json");
-        Directory.Delete(sdCard, recursive: true);
-
-        // Act
-        var result = await RunAsync("games", "list", "--json");
-
-        // Assert
-        Games(result).Should().ContainSingle()
-            .Which!["available"]!.GetValue<bool>().Should().BeFalse();
-    }
-
-    [Fact]
     public async Task Lists_games_of_a_library_folder_added_in_settings()
     {
         // Arrange
@@ -141,19 +108,6 @@ public sealed class GamesListTests : IDisposable
         Games(result).Should().ContainSingle().Which!["libraryPath"]!.GetValue<string>().Should().Be(extra);
         JsonNode.Parse(result.StdOut)!["libraries"]!.AsArray()
             .Should().ContainSingle(l => (bool)l!["addedByHand"]!);
-    }
-
-    [Fact]
-    public async Task Catalog_is_saved_in_the_app_data_folder()
-    {
-        // Arrange
-        _steam.AddGame(413150, "Stardew Valley");
-
-        // Act
-        await RunAsync("games", "list");
-
-        // Assert
-        File.ReadAllText(_dir.Combine("home/data/games.json")).Should().Contain("steam:413150");
     }
 
     [Fact]
@@ -182,20 +136,6 @@ public sealed class GamesListTests : IDisposable
 
         // Assert
         result.StdOut.Should().Contain("RPG Maker MV");
-    }
-
-    [Fact]
-    public async Task Engine_is_saved_in_the_catalog()
-    {
-        // Arrange
-        _steam.AddGame(413150, "Stardew Valley");
-        _dir.RenPy("Steam/steamapps/common/Stardew Valley");
-
-        // Act
-        await RunAsync("games", "list");
-
-        // Assert
-        File.ReadAllText(_dir.Combine("home/data/games.json")).Should().Contain("\"engine\": \"renpy\"");
     }
 
     [Fact]

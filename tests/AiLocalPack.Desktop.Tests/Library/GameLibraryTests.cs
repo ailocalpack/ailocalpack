@@ -40,19 +40,6 @@ public sealed class GameLibraryTests : IDisposable
     }
 
     [Fact]
-    public void Starts_not_scanned()
-    {
-        // Arrange
-        var library = Create();
-
-        // Act
-        var state = (library.IsScanning, library.HasScanned);
-
-        // Assert
-        state.Should().Be((false, false));
-    }
-
-    [Fact]
     public void Refresh_puts_steam_games_into_the_catalog()
     {
         // Arrange

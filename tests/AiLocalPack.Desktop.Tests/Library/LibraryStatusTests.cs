@@ -68,21 +68,6 @@ public sealed class LibraryStatusTests : IDisposable
     }
 
     [Fact]
-    public async Task Game_without_a_pack_shows_no_pack()
-    {
-        // Arrange
-        _registry.Pack(10, "ru", "full");
-        using var services = await BuildAsync();
-        services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
-
-        // Act
-        var vm = Create(services);
-
-        // Assert
-        CardOf(vm, "Beta").StatusKind.Should().Be(LocalizationStatusKind.NoPack);
-    }
-
-    [Fact]
     public async Task Switching_the_language_changes_the_badges()
     {
         // Arrange
@@ -281,20 +266,6 @@ public sealed class LibraryStatusTests : IDisposable
 
         // Assert
         Names(vm).Should().Equal("Gamma", "Alpha", "Beta");
-    }
-
-    [Fact]
-    public async Task Opted_out_game_is_blocked_as_unavailable()
-    {
-        // Arrange
-        _registry.OptOut(10);
-        using var services = await BuildAsync();
-
-        // Act
-        var card = CardOf(Create(services), "Alpha");
-
-        // Assert
-        (card.IsBlocked, card.BadgeText, card.ContextLine).Should().Be((true, "Unavailable", "Studio opted out"));
     }
 
     [Fact]

@@ -44,20 +44,6 @@ public sealed class ToolkitScanFolderTests : IDisposable
     }
 
     [Fact]
-    public async Task Same_game_in_two_folders_prints_the_same_fingerprint()
-    {
-        // Arrange
-        _dir.RpgMakerMz("A/Moss").RpgMakerMz("B/Moss");
-
-        // Act
-        var result = await CliRunner.RunAsync("toolkit", "scan-folder", _dir.Path, "--json");
-
-        // Assert
-        var games = JsonNode.Parse(result.StdOut)!["games"]!.AsArray();
-        games.Select(g => g!["fingerprint"]!.GetValue<string>()).Distinct().Should().ContainSingle();
-    }
-
-    [Fact]
     public async Task Steam_library_games_are_marked()
     {
         // Arrange

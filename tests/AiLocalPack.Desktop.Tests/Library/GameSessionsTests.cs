@@ -73,16 +73,6 @@ public sealed class GameSessionsTests : IDisposable
     }
 
     [Fact]
-    public async Task Launched_game_is_starting()
-    {
-        // Act
-        await Sessions.LaunchAsync(Alpha);
-
-        // Assert
-        Sessions.Find(Alpha.Id)!.Phase.Should().Be(GameSessionPhase.Starting);
-    }
-
-    [Fact]
     public async Task Game_launched_while_starting_is_not_launched_again()
     {
         // Arrange

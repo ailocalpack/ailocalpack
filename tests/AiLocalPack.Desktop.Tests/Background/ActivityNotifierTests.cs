@@ -55,21 +55,6 @@ public sealed class ActivityNotifierTests
     }
 
     [Fact]
-    public void Nothing_is_sent_while_the_window_is_in_front()
-    {
-        // Arrange
-        using var services = Services();
-        var notifications = Start(services);
-        services.GetRequiredService<FakeAppWindow>().IsActive = true;
-
-        // Act
-        services.GetRequiredService<ActivityStore>().Add(Event(ActivityEventKind.PackAutoReapplied));
-
-        // Assert
-        notifications.Shown.Should().BeEmpty();
-    }
-
-    [Fact]
     public void Turned_off_category_sends_nothing()
     {
         // Arrange

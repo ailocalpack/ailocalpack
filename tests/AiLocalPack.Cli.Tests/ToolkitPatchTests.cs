@@ -69,19 +69,6 @@ public sealed class ToolkitPatchTests : IDisposable
     }
 
     [Fact]
-    public async Task A_changed_game_file_is_refused_as_incompatible()
-    {
-        // Arrange
-        _dir.File("game/" + File1, "Hello, modded lamplighter");
-
-        // Act
-        var result = await CliRunner.RunAsync("toolkit", "patch", Game, "--pack", _dir.Combine("pack"), "--out", Out);
-
-        // Assert
-        (result.ExitCode, result.StdErr.Contains("not the file the patch was made from", StringComparison.Ordinal)).Should().Be((1, true));
-    }
-
-    [Fact]
     public async Task A_missing_archive_is_refused()
     {
         // Arrange

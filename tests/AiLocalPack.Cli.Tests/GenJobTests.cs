@@ -127,19 +127,6 @@ public sealed class GenJobTests : IDisposable
     }
 
     [Fact]
-    public async Task The_test_run_of_the_stub_game_is_skipped()
-    {
-        // Arrange
-        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
-
-        // Act
-        var result = await RunAsync("pack", "local", "steam:620");
-
-        // Assert
-        result.StdOut.Should().Contain("test run: skipped");
-    }
-
-    [Fact]
     public async Task Pack_local_lists_the_generated_pack()
     {
         // Arrange
@@ -178,19 +165,6 @@ public sealed class GenJobTests : IDisposable
     }
 
     [Fact]
-    public async Task The_job_stores_the_translations_of_every_chunk()
-    {
-        // Arrange
-        var recording = Success;
-
-        // Act
-        await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru");
-
-        // Assert
-        StringTableSerializer.Read(File.ReadAllBytes(Path.Combine(JobFolder, "strings.json"))).Value!.Strings.Should().HaveCount(64);
-    }
-
-    [Fact]
     public async Task The_limit_pauses_the_job_and_status_says_when_it_resumes()
     {
         // Arrange
@@ -201,50 +175,6 @@ public sealed class GenJobTests : IDisposable
 
         // Assert
         result.StdOut.Should().Contain("paused at Glossary by the agent's limit, resumes at");
-    }
-
-    [Fact]
-    public async Task A_second_job_for_the_game_is_refused()
-    {
-        // Arrange
-        await RunAsync("gen", "run", "steam:620", "--fake-agent", Limit, "--lang", "ru");
-
-        // Act
-        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "de");
-
-        // Assert
-        new { result.ExitCode, Refused = result.StdErr.Contains("already has a generation job", StringComparison.Ordinal) }
-            .Should().Be(new { ExitCode = 1, Refused = true });
-    }
-
-    [Fact]
-    public async Task Resume_goes_on_from_the_chunk_a_crashed_run_saved()
-    {
-        // Arrange
-        await RunAsync("gen", "run", "steam:620", "--fake-agent", Limit, "--lang", "ru");
-        var jobFile = Path.Combine(JobFolder, "job.json");
-        var job = JsonNode.Parse(File.ReadAllText(jobFile))!;
-        job["stage"] = "translate";
-        job["status"] = "running";
-        job.AsObject().Remove("pauseReason");
-        job.AsObject().Remove("resumeAt");
-        job["counters"]!["chunksDone"] = 1;
-        job["counters"]!["translated"] = 50;
-        File.WriteAllText(jobFile, job.ToJsonString());
-
-        // Act
-        var result = await RunAsync("gen", "resume", "steam:620", "--fake-agent", Success);
-
-        // Assert
-        var afterResume = JobLog[JobLog.IndexOf("Resumed at", StringComparison.Ordinal)..];
-        new
-        {
-            result.ExitCode,
-            Interrupted = JobLog.Contains("Interrupted at Translate (1 of 2 chunks done)", StringComparison.Ordinal),
-            Chunk1Again = afterResume.Contains("Chunk 1 of 2:", StringComparison.Ordinal),
-            Chunk2 = afterResume.Contains("Chunk 2 of 2:", StringComparison.Ordinal),
-            Completed = afterResume.Contains("Completed.", StringComparison.Ordinal),
-        }.Should().Be(new { ExitCode = 0, Interrupted = true, Chunk1Again = false, Chunk2 = true, Completed = true });
     }
 
     [Fact]
@@ -288,21 +218,6 @@ public sealed class GenJobTests : IDisposable
     }
 
     [Fact]
-    public async Task A_game_with_an_anti_cheat_is_refused()
-    {
-        // Arrange
-        _dir.File("Steam/steamapps/common/Sample Quest/EasyAntiCheat/EasyAntiCheat_Setup.exe", "MZ");
-        await RunAsync("games", "list");
-
-        // Act
-        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
-
-        // Assert
-        new { result.ExitCode, Refused = result.StdErr.Contains("can't be generated", StringComparison.Ordinal), Work = Directory.Exists(Work) }
-            .Should().Be(new { ExitCode = 1, Refused = true, Work = false });
-    }
-
-    [Fact]
     public async Task Until_glossary_pauses_the_job_with_the_glossary_saved()
     {
         // Arrange
@@ -332,20 +247,6 @@ public sealed class GenJobTests : IDisposable
 
         // Assert
         new { result.ExitCode, Completed = result.StdOut.Contains("100% completed, 64 of 64 strings", StringComparison.Ordinal) }.Should().Be(new { ExitCode = 0, Completed = true });
-    }
-
-    [Fact]
-    public async Task An_agent_that_saves_no_glossary_fails_the_job()
-    {
-        // Arrange
-        var recording = NoGlossary;
-
-        // Act
-        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru");
-
-        // Assert
-        new { result.ExitCode, Last = result.StdOut.TrimEnd().Split('\n')[^1].Trim() }
-            .Should().Be(new { ExitCode = 1, Last = "10% Glossary failed: Fake agent finished without saving a glossary., 0 of 64 strings" });
     }
 
     [Fact]

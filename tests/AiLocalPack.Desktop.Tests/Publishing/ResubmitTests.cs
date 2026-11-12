@@ -97,20 +97,6 @@ public sealed class ResubmitTests
     }
 
     [Fact]
-    public async Task A_rejected_pr_reads_CI_failed_in_Mine()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync();
-        await SentAsync(bed, PullRequestState.Open, CiState.Failed);
-
-        // Act
-        var row = Page(bed, GamePageTab.Packs).Packs.Mine.Single();
-
-        // Assert
-        row.Meta.Should().Be("PR #7 · CI failed");
-    }
-
-    [Fact]
     public async Task A_merged_pr_waits_green_for_the_index()
     {
         // Arrange

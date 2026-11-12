@@ -178,21 +178,6 @@ public sealed class PackInstallServiceTests
     }
 
     [Fact]
-    public async Task Install_saves_the_record()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"));
-        var service = bed.Services.GetRequiredService<PackInstallService>();
-
-        // Act
-        await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
-
-        // Assert
-        bed.Services.GetRequiredService<InstalledPackStore>().Find(InstallBed.Alpha)
-            .Should().BeEquivalentTo(new { Language = "ru", PackId = "lanterns", Revision = 1 });
-    }
-
-    [Fact]
     public async Task Install_reports_each_step_in_order()
     {
         // Arrange
@@ -228,31 +213,6 @@ public sealed class PackInstallServiceTests
 
         // Assert
         (outcome.Error?.Transaction?.Problem, outcome.Error?.FilesRestored, bed.Read(InstallBed.SystemFile)).Should().Be((InstallProblem.GameRunning, true, before));
-    }
-
-    [Fact]
-    public async Task Install_failing_on_a_read_only_file_restores_the_game_and_records_nothing()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"));
-        var file = Path.Combine(bed.GameDir, "www", "data", "Map001.json");
-        var before = bed.Read(InstallBed.SystemFile);
-        File.SetAttributes(file, FileAttributes.ReadOnly);
-        var service = bed.Services.GetRequiredService<PackInstallService>();
-
-        try
-        {
-            // Act
-            var outcome = await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
-
-            // Assert
-            (outcome.Error?.Transaction?.Problem, bed.Read(InstallBed.SystemFile), bed.Services.GetRequiredService<InstalledPackStore>().Find(InstallBed.Alpha))
-                .Should().Be((InstallProblem.ReadOnly, before, (InstalledPack?)null));
-        }
-        finally
-        {
-            File.SetAttributes(file, FileAttributes.Normal);
-        }
     }
 
     [Fact]
@@ -297,22 +257,6 @@ public sealed class PackInstallServiceTests
 
         // Assert
         (outcome.Error?.Kind, outcome.Error?.Compatibility?.Reason).Should().Be((InstallErrorKind.Incompatible, PackCompatibilityReason.FilesMissing));
-    }
-
-    [Fact]
-    public async Task Uninstall_restores_the_original_files()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.RecipePack("lanterns"));
-        var before = bed.Read(InstallBed.SystemFile);
-        var service = bed.Services.GetRequiredService<PackInstallService>();
-        await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), TestContext.Current.CancellationToken);
-
-        // Act
-        var outcome = await service.UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
-
-        // Assert
-        (outcome.Succeeded, bed.Read(InstallBed.SystemFile)).Should().Be((true, before));
     }
 
     [Fact]

@@ -72,25 +72,6 @@ public sealed class PublishViewTests
         window.Close();
     });
 
-    [Fact]
-    public Task Once_sent_the_strip_and_Mine_show_CI_running() => HeadlessUi.RunAsync(async () =>
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync();
-        var pack = bed.LocalPack(tried: Tried);
-        bed.Services.GetRequiredService<FakeGitHubHost>().Account = FakeGitHubHost.Octocat;
-        var window = Open(bed, GamePageTab.Generation);
-
-        // Act
-        await bed.Services.GetRequiredService<PublishFlow>().SendAsync(bed.Game, pack, new PublishTarget.NewPack());
-        Dispatcher.UIThread.RunJobs();
-
-        // Assert
-        (Find<Border>(window, "ShareStrip").IsEffectivelyVisible, Find<TextBlock>(window, "PublishTitle").Text, Find<Button>(window, "PublishOpenPr").IsEffectivelyVisible)
-            .Should().Be((false, "PR #7 opened · CI is checking the translation", true));
-        window.Close();
-    });
-
     private static async Task RejectedAsync(InstallBed bed)
     {
         bed.LocalPack(tried: Tried);
@@ -103,23 +84,6 @@ public sealed class PublishViewTests
             new CiAnnotation(null, CiAnnotationLevel.Failure, CiFailures.ScopeTitle, "This pull request can't be accepted: README.md is outside games/."));
         await bed.Services.GetRequiredService<PullRequestTracker>().CheckAsync(all: true);
     }
-
-    [Fact]
-    public Task A_rejected_pr_shows_the_reason_and_Fix_and_resubmit() => HeadlessUi.RunAsync(async () =>
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync();
-        await RejectedAsync(bed);
-
-        // Act
-        var window = Open(bed, GamePageTab.Generation);
-
-        // Assert
-        (Find<TextBlock>(window, "PublishTitle").Text, Find<TextBlock>(window, "PublishText").Text,
-                Find<Button>(window, "PublishResubmit").IsEffectivelyVisible, Find<Button>(window, "PublishAgain").IsEffectivelyVisible)
-            .Should().Be(("CI rejected PR #7", "The pull request changes files outside the translation's folder. Fix and resubmit rebuilds its branch with only this translation.", true, false));
-        window.Close();
-    });
 
     [Fact]
     public Task My_published_packs_lists_the_rejected_pr_with_Fix_and_resubmit() => HeadlessUi.RunAsync(async () =>

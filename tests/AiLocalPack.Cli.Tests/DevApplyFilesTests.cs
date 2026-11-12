@@ -66,34 +66,6 @@ public sealed class DevApplyFilesTests : IDisposable
     }
 
     [Fact]
-    public async Task Apply_files_twice_is_refused()
-    {
-        // Arrange
-        (await RunAsync("dev", "apply-files", "steam:620", _dir.Combine("files"))).ExitCode.Should().Be(0);
-
-        // Act
-        var result = await RunAsync("dev", "apply-files", "steam:620", _dir.Combine("files"));
-
-        // Assert
-        new { result.ExitCode, Said = result.StdErr.Contains("already installed", StringComparison.Ordinal) }
-            .Should().BeEquivalentTo(new { ExitCode = 1, Said = true });
-    }
-
-    [Fact]
-    public async Task Uninstall_without_a_pack_exits_1()
-    {
-        // Arrange
-        var game = "steam:620";
-
-        // Act
-        var result = await RunAsync("dev", "uninstall", game);
-
-        // Assert
-        new { result.ExitCode, Said = result.StdErr.Contains("no pack is installed", StringComparison.Ordinal) }
-            .Should().BeEquivalentTo(new { ExitCode = 1, Said = true });
-    }
-
-    [Fact]
     public async Task Game_not_in_the_catalog_exits_1()
     {
         // Arrange

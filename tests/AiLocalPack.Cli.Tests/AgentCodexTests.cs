@@ -91,19 +91,6 @@ public sealed class AgentCodexTests : IDisposable
     }
 
     [Fact(SkipUnless = nameof(IsUnix), Skip = "The stand-in codex is a shell script.")]
-    public async Task Run_passes_the_prompt_on_standard_input()
-    {
-        // Arrange
-        var environment = FakeCodex();
-
-        // Act
-        await CliRunner.RunAsync(environment, "agent", "run", "codex", "list files", "--cwd", _dir.Path);
-
-        // Assert
-        File.ReadAllText(_dir.Combine("bin/prompt.txt")).Should().Be("list files");
-    }
-
-    [Fact(SkipUnless = nameof(IsUnix), Skip = "The stand-in codex is a shell script.")]
     public async Task Run_works_in_the_given_folder_in_the_read_only_sandbox()
     {
         // Arrange

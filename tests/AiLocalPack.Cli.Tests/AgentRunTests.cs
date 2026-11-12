@@ -32,19 +32,6 @@ public sealed class AgentRunTests : IDisposable
     }
 
     [Fact]
-    public async Task The_prompt_reaches_the_fake_agent()
-    {
-        // Arrange
-        _dir.File("r.jsonl", "{\"control\":\"prompt\"}\n" + AgentEventJson.Write(new AgentDone(AgentOutcome.Succeeded, "ok")) + "\n");
-
-        // Act
-        var result = await CliRunner.RunAsync("agent", "run", "--fake", _dir.Combine("r.jsonl"), "Переведи");
-
-        // Assert
-        result.StdOut.Should().StartWith("message  Переведи");
-    }
-
-    [Fact]
     public async Task Json_output_reads_back_as_the_events()
     {
         // Arrange

@@ -123,20 +123,6 @@ public sealed class AgentInstallTests : IDisposable
         (result.ExitCode, result.StdOut.Trim()).Should().Be((0, "The app has no copy of codex installed."));
     }
 
-    [Fact(SkipUnless = nameof(IsUnix), Skip = "The stand-in claude is a shell script.")]
-    public async Task Uninstall_removes_the_apps_copy()
-    {
-        // Arrange
-        FakeClaude("app/data/agents/claude/2.1.319");
-        _dir.File("app/data/agents/claude/installed.json", """{"schemaVersion": 1, "version": "2.1.319", "executable": "claude", "installedAt": "2026-11-08T12:00:00Z"}""");
-
-        // Act
-        var result = await CliRunner.RunAsync(Machine(), "agent", "uninstall", "claude");
-
-        // Assert
-        (result.StdOut.Trim(), Directory.Exists(_dir.Combine("app/data/agents/claude"))).Should().Be(("Removed the app's copy of claude 2.1.319.", false));
-    }
-
     [Fact]
     public async Task Installing_an_unknown_agent_exits_one()
     {

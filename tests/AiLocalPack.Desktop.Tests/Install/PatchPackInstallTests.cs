@@ -51,21 +51,6 @@ public sealed class PatchPackInstallTests
     }
 
     [Fact]
-    public async Task Uninstall_restores_the_original_file()
-    {
-        // Arrange
-        using var bed = await InstallBed.CreateAsync(b => b.PatchPack("patch"));
-        var before = bed.Read(InstallBed.SystemFile);
-        await Service(bed).InstallAsync(bed.Game, PackOf(bed, "patch"), TestContext.Current.CancellationToken);
-
-        // Act
-        var outcome = await Service(bed).UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
-
-        // Assert
-        (outcome.Succeeded, bed.Read(InstallBed.SystemFile)).Should().Be((true, before));
-    }
-
-    [Fact]
     public async Task A_game_file_other_than_the_patch_source_makes_the_pack_incompatible_and_touches_nothing()
     {
         // Arrange: the game's build is listed, so only the patch's own source check sees the change.

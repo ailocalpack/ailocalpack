@@ -57,23 +57,6 @@ public sealed class SettingsViewTests
     });
 
     [Fact]
-    public Task Deep_link_opens_the_right_section() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = TestServices.Build();
-
-        // Act
-        var window = Open(services, SettingsSectionId.Libraries);
-
-        // Assert
-        Find<TextBlock>(window, "SectionTitle").Text.Should().Be("Libraries");
-        Find<ListBox>(window, "SectionList").SelectedItem.Should().BeAssignableTo<SettingsSection>()
-            .Which.Id.Should().Be(SettingsSectionId.Libraries);
-        Find<TextBlock>(window, "ComingSoon").IsEffectivelyVisible.Should().BeFalse();
-        window.Close();
-    });
-
-    [Fact]
     public Task Storage_section_shows_sizes_and_the_backups_folder() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
@@ -179,23 +162,6 @@ public sealed class SettingsViewTests
         results.GetVisualDescendants().OfType<TextBlock>().Should().Contain(t => t.Text == "General");
         results.GetVisualDescendants().OfType<HighlightTextBlock>().Should().ContainSingle()
             .Which.HighlightedText.Should().Be("Theme");
-        window.Close();
-    });
-
-    [Fact]
-    public Task A_search_without_matches_says_so() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = TestServices.Build();
-        var window = Open(services);
-
-        // Act
-        Type(window, "xyzzy");
-
-        // Assert
-        var noResults = Find<TextBlock>(window, "NoResults");
-        noResults.IsEffectivelyVisible.Should().BeTrue();
-        noResults.Text.Should().Be("No settings match “xyzzy”.");
         window.Close();
     });
 

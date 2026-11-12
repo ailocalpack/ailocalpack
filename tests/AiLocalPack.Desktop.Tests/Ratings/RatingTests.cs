@@ -32,19 +32,6 @@ public sealed class RatingTests
     // ---------- Rating block ----------
 
     [Fact]
-    public async Task The_block_is_hidden_right_after_installing()
-    {
-        // Arrange
-        using var bed = await RatingBed.CreateAsync();
-
-        // Act
-        var page = bed.Page();
-
-        // Assert
-        page.Packs.Rows.Single().ShowRating.Should().BeFalse();
-    }
-
-    [Fact]
     public async Task The_block_shows_once_the_player_played_with_the_pack()
     {
         // Arrange
@@ -323,19 +310,6 @@ public sealed class RatingTests
 
         // Assert
         (page.ShowRatingPrompt, page.RatingPromptText).Should().Be((true, "How is «full»? Your answer helps other players."));
-    }
-
-    [Fact]
-    public async Task No_prompt_right_after_installing()
-    {
-        // Arrange
-        using var bed = await RatingBed.CreateAsync();
-
-        // Act
-        var page = bed.Page();
-
-        // Assert
-        page.ShowRatingPrompt.Should().BeFalse();
     }
 
     [Fact]

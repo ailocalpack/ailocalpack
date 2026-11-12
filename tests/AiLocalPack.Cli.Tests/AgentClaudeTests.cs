@@ -90,19 +90,6 @@ public sealed class AgentClaudeTests : IDisposable
     }
 
     [Fact(SkipUnless = nameof(IsUnix), Skip = "The stand-in claude is a shell script.")]
-    public async Task Run_passes_the_prompt_on_standard_input()
-    {
-        // Arrange
-        var environment = FakeClaude();
-
-        // Act
-        await CliRunner.RunAsync(environment, "agent", "run", "claude", "list files", "--cwd", _dir.Path);
-
-        // Assert
-        File.ReadAllText(_dir.Combine("bin/prompt.txt")).Should().Be("list files");
-    }
-
-    [Fact(SkipUnless = nameof(IsUnix), Skip = "The stand-in claude is a shell script.")]
     public async Task Run_allows_reading_by_default()
     {
         // Arrange

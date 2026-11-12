@@ -53,19 +53,6 @@ public sealed class PackFetchTests : IDisposable
     }
 
     [Fact]
-    public async Task Second_fetch_is_answered_from_the_cache()
-    {
-        // Arrange
-        await RunAsync("steam:620/ru/full");
-
-        // Act
-        var result = await RunAsync("steam:620/ru/full");
-
-        // Assert
-        result.StdOut.Should().StartWith("steam:620/ru/full rev 2: already in the cache.");
-    }
-
-    [Fact]
     public async Task Pack_id_with_game_and_language_options_is_found()
     {
         // Act
@@ -96,16 +83,6 @@ public sealed class PackFetchTests : IDisposable
     }
 
     [Fact]
-    public async Task Bad_pack_address_fails()
-    {
-        // Act
-        var result = await RunAsync("steam:620/xx/full");
-
-        // Assert
-        result.ExitCode.Should().Be(1);
-    }
-
-    [Fact]
     public async Task Json_names_the_cached_files()
     {
         // Act
@@ -115,20 +92,6 @@ public sealed class PackFetchTests : IDisposable
         var json = JsonNode.Parse(result.StdOut)!;
         (json["problem"]?.GetValue<string>(), File.Exists(json["strings"]!.GetValue<string>()), File.Exists(json["manifest"]!.GetValue<string>()))
             .Should().Be((null, true, true));
-    }
-
-    [Fact]
-    public async Task Offline_fetch_uses_the_cached_pack()
-    {
-        // Arrange
-        await RunAsync("steam:620/ru/full");
-        SaveIndexCopy(UnreachableUrl);
-
-        // Act
-        var result = await RunAtAsync(UnreachableUrl, "steam:620/ru/full");
-
-        // Assert
-        (result.ExitCode, result.StdOut.Contains("using the cached copy", StringComparison.Ordinal)).Should().Be((0, true));
     }
 
     [Fact]

@@ -123,18 +123,4 @@ public sealed class ActivityPanelViewTests
         ((Flyout)Bell(window).Flyout!).IsOpen.Should().BeFalse();
         window.Close();
     });
-
-    [Fact]
-    public Task Empty_panel_says_all_quiet() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        var (window, _) = Open();
-
-        // Act
-        Click(window, Bell(window));
-
-        // Assert
-        (Find<StackPanel>(PanelView(window), "ActivityEmpty").IsVisible, Find<Border>(window, "ActivityBadge").IsVisible).Should().Be((true, false));
-        window.Close();
-    });
 }

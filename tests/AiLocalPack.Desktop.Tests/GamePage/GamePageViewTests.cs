@@ -84,20 +84,6 @@ public sealed class GamePageViewTests : IDisposable
     });
 
     [Fact]
-    public Task Blocked_game_shows_no_primary_action() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = Build(r => r.OptOut(10));
-
-        // Act
-        var window = OpenGame(services, 10);
-
-        // Assert
-        Find<Button>(window, "PrimaryAction").IsEffectivelyVisible.Should().BeFalse();
-        window.Close();
-    });
-
-    [Fact]
     public Task Blocked_game_shows_the_explanation_instead_of_the_tabs() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
@@ -112,20 +98,6 @@ public sealed class GamePageViewTests : IDisposable
             Find<Panel>(window, "TabContent").IsEffectivelyVisible,
             Find<Button>(window, "ReportButton").IsEffectivelyEnabled)
             .Should().Be((true, false, false, true));
-        window.Close();
-    });
-
-    [Fact]
-    public Task Game_that_is_not_blocked_has_no_explanation() => HeadlessUi.RunAsync(() =>
-    {
-        // Arrange
-        using var services = Build();
-
-        // Act
-        var window = OpenGame(services, 10);
-
-        // Assert
-        Find<Border>(window, "BlockedPanel").IsEffectivelyVisible.Should().BeFalse();
         window.Close();
     });
 

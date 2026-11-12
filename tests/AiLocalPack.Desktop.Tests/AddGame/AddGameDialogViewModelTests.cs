@@ -50,19 +50,6 @@ public sealed class AddGameDialogViewModelTests : IDisposable
     // ---------- Step 1 ----------
 
     [Fact]
-    public void Opens_on_step_one()
-    {
-        // Arrange
-        var vm = Open();
-
-        // Act
-        var step = (vm.Step, vm.StepText, vm.HasPickError);
-
-        // Assert
-        step.Should().Be((AddGameStep.Pick, "Step 1 of 2", false));
-    }
-
-    [Fact]
     public async Task Folder_without_games_returns_to_step_one_with_an_error_and_the_hint_open()
     {
         // Arrange

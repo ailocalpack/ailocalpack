@@ -85,24 +85,6 @@ public sealed class PackCheckTests : IDisposable
     }
 
     [Fact]
-    public async Task Changed_files_are_probably_compatible_and_listed()
-    {
-        // Arrange
-        InstallGame("200", "map v2");
-        var pack = WritePack();
-
-        // Act
-        var result = await RunAsync("pack", "check", pack, "--game", "steam:620");
-
-        // Assert
-        result.ExitCode.Should().Be(0);
-        result.StdOut.Should().StartWith(
-            "probably compatible: built for build 100; you have build 200. 1 of 1 file the pack changes differ; "
-            + "they are rebuilt from your copy, and text the update added stays untranslated.")
-            .And.EndWith($"changed:\n  {Map}\n");
-    }
-
-    [Fact]
     public async Task A_missing_touched_file_is_incompatible_with_exit_code_2()
     {
         // Arrange

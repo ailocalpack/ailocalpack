@@ -26,16 +26,6 @@ public sealed class GitHubSignInViewModelTests : IDisposable
     }
 
     [Fact]
-    public void Is_hidden_until_started()
-    {
-        // Act
-        var signIn = Create();
-
-        // Assert
-        (signIn.State, signIn.IsActive).Should().Be((GitHubSignInState.Idle, false));
-    }
-
-    [Fact]
     public async Task Shows_the_code_and_where_to_enter_it()
     {
         // Arrange

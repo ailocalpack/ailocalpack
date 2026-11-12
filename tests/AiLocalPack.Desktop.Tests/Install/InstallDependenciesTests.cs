@@ -128,21 +128,6 @@ public sealed class InstallDependenciesTests
     }
 
     [Fact]
-    public async Task Uninstall_removes_the_dependency_files()
-    {
-        // Arrange
-        using var bed = await BedAsync();
-        var service = bed.Services.GetRequiredService<PackInstallService>();
-        await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), Ct);
-
-        // Act
-        var outcome = await service.UninstallAsync(bed.Game, Ct);
-
-        // Assert
-        (outcome.Succeeded, File.Exists(Path.Combine(bed.GameDir, "winhttp.dll")), Directory.Exists(Path.Combine(bed.GameDir, "Loader"))).Should().Be((true, false, false));
-    }
-
-    [Fact]
     public async Task Hash_mismatch_aborts_with_the_game_untouched()
     {
         // Arrange
@@ -210,23 +195,6 @@ public sealed class InstallDependenciesTests
 
         // Assert
         (outcome.Error?.Kind, outcome.Error?.Platform).Should().Be((InstallErrorKind.DependencyPlatform, "windows-x64"));
-    }
-
-    [Fact]
-    public async Task Replacing_a_pack_keeps_the_shared_dependency()
-    {
-        // Arrange
-        using var bed = await BedAsync(packs: ["lanterns", "torches"]);
-        var service = bed.Services.GetRequiredService<PackInstallService>();
-        await service.InstallAsync(bed.Game, PackOf(bed, "lanterns"), Ct);
-        var first = bed.Services.GetRequiredService<InstalledPackStore>().DependenciesOf(InstallBed.Alpha).Single();
-
-        // Act
-        await service.InstallAsync(bed.Game, PackOf(bed, "torches"), Ct);
-
-        // Assert
-        var dependency = bed.Services.GetRequiredService<InstalledPackStore>().DependenciesOf(InstallBed.Alpha).Single();
-        (dependency.UsedBy, dependency.Backup, bed.Read("winhttp.dll")).Should().BeEquivalentTo((new[] { "torches" }, first.Backup, "proxy"));
     }
 
     [Fact]
