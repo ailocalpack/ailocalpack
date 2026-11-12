@@ -5,6 +5,40 @@ namespace AiLocalPack.Core.Tests.Storage;
 
 public sealed class AtomicFileTests
 {
+    public static bool HostIsNotWindows => !OperatingSystem.IsWindows();
+
+    [Fact(SkipWhen = nameof(HostIsNotWindows), Skip = "Only Windows refuses a rename over a file a reader has open")]
+    public void Replaces_a_file_once_a_reader_lets_it_go()
+    {
+        // Arrange
+        using var dir = new TempDir().File("file.json", "old");
+        var path = dir.Combine("file.json");
+        var reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var release = new Timer(_ => reader.Dispose(), null, TimeSpan.FromMilliseconds(150), Timeout.InfiniteTimeSpan);
+
+        // Act
+        AtomicFile.WriteAllBytes(path, "new"u8.ToArray());
+
+        // Assert
+        File.ReadAllText(path).Should().Be("new");
+    }
+
+    [Fact(SkipWhen = nameof(HostIsNotWindows), Skip = "Only Windows refuses a rename over a file a reader has open")]
+    public void A_reader_that_never_lets_go_fails_the_write_and_keeps_the_old_file()
+    {
+        // Arrange
+        using var dir = new TempDir().File("file.json", "old");
+        var path = dir.Combine("file.json");
+        using var reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+        // Act
+        var act = () => AtomicFile.WriteAllBytes(path, "new"u8.ToArray());
+
+        // Assert
+        act.Should().Throw<Exception>().Where(e => e is IOException || e is UnauthorizedAccessException);
+        File.ReadAllText(path).Should().Be("old");
+    }
+
     [Fact]
     public void Creates_the_file_and_its_parent_folders()
     {

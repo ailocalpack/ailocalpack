@@ -212,12 +212,14 @@ public sealed class PublishFlow
         var started = _time.GetUtcNow();
         Moved(game, run, started);
         // Steps arrive on the publisher's thread; Progress<T> hands them to the caller's (UI) context, a late one is dropped.
-        var progress = new Progress<PublishStep>(step =>
+        // With a UI context (the app) the steps go to it, like Progress<T> does; without one (view-model tests) they run
+        // on the publisher's thread before it goes on, never on the thread pool beside the caller.
+        Action<PublishStep> onStep = step =>
         {
             PublishRun moved;
             lock (_lock)
             {
-                // Steps only move forward: without a UI context Progress<T> may hand them over out of order.
+                // Steps only move forward.
                 if (_running is null || _running.Key != key || (_running.Step is { } current && step <= current))
                 {
                     return;
@@ -227,7 +229,10 @@ public sealed class PublishFlow
             }
 
             Moved(game, moved, started);
-        });
+        };
+        IProgress<PublishStep> progress = SynchronizationContext.Current is null
+            ? new InlineProgress<PublishStep>(onStep)
+            : new Progress<PublishStep>(onStep);
 
         PublishResult result;
         try
@@ -380,5 +385,10 @@ public sealed class PublishFlow
                     key: $"publish:{run.Key}")));
                 break;
         }
+    }
+
+    private sealed class InlineProgress<T>(Action<T> report) : IProgress<T>
+    {
+        public void Report(T value) => report(value);
     }
 }

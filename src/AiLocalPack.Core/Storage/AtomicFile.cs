@@ -26,7 +26,7 @@ public static class AtomicFile
                 stream.Flush(flushToDisk: true);
             }
 
-            File.Move(temp, full, overwrite: true);
+            Replace(temp, full);
         }
         catch
         {
@@ -37,6 +37,33 @@ public static class AtomicFile
 
     /// <summary>Atomically replaces <paramref name="path"/> with <paramref name="bytes"/>.</summary>
     public static void WriteAllBytes(string path, ReadOnlyMemory<byte> bytes) => Write(path, s => s.Write(bytes.Span));
+
+    /// <summary>How long a rename over a file another reader has open is retried (Windows refuses it meanwhile).</summary>
+    internal static readonly TimeSpan ReplaceRetryLimit = TimeSpan.FromSeconds(2);
+
+    /// <summary>
+    /// Renames <paramref name="temp"/> over <paramref name="target"/>. On Windows a reader holding the target open
+    /// without delete sharing (any <c>File.ReadAllBytes</c>, an antivirus scan) makes the rename fail for a moment; it is
+    /// retried with growing waits for up to <see cref="ReplaceRetryLimit"/>, then the last error is thrown.
+    /// </summary>
+    private static void Replace(string temp, string target)
+    {
+        var waited = TimeSpan.Zero;
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                File.Move(temp, target, overwrite: true);
+                return;
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException && waited < ReplaceRetryLimit && File.Exists(temp))
+            {
+                var wait = TimeSpan.FromMilliseconds(Math.Min(10 * attempt, 200));
+                Thread.Sleep(wait);
+                waited += wait;
+            }
+        }
+    }
 
     private static void TryDelete(string path)
     {
