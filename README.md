@@ -1,88 +1,124 @@
 <p align="center"><img src="assets/branding/app-icon-512.png" width="128" alt=""></p>
 
-# AI Local Pack
+<h1 align="center">AI Local Pack</h1>
 
-A free, open-source desktop app for Windows, macOS and Linux (Steam Deck included). It lets you **install** a community translation for a game you own, or **generate** a new one with an AI agent and **publish** it for other players.
+<p align="center">
+  <b>Play your games in your language.</b><br>
+  Install a translation other players made, or create one with AI in a few clicks.<br>
+  Free and open source, for Windows, macOS and Linux.
+</p>
 
-> **Status: early development.** Nothing is released yet. What works today: the game library (Steam and folders you add yourself), engine and anti-cheat detection, the pack format, compatibility checks, and the public registry with its CI. You can also see, per game, whether a translation exists for your language. Installing, generating and publishing are next. The roadmap is below.
+<p align="center">
+  <a href="#download"><b>Download</b></a> ·
+  <a href="#how-to-use-it">How to use it</a> ·
+  <a href="#questions">Questions</a> ·
+  <a href="https://github.com/ailocalpack/registry">Translations</a>
+</p>
 
-## How it works
+<p align="center"><img src="assets/screenshots/library.png" width="860" alt="The AI Local Pack library: your Steam games with their covers, engines and whether a translation exists for your language"></p>
 
-1. **Discover.** The app finds your Steam games. You can also add any game folder by hand.
-2. **Identify.** Each game gets a stable ID: its Steam app ID, or a fingerprint of its files. Each game also gets a version: the Steam build ID, or a set of file hashes.
-3. **Browse.** You see which games have a translation (a *pack*) into your language in the public [registry](https://github.com/ailocalpack/registry).
-4. **Install.** One click. The app's own built-in code applies the pack: no AI and no third-party scripts run on your machine. Every file the pack changes is backed up, so you can uninstall it.
-5. **Generate.** If no pack exists, the app can have an AI coding agent make one: Claude Code or Codex, on your own subscription. The agent works on a copy of the game, never on the game folder itself.
-6. **Publish.** You can share the result through a pull request to the registry, signed in with your GitHub account.
+## What it does
 
-A pack holds data only: translated strings plus a *recipe* that names the built-in tool to rebuild the game files from your own copy, or a binary patch as a fallback. It never contains the game's original text or files, and the registry's CI rejects any executable file. Games with anti-cheat are blocked, unless the game officially allows mods.
+- **Finds your games.** Your Steam library shows up on its own. Games from elsewhere: add their folder.
+- **Shows which games have a translation** into your language and installs one with a single click.
+- **Creates a translation when there is none.** An AI agent (Claude Code or Codex, on your own subscription) translates the game's text. You review the names and terms, then play.
+- **Shares it with everyone.** Publish your translation in one click so other players get it too.
+- **Undo any time.** Every file a translation changes is backed up first. Uninstall it and the game is as it was.
 
-There is no server: the whole system is the app, GitHub and your own AI agent account.
+## Download
 
-## Roadmap
+| Your computer | Installer | Without installing |
+|---|---|---|
+| **Windows** (most PCs) | [Download `.exe`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-win-x64-Setup.exe) | [Portable `.zip`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-win-x64-Portable.zip) |
+| **Windows on ARM** (Snapdragon laptops) | [Download `.exe`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-win-arm64-Setup.exe) | [Portable `.zip`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-win-arm64-Portable.zip) |
+| **Mac with Apple chip** (M1, M2, M3…) | [Download `.pkg`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-osx-arm64-Setup.pkg) | [Portable `.zip`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-osx-arm64-Portable.zip) |
+| **Mac with Intel** | [Download `.pkg`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-osx-x64-Setup.pkg) | [Portable `.zip`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-osx-x64-Portable.zip) |
+| **Linux** (64-bit) | [Download `.AppImage`](https://github.com/ailocalpack/ailocalpack/releases/latest/download/AiLocalPack-linux-x64.AppImage) | the AppImage needs no installing |
 
-- **MVP:** text translations. Steam plus folders you add. Install, generate and publish on all three OSes. Supported engines: Unity, Unreal Engine, RPG Maker MV/MZ, Ren'Py, Godot.
-- **Phase 2:** voice-over (TTS). **Phase 3:** translated textures.
-- **Later:** more stores (Epic, GOG, EA app), your own API key or a local model, a manual string editor.
+The links always point to the latest version. All versions and what changed: [Releases](https://github.com/ailocalpack/ailocalpack/releases).
 
-## Building from source
+**Which Mac do I have?** Apple menu → *About This Mac*. *Chip: Apple M…* means Apple chip; *Processor: Intel…* means Intel.
 
-Requirements: the [.NET 10 SDK](https://dotnet.microsoft.com/download) (pinned in `global.json`).
+The app updates itself: when a new version is ready, it offers *Restart to update*.
 
-```sh
-dotnet build                                  # whole solution; warnings are errors
-dotnet test                                   # all tests (xunit.v3 on Microsoft.Testing.Platform)
-dotnet run --project src/AiLocalPack.Desktop  # the desktop app
-dotnet run --project src/AiLocalPack.Cli -- games list
-```
+### First start: "unknown app" warnings
 
-The CLI ships as one self-contained file per OS: `dotnet publish src/AiLocalPack.Cli -c Release -r <rid>`.
+The app isn't code-signed yet, so your system asks once whether you trust it. That's expected for now:
 
-### CLI
+- **Windows** shows *Windows protected your PC*: click **More info** → **Run anyway**.
+- **macOS** says the app *can't be opened* or *can't be checked*: open **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to AI Local Pack.
+- **Linux**: allow the file to run (right-click → *Properties* → *Allow executing file as program*, or `chmod +x AiLocalPack-linux-x64.AppImage`), then double-click it. If nothing happens, install FUSE 2 (`libfuse2` on Ubuntu / Debian).
 
-| Command | What it does |
-|---|---|
-| `games list [--json]` | Your Steam games with engine, anti-cheat and build |
-| `toolkit detect <folder>` | Engine and anti-cheat of a game folder |
-| `toolkit scan-folder <folder>` | Every game in a folder, with its fingerprint and version |
-| `toolkit extract <folder> --out <file> [--lang <tag>]` | A game's strings as an editable string table (RPG Maker, Ren'Py, Godot, Unity, Unreal) |
-| `toolkit rebuild <folder> --strings <table> --out <folder>` | Rebuilds translated files into a separate staging folder |
-| `dev fixture <rpgmaker\|renpy\|godot\|unity\|unreal> <folder>` | Writes a synthetic game for manual checks |
-| `index show [--game <id>] [--lang <tag>]` | Packs in the registry index |
-| `pack check <pack> --game <id>` | Whether a pack fits your installed copy |
-| `pack validate <folder>…` | What registry CI checks for each pack |
-| `index build <registry> --out <file>` | Builds `index.json` from a registry checkout |
+## How to use it
 
-### Useful environment variables
+### Install a translation
 
-- `AILOCALPACK_HOME=<dir>`: keeps settings, data and cache under one folder. Use it to keep your real data untouched while testing.
-- `AILOCALPACK_INDEX_URL=<folder or URL>`: reads another registry, for example the sample one in `tests/fixtures/registry`.
-- `AILOCALPACK_STEAM_ROOT=<dir>`: uses this folder as the Steam install instead of looking for one.
+1. Open the app. Your Steam games appear. Another game? Click **Folder** and pick the folder it is installed in.
+2. Choose your language at the top: **Translate to …**. Games that have a translation are marked *Translation available*.
+3. Open a game, pick a translation and click **Install**. Then play as usual.
 
-## Repository layout
+To go back to the original, open the game and click **Uninstall**.
 
-```
-src/
-  AiLocalPack.Core      game catalog, Steam discovery, pack and registry formats, compatibility
-  AiLocalPack.Toolkit   engine detection, anti-cheat detection, folder scanning (later: extract / rebuild)
-  AiLocalPack.Agents    AI agent adapters (planned)
-  AiLocalPack.Mcp       toolkit exposed to agents over MCP (planned)
-  AiLocalPack.Cli       command-line tool, also used by registry CI
-  AiLocalPack.Desktop   Avalonia UI app
-tests/                  one test project per src project, shared TestKit, fixtures
-schemas/                JSON Schemas of pack manifests, string tables and the registry index
-```
+<p align="center"><img src="assets/screenshots/game-page.png" width="760" alt="A game page: the Text tab lists translations into the chosen language, the Create with AI tab makes a new one"></p>
 
-Stack: C# / .NET 10 and [Avalonia UI](https://avaloniaui.net/) with MVVM (CommunityToolkit.Mvvm). The app UI is translated through `.resx` resource files: English and Russian for now, more to come.
+### Create a translation with AI
 
-## Contributing
+No translation for your game yet? Open it and click **Create with AI**.
 
-- **Translations of games** go to the [registry](https://github.com/ailocalpack/registry) as pull requests. Once its CI passes, a pack PR merges on its own with status `alpha`. A pack becomes `verified` after other players confirm that it works.
-- **Translations of the app UI**, bug reports and code changes go to this repository. See [CONTRIBUTING.md](CONTRIBUTING.md) for the setup, conventions and PR checklist.
+- You need **Claude Code** (with a Claude Pro or Max subscription) or **Codex** (with a ChatGPT Plus or Pro subscription). The app installs the agent for you if it's missing and opens its sign-in. AI Local Pack itself costs nothing; the AI work counts against your own subscription.
+- Before starting, the app shows how big the job is. A large game can take hours, and if your subscription's limit runs out, the app waits and continues on its own.
+- Halfway through, you can check the list of names and terms (characters, places, how characters address each other) and fix anything you'd translate differently.
+- When it's done, click **Install & play**.
+
+### Share it
+
+After you've tried your translation in the game, click **Publish**. The first time, the app asks you to sign in with a free GitHub account. Other players then see your translation in their app, can rate it, and it becomes **verified** once three players confirm it works.
+
+## Questions
+
+**Is it free?**
+Yes, the app and every translation in it. Only creating a new translation with AI uses your own Claude or ChatGPT subscription.
+
+**Which games work?**
+Most games made with Unity, Unreal Engine 4 / 5, RPG Maker MV / MZ, Ren'Py and Godot. The app shows a game's engine on its card. For other engines the AI can still try to make a translation, with less certainty.
+
+**Is it safe for my game?**
+Installing a translation runs only the app's own code: no AI and no downloaded scripts touch your game. Translations contain only text, never programs, and every file they change is backed up so you can undo. The AI works on a copy of the game, never on the game itself.
+
+**Can I get banned?**
+Games with anti-cheat (Easy Anti-Cheat, BattlEye, Vanguard and others) are blocked: the app won't change them, unless the game officially allows mods.
+
+**What happens when the game updates?**
+A Steam update can overwrite the translation. The app notices and puts it back if it still fits the new version. If it doesn't, the app tells you and offers a newer version of the translation, or to translate only the new text with AI.
+
+**Which languages?**
+Any language Steam supports, as the language you translate games into. The app itself is in English, Deutsch, Español, Français, Italiano, 日本語, 한국어, Polski, Português (Brasil), Русский, Türkçe, Українська and 简体中文.
+
+**Steam Deck? Epic, GOG?**
+Planned. For now: Steam games, plus any game folder you add yourself (so Epic and GOG games work if you add their folder).
+
+**A translation is wrong or doesn't work.**
+Rate it in the app (*Doesn't work* with a short comment), or fix it with AI and publish the fix as its new version.
+
+**How do I remove the app?**
+First uninstall the translations you no longer want (each game's page). Then: Windows: *Settings → Apps*, AI Local Pack → *Uninstall*. macOS: move *AI Local Pack* from *Applications* to the Trash. Linux: delete the AppImage.
+
+**Where do the translations come from?**
+From players like you: they live in the public [translation registry](https://github.com/ailocalpack/registry) on GitHub. There is no server of our own: just the app, GitHub and your own AI subscription.
+
+## Status
+
+Early version: things may still break. Planned next: voice-over and translated textures in games, Steam Deck, more stores, and your own API key or a local AI model. Found a bug? [Open an issue](https://github.com/ailocalpack/ailocalpack/issues).
+
+## For developers
+
+The app is C# / .NET 10 with [Avalonia UI](https://avaloniaui.net/). Building, tests and conventions: [CONTRIBUTING.md](CONTRIBUTING.md). The command-line tool (also used by the registry's CI) ships with each release as `ailocalpack-cli-<version>-<os>`; every feature with its commands: [docs/status.md](docs/status.md). Component specs live in [docs/](docs).
+
+- **App UI translations**, bug reports and code go to this repository ([CONTRIBUTING.md](CONTRIBUTING.md)).
+- **Game translations** go to the [registry](https://github.com/ailocalpack/registry) as pull requests (the app does this for you).
 
 ## Licenses
 
-- App: Apache-2.0.
-- Registry content (packs): CC BY-SA 4.0.
+The app: Apache-2.0. Translations in the registry: CC BY-SA 4.0.
 
-Packs contain no game files. Please don't use them with pirated copies. Studios that object to fan translations of their game can ask for it to be opted out of the registry.
+Translations contain no game files. Please own the games you translate. Studios that object to fan translations of their game can ask for it to be opted out of the registry ([LEGAL.md](https://github.com/ailocalpack/registry/blob/master/LEGAL.md)).
