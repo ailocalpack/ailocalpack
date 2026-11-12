@@ -170,12 +170,14 @@ public sealed class PublishFlowTests
 
         // Act
         Flow(bed).Publish(bed.Game, pack);
-        await Until(() => Flow(bed).StatusOf(pack).Run?.Step == PublishStep.Commit);
+        // The Activity item follows the strip's step a moment later: wait for the last of them.
+        var activity = bed.Services.GetRequiredService<ActivityStore>();
+        await Until(() => activity.Tasks.SingleOrDefault()?.Step == "Commit the translation");
 
         // Assert
-        var task = bed.Services.GetRequiredService<ActivityStore>().Tasks.Single();
-        (Flow(bed).StatusOf(pack).Phase, task.Kind, task.Title, task.Step)
-            .Should().Be((PublishPhase.Sending, ActivityTaskKind.Publish, "Publishing «Claude Code translation»…", "Commit the translation"));
+        var task = activity.Tasks.Single();
+        (Flow(bed).StatusOf(pack).Phase, Flow(bed).StatusOf(pack).Run?.Step, task.Kind, task.Title)
+            .Should().Be((PublishPhase.Sending, (PublishStep?)PublishStep.Commit, ActivityTaskKind.Publish, "Publishing «Claude Code translation»…"));
         Publisher(bed).Release();
     }
 

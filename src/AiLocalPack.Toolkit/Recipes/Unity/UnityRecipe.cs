@@ -141,20 +141,23 @@ internal sealed class UnityAsset : IDisposable
 
     public UnityAsset(string path)
     {
+        // Our own stream: AssetsTools leaves the one it opens itself unclosed when the file fails to parse, and Windows
+        // then can't delete or replace the file until the GC runs.
+        FileStream? stream = null;
         try
         {
-            using (var probe = File.OpenRead(path))
+            stream = File.OpenRead(path);
+            Span<byte> signature = stackalloc byte[8];
+            var bundle = stream.Read(signature) == signature.Length && signature.SequenceEqual("UnityFS\0"u8);
+            stream.Position = 0;
+            if (bundle)
             {
-                Span<byte> signature = stackalloc byte[8];
-                if (probe.Read(signature) == signature.Length && signature.SequenceEqual("UnityFS\0"u8))
-                {
-                    _bundle = _manager.LoadBundleFile(path, true);
-                    _instance = null!;
-                    return;
-                }
+                _bundle = _manager.LoadBundleFile(stream, path, true);
+                _instance = null!;
+                return;
             }
 
-            _instance = _manager.LoadAssetsFile(path, false);
+            _instance = _manager.LoadAssetsFile(stream, path, false, null);
             var managed = Path.Combine(Path.GetDirectoryName(path)!, "Managed");
             if (!_instance.file.Metadata.TypeTreeEnabled && Directory.Exists(managed) && Directory.EnumerateFiles(managed, "*.dll").Any())
             {
@@ -167,6 +170,7 @@ internal sealed class UnityAsset : IDisposable
         catch
         {
             _manager.UnloadAll();
+            stream?.Dispose();
             throw;
         }
     }

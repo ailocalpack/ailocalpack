@@ -55,7 +55,7 @@ public sealed class ToolkitValidateTests : IDisposable
         var result = await CliRunner.RunAsync("toolkit", "validate", table, "--game", Game);
 
         // Assert
-        result.StdOut.Should().EndWith("Checked 2 translations: 1 error, 1 warning." + Environment.NewLine);
+        result.StdOut.Should().EndWith("Checked 2 translations: 1 error, 1 warning.\n");
     }
 
     [Fact]

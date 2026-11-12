@@ -80,7 +80,7 @@ public sealed class ToolkitScanFolderTests : IDisposable
         var result = await CliRunner.RunAsync("toolkit", "scan-folder", _dir.Path);
 
         // Assert
-        (result.ExitCode, result.StdOut).Should().Be((0, $"No games found in {_dir.Path}{Environment.NewLine}"));
+        (result.ExitCode, result.StdOut).Should().Be((0, $"No games found in {_dir.Path}\n"));
     }
 
     [Fact]

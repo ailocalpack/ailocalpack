@@ -257,7 +257,7 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "resume", "steam:620", "--fake-agent", recording);
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "Sample Quest has no open generation job: start one with 'gen run'." + Environment.NewLine });
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "Sample Quest has no open generation job: start one with 'gen run'.\n" });
     }
 
     [Fact]
@@ -358,7 +358,7 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru", "--until", "build");
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--until takes setup, extract, glossary or translate, not 'build'." + Environment.NewLine });
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--until takes setup, extract, glossary or translate, not 'build'.\n" });
     }
 
     [Fact]
@@ -371,7 +371,7 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "run", "steam:620", "--agent", agent, "--lang", "ru");
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "'gpt' is not an agent: use claude or codex." + Environment.NewLine });
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "'gpt' is not an agent: use claude or codex.\n" });
     }
 
     [Fact]
@@ -384,7 +384,7 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "resume", "steam:620");
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "The job runs with the fake agent: give its recording with --fake-agent." + Environment.NewLine });
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "The job runs with the fake agent: give its recording with --fake-agent.\n" });
     }
 
     /// <summary>
@@ -422,6 +422,6 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--update");
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().BeEquivalentTo(new { ExitCode = 1, StdErr = "Sample Quest has no installed pack to update." + Environment.NewLine });
+        new { result.ExitCode, result.StdErr }.Should().BeEquivalentTo(new { ExitCode = 1, StdErr = "Sample Quest has no installed pack to update.\n" });
     }
 }

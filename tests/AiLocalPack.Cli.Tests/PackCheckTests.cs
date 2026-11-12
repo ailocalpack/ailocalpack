@@ -75,11 +75,11 @@ public sealed class PackCheckTests : IDisposable
         result.Should().BeEquivalentTo(new
         {
             ExitCode = 0,
-            StdOut = "compatible: made for build 100, which is your build." + Environment.NewLine + Environment.NewLine
-                + "pack:  steam:620/ru/full rev 1 \"Полный перевод\"" + Environment.NewLine
-                + "       recipe rpgmaker 1.0.0; 1 build: 100" + Environment.NewLine
-                + "game:  steam:620 \"Portal 2\", build 100" + Environment.NewLine
-                + $"       {Path.Combine(_steam.Root, "steamapps", "common", "Portal 2")}" + Environment.NewLine,
+            StdOut = "compatible: made for build 100, which is your build.\n\n"
+                + "pack:  steam:620/ru/full rev 1 \"Полный перевод\"\n"
+                + "       recipe rpgmaker 1.0.0; 1 build: 100\n"
+                + "game:  steam:620 \"Portal 2\", build 100\n"
+                + $"       {Path.Combine(_steam.Root, "steamapps", "common", "Portal 2")}\n",
             StdErr = "",
         });
     }
@@ -99,7 +99,7 @@ public sealed class PackCheckTests : IDisposable
         result.StdOut.Should().StartWith(
             "probably compatible: built for build 100; you have build 200. 1 of 1 file the pack changes differ; "
             + "they are rebuilt from your copy, and text the update added stays untranslated.")
-            .And.EndWith($"changed:{Environment.NewLine}  {Map}{Environment.NewLine}");
+            .And.EndWith($"changed:\n  {Map}\n");
     }
 
     [Fact]
@@ -162,8 +162,7 @@ public sealed class PackCheckTests : IDisposable
         {
             ExitCode = 1,
             StdOut = "",
-            StdErr = "steam:620 is not in the game catalog: install it in Steam or add its folder in the app, then run 'games list'."
-                + Environment.NewLine,
+            StdErr = "steam:620 is not in the game catalog: install it in Steam or add its folder in the app, then run 'games list'.\n",
         });
     }
 
@@ -196,7 +195,7 @@ public sealed class PackCheckTests : IDisposable
         result.Should().BeEquivalentTo(new
         {
             ExitCode = 1,
-            StdErr = "'620' is not a game ID (steam:<app id> or fp:<64 lowercase hex>)." + Environment.NewLine,
+            StdErr = "'620' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).\n",
         });
     }
 }

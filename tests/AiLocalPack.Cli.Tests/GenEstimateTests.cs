@@ -38,7 +38,7 @@ public sealed class GenEstimateTests : IDisposable
 
         // Assert
         result.Should().BeEquivalentTo(new { ExitCode = 0, StdErr = "" });
-        result.StdOut.Split(Environment.NewLine).Select(l => l.Split(':')[0]).Should().StartWith(
+        result.StdOut.Split("\n").Select(l => l.Split(':')[0]).Should().StartWith(
             ["Sample Quest (steam", "strings", "copy", "disk", "agent time", "subscription", "tokens"]);
     }
 
@@ -100,7 +100,7 @@ public sealed class GenEstimateTests : IDisposable
         result.Should().BeEquivalentTo(new
         {
             ExitCode = 1,
-            StdErr = "steam:999 is not in the game catalog: install it in Steam or add its folder in the app, then run 'games list'." + Environment.NewLine,
+            StdErr = "steam:999 is not in the game catalog: install it in Steam or add its folder in the app, then run 'games list'.\n",
         });
     }
 
