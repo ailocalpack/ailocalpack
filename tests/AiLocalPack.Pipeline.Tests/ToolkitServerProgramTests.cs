@@ -14,16 +14,17 @@ public sealed class ToolkitServerProgramTests
     {
         // Arrange
         var program = ToolkitServerProgram.Cli(new AppLaunch("/usr/bin/dotnet", ["/opt/cli.dll"]), Env());
+        var (game, job) = (Path.GetFullPath("/w/job/game"), Path.GetFullPath("/w/job")); // D:\w\job… on Windows
 
         // Act
-        var server = program.For("/w/job/game", "/w/job", "ru");
+        var server = program.For(game, job, "ru");
 
         // Assert
         new { server.Name, server.Command, server.Arguments }.Should().BeEquivalentTo(new
         {
             Name = "ailocalpack",
             Command = "/usr/bin/dotnet",
-            Arguments = new[] { "/opt/cli.dll", "mcp", "--root", "/w/job/game", "--job", "/w/job", "--lang", "ru" },
+            Arguments = new[] { "/opt/cli.dll", "mcp", "--root", game, "--job", job, "--lang", "ru" },
         });
     }
 

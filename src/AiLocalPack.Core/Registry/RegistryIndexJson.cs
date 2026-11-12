@@ -75,6 +75,7 @@ internal sealed record RegistryCacheMetaJson(
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     AllowDuplicateProperties = false)]

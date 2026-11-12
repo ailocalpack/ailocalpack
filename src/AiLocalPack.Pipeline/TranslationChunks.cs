@@ -300,6 +300,7 @@ internal sealed record ChunkJson(IReadOnlyList<string>? Keys);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(ChunkFileJson))]

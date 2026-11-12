@@ -120,6 +120,6 @@ internal sealed record CandidateJson(string Engine, string Name, string Confiden
 
 internal sealed record AntiCheatJson(string Id, string Name, string Marker);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(DetectJson))]
 internal sealed partial class ToolkitJsonContext : JsonSerializerContext;

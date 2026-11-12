@@ -560,6 +560,7 @@ internal sealed record StringJson(string? Key, string? Original);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(LocalPackReportJson))]

@@ -190,7 +190,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
             {
                 if (!tocs.Any(t => IsPartitionOf(data, t)))
                 {
-                    throw new RecipeException("IoStore data has no matching .utoc index.", Path.GetRelativePath(root, data));
+                    throw new RecipeException("IoStore data has no matching .utoc index.", Path.GetRelativePath(root, data).Replace('\\', '/'));
                 }
             }
 
@@ -218,7 +218,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
                 });
                 if (provider.UnloadedVfs.Count != before + 1)
                 {
-                    throw new RecipeException("Unsupported or corrupt Unreal archive.", Path.GetRelativePath(root, archive));
+                    throw new RecipeException("Unsupported or corrupt Unreal archive.", Path.GetRelativePath(root, archive).Replace('\\', '/'));
                 }
             }
 
@@ -231,7 +231,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
                     unloaded.IsEncrypted
                         ? "AES-encrypted Unreal archive: no key is configured; this game is unsupported."
                         : "Unreal archive could not be mounted (unsupported or corrupt index).",
-                    Path.GetRelativePath(root, unloaded.Path));
+                    Path.GetRelativePath(root, unloaded.Path).Replace('\\', '/'));
             }
 
             var files = provider.Files.ToDictionary(p => p.Key, p => p.Value, StringComparer.Ordinal);

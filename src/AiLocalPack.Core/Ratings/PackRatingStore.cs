@@ -263,6 +263,7 @@ internal sealed record PackRatingJson(
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     ReadCommentHandling = JsonCommentHandling.Skip,
     AllowTrailingCommas = true,

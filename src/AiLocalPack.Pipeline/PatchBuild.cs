@@ -32,6 +32,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
     private static readonly JsonSerializerOptions TranslationsJson = new()
     {
         WriteIndented = true,
+        NewLine = "\n",
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 

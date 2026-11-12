@@ -4,6 +4,7 @@ namespace AiLocalPack.Core.Settings;
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     UseStringEnumConverter = true,
     DefaultIgnoreCondition = JsonIgnoreCondition.Never,

@@ -198,6 +198,7 @@ internal sealed partial class RegistryInputsJsonContext : JsonSerializerContext;
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     WriteIndented = true,
+    NewLine = "\n",
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(RatingsFileJson))]
 internal sealed partial class RegistryRatingsWriteContext : JsonSerializerContext;

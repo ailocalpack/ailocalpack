@@ -284,6 +284,6 @@ internal sealed record GenWorkJson(
     double LimitDaysLow,
     double LimitDaysHigh);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(GenEstimateJson))]
 internal sealed partial class GenJsonContext : JsonSerializerContext;

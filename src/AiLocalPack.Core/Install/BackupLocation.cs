@@ -458,6 +458,6 @@ internal sealed record BackupLocationFile(int SchemaVersion, string? Path, Backu
 /// <param name="CreatedTarget">The move created the new folder (rolled back: deleted; else only emptied).</param>
 internal sealed record BackupMoveJson(string? From, string? To, string? Phase, bool CreatedTarget);
 
-[JsonSourceGenerationOptions(WriteIndented = true, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSourceGenerationOptions(WriteIndented = true, NewLine = "\n", PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 [JsonSerializable(typeof(BackupLocationFile))]
 internal sealed partial class BackupLocationJsonContext : JsonSerializerContext;

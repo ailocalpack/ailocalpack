@@ -130,6 +130,6 @@ internal sealed record BackupsJson(string Folder, long Bytes, int Games);
 
 internal sealed record WorkingCopyJson(string Folder, string? Game, string? GameName, string Job, string State, long Bytes);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(StorageJson))]
 internal sealed partial class StorageJsonContext : JsonSerializerContext;

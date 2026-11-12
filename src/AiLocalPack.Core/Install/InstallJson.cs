@@ -71,6 +71,7 @@ internal sealed record JournalEntryJson(string? Path, bool Write, string? Before
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
     AllowTrailingCommas = true)]

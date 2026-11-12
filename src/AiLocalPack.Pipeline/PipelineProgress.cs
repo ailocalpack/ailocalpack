@@ -203,6 +203,7 @@ internal sealed record UsageJson(int Runs, long InputTokens, long OutputTokens, 
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(ProgressFileJson))]

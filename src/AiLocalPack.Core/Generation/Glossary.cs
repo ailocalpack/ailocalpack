@@ -167,6 +167,7 @@ internal sealed record GlossaryEntryJson(
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     ReadCommentHandling = JsonCommentHandling.Skip,
     AllowTrailingCommas = true,

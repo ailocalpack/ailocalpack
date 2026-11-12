@@ -30,6 +30,7 @@ internal sealed record ActivityEventJson(
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
     AllowTrailingCommas = true,

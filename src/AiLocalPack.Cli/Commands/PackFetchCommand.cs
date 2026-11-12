@@ -223,6 +223,6 @@ internal sealed record PackFetchJson(
     string? Strings,
     string? Patch);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(PackFetchJson))]
 internal sealed partial class PackFetchJsonContext : JsonSerializerContext;

@@ -7,6 +7,9 @@ public sealed class AutostartCommandTests
 {
     private static OsEnvironment Env(OsKind os, string? appImage = null) => new(os, "/home/p", name => name == "APPIMAGE" ? appImage : null);
 
+    /// <summary>A fully qualified path on the host running the tests (a Unix path isn't one on Windows).</summary>
+    private static string Abs(string unixPath) => OperatingSystem.IsWindows() ? "C:" + unixPath : unixPath;
+
     [Fact]
     public void Own_executable_runs_with_the_background_argument()
     {
@@ -14,10 +17,10 @@ public sealed class AutostartCommandTests
         var env = Env(OsKind.MacOS);
 
         // Act
-        var command = AutostartCommand.ForCurrentProcess(env, "/Applications/ailocalpack.app/Contents/MacOS/AiLocalPack", entryAssembly: null);
+        var command = AutostartCommand.ForCurrentProcess(env, Abs("/Applications/ailocalpack.app/Contents/MacOS/AiLocalPack"), entryAssembly: null);
 
         // Assert
-        command.Should().BeEquivalentTo(new AutostartCommand("/Applications/ailocalpack.app/Contents/MacOS/AiLocalPack", ["--background"]));
+        command.Should().BeEquivalentTo(new AutostartCommand(Abs("/Applications/ailocalpack.app/Contents/MacOS/AiLocalPack"), ["--background"]));
     }
 
     [Fact]
@@ -27,23 +30,23 @@ public sealed class AutostartCommandTests
         var env = Env(OsKind.Linux);
 
         // Act
-        var command = AutostartCommand.ForCurrentProcess(env, "/usr/share/dotnet/dotnet", "/src/bin/AiLocalPack.dll");
+        var command = AutostartCommand.ForCurrentProcess(env, Abs("/usr/share/dotnet/dotnet"), Abs("/src/bin/AiLocalPack.dll"));
 
         // Assert
-        command.Should().BeEquivalentTo(new AutostartCommand("/usr/share/dotnet/dotnet", ["/src/bin/AiLocalPack.dll", "--background"]));
+        command.Should().BeEquivalentTo(new AutostartCommand(Abs("/usr/share/dotnet/dotnet"), [Abs("/src/bin/AiLocalPack.dll"), "--background"]));
     }
 
     [Fact]
     public void AppImage_runs_the_image_not_its_temporary_mount()
     {
         // Arrange
-        var env = Env(OsKind.Linux, "/home/deck/Apps/ailocalpack.AppImage");
+        var env = Env(OsKind.Linux, Abs("/home/deck/Apps/ailocalpack.AppImage"));
 
         // Act
-        var command = AutostartCommand.ForCurrentProcess(env, "/tmp/.mount_ailoXYZ/usr/bin/AiLocalPack", entryAssembly: null);
+        var command = AutostartCommand.ForCurrentProcess(env, Abs("/tmp/.mount_ailoXYZ/usr/bin/AiLocalPack"), entryAssembly: null);
 
         // Assert
-        command!.Executable.Should().Be("/home/deck/Apps/ailocalpack.AppImage");
+        command!.Executable.Should().Be(Abs("/home/deck/Apps/ailocalpack.AppImage"));
     }
 
     [Fact]

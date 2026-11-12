@@ -67,6 +67,7 @@ internal static class CliRunner
             throw;
         }
 
-        return new CliResult(process.ExitCode, await stdOut, await stdErr);
+        // The console writes CRLF on Windows; tests compare LF text on every OS.
+        return new CliResult(process.ExitCode, (await stdOut).ReplaceLineEndings("\n"), (await stdErr).ReplaceLineEndings("\n"));
     }
 }

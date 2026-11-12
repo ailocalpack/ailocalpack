@@ -260,7 +260,7 @@ public sealed class GenerationRunnerTests : IDisposable
     public async Task Pause_stops_the_running_step_and_keeps_the_chunk()
     {
         // Arrange
-        var started = new TaskCompletionSource();
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var run = Start(Stages(async (_, ct) =>
         {
             started.TrySetResult();
@@ -286,7 +286,7 @@ public sealed class GenerationRunnerTests : IDisposable
     public async Task Cancel_ends_the_job()
     {
         // Arrange
-        var started = new TaskCompletionSource();
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var run = Start(Stages(async (_, ct) =>
         {
             started.TrySetResult();
@@ -471,7 +471,7 @@ public sealed class GenerationRunnerTests : IDisposable
     public async Task A_running_job_cant_be_resumed_by_a_second_runner()
     {
         // Arrange
-        var started = new TaskCompletionSource();
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var run = Start(Stages(async (_, ct) =>
         {
             started.TrySetResult();

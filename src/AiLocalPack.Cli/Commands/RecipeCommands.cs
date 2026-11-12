@@ -562,6 +562,7 @@ internal sealed record FontJson(string Name, string File, string? Entry, string?
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     WriteIndented = true,
+    NewLine = "\n",
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(ExtractFileJson))]
 [JsonSerializable(typeof(FontsFileJson))]

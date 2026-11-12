@@ -180,7 +180,7 @@ internal static class GitHubCommand
             _ => ((GitHubAccount?)null, "signedOut", (string?)null),
         };
         using var buffer = new MemoryStream();
-        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }))
+        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, NewLine = "\n", Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }))
         {
             json.WriteStartObject();
             json.WriteString("state", state);

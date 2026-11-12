@@ -555,6 +555,7 @@ internal sealed record GenerationCountersJson(int Strings, int Translated, int C
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(GenerationJobFileJson))]

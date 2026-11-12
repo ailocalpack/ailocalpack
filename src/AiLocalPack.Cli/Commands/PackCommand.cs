@@ -401,6 +401,6 @@ internal sealed record PackCheckJson(
     IReadOnlyList<string> MissingFiles,
     string? UnreadableFile);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(PackCheckJson))]
 internal sealed partial class PackJsonWriterContext : JsonSerializerContext;

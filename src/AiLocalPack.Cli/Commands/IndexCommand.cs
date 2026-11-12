@@ -353,6 +353,6 @@ internal sealed record IndexPackJson(
     int DoesNotWork,
     string? Discussion);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(IndexShowJson))]
 internal sealed partial class IndexJsonContext : JsonSerializerContext;

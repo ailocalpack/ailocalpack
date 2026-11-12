@@ -139,7 +139,7 @@ public static partial class ClaudeCodeCommandLine
     {
         ArgumentNullException.ThrowIfNull(servers);
         using var buffer = new MemoryStream();
-        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true }))
+        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, NewLine = "\n" }))
         {
             json.WriteStartObject();
             json.WriteStartObject("mcpServers");

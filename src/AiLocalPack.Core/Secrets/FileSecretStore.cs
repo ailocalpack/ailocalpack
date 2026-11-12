@@ -87,6 +87,6 @@ public sealed class FileSecretStore : ISecretStore
     }
 }
 
-[System.Text.Json.Serialization.JsonSourceGenerationOptions(WriteIndented = true)]
+[System.Text.Json.Serialization.JsonSourceGenerationOptions(WriteIndented = true, NewLine = "\n")]
 [System.Text.Json.Serialization.JsonSerializable(typeof(Dictionary<string, Dictionary<string, string>>))]
 internal sealed partial class SecretsJsonContext : System.Text.Json.Serialization.JsonSerializerContext;

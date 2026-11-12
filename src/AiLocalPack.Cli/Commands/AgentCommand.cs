@@ -110,7 +110,7 @@ internal static class AgentCommand
     private static string ProbeJson(IAgentAdapter adapter, AgentInstallation? installation, bool supported, AgentAuthStatus? auth)
     {
         using var buffer = new MemoryStream();
-        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }))
+        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, NewLine = "\n", Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }))
         {
             json.WriteStartObject();
             json.WriteString("agent", adapter.Id);

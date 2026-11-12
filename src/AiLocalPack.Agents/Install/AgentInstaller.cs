@@ -323,7 +323,7 @@ public sealed class AgentInstaller
     {
         AtomicFile.Write(Path.Combine(folder, StateFile), stream =>
         {
-            using var json = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+            using var json = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true, NewLine = "\n", Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
             json.WriteStartObject();
             json.WriteNumber("schemaVersion", 1);
             json.WriteString("version", release.Version);

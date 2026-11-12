@@ -157,6 +157,6 @@ internal sealed record FoundGameJson(
 
 internal sealed record SkippedFolderJson(string Path, string Reason);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(ScanFolderJson))]
 internal sealed partial class ScanFolderJsonContext : JsonSerializerContext;

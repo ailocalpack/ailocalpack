@@ -95,7 +95,7 @@ public sealed class GenerationServiceTests
         using var services = Build();
         services.GetRequiredService<FakeGenerationStages>().Hold = false;
         var jobs = services.GetRequiredService<GenerationService>();
-        var ended = new TaskCompletionSource();
+        var ended = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously); // not on the run's thread: Dispose waits for the run
         jobs.Changed += (_, job) =>
         {
             if (job.Status == GenerationJobStatus.Completed)

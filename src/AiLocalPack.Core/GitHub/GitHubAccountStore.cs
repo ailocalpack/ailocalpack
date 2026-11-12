@@ -144,6 +144,7 @@ internal sealed record GitHubAccountJson(
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     ReadCommentHandling = JsonCommentHandling.Skip,
     AllowTrailingCommas = true,

@@ -154,6 +154,6 @@ internal sealed record GameJson(
     DateTimeOffset? LastPlayed,
     bool Available);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(GamesListJson))]
 internal sealed partial class CliJsonContext : JsonSerializerContext;
