@@ -5,8 +5,8 @@ namespace AiLocalPack.Core.Tests.Secrets;
 
 /// <summary>
 /// This machine's real keychain (Windows Credential Manager, macOS Keychain, Linux Secret Service), under a throwaway
-/// service name. Explicit: run by hand (<c>dotnet test --project tests/AiLocalPack.Core.Tests -- --filter-class
-/// *KeychainSmokeTests --explicit only</c>) until CI has a keychain on every OS (task 70).
+/// service name. Runs only with <c>AILOCALPACK_KEYCHAIN_TESTS=1</c>: CI sets it on all three OSes (Linux under a
+/// D-Bus session with an unlocked gnome-keyring); a developer machine would show keychain prompts.
 /// </summary>
 public sealed class KeychainSmokeTests
 {
@@ -19,7 +19,9 @@ public sealed class KeychainSmokeTests
         _ => new SecretServiceStore(Service, new TestLogger<SecretServiceStore>()),
     };
 
-    [Fact(Explicit = true)]
+    public static bool KeychainTestsOn => Environment.GetEnvironmentVariable("AILOCALPACK_KEYCHAIN_TESTS") == "1";
+
+    [Fact(SkipUnless = nameof(KeychainTestsOn), Skip = "Needs the OS keychain: set AILOCALPACK_KEYCHAIN_TESTS=1 (CI does)")]
     public async Task Writes_replaces_reads_and_deletes_a_secret()
     {
         // Arrange

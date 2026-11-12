@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  # Runs KeychainSmokeTests against the runner's keychain (Credential Manager, login keychain, gnome-keyring).
+  AILOCALPACK_KEYCHAIN_TESTS: "1"
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: windows, os: windows-latest }
+          - { name: macos, os: macos-latest }
+          - { name: linux, os: ubuntu-latest }
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props', 'global.json', '**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore
+
+      # Warnings are errors and the NuGet audit fails on any vulnerable package (Directory.Build.props).
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Secret Service for the keychain tests
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -q && sudo apt-get install -y -q gnome-keyring dbus-x11
+
+      - name: Test
+        shell: bash
+        run: |
+          test_cmd='dotnet test --no-build --results-directory "$GITHUB_WORKSPACE/TestResults" --report-xunit-trx --report-xunit-markdown'
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            # A session bus with an unlocked login keyring as the default collection.
+            dbus-run-session -- bash -c "echo ci | gnome-keyring-daemon --unlock --components=secrets >/dev/null && $test_cmd"
+          else
+            eval "$test_cmd"
+          fi
+
+      - name: Test summary
+        if: always()
+        shell: bash
+        run: |
+          shopt -s nullglob
+          for f in TestResults/*.md; do cat "$f" >> "$GITHUB_STEP_SUMMARY"; echo >> "$GITHUB_STEP_SUMMARY"; done
+
+      - name: Upload test results and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.name }}
+          path: |
+            TestResults/
+            tests/**/bin/**/TestResults/
+          if-no-files-found: ignore
+          retention-days: 14
