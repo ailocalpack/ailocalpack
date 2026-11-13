@@ -9,24 +9,31 @@ using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Pipeline;
 
-/// <summary>How the Translate stage retries.</summary>
+/// <summary>How the Translate stage retries and how many chunks it runs at once.</summary>
 /// <param name="MaxAttempts">Agent runs per chunk at most: the first, then retries with only the strings still missing or refused.</param>
-public sealed record TranslateOptions(int MaxAttempts = 3)
+/// <param name="Workers">
+/// Chunks a step runs side by side, each its own agent run (<see cref="Core.Settings.AppSettings.TranslateWorkers"/>);
+/// clamped to at least 1.
+/// </param>
+public sealed record TranslateOptions(int MaxAttempts = 3, int Workers = 1)
 {
     public static TranslateOptions Default { get; } = new();
 }
 
 /// <summary>
-/// Stage Translate (task 50), one step per chunk of <c>chunks.json</c> (<see cref="ChunkPlanner"/>, fixed by the Extract
-/// stage; the step's chunk is <see cref="GenerationCounters.ChunksDone"/>, so a resumed job goes on with the chunk it
-/// was at and never runs a finished one again). A step gives the agent the chunk's strings that have no stored
-/// translation yet (originals, context, length limit, placeholders) with the glossary entries they mention and the
-/// tone (<see cref="PromptTemplate.Translate"/>); the agent stores them with <c>put_translations</c>, which refuses
-/// errors. Every stored text is checked again with the <see cref="StringValidator"/>; strings still missing or refused
-/// go back to the agent (<see cref="PromptTemplate.TranslateRetry"/>, each with its problem) up to
-/// <see cref="TranslateOptions.MaxAttempts"/> runs in all; warnings are kept. What is still missing after that stays
-/// untranslated (logged) and the job goes on; a chunk where the agent stored nothing at all fails the stage. A limit
-/// pauses the job at the chunk; translations stored before it are kept and not asked for again.
+/// Stage Translate (task 50). A step takes the next <see cref="TranslateOptions.Workers"/> chunks of <c>chunks.json</c>
+/// (<see cref="ChunkPlanner"/>, fixed by the Extract stage) from <see cref="GenerationCounters.ChunksDone"/> on and runs
+/// them side by side, so a resumed job goes on with the chunks it was at; a chunk whose strings are all stored needs no
+/// agent run, so repeating a step costs nothing for the chunks it finished. For each chunk the agent gets its strings
+/// that have no stored translation yet (originals, context, length limit, placeholders) with the glossary entries they
+/// mention and the tone (<see cref="PromptTemplate.Translate"/>); it stores them with <c>put_translations</c>, which
+/// refuses errors (its server holds the store's lock, <see cref="GenerationFiles.LockStrings"/>, while it writes). Every
+/// stored text is checked again with the <see cref="StringValidator"/>; strings still missing or refused go back to the
+/// agent (<see cref="PromptTemplate.TranslateRetry"/>, each with its problem) up to <see cref="TranslateOptions.MaxAttempts"/>
+/// runs in all; warnings are kept. What is still missing after that stays untranslated (logged) and the job goes on; a
+/// chunk where the agent stored nothing at all fails the stage. When a chunk stops (limit, failure) the step ends with
+/// the first such stop in chunk order once the others are over; translations stored before it are kept and not asked
+/// for again.
 /// </summary>
 public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeTools tools, TranslateOptions? options = null) : IGenerationStage
 {
@@ -40,7 +47,6 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
     {
         ArgumentNullException.ThrowIfNull(context);
         var job = context.Job;
-        var number = job.Counters.ChunksDone + 1;
         SourceStrings? source;
         IReadOnlyList<TranslationChunk>? plan;
         try
@@ -64,25 +70,63 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         }
 
         var byKey = source.Strings.ToDictionary(s => s.Key, StringComparer.Ordinal);
-        var chunk = new List<ExtractedString>();
-        foreach (var key in plan[job.Counters.ChunksDone].Keys)
+        var count = Math.Min(Math.Max(1, _options.Workers), plan.Count - job.Counters.ChunksDone);
+        var chunks = new List<List<ExtractedString>>();
+        for (var index = job.Counters.ChunksDone; index < job.Counters.ChunksDone + count; index++)
         {
-            if (!byKey.TryGetValue(key, out var s))
+            var chunk = new List<ExtractedString>();
+            foreach (var key in plan[index].Keys)
             {
-                return Fail(context, GenerationFailureKind.Toolkit, $"chunks.json names '{key}', which source.json doesn't have; run the Extract stage again.");
+                if (!byKey.TryGetValue(key, out var s))
+                {
+                    return Fail(context, GenerationFailureKind.Toolkit, $"chunks.json names '{key}', which source.json doesn't have; run the Extract stage again.");
+                }
+
+                chunk.Add(s);
             }
 
-            chunk.Add(s);
+            chunks.Add(chunk);
         }
 
-        var markup = SourceMarkup.Of(tools, source);
-        var glossary = Glossary(context);
-        var label = $"Chunk {number} of {plan.Count}";
+        var shared = new Shared(source, SourceMarkup.Of(tools, source), Glossary(context), plan.Count, count > 1);
+        if (count > 1)
+        {
+            context.Log($"Chunks {job.Counters.ChunksDone + 1}–{job.Counters.ChunksDone + count} of {plan.Count} side by side.");
+        }
+
+        var stops = await Task.WhenAll(chunks.Select((chunk, i) => RunChunkAsync(context, shared, job.Counters.ChunksDone + i + 1, chunk, cancellationToken))).ConfigureAwait(false);
+        if (stops.FirstOrDefault(s => s is not null) is { } stop)
+        {
+            return stop;
+        }
+
+        StringTable stored;
+        try
+        {
+            stored = Store(context);
+        }
+        catch (GenerationFileException e)
+        {
+            return Fail(context, GenerationFailureKind.Disk, e.Message);
+        }
+
+        var translated = source.Strings.Count(s => stored.Strings.TryGetValue(s.Key, out var t) && !string.IsNullOrEmpty(t));
+        return new GenerationStepResult.ChunkDone(translated - job.Counters.Translated, count);
+    }
+
+    /// <summary>What every chunk of a step reads.</summary>
+    private sealed record Shared(SourceStrings Source, TextMarkup Markup, Glossary? Glossary, int Chunks, bool SideBySide);
+
+    /// <summary>Translates one chunk (<paramref name="number"/> is 1-based); <c>null</c> = done, else why it stopped.</summary>
+    private async Task<GenerationStepResult?> RunChunkAsync(GenerationStepContext context, Shared shared, int number, List<ExtractedString> chunk, CancellationToken cancellationToken)
+    {
+        var job = context.Job;
+        var label = $"Chunk {number} of {shared.Chunks}";
         var asked = 0;
         Dictionary<string, string?> problems;
         try
         {
-            problems = Problems(context, chunk, markup, out _);
+            problems = Problems(context, chunk, shared.Markup, out _);
         }
         catch (GenerationFileException e)
         {
@@ -99,11 +143,17 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         for (var attempt = 1; attempt <= _options.MaxAttempts && problems.Count > 0; attempt++)
         {
             var pending = chunk.Where(s => problems.ContainsKey(s.Key)).ToList();
-            var entries = GlossaryFilter.Relevant(glossary, pending.Select(s => s.Original));
+            var entries = GlossaryFilter.Relevant(shared.Glossary, pending.Select(s => s.Original));
             context.Log($"{label}: {pending.Count} strings, {entries.Count} glossary entries, attempt {attempt} of {_options.MaxAttempts}.");
             var retry = attempt > 1;
-            var values = Values(gameName, job.Language, source, number, plan.Count, pending, entries, GlossaryReview.ToneForPrompt(glossary), retry ? problems : null);
-            var run = await agent.RunAsync(context, retry ? PromptTemplate.TranslateRetry : PromptTemplate.Translate, values, gameName, cancellationToken).ConfigureAwait(false);
+            var values = Values(gameName, job.Language, shared.Source, number, shared.Chunks, pending, entries, GlossaryReview.ToneForPrompt(shared.Glossary), retry ? problems : null);
+            var run = await agent.RunAsync(
+                context,
+                retry ? PromptTemplate.TranslateRetry : PromptTemplate.Translate,
+                values,
+                gameName,
+                cancellationToken,
+                logTag: shared.SideBySide ? label : null).ConfigureAwait(false);
             asked++;
             if (run.Stop is { } stop)
             {
@@ -112,7 +162,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
 
             try
             {
-                problems = Problems(context, chunk, markup, out _);
+                problems = Problems(context, chunk, shared.Markup, out _);
             }
             catch (GenerationFileException e)
             {
@@ -124,7 +174,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         Dictionary<string, string> warnings;
         try
         {
-            problems = Problems(context, chunk, markup, out warnings);
+            problems = Problems(context, chunk, shared.Markup, out warnings);
             stored = RemoveRefused(context, problems);
         }
         catch (GenerationFileException e)
@@ -159,9 +209,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
             Recent = recent.Count > 0 ? recent : p.Recent,
             Warnings = [.. p.Warnings.Where(w => !chunkKeys.Contains(w.Key)), .. chunkWarnings],
         });
-
-        var translated = source.Strings.Count(s => stored.Strings.TryGetValue(s.Key, out var t) && !string.IsNullOrEmpty(t));
-        return new GenerationStepResult.ChunkDone(translated - job.Counters.Translated);
+        return null;
     }
 
     /// <summary>
@@ -199,6 +247,8 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
     /// <summary>Removes stored translations with errors (put_translations refuses them, so only a damaged store has any); returns the store.</summary>
     private static StringTable RemoveRefused(GenerationStepContext context, Dictionary<string, string?> problems)
     {
+        // Chunks running beside this one store through their servers meanwhile.
+        using var store = context.Files.LockStrings();
         var stored = Store(context);
         var refused = problems.Where(p => p.Value is not null && stored.Strings.ContainsKey(p.Key)).Select(p => p.Key).ToList();
         if (refused.Count == 0)

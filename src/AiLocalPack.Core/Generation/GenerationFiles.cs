@@ -27,6 +27,9 @@ public sealed class GenerationFiles
 
     public string StringsPath => Path.Combine(Folder, "strings.json");
 
+    /// <summary>Held while <c>strings.json</c> is read, changed and written (<see cref="LockStrings"/>).</summary>
+    public string StringsLockPath => Path.Combine(Folder, "strings.lock");
+
     public string GlossaryPath => Path.Combine(Folder, "glossary.json");
 
     /// <summary>The Extract stage's result: every string with its original, context and limits (task 49, read by the translate stage).</summary>
@@ -131,6 +134,33 @@ public sealed class GenerationFiles
         var result = StringTableSerializer.Read(data);
         return result.Value ?? throw new GenerationFileException(
             StringsPath, string.Join("; ", result.Errors.Select(e => $"{e.Field}: {e.Message}")));
+    }
+
+    /// <summary>
+    /// Takes the string store's lock (<c>strings.lock</c> opened <see cref="FileShare.None"/>) for a read, change and
+    /// write of <c>strings.json</c>: the Translate stage runs chunks side by side, each agent with its own toolkit server
+    /// process storing into the same file. Waits while another process or thread holds it; dispose to release.
+    /// </summary>
+    /// <exception cref="IOException">The lock is still held after <paramref name="timeout"/> (30 s by default), or the file can't be made.</exception>
+    public IDisposable LockStrings(TimeSpan? timeout = null)
+    {
+        Directory.CreateDirectory(Folder);
+        var until = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(30));
+        while (true)
+        {
+            try
+            {
+                return new FileStream(StringsLockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException) when (DateTime.UtcNow < until && File.Exists(StringsLockPath))
+            {
+                Thread.Sleep(20);
+            }
+            catch (IOException e) when (File.Exists(StringsLockPath))
+            {
+                throw new IOException($"strings.json is busy: another writer holds {StringsLockPath}.", e);
+            }
+        }
     }
 
     /// <exception cref="IOException">The file can't be written.</exception>

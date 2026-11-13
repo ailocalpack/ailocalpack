@@ -145,7 +145,7 @@ Both live in the GitHub organization **`ailocalpack`** (not a personal account: 
 - **Pipeline** (stages, persisted to disk, resumable when interrupted or the subscription limit runs out; show a size estimate before starting):
   1. Explore the game and extract strings via the toolkit.
   2. Build a glossary (names, terms, tone).
-  3. The app chunks strings and feeds them to the agent with the glossary.
+  3. The app chunks strings and feeds them to the agent with the glossary, several chunks side by side (one agent run each; Settings → AI agents → *Chunks translated at once*, default 2, 1–8; decided 2026-11-13, _Translate stage_ in `docs/generation.md`).
   4. Rebuild and do a test run (the translated working copy for 15 s, compared with the untranslated one when it closes early), then save a local pack (_Build stage_ in `docs/generation.md`).
 - The agent gets string length limits where they can be determined and must preserve placeholders and formatting tags; a validator checks both.
 - **Prompts** are versioned files `src/AiLocalPack.Pipeline/Prompts/<name>.v<N>.md`; a change that alters what the agent does is a new version file. Rendered prompts are snapshot-tested.

@@ -143,6 +143,20 @@ public sealed class ToolkitSession
 
     public void WriteStrings(StringTable table) => Write(() => Files.WriteStrings(table), "strings.json");
 
+    /// <summary>The string store's lock for a read, change and write (<see cref="GenerationFiles.LockStrings"/>).</summary>
+    /// <exception cref="McpException">Another writer holds it too long, or it can't be made.</exception>
+    public IDisposable LockStrings()
+    {
+        try
+        {
+            return Files.LockStrings();
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            throw new McpException($"Can't lock strings.json: {e.Message}", e);
+        }
+    }
+
     /// <exception cref="McpException">The glossary can't be read.</exception>
     public Glossary? ReadGlossary()
     {

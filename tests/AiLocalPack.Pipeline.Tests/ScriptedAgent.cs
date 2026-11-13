@@ -29,6 +29,7 @@ internal sealed class ScriptedRun(string prompt, string copyFolder)
     public void Store(Func<string, string, string?>? translate = null)
     {
         translate ??= (_, original) => "RU " + original;
+        using var store = Files.LockStrings();
         var table = Files.ReadStrings();
         var strings = new Dictionary<string, string>(table?.Strings ?? new Dictionary<string, string>(), StringComparer.Ordinal);
         foreach (var (key, original, _) in Strings)

@@ -219,6 +219,8 @@ public sealed class ToolkitTools(ToolkitSession session)
         {
             var language = session.WriteLanguage();
             var extracted = session.Extract(cancellationToken: cancellationToken);
+            // Other chunks' agents store into the same file from their own servers at the same time.
+            using var store = session.LockStrings();
             var table = session.ReadStrings();
             var strings = new SortedDictionary<string, string>(table.Strings.ToDictionary(), StringComparer.Ordinal);
             var context = new SortedDictionary<string, string>(table.Context.ToDictionary(), StringComparer.Ordinal);

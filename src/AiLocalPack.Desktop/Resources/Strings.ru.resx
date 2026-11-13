@@ -2182,6 +2182,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>Сначала установите агента и войдите</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>Перевод</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>Чанков одновременно</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>Каждый чанк — отдельный запуск агента: больше — быстрее, но сильнее нагружает компьютер и быстрее расходует лимит агента. Применяется, когда перевод запускается или продолжается.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>параллельно потоки воркеры скорость чанки</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Свой API-ключ или локальная модель</value>
   </data>

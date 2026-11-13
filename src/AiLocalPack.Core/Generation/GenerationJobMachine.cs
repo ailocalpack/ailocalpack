@@ -6,8 +6,11 @@ public abstract record GenerationTrigger
     /// <summary>The running stage finished; <paramref name="Counters"/> replaces the job's when given (Extract sets the totals).</summary>
     public sealed record StageCompleted(GenerationCounters? Counters = null) : GenerationTrigger;
 
-    /// <summary>A Translate chunk finished, <paramref name="Translated"/> more strings translated, in <paramref name="Took"/>.</summary>
-    public sealed record ChunkCompleted(int Translated, TimeSpan Took) : GenerationTrigger;
+    /// <summary>
+    /// <paramref name="Chunks"/> Translate chunks finished (the next ones in order), <paramref name="Translated"/> more
+    /// strings translated, in <paramref name="Took"/> (wall time: chunks run side by side share it).
+    /// </summary>
+    public sealed record ChunkCompleted(int Translated, TimeSpan Took, int Chunks = 1) : GenerationTrigger;
 
     /// <summary>The agent hit the subscription limit; <paramref name="ResumeAt"/> = its reset time.</summary>
     public sealed record LimitReached(DateTimeOffset ResumeAt) : GenerationTrigger;
@@ -93,8 +96,8 @@ public static class GenerationJobMachine
         return (job.Status, trigger) switch
         {
             (GenerationJobStatus.Running, GenerationTrigger.StageCompleted) => job.Stage != GenerationStage.Done,
-            (GenerationJobStatus.Running, GenerationTrigger.ChunkCompleted) =>
-                job.Stage == GenerationStage.Translate && job.Counters.ChunksDone < job.Counters.Chunks,
+            (GenerationJobStatus.Running, GenerationTrigger.ChunkCompleted chunk) =>
+                job.Stage == GenerationStage.Translate && chunk.Chunks > 0 && job.Counters.ChunksDone + chunk.Chunks <= job.Counters.Chunks,
             (GenerationJobStatus.Running, GenerationTrigger.LimitReached or GenerationTrigger.PausedByPlayer
                 or GenerationTrigger.Interrupted or GenerationTrigger.Failed or GenerationTrigger.Cancelled) => true,
             (GenerationJobStatus.Paused or GenerationJobStatus.Interrupted, GenerationTrigger.Resumed or GenerationTrigger.Cancelled) => true,
@@ -120,7 +123,7 @@ public static class GenerationJobMachine
             {
                 Counters = job.Counters with
                 {
-                    ChunksDone = job.Counters.ChunksDone + 1,
+                    ChunksDone = job.Counters.ChunksDone + chunk.Chunks,
                     Translated = Math.Min(job.Counters.Strings, job.Counters.Translated + Math.Max(0, chunk.Translated)),
                 },
                 ChunkTime = job.ChunkTime + (chunk.Took > TimeSpan.Zero ? chunk.Took : TimeSpan.Zero),

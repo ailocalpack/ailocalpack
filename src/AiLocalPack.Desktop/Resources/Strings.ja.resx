@@ -2038,6 +2038,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>まずエージェントをインストールしてサインインしてください</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>翻訳</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>同時に翻訳するチャンク数</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>チャンクごとにエージェントを個別に実行します。多いほど速くなりますが、PC の負荷が増え、エージェントの利用上限に早く達します。翻訳の開始時または再開時に適用されます。</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>並列 ワーカー スレッド 同時 速度 チャンク parallel workers</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>独自の API キーまたはローカルモデル</value>
   </data>

@@ -2110,6 +2110,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>Installiere zuerst einen Agenten und melde dich an</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>Übersetzung</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>Gleichzeitige Abschnitte</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>Jeder Abschnitt ist ein eigener Agentenlauf: mehr geht schneller, belastet aber den Computer und verbraucht das Limit des Agenten früher. Gilt, wenn eine Übersetzung startet oder fortgesetzt wird.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>parallel worker threads gleichzeitig geschwindigkeit abschnitte</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Eigener API-Schlüssel oder lokales Modell</value>
   </data>

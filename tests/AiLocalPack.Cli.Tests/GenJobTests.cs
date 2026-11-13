@@ -250,6 +250,19 @@ public sealed class GenJobTests : IDisposable
     }
 
     [Fact]
+    public async Task Workers_out_of_the_range_are_refused()
+    {
+        // Arrange
+        var recording = Success;
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru", "--workers", "9");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--workers takes 1 to 8, not 9.\n" });
+    }
+
+    [Fact]
     public async Task An_unknown_until_stage_is_refused()
     {
         // Arrange

@@ -36,6 +36,9 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
 {
     private const int LogTextLength = 400;
 
+    // Translate chunks running side by side append to the same transcript.
+    private static readonly Lock TranscriptGate = new();
+
     public string Id => adapter.Id;
 
     public string DisplayName => adapter.DisplayName;
@@ -46,7 +49,8 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         IReadOnlyDictionary<string, string> values,
         string gameName,
         CancellationToken cancellationToken,
-        AgentWorkspace? workspace = null)
+        AgentWorkspace? workspace = null,
+        string? logTag = null)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(prompt);
@@ -58,14 +62,14 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             : PromptTemplate.SystemScripts.Render(PromptValues.SystemScripts(gameName, context.Job.Language, context.CopyFolder));
         if (await adapter.DetectAsync(cancellationToken).ConfigureAwait(false) is not { } installation)
         {
-            return Stop(context, new GenerationStepResult.Failed(
+            return Stop(context, logTag, new GenerationStepResult.Failed(
                 GenerationFailureKind.AgentMissing, $"{adapter.DisplayName} isn't installed: install it in Settings → AI agents."));
         }
 
         var auth = await adapter.GetAuthStatusAsync(installation, cancellationToken).ConfigureAwait(false);
         if (auth.State == AgentAuthState.SignedOut)
         {
-            return Stop(context, new GenerationStepResult.Failed(
+            return Stop(context, logTag, new GenerationStepResult.Failed(
                 GenerationFailureKind.SignedOut, $"{adapter.DisplayName} isn't signed in: sign in in Settings → AI agents."));
         }
 
@@ -77,7 +81,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             }
             catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {
-                return Stop(context, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's workspace {workspace.Folder} can't be made: {e.Message}"));
+                return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's workspace {workspace.Folder} can't be made: {e.Message}"));
             }
         }
 
@@ -88,7 +92,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language)],
             Model = context.Job.Options.Model,
         };
-        context.Log($"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
+        Log(context, logTag, $"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
             + (workspace is null ? "" : $", in its workspace {workspace.Folder} with file and command tools")
             + (request.Model is { } model ? $", model {model}." : "."));
         var transcript = Transcript(context);
@@ -116,7 +120,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                         PipelineProgressFile.Update(context.Files, p => p with { Limit = new AgentLimitInfo(status.Used, status.Window, status.ResetsAt) });
                     }
 
-                    Record(context, transcript, e);
+                    Record(context, logTag, transcript, e);
                 },
                 cancellationToken).ConfigureAwait(false);
             return new PipelineAgentResult(outcome.Stop, outcome.Done.Result);
@@ -131,9 +135,9 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         }
     }
 
-    private static PipelineAgentResult Stop(GenerationStepContext context, GenerationStepResult.Failed failed)
+    private static PipelineAgentResult Stop(GenerationStepContext context, string? logTag, GenerationStepResult.Failed failed)
     {
-        context.Log(failed.Message);
+        Log(context, logTag, failed.Message);
         return new PipelineAgentResult(failed, null);
     }
 
@@ -144,15 +148,22 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         return Path.Combine(logs, $"agent-{context.Job.Stage.ToString().ToLowerInvariant()}.jsonl");
     }
 
-    private static void Record(GenerationStepContext context, string transcript, AgentEvent e)
+    /// <summary>A job log line, after <c>logTag: </c> when runs go side by side (Translate chunks).</summary>
+    private static void Log(GenerationStepContext context, string? logTag, string line) =>
+        context.Log(logTag is null ? line : $"{logTag}: {line}");
+
+    private static void Record(GenerationStepContext context, string? logTag, string transcript, AgentEvent e)
     {
-        try
+        lock (TranscriptGate)
         {
-            File.AppendAllText(transcript, AgentEventJson.Write(e) + "\n");
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            // Best effort, like the job log.
+            try
+            {
+                File.AppendAllText(transcript, AgentEventJson.Write(e) + "\n");
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Best effort, like the job log.
+            }
         }
 
         var line = e switch
@@ -171,7 +182,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         };
         if (line is not null)
         {
-            context.Log(line);
+            Log(context, logTag, line);
         }
     }
 

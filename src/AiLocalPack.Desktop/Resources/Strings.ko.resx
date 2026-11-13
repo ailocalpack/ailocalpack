@@ -2038,6 +2038,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>먼저 에이전트를 설치하고 로그인하세요</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>번역</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>동시에 번역할 청크 수</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>청크마다 에이전트가 따로 실행됩니다. 많을수록 빠르지만 컴퓨터 부하가 커지고 에이전트 한도를 더 빨리 소진합니다. 번역을 시작하거나 다시 시작할 때 적용됩니다.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>병렬 워커 스레드 동시 속도 청크 parallel workers</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>개인 API 키 또는 로컬 모델</value>
   </data>

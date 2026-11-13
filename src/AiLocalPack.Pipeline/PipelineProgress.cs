@@ -106,6 +106,8 @@ public static class PipelineProgressFile
     /// <summary>Lines of the "just translated" feed.</summary>
     public const int RecentCount = 3;
 
+    private static readonly Lock Gate = new();
+
     private static readonly JsonSerializerOptions WriteOptions = new(ProgressJsonContext.Default.Options)
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -157,7 +159,15 @@ public static class PipelineProgressFile
     public static PipelineProgress Update(GenerationFiles files, Func<PipelineProgress, PipelineProgress> change)
     {
         ArgumentNullException.ThrowIfNull(change);
-        var next = change(Read(files));
+        // Translate chunks running side by side update it at once: one read, change and write at a time.
+        lock (Gate)
+        {
+            return Write(files, change(Read(files)));
+        }
+    }
+
+    private static PipelineProgress Write(GenerationFiles files, PipelineProgress next)
+    {
         var usage = next.Usage;
         var json = new ProgressFileJson(
             CurrentSchemaVersion,

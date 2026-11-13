@@ -2182,6 +2182,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>Primeiro instale um agente e faça login nele</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>Tradução</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>Blocos ao mesmo tempo</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>Cada bloco é uma execução própria do agente: mais é mais rápido, mas sobrecarrega o computador e gasta o limite do agente mais cedo. Vale quando uma tradução começa ou é retomada.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>paralelo workers threads simultâneo velocidade blocos</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Chave de API própria ou modelo local</value>
   </data>

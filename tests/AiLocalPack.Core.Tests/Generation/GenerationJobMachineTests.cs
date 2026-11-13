@@ -233,6 +233,32 @@ public sealed class GenerationJobMachineTests
     }
 
     [Fact]
+    public void Chunks_run_side_by_side_count_together()
+    {
+        // Arrange
+        var job = Job(stage: GenerationStage.Translate, counters: new GenerationCounters(200, 0, 4, 0));
+
+        // Act
+        var result = GenerationJobMachine.Apply(job, new GenerationTrigger.ChunkCompleted(150, TimeSpan.FromMinutes(2), Chunks: 3), T0.AddMinutes(2));
+
+        // Assert
+        new { result.Counters, result.ChunkTime }.Should().Be(new { Counters = new GenerationCounters(200, 150, 4, 3), ChunkTime = TimeSpan.FromMinutes(2) });
+    }
+
+    [Fact]
+    public void More_chunks_than_are_left_are_not_allowed()
+    {
+        // Arrange
+        var job = Job(stage: GenerationStage.Translate, counters: new GenerationCounters(200, 0, 4, 2));
+
+        // Act
+        var allowed = GenerationJobMachine.CanApply(job, new GenerationTrigger.ChunkCompleted(50, TimeSpan.FromMinutes(1), Chunks: 3));
+
+        // Assert
+        allowed.Should().BeFalse();
+    }
+
+    [Fact]
     public void Translated_strings_never_exceed_the_total()
     {
         // Arrange

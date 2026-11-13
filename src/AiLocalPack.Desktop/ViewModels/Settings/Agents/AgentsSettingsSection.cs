@@ -10,7 +10,7 @@ namespace AiLocalPack.Desktop.ViewModels.Settings.Agents;
 
 /// <summary>
 /// Settings → AI agents (design §8; task 44): a lead line (agents only generate; installing never needs one; they run on
-/// the player's own subscription), one <see cref="AgentRow"/> per agent, <em>Default agent</em>, and <em>Own API key or
+/// the player's own subscription), one <see cref="AgentRow"/> per agent, <em>Default agent</em>, <em>Chunks translated at once</em> (Translate stage workers), and <em>Own API key or
 /// local model</em> as coming soon. An expired session is an amber alert with <c>Sign in</c> and counts in the badge; a
 /// missing, old or never signed-in agent never does. The agents are checked when the section is created (Settings are
 /// preloaded at start-up) and again each time it is opened.
@@ -27,6 +27,15 @@ public sealed class AgentsSettingsSection : SettingsSection
         var services = new SettingRowServices(store, localizer, logger);
         Agents = [.. host.AgentIds.Select(id => new AgentRow(services, host, ui, AgentInfo.Of(id)))];
         DefaultAgent = new DefaultAgentRow(services, Agents);
+        TranslateWorkers = new NumberSettingRow(
+            services,
+            nameof(Strings.Settings_TranslateWorkers_Label),
+            nameof(Strings.Settings_TranslateWorkers_Help),
+            nameof(Strings.Settings_TranslateWorkers_Keywords),
+            AppSettings.MinTranslateWorkers,
+            AppSettings.MaxTranslateWorkers,
+            s => s.TranslateWorkerCount,
+            (s, n) => s with { TranslateWorkers = n });
         OwnKey = new ComingSoonSettingRow(
             services,
             nameof(Strings.Settings_OwnKey_Label),
@@ -36,6 +45,7 @@ public sealed class AgentsSettingsSection : SettingsSection
         [
             new SettingsGroup(services, nameof(Strings.Settings_Group_Agents), Agents),
             new SettingsGroup(services, nameof(Strings.Settings_Group_DefaultAgent), [DefaultAgent]),
+            new SettingsGroup(services, nameof(Strings.Settings_Group_Translation), [TranslateWorkers]),
             new SettingsGroup(services, nameof(Strings.Settings_Group_Later), [OwnKey]),
         ];
 
@@ -51,6 +61,9 @@ public sealed class AgentsSettingsSection : SettingsSection
     public IReadOnlyList<AgentRow> Agents { get; }
 
     public DefaultAgentRow DefaultAgent { get; }
+
+    /// <summary><em>Chunks translated at once</em> (<see cref="AppSettings.TranslateWorkers"/>).</summary>
+    public NumberSettingRow TranslateWorkers { get; }
 
     public ComingSoonSettingRow OwnKey { get; }
 

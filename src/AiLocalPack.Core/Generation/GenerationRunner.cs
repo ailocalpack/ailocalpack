@@ -13,8 +13,11 @@ public abstract record GenerationStepResult
     /// <summary>The stage is done; <paramref name="Counters"/> replaces the job's when given.</summary>
     public sealed record StageDone(GenerationCounters? Counters = null) : GenerationStepResult;
 
-    /// <summary>One Translate chunk (number <see cref="GenerationCounters.ChunksDone"/>) is done.</summary>
-    public sealed record ChunkDone(int Translated) : GenerationStepResult;
+    /// <summary>
+    /// Translate chunks are done: <paramref name="Chunks"/> of them from number <see cref="GenerationCounters.ChunksDone"/>
+    /// on (several when the stage runs chunks side by side), <paramref name="Translated"/> more strings translated.
+    /// </summary>
+    public sealed record ChunkDone(int Translated, int Chunks = 1) : GenerationStepResult;
 
     /// <summary>The agent hit its limit; <paramref name="ResetsAt"/> = when it resets, if it said.</summary>
     public sealed record LimitReached(DateTimeOffset? ResetsAt, string? Message = null) : GenerationStepResult;
@@ -42,8 +45,8 @@ public sealed class GenerationStepContext(GenerationJobEntry entry, TimeProvider
 }
 
 /// <summary>
-/// The handler of one stage (tasks 49–51). A step is the unit that is saved: a whole stage, or one chunk of Translate
-/// (the next chunk is <see cref="GenerationCounters.ChunksDone"/>, so a resumed job goes on from it). A cancelled step
+/// The handler of one stage (tasks 49–51). A step is the unit that is saved: a whole stage, or one or more chunks of
+/// Translate (the next chunk is <see cref="GenerationCounters.ChunksDone"/>, so a resumed job goes on from it). A cancelled step
 /// is run again from its start on resume, so a step must be safe to repeat.
 /// </summary>
 public interface IGenerationStage
@@ -259,7 +262,7 @@ public sealed class GenerationRunner
     private GenerationTrigger ToTrigger(GenerationJob job, GenerationStepResult result, TimeSpan took) => result switch
     {
         GenerationStepResult.StageDone done => new GenerationTrigger.StageCompleted(done.Counters),
-        GenerationStepResult.ChunkDone chunk => new GenerationTrigger.ChunkCompleted(chunk.Translated, took),
+        GenerationStepResult.ChunkDone chunk => new GenerationTrigger.ChunkCompleted(chunk.Translated, took, chunk.Chunks),
         GenerationStepResult.LimitReached limit => new GenerationTrigger.LimitReached(ResumeTime(limit.ResetsAt)),
         GenerationStepResult.Failed failed => new GenerationTrigger.Failed(failed.Kind, failed.Message),
         _ => new GenerationTrigger.Failed(GenerationFailureKind.Unexpected, $"The {job.Stage} stage returned nothing known."),

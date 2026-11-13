@@ -63,6 +63,18 @@
             </Border>
         </DataTemplate>
 
+        <DataTemplate DataType="s:NumberSettingRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <NumericUpDown Grid.Column="1" MinWidth="120" VerticalAlignment="Center"
+                                   Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Increment="1" FormatString="0"
+                                   ParsingNumberStyle="Integer" ClipValueToMinMax="True"
+                                   Value="{Binding Value}" AutomationProperties.Name="{Binding Label}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+
         <!-- Settings → AI agents -->
         <DataTemplate DataType="ag:AgentRow">
             <Border Classes="settingRow">

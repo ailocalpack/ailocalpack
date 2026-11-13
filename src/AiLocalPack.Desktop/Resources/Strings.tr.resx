@@ -2110,6 +2110,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>Önce bir ajan yükleyip giriş yapın</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>Çeviri</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>Aynı anda çevrilen parça</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>Her parça ayrı bir ajan çalıştırmasıdır: fazlası daha hızlıdır ama bilgisayarı daha çok yorar ve ajanın limitini daha erken tüketir. Bir çeviri başladığında veya devam ettiğinde uygulanır.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>paralel işçi iş parçacığı eşzamanlı hız parçalar workers</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Kendi API anahtarı veya yerel model</value>
   </data>

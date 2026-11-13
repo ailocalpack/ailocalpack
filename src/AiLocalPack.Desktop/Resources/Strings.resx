@@ -2138,6 +2138,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>Install and sign in to an agent first</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>Chunks translated at once</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>Each chunk is its own agent run: more is faster, but loads the computer and uses up the agent's limit sooner. Applies when a translation starts or resumes.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>parallel workers threads concurrency speed chunks</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Own API key or local model</value>
   </data>

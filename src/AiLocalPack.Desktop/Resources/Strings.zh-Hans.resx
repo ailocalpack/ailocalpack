@@ -2038,6 +2038,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>请先安装并登录一个智能体</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>同时翻译的分块数</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>每个分块都是一次独立的智能体运行：越多越快，但电脑负载更高，也会更快用完智能体的额度。在翻译开始或继续时生效。</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>并行 工作线程 线程 同时 速度 分块 parallel workers</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>自己的 API 密钥或本地模型</value>
   </data>

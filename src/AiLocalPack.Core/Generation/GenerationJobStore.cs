@@ -307,9 +307,20 @@ public sealed class GenerationJobStore
 /// <summary>The job's own log, <c>logs/job.log</c>: one timestamped line per event. Best effort, never throws.</summary>
 public static class GenerationJobLog
 {
+    // Translate chunks running side by side log at once; appends from two threads would collide.
+    private static readonly Lock Gate = new();
+
     public static void Append(string folder, TimeProvider time, string line)
     {
         ArgumentNullException.ThrowIfNull(time);
+        lock (Gate)
+        {
+            AppendLine(folder, time, line);
+        }
+    }
+
+    private static void AppendLine(string folder, TimeProvider time, string line)
+    {
         try
         {
             var path = GenerationJobStore.LogFile(folder);

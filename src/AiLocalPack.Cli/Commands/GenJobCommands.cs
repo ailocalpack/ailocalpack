@@ -12,6 +12,7 @@ using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Pipeline;
 using AiLocalPack.Toolkit.Engines;
@@ -22,8 +23,8 @@ namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
 /// Generation jobs (tasks 47, 49): <c>gen run &lt;game&gt; [--agent claude|codex | --fake-agent &lt;recording&gt;] [--lang]
-/// [--review-glossary] [--until &lt;stage&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
-/// [--until] [--wait]</c> goes on from the saved stage and chunk (or retries a failed stage, or approves a glossary under
+/// [--review-glossary] [--until &lt;stage&gt;] [--workers &lt;n&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
+/// [--until] [--workers] [--wait]</c> goes on from the saved stage and chunk (or retries a failed stage, or approves a glossary under
 /// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Every stage is
 /// the real one (<see cref="GenerationPipeline"/>), with the fake agent too. After each chunk the strings just translated
 /// and the agent's usage so far are printed; a completed job prints its local pack (task 51). Ctrl+C / SIGTERM leaves
@@ -54,6 +55,17 @@ internal static class GenJobCommands
         _ => (null, $"--until takes setup, extract, glossary or translate, not '{text}'."),
     };
 
+    private static Option<int?> WorkersOption() => new("--workers")
+    {
+        Description = $"Translate chunks run at once ({AppSettings.MinTranslateWorkers}–{AppSettings.MaxTranslateWorkers}; default: the app's setting, {AppSettings.DefaultTranslateWorkers} unless changed).",
+    };
+
+    /// <summary>The <c>--workers</c> value, or the reason it is wrong.</summary>
+    private static (int? Workers, string? Error) Workers(int? value) =>
+        value is null or (>= AppSettings.MinTranslateWorkers and <= AppSettings.MaxTranslateWorkers)
+            ? (value, null)
+            : (null, $"--workers takes {AppSettings.MinTranslateWorkers} to {AppSettings.MaxTranslateWorkers}, not {value}.");
+
     private static Option<bool> WaitOption() => new("--wait")
     {
         Description = "When the agent's limit pauses the job, wait for its reset time and go on.",
@@ -70,8 +82,9 @@ internal static class GenJobCommands
         var model = new Option<string?>("--model") { Description = "The agent's model (default: the agent's own)." };
         var update = new Option<bool>("--update") { Description = "Translate only the new and changed strings on top of the installed pack (its next revision, in its language)." };
         var until = UntilOption();
+        var workers = WorkersOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, update, until, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, update, until, workers, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -115,9 +128,10 @@ internal static class GenJobCommands
             }
 
             var (pauseBefore, untilError) = Until(result.GetValue(until));
-            if (untilError is not null)
+            var (chunksAtOnce, workersError) = Workers(result.GetValue(workers));
+            if ((untilError ?? workersError) is { } optionError)
             {
-                error.WriteLine(untilError);
+                error.WriteLine(optionError);
                 return 1;
             }
 
@@ -140,7 +154,7 @@ internal static class GenJobCommands
                 result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null,
                 result.GetValue(model),
                 updateBase?.Reference(installed!.Local));
-            var plan = new StagePlan(agentId, recording, pauseBefore);
+            var plan = new StagePlan(agentId, recording, pauseBefore, chunksAtOnce);
             GenerationRun run;
             try
             {
@@ -179,10 +193,11 @@ internal static class GenJobCommands
         var game = GameArgument();
         var fake = FakeAgentOption();
         var until = UntilOption();
+        var workers = WorkersOption();
         var wait = WaitOption();
         var command = new Command("resume", "Resume the game's paused or interrupted job from its stage and chunk, retry a failed stage, or approve the glossary under review.")
         {
-            game, fake, until, wait,
+            game, fake, until, workers, wait,
         };
         command.SetAction(async (result, cancellationToken) =>
         {
@@ -200,9 +215,10 @@ internal static class GenJobCommands
             }
 
             var (pauseBefore, untilError) = Until(result.GetValue(until));
-            if (untilError is not null)
+            var (chunksAtOnce, workersError) = Workers(result.GetValue(workers));
+            if ((untilError ?? workersError) is { } optionError)
             {
-                error.WriteLine(untilError);
+                error.WriteLine(optionError);
                 return 1;
             }
 
@@ -219,7 +235,7 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            var plan = new StagePlan(recording is null ? entry.Job.Agent : FakeAgentAdapter.AgentId, recording, pauseBefore);
+            var plan = new StagePlan(recording is null ? entry.Job.Agent : FakeAgentAdapter.AgentId, recording, pauseBefore, chunksAtOnce);
             GenerationRun run;
             try
             {
@@ -507,7 +523,7 @@ internal static class GenJobCommands
     }
 
     /// <summary>The agent of a run (<paramref name="Recording"/> = the fake agent's) and where it pauses.</summary>
-    private sealed record StagePlan(string AgentId, string? Recording, GenerationStage? PauseBefore);
+    private sealed record StagePlan(string AgentId, string? Recording, GenerationStage? PauseBefore, int? Workers);
 
     private sealed record JobContext(
         Game Game,
@@ -536,7 +552,8 @@ internal static class GenJobCommands
             var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, entryAssembly)
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
             var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, new GameTestRunner(new ProcessRunner(), Env.Os));
-            var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies, Build: build);
+            var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies, Build: build,
+                Translate: new TranslateOptions(Workers: plan.Workers ?? Settings.TranslateWorkerCount));
             return GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore);
         }
     }

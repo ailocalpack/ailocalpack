@@ -48,6 +48,12 @@ namespace AiLocalPack.Core.Settings;
 /// The welcome tour was shown and closed (finished, skipped or Esc): it no longer opens by itself on start (design §10);
 /// <c>?</c> in the chrome and Settings → About still show it.
 /// </param>
+/// <param name="TranslateWorkers">
+/// How many chunks the Translate stage gives the agent at once (Settings → AI agents): each is its own agent run with
+/// its own toolkit server, so more is faster but loads the PC and spends the agent's limit sooner. Read through
+/// <see cref="TranslateWorkerCount"/> (clamped to <see cref="MinTranslateWorkers"/>–<see cref="MaxTranslateWorkers"/>);
+/// a job takes the value when it starts or resumes.
+/// </param>
 public sealed record AppSettings(
     int SchemaVersion = AppSettings.CurrentSchemaVersion,
     string? UiLanguage = null,
@@ -64,9 +70,20 @@ public sealed record AppSettings(
     string? DefaultAgent = null,
     IReadOnlyList<string>? SignedInAgents = null,
     bool PublishLicenseAccepted = false,
-    bool WelcomeTourShown = false)
+    bool WelcomeTourShown = false,
+    int TranslateWorkers = AppSettings.DefaultTranslateWorkers)
 {
     public const int CurrentSchemaVersion = 1;
+
+    public const int DefaultTranslateWorkers = 2;
+
+    public const int MinTranslateWorkers = 1;
+
+    public const int MaxTranslateWorkers = 8;
+
+    /// <summary><see cref="TranslateWorkers"/> within <see cref="MinTranslateWorkers"/>–<see cref="MaxTranslateWorkers"/> (a hand-edited file may hold anything).</summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public int TranslateWorkerCount => Math.Clamp(TranslateWorkers, MinTranslateWorkers, MaxTranslateWorkers);
 
     public static AppSettings Defaults { get; } = new();
 

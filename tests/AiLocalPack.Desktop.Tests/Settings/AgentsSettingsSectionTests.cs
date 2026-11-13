@@ -26,6 +26,56 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         new(new ManagedAgent(id, version, $"/data/agents/{id}/{version}", $"/data/agents/{id}/{version}/{id}", DateTimeOffset.UnixEpoch));
 
     [Fact]
+    public void Chunks_at_once_shows_the_default_of_two()
+    {
+        // Act
+        var value = Section().TranslateWorkers.Value;
+
+        // Assert
+        value.Should().Be(2);
+    }
+
+    [Fact]
+    public void Chunks_at_once_stores_the_number_picked()
+    {
+        // Arrange
+        var row = Section().TranslateWorkers;
+
+        // Act
+        row.Value = 4;
+
+        // Assert
+        Store.Current.TranslateWorkers.Should().Be(4);
+    }
+
+    [Fact]
+    public void Chunks_at_once_beyond_the_range_stores_the_maximum()
+    {
+        // Arrange
+        var row = Section().TranslateWorkers;
+
+        // Act
+        row.Value = 20;
+
+        // Assert
+        new { Stored = Store.Current.TranslateWorkers, row.Value }.Should().Be(new { Stored = 8, Value = (decimal?)8 });
+    }
+
+    [Fact]
+    public void An_emptied_chunks_at_once_box_shows_the_stored_number_again()
+    {
+        // Arrange
+        Store.Update(s => s with { TranslateWorkers = 3 });
+        var row = Section().TranslateWorkers;
+
+        // Act
+        row.Value = null;
+
+        // Assert
+        new { Stored = Store.Current.TranslateWorkers, row.Value }.Should().Be(new { Stored = 3, Value = (decimal?)3 });
+    }
+
+    [Fact]
     public void Lists_one_row_per_agent()
     {
         // Act

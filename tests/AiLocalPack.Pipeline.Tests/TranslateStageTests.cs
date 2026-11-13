@@ -29,8 +29,8 @@ public sealed class TranslateStageTests : IDisposable
         _counters = ((GenerationStepResult.StageDone)result).Counters!;
     }
 
-    private Task<GenerationStepResult> StepAsync(ScriptedAgent agent, int chunk = 0, int translated = 0, int maxAttempts = 3) =>
-        new TranslateStage(new PipelineAgent(agent, StageHarness.Server), "Sample Quest", RecipeTools.Builtin, new TranslateOptions(maxAttempts))
+    private Task<GenerationStepResult> StepAsync(ScriptedAgent agent, int chunk = 0, int translated = 0, int maxAttempts = 3, int workers = 1) =>
+        new TranslateStage(new PipelineAgent(agent, StageHarness.Server), "Sample Quest", RecipeTools.Builtin, new TranslateOptions(maxAttempts, workers))
             .RunStepAsync(
                 _h.Context(GenerationStage.Translate, counters: _counters with { ChunksDone = chunk, Translated = translated }),
                 TestContext.Current.CancellationToken);
@@ -462,6 +462,113 @@ public sealed class TranslateStageTests : IDisposable
 
         // Assert
         result.Should().BeOfType<GenerationStepResult.Failed>().Which.Kind.Should().Be(GenerationFailureKind.Toolkit);
+    }
+
+    [Fact]
+    public async Task A_step_with_workers_translates_that_many_chunks()
+    {
+        // Arrange
+        await ExtractAsync();
+        var agent = ScriptedAgent.Translating();
+
+        // Act
+        var result = await StepAsync(agent, workers: 3);
+
+        // Assert
+        var keys = Chunks.Take(3).SelectMany(c => c.Keys).ToList();
+        new { result, Stored = Stored.Keys.ToHashSet() }.Should().BeEquivalentTo(new
+        {
+            result = (GenerationStepResult)new GenerationStepResult.ChunkDone(keys.Count, 3),
+            Stored = keys.ToHashSet(),
+        });
+    }
+
+    [Fact]
+    public async Task The_chunks_of_a_step_run_side_by_side()
+    {
+        // Arrange
+        await ExtractAsync();
+        var started = 0;
+        var allStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var agent = new ScriptedAgent(async (run, _, cancellationToken) =>
+        {
+            if (Interlocked.Increment(ref started) == 3)
+            {
+                allStarted.TrySetResult();
+            }
+
+            // Run one after another, the first would wait here in vain.
+            await allStarted.Task.WaitAsync(TimeSpan.FromSeconds(10), cancellationToken);
+            run.Store();
+            return [ScriptedAgent.Usage, ScriptedAgent.Done];
+        });
+
+        // Act
+        var result = await StepAsync(agent, workers: 3);
+
+        // Assert
+        result.Should().BeOfType<GenerationStepResult.ChunkDone>().Which.Chunks.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task The_last_step_takes_only_the_chunks_left()
+    {
+        // Arrange
+        await ExtractAsync();
+        var agent = ScriptedAgent.Translating();
+
+        // Act
+        var result = await StepAsync(agent, chunk: Chunks.Count - 1, workers: 3);
+
+        // Assert
+        new { result, Runs = agent.Runs.Count }.Should().BeEquivalentTo(new
+        {
+            result = (GenerationStepResult)new GenerationStepResult.ChunkDone(Chunks[^1].Keys.Count, 1),
+            Runs = 1,
+        });
+    }
+
+    [Fact]
+    public async Task A_chunk_stopped_by_the_limit_ends_the_step_with_the_others_stored()
+    {
+        // Arrange
+        await ExtractAsync();
+        var reset = StageHarness.T0.AddHours(2);
+        var second = Chunks[1].Keys.ToHashSet();
+        var agent = Agent((run, _) =>
+        {
+            if (run.Keys.Any(second.Contains))
+            {
+                return [new AgentLimitReached(reset, "limit"), new AgentDone(AgentOutcome.LimitReached, Message: "limit")];
+            }
+
+            run.Store();
+            return [ScriptedAgent.Usage, ScriptedAgent.Done];
+        });
+
+        // Act
+        var result = await StepAsync(agent, workers: 3);
+
+        // Assert
+        new { result, Stored = Stored.Keys.ToHashSet() }.Should().BeEquivalentTo(new
+        {
+            result = (GenerationStepResult)new GenerationStepResult.LimitReached(reset, "limit"),
+            Stored = Chunks[0].Keys.Concat(Chunks[2].Keys).ToHashSet(),
+        });
+    }
+
+    [Fact]
+    public async Task Agent_log_lines_name_their_chunk_when_chunks_run_side_by_side()
+    {
+        // Arrange
+        await ExtractAsync();
+        var agent = ScriptedAgent.Translating();
+
+        // Act
+        await StepAsync(agent, workers: 2);
+
+        // Assert
+        _h.Log.Should().Contain($"Chunk 2 of {Chunks.Count}: Agent run ended: Succeeded");
     }
 
     [Fact]

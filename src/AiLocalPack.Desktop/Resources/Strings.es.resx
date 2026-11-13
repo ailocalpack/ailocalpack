@@ -2182,6 +2182,18 @@
   <data name="Settings_DefaultAgent_None" xml:space="preserve">
     <value>Primero instala un agente e inicia sesión</value>
   </data>
+  <data name="Settings_Group_Translation" xml:space="preserve">
+    <value>Traducción</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Label" xml:space="preserve">
+    <value>Fragmentos a la vez</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Help" xml:space="preserve">
+    <value>Cada fragmento es una ejecución propia del agente: más es más rápido, pero carga el equipo y agota antes el límite del agente. Se aplica cuando una traducción empieza o se reanuda.</value>
+  </data>
+  <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
+    <value>paralelo trabajadores hilos simultáneo velocidad fragmentos</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Clave de API propia o modelo local</value>
   </data>
