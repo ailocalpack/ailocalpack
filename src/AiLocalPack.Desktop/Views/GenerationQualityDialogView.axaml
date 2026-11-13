@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:AiLocalPack.Desktop.Generation"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.GenerationQualityDialogView"
+             x:DataType="g:GenerationQualityDialogViewModel"
+             Width="820">
+    <!-- Design §6a: Compare modes, from the quality popover of the start form. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,22,24,20" Spacing="12">
+            <TextBlock x:Name="QualityCompareTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" />
+            <TextBlock x:Name="QualityCompareSubtitle" Classes="muted" FontSize="13" Text="{Binding Subtitle}" TextWrapping="Wrap" />
+            <Grid x:Name="QualityCompareTable" ColumnDefinitions="0.9*,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                <Border Grid.Row="0" Grid.Column="1" Classes="qualityCell head" Classes.on="{Binding Columns[0].IsCurrent}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{Binding Columns[0].Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" /></Viewbox>
+                        <TextBlock FontWeight="Bold" Text="{Binding Columns[0].Name}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Row="8" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}">
+                    <Panel>
+                        <Button x:Name="QualityChoose0" Classes="ghost sm" Command="{Binding Columns[0].ChooseCommand}" Content="{l:Loc Gen_Quality_Choose}"
+                                IsVisible="{Binding !Columns[0].IsCurrent}" />
+                        <TextBlock Classes="qualityChosen" Text="{l:Loc Gen_Quality_Chosen}" IsVisible="{Binding Columns[0].IsCurrent}" VerticalAlignment="Center" />
+                    </Panel>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="2" Classes="qualityCell head" Classes.on="{Binding Columns[1].IsCurrent}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{Binding Columns[1].Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" /></Viewbox>
+                        <TextBlock FontWeight="Bold" Text="{Binding Columns[1].Name}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Row="8" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}">
+                    <Panel>
+                        <Button x:Name="QualityChoose1" Classes="ghost sm" Command="{Binding Columns[1].ChooseCommand}" Content="{l:Loc Gen_Quality_Choose}"
+                                IsVisible="{Binding !Columns[1].IsCurrent}" />
+                        <TextBlock Classes="qualityChosen" Text="{l:Loc Gen_Quality_Chosen}" IsVisible="{Binding Columns[1].IsCurrent}" VerticalAlignment="Center" />
+                    </Panel>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="3" Classes="qualityCell head" Classes.on="{Binding Columns[2].IsCurrent}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{Binding Columns[2].Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" /></Viewbox>
+                        <TextBlock FontWeight="Bold" Text="{Binding Columns[2].Name}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Row="8" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}">
+                    <Panel>
+                        <Button x:Name="QualityChoose2" Classes="ghost sm" Command="{Binding Columns[2].ChooseCommand}" Content="{l:Loc Gen_Quality_Choose}"
+                                IsVisible="{Binding !Columns[2].IsCurrent}" />
+                        <TextBlock Classes="qualityChosen" Text="{l:Loc Gen_Quality_Chosen}" IsVisible="{Binding Columns[2].IsCurrent}" VerticalAlignment="Center" />
+                    </Panel>
+                </Border>
+                <TextBlock Grid.Row="1" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[0]}" />
+                <Border Grid.Row="1" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[0]}" /></Border>
+                <Border Grid.Row="1" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[0]}" /></Border>
+                <Border Grid.Row="1" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[0]}" /></Border>
+                <TextBlock Grid.Row="2" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[1]}" />
+                <Border Grid.Row="2" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[1]}" /></Border>
+                <Border Grid.Row="2" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[1]}" /></Border>
+                <Border Grid.Row="2" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[1]}" /></Border>
+                <TextBlock Grid.Row="3" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[2]}" />
+                <Border Grid.Row="3" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[2]}" /></Border>
+                <Border Grid.Row="3" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[2]}" /></Border>
+                <Border Grid.Row="3" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[2]}" /></Border>
+                <TextBlock Grid.Row="4" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[3]}" />
+                <Border Grid.Row="4" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[3]}" /></Border>
+                <Border Grid.Row="4" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[3]}" /></Border>
+                <Border Grid.Row="4" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[3]}" /></Border>
+                <TextBlock Grid.Row="5" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[4]}" />
+                <Border Grid.Row="5" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[4]}" /></Border>
+                <Border Grid.Row="5" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[4]}" /></Border>
+                <Border Grid.Row="5" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[4]}" /></Border>
+                <TextBlock Grid.Row="6" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[5]}" />
+                <Border Grid.Row="6" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[5]}" /></Border>
+                <Border Grid.Row="6" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[5]}" /></Border>
+                <Border Grid.Row="6" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[5]}" /></Border>
+                <TextBlock Grid.Row="7" Grid.Column="0" Classes="qualityRowName" Text="{Binding RowNames[6]}" />
+                <Border Grid.Row="7" Grid.Column="1" Classes="qualityCell" Classes.on="{Binding Columns[0].IsCurrent}"><TextBlock Text="{Binding Columns[0].Cells[6]}" /></Border>
+                <Border Grid.Row="7" Grid.Column="2" Classes="qualityCell" Classes.on="{Binding Columns[1].IsCurrent}"><TextBlock Text="{Binding Columns[1].Cells[6]}" /></Border>
+                <Border Grid.Row="7" Grid.Column="3" Classes="qualityCell" Classes.on="{Binding Columns[2].IsCurrent}"><TextBlock Text="{Binding Columns[2].Cells[6]}" /></Border>
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+                <Button x:Name="QualityCompareClose" Classes="ghost" Command="{Binding CloseCommand}" Content="{l:Loc Gen_Details_Close}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

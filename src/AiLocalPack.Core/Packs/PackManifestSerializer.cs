@@ -75,7 +75,7 @@ public static class PackManifestSerializer
             manifest.Revision,
             [.. manifest.Revisions.Select(r => new PackRevisionJson(r.Number, PackFormat.FormatDate(r.Date), r.By, r.Notes))],
             StatusText(manifest.Status),
-            manifest.Agent is { } agent ? new PackAgentJson(agent.Id, agent.Version, agent.Model) : null,
+            manifest.Agent is { } agent ? new PackAgentJson(agent.Id, agent.Version, agent.Model, agent.Quality) : null,
             [.. manifest.Builds.Select(b => new PackBuildJson(b.BuildId, Sorted(b.Files)))],
             manifest.Recipe is { } recipe ? new PackRecipeJson(recipe.Tool, recipe.Version, recipe.Parameters) : null,
             manifest.Strings is { } strings ? new PackStringsJson(strings.Path, strings.Sha256, strings.Size) : null,
@@ -398,7 +398,8 @@ public static class PackManifestSerializer
             var id = Slug("agent.id", agent.Id);
             var version = Text("agent.version", agent.Version, MaxVersionLength, required: false);
             var model = Text("agent.model", agent.Model, MaxModelLength, required: false);
-            return id is null ? null : new PackAgent(id, version, model);
+            var quality = agent.Quality is null ? null : Slug("agent.quality", agent.Quality);
+            return id is null ? null : new PackAgent(id, version, model, quality);
         }
 
         private List<PackBuild> Builds(IReadOnlyList<PackBuildJson?>? list, GameId? game)

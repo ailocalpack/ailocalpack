@@ -11,7 +11,7 @@ namespace AiLocalPack.Agents.Claude;
 /// 2.1.319, 2026-11-08):
 /// <c>claude -p --output-format stream-json --verbose --input-format text --restricted --disable-slash-commands
 /// --permission-mode dontAsk --permission-prompts none --strict-mcp-config [--mcp-config &lt;file&gt;] --tools &lt;list&gt;
-/// [--allowedTools &lt;rules&gt;] [--append-system-prompt-file &lt;file&gt;] [--model &lt;m&gt;] [--resume &lt;id&gt;]</c>, the prompt on
+/// [--allowedTools &lt;rules&gt;] [--append-system-prompt-file &lt;file&gt;] [--model &lt;m&gt;] [--effort &lt;e&gt;] [--resume &lt;id&gt;]</c>, the prompt on
 /// standard input.
 /// <list type="bullet">
 /// <item><c>--restricted</c> confines the built-in file tools to the working folder (the generation working copy), drops
@@ -99,6 +99,11 @@ public static partial class ClaudeCodeCommandLine
             arguments.AddRange(["--model", model]);
         }
 
+        if (request.Effort is { } effort)
+        {
+            arguments.AddRange(["--effort", effort.ToString().ToLowerInvariant()]);
+        }
+
         if (request.ResumeSessionId is { } session)
         {
             arguments.AddRange(["--resume", session]);
@@ -125,6 +130,11 @@ public static partial class ClaudeCodeCommandLine
         if (tools.Contains(AgentBuiltinTool.RunCommands))
         {
             names.Add("Bash");
+        }
+
+        if (tools.Contains(AgentBuiltinTool.WebSearch))
+        {
+            names.AddRange(["WebSearch", "WebFetch"]);
         }
 
         return names;

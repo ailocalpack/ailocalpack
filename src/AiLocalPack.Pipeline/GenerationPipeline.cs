@@ -40,6 +40,7 @@ public static class GenerationPipeline
             [
                 new SetupStage(services.Game, services.Estimator, services.Copies),
                 new ExtractStage(services.Tools, services.Budget, services.Agent, services.Game.Name),
+                new StudyStage(services.Agent, services.Game.Name),
                 new GlossaryStage(services.Agent, services.Game.Name),
                 new TranslateStage(services.Agent, services.Game.Name, services.Tools, services.Translate),
                 .. services.Build is { } build ? [new BuildStage(services.Game, services.Agent, services.Tools, build)] : Array.Empty<IGenerationStage>(),

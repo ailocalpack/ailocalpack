@@ -32,7 +32,7 @@ internal sealed record PackAuthorJson(string? Github, string? Name);
 
 internal sealed record PackRevisionJson(int? Revision, string? Date, string? By, string? Notes);
 
-internal sealed record PackAgentJson(string? Id, string? Version, string? Model);
+internal sealed record PackAgentJson(string? Id, string? Version, string? Model, string? Quality = null);
 
 internal sealed record PackBuildJson(string? BuildId, IReadOnlyDictionary<string, string?>? Files);
 

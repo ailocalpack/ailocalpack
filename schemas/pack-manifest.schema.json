@@ -62,7 +62,11 @@
       "properties": {
         "id": { "$ref": "#/$defs/slug" },
         "version": { "$ref": "#/$defs/text", "maxLength": 64 },
-        "model": { "$ref": "#/$defs/text", "maxLength": 128 }
+        "model": { "$ref": "#/$defs/text", "maxLength": 128 },
+        "quality": {
+          "description": "How carefully the agent translated: quick (a small fast model), balanced (the standard model) or thorough (the strongest model, after studying the whole game). A newer app may add values.",
+          "$ref": "#/$defs/slug"
+        }
       }
     },
     "builds": {

@@ -35,8 +35,68 @@
         <!-- Start form (§6a) -->
         <Border x:Name="StartForm" Classes="genCard" IsVisible="{Binding ShowForm}">
             <StackPanel Spacing="18">
+                <!-- Title as a sentence: "Create a [Balanced ▾] translation into [Русский ▾]" (quality modes, decided 2026-11-13) -->
+                <StackPanel Spacing="4">
                 <WrapPanel ItemSpacing="10" LineSpacing="6">
-                    <TextBlock x:Name="GenFormTitle" Classes="genTitle" Text="{Binding FormTitle}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="GenFormTitle" Classes="genTitle" Text="{Binding FormTitle}" VerticalAlignment="Center" IsVisible="{Binding HasFormTitle}" />
+                    <Button x:Name="GenQualityButton" Classes="qualityPicker" ToolTip.Tip="{l:Loc Gen_Quality_Button_Tip}"
+                            AutomationProperties.Name="{l:Loc Gen_Quality_Button_Tip}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="16" Height="16">
+                                <Path Classes="icon qualityIcon" Data="{Binding QualityIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                            </Viewbox>
+                            <TextBlock x:Name="GenQualityName" FontWeight="Bold" Text="{Binding QualityName}" VerticalAlignment="Center" />
+                            <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconChevronDown}" /></Viewbox>
+                        </StackPanel>
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedLeft">
+                                <StackPanel Width="440" Spacing="2">
+                                    <ItemsControl x:Name="GenQualityList" ItemsSource="{Binding QualityOptions}" AutomationProperties.Name="{l:Loc Gen_Quality_Button_Tip}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:GenerationQualityOption">
+                                                <Button Classes="qualityItem" Classes.on="{Binding IsSelected}" Command="{Binding SelectCommand}"
+                                                        Click="OnQualityPicked" AutomationProperties.Name="{Binding Name}">
+                                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                                        <Border Classes="qualityItemIcon" VerticalAlignment="Top">
+                                                            <Viewbox Classes="icon" Width="16" Height="16">
+                                                                <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                            </Viewbox>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" Spacing="2">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <TextBlock FontWeight="Bold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                                <Border Classes="qualityDefault" IsVisible="{Binding IsDefault}">
+                                                                    <TextBlock Text="{l:Loc Gen_Quality_Default}" />
+                                                                </Border>
+                                                            </StackPanel>
+                                                            <TextBlock Classes="muted" FontSize="12" Text="{Binding Blurb}" TextWrapping="Wrap" />
+                                                            <TextBlock Classes="faint" FontSize="12" Text="{Binding Model}" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="2" Spacing="6" HorizontalAlignment="Right">
+                                                            <TextBlock Classes="faint" FontSize="12" Text="{Binding Time}" HorizontalAlignment="Right" />
+                                                            <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Right">
+                                                                <Border Classes="qualityBar on" />
+                                                                <Border Classes="qualityBar" Classes.on="{Binding HasSecondBar}" />
+                                                                <Border Classes="qualityBar" Classes.on="{Binding HasThirdBar}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Border Classes="qualityFoot">
+                                        <DockPanel>
+                                            <Button x:Name="GenQualityCompare" DockPanel.Dock="Right" Classes="link" Command="{Binding CompareQualitiesCommand}"
+                                                    Click="OnQualityPicked" Content="{l:Loc Gen_Quality_Compare}" VerticalAlignment="Center" />
+                                            <TextBlock Classes="faint" FontSize="12" Text="{l:Loc Gen_Quality_Footer}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                        </DockPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <TextBlock x:Name="GenFormTitleAfter" Classes="genTitle" Text="{Binding FormTitleAfter}" VerticalAlignment="Center" IsVisible="{Binding HasFormTitleAfter}" />
                     <Button x:Name="GenLanguageButton" Classes="langPicker" ToolTip.Tip="{l:Loc Gen_Language_Tip}" IsEnabled="{Binding CanPickLanguage}"
                             AutomationProperties.Name="{l:Loc Gen_Language_Tip}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
@@ -73,6 +133,24 @@
                         </Button.Flyout>
                     </Button>
                 </WrapPanel>
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Viewbox Classes="icon" Width="13" Height="13"><Path Classes="icon" Data="{StaticResource IconBot}" Stroke="{DynamicResource AppFaintBrush}" /></Viewbox>
+                    <TextBlock x:Name="GenQualityModel" Classes="muted" FontSize="12" Text="{Binding QualityModelLine}" VerticalAlignment="Center" />
+                </StackPanel>
+                </StackPanel>
+
+                <!-- Thorough only: web lookup while studying the game -->
+                <Border x:Name="GenWebLookup" Classes="genBanner" IsVisible="{Binding ShowWebLookup}">
+                    <CheckBox IsChecked="{Binding WebLookup}" VerticalAlignment="Top" AutomationProperties.Name="{l:Loc Gen_Quality_Web}">
+                        <StackPanel Spacing="3">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon bannerIcon" Data="{StaticResource IconGlobe}" /></Viewbox>
+                                <TextBlock FontWeight="SemiBold" Text="{l:Loc Gen_Quality_Web}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Quality_Web_Detail}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </CheckBox>
+                </Border>
 
                 <!-- Update mode (task 56): the base pack and what the game update changed -->
                 <Border x:Name="GenUpdateBanner" Classes="genBanner" IsVisible="{Binding IsUpdateMode}">
@@ -571,7 +649,17 @@
                     <StackPanel Orientation="Horizontal" Spacing="16">
                         <TextBlock x:Name="ProgressPercent" Classes="genPercent" Text="{Binding PercentText}" VerticalAlignment="Bottom" />
                         <StackPanel Spacing="2" VerticalAlignment="Bottom" Margin="0,0,0,6">
-                            <TextBlock x:Name="ProgressTitle" FontWeight="Bold" Text="{Binding ProgressTitle}" />
+                            <WrapPanel ItemSpacing="10" LineSpacing="4">
+                                <TextBlock x:Name="ProgressTitle" FontWeight="Bold" Text="{Binding ProgressTitle}" VerticalAlignment="Center" />
+                                <Border x:Name="ProgressQuality" Classes="qualityChip">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <Viewbox Classes="icon" Width="12" Height="12">
+                                            <Path Classes="icon" Data="{Binding QualityChipIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding QualityChip}" />
+                                    </StackPanel>
+                                </Border>
+                            </WrapPanel>
                             <TextBlock x:Name="ProgressDetail" Classes="muted" FontSize="13" Text="{Binding ProgressDetail}" TextWrapping="Wrap" />
                         </StackPanel>
                     </StackPanel>

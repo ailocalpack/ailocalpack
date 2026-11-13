@@ -2233,9 +2233,6 @@
   <data name="Gen_Steps_Label" xml:space="preserve">
     <value>Етапи створення</value>
   </data>
-  <data name="Gen_Title" xml:space="preserve">
-    <value>Створити переклад</value>
-  </data>
   <data name="Gen_Language_Into" xml:space="preserve">
     <value>Мова</value>
   </data>
@@ -3111,9 +3108,6 @@
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>Ваш переклад · {0}</value>
-  </data>
-  <data name="Gen_Update_Title" xml:space="preserve">
-    <value>Перекласти нові рядки мовою</value>
   </data>
   <data name="Gen_Update_Banner" xml:space="preserve">
     <value>На основі встановленого «{0}» ред. {1}: його переклади залишаються, агентові передаються лише нові й змінені рядки.</value>
@@ -4128,5 +4122,149 @@
   </data>
   <data name="Welcome_Ill_Greeting" xml:space="preserve">
     <value>Вітаю, мандрівнику!</value>
+  </data>
+  <data name="Gen_Title_Before" xml:space="preserve">
+    <value>Створити переклад у режимі</value>
+  </data>
+  <data name="Gen_Title_After" xml:space="preserve">
+    <value>на</value>
+  </data>
+  <data name="Gen_Update_Title_Before" xml:space="preserve">
+    <value>Перекласти нові рядки в режимі</value>
+  </data>
+  <data name="Gen_Update_Title_After" xml:space="preserve">
+    <value>на</value>
+  </data>
+  <data name="Gen_Quality_Button_Tip" xml:space="preserve">
+    <value>Наскільки ретельно перекладати</value>
+  </data>
+  <data name="Gen_Quality_Quick" xml:space="preserve">
+    <value>Швидкий</value>
+  </data>
+  <data name="Gen_Quality_Balanced" xml:space="preserve">
+    <value>Баланс</value>
+  </data>
+  <data name="Gen_Quality_Thorough" xml:space="preserve">
+    <value>Ретельний</value>
+  </data>
+  <data name="Gen_Quality_Quick_Blurb" xml:space="preserve">
+    <value>Швидко й дешево: невелика модель перекладає шматок за шматком.</value>
+  </data>
+  <data name="Gen_Quality_Balanced_Blurb" xml:space="preserve">
+    <value>Звичайна модель із глосарієм. Підходить більшості ігор.</value>
+  </data>
+  <data name="Gen_Quality_Thorough_Blurb" xml:space="preserve">
+    <value>Найсильніша модель спершу вивчає всю гру, потім перекладає.</value>
+  </data>
+  <data name="Gen_Quality_Default" xml:space="preserve">
+    <value>типово</value>
+  </data>
+  <data name="Gen_Quality_Footer" xml:space="preserve">
+    <value>Лише для цієї гри; наступного разу знову Баланс.</value>
+  </data>
+  <data name="Gen_Quality_Compare" xml:space="preserve">
+    <value>Порівняти режими</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortLow" xml:space="preserve">
+    <value>типова модель, низькі зусилля</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortMedium" xml:space="preserve">
+    <value>типова модель, середні зусилля</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortHigh" xml:space="preserve">
+    <value>типова модель, високі зусилля</value>
+  </data>
+  <data name="Gen_Quality_Model_Default" xml:space="preserve">
+    <value>типова модель агента</value>
+  </data>
+  <data name="Gen_Quality_ModelLine" xml:space="preserve">
+    <value>Перекладає {0}</value>
+  </data>
+  <data name="Gen_Quality_ModelLine_Study" xml:space="preserve">
+    <value>Вивчає гру й перекладає {0}</value>
+  </data>
+  <data name="Gen_Quality_Web" xml:space="preserve">
+    <value>Дозволити агентові пошукати про гру в мережі</value>
+  </data>
+  <data name="Gen_Quality_Web_Detail" xml:space="preserve">
+    <value>Лише поки вивчає гру: вікі, сторінка в магазині, офіційні переклади іншими мовами. З вашого комп’ютера нічого не надсилається; переклад іде без мережі.</value>
+  </data>
+  <data name="Gen_Quality_Compare_Title" xml:space="preserve">
+    <value>Порівняння режимів перекладу</value>
+  </data>
+  <data name="Gen_Quality_Compare_Subtitle" xml:space="preserve">
+    <value>Для «{0}», рядків: {1}, з {2}.</value>
+  </data>
+  <data name="Gen_Quality_Compare_SubtitleNoSize" xml:space="preserve">
+    <value>Для «{0}» з {1}.</value>
+  </data>
+  <data name="Gen_Quality_Row_Model" xml:space="preserve">
+    <value>Перекладає</value>
+  </data>
+  <data name="Gen_Quality_Row_Study" xml:space="preserve">
+    <value>Спершу вивчає гру</value>
+  </data>
+  <data name="Gen_Quality_Row_Web" xml:space="preserve">
+    <value>Пошук у мережі</value>
+  </data>
+  <data name="Gen_Quality_Row_Chunk" xml:space="preserve">
+    <value>Кожен шматок отримує</value>
+  </data>
+  <data name="Gen_Quality_Row_Time" xml:space="preserve">
+    <value>Час агента</value>
+  </data>
+  <data name="Gen_Quality_Row_Limits" xml:space="preserve">
+    <value>Підписка</value>
+  </data>
+  <data name="Gen_Quality_Row_BestFor" xml:space="preserve">
+    <value>Найкраще для</value>
+  </data>
+  <data name="Gen_Quality_Cell_No" xml:space="preserve">
+    <value>Ні</value>
+  </data>
+  <data name="Gen_Quality_Cell_StudyYes" xml:space="preserve">
+    <value>Так: читає всі рядки й пише бриф гри</value>
+  </data>
+  <data name="Gen_Quality_Cell_WebYes" xml:space="preserve">
+    <value>За бажанням, лише під час вивчення</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkGlossary" xml:space="preserve">
+    <value>Глосарій</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkBrief" xml:space="preserve">
+    <value>Бриф гри та глосарій</value>
+  </data>
+  <data name="Gen_Quality_Cell_Limits" xml:space="preserve">
+    <value>{0} дн. лімітів</value>
+  </data>
+  <data name="Gen_Quality_Quick_BestFor" xml:space="preserve">
+    <value>Спробувати гру сьогодні; меню й короткі тексти</value>
+  </data>
+  <data name="Gen_Quality_Balanced_BestFor" xml:space="preserve">
+    <value>Більшість ігор</value>
+  </data>
+  <data name="Gen_Quality_Thorough_BestFor" xml:space="preserve">
+    <value>Сюжетні ігри, гра слів, багато персонажів</value>
+  </data>
+  <data name="Gen_Quality_Choose" xml:space="preserve">
+    <value>Обрати</value>
+  </data>
+  <data name="Gen_Quality_Chosen" xml:space="preserve">
+    <value>Обрано</value>
+  </data>
+  <data name="Gen_Step_Study" xml:space="preserve">
+    <value>Вивчення</value>
+  </data>
+  <data name="Gen_Stage_Study" xml:space="preserve">
+    <value>Вивчення гри</value>
+  </data>
+  <data name="Gen_Progress_Sub_Study" xml:space="preserve">
+    <value>Читає всі рядки, щоб написати бриф гри</value>
+  </data>
+  <data name="Gen_Progress_Sub_StudyWeb" xml:space="preserve">
+    <value>Читає всі рядки й мережу, щоб написати бриф гри</value>
+  </data>
+  <data name="Gen_Result_PackLineQuality" xml:space="preserve">
+    <value>«{0}» · {1} · {2}</value>
   </data>
 </root>

@@ -14,10 +14,32 @@ public sealed record GenerationProgress(int Percent, int? StageDone, int? StageT
     {
         [GenerationStage.Setup] = 0.05,
         [GenerationStage.Extract] = 0.05,
+        [GenerationStage.Study] = 0,
         [GenerationStage.Glossary] = 0.10,
         [GenerationStage.Translate] = 0.70,
         [GenerationStage.Build] = 0.10,
     };
+
+    /// <summary>
+    /// The weights of a <see cref="GenerationQuality.Thorough"/> job, whose Study stage reads the whole game with the
+    /// strongest model (a guess to tune with real jobs).
+    /// </summary>
+    public static readonly IReadOnlyDictionary<GenerationStage, double> StudyWeights = new Dictionary<GenerationStage, double>
+    {
+        [GenerationStage.Setup] = 0.04,
+        [GenerationStage.Extract] = 0.04,
+        [GenerationStage.Study] = 0.12,
+        [GenerationStage.Glossary] = 0.08,
+        [GenerationStage.Translate] = 0.64,
+        [GenerationStage.Build] = 0.08,
+    };
+
+    /// <summary>The weights for this job.</summary>
+    public static IReadOnlyDictionary<GenerationStage, double> WeightsOf(GenerationJob job)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        return job.Options.Studies ? StudyWeights : Weights;
+    }
 
     /// <summary>What Build is reckoned to take in the ETA once chunks are measured (a rebuild and a short test run).</summary>
     public static readonly TimeSpan BuildAllowance = TimeSpan.FromMinutes(5);
@@ -40,7 +62,8 @@ public sealed record GenerationProgress(int Percent, int? StageDone, int? StageT
         var stageShare = job.Stage == GenerationStage.Translate && counters.Chunks > 0
             ? Math.Clamp((double)counters.ChunksDone / counters.Chunks, 0, 1)
             : 0;
-        var fraction = Weights.Where(w => w.Key < job.Stage).Sum(w => w.Value) + Weights[job.Stage] * stageShare;
+        var weights = WeightsOf(job);
+        var fraction = weights.Where(w => w.Key < job.Stage).Sum(w => w.Value) + weights[job.Stage] * stageShare;
         var percent = Math.Min(99, (int)Math.Floor(fraction * 100 + 1e-9));
         var (done, total) = job.Stage == GenerationStage.Translate && counters.Chunks > 0
             ? (counters.ChunksDone, counters.Chunks)

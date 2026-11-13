@@ -81,7 +81,7 @@ internal sealed class FakeGenerationStages : IGenerationStagesFactory
         }
 
         Jobs.Add(entry.Job);
-        return new GenerationStages(GenerationSteps.Stages.Select(stage => (IGenerationStage)new HeldStage(stage, Hold, Results)));
+        return new GenerationStages(GenerationSteps.StudyStages.Select(stage => (IGenerationStage)new HeldStage(stage, Hold, Results)));
     }
 
     private sealed class HeldStage(GenerationStage stage, bool hold, Func<GenerationStage, GenerationStepResult?>? results) : IGenerationStage

@@ -78,7 +78,10 @@ public sealed record PackAuthor(string GitHub, string? Name = null)
 public sealed record PackRevision(int Number, DateTimeOffset Date, string By, string? Notes = null);
 
 /// <param name="Id">Agent ID (<c>claude-code</c>, <c>codex</c>…).</param>
-public sealed record PackAgent(string Id, string? Version = null, string? Model = null);
+/// <param name="Quality">How carefully it translated (<c>quick</c>, <c>balanced</c>, <c>thorough</c>; the app's
+/// <c>GenerationQuality</c>); <c>null</c> for packs from before the quality modes. Kept as text: a value from a newer app
+/// reads as is.</param>
+public sealed record PackAgent(string Id, string? Version = null, string? Model = null, string? Quality = null);
 
 /// <summary>A game build the pack supports.</summary>
 /// <param name="BuildId">Store build ID (Steam games); <c>null</c> for a manually added game.</param>

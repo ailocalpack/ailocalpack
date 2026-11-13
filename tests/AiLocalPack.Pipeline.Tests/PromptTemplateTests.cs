@@ -84,6 +84,45 @@ public sealed class PromptTemplateTests
     }
 
     [Fact]
+    public void The_study_prompt_with_web_lookup_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.Study("Sample Quest", "ru", new EngineKind(GameEngine.RpgMaker, "mz"), 1_234, 12, webLookup: true);
+
+        // Act
+        var prompt = PromptTemplate.Study.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("study.v1.ru.txt", prompt));
+    }
+
+    [Fact]
+    public void The_study_prompt_without_web_lookup_says_so()
+    {
+        // Arrange
+        var values = PromptValues.Study("Sample Quest", "ru", new EngineKind(GameEngine.RpgMaker, "mz"), 1_234, 12, webLookup: false);
+
+        // Act
+        var prompt = PromptTemplate.Study.Render(values);
+
+        // Assert
+        prompt.Should().Contain("2. You have no web access: work from the strings alone.");
+    }
+
+    [Fact]
+    public void The_brief_system_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.SystemBrief("## Setting\nA flooded megacity.");
+
+        // Act
+        var prompt = PromptTemplate.SystemBrief.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-brief.v1.txt", prompt));
+    }
+
+    [Fact]
     public void The_system_prompt_matches_its_snapshot()
     {
         // Arrange

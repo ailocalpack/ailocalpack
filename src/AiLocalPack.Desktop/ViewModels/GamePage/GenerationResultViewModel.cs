@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Generation;
@@ -71,7 +72,14 @@ public sealed partial class GenerationResultViewModel : ObservableObject
     public string Subtitle => _localizer.Format(nameof(Strings.Gen_Result_Saved), AddGameText.FormatSize(_localizer, Pack.Report.SizeBytes));
 
     /// <summary>"«Claude Code translation» into Русский".</summary>
-    public string PackLine => _localizer.Format(nameof(Strings.Gen_Result_PackLine), Pack.Manifest.Title, LanguageNames.Native(Pack.Manifest.Language));
+    public string PackLine => Quality is { } quality
+        ? _localizer.Format(nameof(Strings.Gen_Result_PackLineQuality), Pack.Manifest.Title, LanguageNames.Native(Pack.Manifest.Language), GenerationQualityTexts.Name(quality, _localizer))
+        : _localizer.Format(nameof(Strings.Gen_Result_PackLine), Pack.Manifest.Title, LanguageNames.Native(Pack.Manifest.Language));
+
+    /// <summary>The quality the pack was made at (the manifest's <c>agent.quality</c>), when the app knows it.</summary>
+    private GenerationQuality? Quality => Pack.Manifest.Agent?.Quality is { } text && Enum.TryParse<GenerationQuality>(text, ignoreCase: true, out var q) && Enum.IsDefined(q)
+        ? q
+        : null;
 
     /// <summary>"Revision 4, an update of rev 3 · New: 12 · Changed: 3 · Removed: 2" for an update job's pack (task 56).</summary>
     public string UpdateLine => Pack.Report.Update is { } u

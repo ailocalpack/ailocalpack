@@ -186,7 +186,7 @@ public static class GenerationJobMachine
             counters = counters with { ChunksDone = counters.Chunks };
         }
 
-        var next = job with { Counters = counters, Stage = job.Stage + 1 };
+        var next = job with { Counters = counters, Stage = GenerationStages.After(job.Stage, job.Options) };
         if (next.Stage == GenerationStage.Done)
         {
             return Stop(next, now, GenerationJobStatus.Completed);

@@ -11,6 +11,12 @@ public enum GenerationStage
     /// <summary>The strings, through the toolkit or the agent (task 49).</summary>
     Extract,
 
+    /// <summary>
+    /// <see cref="GenerationQuality.Thorough"/> only: the strongest model reads every string (and, when allowed, the web)
+    /// and writes the game brief that the glossary and every chunk get. Skipped by the other qualities.
+    /// </summary>
+    Study,
+
     /// <summary>The glossary: names, terms, tone (task 49); may wait for the player's review.</summary>
     Glossary,
 
@@ -100,14 +106,42 @@ public sealed record GenerationCounters(int Strings = 0, int Translated = 0, int
     public static readonly GenerationCounters Zero = new();
 }
 
+/// <summary>
+/// How carefully the agent translates (chosen on the start form per job, <see cref="Balanced"/> by default). Extraction is
+/// the same for all; the model of the later stages differs (<c>AgentModels</c> in Agents), and
+/// <see cref="Thorough"/> adds the <see cref="GenerationStage.Study"/> stage.
+/// </summary>
+public enum GenerationQuality
+{
+    /// <summary>A small, fast model translates chunk by chunk with the glossary.</summary>
+    Quick,
+
+    /// <summary>The agent's standard model (the default).</summary>
+    Balanced,
+
+    /// <summary>The strongest model studies the whole game first and translates with the game brief.</summary>
+    Thorough,
+}
+
 /// <summary>What the player chose on the start form.</summary>
 /// <param name="ReviewGlossary">Wait for the player after the glossary (task 54).</param>
 /// <param name="Scope">Which game files the working copy holds; <c>null</c> = the default for the engine.</param>
 /// <param name="Model">The agent's model, when the player picked one.</param>
 /// <param name="Base">An update job's base pack (task 56): only the strings it lacks or that changed are translated, and the result is its next revision.</param>
-public sealed record GenerationOptions(bool ReviewGlossary = false, WorkingCopyScope? Scope = null, string? Model = null, GenerationBase? Base = null)
+/// <param name="Quality">How carefully to translate; picks the model of the stages after Extract unless <paramref name="Model"/> is given.</param>
+/// <param name="WebLookup"><see cref="GenerationQuality.Thorough"/> only: the Study stage may search the web about the game.</param>
+public sealed record GenerationOptions(
+    bool ReviewGlossary = false,
+    WorkingCopyScope? Scope = null,
+    string? Model = null,
+    GenerationBase? Base = null,
+    GenerationQuality Quality = GenerationQuality.Balanced,
+    bool WebLookup = false)
 {
     public static readonly GenerationOptions Default = new();
+
+    /// <summary>The job runs the <see cref="GenerationStage.Study"/> stage.</summary>
+    public bool Studies => Quality == GenerationQuality.Thorough;
 }
 
 /// <summary>

@@ -2161,9 +2161,6 @@
   <data name="Gen_Steps_Label" xml:space="preserve">
     <value>Oluşturma adımları</value>
   </data>
-  <data name="Gen_Title" xml:space="preserve">
-    <value>Şu dile çeviri oluştur</value>
-  </data>
   <data name="Gen_Language_Into" xml:space="preserve">
     <value>Hedef dil</value>
   </data>
@@ -3015,9 +3012,6 @@
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>Çeviriniz · {0}</value>
-  </data>
-  <data name="Gen_Update_Title" xml:space="preserve">
-    <value>Yeni satırları şu dile çevir</value>
   </data>
   <data name="Gen_Update_Banner" xml:space="preserve">
     <value>Yüklü “{0}” rev. {1} temel alınır: çevirileri korunur, ajana yalnızca yeni ve değişen satırlar gider.</value>
@@ -4026,5 +4020,149 @@
   </data>
   <data name="Welcome_Ill_Greeting" xml:space="preserve">
     <value>Merhaba, yolcu!</value>
+  </data>
+  <data name="Gen_Title_Before" xml:space="preserve">
+    <value>Çeviri modu:</value>
+  </data>
+  <data name="Gen_Title_After" xml:space="preserve">
+    <value>· dil:</value>
+  </data>
+  <data name="Gen_Update_Title_Before" xml:space="preserve">
+    <value>Yeni metinlerin çeviri modu:</value>
+  </data>
+  <data name="Gen_Update_Title_After" xml:space="preserve">
+    <value>· dil:</value>
+  </data>
+  <data name="Gen_Quality_Button_Tip" xml:space="preserve">
+    <value>Ne kadar özenli çevrilecek</value>
+  </data>
+  <data name="Gen_Quality_Quick" xml:space="preserve">
+    <value>Hızlı</value>
+  </data>
+  <data name="Gen_Quality_Balanced" xml:space="preserve">
+    <value>Dengeli</value>
+  </data>
+  <data name="Gen_Quality_Thorough" xml:space="preserve">
+    <value>Titiz</value>
+  </data>
+  <data name="Gen_Quality_Quick_Blurb" xml:space="preserve">
+    <value>Hızlı ve ucuz: küçük bir model parça parça çevirir.</value>
+  </data>
+  <data name="Gen_Quality_Balanced_Blurb" xml:space="preserve">
+    <value>Sözlükle birlikte standart model. Çoğu oyun için uygun.</value>
+  </data>
+  <data name="Gen_Quality_Thorough_Blurb" xml:space="preserve">
+    <value>En güçlü model önce oyunun tamamını inceler, sonra çevirir.</value>
+  </data>
+  <data name="Gen_Quality_Default" xml:space="preserve">
+    <value>varsayılan</value>
+  </data>
+  <data name="Gen_Quality_Footer" xml:space="preserve">
+    <value>Yalnızca bu oyun için; bir dahaki sefere yine Dengeli.</value>
+  </data>
+  <data name="Gen_Quality_Compare" xml:space="preserve">
+    <value>Modları karşılaştır</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortLow" xml:space="preserve">
+    <value>varsayılan model, düşük çaba</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortMedium" xml:space="preserve">
+    <value>varsayılan model, orta çaba</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortHigh" xml:space="preserve">
+    <value>varsayılan model, yüksek çaba</value>
+  </data>
+  <data name="Gen_Quality_Model_Default" xml:space="preserve">
+    <value>ajanın varsayılan modeli</value>
+  </data>
+  <data name="Gen_Quality_ModelLine" xml:space="preserve">
+    <value>{0} ile çevirir</value>
+  </data>
+  <data name="Gen_Quality_ModelLine_Study" xml:space="preserve">
+    <value>{0} ile oyunu inceler ve çevirir</value>
+  </data>
+  <data name="Gen_Quality_Web" xml:space="preserve">
+    <value>Ajanın oyunu web’de araştırmasına izin ver</value>
+  </data>
+  <data name="Gen_Quality_Web_Detail" xml:space="preserve">
+    <value>Yalnızca oyunu incelerken: vikiler, mağaza sayfası, diğer dillere resmî çeviriler. Bilgisayarından hiçbir şey gönderilmez; çeviri çevrimdışı kalır.</value>
+  </data>
+  <data name="Gen_Quality_Compare_Title" xml:space="preserve">
+    <value>Çeviri modlarını karşılaştır</value>
+  </data>
+  <data name="Gen_Quality_Compare_Subtitle" xml:space="preserve">
+    <value>“{0}”, {1} metin, {2} ile.</value>
+  </data>
+  <data name="Gen_Quality_Compare_SubtitleNoSize" xml:space="preserve">
+    <value>“{0}”, {1} ile.</value>
+  </data>
+  <data name="Gen_Quality_Row_Model" xml:space="preserve">
+    <value>Çeviren</value>
+  </data>
+  <data name="Gen_Quality_Row_Study" xml:space="preserve">
+    <value>Önce oyunu inceler</value>
+  </data>
+  <data name="Gen_Quality_Row_Web" xml:space="preserve">
+    <value>Web araması</value>
+  </data>
+  <data name="Gen_Quality_Row_Chunk" xml:space="preserve">
+    <value>Her parça şunu alır</value>
+  </data>
+  <data name="Gen_Quality_Row_Time" xml:space="preserve">
+    <value>Ajan süresi</value>
+  </data>
+  <data name="Gen_Quality_Row_Limits" xml:space="preserve">
+    <value>Abonelik</value>
+  </data>
+  <data name="Gen_Quality_Row_BestFor" xml:space="preserve">
+    <value>En uygun</value>
+  </data>
+  <data name="Gen_Quality_Cell_No" xml:space="preserve">
+    <value>Hayır</value>
+  </data>
+  <data name="Gen_Quality_Cell_StudyYes" xml:space="preserve">
+    <value>Evet: her metni okur ve oyun özeti yazar</value>
+  </data>
+  <data name="Gen_Quality_Cell_WebYes" xml:space="preserve">
+    <value>İsteğe bağlı, yalnızca incelerken</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkGlossary" xml:space="preserve">
+    <value>Sözlük</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkBrief" xml:space="preserve">
+    <value>Oyun özeti ve sözlük</value>
+  </data>
+  <data name="Gen_Quality_Cell_Limits" xml:space="preserve">
+    <value>{0} günlük limit</value>
+  </data>
+  <data name="Gen_Quality_Quick_BestFor" xml:space="preserve">
+    <value>Oyunu bu akşam denemek; menüler ve kısa metinler</value>
+  </data>
+  <data name="Gen_Quality_Balanced_BestFor" xml:space="preserve">
+    <value>Çoğu oyun</value>
+  </data>
+  <data name="Gen_Quality_Thorough_BestFor" xml:space="preserve">
+    <value>Hikâye ağırlıklı oyunlar, kelime oyunları, çok karakter</value>
+  </data>
+  <data name="Gen_Quality_Choose" xml:space="preserve">
+    <value>Seç</value>
+  </data>
+  <data name="Gen_Quality_Chosen" xml:space="preserve">
+    <value>Seçili</value>
+  </data>
+  <data name="Gen_Step_Study" xml:space="preserve">
+    <value>İnceleme</value>
+  </data>
+  <data name="Gen_Stage_Study" xml:space="preserve">
+    <value>Oyun inceleniyor</value>
+  </data>
+  <data name="Gen_Progress_Sub_Study" xml:space="preserve">
+    <value>Oyun özeti için her metni okuyor</value>
+  </data>
+  <data name="Gen_Progress_Sub_StudyWeb" xml:space="preserve">
+    <value>Oyun özeti için her metni ve web’i okuyor</value>
+  </data>
+  <data name="Gen_Result_PackLineQuality" xml:space="preserve">
+    <value>“{0}” · {1} · {2}</value>
   </data>
 </root>

@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Toolkit.Engines;
@@ -175,6 +176,19 @@ public sealed class LocalPackBuilderTests
 
         // Assert
         manifest.Agent.Should().Be(new PackAgent("codex", "0.40.0", "gpt-5.5"));
+    }
+
+    [Fact]
+    public void The_jobs_quality_goes_into_the_manifests_agent()
+    {
+        // Arrange
+        var input = Input() with { Quality = GenerationQuality.Thorough };
+
+        // Act
+        var manifest = LocalPackBuilder.Manifest(input);
+
+        // Assert
+        manifest.Agent!.Quality.Should().Be("thorough");
     }
 
     [Fact]

@@ -44,6 +44,7 @@ public static class GenerationTexts
         {
             GenerationStage.Setup => nameof(Strings.Gen_Step_Setup),
             GenerationStage.Extract => nameof(Strings.Gen_Step_Extract),
+            GenerationStage.Study => nameof(Strings.Gen_Step_Study),
             GenerationStage.Glossary => nameof(Strings.Gen_Step_Glossary),
             GenerationStage.Translate => nameof(Strings.Gen_Step_Translate),
             _ => nameof(Strings.Gen_Step_Build),
@@ -58,6 +59,7 @@ public static class GenerationTexts
         {
             GenerationStage.Setup => nameof(Strings.Gen_Stage_Setup),
             GenerationStage.Extract => nameof(Strings.Gen_Stage_Extract),
+            GenerationStage.Study => nameof(Strings.Gen_Stage_Study),
             GenerationStage.Glossary => nameof(Strings.Gen_Stage_Glossary),
             GenerationStage.Translate => nameof(Strings.Gen_Stage_Translate),
             _ => nameof(Strings.Gen_Stage_Build),

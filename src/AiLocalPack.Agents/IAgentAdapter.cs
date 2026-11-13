@@ -76,6 +76,20 @@ public enum AgentBuiltinTool
     ReadFiles,
     EditFiles,
     RunCommands,
+
+    /// <summary>
+    /// Searching the web and reading web pages (the Study stage of a Thorough job): Claude Code's WebSearch and WebFetch,
+    /// Codex's live web search. Never on by default; nothing of the player's machine is sent but the agent's queries.
+    /// </summary>
+    WebSearch,
+}
+
+/// <summary>How hard the model reasons (Claude Code's <c>--effort</c>, Codex's <c>model_reasoning_effort</c>).</summary>
+public enum AgentEffort
+{
+    Low,
+    Medium,
+    High,
 }
 
 /// <summary>An MCP server the agent starts for the run (the toolkit server, task 45); all its tools are allowed.</summary>
@@ -104,6 +118,9 @@ public sealed record AgentRunRequest(string Prompt, string WorkingDirectory)
 
     /// <summary>The model, when the player picked one; <c>null</c> = the agent's default.</summary>
     public string? Model { get; init; }
+
+    /// <summary>The reasoning effort; <c>null</c> = the agent's default for the model.</summary>
+    public AgentEffort? Effort { get; init; }
 
     /// <summary>A session to continue (from <see cref="AgentSessionStarted.SessionId"/>), else a new one.</summary>
     public string? ResumeSessionId { get; init; }

@@ -50,7 +50,8 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         string gameName,
         CancellationToken cancellationToken,
         AgentWorkspace? workspace = null,
-        string? logTag = null)
+        string? logTag = null,
+        IReadOnlySet<AgentBuiltinTool>? extraTools = null)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(prompt);
@@ -60,6 +61,22 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         var system = workspace is null
             ? PromptTemplate.System.Render(PromptValues.System(gameName, context.Job.Language))
             : PromptTemplate.SystemScripts.Render(PromptValues.SystemScripts(gameName, context.Job.Language, context.CopyFolder));
+        string? brief;
+        try
+        {
+            brief = BriefFor(context);
+        }
+        catch (GenerationFileException e)
+        {
+            return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"{e.Message}; run the Study stage again."));
+        }
+
+        if (brief is not null)
+        {
+            system += PromptTemplate.SystemBrief.Render(PromptValues.SystemBrief(brief));
+        }
+
+        var choice = ModelFor(context.Job, Id, workspace is not null);
         if (await adapter.DetectAsync(cancellationToken).ConfigureAwait(false) is not { } installation)
         {
             return Stop(context, logTag, new GenerationStepResult.Failed(
@@ -88,13 +105,18 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         var request = new AgentRunRequest(task, workspace?.Folder ?? context.CopyFolder)
         {
             SystemPrompt = system,
-            BuiltinTools = workspace is null ? new HashSet<AgentBuiltinTool>() : AgentWorkspace.Tools,
+            BuiltinTools = Tools(workspace, extraTools),
             McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language)],
-            Model = context.Job.Options.Model,
+            Model = choice.Model,
+            Effort = choice.Effort,
         };
         Log(context, logTag, $"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
+            + (brief is null ? "" : $" + {PromptTemplate.SystemBrief.Label}")
             + (workspace is null ? "" : $", in its workspace {workspace.Folder} with file and command tools")
-            + (request.Model is { } model ? $", model {model}." : "."));
+            + (extraTools is { Count: > 0 } ? $", with {string.Join(", ", extraTools.Order())}" : "")
+            + $", quality {context.Job.Options.Quality.ToString().ToLowerInvariant()}"
+            + (request.Model is { } model ? $", model {model}" : "")
+            + (request.Effort is { } effort ? $", effort {effort.ToString().ToLowerInvariant()}." : "."));
         var transcript = Transcript(context);
         var usage = new List<AgentUsage>();
         var seenModel = request.Model;
@@ -133,6 +155,39 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                 Agent = new AgentRunInfo(installation.Version ?? p.Agent?.Version, seenModel ?? p.Agent?.Model),
             });
         }
+    }
+
+    /// <summary>
+    /// The model of a run: the job's <see cref="GenerationOptions.Model"/> when the player named one (CLI <c>--model</c>),
+    /// else <see cref="AgentModels"/> for the job's quality; the agent's own scripts (unknown engines) always run with the
+    /// Balanced choice.
+    /// </summary>
+    public static AgentModelChoice ModelFor(GenerationJob job, string agentId, bool scripts)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        if (job.Options.Model is { } model)
+        {
+            return new AgentModelChoice(model, null);
+        }
+
+        return scripts ? AgentModels.ForExtraction(agentId) : AgentModels.For(agentId, job.Options.Quality);
+    }
+
+    /// <summary>The game brief a run gets: a Thorough job's Glossary and Translate runs, once Study wrote it.</summary>
+    private static string? BriefFor(GenerationStepContext context) =>
+        context.Job.Options.Studies && context.Job.Stage is GenerationStage.Glossary or GenerationStage.Translate
+            ? context.Files.ReadBrief()
+            : null;
+
+    private static HashSet<AgentBuiltinTool> Tools(AgentWorkspace? workspace, IReadOnlySet<AgentBuiltinTool>? extra)
+    {
+        var tools = workspace is null ? new HashSet<AgentBuiltinTool>() : new HashSet<AgentBuiltinTool>(AgentWorkspace.Tools);
+        if (extra is not null)
+        {
+            tools.UnionWith(extra);
+        }
+
+        return tools;
     }
 
     private static PipelineAgentResult Stop(GenerationStepContext context, string? logTag, GenerationStepResult.Failed failed)

@@ -193,7 +193,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         var progress = PipelineProgressFile.Read(context.Files);
         var manifest = LocalPackBuilder.Manifest(new LocalPackInput(
             id, game, job.Language, agent.Id, agent.DisplayName, progress.Agent, job.Options.Model, tool.Id, tool.Version, touched, fonts.ManifestFonts, collected.Coverage, now,
-            updateBase?.Manifest, update));
+            updateBase?.Manifest, update, Quality: job.Options.Quality));
         var report = new LocalPackReport(
             job.Id,
             now,

@@ -13,8 +13,9 @@ using AiLocalPack.Toolkit.Recipes;
 namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
-/// <c>gen estimate &lt;game&gt; [--all-files] [--json]</c>: what generating a pack for a game would take (strings, words,
-/// working copy size, free space, agent time, share of the subscription's limits).
+/// <c>gen estimate &lt;game&gt; [--all-files] [--quality quick|balanced|thorough] [--json]</c>: what generating a pack for a
+/// game would take (strings, words, working copy size, free space, agent time and share of the subscription's limits at
+/// that quality).
 /// <c>gen copy &lt;game&gt; [--all-files] [--job &lt;id&gt;]</c>: makes the working copy a job would use and prints where.
 /// </summary>
 internal static class GenCommand
@@ -44,13 +45,21 @@ internal static class GenCommand
         var game = GameArgument();
         var allFiles = AllFilesOption();
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
+        var quality = new Option<string?>("--quality") { Description = "Estimate at this quality: quick, balanced (default) or thorough." };
         var command = new Command("estimate", "Estimate a generation: strings and words to translate, working copy size, free space, agent time and subscription limits.")
         {
-            game, allFiles, json,
+            game, allFiles, quality, json,
         };
         command.SetAction((result, cancellationToken) =>
         {
             var error = result.InvocationConfiguration.Error;
+            var (chosen, qualityError) = GenJobCommands.Quality(result.GetValue(quality));
+            if (qualityError is not null)
+            {
+                error.WriteLine(qualityError);
+                return Task.FromResult(1);
+            }
+
             if (Find(env, result.GetValue(game)!, error) is not var (paths, found))
             {
                 return Task.FromResult(1);
@@ -60,6 +69,7 @@ internal static class GenCommand
             try
             {
                 estimate = Estimator(env, paths).Estimate(found.InstallPath, Engine(found), Scope(result.GetValue(allFiles)), cancellationToken);
+                estimate = estimate with { Work = estimate.Work.At(chosen) };
             }
             catch (WorkingCopyException e)
             {
@@ -181,7 +191,7 @@ internal static class GenCommand
         output.WriteLine(space.FreeBytes is { } free
             ? $"disk: needs {Size(space.NeededBytes)}{cloned}, {Size(free)} free: {(space.IsEnough ? "enough" : "NOT ENOUGH")}"
             : $"disk: needs {Size(space.NeededBytes)}{cloned}, free space unknown");
-        output.WriteLine($"agent time: {Duration(work.TimeLow)} to {Duration(work.TimeHigh)}");
+        output.WriteLine($"agent time: {Duration(work.TimeLow)} to {Duration(work.TimeHigh)} ({work.Quality.ToString().ToLowerInvariant()})");
         output.WriteLine(Invariant($"subscription: {work.LimitWindowsLow:0.#} to {work.LimitWindowsHigh:0.#} five-hour limit windows of an entry-level plan (about {work.LimitDaysLow:0.#} to {work.LimitDaysHigh:0.#} days)"));
         output.WriteLine(Invariant($"tokens: ~{work.InputTokens:N0} in, ~{work.OutputTokens:N0} out, {work.Chunks:N0} chunks of {GenerationEstimateModel.StringsPerChunk}"));
     }
@@ -225,7 +235,8 @@ internal static class GenCommand
                 Math.Round(work.LimitWindowsLow, 2),
                 Math.Round(work.LimitWindowsHigh, 2),
                 Math.Round(work.LimitDaysLow, 2),
-                Math.Round(work.LimitDaysHigh, 2)));
+                Math.Round(work.LimitDaysHigh, 2),
+                work.Quality.ToString().ToLowerInvariant()));
     }
 
     private static string Kebab(string name) =>
@@ -282,7 +293,8 @@ internal sealed record GenWorkJson(
     double LimitWindowsLow,
     double LimitWindowsHigh,
     double LimitDaysLow,
-    double LimitDaysHigh);
+    double LimitDaysHigh,
+    string Quality);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(GenEstimateJson))]

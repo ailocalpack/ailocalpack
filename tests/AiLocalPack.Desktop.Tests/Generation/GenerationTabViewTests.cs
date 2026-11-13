@@ -61,6 +61,57 @@ public sealed class GenerationTabViewTests
     });
 
     [Fact]
+    public Task The_title_shows_the_quality_button_and_its_model() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var (window, _) = Open(services);
+
+        // Assert
+        (Find<TextBlock>(window, "GenQualityName").Text, Find<TextBlock>(window, "GenQualityModel").Text, Find<Border>(window, "GenWebLookup").IsEffectivelyVisible)
+            .Should().Be(("Balanced", "Translates with Sonnet", false));
+        window.Close();
+        return Task.CompletedTask;
+    });
+
+    [Fact]
+    public Task Thorough_shows_six_steps_and_the_web_lookup() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+        var (window, page) = Open(services);
+
+        // Act
+        page.Generation.Quality = AiLocalPack.Core.Generation.GenerationQuality.Thorough;
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<ItemsControl>(window, "GenerationSteps").ItemCount, Find<Border>(window, "GenWebLookup").IsEffectivelyVisible).Should().Be((6, true));
+        window.Close();
+        return Task.CompletedTask;
+    });
+
+    [Fact]
+    public Task The_compare_dialog_renders_a_column_per_quality() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+        var (window, page) = Open(services);
+
+        // Act
+        page.Generation.CompareQualitiesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<TextBlock>(window, "QualityCompareTitle").Text, Find<Button>(window, "QualityChoose0").IsEffectivelyVisible, Find<Button>(window, "QualityChoose1").IsEffectivelyVisible)
+            .Should().Be(("Compare translation modes", true, false));
+        window.Close();
+        return Task.CompletedTask;
+    });
+
+    [Fact]
     public Task Start_off_shows_the_reason_under_it() => HeadlessUi.RunAsync(() =>
     {
         // Arrange

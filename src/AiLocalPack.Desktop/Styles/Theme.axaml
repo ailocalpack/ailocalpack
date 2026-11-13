@@ -156,7 +156,7 @@
     <StreamGeometry x:Key="IconGitHub">M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4 M9 18c-4.51 2-5-2-7-2</StreamGeometry>
     <StreamGeometry x:Key="IconHardDrive">M22 12H2 M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z M6 16h.01 M10 16h.01</StreamGeometry>
     <StreamGeometry x:Key="IconBug">m8 2 1.88 1.88 M14.12 3.88 16 2 M9 7.13v-1a3 3 0 1 1 6 0v1 M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6 M12 20v-9 M6.53 9C4.6 8.8 3 7.1 3 5 M6 13H2 M3 21c0-2.1 1.7-3.9 3.8-4 M20.97 5c0 2.1-1.6 3.8-3.5 4 M22 13h-4 M17.2 17c2.1.1 3.8 1.9 3.8 4</StreamGeometry>
-    <StreamGeometry x:Key="IconScale">m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z M7 21h10 M12 3v18 M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2</StreamGeometry>
+    <StreamGeometry x:Key="IconScale">M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z M7 21h10 M12 3v18 M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2</StreamGeometry>
     <StreamGeometry x:Key="IconHelp">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3 M12 17h.01</StreamGeometry>
     <StreamGeometry x:Key="IconInfo">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M12 16v-4 M12 8h.01</StreamGeometry>
     <StreamGeometry x:Key="IconFolderPlus">M12 10v6 M9 13h6 M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z</StreamGeometry>
@@ -204,6 +204,9 @@
     <StreamGeometry x:Key="IconWifiOff">M12 20h.01 M8.5 16.43a5 5 0 0 1 7 0 M5 12.86a10 10 0 0 1 5.17-2.69 M19 12.86a10 10 0 0 0-2.01-1.53 M2 8.82a15 15 0 0 1 4.18-2.65 M22 8.82a15 15 0 0 0-11.29-3.76 M2 2l20 20</StreamGeometry>
     <StreamGeometry x:Key="IconThumbsUp">M7 10v12 M15 5.88L14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88z</StreamGeometry>
     <StreamGeometry x:Key="IconThumbsDown">M17 14V2 M9 18.12L10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88z</StreamGeometry>
+    <StreamGeometry x:Key="IconZap">M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z</StreamGeometry>
+    <StreamGeometry x:Key="IconGem">M6 3h12l4 6-10 13L2 9z M11 3L8 9l4 13 4-13-3-6 M2 9h20</StreamGeometry>
+    <StreamGeometry x:Key="IconBrain">M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4</StreamGeometry>
     <StreamGeometry x:Key="IconGlobe">M22 12a10 10 0 1 1-20 0a10 10 0 0 1 20 0z M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20 M2 12h20</StreamGeometry>
     <StreamGeometry x:Key="IconType">M4 7V4h16v3 M9 20h6 M12 4v16</StreamGeometry>
     <StreamGeometry x:Key="IconMic">M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z M19 10v2a7 7 0 0 1-14 0v-2 M12 19v3</StreamGeometry>

@@ -86,6 +86,25 @@ public sealed class GenerationStages
     /// <summary>The stage the job pauses before, if any.</summary>
     public GenerationStage? PauseBefore { get; }
 
+    /// <summary>The stages a job with these options goes through, in order (Study only for Thorough), ending with Done.</summary>
+    public static IReadOnlyList<GenerationStage> Of(GenerationOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return [.. Enum.GetValues<GenerationStage>().Where(s => s != GenerationStage.Study || options.Studies)];
+    }
+
+    /// <summary>The stage after <paramref name="stage"/> for a job with these options; <see cref="GenerationStage.Done"/> stays.</summary>
+    public static GenerationStage After(GenerationStage stage, GenerationOptions options)
+    {
+        if (stage == GenerationStage.Done)
+        {
+            return stage;
+        }
+
+        var next = stage + 1;
+        return next == GenerationStage.Study && !options.Studies ? next + 1 : next;
+    }
+
     public IGenerationStage? For(GenerationStage stage) => _stages.GetValueOrDefault(stage);
 }
 

@@ -389,7 +389,9 @@ public static class GenerationJobSerializer
                 job.Options.ReviewGlossary,
                 Name(job.Options.Scope),
                 job.Options.Model,
-                job.Options.Base is { } b ? new GenerationBaseJson(b.PackId, b.Revision, b.Local, b.Title) : null),
+                job.Options.Base is { } b ? new GenerationBaseJson(b.PackId, b.Revision, b.Local, b.Title) : null,
+                Name(job.Options.Quality),
+                job.Options.WebLookup ? true : null),
             Name(job.Stage),
             Name(job.Status),
             Name(job.PauseReason),
@@ -481,6 +483,11 @@ public static class GenerationJobSerializer
             scope = parsedScope;
         }
 
+        // A job from before the quality modes (or a quality from a newer app) runs as Balanced.
+        var quality = file.Options?.Quality is { } qualityName && TryParse<GenerationQuality>(qualityName, out var parsedQuality)
+            ? parsedQuality
+            : GenerationQuality.Balanced;
+
         GenerationBase? baseRef = null;
         if (file.Options?.Base is { } b)
         {
@@ -505,7 +512,13 @@ public static class GenerationJobSerializer
             GameName = file.GameName ?? game.ToString(),
             Language = file.Language,
             Agent = file.Agent,
-            Options = new GenerationOptions(file.Options?.ReviewGlossary ?? false, scope, file.Options?.Model, baseRef),
+            Options = new GenerationOptions(
+                file.Options?.ReviewGlossary ?? false,
+                scope,
+                file.Options?.Model,
+                baseRef,
+                quality,
+                file.Options?.WebLookup ?? false),
             Stage = stage,
             Status = status,
             PauseReason = pause,
@@ -556,7 +569,13 @@ internal sealed record GenerationJobFileJson(
     long ChunkMs,
     long? EstimatedMs);
 
-internal sealed record GenerationOptionsJson(bool ReviewGlossary, string? Scope, string? Model, GenerationBaseJson? Base = null);
+internal sealed record GenerationOptionsJson(
+    bool ReviewGlossary,
+    string? Scope,
+    string? Model,
+    GenerationBaseJson? Base = null,
+    string? Quality = null,
+    bool? WebLookup = null);
 
 internal sealed record GenerationBaseJson(string? PackId, int Revision, bool Local, string? Title);
 

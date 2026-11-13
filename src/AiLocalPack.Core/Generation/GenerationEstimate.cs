@@ -79,6 +79,7 @@ public enum EstimateBasis
 /// and the share of a subscription's usage limits, each low and high bound.
 /// </summary>
 /// <param name="LimitWindowsLow">Usage-limit windows (5 h each) of an entry-level plan the job uses up.</param>
+/// <param name="Quality">The quality the cost is for.</param>
 public sealed record GenerationEstimate(
     EstimateBasis Basis,
     TextSize Text,
@@ -88,12 +89,16 @@ public sealed record GenerationEstimate(
     TimeSpan TimeLow,
     TimeSpan TimeHigh,
     double LimitWindowsLow,
-    double LimitWindowsHigh)
+    double LimitWindowsHigh,
+    GenerationQuality Quality = GenerationQuality.Balanced)
 {
     /// <summary>The same in days of limits, a player's day = <see cref="GenerationEstimateModel.LimitWindowsPerDay"/> windows.</summary>
     public double LimitDaysLow => LimitWindowsLow / GenerationEstimateModel.LimitWindowsPerDay;
 
     public double LimitDaysHigh => LimitWindowsHigh / GenerationEstimateModel.LimitWindowsPerDay;
+
+    /// <summary>The same text at another quality (the start form switches it without reading the game again).</summary>
+    public GenerationEstimate At(GenerationQuality quality) => GenerationEstimateModel.Estimate(Text, Basis, quality);
 }
 
 /// <summary>
@@ -179,8 +184,38 @@ public static class GenerationEstimateModel
 
     public const double CharactersPerWord = 6;
 
-    /// <summary>The cost of translating <paramref name="text"/>.</summary>
-    public static GenerationEstimate Estimate(TextSize text, EstimateBasis basis)
+    /// <summary>
+    /// <see cref="GenerationQuality.Quick"/>'s small model writes this much faster than the standard one (time ×) …
+    /// </summary>
+    public const double QuickTimeFactor = 0.6;
+
+    /// <summary>… and costs this share of the standard model's limits.</summary>
+    public const double QuickLimitFactor = 0.35;
+
+    /// <summary><see cref="GenerationQuality.Thorough"/>'s strongest model writes this much slower (time ×) …</summary>
+    public const double ThoroughTimeFactor = 1.4;
+
+    /// <summary>… and uses limits this many times faster than the standard model.</summary>
+    public const double ThoroughLimitFactor = 1.7;
+
+    /// <summary>The Study stage besides reading the strings: prompt, tools, web pages (input) and the brief (output).</summary>
+    public const int StudyInputTokens = 60_000;
+
+    public const int StudyOutputTokens = 8_000;
+
+    /// <summary>The game brief every Thorough chunk carries (<c>StudyStage.MaxLength</c> characters at most).</summary>
+    public const int BriefTokensPerChunk = 4_000;
+
+    /// <summary>The cost of translating <paramref name="text"/> at the Balanced quality.</summary>
+    public static GenerationEstimate Estimate(TextSize text, EstimateBasis basis) => Estimate(text, basis, GenerationQuality.Balanced);
+
+    /// <summary>
+    /// The cost of translating <paramref name="text"/> at <paramref name="quality"/>: Quick scales time and limits down
+    /// (<see cref="QuickTimeFactor"/>, <see cref="QuickLimitFactor"/>); Thorough adds the Study stage (every string read
+    /// once more, <see cref="StudyInputTokens"/>, <see cref="StudyOutputTokens"/>) and the brief in every chunk
+    /// (<see cref="BriefTokensPerChunk"/>), then scales by <see cref="ThoroughTimeFactor"/> and <see cref="ThoroughLimitFactor"/>.
+    /// </summary>
+    public static GenerationEstimate Estimate(TextSize text, EstimateBasis basis, GenerationQuality quality)
     {
         ArgumentNullException.ThrowIfNull(text);
         var chunks = (int)Math.Ceiling(text.Strings / (double)StringsPerChunk);
@@ -191,8 +226,20 @@ public static class GenerationEstimateModel
         var output = (long)Math.Round(
             (sourceTokens * TranslationExpansion) + ((double)text.Strings * OutputTokensPerString) + ((double)chunks * OutputTokensPerChunk) + ((double)SetupOutputTokens * setupFactor));
 
-        var seconds = (output / OutputTokensPerSecond) + (chunks * SecondsPerChunk) + (FixedTime.TotalSeconds * setupFactor);
-        var windows = ((input * CachedInputWeight) + output) / TokensPerLimitWindow;
+        var (timeFactor, limitFactor) = quality switch
+        {
+            GenerationQuality.Quick => (QuickTimeFactor, QuickLimitFactor),
+            GenerationQuality.Thorough => (ThoroughTimeFactor, ThoroughLimitFactor),
+            _ => (1.0, 1.0),
+        };
+        if (quality == GenerationQuality.Thorough)
+        {
+            input += (long)Math.Round(sourceTokens + ((double)text.Strings * InputTokensPerString) + StudyInputTokens + ((double)chunks * BriefTokensPerChunk));
+            output += StudyOutputTokens;
+        }
+
+        var seconds = (((output / OutputTokensPerSecond) + (chunks * SecondsPerChunk)) * timeFactor) + (FixedTime.TotalSeconds * setupFactor);
+        var windows = ((input * CachedInputWeight) + output) / TokensPerLimitWindow * limitFactor;
         return new GenerationEstimate(
             basis,
             text,
@@ -202,7 +249,8 @@ public static class GenerationEstimateModel
             TimeSpan.FromSeconds(Math.Round(seconds * LowFactor)),
             TimeSpan.FromSeconds(Math.Round(seconds * HighFactor)),
             windows * LowFactor,
-            windows * HighFactor);
+            windows * HighFactor,
+            quality);
     }
 
     /// <summary>

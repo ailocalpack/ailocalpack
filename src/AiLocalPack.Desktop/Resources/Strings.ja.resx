@@ -2089,9 +2089,6 @@
   <data name="Gen_Steps_Label" xml:space="preserve">
     <value>生成のステップ</value>
   </data>
-  <data name="Gen_Title" xml:space="preserve">
-    <value>翻訳を生成する言語</value>
-  </data>
   <data name="Gen_Language_Into" xml:space="preserve">
     <value>翻訳先</value>
   </data>
@@ -2919,9 +2916,6 @@
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>自分の翻訳 · {0}</value>
-  </data>
-  <data name="Gen_Update_Title" xml:space="preserve">
-    <value>新しい文字列の翻訳先</value>
   </data>
   <data name="Gen_Update_Banner" xml:space="preserve">
     <value>インストール済みの「{0}」リビジョン {1} がベースです。その翻訳はそのまま使い、新規と変更された文字列だけをエージェントに渡します。</value>
@@ -3924,5 +3918,149 @@
   </data>
   <data name="Welcome_Ill_Greeting" xml:space="preserve">
     <value>やあ、旅人！</value>
+  </data>
+  <data name="Gen_Title_Before" xml:space="preserve">
+    <value>翻訳モード</value>
+  </data>
+  <data name="Gen_Title_After" xml:space="preserve">
+    <value>で作成する言語:</value>
+  </data>
+  <data name="Gen_Update_Title_Before" xml:space="preserve">
+    <value>新しい文字列の翻訳モード</value>
+  </data>
+  <data name="Gen_Update_Title_After" xml:space="preserve">
+    <value>で翻訳する言語:</value>
+  </data>
+  <data name="Gen_Quality_Button_Tip" xml:space="preserve">
+    <value>翻訳の丁寧さ</value>
+  </data>
+  <data name="Gen_Quality_Quick" xml:space="preserve">
+    <value>クイック</value>
+  </data>
+  <data name="Gen_Quality_Balanced" xml:space="preserve">
+    <value>バランス</value>
+  </data>
+  <data name="Gen_Quality_Thorough" xml:space="preserve">
+    <value>丁寧</value>
+  </data>
+  <data name="Gen_Quality_Quick_Blurb" xml:space="preserve">
+    <value>速くて安価：小型モデルがチャンクごとに翻訳します。</value>
+  </data>
+  <data name="Gen_Quality_Balanced_Blurb" xml:space="preserve">
+    <value>標準モデルと用語集。ほとんどのゲームに適しています。</value>
+  </data>
+  <data name="Gen_Quality_Thorough_Blurb" xml:space="preserve">
+    <value>最も強力なモデルがまずゲーム全体を読み込み、それから翻訳します。</value>
+  </data>
+  <data name="Gen_Quality_Default" xml:space="preserve">
+    <value>既定</value>
+  </data>
+  <data name="Gen_Quality_Footer" xml:space="preserve">
+    <value>このゲームのみ。次回はまたバランスになります。</value>
+  </data>
+  <data name="Gen_Quality_Compare" xml:space="preserve">
+    <value>モードを比較</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortLow" xml:space="preserve">
+    <value>既定モデル・推論 低</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortMedium" xml:space="preserve">
+    <value>既定モデル・推論 中</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortHigh" xml:space="preserve">
+    <value>既定モデル・推論 高</value>
+  </data>
+  <data name="Gen_Quality_Model_Default" xml:space="preserve">
+    <value>エージェントの既定モデル</value>
+  </data>
+  <data name="Gen_Quality_ModelLine" xml:space="preserve">
+    <value>{0} で翻訳</value>
+  </data>
+  <data name="Gen_Quality_ModelLine_Study" xml:space="preserve">
+    <value>{0} でゲームを読み込み翻訳</value>
+  </data>
+  <data name="Gen_Quality_Web" xml:space="preserve">
+    <value>エージェントにゲームをウェブで調べさせる</value>
+  </data>
+  <data name="Gen_Quality_Web_Detail" xml:space="preserve">
+    <value>ゲームを読み込む間だけ：Wiki、ストアページ、他言語の公式翻訳。PC のデータは送信されず、翻訳はオフラインのままです。</value>
+  </data>
+  <data name="Gen_Quality_Compare_Title" xml:space="preserve">
+    <value>翻訳モードを比較</value>
+  </data>
+  <data name="Gen_Quality_Compare_Subtitle" xml:space="preserve">
+    <value>「{0}」、{1} 文字列、{2} の場合。</value>
+  </data>
+  <data name="Gen_Quality_Compare_SubtitleNoSize" xml:space="preserve">
+    <value>「{0}」、{1} の場合。</value>
+  </data>
+  <data name="Gen_Quality_Row_Model" xml:space="preserve">
+    <value>翻訳モデル</value>
+  </data>
+  <data name="Gen_Quality_Row_Study" xml:space="preserve">
+    <value>先にゲームを読み込む</value>
+  </data>
+  <data name="Gen_Quality_Row_Web" xml:space="preserve">
+    <value>ウェブ検索</value>
+  </data>
+  <data name="Gen_Quality_Row_Chunk" xml:space="preserve">
+    <value>各チャンクに渡す情報</value>
+  </data>
+  <data name="Gen_Quality_Row_Time" xml:space="preserve">
+    <value>エージェント時間</value>
+  </data>
+  <data name="Gen_Quality_Row_Limits" xml:space="preserve">
+    <value>サブスクリプション</value>
+  </data>
+  <data name="Gen_Quality_Row_BestFor" xml:space="preserve">
+    <value>向いている用途</value>
+  </data>
+  <data name="Gen_Quality_Cell_No" xml:space="preserve">
+    <value>いいえ</value>
+  </data>
+  <data name="Gen_Quality_Cell_StudyYes" xml:space="preserve">
+    <value>はい：全文字列を読み、ゲーム概要を作成</value>
+  </data>
+  <data name="Gen_Quality_Cell_WebYes" xml:space="preserve">
+    <value>任意。読み込み中のみ</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkGlossary" xml:space="preserve">
+    <value>用語集</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkBrief" xml:space="preserve">
+    <value>ゲーム概要と用語集</value>
+  </data>
+  <data name="Gen_Quality_Cell_Limits" xml:space="preserve">
+    <value>上限 {0} 日分</value>
+  </data>
+  <data name="Gen_Quality_Quick_BestFor" xml:space="preserve">
+    <value>今夜すぐ遊びたい時、メニューや短い文</value>
+  </data>
+  <data name="Gen_Quality_Balanced_BestFor" xml:space="preserve">
+    <value>ほとんどのゲーム</value>
+  </data>
+  <data name="Gen_Quality_Thorough_BestFor" xml:space="preserve">
+    <value>ストーリー重視、言葉遊び、登場人物が多いゲーム</value>
+  </data>
+  <data name="Gen_Quality_Choose" xml:space="preserve">
+    <value>選択</value>
+  </data>
+  <data name="Gen_Quality_Chosen" xml:space="preserve">
+    <value>選択中</value>
+  </data>
+  <data name="Gen_Step_Study" xml:space="preserve">
+    <value>読み込み</value>
+  </data>
+  <data name="Gen_Stage_Study" xml:space="preserve">
+    <value>ゲームを読み込み中</value>
+  </data>
+  <data name="Gen_Progress_Sub_Study" xml:space="preserve">
+    <value>ゲーム概要のため全文字列を読んでいます</value>
+  </data>
+  <data name="Gen_Progress_Sub_StudyWeb" xml:space="preserve">
+    <value>ゲーム概要のため全文字列とウェブを読んでいます</value>
+  </data>
+  <data name="Gen_Result_PackLineQuality" xml:space="preserve">
+    <value>「{0}」 · {1}へ · {2}</value>
   </data>
 </root>

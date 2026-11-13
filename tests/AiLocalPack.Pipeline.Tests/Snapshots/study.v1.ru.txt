@@ -1,0 +1,19 @@
+Study the video game "Sample Quest" (RPG Maker MZ) before it is translated into Russian, and write the game brief.
+
+The toolkit found 1,234 translatable strings in 12 files of the game. Later steps build a glossary and translate the strings in chunks of about 50; every one of them gets your brief, and it is all they know about the game beyond their chunk. The brief is what lets a chunk in the middle of the game sound like the rest of it, so it decides how good the translation reads.
+
+Steps:
+
+1. Read every string with `extract_strings` (`limit` 200, then the next `offset`), in order: the order and the context of each string tell who speaks, to whom and in which scene. With more than 20,000 strings, read the first 20,000 and use `search` for the rest.
+2. Look the game up on the web with your web search and fetch tools: its store page, wikis and fan sites, and its official translations into other languages, to learn what the strings don't say (who the characters are, names an official translation already uses). Search for the game and its characters, never for the text of the strings, and keep it to about 20 searches.
+3. Write the brief in English, in Markdown, under these headings:
+   - `## Setting`: the world, the era, the genre and the mood; the style of the writing (short or long sentences, slang, jargon, archaic words, humour).
+   - `## Characters`: one line per character who speaks or is spoken about often: who they are, gender, age when it shows, how they talk, and how they address the player and the other characters (formal or informal, nicknames).
+   - `## Relationships`: who is formal or informal with whom, and where that changes in the story.
+   - `## The player`: how the game addresses the player, and whether the player's gender or name is chosen (strings that must work for any choice).
+   - `## Recurring lines`: catchphrases, running jokes, wordplay, songs, rhymes and lines quoted again later, which must be translated the same way every time; and how to handle the wordplay in Russian.
+   - `## Interface`: the tone of menus, hints and item texts.
+   - `## Notes for Russian`: anything a translator into Russian must decide once for the whole game.
+4. Quote at most a few words of the original text where an example is needed; describe instead of copying.
+
+Don't build the glossary and don't translate anything now: those are the next steps. Your final reply is the brief itself, starting with `## Setting` and nothing before it.

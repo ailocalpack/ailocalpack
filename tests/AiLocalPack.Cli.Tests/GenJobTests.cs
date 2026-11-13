@@ -272,7 +272,72 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru", "--until", "build");
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--until takes setup, extract, glossary or translate, not 'build'.\n" });
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--until takes setup, extract, study, glossary or translate, not 'build'.\n" });
+    }
+
+    /// <summary><see cref="Success"/> whose every reply is a game brief (the Study run's answer).</summary>
+    private string ThoroughSuccess
+    {
+        get
+        {
+            var strings = JsonSerializer.Serialize(Translations());
+            var brief = "## Setting\n" + new string('x', 300) + "\n## Characters\nHarold: the hero.";
+            _dir.File(
+                "thorough.jsonl",
+                GlossaryLine
+                + $$"""{"control":"write","path":"../strings.json","text":{{strings}}}""" + "\n"
+                + AgentEventJson.Write(new AgentDone(AgentOutcome.Succeeded, brief)) + "\n");
+            return _dir.Combine("thorough.jsonl");
+        }
+    }
+
+    [Fact]
+    public async Task A_thorough_job_studies_the_game_and_records_its_quality()
+    {
+        // Arrange
+        var recording = ThoroughSuccess;
+
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", recording, "--lang", "ru", "--quality", "thorough");
+
+        // Assert
+        var manifest = File.ReadAllText(Path.Combine(LocalPack, "manifest.json"));
+        new
+        {
+            result.ExitCode,
+            Brief = File.Exists(Path.Combine(JobFolder, "brief.md")),
+            Quality = manifest.Contains("\"quality\": \"thorough\"", StringComparison.Ordinal),
+        }.Should().Be(new { ExitCode = 0, Brief = true, Quality = true });
+    }
+
+    [Fact]
+    public async Task An_unknown_quality_is_refused()
+    {
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru", "--quality", "best");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--quality takes quick, balanced or thorough, not 'best'.\n" });
+    }
+
+    [Fact]
+    public async Task Web_lookup_needs_the_thorough_quality()
+    {
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru", "--web");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--web works only with --quality thorough.\n" });
+    }
+
+    [Fact]
+    public async Task The_estimate_names_its_quality()
+    {
+        // Act
+        var result = await RunAsync("gen", "estimate", "steam:620", "--quality", "quick");
+
+        // Assert
+        result.StdOut.Should().MatchRegex(@"agent time: .+ \(quick\)");
     }
 
     [Fact]

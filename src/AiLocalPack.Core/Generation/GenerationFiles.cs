@@ -41,6 +41,12 @@ public sealed class GenerationFiles
     /// <summary>What a job shows while it runs (task 50): the strings just translated and the agent's usage so far.</summary>
     public string ProgressPath => Path.Combine(Folder, "progress.json");
 
+    /// <summary>
+    /// The game brief of a Thorough job (Markdown, written by the Study stage): setting, characters, forms of address,
+    /// recurring lines. Stays on the player's machine (it may quote the original); never goes into a pack.
+    /// </summary>
+    public string BriefPath => Path.Combine(Folder, "brief.md");
+
     public string BuildFolder => Path.Combine(Folder, "build");
 
     /// <summary>An update job's base pack (task 56): <c>manifest.json</c>, <c>strings.json.gz</c>, <c>glossary.json</c> when it had one.</summary>
@@ -185,6 +191,26 @@ public sealed class GenerationFiles
 
     /// <exception cref="IOException">The file can't be written.</exception>
     public void WriteGlossary(Glossary glossary) => AtomicFile.WriteAllBytes(GlossaryPath, GlossarySerializer.Write(glossary));
+
+    /// <summary>The game brief, or <c>null</c> when none was written yet (or it is blank).</summary>
+    /// <exception cref="GenerationFileException">The file exists but can't be read.</exception>
+    public string? ReadBrief()
+    {
+        if (ReadBytes(BriefPath) is not { } data)
+        {
+            return null;
+        }
+
+        var text = System.Text.Encoding.UTF8.GetString(data).ReplaceLineEndings("\n").Trim();
+        return text.Length == 0 ? null : text;
+    }
+
+    /// <exception cref="IOException">The file can't be written.</exception>
+    public void WriteBrief(string brief)
+    {
+        ArgumentNullException.ThrowIfNull(brief);
+        AtomicFile.WriteAllBytes(BriefPath, new System.Text.UTF8Encoding(false).GetBytes(brief.ReplaceLineEndings("\n").Trim() + "\n"));
+    }
 
     private static byte[]? ReadBytes(string path)
     {

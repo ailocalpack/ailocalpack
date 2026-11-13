@@ -37,6 +37,20 @@ public static class PromptValues
         ["fileCount"] = files.ToString("N0", CultureInfo.InvariantCulture),
     };
 
+    /// <summary>The Study prompt's step 2: what the agent may use besides the strings.</summary>
+    public static string StudyWebStep(bool webLookup) => webLookup
+        ? "2. Look the game up on the web with your web search and fetch tools: its store page, wikis and fan sites, and its official translations into other languages, to learn what the strings don't say (who the characters are, names an official translation already uses). Search for the game and its characters, never for the text of the strings, and keep it to about 20 searches."
+        : "2. You have no web access: work from the strings alone.";
+
+    public static Dictionary<string, string> Study(string gameName, string language, EngineKind engine, int strings, int files, bool webLookup)
+    {
+        var values = Glossary(gameName, language, engine, strings, files);
+        values["webStep"] = StudyWebStep(webLookup);
+        return values;
+    }
+
+    public static Dictionary<string, string> SystemBrief(string brief) => new(StringComparer.Ordinal) { ["brief"] = brief };
+
     /// <param name="baseTitle">The base pack's title.</param>
     /// <param name="kept">Strings that already have the base's translation.</param>
     public static Dictionary<string, string> GlossaryUpdate(string gameName, string language, EngineKind engine, int strings, int files, string baseTitle, int kept)

@@ -46,6 +46,7 @@
         <DataTemplate DataType="install:InstallDetailsDialogViewModel"><views:InstallDetailsDialogView /></DataTemplate>
         <DataTemplate DataType="gen:GenerationCancelDialogViewModel"><views:GenerationCancelDialogView /></DataTemplate>
         <DataTemplate DataType="gen:GenerationDetailsDialogViewModel"><views:GenerationDetailsDialogView /></DataTemplate>
+        <DataTemplate DataType="gen:GenerationQualityDialogViewModel"><views:GenerationQualityDialogView /></DataTemplate>
         <DataTemplate DataType="pub:PublishSignInDialogViewModel"><views:PublishSignInDialogView /></DataTemplate>
         <DataTemplate DataType="pub:SimilarPackDialogViewModel"><views:SimilarPackDialogView /></DataTemplate>
         <DataTemplate DataType="rate:RatingSignInDialogViewModel"><views:RatingSignInDialogView /></DataTemplate>

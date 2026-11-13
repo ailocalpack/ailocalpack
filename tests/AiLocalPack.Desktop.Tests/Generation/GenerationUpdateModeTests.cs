@@ -85,7 +85,7 @@ public sealed class GenerationUpdateModeTests
         new { tab.IsUpdateMode, tab.FormTitle, tab.StartText, tab.CanPickLanguage }.Should().Be(new
         {
             IsUpdateMode = true,
-            FormTitle = "Translate the new strings into",
+            FormTitle = "Translate the new strings at",
             StartText = "Translate new strings",
             CanPickLanguage = false,
         });
@@ -162,7 +162,7 @@ public sealed class GenerationUpdateModeTests
 
         // Assert
         new { tab.IsUpdateMode, tab.FormTitle, Loads = services.GetRequiredService<FakeUpdateBases>().Calls }
-            .Should().Be(new { IsUpdateMode = false, FormTitle = "Generate a translation into", Loads = 0 });
+            .Should().Be(new { IsUpdateMode = false, FormTitle = "Create a", Loads = 0 });
     }
 
     [Fact]

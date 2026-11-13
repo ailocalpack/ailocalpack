@@ -33,6 +33,12 @@ public sealed partial class PromptTemplate
     /// <summary>The Translate stage's task for the strings an earlier attempt at the chunk left without a valid translation.</summary>
     public static PromptTemplate TranslateRetry { get; } = Load("translate-retry", 1);
 
+    /// <summary>The Study stage's task (Thorough jobs): read the whole game, optionally look it up on the web, reply with the game brief.</summary>
+    public static PromptTemplate Study { get; } = Load("study", 1);
+
+    /// <summary>Appended to the system prompt of a Thorough job's Glossary and Translate runs: the game brief from Study.</summary>
+    public static PromptTemplate SystemBrief { get; } = Load("system-brief", 1);
+
     /// <summary>The system prompt of a run that writes and runs its own scripts in its workspace (task 57).</summary>
     public static PromptTemplate SystemScripts { get; } = Load("system-scripts", 1);
 

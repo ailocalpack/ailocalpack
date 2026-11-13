@@ -2089,9 +2089,6 @@
   <data name="Gen_Steps_Label" xml:space="preserve">
     <value>制作步骤</value>
   </data>
-  <data name="Gen_Title" xml:space="preserve">
-    <value>制作翻译，目标语言</value>
-  </data>
   <data name="Gen_Language_Into" xml:space="preserve">
     <value>译为</value>
   </data>
@@ -2919,9 +2916,6 @@
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>你的翻译 · {0}</value>
-  </data>
-  <data name="Gen_Update_Title" xml:space="preserve">
-    <value>将新增文本翻译为</value>
   </data>
   <data name="Gen_Update_Banner" xml:space="preserve">
     <value>基于已安装的“{0}”第 {1} 版：保留其已有翻译，只把新增和修改的文本交给智能体。</value>
@@ -3924,5 +3918,149 @@
   </data>
   <data name="Welcome_Ill_Greeting" xml:space="preserve">
     <value>你好，旅行者！</value>
+  </data>
+  <data name="Gen_Title_Before" xml:space="preserve">
+    <value>以</value>
+  </data>
+  <data name="Gen_Title_After" xml:space="preserve">
+    <value>模式创建翻译：</value>
+  </data>
+  <data name="Gen_Update_Title_Before" xml:space="preserve">
+    <value>以</value>
+  </data>
+  <data name="Gen_Update_Title_After" xml:space="preserve">
+    <value>模式翻译新文本：</value>
+  </data>
+  <data name="Gen_Quality_Button_Tip" xml:space="preserve">
+    <value>翻译的细致程度</value>
+  </data>
+  <data name="Gen_Quality_Quick" xml:space="preserve">
+    <value>快速</value>
+  </data>
+  <data name="Gen_Quality_Balanced" xml:space="preserve">
+    <value>均衡</value>
+  </data>
+  <data name="Gen_Quality_Thorough" xml:space="preserve">
+    <value>细致</value>
+  </data>
+  <data name="Gen_Quality_Quick_Blurb" xml:space="preserve">
+    <value>快速又省钱：小模型逐块翻译。</value>
+  </data>
+  <data name="Gen_Quality_Balanced_Blurb" xml:space="preserve">
+    <value>标准模型加术语表。适合大多数游戏。</value>
+  </data>
+  <data name="Gen_Quality_Thorough_Blurb" xml:space="preserve">
+    <value>最强的模型先研读整个游戏，再进行翻译。</value>
+  </data>
+  <data name="Gen_Quality_Default" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="Gen_Quality_Footer" xml:space="preserve">
+    <value>仅对本游戏生效；下次仍为均衡。</value>
+  </data>
+  <data name="Gen_Quality_Compare" xml:space="preserve">
+    <value>比较模式</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortLow" xml:space="preserve">
+    <value>默认模型，低推理强度</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortMedium" xml:space="preserve">
+    <value>默认模型，中推理强度</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortHigh" xml:space="preserve">
+    <value>默认模型，高推理强度</value>
+  </data>
+  <data name="Gen_Quality_Model_Default" xml:space="preserve">
+    <value>代理的默认模型</value>
+  </data>
+  <data name="Gen_Quality_ModelLine" xml:space="preserve">
+    <value>使用 {0} 翻译</value>
+  </data>
+  <data name="Gen_Quality_ModelLine_Study" xml:space="preserve">
+    <value>使用 {0} 研读游戏并翻译</value>
+  </data>
+  <data name="Gen_Quality_Web" xml:space="preserve">
+    <value>允许代理在网上查找该游戏</value>
+  </data>
+  <data name="Gen_Quality_Web_Detail" xml:space="preserve">
+    <value>仅在研读游戏时：维基、商店页面、其他语言的官方翻译。不会发送你电脑上的任何内容；翻译过程保持离线。</value>
+  </data>
+  <data name="Gen_Quality_Compare_Title" xml:space="preserve">
+    <value>比较翻译模式</value>
+  </data>
+  <data name="Gen_Quality_Compare_Subtitle" xml:space="preserve">
+    <value>针对“{0}”，{1} 条文本，使用 {2}。</value>
+  </data>
+  <data name="Gen_Quality_Compare_SubtitleNoSize" xml:space="preserve">
+    <value>针对“{0}”，使用 {1}。</value>
+  </data>
+  <data name="Gen_Quality_Row_Model" xml:space="preserve">
+    <value>翻译模型</value>
+  </data>
+  <data name="Gen_Quality_Row_Study" xml:space="preserve">
+    <value>先研读游戏</value>
+  </data>
+  <data name="Gen_Quality_Row_Web" xml:space="preserve">
+    <value>网络查找</value>
+  </data>
+  <data name="Gen_Quality_Row_Chunk" xml:space="preserve">
+    <value>每块附带</value>
+  </data>
+  <data name="Gen_Quality_Row_Time" xml:space="preserve">
+    <value>代理用时</value>
+  </data>
+  <data name="Gen_Quality_Row_Limits" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="Gen_Quality_Row_BestFor" xml:space="preserve">
+    <value>最适合</value>
+  </data>
+  <data name="Gen_Quality_Cell_No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Gen_Quality_Cell_StudyYes" xml:space="preserve">
+    <value>是：读取所有文本并撰写游戏概要</value>
+  </data>
+  <data name="Gen_Quality_Cell_WebYes" xml:space="preserve">
+    <value>可选，仅在研读时</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkGlossary" xml:space="preserve">
+    <value>术语表</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkBrief" xml:space="preserve">
+    <value>游戏概要和术语表</value>
+  </data>
+  <data name="Gen_Quality_Cell_Limits" xml:space="preserve">
+    <value>{0} 天的额度</value>
+  </data>
+  <data name="Gen_Quality_Quick_BestFor" xml:space="preserve">
+    <value>今晚就想试玩；菜单和短文本</value>
+  </data>
+  <data name="Gen_Quality_Balanced_BestFor" xml:space="preserve">
+    <value>大多数游戏</value>
+  </data>
+  <data name="Gen_Quality_Thorough_BestFor" xml:space="preserve">
+    <value>剧情丰富、文字游戏多、角色众多的游戏</value>
+  </data>
+  <data name="Gen_Quality_Choose" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="Gen_Quality_Chosen" xml:space="preserve">
+    <value>已选择</value>
+  </data>
+  <data name="Gen_Step_Study" xml:space="preserve">
+    <value>研读</value>
+  </data>
+  <data name="Gen_Stage_Study" xml:space="preserve">
+    <value>正在研读游戏</value>
+  </data>
+  <data name="Gen_Progress_Sub_Study" xml:space="preserve">
+    <value>正在读取所有文本以撰写游戏概要</value>
+  </data>
+  <data name="Gen_Progress_Sub_StudyWeb" xml:space="preserve">
+    <value>正在读取所有文本和网络以撰写游戏概要</value>
+  </data>
+  <data name="Gen_Result_PackLineQuality" xml:space="preserve">
+    <value>“{0}”，译为“{1}” · {2}</value>
   </data>
 </root>

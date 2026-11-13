@@ -109,17 +109,29 @@ public static class GenerationSteps
     public static IReadOnlyList<GenerationStage> Stages { get; } =
         [GenerationStage.Setup, GenerationStage.Extract, GenerationStage.Glossary, GenerationStage.Translate, GenerationStage.Build];
 
-    /// <summary>The state of each of <see cref="Stages"/>; <paramref name="job"/> <c>null</c> = the start form.</summary>
-    public static IReadOnlyList<GenerationStepState> Of(GenerationJob? job)
+    /// <summary>A Thorough job's: Setup, Extract, Study, Glossary, Translate, Build &amp; test.</summary>
+    public static IReadOnlyList<GenerationStage> StudyStages { get; } =
+        [GenerationStage.Setup, GenerationStage.Extract, GenerationStage.Study, GenerationStage.Glossary, GenerationStage.Translate, GenerationStage.Build];
+
+    /// <summary>The steps of a job at <paramref name="quality"/>.</summary>
+    public static IReadOnlyList<GenerationStage> For(GenerationQuality quality) =>
+        quality == GenerationQuality.Thorough ? StudyStages : Stages;
+
+    /// <summary>
+    /// The state of each of <see cref="For"/> the job's quality; <paramref name="job"/> <c>null</c> = the start form, whose
+    /// steps follow the quality the player chose (<paramref name="formQuality"/>).
+    /// </summary>
+    public static IReadOnlyList<GenerationStepState> Of(GenerationJob? job, GenerationQuality formQuality = GenerationQuality.Balanced)
     {
+        var stages = For(job?.Options.Quality ?? formQuality);
         if (job is null)
         {
-            return [GenerationStepState.Current, .. Enumerable.Repeat(GenerationStepState.Upcoming, Stages.Count - 1)];
+            return [GenerationStepState.Current, .. Enumerable.Repeat(GenerationStepState.Upcoming, stages.Count - 1)];
         }
 
         if (job.Stage == GenerationStage.Done || job.Status == GenerationJobStatus.Completed)
         {
-            return [.. Enumerable.Repeat(GenerationStepState.Done, Stages.Count)];
+            return [.. Enumerable.Repeat(GenerationStepState.Done, stages.Count)];
         }
 
         var current = job.Status switch
@@ -132,7 +144,7 @@ public static class GenerationSteps
 
         // A failure names its stage; the job's stage is the one that runs next otherwise.
         var stage = job.Status == GenerationJobStatus.Failed && job.Failure is { } failure ? failure.Stage : job.Stage;
-        var index = Stages.ToList().IndexOf(stage);
-        return [.. Stages.Select((_, i) => i < index ? GenerationStepState.Done : i == index ? current : GenerationStepState.Upcoming)];
+        var index = stages.ToList().IndexOf(stage);
+        return [.. stages.Select((_, i) => i < index ? GenerationStepState.Done : i == index ? current : GenerationStepState.Upcoming)];
     }
 }

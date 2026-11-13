@@ -54,6 +54,32 @@ public sealed class CodexCommandLineTests
     }
 
     [Fact]
+    public void Web_search_turns_codexs_live_search_on()
+    {
+        // Arrange
+        var request = Request with { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.WebSearch } };
+
+        // Act
+        var overrides = Overrides(CodexCommandLine.Arguments(request));
+
+        // Assert
+        overrides.Should().Contain("web_search=\"live\"").And.NotContain("web_search=\"disabled\"");
+    }
+
+    [Fact]
+    public void The_effort_is_codexs_reasoning_effort()
+    {
+        // Arrange
+        var request = Request with { Effort = AgentEffort.Low };
+
+        // Act
+        var overrides = Overrides(CodexCommandLine.Arguments(request));
+
+        // Assert
+        overrides.Should().Contain("model_reasoning_effort=\"low\"");
+    }
+
+    [Fact]
     public void Features_acting_outside_the_sandbox_are_off()
     {
         // Act

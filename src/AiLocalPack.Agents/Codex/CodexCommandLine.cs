@@ -10,7 +10,7 @@ namespace AiLocalPack.Agents.Codex;
 /// config reference, 2026-11-08): <c>codex exec --json --skip-git-repo-check --ignore-user-config --ignore-rules --color
 /// never --cd &lt;dir&gt; --sandbox read-only|workspace-write -c approval_policy="never" -c web_search="disabled" -c
 /// features.&lt;x&gt;=false… [-c sandbox_workspace_write.…] [-c mcp_servers.&lt;name&gt;.…] [-c developer_instructions="…"]
-/// [--model &lt;m&gt;] [resume &lt;session&gt;] -</c>, the prompt on standard input (<c>-</c>).
+/// [-c model_reasoning_effort="…"] [--model &lt;m&gt;] [resume &lt;session&gt;] -</c>, the prompt on standard input (<c>-</c>).
 /// <list type="bullet">
 /// <item><b>Config</b> (decided): <c>-c</c> overrides over Codex's own defaults, the player's <c>config.toml</c> and
 /// <c>.rules</c> ignored; not a generated <c>CODEX_HOME</c>, which also holds the sign-in (<c>--ignore-user-config</c>
@@ -23,7 +23,9 @@ namespace AiLocalPack.Agents.Codex;
 /// read-only sandbox); with neither reading nor commands the shell tools are off and only MCP tools remain.</item>
 /// <item>Never asks (<c>approval_policy="never"</c>): what the sandbox refuses fails; MCP servers' tools are pre-approved
 /// (<c>default_tools_approval_mode="approve"</c>) and the servers <c>required</c> (Codex stops if one can't start).</item>
-/// <item>Off whatever the request: web search, apps / connectors, plugins, hooks, browser and computer use, image
+/// <item>Web search (<c>web_search</c>) is <c>"live"</c> only with <see cref="AgentBuiltinTool.WebSearch"/>, else
+/// <c>"disabled"</c>; it runs on OpenAI's side, so the sandbox's network stays off.</item>
+/// <item>Off whatever the request: apps / connectors, plugins, hooks, browser and computer use, image
 /// generation, sub-agents, memories (<see cref="DisabledFeatures"/>).</item>
 /// </list>
 /// </summary>
@@ -69,7 +71,7 @@ public static partial class CodexCommandLine
         void Set(string key, string tomlValue) => arguments.AddRange(["-c", $"{key}={tomlValue}"]);
 
         Set("approval_policy", Toml("never"));
-        Set("web_search", Toml("disabled"));
+        Set("web_search", Toml(tools.Contains(AgentBuiltinTool.WebSearch) ? "live" : "disabled"));
         foreach (var feature in DisabledFeatures)
         {
             Set($"features.{feature}", "false");
@@ -111,6 +113,11 @@ public static partial class CodexCommandLine
         if (!string.IsNullOrEmpty(request.SystemPrompt))
         {
             Set("developer_instructions", Toml(request.SystemPrompt));
+        }
+
+        if (request.Effort is { } effort)
+        {
+            Set("model_reasoning_effort", Toml(effort.ToString().ToLowerInvariant()));
         }
 
         if (request.Model is { } model)

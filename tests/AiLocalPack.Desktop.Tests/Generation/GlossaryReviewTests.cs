@@ -254,7 +254,8 @@ public sealed class GlossaryReviewTests
         dialog.ConfirmCommand.Execute(null);
 
         // Assert
-        await WaitUntil(() => tab.Job?.Status == GenerationJobStatus.Running);
+        // The job's status and the review card change in two UI updates: wait for both.
+        await WaitUntil(() => tab.Job?.Status == GenerationJobStatus.Running && !tab.ShowReview);
         (tab.Job!.Stage, tab.ShowReview, OnDisk(folder)!.Entries.Select(e => e.Term).Single()).Should().Be((GenerationStage.Glossary, false, "Potion"));
     }
 

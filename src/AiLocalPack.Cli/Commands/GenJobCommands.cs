@@ -23,7 +23,7 @@ namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
 /// Generation jobs (tasks 47, 49): <c>gen run &lt;game&gt; [--agent claude|codex | --fake-agent &lt;recording&gt;] [--lang]
-/// [--review-glossary] [--until &lt;stage&gt;] [--workers &lt;n&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
+/// [--review-glossary] [--quality quick|balanced|thorough] [--web] [--until &lt;stage&gt;] [--workers &lt;n&gt;] [--wait]</c> starts one and follows it; <c>gen resume &lt;game&gt; [--fake-agent]
 /// [--until] [--workers] [--wait]</c> goes on from the saved stage and chunk (or retries a failed stage, or approves a glossary under
 /// review); <c>gen status [&lt;game&gt;]</c> lists jobs; <c>gen cancel &lt;game&gt;</c> cancels the open one. Every stage is
 /// the real one (<see cref="GenerationPipeline"/>), with the fake agent too. After each chunk the strings just translated
@@ -41,7 +41,7 @@ internal static class GenJobCommands
 
     private static Option<string?> UntilOption() => new("--until")
     {
-        Description = "Pause the job once this stage is done: setup, extract, glossary or translate ('gen resume' goes on).",
+        Description = "Pause the job once this stage is done: setup, extract, study (Thorough), glossary or translate ('gen resume' goes on).",
     };
 
     /// <summary>The stage to pause before for <c>--until &lt;stage&gt;</c>, or the reason the value is wrong.</summary>
@@ -49,11 +49,23 @@ internal static class GenJobCommands
     {
         null => (null, null),
         "setup" => (GenerationStage.Extract, null),
-        "extract" => (GenerationStage.Glossary, null),
+        "extract" => (GenerationStage.Study, null),
+        "study" => (GenerationStage.Glossary, null),
         "glossary" => (GenerationStage.Translate, null),
         "translate" => (GenerationStage.Build, null),
-        _ => (null, $"--until takes setup, extract, glossary or translate, not '{text}'."),
+        _ => (null, $"--until takes setup, extract, study, glossary or translate, not '{text}'."),
     };
+
+    /// <summary>The quality of <c>--quality</c> (Balanced when not given), or the reason the value is wrong.</summary>
+    internal static (GenerationQuality Quality, string? Error) Quality(string? text) => text?.ToLowerInvariant() switch
+    {
+        null or "balanced" => (GenerationQuality.Balanced, null),
+        "quick" => (GenerationQuality.Quick, null),
+        "thorough" => (GenerationQuality.Thorough, null),
+        _ => (GenerationQuality.Balanced, $"--quality takes quick, balanced or thorough, not '{text}'."),
+    };
+
+    private static TimeSpan Middle(GenerationEstimate work) => (work.TimeLow + work.TimeHigh) / 2;
 
     private static Option<int?> WorkersOption() => new("--workers")
     {
@@ -79,12 +91,14 @@ internal static class GenJobCommands
         var language = new Option<string?>("--lang") { Description = "Target language tag (default: the app's setting, else the OS language)." };
         var review = new Option<bool>("--review-glossary") { Description = "Wait for the player's review after the glossary." };
         var allFiles = new Option<bool>("--all-files") { Description = "Copy every file into the working copy." };
-        var model = new Option<string?>("--model") { Description = "The agent's model (default: the agent's own)." };
+        var model = new Option<string?>("--model") { Description = "The agent's model for every stage (default: the quality's model)." };
+        var quality = new Option<string?>("--quality") { Description = "How carefully to translate: quick, balanced (default) or thorough (studies the whole game first)." };
+        var web = new Option<bool>("--web") { Description = "Thorough only: let the Study stage look the game up on the web." };
         var update = new Option<bool>("--update") { Description = "Translate only the new and changed strings on top of the installed pack (its next revision, in its language)." };
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, update, until, workers, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, quality, web, update, until, workers, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -129,7 +143,9 @@ internal static class GenJobCommands
 
             var (pauseBefore, untilError) = Until(result.GetValue(until));
             var (chunksAtOnce, workersError) = Workers(result.GetValue(workers));
-            if ((untilError ?? workersError) is { } optionError)
+            var (chosenQuality, qualityError) = Quality(result.GetValue(quality));
+            var webError = result.GetValue(web) && chosenQuality != GenerationQuality.Thorough ? "--web works only with --quality thorough." : null;
+            if ((untilError ?? workersError ?? qualityError ?? webError) is { } optionError)
             {
                 error.WriteLine(optionError);
                 return 1;
@@ -153,7 +169,9 @@ internal static class GenJobCommands
                 result.GetValue(review),
                 result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null,
                 result.GetValue(model),
-                updateBase?.Reference(installed!.Local));
+                updateBase?.Reference(installed!.Local),
+                chosenQuality,
+                result.GetValue(web));
             var plan = new StagePlan(agentId, recording, pauseBefore, chunksAtOnce);
             GenerationRun run;
             try
@@ -172,7 +190,7 @@ internal static class GenJobCommands
                     agentId,
                     options,
                     _ => context.Stages(plan),
-                    (estimate.Work.TimeLow + estimate.Work.TimeHigh) / 2,
+                    Middle(estimate.Work.At(options.Quality)),
                     cancellationToken,
                     updateBase);
             }
@@ -182,7 +200,7 @@ internal static class GenJobCommands
                 return 1;
             }
 
-            output.WriteLine($"Job {run.Job.Id} for {context.Game.Name} into {tag} with {agentId}: {run.Folder}");
+            output.WriteLine($"Job {run.Job.Id} for {context.Game.Name} into {tag} with {agentId}, {options.Quality.ToString().ToLowerInvariant()}" + (options.WebLookup ? " with web lookup" : "") + $": {run.Folder}");
             return await FollowAsync(context, run, plan, result.GetValue(wait), output, cancellationToken);
         });
         return command;

@@ -60,6 +60,7 @@ public sealed class GenerationStepViewModel(GenerationStage stage, string name, 
         {
             GenerationStage.Setup => "IconBot",
             GenerationStage.Extract => "IconFile",
+            GenerationStage.Study => "IconBrain",
             GenerationStage.Glossary => "IconTag",
             GenerationStage.Translate => "IconGlobe",
             _ => "IconPlay",
@@ -185,6 +186,12 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private bool _reviewGlossary;
 
     [ObservableProperty]
+    private GenerationQuality _quality = GenerationQuality.Balanced;
+
+    [ObservableProperty]
+    private bool _webLookup = true;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasStartError))]
     private string _startError = string.Empty;
 
@@ -261,6 +268,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         RegenerateCommand = new RelayCommand(AskRegenerate, () => CanResume && Review?.IsLoaded == true);
         ToggleWarningsCommand = new RelayCommand(() => IsWarningsOpen = !IsWarningsOpen);
         ToggleLogCommand = new RelayCommand(() => IsLogOpen = !IsLogOpen);
+        CompareQualitiesCommand = new RelayCommand(CompareQualities);
+        QualityOptions = [.. GenerationQualityTexts.All.Select(q => new GenerationQualityOption(q, PickQuality))];
         Job = jobs.FindOpen(game.Id);
         SyncResult();
         SelectDefaultAgent();
@@ -299,7 +308,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     /// <summary><c>Regenerate</c>: asks, then the agent drafts the glossary again, keeping the player's edits.</summary>
     public IRelayCommand RegenerateCommand { get; }
 
-    /// <summary>Setup + the four pipeline stages.</summary>
+    /// <summary>Setup + the four pipeline stages (five with Study for a Thorough job).</summary>
     public IReadOnlyList<GenerationStepViewModel> Steps { get; private set; }
 
     // ---------- Title and language ----------
@@ -310,8 +319,37 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     /// </summary>
     public bool IsUpdateMode => _update is not null && !_baseUnusable;
 
-    /// <summary>"Generate a translation into" / "Translate the new strings into".</summary>
-    public string FormTitle => _localizer[IsUpdateMode ? nameof(Strings.Gen_Update_Title) : nameof(Strings.Gen_Title)];
+    /// <summary>The title before the quality button: "Create a" / "Translate the new strings at".</summary>
+    public string FormTitle => _localizer[IsUpdateMode ? nameof(Strings.Gen_Update_Title_Before) : nameof(Strings.Gen_Title_Before)];
+
+    /// <summary>The title between the quality and the language buttons: "translation into" / "quality into".</summary>
+    public string FormTitleAfter => _localizer[IsUpdateMode ? nameof(Strings.Gen_Update_Title_After) : nameof(Strings.Gen_Title_After)];
+
+    public bool HasFormTitle => FormTitle.Length > 0;
+
+    public bool HasFormTitleAfter => FormTitleAfter.Length > 0;
+
+    // ---------- Quality (decided 2026-11-13, design §6a) ----------
+
+    /// <summary>The mode popover's rows: Quick, Balanced (the default every time), Thorough.</summary>
+    public IReadOnlyList<GenerationQualityOption> QualityOptions { get; }
+
+    /// <summary>"Balanced": the mode button.</summary>
+    public string QualityName => GenerationQualityTexts.Name(Quality, _localizer);
+
+    public string QualityIcon => GenerationQualityTexts.Icon(Quality);
+
+    /// <summary>"Translates with Sonnet" for the selected agent.</summary>
+    public string QualityModelLine => GenerationQualityTexts.ModelLine(Quality, SelectedAgent?.AgentId, _localizer);
+
+    /// <summary>The web lookup checkbox: Thorough only.</summary>
+    public bool ShowWebLookup => Quality == GenerationQuality.Thorough;
+
+    /// <summary><c>Compare modes</c>: the dialog with every quality side by side.</summary>
+    public IRelayCommand CompareQualitiesCommand { get; }
+
+    /// <summary>The estimate at the chosen quality (the toolkit reads the game once; the quality only changes the cost).</summary>
+    private GenerationEstimate? Work => _estimate?.Work.At(Quality);
 
     /// <summary>An update keeps its pack's language.</summary>
     public bool CanPickLanguage => !IsUpdateMode;
@@ -371,10 +409,10 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         : _localizer.Plural(nameof(Strings.Gen_Tile_Words_One), e.Work.Text.Words, e.Work.Text.Words.ToString("N0", _localizer.Culture));
 
     /// <summary>"3–5 h", "35–80 min".</summary>
-    public string TimeValue => _estimate is { } e ? Approx + FormatTime(e.Work.TimeLow, e.Work.TimeHigh, _localizer) : "—";
+    public string TimeValue => Work is { } w ? Approx + FormatTime(w.TimeLow, w.TimeHigh, _localizer) : "—";
 
     /// <summary>"1–2" days of an entry-level plan's limits.</summary>
-    public string LimitsValue => _estimate is { } e ? Approx + FormatRange(e.Work.LimitDaysLow, e.Work.LimitDaysHigh, _localizer.Culture) : "—";
+    public string LimitsValue => Work is { } w ? Approx + FormatRange(w.LimitDaysLow, w.LimitDaysHigh, _localizer.Culture) : "—";
 
     /// <summary>Why the size couldn't be estimated (or the update's base pack couldn't be read).</summary>
     public string EstimateErrorText => _baseError is { } baseError && _update is { } u
@@ -470,6 +508,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
                     nameof(Strings.Gen_Progress_Counter_Chunks), Math.Min(counters.ChunksDone + 1, counters.Chunks), counters.Chunks),
                 GenerationStage.Setup => _localizer[nameof(Strings.Gen_Progress_Sub_Setup)],
                 GenerationStage.Extract => _localizer[nameof(Strings.Gen_Progress_Sub_Extract)],
+                GenerationStage.Study => _localizer[job.Options.WebLookup ? nameof(Strings.Gen_Progress_Sub_StudyWeb) : nameof(Strings.Gen_Progress_Sub_Study)],
                 GenerationStage.Glossary => _localizer[nameof(Strings.Gen_Progress_Sub_Glossary)],
                 GenerationStage.Build => _localizer[nameof(Strings.Gen_Progress_Sub_Build)],
                 _ => _localizer.Format(nameof(Strings.Gen_Progress_Detail), LanguageNames.Native(job.Language), AgentName),
@@ -482,6 +521,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     /// <summary>The job's agent ("Claude Code").</summary>
     public string AgentName => Job is { } job ? AgentInfo.Of(job.Agent).Name : string.Empty;
+
+    /// <summary>"Thorough · Opus": the job's quality and model next to the stage name.</summary>
+    public string QualityChip => Job is { } job ? GenerationQualityTexts.Chip(job.Options.Quality, job.Agent, _localizer) : string.Empty;
+
+    public string QualityChipIcon => GenerationQualityTexts.Icon(Job?.Options.Quality ?? GenerationQuality.Balanced);
 
     public bool ShowPause => IsRunning;
 
@@ -745,6 +789,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     public void RefreshTexts()
     {
         Steps = BuildSteps();
+        SyncQualityOptions();
         Review?.RefreshTexts();
         Result?.RefreshTexts();
         foreach (var card in Agents)
@@ -803,6 +848,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     partial void OnEstimateStateChanged(EstimateState value)
     {
         RetryEstimateCommand.NotifyCanExecuteChanged();
+        SyncQualityOptions();
         RaiseAll();
     }
 
@@ -874,7 +920,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private async Task StartAsync()
     {
-        if (!CanStart || SelectedAgent is not { } agent || _estimate is not { } estimate)
+        if (!CanStart || SelectedAgent is not { } agent || Work is not { } work)
         {
             return;
         }
@@ -883,8 +929,12 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         StartError = string.Empty;
         RaiseStart();
         var updateBase = IsUpdateMode ? _base?.Base : null;
-        var options = new GenerationOptions(ReviewGlossary, Base: updateBase is null ? null : _base!.Reference);
-        var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (estimate.Work.TimeLow + estimate.Work.TimeHigh) / 2, updateBase);
+        var options = new GenerationOptions(
+            ReviewGlossary,
+            Base: updateBase is null ? null : _base!.Reference,
+            Quality: Quality,
+            WebLookup: Quality == GenerationQuality.Thorough && WebLookup);
+        var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (work.TimeLow + work.TimeHigh) / 2, updateBase);
         _ui.Post(() =>
         {
             _starting = false;
@@ -1268,8 +1318,55 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(SelectedAgent));
+        OnPropertyChanged(nameof(QualityModelLine));
+        SyncQualityOptions();
         RaiseStart();
     }
+
+    private void PickQuality(GenerationQuality quality) => Quality = quality;
+
+    partial void OnQualityChanged(GenerationQuality value)
+    {
+        SyncQualityOptions();
+        Steps = BuildSteps();
+        OnPropertyChanged(nameof(Steps));
+        OnPropertyChanged(nameof(QualityName));
+        OnPropertyChanged(nameof(QualityIcon));
+        OnPropertyChanged(nameof(QualityModelLine));
+        OnPropertyChanged(nameof(ShowWebLookup));
+        OnPropertyChanged(nameof(TimeValue));
+        OnPropertyChanged(nameof(LimitsValue));
+    }
+
+    /// <summary>The popover's rows for the selected agent and the estimate.</summary>
+    private void SyncQualityOptions()
+    {
+        // Called from the constructor's agent selection before the rows exist.
+        if (QualityOptions is null)
+        {
+            return;
+        }
+
+        foreach (var option in QualityOptions)
+        {
+            option.IsSelected = option.Quality == Quality;
+            option.Name = GenerationQualityTexts.Name(option.Quality, _localizer);
+            option.Blurb = GenerationQualityTexts.Blurb(option.Quality, _localizer);
+            option.Model = GenerationQualityTexts.Model(option.Quality, SelectedAgent?.AgentId, _localizer);
+            option.Time = _estimate?.Work.At(option.Quality) is { } w ? Approx + FormatTime(w.TimeLow, w.TimeHigh, _localizer) : string.Empty;
+        }
+    }
+
+    private void CompareQualities() =>
+        _dialogs.Show<GenerationQualityDialogViewModel>(new GenerationQualityCompareRequest(
+            _game.Name,
+            SelectedAgent?.AgentId,
+            SelectedAgent?.Name ?? string.Empty,
+            Quality,
+            _estimate?.Work,
+            w => Approx + FormatTime(w.TimeLow, w.TimeHigh, _localizer),
+            w => _localizer.Format(nameof(Strings.Gen_Quality_Cell_Limits), Approx + FormatRange(w.LimitDaysLow, w.LimitDaysHigh, _localizer.Culture)),
+            PickQuality));
 
     /// <summary>The default agent (Settings: the stored one while ready, else the first ready one), else the stored one, else the first.</summary>
     private void SelectDefaultAgent()
@@ -1323,8 +1420,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private IReadOnlyList<GenerationStepViewModel> BuildSteps()
     {
-        var states = GenerationSteps.Of(Job ?? Result?.Result.Job);
-        return [.. GenerationSteps.Stages.Select((stage, i) => new GenerationStepViewModel(stage, GenerationTexts.StepName(stage, _localizer), states[i], i == states.Count - 1))];
+        var job = Job ?? Result?.Result.Job;
+        var states = GenerationSteps.Of(job, Quality);
+        return [.. GenerationSteps.For(job?.Options.Quality ?? Quality).Select((stage, i) => new GenerationStepViewModel(stage, GenerationTexts.StepName(stage, _localizer), states[i], i == states.Count - 1))];
     }
 
     /// <summary>"Unity (Mono) · supported by the toolkit", or why the toolkit can't read the game.</summary>

@@ -2233,9 +2233,6 @@
   <data name="Gen_Steps_Label" xml:space="preserve">
     <value>Fasi della generazione</value>
   </data>
-  <data name="Gen_Title" xml:space="preserve">
-    <value>Genera una traduzione in</value>
-  </data>
   <data name="Gen_Language_Into" xml:space="preserve">
     <value>In</value>
   </data>
@@ -3111,9 +3108,6 @@
   </data>
   <data name="Library_Card_LocalPackLanguage" xml:space="preserve">
     <value>La tua traduzione · {0}</value>
-  </data>
-  <data name="Gen_Update_Title" xml:space="preserve">
-    <value>Traduci le nuove stringhe in</value>
   </data>
   <data name="Gen_Update_Banner" xml:space="preserve">
     <value>Basata su «{0}» rev. {1} installata: le sue traduzioni restano, all'agente vanno solo le stringhe nuove e modificate.</value>
@@ -4128,5 +4122,149 @@
   </data>
   <data name="Welcome_Ill_Greeting" xml:space="preserve">
     <value>Salve, viaggiatore!</value>
+  </data>
+  <data name="Gen_Title_Before" xml:space="preserve">
+    <value>Crea una traduzione in modalità</value>
+  </data>
+  <data name="Gen_Title_After" xml:space="preserve">
+    <value>in</value>
+  </data>
+  <data name="Gen_Update_Title_Before" xml:space="preserve">
+    <value>Traduci le nuove stringhe in modalità</value>
+  </data>
+  <data name="Gen_Update_Title_After" xml:space="preserve">
+    <value>in</value>
+  </data>
+  <data name="Gen_Quality_Button_Tip" xml:space="preserve">
+    <value>Con quanta cura tradurre</value>
+  </data>
+  <data name="Gen_Quality_Quick" xml:space="preserve">
+    <value>Rapida</value>
+  </data>
+  <data name="Gen_Quality_Balanced" xml:space="preserve">
+    <value>Bilanciata</value>
+  </data>
+  <data name="Gen_Quality_Thorough" xml:space="preserve">
+    <value>Accurata</value>
+  </data>
+  <data name="Gen_Quality_Quick_Blurb" xml:space="preserve">
+    <value>Veloce ed economica: un modello piccolo traduce blocco per blocco.</value>
+  </data>
+  <data name="Gen_Quality_Balanced_Blurb" xml:space="preserve">
+    <value>Il modello standard con il glossario. Adatta alla maggior parte dei giochi.</value>
+  </data>
+  <data name="Gen_Quality_Thorough_Blurb" xml:space="preserve">
+    <value>Il modello più potente studia prima tutto il gioco, poi traduce.</value>
+  </data>
+  <data name="Gen_Quality_Default" xml:space="preserve">
+    <value>predefinita</value>
+  </data>
+  <data name="Gen_Quality_Footer" xml:space="preserve">
+    <value>Solo per questo gioco; la prossima volta di nuovo Bilanciata.</value>
+  </data>
+  <data name="Gen_Quality_Compare" xml:space="preserve">
+    <value>Confronta le modalità</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortLow" xml:space="preserve">
+    <value>modello predefinito, sforzo basso</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortMedium" xml:space="preserve">
+    <value>modello predefinito, sforzo medio</value>
+  </data>
+  <data name="Gen_Quality_Model_EffortHigh" xml:space="preserve">
+    <value>modello predefinito, sforzo alto</value>
+  </data>
+  <data name="Gen_Quality_Model_Default" xml:space="preserve">
+    <value>il modello predefinito dell’agente</value>
+  </data>
+  <data name="Gen_Quality_ModelLine" xml:space="preserve">
+    <value>Traduce con {0}</value>
+  </data>
+  <data name="Gen_Quality_ModelLine_Study" xml:space="preserve">
+    <value>Studia il gioco e traduce con {0}</value>
+  </data>
+  <data name="Gen_Quality_Web" xml:space="preserve">
+    <value>Lascia che l’agente cerchi il gioco sul web</value>
+  </data>
+  <data name="Gen_Quality_Web_Detail" xml:space="preserve">
+    <value>Solo mentre studia il gioco: wiki, pagina dello store, traduzioni ufficiali in altre lingue. Nulla del tuo computer viene inviato; la traduzione resta offline.</value>
+  </data>
+  <data name="Gen_Quality_Compare_Title" xml:space="preserve">
+    <value>Confronta le modalità di traduzione</value>
+  </data>
+  <data name="Gen_Quality_Compare_Subtitle" xml:space="preserve">
+    <value>Per «{0}», {1} stringhe, con {2}.</value>
+  </data>
+  <data name="Gen_Quality_Compare_SubtitleNoSize" xml:space="preserve">
+    <value>Per «{0}» con {1}.</value>
+  </data>
+  <data name="Gen_Quality_Row_Model" xml:space="preserve">
+    <value>Traduce con</value>
+  </data>
+  <data name="Gen_Quality_Row_Study" xml:space="preserve">
+    <value>Studia prima il gioco</value>
+  </data>
+  <data name="Gen_Quality_Row_Web" xml:space="preserve">
+    <value>Ricerca web</value>
+  </data>
+  <data name="Gen_Quality_Row_Chunk" xml:space="preserve">
+    <value>Ogni blocco riceve</value>
+  </data>
+  <data name="Gen_Quality_Row_Time" xml:space="preserve">
+    <value>Tempo dell’agente</value>
+  </data>
+  <data name="Gen_Quality_Row_Limits" xml:space="preserve">
+    <value>Abbonamento</value>
+  </data>
+  <data name="Gen_Quality_Row_BestFor" xml:space="preserve">
+    <value>Ideale per</value>
+  </data>
+  <data name="Gen_Quality_Cell_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Gen_Quality_Cell_StudyYes" xml:space="preserve">
+    <value>Sì: legge ogni stringa e scrive una scheda del gioco</value>
+  </data>
+  <data name="Gen_Quality_Cell_WebYes" xml:space="preserve">
+    <value>Facoltativa, solo durante lo studio</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkGlossary" xml:space="preserve">
+    <value>Il glossario</value>
+  </data>
+  <data name="Gen_Quality_Cell_ChunkBrief" xml:space="preserve">
+    <value>La scheda del gioco e il glossario</value>
+  </data>
+  <data name="Gen_Quality_Cell_Limits" xml:space="preserve">
+    <value>{0} giorni di limiti</value>
+  </data>
+  <data name="Gen_Quality_Quick_BestFor" xml:space="preserve">
+    <value>Provare un gioco stasera; menu e testi brevi</value>
+  </data>
+  <data name="Gen_Quality_Balanced_BestFor" xml:space="preserve">
+    <value>La maggior parte dei giochi</value>
+  </data>
+  <data name="Gen_Quality_Thorough_BestFor" xml:space="preserve">
+    <value>Giochi con molta storia, giochi di parole, tanti personaggi</value>
+  </data>
+  <data name="Gen_Quality_Choose" xml:space="preserve">
+    <value>Scegli</value>
+  </data>
+  <data name="Gen_Quality_Chosen" xml:space="preserve">
+    <value>Scelta</value>
+  </data>
+  <data name="Gen_Step_Study" xml:space="preserve">
+    <value>Studio</value>
+  </data>
+  <data name="Gen_Stage_Study" xml:space="preserve">
+    <value>Studio del gioco</value>
+  </data>
+  <data name="Gen_Progress_Sub_Study" xml:space="preserve">
+    <value>Legge ogni stringa per la scheda del gioco</value>
+  </data>
+  <data name="Gen_Progress_Sub_StudyWeb" xml:space="preserve">
+    <value>Legge ogni stringa e il web per la scheda del gioco</value>
+  </data>
+  <data name="Gen_Result_PackLineQuality" xml:space="preserve">
+    <value>«{0}» in {1} · {2}</value>
   </data>
 </root>

@@ -117,6 +117,32 @@ public sealed class ClaudeCodeCommandLineTests
     }
 
     [Fact]
+    public void Web_search_allows_and_pre_approves_websearch_and_webfetch()
+    {
+        // Arrange
+        var request = Request with { BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.WebSearch } };
+
+        // Act
+        var arguments = ClaudeCodeCommandLine.Arguments(request, null, null);
+
+        // Assert
+        (ValueAfter(arguments, "--tools"), ValueAfter(arguments, "--allowedTools")).Should().Be(("WebSearch,WebFetch", "WebSearch,WebFetch"));
+    }
+
+    [Fact]
+    public void The_effort_is_passed_on()
+    {
+        // Arrange
+        var request = Request with { Effort = AgentEffort.High };
+
+        // Act
+        var arguments = ClaudeCodeCommandLine.Arguments(request, null, null);
+
+        // Assert
+        ValueAfter(arguments, "--effort").Should().Be("high");
+    }
+
+    [Fact]
     public void A_model_and_a_session_to_resume_are_passed_on()
     {
         // Arrange
