@@ -22,7 +22,8 @@ public sealed record StringIssue(StringIssueSeverity Severity, string Rule, stri
 /// (<see cref="IRecipeTool.Markup"/>). Rules (ID, severity):
 /// <list type="bullet">
 /// <item><c>empty</c> (error): nothing but whitespace; no other rule runs.</item>
-/// <item><c>placeholder-missing</c> (error): a placeholder or tag of the original appears fewer times in the translation.</item>
+/// <item><c>placeholder-missing</c> (error): a placeholder or tag of the original appears fewer times in the translation
+/// (as many times as the original has it, however often the list names it).</item>
 /// <item><c>placeholder-extra</c> (error): a markup token appears more times than in the original (an added
 /// <c>%s</c> or <c>{1}</c> can crash the game, an added tag changes the look); order is free.</item>
 /// <item><c>placeholder-order</c> (error): unnumbered printf fields (<c>%s</c>, <c>%d</c>, <c>%.1f</c>) in another order:
@@ -64,7 +65,14 @@ public static partial class StringValidator
         }
 
         var issues = new List<StringIssue>();
+        // A placeholder counts as often as the original has it, even when the list names it once (an agent's extractor
+        // may list "%s" once for "%s waves to %s!").
         var expected = Counts(source.Placeholders);
+        foreach (var token in expected.Keys.ToList())
+        {
+            expected[token] = Math.Max(expected[token], Occurrences(source.Original, token));
+        }
+
         foreach (var (token, count) in expected.OrderBy(p => p.Key, StringComparer.Ordinal))
         {
             var present = Occurrences(translation, token);

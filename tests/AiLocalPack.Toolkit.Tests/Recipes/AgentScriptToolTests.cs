@@ -40,6 +40,16 @@ public sealed class AgentScriptToolTests : IDisposable
         s.Should().BeEquivalentTo(new ExtractedString("a", "Hi {hero}", "Dialogue", 30, ["{hero}"]));
     }
 
+    [Fact]
+    public void A_placeholder_listed_once_counts_every_time_the_original_has_it()
+    {
+        // Act
+        var s = Extract("""{"strings": [{"key": "a", "original": "%s waves to %s for %d!", "placeholders": ["%s", "%d"]}]}""").Strings.Single();
+
+        // Assert
+        s.Placeholders.Should().Equal("%s", "%s", "%d");
+    }
+
     [Theory]
     [InlineData("""{"strings": [{"key": "a", "original": "x"}, {"key": "a", "original": "y"}]}""", "listed twice")]
     [InlineData("""{"strings": [{"key": "", "original": "x"}]}""", "\"key\" must be")]

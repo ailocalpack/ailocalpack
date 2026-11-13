@@ -64,6 +64,20 @@ public sealed class StringValidatorTests
     }
 
     [Fact]
+    public void A_placeholder_listed_once_but_repeated_in_the_original_may_repeat_in_the_translation()
+    {
+        // Arrange
+        var source = new ExtractedString("k", "%s waves to %s!", null, null, ["%s"]);
+        var markup = new TextMarkup(new System.Text.RegularExpressions.Regex("%s"), TagBrackets.None);
+
+        // Act
+        var issues = StringValidator.Validate(source, "%s машет %s!", markup);
+
+        // Assert
+        issues.Should().BeEmpty();
+    }
+
+    [Fact]
     public void Placeholder_repeated_in_the_original_must_repeat_in_the_translation()
     {
         // Act

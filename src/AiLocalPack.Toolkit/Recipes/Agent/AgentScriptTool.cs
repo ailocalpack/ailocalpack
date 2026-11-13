@@ -12,7 +12,7 @@ namespace AiLocalPack.Toolkit.Recipes.Agent;
 /// validator, the Translate stage) but never rebuilds: the agent's own rebuild script does, inside its sandbox, and the
 /// pack is a binary patch (no pack names this tool, and no agent code runs anywhere else).
 /// Markup = exactly the placeholders the extractor listed (each must occur in its original), so the validator checks
-/// a translation keeps them.
+/// a translation keeps them; a string's placeholders are every occurrence of the listed ones in its original, in order.
 /// </summary>
 public sealed class AgentScriptTool : IRecipeTool
 {
@@ -206,7 +206,7 @@ public sealed class AgentScriptTool : IRecipeTool
                 }
             }
 
-            strings.Add(new ExtractedString(key, original, Text(item, "context", where), maxLength, placeholders));
+            strings.Add(new ExtractedString(key, original, Text(item, "context", where), maxLength, Occurrences(original, placeholders)));
         }
 
         strings.Sort((a, b) => string.CompareOrdinal(a.Key, b.Key));
@@ -229,6 +229,22 @@ public sealed class AgentScriptTool : IRecipeTool
         return value.ValueKind == JsonValueKind.String
             ? value.GetString()
             : throw new RecipeException($"{where}: \"{name}\" must be a string.");
+    }
+
+    /// <summary>
+    /// Every occurrence of the listed placeholders in <paramref name="original"/>, in order: extractors often list a
+    /// token once though the original has it twice (<c>%s waves to %s!</c>), and the validator counts occurrences.
+    /// </summary>
+    private static List<string> Occurrences(string original, List<string> listed)
+    {
+        if (listed.Count == 0)
+        {
+            return listed;
+        }
+
+        var pattern = string.Join('|', listed.Distinct(StringComparer.Ordinal)
+            .OrderByDescending(t => t.Length).ThenBy(t => t, StringComparer.Ordinal).Select(Regex.Escape));
+        return [.. Regex.Matches(original, pattern, RegexOptions.CultureInvariant).Select(m => m.Value)];
     }
 
     /// <summary>Every listed placeholder as a literal, longest first, so a longer token isn't matched as a shorter one.</summary>
