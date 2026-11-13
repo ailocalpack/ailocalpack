@@ -11,7 +11,7 @@
 <p align="center">
   <a href="#download"><b>Download</b></a> ·
   <a href="#how-to-use-it">How to use it</a> ·
-  <a href="#questions">Questions</a> ·
+  <a href="#faq">FAQ</a> ·
   <a href="https://github.com/ailocalpack/registry">Translations</a> ·
   <a href="#privacy">Privacy</a> ·
   <a href="#code-signing-policy">Code signing policy</a>
@@ -43,13 +43,7 @@ The links always point to the latest version. All versions and what changed: [Re
 
 The app updates itself: when a new version is ready, it offers *Restart to update*.
 
-### First start: "unknown app" warnings
-
-The app isn't code-signed yet, so your system asks once whether you trust it. That's expected for now:
-
-- **Windows** shows *Windows protected your PC*: click **More info** → **Run anyway**.
-- **macOS** says the app *can't be opened* or *can't be checked*: open **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to AI Local Pack.
-- **Linux**: allow the file to run (right-click → *Properties* → *Allow executing file as program*, or `chmod +x AiLocalPack-linux-x64.AppImage`), then double-click it. If nothing happens, install FUSE 2 (`libfuse2` on Ubuntu / Debian).
+**Installing for the first time?** The app isn't code-signed yet, so Windows and macOS warn about it once. Step-by-step: [How do I install it?](#how-do-i-install-it) in the FAQ.
 
 ## How to use it
 
@@ -76,7 +70,38 @@ No translation for your game yet? Open it and click **Create with AI**.
 
 After you've tried your translation in the game, click **Publish**. The first time, the app asks you to sign in with a free GitHub account. Other players then see your translation in their app, can rate it, and it becomes **verified** once three players confirm it works.
 
-## Questions
+## FAQ
+
+### How do I install it?
+
+Download the file for your computer from [Download](#download). **The app isn't code-signed yet** (signing is being set up, see [Code signing policy](#code-signing-policy)), so your system doesn't know who made it and warns you once. That's expected for now; the steps below get past it. Download only from this repository's [Releases](https://github.com/ailocalpack/ailocalpack/releases): every file there is built from this code by its public [release workflow](.github/workflows/release.yml).
+
+**Windows** (`Setup.exe`)
+
+1. Your browser may say the file *isn't commonly downloaded*: choose **Keep** (Edge: **…** → **Keep** → **Keep anyway**).
+2. Run `AiLocalPack-win-x64-Setup.exe`. Windows shows *Windows protected your PC*: click **More info** → **Run anyway**.
+3. The installer needs no admin rights: it installs for your user and starts the app. Next time, start *AI Local Pack* from the Start menu.
+
+Portable `.zip` instead: right-click the ZIP → *Properties* → tick **Unblock** → *OK*, extract it anywhere and run `AiLocalPack.exe` (answer *Windows protected your PC* the same way). If Windows 11's **Smart App Control** is on, it blocks unsigned apps with no *Run anyway* button; until the app is signed it can't run there.
+
+**macOS** (`.pkg`)
+
+1. Double-click the `.pkg`. macOS says it *can't be opened* or *can't be checked for malicious software*: click **Done** (or **OK**).
+2. Open **System Settings → Privacy & Security**, scroll down to *"AiLocalPack…" was blocked* and click **Open Anyway**, then confirm with your password.
+3. Go through the installer. *AI Local Pack* appears in *Applications*. If macOS asks again on the first start, repeat step 2 for the app.
+
+Portable `.zip` instead: double-click it to extract, move *AI Local Pack* to *Applications* and open it; allow it in **Privacy & Security → Open Anyway** as above. (In Terminal, `xattr -dr com.apple.quarantine "/Applications/AI Local Pack.app"` does the same.)
+
+**Linux** (`.AppImage`)
+
+1. Allow the file to run: right-click → *Properties* → *Allow executing file as program*, or `chmod +x AiLocalPack-linux-x64.AppImage`.
+2. Double-click it (or run `./AiLocalPack-linux-x64.AppImage`). Nothing to install; keep the file where you like.
+3. If nothing happens, install FUSE 2: `sudo apt install libfuse2` on Ubuntu 22.04 / Debian (`libfuse2t64` on Ubuntu 24.04 and later), `fuse-libs` on Fedora. Or run it without FUSE: `./AiLocalPack-linux-x64.AppImage --appimage-extract-and-run`.
+
+Updates come through the app itself (*Restart to update*) and don't ask again.
+
+**Why isn't it signed? Is that safe?**
+Code signing costs money and paperwork that this free project is still setting up: Windows signing through [SignPath Foundation](https://signpath.org/) and an Apple Developer ID for macOS. Until then the warnings only mean "unknown publisher", not that something wrong was found. The code is open, and releases are built on GitHub's servers from it. Once signing is on, the warnings go away with the next update.
 
 **Is it free?**
 Yes, the app and every translation in it. Only creating a new translation with AI uses your own Claude or ChatGPT subscription.
@@ -133,7 +158,7 @@ What you publish (your translation and your GitHub user name as its author, rati
 
 ## Code signing policy
 
-Windows releases get free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/). (Signing is being set up; until it is, releases are unsigned, see [First start](#first-start-unknown-app-warnings).)
+Windows releases get free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/). (Signing is being set up; until it is, releases are unsigned, see [How do I install it?](#how-do-i-install-it).)
 
 Only the app built from this repository by its [release workflow](.github/workflows/release.yml) is signed: `AiLocalPack.exe`, the `AiLocalPack.*.dll` files and the `Setup.exe` installer. Third-party libraries are not signed by us.
 
