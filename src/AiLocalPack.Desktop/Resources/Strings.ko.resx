@@ -2180,7 +2180,7 @@
     <value>{0}: 툴킷이 읽을 수 없어 에이전트가 직접 읽기 도구를 만듭니다(번역은 바이너리 패치)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: 툴킷이 게임을 읽지 못했습니다({1})</value>
+    <value>{0}: 툴킷이 게임을 읽지 못했습니다({1}). 에이전트가 직접 읽기 도구를 만들어 봅니다. 시간이 더 걸리고 실패할 수도 있습니다(번역은 바이너리 패치)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>디스크 공간 확인 중…</value>
@@ -2232,9 +2232,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>규모를 추정하지 못했습니다</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>툴킷이 이 게임의 파일을 읽지 못했습니다</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>작업 사본을 만들 디스크 공간이 부족합니다</value>

@@ -2180,7 +2180,7 @@
     <value>{0}：工具包无法读取，因此智能体会自己编写读取程序（翻译将是二进制补丁）</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}：工具包无法读取这款游戏（{1}）</value>
+    <value>{0}：工具包无法读取这款游戏（{1}）。智能体会尝试自己编写读取程序：耗时更长，也可能失败（翻译将是二进制补丁）</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>正在检查磁盘空间…</value>
@@ -2232,9 +2232,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>无法估算规模</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>工具包无法读取这款游戏的文件</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>磁盘空间不足以存放工作副本</value>

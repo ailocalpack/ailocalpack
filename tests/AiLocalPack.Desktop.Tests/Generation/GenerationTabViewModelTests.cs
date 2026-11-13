@@ -310,20 +310,21 @@ public sealed class GenerationTabViewModelTests
     }
 
     [Fact]
-    public void A_toolkit_that_failed_to_read_the_game_holds_start()
+    public void A_toolkit_that_failed_to_read_the_game_warns_and_lets_the_agent_try()
     {
         // Arrange
         using var services = Build((agents, estimates) =>
         {
             ClaudeReady(agents, estimates);
-            estimates.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(source: TextSizeSource.ToolkitFailed));
+            estimates.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(source: TextSizeSource.ToolkitFailed, toolkitError: "bad archive."));
         });
 
         // Act
         var tab = Open(services);
 
         // Assert
-        (tab.StartBlock, tab.Checks[0].IsBad).Should().Be((GenerationStartBlock.EngineUnsupported, true));
+        (tab.StartBlock, tab.Checks[0].IsWarning, tab.Checks[0].Text).Should().Be(((GenerationStartBlock?)null, true,
+            "Unity (Mono): the toolkit couldn't read the game (bad archive). The agent will try to write its own reader: this takes longer and may not work (the translation is a binary patch)"));
     }
 
     [Fact]

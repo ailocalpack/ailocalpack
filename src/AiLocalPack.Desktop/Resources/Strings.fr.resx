@@ -2330,7 +2330,7 @@
     <value>{0} : la boîte à outils ne sait pas le lire, l’agent écrit donc son propre lecteur (la traduction sera un patch binaire)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0} : la boîte à outils n’a pas pu lire le jeu ({1})</value>
+    <value>{0} : la boîte à outils n’a pas pu lire le jeu ({1}). L’agent va essayer d’écrire son propre lecteur : c’est plus long et cela peut échouer (la traduction sera un patch binaire)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Vérification de l’espace disque…</value>
@@ -2382,9 +2382,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>La taille n’a pas pu être estimée</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>La boîte à outils n’a pas pu lire les fichiers de ce jeu</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Pas assez d’espace disque pour la copie de travail</value>

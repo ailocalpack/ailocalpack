@@ -330,7 +330,7 @@ public sealed class UnrealRecipeTests : IDisposable
         var act = () => _recipe.Extract(Game, Ct);
 
         // Assert
-        act.Should().Throw<RecipeException>().WithMessage("*AES*no key*");
+        act.Should().Throw<RecipeException>().WithMessage("*AES*no known key*");
     }
 
     [Fact]

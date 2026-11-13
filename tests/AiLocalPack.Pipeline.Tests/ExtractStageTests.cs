@@ -104,6 +104,38 @@ public sealed class ExtractStageTests : IDisposable
     }
 
     [Fact]
+    public async Task A_game_the_toolkit_fails_to_read_goes_to_the_agent_s_own_extractor()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+        _h.Dir.File("work/steam-620/job/game/data/Items.json", "{ not json");
+        var agent = UnknownEngineExtractTests.Extracting();
+        var stage = new ExtractStage(RecipeTools.Builtin, agent: new PipelineAgent(agent, StageHarness.Server), gameName: "Sample Quest");
+
+        // Act
+        await stage.RunStepAsync(_h.Context(GenerationStage.Extract), TestContext.Current.CancellationToken);
+
+        // Assert
+        SourceStringsFile.Read(_h.Files)!.Tool.Should().Be(AiLocalPack.Toolkit.Recipes.Agent.AgentScriptTool.ToolId);
+    }
+
+    [Fact]
+    public async Task The_agent_is_told_why_the_toolkit_failed()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+        _h.Dir.File("work/steam-620/job/game/data/Items.json", "{ not json");
+        var agent = UnknownEngineExtractTests.Extracting();
+        var stage = new ExtractStage(RecipeTools.Builtin, agent: new PipelineAgent(agent, StageHarness.Server), gameName: "Sample Quest");
+
+        // Act
+        await stage.RunStepAsync(_h.Context(GenerationStage.Extract), TestContext.Current.CancellationToken);
+
+        // Assert
+        agent.Runs.Single().Request!.Prompt.Should().Contain("(RPG Maker MZ; the toolkit's reader stopped with:").And.Contain("Items.json");
+    }
+
+    [Fact]
     public async Task The_extraction_is_logged()
     {
         // Arrange

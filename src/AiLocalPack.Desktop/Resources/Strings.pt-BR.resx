@@ -2330,7 +2330,7 @@
     <value>{0}: o toolkit não consegue lê-la, então o agente escreve o próprio leitor (a tradução é um patch binário)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: o toolkit não conseguiu ler o jogo ({1})</value>
+    <value>{0}: o toolkit não conseguiu ler o jogo ({1}). O agente vai tentar escrever o próprio leitor: isso demora mais e pode não dar certo (a tradução é um patch binário)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Verificando o espaço em disco…</value>
@@ -2382,9 +2382,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>Não foi possível estimar o tamanho</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>O toolkit não conseguiu ler os arquivos deste jogo</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Espaço em disco insuficiente para a cópia de trabalho</value>

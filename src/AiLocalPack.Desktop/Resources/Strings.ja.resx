@@ -2180,7 +2180,7 @@
     <value>{0}: ツールキットで読み取れないため、エージェントが独自の読み取りツールを作成します（翻訳はバイナリパッチになります）</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: ツールキットがゲームを読み取れませんでした（{1}）</value>
+    <value>{0}: ツールキットがゲームを読み取れませんでした（{1}）。エージェントが独自の読み取りツールの作成を試みます。時間がかかり、うまくいかない場合もあります（翻訳はバイナリパッチになります）</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>ディスクの空き容量を確認しています…</value>
@@ -2232,9 +2232,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>規模を見積もれませんでした</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>ツールキットがこのゲームのファイルを読み取れませんでした</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>作業コピー用のディスク容量が足りません</value>

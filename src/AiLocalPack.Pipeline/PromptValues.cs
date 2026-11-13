@@ -55,10 +55,13 @@ public static class PromptValues
         return values;
     }
 
-    public static Dictionary<string, string> ExtractUnknown(string gameName, string language, EngineKind engine, string gamePath, int files) => new(StringComparer.Ordinal)
+    /// <param name="toolkitError">The toolkit's own reader failed on the game with this message (the engine is known).</param>
+    public static Dictionary<string, string> ExtractUnknown(string gameName, string language, EngineKind engine, string gamePath, int files, string? toolkitError = null) => new(StringComparer.Ordinal)
     {
         ["gameName"] = gameName,
-        ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown" : engine.DisplayName,
+        ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown"
+            : toolkitError is null ? engine.DisplayName
+            : $"{engine.DisplayName}; the toolkit's reader stopped with: {toolkitError.TrimEnd('.')}",
         ["gamePath"] = gamePath,
         ["fileCount"] = files.ToString("N0", CultureInfo.InvariantCulture),
         ["languageName"] = LanguageName(language),

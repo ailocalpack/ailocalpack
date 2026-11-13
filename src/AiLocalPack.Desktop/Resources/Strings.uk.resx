@@ -2330,7 +2330,7 @@
     <value>{0}: інструменти не можуть його прочитати, тому агент напише власний зчитувач (переклад буде бінарним патчем)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: інструментам не вдалося прочитати гру ({1})</value>
+    <value>{0}: інструментам не вдалося прочитати гру ({1}). Агент спробує написати власний зчитувач: це довше й може не вдатися (переклад буде бінарним патчем)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Перевіряємо місце на диску…</value>
@@ -2382,9 +2382,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>Не вдалося оцінити розмір</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>Інструментам не вдалося прочитати файли цієї гри</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Недостатньо місця на диску для робочої копії</value>

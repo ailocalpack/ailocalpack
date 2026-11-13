@@ -2255,7 +2255,7 @@
     <value>{0}: araç seti okuyamıyor, bu yüzden ajan kendi okuyucusunu yazar (çeviri bir ikili yama olur)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: araç seti oyunu okuyamadı ({1})</value>
+    <value>{0}: araç seti oyunu okuyamadı ({1}). Ajan kendi okuyucusunu yazmayı deneyecek: bu daha uzun sürer ve başarısız olabilir (çeviri bir ikili yama olur)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Disk alanı kontrol ediliyor…</value>
@@ -2307,9 +2307,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>Boyut tahmin edilemedi</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>Araç seti bu oyunun dosyalarını okuyamadı</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Çalışma kopyası için yeterli disk alanı yok</value>

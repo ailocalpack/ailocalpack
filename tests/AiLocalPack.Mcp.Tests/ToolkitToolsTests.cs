@@ -1,6 +1,7 @@
 using System.Text.Json;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Toolkit.Recipes.RpgMaker;
 
 namespace AiLocalPack.Mcp.Tests;
 
@@ -187,6 +188,41 @@ public sealed class ToolkitToolsTests
 
         // Assert
         (result.GetProperty("tool").GetString(), Keys(result)).Should().BeEquivalentTo(("agent-script", new[] { "readme.txt:1" }));
+    }
+
+    [Fact]
+    public async Task Extract_strings_the_toolkit_fails_to_read_asks_for_the_agents_own_extractor()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(game: dir =>
+        {
+            RpgMakerFixture.Create(dir.Combine("game"));
+            dir.File("game/data/Items.json", "{ not json");
+        });
+
+        // Act
+        var error = await mcp.ErrorAsync("extract_strings");
+
+        // Assert
+        error.Should().StartWith("The toolkit couldn't read the game: ").And.EndWith("Write your own extractor: it must write strings.json in your workspace.");
+    }
+
+    [Fact]
+    public async Task Extract_strings_of_a_game_the_toolkit_fails_to_read_reads_the_agents_strings_once_written()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(game: dir =>
+        {
+            RpgMakerFixture.Create(dir.Combine("game"));
+            dir.File("game/data/Items.json", "{ not json");
+            dir.File("job/agent/strings.json", """{"strings": [{"key": "data/Items.json:1", "original": "Potion", "file": "data/Items.json"}]}""");
+        });
+
+        // Act
+        var result = await mcp.ResultAsync("extract_strings");
+
+        // Assert
+        result.GetProperty("tool").GetString().Should().Be("agent-script");
     }
 
     [Fact]

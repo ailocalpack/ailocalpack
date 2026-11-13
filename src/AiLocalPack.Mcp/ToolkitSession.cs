@@ -63,23 +63,26 @@ public sealed class ToolkitSession
         detection = refresh || detection is null ? new EngineDetector().Detect(Copy.Root) : detection;
 
     /// <summary>
-    /// The recipe tool for the copy's engine; for an engine the toolkit can't read, the strings the agent's own extractor
-    /// wrote into its workspace (<see cref="AgentScriptTool"/>, task 57) once that file is there.
+    /// The strings the agent's own extractor wrote into its workspace (<see cref="AgentScriptTool"/>, task 57) once that
+    /// file is there: the job went the agent's way, for an engine the toolkit can't read or one whose tool failed on this
+    /// game. Otherwise the recipe tool for the copy's engine.
     /// </summary>
     /// <exception cref="McpException">Unknown engine, an engine switched off on this OS, or one without a tool, and no agent extraction.</exception>
     public (IRecipeTool Tool, EngineKind Kind) Tool()
     {
         var kind = Detect().Kind;
-        if (ToolProblem(kind) is not { } problem)
+        var agent = AgentTool();
+        if (agent.Exists)
         {
-            return (Tools.For(kind)!, kind);
+            return (agent, kind);
         }
 
-        var agent = AgentTool();
-        return agent.Exists
-            ? (agent, kind)
-            : throw new McpException(problem + " Write your own extractor: it must write strings.json in your workspace.");
+        return ToolProblem(kind) is { } problem
+            ? throw new McpException(problem + WriteYourOwn)
+            : (Tools.For(kind)!, kind);
     }
+
+    private const string WriteYourOwn = " Write your own extractor: it must write strings.json in your workspace.";
 
     /// <summary>The strings the agent's extractor wrote (<c>agent/strings.json</c> of the job folder).</summary>
     public AgentScriptTool AgentTool() => agentTool ??= new AgentScriptTool(Files.AgentStringsPath);
@@ -118,7 +121,8 @@ public sealed class ToolkitSession
         }
         catch (RecipeException e)
         {
-            throw new McpException(e.File is { } file ? $"{file}: {e.Message}" : e.Message, e);
+            var message = e.File is { } file ? $"{file}: {e.Message}" : e.Message;
+            throw new McpException(tool is AgentScriptTool ? message : $"The toolkit couldn't read the game: {message}" + WriteYourOwn, e);
         }
     }
 

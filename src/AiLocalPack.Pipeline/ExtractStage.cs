@@ -11,7 +11,8 @@ namespace AiLocalPack.Pipeline;
 /// <see cref="ChunkPlanner"/>) and sets the job's counters (strings, chunks, translations already stored). No agent
 /// runs for an engine the toolkit reads: its extraction is complete by construction, and the Glossary stage's agent
 /// reads every string anyway.
-/// An unknown engine, one switched off on this OS or without a tool (task 57): the agent explores the copy and writes
+/// An unknown engine, one switched off on this OS or without a tool (task 57), or one whose tool fails to read the game
+/// (an encrypted archive, a format change): the agent explores the copy and writes
 /// its own extractor and rebuilder in its workspace (<c>agent/</c>, <see cref="AgentWorkspace"/>, prompt
 /// <see cref="PromptTemplate.ExtractUnknown"/>), runs the extractor into <c>agent/strings.json</c> and checks the round
 /// trip; the app reads that file (<see cref="AgentScriptTool"/>: refused strings fail the stage, Agent kind, to retry)
@@ -30,63 +31,60 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
     {
         ArgumentNullException.ThrowIfNull(context);
         var kind = new EngineDetector().Detect(context.CopyFolder).Kind;
-        IRecipeTool tool;
         RecipeExtraction extraction;
-        if (Problem(kind) is { } problem)
+        var problem = Problem(kind);
+        string? toolkitError = null;
+        if (problem is null)
         {
-            if (agent is null)
-            {
-                context.Log(problem);
-                return new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, problem);
-            }
-
-            context.Log(problem + " The agent writes its own extractor.");
-            var files = context.Files;
-            var run = await agent.RunAsync(
-                context,
-                PromptTemplate.ExtractUnknown,
-                PromptValues.ExtractUnknown(gameName, context.Job.Language, kind, context.CopyFolder, CountFiles(context.CopyFolder)),
-                gameName,
-                cancellationToken,
-                new AgentWorkspace(files.AgentFolder)).ConfigureAwait(false);
-            if (run.Stop is { } stop)
-            {
-                return stop;
-            }
-
-            var agentTool = new AgentScriptTool(files.AgentStringsPath);
-            try
-            {
-                extraction = agentTool.Extract(context.CopyFolder, cancellationToken);
-            }
-            catch (RecipeException e)
-            {
-                return Fail(context, GenerationFailureKind.Agent, $"The agent's extractor didn't give strings the app can read: {e.Message}");
-            }
-
-            tool = agentTool;
-        }
-        else
-        {
-            tool = tools.For(kind)!;
+            var tool = tools.For(kind)!;
             try
             {
                 extraction = tool.Extract(context.CopyFolder, cancellationToken);
+                return extraction.Strings.Count == 0
+                    ? new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, $"The toolkit found no text to translate in this {kind.DisplayName} game.")
+                    : Store(context, kind, tool, extraction);
             }
             catch (RecipeException e)
             {
-                return new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, e.Message);
+                // The toolkit's reader failed on this game: the agent may still read it its own way.
+                toolkitError = e.Message;
+                problem = $"The toolkit couldn't read this {kind.DisplayName} game: {e.Message}";
             }
         }
 
-        if (extraction.Strings.Count == 0)
+        if (agent is null)
         {
-            return tool is AgentScriptTool
-                ? Fail(context, GenerationFailureKind.Agent, "The agent's extractor found no text to translate.")
-                : new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, $"The toolkit found no text to translate in this {kind.DisplayName} game.");
+            context.Log(problem);
+            return new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, problem);
         }
 
-        return Store(context, kind, tool, extraction);
+        context.Log(problem + " The agent writes its own extractor.");
+        var files = context.Files;
+        var run = await agent.RunAsync(
+            context,
+            PromptTemplate.ExtractUnknown,
+            PromptValues.ExtractUnknown(gameName, context.Job.Language, kind, context.CopyFolder, CountFiles(context.CopyFolder), toolkitError),
+            gameName,
+            cancellationToken,
+            new AgentWorkspace(files.AgentFolder)).ConfigureAwait(false);
+        if (run.Stop is { } stop)
+        {
+            return stop;
+        }
+
+        var agentTool = new AgentScriptTool(files.AgentStringsPath);
+        try
+        {
+            extraction = agentTool.Extract(context.CopyFolder, cancellationToken);
+        }
+        catch (RecipeException e)
+        {
+            return Fail(context, GenerationFailureKind.Agent, $"The agent's extractor didn't give strings the app can read: {e.Message}");
+        }
+
+        return extraction.Strings.Count == 0
+            ? Fail(context, GenerationFailureKind.Agent, "The agent's extractor found no text to translate.")
+            : Store(context, kind, agentTool, extraction);
     }
 
     private GenerationStepResult Store(GenerationStepContext context, EngineKind kind, IRecipeTool tool, RecipeExtraction extraction)

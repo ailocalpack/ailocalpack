@@ -323,7 +323,7 @@ public sealed class UnrealIoStoreTests : IDisposable
 
     [Theory]
     [InlineData(16, 9, "*version 9*")]
-    [InlineData(80, 10, "*AES*no key*")]
+    [InlineData(80, 10, "*AES*no known key*")]
     [InlineData(80, 12, "*Signed*unsupported*")]
     [InlineData(80, 0, "*directory index*")]
     public void Unsupported_versions_flags_and_encryption_are_refused(int offset, byte value, string message)

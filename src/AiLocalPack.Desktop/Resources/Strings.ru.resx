@@ -2330,7 +2330,7 @@
     <value>{0}: инструменты его не читают, агент напишет свой разборщик (перевод — бинарный патч)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: инструменты не смогли прочитать игру ({1})</value>
+    <value>{0}: инструменты не смогли прочитать игру ({1}). Агент попробует написать свой разборщик: это дольше и может не получиться (перевод — бинарный патч)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Проверяем место на диске…</value>
@@ -2382,9 +2382,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>Не удалось оценить объём</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>Инструментам не удалось прочитать файлы игры</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Не хватает места для рабочей копии</value>

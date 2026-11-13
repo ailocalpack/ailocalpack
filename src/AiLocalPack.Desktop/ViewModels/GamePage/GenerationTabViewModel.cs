@@ -400,7 +400,6 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _game.IsAvailable,
         SelectedAgent?.IsReady == true,
         EstimateState,
-        _estimate is { Source: not TextSizeSource.ToolkitFailed },
         _estimate?.Space.IsEnough == true,
         _starting));
 
@@ -414,7 +413,6 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         GenerationStartBlock.AgentNotReady => _localizer.Format(nameof(Strings.Gen_Start_AgentNotReady), SelectedAgent?.Name),
         GenerationStartBlock.Estimating => _localizer[nameof(Strings.Gen_Start_Estimating)],
         GenerationStartBlock.EstimateFailed => _localizer[nameof(Strings.Gen_Start_EstimateFailed)],
-        GenerationStartBlock.EngineUnsupported => _localizer[nameof(Strings.Gen_Start_EngineUnsupported)],
         GenerationStartBlock.NotEnoughDisk => _localizer[nameof(Strings.Gen_Start_NotEnoughDisk)],
         _ => string.Empty,
     };
@@ -1344,7 +1342,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             TextSizeSource.UnknownEngine => new(GenerationCheckState.Warning, _localizer[nameof(Strings.Gen_Check_Engine_Unknown)]),
             TextSizeSource.EngineDisabled => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_Disabled), engine)),
             TextSizeSource.NoTool => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_NoTool), engine)),
-            _ => new(GenerationCheckState.Bad, _localizer.Format(nameof(Strings.Gen_Check_Engine_Failed), engine, e.ToolkitError)),
+            _ => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_Failed), engine, e.ToolkitError?.TrimEnd('.'))),
         };
     }
 

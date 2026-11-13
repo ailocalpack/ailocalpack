@@ -58,7 +58,7 @@ internal sealed class UnrealIoStore : IDisposable
         var flags = header[80];
         if ((flags & 2) != 0)
         {
-            throw new RecipeException("AES-encrypted IoStore archive: no key is configured; this game is unsupported.", path);
+            throw new RecipeException("AES-encrypted IoStore archive with no known key", path);
         }
 
         if ((flags & (4 | 16)) != 0)

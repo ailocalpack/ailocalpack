@@ -2330,7 +2330,7 @@
     <value>{0}: narzędzia aplikacji nie potrafią go odczytać, więc agent napisze własny czytnik (tłumaczenie będzie łatką binarną)</value>
   </data>
   <data name="Gen_Check_Engine_Failed" xml:space="preserve">
-    <value>{0}: narzędziom aplikacji nie udało się odczytać gry ({1})</value>
+    <value>{0}: narzędziom aplikacji nie udało się odczytać gry ({1}). Agent spróbuje napisać własny czytnik: to potrwa dłużej i może się nie udać (tłumaczenie będzie łatką binarną)</value>
   </data>
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Sprawdzanie miejsca na dysku…</value>
@@ -2382,9 +2382,6 @@
   </data>
   <data name="Gen_Start_EstimateFailed" xml:space="preserve">
     <value>Nie udało się oszacować rozmiaru</value>
-  </data>
-  <data name="Gen_Start_EngineUnsupported" xml:space="preserve">
-    <value>Narzędziom aplikacji nie udało się odczytać plików tej gry</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
     <value>Za mało miejsca na dysku na kopię roboczą</value>

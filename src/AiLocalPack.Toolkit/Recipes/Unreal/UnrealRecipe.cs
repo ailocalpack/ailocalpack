@@ -229,7 +229,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
                 var unloaded = provider.UnloadedVfs.First();
                 throw new RecipeException(
                     unloaded.IsEncrypted
-                        ? "AES-encrypted Unreal archive: no key is configured; this game is unsupported."
+                        ? "AES-encrypted Unreal archive with no known key"
                         : "Unreal archive could not be mounted (unsupported or corrupt index).",
                     Path.GetRelativePath(root, unloaded.Path).Replace('\\', '/'));
             }
@@ -368,7 +368,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
     {
         if (file.IsEncrypted)
         {
-            throw new RecipeException("AES-encrypted localization: no key is configured; this game is unsupported.", file.Path);
+            throw new RecipeException("AES-encrypted localization with no known key", file.Path);
         }
 
         if (file.Size < 0 || file.Size > MaxResourceSize)

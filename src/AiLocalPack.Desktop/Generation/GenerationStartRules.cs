@@ -26,31 +26,27 @@ public enum GenerationStartBlock
 
     EstimateFailed,
 
-    /// <summary>
-    /// The toolkit's tool for the game's engine failed to read it (a reading error). An unknown engine, one switched off
-    /// on this OS or without a tool doesn't block: the agent writes its own extractor (task 57).
-    /// </summary>
-    EngineUnsupported,
-
     /// <summary>The data drive hasn't room for the working copy.</summary>
     NotEnoughDisk,
 }
 
-/// <summary>What the start form knows when it decides whether a job can start.</summary>
-/// <param name="EngineSupported">The toolkit read the strings, or has no tool for the engine so the agent reads them (task 57); false = the toolkit's tool failed (only meaningful once the estimate is done).</param>
+/// <summary>
+/// What the start form knows when it decides whether a job can start. The engine never blocks: a game the toolkit
+/// can't read (unknown engine, switched off on this OS, no tool, or its tool failed on the game) starts with a warning,
+/// and the agent writes its own extractor (task 57).
+/// </summary>
 /// <param name="EnoughDisk">The working copy fits (only meaningful once the estimate is done).</param>
 public sealed record GenerationStartInputs(
     bool GameAvailable,
     bool AgentReady,
     EstimateState Estimate,
-    bool EngineSupported,
     bool EnoughDisk,
     bool Starting = false);
 
 /// <summary>
 /// The start form's rule (design §6a): <c>Start generation</c> is on only when the agent is ready, the estimate is done,
-/// the toolkit reads the game and there is room for the working copy; otherwise the first reason in this order is shown:
-/// starting, game unavailable, agent, estimating, estimate failed, engine, disk.
+/// and there is room for the working copy; otherwise the first reason in this order is shown: starting, game
+/// unavailable, agent, estimating, estimate failed, disk.
 /// </summary>
 public static class GenerationStartRules
 {
@@ -77,7 +73,6 @@ public static class GenerationStartRules
         {
             EstimateState.Estimating => GenerationStartBlock.Estimating,
             EstimateState.Failed => GenerationStartBlock.EstimateFailed,
-            _ when !inputs.EngineSupported => GenerationStartBlock.EngineUnsupported,
             _ when !inputs.EnoughDisk => GenerationStartBlock.NotEnoughDisk,
             _ => null,
         };

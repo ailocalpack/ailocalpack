@@ -7,28 +7,26 @@ namespace AiLocalPack.Desktop.Tests.Generation;
 /// <summary>When <c>Start generation</c> is on, and the reason shown when it isn't (design §6a).</summary>
 public sealed class GenerationStartRulesTests
 {
-    public static TheoryData<bool, bool, EstimateState, bool, bool, bool, GenerationStartBlock?> Rules => new()
+    public static TheoryData<bool, bool, EstimateState, bool, bool, GenerationStartBlock?> Rules => new()
     {
-        // game available, agent ready, estimate, engine supported, enough disk, starting → block
-        { true, true, EstimateState.Done, true, true, false, null },
-        { true, true, EstimateState.Done, true, true, true, GenerationStartBlock.Starting },
-        { false, true, EstimateState.Done, true, true, false, GenerationStartBlock.GameUnavailable },
-        { true, false, EstimateState.Done, true, true, false, GenerationStartBlock.AgentNotReady },
-        { true, false, EstimateState.Estimating, true, true, false, GenerationStartBlock.AgentNotReady },
-        { true, true, EstimateState.Estimating, false, false, false, GenerationStartBlock.Estimating },
-        { true, true, EstimateState.Failed, false, false, false, GenerationStartBlock.EstimateFailed },
-        { true, true, EstimateState.Done, false, true, false, GenerationStartBlock.EngineUnsupported },
-        { true, true, EstimateState.Done, false, false, false, GenerationStartBlock.EngineUnsupported },
-        { true, true, EstimateState.Done, true, false, false, GenerationStartBlock.NotEnoughDisk },
+        // game available, agent ready, estimate, enough disk, starting → block
+        { true, true, EstimateState.Done, true, false, null },
+        { true, true, EstimateState.Done, true, true, GenerationStartBlock.Starting },
+        { false, true, EstimateState.Done, true, false, GenerationStartBlock.GameUnavailable },
+        { true, false, EstimateState.Done, true, false, GenerationStartBlock.AgentNotReady },
+        { true, false, EstimateState.Estimating, true, false, GenerationStartBlock.AgentNotReady },
+        { true, true, EstimateState.Estimating, false, false, GenerationStartBlock.Estimating },
+        { true, true, EstimateState.Failed, false, false, GenerationStartBlock.EstimateFailed },
+        { true, true, EstimateState.Done, false, false, GenerationStartBlock.NotEnoughDisk },
     };
 
     [Theory]
     [MemberData(nameof(Rules))]
     public void Start_is_on_only_when_every_condition_holds(
-        bool gameAvailable, bool agentReady, EstimateState estimate, bool engineSupported, bool enoughDisk, bool starting, GenerationStartBlock? expected)
+        bool gameAvailable, bool agentReady, EstimateState estimate, bool enoughDisk, bool starting, GenerationStartBlock? expected)
     {
         // Arrange
-        var inputs = new GenerationStartInputs(gameAvailable, agentReady, estimate, engineSupported, enoughDisk, starting);
+        var inputs = new GenerationStartInputs(gameAvailable, agentReady, estimate, enoughDisk, starting);
 
         // Act
         var block = GenerationStartRules.Resolve(inputs);
