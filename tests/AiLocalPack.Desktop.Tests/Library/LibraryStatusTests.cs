@@ -140,7 +140,7 @@ public sealed class LibraryStatusTests : IDisposable
 
         // Assert
         vm.FilterChips.Select(c => (c.Label, c.Count)).Should().Equal(
-            ("All", 3), ("Installed", 0), ("Translation available", 2), ("No translation", 1), ("Needs update", 0), ("Generating", 0));
+            ("All", 3), ("Installed", 0), ("Translation available", 2), ("No translation", 1), ("Needs update", 0), ("Generating", 0), ("Requested", 0));
     }
 
     [Fact]

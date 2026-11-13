@@ -9,6 +9,7 @@ using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Ratings;
 using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Desktop.Requests;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -129,7 +130,8 @@ public sealed partial class PacksTabViewModel : ObservableObject
         Action<LocalPack> deleteLocal,
         Func<LocalPack, PackPublishViewModel> publish,
         PackRatings ratings,
-        ILogger logger)
+        ILogger logger,
+        TranslationRequests? requests = null)
     {
         _publish = publish;
         _ratings = ratings;
@@ -149,7 +151,36 @@ public sealed partial class PacksTabViewModel : ObservableObject
         _logger = logger;
         SortOptions = BuildSortOptions();
         _selectedSort = SortOptions[0];
+        Request = requests is null ? null : new RequestPanelViewModel(requests, game, language, localizer, shell, openGeneration);
         Rebuild();
+    }
+
+    /// <summary>The translation request of the game into <see cref="Language"/> (task 74); <c>null</c> without the requests service.</summary>
+    public RequestPanelViewModel? Request { get; }
+
+    /// <summary>The empty state asks for a translation (nobody asked, or others did and the player not yet).</summary>
+    public bool ShowRequestAsk => ShowEmpty && Request is { IsMine: false };
+
+    /// <summary>The player's own request replaces the empty state.</summary>
+    public bool ShowRequestCard => ShowEmpty && Request is { IsMine: true };
+
+    /// <summary>The usual empty state ("No translation into Русский yet" + Create with AI), with or without the ask.</summary>
+    public bool ShowNoPacks => ShowEmpty && Request is not { IsMine: true };
+
+    /// <summary>The empty state's text without requests (Create with AI only).</summary>
+    public bool ShowNoPacksText => Request is null;
+
+    /// <summary>"Your request is done" above the list.</summary>
+    public bool ShowRequestDone => !IsUnknown && HasRows && Request is { ShowDone: true };
+
+    /// <summary>The request or its pack list changed (task 74): the empty state, the card and the strip follow.</summary>
+    public void RefreshRequest()
+    {
+        Request?.Refresh(_game, Language, HasRows);
+        OnPropertyChanged(nameof(ShowRequestAsk));
+        OnPropertyChanged(nameof(ShowRequestCard));
+        OnPropertyChanged(nameof(ShowNoPacks));
+        OnPropertyChanged(nameof(ShowRequestDone));
     }
 
     /// <summary><c>Install</c> on a pack, with its manifest and check (the install flow listens).</summary>
@@ -598,6 +629,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
         // A selected Mine row stays selected over a new registry list.
         SelectedMine = mineSelected;
         RebuildMine();
+        Request?.Refresh(_game, Language, rows.Count > 0);
         OnPropertyChanged(string.Empty);
     }
 

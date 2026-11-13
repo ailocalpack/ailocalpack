@@ -4063,4 +4063,151 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>「{0}」 · {1}へ · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>翻訳をリクエスト</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>私も · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>まだ誰も作っていません。コミュニティに頼みましょう: AI エージェントを持つプレイヤーがリクエストを引き受け、翻訳が出たらお知らせします。</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>GitHub で開く</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>リクエストを送信しました。誰かが引き受けたときと翻訳が出たときにお知らせします。</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>翻訳をリクエストするには GitHub にサインイン</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>リクエストと投票は、あなたのアカウントで翻訳レジストリの GitHub ディスカッションに投稿されます。一度サインインすれば、すぐにリクエストが送られます。</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>翻訳をリクエスト</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>AI エージェントを持つプレイヤーがキューからリクエストを選びます。報酬も保証もありませんが、要望の多いものほど先に引き受けられる傾向があります。</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>翻訳先</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>翻訳者へのメモ (任意)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>大切なこと: まずメニュー、ファン wiki の名前、敬語かタメ口か…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>公開され、GitHub の名前と一緒に表示されます。ゲームのテキストは貼り付けないでください。</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>ビルド {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>@{0} として GitHub のレジストリのリクエストに投稿されます。</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>あなたのアカウントで GitHub のレジストリのリクエストに投稿されます: 次はサインインです。</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>リクエスト中: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>{0} にリクエスト · 今のところあなただけ</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>翻訳者を待っています。誰かが始めたときと翻訳が出たときに、アプリがトレイにあってもお知らせします。</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>リクエストの進行状況</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>リクエスト</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>翻訳者が決定</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>待機中</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>翻訳中</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>公開</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} が翻訳中: {1} · {2}%</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} が翻訳しました。次は公開です</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} が公開しました。レジストリが確認中です</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>最新の更新 {0}。14 日間更新がないと、リクエストは再び他の人に開かれます。</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>プレイヤーのメモ</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>自分で作る</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>リクエストを取り下げる</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>リクエストが実現しました: {0} への翻訳が届いています。遊んだら、動作するかどうか他の人に教えてください。</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} がすでに翻訳中です ({1}%)。それでも自分で作れます。</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>リクエスト</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} が翻訳中</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0} があなたのために {1} を翻訳しています</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>リクエストが実現しました: 「{0}」</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>この翻訳をリクエストしました。公開されたらお知らせします。</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>{0} が公開しました。ゲームページからインストールしてください。</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>翻訳を表示</value>
+  </data>
+  <data name="Request_Empty_Others_Other" xml:space="preserve">
+    <value>{0} 人のプレイヤーが {1} への翻訳をリクエストしています。参加しましょう: 多いほど AI エージェントを持つ誰かが早く引き受けます。</value>
+  </data>
+  <data name="Request_Card_Sub_Other" xml:space="preserve">
+    <value>{1} にリクエスト · あなたとほか {0} 人</value>
+  </data>
+  <data name="Request_Step_Players_Other" xml:space="preserve">
+    <value>{0} 人</value>
+  </data>
+  <data name="Request_Dialog_Others_Other" xml:space="preserve">
+    <value>すでに {0} 人がリクエストしています。あなたのリクエストで投票とメモが加わります。</value>
+  </data>
+  <data name="Gen_Request_Strip_Other" xml:space="preserve">
+    <value>{0} 人のプレイヤーが {1} への翻訳をリクエストしています。あなたの翻訳を公開するとリクエストが閉じられ、全員に通知されます。</value>
+  </data>
+  <data name="Gen_Request_Take_Other" xml:space="preserve">
+    <value>リクエストした {0} 人に翻訳中であることを知らせる (GitHub に自分の名前で投稿)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Other" xml:space="preserve">
+    <value>リクエスト済み · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Other" xml:space="preserve">
+    <value>リクエスト · {0}</value>
+  </data>
 </root>

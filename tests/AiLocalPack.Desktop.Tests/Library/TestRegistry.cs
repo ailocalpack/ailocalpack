@@ -125,6 +125,19 @@ internal sealed class TestRegistry : IDisposable
         return this;
     }
 
+    /// <summary>Open translation requests (task 74) by game and language.</summary>
+    public Dictionary<(GameId Game, string Language), RegistryRequest> Requests { get; } = [];
+
+    /// <summary>An open request of game <paramref name="appId"/> into <paramref name="language"/> with <paramref name="votes"/> votes (Discussion #77).</summary>
+    public TestRegistry Request(uint appId, string language, int votes, RegistryRequestClaim? claim = null)
+    {
+        var game = GameId.Steam(appId);
+        Game(game);
+        Requests[(game, language)] = new RegistryRequest(
+            votes, new Uri("https://github.com/ailocalpack/registry/discussions/77"), new DateTimeOffset(2026, 11, 1, 10, 0, 0, TimeSpan.Zero), claim);
+        return this;
+    }
+
     /// <summary>The registry's anti-cheat detection rules published with the index.</summary>
     public List<AntiCheatRule> AntiCheatRules { get; } = [];
 
@@ -142,6 +155,7 @@ internal sealed class TestRegistry : IDisposable
                 g.Value.Packs.GroupBy(p => p.Language).ToDictionary(l => l.Key, l => (IReadOnlyList<RegistryPack>)[.. l]))
             {
                 AntiCheat = g.Value.AntiCheat,
+                Requests = Requests.Where(r => r.Key.Game == g.Key).ToDictionary(r => r.Key.Language, r => r.Value),
             }))
     {
         Dependencies = Dependencies,

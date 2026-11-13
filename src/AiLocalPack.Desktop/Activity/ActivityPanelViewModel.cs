@@ -388,6 +388,12 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             case ActivityEventKind.PackVerified:
                 AddLink(nameof(Strings.Publish_Discussion));
                 break;
+            case ActivityEventKind.RequestDone:
+                actions.Add(Action(nameof(Strings.Activity_Action_ShowTranslation), "IconDownload", true, () => OpenGame(activity.Game, GamePageTab.Packs)));
+                break;
+            case ActivityEventKind.RequestTaken:
+                AddLink(nameof(Strings.Request_OpenOnGitHub));
+                break;
             case ActivityEventKind.PackNotApplied:
                 actions.Add(Action(nameof(Strings.Activity_Action_Reapply), "IconRefresh", true, () => _ = _install.ReapplyAsync(Fresh(game))));
                 break;

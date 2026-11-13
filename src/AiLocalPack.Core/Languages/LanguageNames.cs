@@ -30,6 +30,20 @@ public static class LanguageNames
         }
     }
 
+    /// <summary>The language's English name (<c>ru</c> → <c>Russian</c>); the tag itself when .NET doesn't know it.</summary>
+    public static string English(string tag)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tag);
+        try
+        {
+            return CultureInfo.GetCultureInfo(tag, predefinedOnly: true).EnglishName;
+        }
+        catch (CultureNotFoundException)
+        {
+            return tag;
+        }
+    }
+
     /// <summary>Orders names for a picker: case-insensitive, Latin, then other scripts (invariant culture order).</summary>
     public static StringComparer Order { get; } = StringComparer.Create(CultureInfo.InvariantCulture, CompareOptions.IgnoreCase);
 }

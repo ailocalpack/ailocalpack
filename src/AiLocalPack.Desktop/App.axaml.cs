@@ -145,6 +145,8 @@ public sealed class App : Application
         services.GetRequiredService<ActivityNotifier>();
         // Follows game sessions from the start, so playing with an installed pack brings its rating prompt (task 63).
         services.GetRequiredService<AiLocalPack.Desktop.Ratings.PackRatings>();
+        // Follows the pack list (the player's requests taken or done) and the jobs that took a request (task 74).
+        services.GetRequiredService<AiLocalPack.Desktop.Requests.TranslationRequests>();
         startup.StartBackground();
         services.GetRequiredService<BackgroundChecks>().Start();
         // The player's open pack PRs: CI result, merged, closed (task 62).

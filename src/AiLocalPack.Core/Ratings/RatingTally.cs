@@ -26,7 +26,16 @@ public sealed record CollectedDiscussion(
     Uri Url,
     RegistryPackKey? Pack,
     IReadOnlyList<DiscussionUser> Likers,
-    IReadOnlyList<DiscussionComment> Comments);
+    IReadOnlyList<DiscussionComment> Comments)
+{
+    /// <summary>The first post (a request's Discussion starts with its marker, task 74).</summary>
+    public string Body { get; init; } = "";
+
+    /// <summary>Closed on GitHub (a done or duplicate request).</summary>
+    public bool Closed { get; init; }
+
+    public DateTimeOffset? CreatedAt { get; init; }
+}
 
 /// <summary>What the rules need to know of a registry pack: its current revision, authors and Steam builds.</summary>
 /// <param name="Authors">Every author the manifest lists (logins; their likes and reports don't count).</param>

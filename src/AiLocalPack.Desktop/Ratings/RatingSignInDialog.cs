@@ -8,8 +8,18 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AiLocalPack.Desktop.Ratings;
 
+/// <summary>What the sign-in is for: the dialog's title and intro say so.</summary>
+public enum RatingSignInPurpose
+{
+    /// <summary>A like or a works / doesn't-work report (task 63).</summary>
+    Rating,
+
+    /// <summary>A translation request, a vote or a claim (task 74).</summary>
+    Request,
+}
+
 /// <summary>The rating sign-in dialog's continuation: runs once GitHub confirmed the sign-in.</summary>
-public sealed record RatingSignInRequest(Action OnSignedIn);
+public sealed record RatingSignInRequest(Action OnSignedIn, RatingSignInPurpose Purpose = RatingSignInPurpose.Rating);
 
 /// <summary>
 /// "Sign in to rate packs" (task 63; design §4: GitHub sign-in on first use): the reusable Device Flow panel, started at
@@ -22,10 +32,12 @@ public sealed partial class RatingSignInDialogViewModel : DialogViewModel
     private readonly IDialogService _dialogs;
     private readonly IGitHubHost _github;
     private readonly IUiDispatcher _ui;
+    private readonly Localizer _localizer;
     private bool _done;
 
-    public RatingSignInDialogViewModel(RatingSignInRequest request, IDialogService dialogs, IGitHubHost github, GitHubSignInViewModel signIn, IUiDispatcher ui)
+    public RatingSignInDialogViewModel(RatingSignInRequest request, IDialogService dialogs, IGitHubHost github, GitHubSignInViewModel signIn, IUiDispatcher ui, Localizer localizer)
     {
+        _localizer = localizer;
         ArgumentNullException.ThrowIfNull(request);
         _request = request;
         _dialogs = dialogs;
@@ -39,6 +51,11 @@ public sealed partial class RatingSignInDialogViewModel : DialogViewModel
             _ = SignIn.StartAsync();
         }
     }
+
+    /// <summary>"Sign in to rate packs" / "Sign in to ask for translations".</summary>
+    public string TitleText => _localizer[_request.Purpose == RatingSignInPurpose.Request ? nameof(Strings.Request_SignIn_Title) : nameof(Strings.Rating_SignIn_Title)];
+
+    public string IntroText => _localizer[_request.Purpose == RatingSignInPurpose.Request ? nameof(Strings.Request_SignIn_Intro) : nameof(Strings.Rating_SignIn_Intro)];
 
     /// <summary>The Device Flow panel (code, Copy, Open browser, waiting, Try again).</summary>
     public GitHubSignInViewModel SignIn { get; }

@@ -4267,4 +4267,199 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>«{0}» на {1} · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>Запросить перевод</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>Я тоже · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>Его ещё никто не сделал. Попросите сообщество: игроки с ИИ-агентом берут запросы, а вам сообщат, когда перевод выйдет.</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>Открыть на GitHub</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>Запрос отправлен. Вам сообщат, когда его возьмут и когда перевод выйдет.</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>Войдите в GitHub, чтобы запрашивать переводы</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>Запросы и голоса публикуются в обсуждениях реестра переводов на GitHub от вашего имени. Войдите один раз — запрос уйдёт сразу после входа.</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>Запросить перевод</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>Игроки с ИИ-агентом берут запросы из очереди. Никто не платит и ничего не обещает, но самые популярные запросы обычно берут первыми.</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>На язык</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>Заметка для переводчика (необязательно)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>Что для вас важно: сначала меню, имена из фан-вики, «ты» или «вы»…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>Видна всем вместе с вашим именем на GitHub. Не вставляйте текст из игры.</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>сборка {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>Будет опубликовано как @{0} в запросах реестра на GitHub.</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>Будет опубликовано в запросах реестра на GitHub от вашего имени: дальше — вход.</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>Запрошен перевод: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>Запрошено {0} · пока только вы</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>Ждём переводчика. Вам сообщат, когда кто-то начнёт и когда перевод выйдет, даже если приложение свёрнуто в трей.</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>Ход запроса</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>Запрошен</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>Переводчик найден</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>ждём</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>Перевод</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>Опубликован</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} переводит: {1} · {2}%</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} перевёл; дальше — публикация</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} опубликовал перевод; реестр его проверяет</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>Последние новости {0}. Если 14 дней новостей нет, запрос снова открыт для других.</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>Заметки игроков</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>Сделать самому</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>Отозвать запрос</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>Ваш запрос выполнен: перевод на {0} готов. Поиграв, расскажите другим, работает ли он.</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} уже переводит ({1}%); вы всё равно можете сделать свой.</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>Запрошены</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} переводит</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0} переводит {1} по вашему запросу</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>Ваш запрос выполнен: «{0}»</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>Вы просили этот перевод; вам сообщат, когда он выйдет.</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>Опубликовал {0}. Установите его на странице игры.</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>Показать перевод</value>
+  </data>
+  <data name="Request_Empty_Others_One" xml:space="preserve">
+    <value>{0} игрок попросил перевод на {1}. Присоединяйтесь: чем больше просят, тем скорее его возьмёт кто-то с ИИ-агентом.</value>
+  </data>
+  <data name="Request_Empty_Others_Few" xml:space="preserve">
+    <value>{0} игрока попросили перевод на {1}. Присоединяйтесь: чем больше просят, тем скорее его возьмёт кто-то с ИИ-агентом.</value>
+  </data>
+  <data name="Request_Empty_Others_Many" xml:space="preserve">
+    <value>{0} игроков попросили перевод на {1}. Присоединяйтесь: чем больше просят, тем скорее его возьмёт кто-то с ИИ-агентом.</value>
+  </data>
+  <data name="Request_Card_Sub_One" xml:space="preserve">
+    <value>Запрошено {1} · вы и ещё {0} игрок</value>
+  </data>
+  <data name="Request_Card_Sub_Few" xml:space="preserve">
+    <value>Запрошено {1} · вы и ещё {0} игрока</value>
+  </data>
+  <data name="Request_Card_Sub_Many" xml:space="preserve">
+    <value>Запрошено {1} · вы и ещё {0} игроков</value>
+  </data>
+  <data name="Request_Step_Players_One" xml:space="preserve">
+    <value>{0} игрок</value>
+  </data>
+  <data name="Request_Step_Players_Few" xml:space="preserve">
+    <value>{0} игрока</value>
+  </data>
+  <data name="Request_Step_Players_Many" xml:space="preserve">
+    <value>{0} игроков</value>
+  </data>
+  <data name="Request_Dialog_Others_One" xml:space="preserve">
+    <value>{0} игрок уже попросил этот перевод. Ваш запрос добавит ваш голос и заметку.</value>
+  </data>
+  <data name="Request_Dialog_Others_Few" xml:space="preserve">
+    <value>{0} игрока уже попросили этот перевод. Ваш запрос добавит ваш голос и заметку.</value>
+  </data>
+  <data name="Request_Dialog_Others_Many" xml:space="preserve">
+    <value>{0} игроков уже попросили этот перевод. Ваш запрос добавит ваш голос и заметку.</value>
+  </data>
+  <data name="Gen_Request_Strip_One" xml:space="preserve">
+    <value>{0} игрок попросил перевод на {1}. Публикация вашего закроет запрос и оповестит его.</value>
+  </data>
+  <data name="Gen_Request_Strip_Few" xml:space="preserve">
+    <value>{0} игрока попросили перевод на {1}. Публикация вашего закроет запрос и оповестит их всех.</value>
+  </data>
+  <data name="Gen_Request_Strip_Many" xml:space="preserve">
+    <value>{0} игроков попросили перевод на {1}. Публикация вашего закроет запрос и оповестит их всех.</value>
+  </data>
+  <data name="Gen_Request_Take_One" xml:space="preserve">
+    <value>Сообщить {0} игроку, который просил, что я перевожу (на GitHub от моего имени)</value>
+  </data>
+  <data name="Gen_Request_Take_Few" xml:space="preserve">
+    <value>Сообщить {0} игрокам, которые просили, что я перевожу (на GitHub от моего имени)</value>
+  </data>
+  <data name="Gen_Request_Take_Many" xml:space="preserve">
+    <value>Сообщить {0} игрокам, которые просили, что я перевожу (на GitHub от моего имени)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_One" xml:space="preserve">
+    <value>Вы просили · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Few" xml:space="preserve">
+    <value>Вы просили · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Many" xml:space="preserve">
+    <value>Вы просили · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_One" xml:space="preserve">
+    <value>Запрошен · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Few" xml:space="preserve">
+    <value>Запрошен · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Many" xml:space="preserve">
+    <value>Запрошен · {0}</value>
+  </data>
 </root>

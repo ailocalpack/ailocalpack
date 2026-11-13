@@ -50,9 +50,11 @@ public static class RegistryDiscussionQueries
                 number
                 url
                 body
+                closed
+                createdAt
                 reactions(content: THUMBS_UP, first: 100) {
                   pageInfo { hasNextPage endCursor }
-                  nodes { user { login createdAt } }
+                  nodes { user { __typename login createdAt } }
                 }
                 comments(first: 100) {
                   pageInfo { hasNextPage endCursor }
@@ -83,7 +85,7 @@ public static class RegistryDiscussionQueries
             ... on Discussion {
               reactions(content: THUMBS_UP, first: 100, after: $after) {
                 pageInfo { hasNextPage endCursor }
-                nodes { user { login createdAt } }
+                nodes { user { __typename login createdAt } }
               }
             }
           }
@@ -169,7 +171,13 @@ public static class RegistryDiscussionQueries
             var likers = Object(node, "reactions", out var reactions) ? Likers(reactions) : new GraphQlPage<DiscussionUser>([], null);
             var comments = Object(node, "comments", out var c) ? Comments(c) : new GraphQlPage<DiscussionComment>([], null);
             var pack = PackDiscussionMarker.TryParse(Text(node, "body"), out var key) ? key : null;
-            items.Add(new ListedDiscussion(new CollectedDiscussion(id, number, url, pack, likers.Items, comments.Items), likers.Next, comments.Next));
+            var collected = new CollectedDiscussion(id, number, url, pack, likers.Items, comments.Items)
+            {
+                Body = Text(node, "body") ?? "",
+                Closed = node.TryGetProperty("closed", out var closed) && closed.ValueKind == JsonValueKind.True,
+                CreatedAt = Date(Text(node, "createdAt")),
+            };
+            items.Add(new ListedDiscussion(collected, likers.Next, comments.Next));
         }
 
         return RatingResult<GraphQlPage<ListedDiscussion>>.Ok(new GraphQlPage<ListedDiscussion>(items, NextPage(discussions)));
@@ -218,7 +226,7 @@ public static class RegistryDiscussionQueries
         {
             if (Object(node, "user", out var user) && Text(user, "login") is { Length: > 0 } login)
             {
-                users.Add(new DiscussionUser(login, false, Date(Text(user, "createdAt"))));
+                users.Add(new DiscussionUser(login, Text(user, "__typename") == "Bot", Date(Text(user, "createdAt"))));
             }
         }
 
@@ -330,6 +338,14 @@ public sealed class RegistryDiscussionClient(HttpClient http, GitHubOAuthApp app
         ArgumentNullException.ThrowIfNull(category);
         return CallAsync(RegistryDiscussionQueries.Create(category.RepositoryId, category.CategoryId!, title, body), RegistryDiscussionQueries.ParseCreated, cancellationToken);
     }
+
+    /// <summary>Adds a comment to a Discussion (the request collector's "done" / "merged" notes, task 74).</summary>
+    public Task<RatingResult<bool>> CommentAsync(string discussionId, string body, CancellationToken cancellationToken = default) =>
+        CallAsync(Requests.RequestQueries.AddComment(discussionId, body), Requests.RequestQueries.ParseDone, cancellationToken);
+
+    /// <summary>Closes a Discussion: <c>RESOLVED</c> (a done request) or <c>DUPLICATE</c>.</summary>
+    public Task<RatingResult<bool>> CloseAsync(string discussionId, string reason, CancellationToken cancellationToken = default) =>
+        CallAsync(Requests.RequestQueries.Close(discussionId, reason), Requests.RequestQueries.ParseDone, cancellationToken);
 
     /// <summary>The pages after the first one of a Discussion's likers or comments.</summary>
     private async Task<RatingResult<IReadOnlyList<T>>> RestAsync<T>(

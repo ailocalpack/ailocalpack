@@ -20,6 +20,13 @@ public sealed class FakeDiscussion(string id, string repo, int number)
     /// <summary>The first post (a pack's Discussion starts with its marker).</summary>
     public string Body { get; set; } = "";
 
+    /// <summary>Closed on GitHub, and why (<c>RESOLVED</c>, <c>DUPLICATE</c>…; task 74).</summary>
+    public bool Closed { get; set; }
+
+    public string? CloseReason { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; } = new(2026, 11, 1, 10, 0, 0, TimeSpan.Zero);
+
     /// <summary>Logins that gave a 👍.</summary>
     public HashSet<string> ThumbsUp { get; } = new(StringComparer.Ordinal);
 
@@ -53,7 +60,7 @@ public sealed partial class FakeGitHubApi
     private readonly Dictionary<(string Repo, int Number), FakeDiscussion> _discussions = [];
 
     /// <summary>Discussion categories every repository has (the registry's <c>Packs</c>).</summary>
-    public List<string> DiscussionCategories { get; } = ["General", "Packs"];
+    public List<string> DiscussionCategories { get; } = ["General", "Packs", "Requests"];
 
     /// <summary>The Discussions of <paramref name="repo"/> by number.</summary>
     public IReadOnlyList<FakeDiscussion> DiscussionsOf(string repo)
@@ -134,6 +141,30 @@ public sealed partial class FakeGitHubApi
             return GraphQlError("NOT_FOUND", "Could not resolve to a node.");
         }
 
+        if (query.Contains("closeDiscussion", StringComparison.Ordinal))
+        {
+            if (ById(variables["id"]?.GetValue<string>()) is not { } closing)
+            {
+                return GraphQlError("NOT_FOUND", "Could not resolve to a node.");
+            }
+
+            closing.Closed = true;
+            closing.CloseReason = variables["reason"]?.GetValue<string>();
+            return Ok(new JsonObject { ["data"] = new JsonObject { ["closeDiscussion"] = new JsonObject { ["discussion"] = new JsonObject { ["id"] = closing.Id } } } });
+        }
+
+        if (query.Contains("search(", StringComparison.Ordinal))
+        {
+            // "repo:<owner/name> in:title \"<words>\"": Discussions of the repository whose title holds the quoted words.
+            var q = variables["q"]?.GetValue<string>() ?? "";
+            var repo = q.Split(' ')[0]["repo:".Length..].ToLowerInvariant();
+            var words = q[(q.IndexOf('"', StringComparison.Ordinal) + 1)..].TrimEnd('"');
+            var hits = new JsonArray([.. _discussions.Where(d => d.Key.Repo == repo && d.Value.Title.Contains(words, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(d => d.Key.Number)
+                .Select(d => (JsonNode)new JsonObject { ["number"] = d.Key.Number, ["url"] = d.Value.Url.AbsoluteUri, ["body"] = d.Value.Body, ["closed"] = d.Value.Closed })]);
+            return Ok(new JsonObject { ["data"] = new JsonObject { ["search"] = new JsonObject { ["nodes"] = hits } } });
+        }
+
         if (CollectorCall(query, variables) is { } answer)
         {
             return answer;
@@ -151,7 +182,10 @@ public sealed partial class FakeGitHubApi
                     ["id"] = comment.Id,
                     ["url"] = $"{d.Url.AbsoluteUri}#discussioncomment-{comment.Id}",
                     ["body"] = comment.Body,
+                    ["createdAt"] = comment.CreatedAt.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
+                    ["lastEditedAt"] = comment.LastEditedAt?.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
                     ["viewerDidAuthor"] = comment.Author == Login,
+                    ["author"] = comment.AuthorDeleted ? null : new JsonObject { ["__typename"] = comment.AuthorIsBot ? "Bot" : "User", ["login"] = comment.Author },
                 });
             }
 
@@ -159,6 +193,8 @@ public sealed partial class FakeGitHubApi
             {
                 ["id"] = d.Id,
                 ["url"] = d.Url.AbsoluteUri,
+                ["body"] = d.Body,
+                ["closed"] = d.Closed,
                 ["locked"] = d.Locked,
                 ["reactionGroups"] = new JsonArray(new JsonObject
                 {
@@ -244,6 +280,8 @@ public sealed partial class FakeGitHubApi
                     ["number"] = int.Parse(d.Url.Segments[^1], System.Globalization.CultureInfo.InvariantCulture),
                     ["url"] = d.Url.AbsoluteUri,
                     ["body"] = d.Body,
+                    ["closed"] = d.Closed,
+                    ["createdAt"] = d.CreatedAt.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
                     ["reactions"] = Likers(d, 0),
                     ["comments"] = CommentPage(d, 0),
                 });
@@ -290,7 +328,7 @@ public sealed partial class FakeGitHubApi
     {
         ["pageInfo"] = PageInfo(start + 100, d.ThumbsUp.Count),
         ["nodes"] = new JsonArray([.. d.ThumbsUp.Order(StringComparer.Ordinal).Skip(start).Take(100)
-            .Select(login => (JsonNode)new JsonObject { ["user"] = new JsonObject { ["login"] = login, ["createdAt"] = "2020-01-01T00:00:00Z" } })]),
+            .Select(login => (JsonNode)new JsonObject { ["user"] = new JsonObject { ["__typename"] = "User", ["login"] = login, ["createdAt"] = "2020-01-01T00:00:00Z" } })]),
     };
 
     private static JsonObject CommentPage(FakeDiscussion d, int start) => new()

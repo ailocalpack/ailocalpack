@@ -11,8 +11,8 @@
         <StackPanel Margin="24,20,20,20" Spacing="14">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                 <StackPanel Spacing="4">
-                    <TextBlock x:Name="RatingSignInTitle" Classes="dialogTitle" FontSize="18" Text="{l:Loc Rating_SignIn_Title}" TextWrapping="Wrap" />
-                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Rating_SignIn_Intro}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="RatingSignInTitle" Classes="dialogTitle" FontSize="18" Text="{Binding TitleText}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="13" Text="{Binding IntroText}" TextWrapping="Wrap" />
                 </StackPanel>
                 <Button x:Name="CloseButton" Grid.Column="1" Classes="icon" Command="{Binding CancelCommand}" VerticalAlignment="Top"
                         ToolTip.Tip="{l:Loc Publish_Close}" AutomationProperties.Name="{l:Loc Publish_Close}">

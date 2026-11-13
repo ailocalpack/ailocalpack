@@ -4203,4 +4203,175 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>«{0}» into {1} · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>Request translation</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>Me too · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>Nobody has made one yet. Ask the community: players with an AI agent pick requests, and you'll be told when the translation is out.</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>Open on GitHub</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>Request sent. You'll be told when someone takes it and when the translation is out.</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>Sign in to GitHub to ask for translations</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>Requests and votes go to the translation registry's Discussions on GitHub under your account. Sign in once; your request goes out right after.</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>Request a translation</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>Players with an AI agent pick requests from the queue. Nobody is paid and nothing is promised, but the most asked requests are usually taken first.</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>Into</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>Note for the translator (optional)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>What matters to you: menus first, names from the fan wiki, formal or informal address…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>Public, shown with your GitHub name. Don't paste text from the game.</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>build {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>Posted as @{0} to the registry's Requests on GitHub.</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>Posted to the registry's Requests on GitHub under your account: sign-in comes next.</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>Requested: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>Asked {0} · only you so far</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>Waiting for a translator. You'll be told when someone starts and when the translation is out, also while the app is in the tray.</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>Request progress</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>Requested</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>Translator found</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>waiting</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>Translating</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>Published</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} is translating it: {1} · {2}%</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} translated it; publishing comes next</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} published it; the registry checks it now</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>Last news {0}. Without news for 14 days, the request opens again for others.</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>Notes from players</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>Create it yourself</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>Withdraw my request</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>Your request is done: the translation into {0} is here. After playing, tell others whether it works.</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} is already translating it ({1}%); you can still make your own.</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>Requested</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} is translating</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0} is translating {1} for you</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>Your request is done: «{0}»</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>You asked for this translation; you'll be told when it's out.</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>Published by {0}. Install it from the game page.</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>Show translation</value>
+  </data>
+  <data name="Request_Empty_Others_One" xml:space="preserve">
+    <value>{0} player asked for a translation into {1}. Add your voice: the more players ask, the sooner someone with an AI agent takes it.</value>
+  </data>
+  <data name="Request_Empty_Others_Other" xml:space="preserve">
+    <value>{0} players asked for a translation into {1}. Add your voice: the more players ask, the sooner someone with an AI agent takes it.</value>
+  </data>
+  <data name="Request_Card_Sub_One" xml:space="preserve">
+    <value>Asked {1} · you and {0} other player</value>
+  </data>
+  <data name="Request_Card_Sub_Other" xml:space="preserve">
+    <value>Asked {1} · you and {0} other players</value>
+  </data>
+  <data name="Request_Step_Players_One" xml:space="preserve">
+    <value>{0} player</value>
+  </data>
+  <data name="Request_Step_Players_Other" xml:space="preserve">
+    <value>{0} players</value>
+  </data>
+  <data name="Request_Dialog_Others_One" xml:space="preserve">
+    <value>{0} player already asked for this. Your request adds your vote and your note.</value>
+  </data>
+  <data name="Request_Dialog_Others_Other" xml:space="preserve">
+    <value>{0} players already asked for this. Your request adds your vote and your note.</value>
+  </data>
+  <data name="Gen_Request_Strip_One" xml:space="preserve">
+    <value>{0} player asked for a translation into {1}. Publishing yours closes the request and tells them.</value>
+  </data>
+  <data name="Gen_Request_Strip_Other" xml:space="preserve">
+    <value>{0} players asked for a translation into {1}. Publishing yours closes the request and tells all of them.</value>
+  </data>
+  <data name="Gen_Request_Take_One" xml:space="preserve">
+    <value>Tell {0} player who asked that I'm translating (posted on GitHub under my name)</value>
+  </data>
+  <data name="Gen_Request_Take_Other" xml:space="preserve">
+    <value>Tell the {0} players who asked that I'm translating (posted on GitHub under my name)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_One" xml:space="preserve">
+    <value>You asked · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Other" xml:space="preserve">
+    <value>You asked · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_One" xml:space="preserve">
+    <value>Requested · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Other" xml:space="preserve">
+    <value>Requested · {0}</value>
+  </data>
 </root>

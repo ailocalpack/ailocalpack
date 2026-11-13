@@ -25,6 +25,8 @@ public sealed class ActivityNotificationsTests
     [Theory]
     [InlineData(ActivityEventKind.PackMerged, NotificationCategory.Community)]
     [InlineData(ActivityEventKind.PackVerified, NotificationCategory.Community)]
+    [InlineData(ActivityEventKind.RequestTaken, NotificationCategory.Community)]
+    [InlineData(ActivityEventKind.RequestDone, NotificationCategory.Community)]
     [InlineData(ActivityEventKind.PullRequestFailed, NotificationCategory.NeedsDecision)]
     public void Pr_events_fall_under_their_toggle(ActivityEventKind kind, NotificationCategory category)
     {

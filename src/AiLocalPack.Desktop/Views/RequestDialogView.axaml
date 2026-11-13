@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:rq="using:AiLocalPack.Desktop.Requests"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.RequestDialogView"
+             x:DataType="rq:RequestDialogViewModel"
+             Width="540">
+    <!-- Task 74 (design: requests, variant 1): ask the community for a translation of the game into the language. -->
+    <Border Classes="dialog">
+        <StackPanel Margin="24,20,20,20" Spacing="14">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                    <TextBlock x:Name="RequestTitle" Classes="dialogTitle" FontSize="18" Text="{l:Loc Request_Dialog_Title}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Request_Dialog_Intro}" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button x:Name="CloseButton" Grid.Column="1" Classes="icon" Command="{Binding CancelCommand}" VerticalAlignment="Top"
+                        ToolTip.Tip="{l:Loc Publish_Close}" AutomationProperties.Name="{l:Loc Publish_Close}">
+                    <Path Data="{StaticResource IconX}" />
+                </Button>
+            </Grid>
+
+            <Border Classes="compatBox">
+                <StackPanel Spacing="2">
+                    <TextBlock x:Name="RequestGame" FontWeight="Bold" FontSize="14" Text="{Binding GameName}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" Text="{Binding GameFacts}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold" FontSize="13" Text="{l:Loc Request_Dialog_Into}" />
+                <TextBlock x:Name="RequestLanguage" FontSize="14" Text="{Binding LanguageName}" />
+            </StackPanel>
+
+            <Border x:Name="RequestOthers" Classes="banner" IsVisible="{Binding HasOthers}">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Viewbox Classes="icon" Width="16" Height="16" VerticalAlignment="Top">
+                        <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{DynamicResource AppAccentBrush}" />
+                    </Viewbox>
+                    <TextBlock FontSize="13" Text="{Binding OthersText}" TextWrapping="Wrap" MaxWidth="440" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold" FontSize="13" Text="{l:Loc Request_Dialog_Note}" />
+                <TextBox x:Name="RequestNote" Text="{Binding Note}" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="{Binding MaxNoteLength}"
+                         MinHeight="72" MaxHeight="160" PlaceholderText="{l:Loc Request_Dialog_NotePlaceholder}" AutomationProperties.Name="{l:Loc Request_Dialog_Note}" />
+                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Request_Dialog_NoteHint}" TextWrapping="Wrap" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Viewbox Classes="icon" Width="14" Height="14" VerticalAlignment="Center">
+                    <Path Classes="icon" Data="{StaticResource IconGitHub}" Stroke="{DynamicResource AppFaintBrush}" />
+                </Viewbox>
+                <TextBlock x:Name="RequestGitHub" Classes="muted" FontSize="12" Text="{Binding GitHubLine}" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="460" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                <Button x:Name="CancelButton" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc Publish_Cancel}" />
+                <Button x:Name="SendButton" Classes="accent" Command="{Binding SendCommand}" IsDefault="True">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Viewbox Classes="icon" Width="16" Height="16">
+                            <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                        <TextBlock Text="{l:Loc Request_Ask}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

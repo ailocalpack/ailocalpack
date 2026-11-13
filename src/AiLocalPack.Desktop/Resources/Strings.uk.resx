@@ -4267,4 +4267,199 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>«{0}» · {1} · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>Запросити переклад</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>Я теж · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>Його ще ніхто не зробив. Попросіть спільноту: гравці з ШІ-агентом беруть запити, а вам повідомлять, коли переклад вийде.</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>Відкрити на GitHub</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>Запит надіслано. Вам повідомлять, коли його візьмуть і коли переклад вийде.</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>Увійдіть у GitHub, щоб запитувати переклади</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>Запити й голоси публікуються в обговореннях реєстру перекладів на GitHub від вашого імені. Увійдіть один раз — запит піде одразу після входу.</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>Запросити переклад</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>Гравці з ШІ-агентом беруть запити з черги. Ніхто не платить і нічого не обіцяє, але найпопулярніші запити зазвичай беруть першими.</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>Мовою</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>Нотатка для перекладача (необов’язково)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>Що для вас важливо: спершу меню, імена з фан-вікі, «ти» чи «ви»…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>Видно всім разом із вашим іменем на GitHub. Не вставляйте текст із гри.</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>збірка {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>Буде опубліковано як @{0} у запитах реєстру на GitHub.</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>Буде опубліковано в запитах реєстру на GitHub від вашого імені: далі — вхід.</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>Запитано переклад: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>Запитано {0} · поки що лише ви</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>Чекаємо на перекладача. Вам повідомлять, коли хтось почне і коли переклад вийде, навіть якщо застосунок у треї.</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>Перебіг запиту</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>Запитано</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>Перекладача знайдено</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>чекаємо</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>Переклад</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>Опубліковано</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} перекладає: {1} · {2}%</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} переклав; далі — публікація</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} опублікував переклад; реєстр його перевіряє</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>Останні новини {0}. Якщо 14 днів новин немає, запит знову відкритий для інших.</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>Нотатки гравців</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>Зробити самому</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>Відкликати запит</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>Ваш запит виконано: переклад мовою {0} готовий. Пограйте й розкажіть іншим, чи він працює.</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} уже перекладає ({1}%); ви все одно можете зробити свій.</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>Запитані</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} перекладає</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0} перекладає {1} на ваш запит</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>Ваш запит виконано: «{0}»</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>Ви просили цей переклад; вам повідомлять, коли він вийде.</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>Опублікував {0}. Встановіть його на сторінці гри.</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>Показати переклад</value>
+  </data>
+  <data name="Request_Empty_Others_One" xml:space="preserve">
+    <value>{0} гравець попросив переклад мовою {1}. Приєднуйтеся: що більше просять, то швидше його візьме хтось із ШІ-агентом.</value>
+  </data>
+  <data name="Request_Empty_Others_Few" xml:space="preserve">
+    <value>{0} гравці попросили переклад мовою {1}. Приєднуйтеся: що більше просять, то швидше його візьме хтось із ШІ-агентом.</value>
+  </data>
+  <data name="Request_Empty_Others_Many" xml:space="preserve">
+    <value>{0} гравців попросили переклад мовою {1}. Приєднуйтеся: що більше просять, то швидше його візьме хтось із ШІ-агентом.</value>
+  </data>
+  <data name="Request_Card_Sub_One" xml:space="preserve">
+    <value>Запитано {1} · ви та ще {0} гравець</value>
+  </data>
+  <data name="Request_Card_Sub_Few" xml:space="preserve">
+    <value>Запитано {1} · ви та ще {0} гравці</value>
+  </data>
+  <data name="Request_Card_Sub_Many" xml:space="preserve">
+    <value>Запитано {1} · ви та ще {0} гравців</value>
+  </data>
+  <data name="Request_Step_Players_One" xml:space="preserve">
+    <value>{0} гравець</value>
+  </data>
+  <data name="Request_Step_Players_Few" xml:space="preserve">
+    <value>{0} гравці</value>
+  </data>
+  <data name="Request_Step_Players_Many" xml:space="preserve">
+    <value>{0} гравців</value>
+  </data>
+  <data name="Request_Dialog_Others_One" xml:space="preserve">
+    <value>{0} гравець уже попросив цей переклад. Ваш запит додасть ваш голос і нотатку.</value>
+  </data>
+  <data name="Request_Dialog_Others_Few" xml:space="preserve">
+    <value>{0} гравці вже попросили цей переклад. Ваш запит додасть ваш голос і нотатку.</value>
+  </data>
+  <data name="Request_Dialog_Others_Many" xml:space="preserve">
+    <value>{0} гравців уже попросили цей переклад. Ваш запит додасть ваш голос і нотатку.</value>
+  </data>
+  <data name="Gen_Request_Strip_One" xml:space="preserve">
+    <value>{0} гравець попросив переклад мовою {1}. Публікація вашого закриє запит і сповістить його.</value>
+  </data>
+  <data name="Gen_Request_Strip_Few" xml:space="preserve">
+    <value>{0} гравці попросили переклад мовою {1}. Публікація вашого закриє запит і сповістить їх усіх.</value>
+  </data>
+  <data name="Gen_Request_Strip_Many" xml:space="preserve">
+    <value>{0} гравців попросили переклад мовою {1}. Публікація вашого закриє запит і сповістить їх усіх.</value>
+  </data>
+  <data name="Gen_Request_Take_One" xml:space="preserve">
+    <value>Повідомити {0} гравцю, який просив, що я перекладаю (на GitHub від мого імені)</value>
+  </data>
+  <data name="Gen_Request_Take_Few" xml:space="preserve">
+    <value>Повідомити {0} гравцям, які просили, що я перекладаю (на GitHub від мого імені)</value>
+  </data>
+  <data name="Gen_Request_Take_Many" xml:space="preserve">
+    <value>Повідомити {0} гравцям, які просили, що я перекладаю (на GitHub від мого імені)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_One" xml:space="preserve">
+    <value>Ви просили · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Few" xml:space="preserve">
+    <value>Ви просили · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Many" xml:space="preserve">
+    <value>Ви просили · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_One" xml:space="preserve">
+    <value>Запитано · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Few" xml:space="preserve">
+    <value>Запитано · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Many" xml:space="preserve">
+    <value>Запитано · {0}</value>
+  </data>
 </root>

@@ -30,6 +30,8 @@ using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Welcome;
 using AiLocalPack.Desktop.Ratings;
+using AiLocalPack.Desktop.Requests;
+using AiLocalPack.Core.Requests;
 using AiLocalPack.Core.Ratings;
 using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Registry;
@@ -246,6 +248,14 @@ internal static class Composition
             new PackDiscussionClient(GitHubOAuthApp.CreateHttpClient(UserAgent), sp.GetRequiredService<GitHubSession>().App, sp.GetRequiredService<TimeProvider>()),
             sp.GetRequiredService<GitHubSession>()));
         services.AddSingleton<PackRatings>();
+
+        // Translation requests (task 74): asks, votes and claims in the registry's Requests Discussions, with the player's token.
+        services.AddSingleton(sp => new TranslationRequestStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<TranslationRequestStore>>()));
+        services.AddSingleton<IRequestDiscussions>(sp => new RequestDiscussions(
+            new TranslationRequestClient(GitHubOAuthApp.CreateHttpClient(UserAgent), sp.GetRequiredService<GitHubSession>().App, sp.GetRequiredService<TimeProvider>()),
+            sp.GetRequiredService<GitHubSession>(),
+            RegistryRepo.Resolve(sp.GetRequiredService<OsEnvironment>())));
+        services.AddSingleton<TranslationRequests>();
     }
 
     /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>

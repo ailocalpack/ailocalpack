@@ -4267,4 +4267,199 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>«{0}» al {1} · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>Pedir traducción</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>Yo también · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>Nadie la ha hecho aún. Pídesela a la comunidad: los jugadores con un agente de IA aceptan solicitudes y se te avisará cuando salga la traducción.</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>Abrir en GitHub</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>Solicitud enviada. Se te avisará cuando alguien la acepte y cuando salga la traducción.</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>Inicia sesión en GitHub para pedir traducciones</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>Las solicitudes y los votos van a las Discussions del registro de traducciones en GitHub con tu cuenta. Inicia sesión una vez; tu solicitud sale justo después.</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>Pedir una traducción</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>Los jugadores con un agente de IA eligen solicitudes de la cola. Nadie cobra y nada está garantizado, pero las más pedidas suelen atenderse primero.</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>Al</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>Nota para quien traduzca (opcional)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>Lo que te importa: primero los menús, nombres de la wiki de fans, tuteo o usted…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>Pública, con tu nombre de GitHub. No pegues texto del juego.</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>compilación {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>Se publicará como @{0} en las solicitudes del registro en GitHub.</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>Se publicará con tu cuenta en las solicitudes del registro en GitHub: ahora toca iniciar sesión.</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>Solicitada: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>Pedida el {0} · de momento solo tú</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>Esperando a quien traduzca. Se te avisará cuando alguien empiece y cuando salga la traducción, también con la app en la bandeja.</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>Progreso de la solicitud</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>Solicitada</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>Traductor encontrado</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>esperando</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>Traduciendo</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>Publicada</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} la está traduciendo: {1} · {2} %</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} la tradujo; ahora toca publicarla</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} la publicó; el registro la está comprobando</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>Últimas noticias {0}. Sin noticias durante 14 días, la solicitud vuelve a quedar libre para otros.</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>Notas de los jugadores</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>Crearla tú</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>Retirar mi solicitud</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>Tu solicitud está cumplida: ya está la traducción al {0}. Después de jugar, cuenta a los demás si funciona.</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} ya la está traduciendo ({1} %); aun así puedes hacer la tuya.</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>Solicitados</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} la traduce</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0} está traduciendo {1} para ti</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>Tu solicitud está cumplida: «{0}»</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>Pediste esta traducción; se te avisará cuando salga.</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>Publicada por {0}. Instálala desde la página del juego.</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>Ver traducción</value>
+  </data>
+  <data name="Request_Empty_Others_One" xml:space="preserve">
+    <value>{0} jugador pidió una traducción al {1}. Súmate: cuantos más la pidan, antes la aceptará alguien con un agente de IA.</value>
+  </data>
+  <data name="Request_Empty_Others_Many" xml:space="preserve">
+    <value>{0} jugadores pidieron una traducción al {1}. Súmate: cuantos más la pidan, antes la aceptará alguien con un agente de IA.</value>
+  </data>
+  <data name="Request_Empty_Others_Other" xml:space="preserve">
+    <value>{0} jugadores pidieron una traducción al {1}. Súmate: cuantos más la pidan, antes la aceptará alguien con un agente de IA.</value>
+  </data>
+  <data name="Request_Card_Sub_One" xml:space="preserve">
+    <value>Pedida el {1} · tú y {0} jugador más</value>
+  </data>
+  <data name="Request_Card_Sub_Many" xml:space="preserve">
+    <value>Pedida el {1} · tú y {0} jugadores más</value>
+  </data>
+  <data name="Request_Card_Sub_Other" xml:space="preserve">
+    <value>Pedida el {1} · tú y {0} jugadores más</value>
+  </data>
+  <data name="Request_Step_Players_One" xml:space="preserve">
+    <value>{0} jugador</value>
+  </data>
+  <data name="Request_Step_Players_Many" xml:space="preserve">
+    <value>{0} jugadores</value>
+  </data>
+  <data name="Request_Step_Players_Other" xml:space="preserve">
+    <value>{0} jugadores</value>
+  </data>
+  <data name="Request_Dialog_Others_One" xml:space="preserve">
+    <value>{0} jugador ya la pidió. Tu solicitud añade tu voto y tu nota.</value>
+  </data>
+  <data name="Request_Dialog_Others_Many" xml:space="preserve">
+    <value>{0} jugadores ya la pidieron. Tu solicitud añade tu voto y tu nota.</value>
+  </data>
+  <data name="Request_Dialog_Others_Other" xml:space="preserve">
+    <value>{0} jugadores ya la pidieron. Tu solicitud añade tu voto y tu nota.</value>
+  </data>
+  <data name="Gen_Request_Strip_One" xml:space="preserve">
+    <value>{0} jugador pidió una traducción al {1}. Publicar la tuya cierra la solicitud y le avisa.</value>
+  </data>
+  <data name="Gen_Request_Strip_Many" xml:space="preserve">
+    <value>{0} jugadores pidieron una traducción al {1}. Publicar la tuya cierra la solicitud y les avisa a todos.</value>
+  </data>
+  <data name="Gen_Request_Strip_Other" xml:space="preserve">
+    <value>{0} jugadores pidieron una traducción al {1}. Publicar la tuya cierra la solicitud y les avisa a todos.</value>
+  </data>
+  <data name="Gen_Request_Take_One" xml:space="preserve">
+    <value>Avisar a {0} jugador que la pidió de que estoy traduciendo (en GitHub con mi nombre)</value>
+  </data>
+  <data name="Gen_Request_Take_Many" xml:space="preserve">
+    <value>Avisar a los {0} jugadores que la pidieron de que estoy traduciendo (en GitHub con mi nombre)</value>
+  </data>
+  <data name="Gen_Request_Take_Other" xml:space="preserve">
+    <value>Avisar a los {0} jugadores que la pidieron de que estoy traduciendo (en GitHub con mi nombre)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_One" xml:space="preserve">
+    <value>La pediste · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Many" xml:space="preserve">
+    <value>La pediste · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Other" xml:space="preserve">
+    <value>La pediste · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_One" xml:space="preserve">
+    <value>Solicitada · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Many" xml:space="preserve">
+    <value>Solicitada · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Other" xml:space="preserve">
+    <value>Solicitada · {0}</value>
+  </data>
 </root>

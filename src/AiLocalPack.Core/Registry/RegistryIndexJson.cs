@@ -16,7 +16,8 @@ internal sealed record RegistryGameJson(
     bool? OptOut,
     bool? AntiCheatAllowed,
     string? AntiCheat,
-    IReadOnlyDictionary<string, IReadOnlyList<RegistryPackJson?>?>? Packs);
+    IReadOnlyDictionary<string, IReadOnlyList<RegistryPackJson?>?>? Packs,
+    IReadOnlyDictionary<string, RequestJson?>? Requests = null);
 
 /// <summary>An anti-cheat detection rule of the registry's policy, as <c>policy/anti-cheat.json</c> has it.</summary>
 internal sealed record RegistryAntiCheatJson(string? Id, string? Name, IReadOnlyList<string?>? Markers);

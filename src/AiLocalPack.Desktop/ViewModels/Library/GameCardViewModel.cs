@@ -4,6 +4,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Localization;
+using AiLocalPack.Desktop.Requests;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Toolkit.Engines;
@@ -81,6 +82,12 @@ public sealed partial class GameCardViewModel : ObservableObject
     public GenerationResultState? LocalResult => GamePrimaryActions.Resolve(Status) is
         { Kind: GamePrimaryActionKind.InstallLocalPack or GamePrimaryActionKind.Play, Result: { } result } ? result : null;
 
+    /// <summary>The translation request of the game into the library's language (task 74), when one exists and the game has no translation.</summary>
+    public RequestView? Request { get; private set; }
+
+    /// <summary>No translation, and players (or the player) asked for one: the badge says so, the Requested filter keeps it.</summary>
+    public bool IsRequested => Request is { Exists: true } && StatusKind == LocalizationStatusKind.NoPack && !IsInstalling;
+
     /// <summary>The status comes from the saved pack list (registry unreachable): the badge is faded.</summary>
     public bool IsStale { get; private set; }
 
@@ -143,7 +150,17 @@ public sealed partial class GameCardViewModel : ObservableObject
         { Kind: InstallOperationKind.Uninstall } => _localizer[nameof(Strings.Library_Badge_Uninstalling)],
         { } operation => _localizer.Format(nameof(Strings.Library_Badge_Installing), operation.Percent),
         _ when LocalResult is { Installed: false } => _localizer[nameof(Strings.Library_Badge_LocalReady)],
+        _ when IsRequested => RequestBadgeText,
         _ => StatusBadgeText,
+    };
+
+    /// <summary>"You asked · 13", "Requested · 31", "alice is translating".</summary>
+    private string RequestBadgeText => Request switch
+    {
+        { Claim: { State: Core.Requests.RequestClaimState.Working } claim } => _localizer.Format(nameof(Strings.Library_Badge_RequestTranslating), claim.By),
+        { Mine: true } r => _localizer.Plural(nameof(Strings.Library_Badge_RequestMine_One), r.Votes),
+        { } r => _localizer.Plural(nameof(Strings.Library_Badge_Requested_One), r.Votes),
+        _ => string.Empty,
     };
 
     private string StatusBadgeText => StatusKind switch
@@ -160,7 +177,9 @@ public sealed partial class GameCardViewModel : ObservableObject
     };
 
     /// <summary>Resource key of the badge icon geometry.</summary>
-    public string BadgeIcon => IsInstalling ? "IconLoader" : LocalResult is { Installed: false } ? "IconCheckCircle" : StatusKind switch
+    public string BadgeIcon => IsInstalling ? "IconLoader" : LocalResult is { Installed: false } ? "IconCheckCircle"
+        : IsRequested ? (Request?.Claim is { State: Core.Requests.RequestClaimState.Working } ? "IconSparkles" : "IconMessage")
+        : StatusKind switch
     {
         LocalizationStatusKind.Installed => "IconCheck",
         LocalizationStatusKind.PackAvailable => "IconDownload",
@@ -175,11 +194,16 @@ public sealed partial class GameCardViewModel : ObservableObject
 
     public bool IsToneAccent => IsInstalling || StatusKind == LocalizationStatusKind.PackAvailable;
 
-    public bool IsToneNone => !IsInstalling && StatusKind == LocalizationStatusKind.NoPack;
+    public bool IsToneNone => !IsInstalling && StatusKind == LocalizationStatusKind.NoPack && !IsRequestTranslating;
+
+    /// <summary>Someone took the game's request and is translating it: the badge is teal, like a generation.</summary>
+    private bool IsRequestTranslating => IsRequested && Request?.Claim is { State: Core.Requests.RequestClaimState.Working };
 
     public bool IsToneWarn => !IsInstalling && StatusKind == LocalizationStatusKind.NeedsUpdate;
 
-    public bool IsToneGen => !IsInstalling && StatusKind is LocalizationStatusKind.Generating or LocalizationStatusKind.Paused;
+    public bool IsToneGen => IsGenerating || IsRequestTranslating;
+
+    private bool IsGenerating => !IsInstalling && StatusKind is LocalizationStatusKind.Generating or LocalizationStatusKind.Paused;
 
     public bool IsToneBad => IsBlocked;
 
@@ -187,7 +211,7 @@ public sealed partial class GameCardViewModel : ObservableObject
     public int Percent => Operation?.Percent ?? Math.Clamp(Status.Job?.Percent ?? 0, 0, 100);
 
     /// <summary>A progress bar along the bottom of the cover while installing or while a job exists (striped when paused).</summary>
-    public bool ShowProgress => IsInstalling || IsToneGen;
+    public bool ShowProgress => IsInstalling || IsGenerating;
 
     public bool IsPaused => !IsInstalling && StatusKind == LocalizationStatusKind.Paused;
 
@@ -234,7 +258,7 @@ public sealed partial class GameCardViewModel : ObservableObject
 
     public bool IsQuickWarn => StatusKind == LocalizationStatusKind.NeedsUpdate;
 
-    public bool IsQuickGen => IsToneGen;
+    public bool IsQuickGen => IsGenerating;
 
     public bool IsQuickGhost => StatusKind == LocalizationStatusKind.NoPack;
 
@@ -360,6 +384,18 @@ public sealed partial class GameCardViewModel : ObservableObject
         IsStale = stale;
         OnPropertyChanged(string.Empty);
         QuickActionCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>Shows the game's translation request (task 74); <c>null</c> = none or no requests service.</summary>
+    public void ApplyRequest(RequestView? request)
+    {
+        if (request == Request)
+        {
+            return;
+        }
+
+        Request = request;
+        OnPropertyChanged(string.Empty);
     }
 
     /// <summary>Shows the operation running now (<paramref name="operation"/> when it is on this game) and whether any runs.</summary>

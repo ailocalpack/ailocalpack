@@ -9,6 +9,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Requests;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -108,6 +109,7 @@ internal static class IndexCommand
         var root = new Argument<string>("registry-root") { Description = "The registry checkout (holds games/ and policy/)." };
         var outFile = new Option<string>("--out") { Description = "Where to write index.json.", Required = true };
         var ratingsFile = new Option<string?>("--ratings") { Description = "ratings.json with likes, works / doesn't work counts and discussion links per pack." };
+        var requestsFile = new Option<string?>("--requests") { Description = "requests.json with the open translation requests (requests collect)." };
         var generatedOption = new Option<string?>("--generated")
         {
             Description = "Build time to record (RFC 3339, e.g. 2026-11-04T12:00:00Z); default now. For reproducible output.",
@@ -115,9 +117,9 @@ internal static class IndexCommand
         var github = new Option<bool>("--github") { Description = "Print warnings as GitHub Actions annotations (::warning file=...)." };
         var build = new Command(
             "build",
-            "Build index.json from a registry checkout: every valid pack under games/, opt-out and anti-cheat flags from policy/, ratings. Invalid packs are left out with a warning.")
+            "Build index.json from a registry checkout: every valid pack under games/, opt-out and anti-cheat flags from policy/, ratings, open translation requests. Invalid packs are left out with a warning.")
         {
-            root, outFile, ratingsFile, generatedOption, github,
+            root, outFile, ratingsFile, requestsFile, generatedOption, github,
         };
         build.SetAction((result, cancellationToken) =>
         {
@@ -161,7 +163,34 @@ internal static class IndexCommand
                 }
             }
 
-            var built = RegistryIndexBuilder.Build(rootPath, generated, ratings, cancellationToken);
+            IReadOnlyDictionary<RequestKey, RegistryRequest>? requests = null;
+            if (result.GetValue(requestsFile) is { } requestsPath)
+            {
+                string text;
+                try
+                {
+                    text = File.ReadAllText(requestsPath);
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+                {
+                    error.WriteLine($"Can't read the requests {requestsPath}: {e.Message}");
+                    return Task.FromResult(1);
+                }
+
+                (requests, var requestErrors) = RegistryRequests.Read(text);
+                if (requests is null)
+                {
+                    error.WriteLine($"{requestsPath} is not a valid requests file:");
+                    foreach (var problem in requestErrors)
+                    {
+                        error.WriteLine($"  {problem}");
+                    }
+
+                    return Task.FromResult(1);
+                }
+            }
+
+            var built = RegistryIndexBuilder.Build(rootPath, generated, ratings, cancellationToken, requests);
             if (built.Index is not { } index)
             {
                 error.WriteLine($"Can't build the index of {rootPath}:");
@@ -190,7 +219,9 @@ internal static class IndexCommand
                 return Task.FromResult(1);
             }
 
+            var requestCount = index.Games.Values.Sum(g => g.Requests.Count);
             output.WriteLine($"Wrote {outPath}: {index.Games.Count} games, {index.PackCount} packs"
+                + (requestCount > 0 ? $", {requestCount} request{(requestCount == 1 ? "" : "s")}" : "")
                 + (built.Problems.Count > 0 ? $", {built.Problems.Count} warning{(built.Problems.Count == 1 ? "" : "s")}." : "."));
             return Task.FromResult(0);
         });
@@ -216,6 +247,12 @@ internal static class IndexCommand
             .Where(p => language is null || p.Key == language)
             .OrderBy(p => p.Key, StringComparer.Ordinal)
             .SelectMany(p => p.Value.OrderBy(pack => pack.Id, StringComparer.Ordinal));
+
+    private static IEnumerable<(string Language, RegistryRequest Request)> RequestsOf(RegistryGame game, string? language) =>
+        game.Requests
+            .Where(r => language is null || r.Key == language)
+            .OrderBy(r => r.Key, StringComparer.Ordinal)
+            .Select(r => (r.Key, r.Value));
 
     private static void WriteTable(TextWriter output, RegistryIndexSnapshot snapshot, RegistryIndex index, IReadOnlyList<RegistryGame> games, string? language)
     {
@@ -254,6 +291,25 @@ internal static class IndexCommand
             foreach (var row in rows)
             {
                 output.WriteLine(Row(row, widths));
+            }
+        }
+
+        var requests = games.SelectMany(g => RequestsOf(g, language).Select(r => (Game: g.Id, r.Language, r.Request))).ToList();
+        if (requests.Count > 0)
+        {
+            output.WriteLine();
+            output.WriteLine("Translation requests:");
+            foreach (var (gameId, requestLanguage, request) in requests)
+            {
+                var claim = request.Claim is { } c
+                    ? c.State switch
+                    {
+                        RequestClaimState.Working => $", {c.By} translating ({(c.Stage is { } stage ? RequestClaimComment.StageText(stage) + " " : "")}{c.Percent}%, {Time(c.Updated)})",
+                        RequestClaimState.Built => $", {c.By} translated it ({Time(c.Updated)})",
+                        _ => $", {c.By} published it ({Time(c.Updated)})",
+                    }
+                    : "";
+                output.WriteLine($"  {gameId}/{requestLanguage}: {request.Votes} vote{(request.Votes == 1 ? "" : "s")}{claim} {request.Discussion.AbsoluteUri}");
             }
         }
 
@@ -307,7 +363,17 @@ internal static class IndexCommand
                     p.Rating.Likes,
                     p.Rating.Works,
                     p.Rating.DoesNotWork,
-                    p.Discussion?.AbsoluteUri))]))],
+                    p.Discussion?.AbsoluteUri))],
+                [.. RequestsOf(g, language).Select(r => new IndexRequestJson(
+                    r.Language,
+                    r.Request.Votes,
+                    r.Request.Discussion.AbsoluteUri,
+                    r.Request.Opened.ToUniversalTime(),
+                    r.Request.Claim?.By,
+                    r.Request.Claim is { } c ? RequestClaimComment.StateText(c.State) : null,
+                    r.Request.Claim?.Stage is { } stage ? RequestClaimComment.StageText(stage) : null,
+                    r.Request.Claim?.Percent,
+                    r.Request.Claim?.Updated.ToUniversalTime()))]))],
             [.. index.AntiCheats.Select(r => new IndexAntiCheatJson(r.Id, r.Name, r.Markers))]);
         output.WriteLine(JsonSerializer.Serialize(dto, JsonWriter.IndexShowJson));
     }
@@ -329,7 +395,19 @@ internal sealed record IndexShowJson(
     IReadOnlyList<IndexGameJson> Games,
     IReadOnlyList<IndexAntiCheatJson> AntiCheats);
 
-internal sealed record IndexGameJson(string Id, bool OptOut, bool AntiCheatAllowed, string? AntiCheat, IReadOnlyList<IndexPackJson> Packs);
+internal sealed record IndexGameJson(string Id, bool OptOut, bool AntiCheatAllowed, string? AntiCheat, IReadOnlyList<IndexPackJson> Packs, IReadOnlyList<IndexRequestJson> Requests);
+
+/// <summary>An open translation request (task 74).</summary>
+internal sealed record IndexRequestJson(
+    string Language,
+    int Votes,
+    string Discussion,
+    DateTimeOffset Opened,
+    string? ClaimBy,
+    string? ClaimState,
+    string? ClaimStage,
+    int? ClaimPercent,
+    DateTimeOffset? ClaimUpdated);
 
 /// <summary>An anti-cheat detection rule the registry adds to (or replaces in) the app's bundled list.</summary>
 internal sealed record IndexAntiCheatJson(string Id, string Name, IReadOnlyList<string> Markers);

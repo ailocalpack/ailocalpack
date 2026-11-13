@@ -4165,4 +4165,175 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>“{0}” · {1} · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>Çeviri iste</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>Ben de · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>Henüz kimse yapmadı. Topluluktan isteyin: YZ ajanı olan oyuncular istekleri üstlenir, çeviri çıkınca size haber verilir.</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>GitHub'da aç</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>İstek gönderildi. Biri üstlendiğinde ve çeviri çıktığında size haber verilecek.</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>Çeviri istemek için GitHub'a giriş yapın</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>İstekler ve oylar, hesabınızla çeviri kayıt deposunun GitHub tartışmalarına gönderilir. Bir kez giriş yapın; isteğiniz hemen ardından gider.</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>Çeviri iste</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>YZ ajanı olan oyuncular kuyruktan istek seçer. Kimseye ödeme yapılmaz ve hiçbir şey garanti değildir, ama en çok istenenler genellikle önce üstlenilir.</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>Çevirmen için not (isteğe bağlı)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>Sizin için önemli olan: önce menüler, hayran vikisindeki adlar, samimi ya da resmi hitap…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>Herkese açık, GitHub adınızla gösterilir. Oyundan metin yapıştırmayın.</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>sürüm {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>GitHub'da kayıt deposunun isteklerine @{0} olarak gönderilir.</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>GitHub'da kayıt deposunun isteklerine hesabınızla gönderilir: sırada giriş var.</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>İstendi: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>{0} tarihinde istendi · şimdilik yalnızca siz</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>Çevirmen bekleniyor. Biri başladığında ve çeviri çıktığında, uygulama tepsideyken bile size haber verilir.</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>İsteğin durumu</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>İstendi</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>Çevirmen bulundu</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>bekleniyor</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>Çeviri</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>Yayınlandı</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} çeviriyor: {1} · %{2}</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} çevirdi; sırada yayın var</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} yayınladı; kayıt deposu şu an denetliyor</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>Son haber {0}. 14 gün haber gelmezse istek yeniden başkalarına açılır.</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>Oyuncuların notları</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>Kendin oluştur</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>İsteğimi geri çek</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>İsteğiniz karşılandı: {0} çeviri hazır. Oynadıktan sonra çalışıp çalışmadığını başkalarına bildirin.</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} zaten çeviriyor (%{1}); yine de kendi çevirinizi yapabilirsiniz.</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>İstenenler</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} çeviriyor</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0}, {1} oyununu sizin için çeviriyor</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>İsteğiniz karşılandı: “{0}”</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>Bu çeviriyi siz istediniz; çıkınca haber verilecek.</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>{0} yayınladı. Oyun sayfasından yükleyin.</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>Çeviriyi göster</value>
+  </data>
+  <data name="Request_Empty_Others_One" xml:space="preserve">
+    <value>{0} oyuncu {1} çeviri istedi. Siz de katılın: ne kadar çok istenirse YZ ajanı olan biri o kadar çabuk üstlenir.</value>
+  </data>
+  <data name="Request_Empty_Others_Other" xml:space="preserve">
+    <value>{0} oyuncu {1} çeviri istedi. Siz de katılın: ne kadar çok istenirse YZ ajanı olan biri o kadar çabuk üstlenir.</value>
+  </data>
+  <data name="Request_Card_Sub_One" xml:space="preserve">
+    <value>{1} tarihinde istendi · siz ve {0} oyuncu daha</value>
+  </data>
+  <data name="Request_Card_Sub_Other" xml:space="preserve">
+    <value>{1} tarihinde istendi · siz ve {0} oyuncu daha</value>
+  </data>
+  <data name="Request_Step_Players_One" xml:space="preserve">
+    <value>{0} oyuncu</value>
+  </data>
+  <data name="Request_Step_Players_Other" xml:space="preserve">
+    <value>{0} oyuncu</value>
+  </data>
+  <data name="Request_Dialog_Others_One" xml:space="preserve">
+    <value>{0} oyuncu bunu zaten istedi. İsteğiniz oyunuzu ve notunuzu ekler.</value>
+  </data>
+  <data name="Request_Dialog_Others_Other" xml:space="preserve">
+    <value>{0} oyuncu bunu zaten istedi. İsteğiniz oyunuzu ve notunuzu ekler.</value>
+  </data>
+  <data name="Gen_Request_Strip_One" xml:space="preserve">
+    <value>{0} oyuncu {1} çeviri istedi. Sizinkini yayınlamak isteği kapatır ve ona haber verir.</value>
+  </data>
+  <data name="Gen_Request_Strip_Other" xml:space="preserve">
+    <value>{0} oyuncu {1} çeviri istedi. Sizinkini yayınlamak isteği kapatır ve hepsine haber verir.</value>
+  </data>
+  <data name="Gen_Request_Take_One" xml:space="preserve">
+    <value>İsteyen {0} oyuncuya çevirdiğimi bildir (GitHub'da benim adımla)</value>
+  </data>
+  <data name="Gen_Request_Take_Other" xml:space="preserve">
+    <value>İsteyen {0} oyuncuya çevirdiğimi bildir (GitHub'da benim adımla)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_One" xml:space="preserve">
+    <value>Siz istediniz · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Other" xml:space="preserve">
+    <value>Siz istediniz · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_One" xml:space="preserve">
+    <value>İstendi · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Other" xml:space="preserve">
+    <value>İstendi · {0}</value>
+  </data>
 </root>

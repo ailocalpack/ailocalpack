@@ -18,6 +18,7 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Ratings;
 using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Desktop.Requests;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.Startup;
@@ -62,6 +63,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     private readonly LocalPacks _localPacks;
     private readonly PublishFlow _publish;
     private readonly PackRatings _ratings;
+    private readonly TranslationRequests? _requests;
     private readonly IDialogService _dialogs;
     private readonly ToastService _toasts;
     private readonly TimeProvider _time;
@@ -122,7 +124,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         PublishFlow publish,
         PackRatings ratings,
         GamePageTab initialTab = GamePageTab.Default,
-        ILogger<GamePageViewModel>? logger = null)
+        ILogger<GamePageViewModel>? logger = null,
+        TranslationRequests? requests = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         Game = game;
@@ -156,13 +159,21 @@ public sealed partial class GamePageViewModel : PageViewModel
             : GamePrimaryActions.OpensOnGeneration(Status) ? GamePageTab.Generation
             : GamePageTab.Packs;
         UpdateTabs();
+
+        // Before the tabs: their first read of the request's Discussion may answer at once.
+        _requests = requests;
+        if (_requests is not null)
+        {
+            _requests.Changed += OnRequestsChanged;
+        }
+
         Packs = new PacksTabViewModel(
             game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, localPacks, jobs,
-            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, ratings, _logger);
+            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, ratings, _logger, requests);
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -495,6 +506,18 @@ public sealed partial class GamePageViewModel : PageViewModel
     }
 
     /// <summary>The player's ratings or a send changed (any thread): the prompt, the menu's Rate and the Packs tab follow.</summary>
+    private void OnRequestsChanged(object? sender, GameId game)
+    {
+        if (game == Game.Id)
+        {
+            _ui.Post(() =>
+            {
+                Packs?.RefreshRequest();
+                Generation?.RefreshRequest();
+            });
+        }
+    }
+
     private void OnRatingsChanged(object? sender, GameId game)
     {
         if (game == Game.Id)
@@ -633,6 +656,11 @@ public sealed partial class GamePageViewModel : PageViewModel
         _localPacks.Changed -= OnLocalPacksChanged;
         _publish.Changed -= OnLocalPacksChanged;
         _ratings.Changed -= OnRatingsChanged;
+        if (_requests is not null)
+        {
+            _requests.Changed -= OnRequestsChanged;
+        }
+
         _closed.Cancel();
         Packs.Close();
         Generation.Close();

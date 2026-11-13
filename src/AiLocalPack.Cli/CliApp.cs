@@ -18,6 +18,8 @@ public static class CliApp
             IndexCommand.Build(env),
             PackCommand.Build(env),
             RatingsCommand.Build(env),
+            RequestsCommand.BuildCollect(env),
+            RequestsCommand.BuildRequest(env),
             AgentCommand.Build(env),
             GitHubCommand.Build(env),
             GenCommand.Build(env),

@@ -4165,4 +4165,175 @@
   <data name="Gen_Result_PackLineQuality" xml:space="preserve">
     <value>„{0}“ auf {1} · {2}</value>
   </data>
+  <data name="Request_Ask" xml:space="preserve">
+    <value>Übersetzung anfragen</value>
+  </data>
+  <data name="Request_MeToo" xml:space="preserve">
+    <value>Ich auch · {0}</value>
+  </data>
+  <data name="Request_Empty_Text" xml:space="preserve">
+    <value>Noch hat niemand eine gemacht. Frag die Community: Spieler mit einem KI-Agenten übernehmen Anfragen, und du erfährst, wenn die Übersetzung erscheint.</value>
+  </data>
+  <data name="Request_OpenOnGitHub" xml:space="preserve">
+    <value>Auf GitHub öffnen</value>
+  </data>
+  <data name="Request_Toast_Sent" xml:space="preserve">
+    <value>Anfrage gesendet. Du erfährst, wenn jemand sie übernimmt und wenn die Übersetzung erscheint.</value>
+  </data>
+  <data name="Request_SignIn_Title" xml:space="preserve">
+    <value>Melde dich bei GitHub an, um Übersetzungen anzufragen</value>
+  </data>
+  <data name="Request_SignIn_Intro" xml:space="preserve">
+    <value>Anfragen und Stimmen gehen unter deinem Konto in die GitHub-Discussions des Übersetzungsregisters. Einmal anmelden – deine Anfrage geht gleich danach raus.</value>
+  </data>
+  <data name="Request_Dialog_Title" xml:space="preserve">
+    <value>Übersetzung anfragen</value>
+  </data>
+  <data name="Request_Dialog_Intro" xml:space="preserve">
+    <value>Spieler mit einem KI-Agenten übernehmen Anfragen aus der Warteschlange. Niemand wird bezahlt und nichts ist versprochen, aber die gefragtesten Anfragen kommen meist zuerst dran.</value>
+  </data>
+  <data name="Request_Dialog_Into" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="Request_Dialog_Note" xml:space="preserve">
+    <value>Notiz für die Übersetzer (optional)</value>
+  </data>
+  <data name="Request_Dialog_NotePlaceholder" xml:space="preserve">
+    <value>Was dir wichtig ist: zuerst die Menüs, Namen aus dem Fan-Wiki, „du“ oder „Sie“…</value>
+  </data>
+  <data name="Request_Dialog_NoteHint" xml:space="preserve">
+    <value>Öffentlich, mit deinem GitHub-Namen. Füge keinen Text aus dem Spiel ein.</value>
+  </data>
+  <data name="Request_Dialog_Build" xml:space="preserve">
+    <value>Build {0}</value>
+  </data>
+  <data name="Request_Dialog_PostedAs" xml:space="preserve">
+    <value>Wird als @{0} in den Anfragen des Registers auf GitHub veröffentlicht.</value>
+  </data>
+  <data name="Request_Dialog_SignInNext" xml:space="preserve">
+    <value>Wird unter deinem Konto in den Anfragen des Registers auf GitHub veröffentlicht: als Nächstes die Anmeldung.</value>
+  </data>
+  <data name="Request_Card_Title" xml:space="preserve">
+    <value>Angefragt: {0}</value>
+  </data>
+  <data name="Request_Card_SubAlone" xml:space="preserve">
+    <value>Angefragt am {0} · bisher nur du</value>
+  </data>
+  <data name="Request_Card_Waiting" xml:space="preserve">
+    <value>Warten auf Übersetzer. Du erfährst, wenn jemand anfängt und wenn die Übersetzung erscheint, auch wenn die App im Tray ist.</value>
+  </data>
+  <data name="Request_Steps_Label" xml:space="preserve">
+    <value>Stand der Anfrage</value>
+  </data>
+  <data name="Request_Step_Requested" xml:space="preserve">
+    <value>Angefragt</value>
+  </data>
+  <data name="Request_Step_Translator" xml:space="preserve">
+    <value>Übersetzer gefunden</value>
+  </data>
+  <data name="Request_Step_Waiting" xml:space="preserve">
+    <value>wartet</value>
+  </data>
+  <data name="Request_Step_Translating" xml:space="preserve">
+    <value>Übersetzung</value>
+  </data>
+  <data name="Request_Step_Published" xml:space="preserve">
+    <value>Veröffentlicht</value>
+  </data>
+  <data name="Request_Claim_Working" xml:space="preserve">
+    <value>{0} übersetzt: {1} · {2} %</value>
+  </data>
+  <data name="Request_Claim_Built" xml:space="preserve">
+    <value>{0} hat übersetzt; als Nächstes die Veröffentlichung</value>
+  </data>
+  <data name="Request_Claim_Published" xml:space="preserve">
+    <value>{0} hat veröffentlicht; das Register prüft sie gerade</value>
+  </data>
+  <data name="Request_Claim_News" xml:space="preserve">
+    <value>Letzte Neuigkeit {0}. Ohne Neuigkeiten für 14 Tage ist die Anfrage wieder für andere offen.</value>
+  </data>
+  <data name="Request_Notes" xml:space="preserve">
+    <value>Notizen von Spielern</value>
+  </data>
+  <data name="Request_CreateYourself" xml:space="preserve">
+    <value>Selbst erstellen</value>
+  </data>
+  <data name="Request_Withdraw" xml:space="preserve">
+    <value>Anfrage zurückziehen</value>
+  </data>
+  <data name="Request_Done_Text" xml:space="preserve">
+    <value>Deine Anfrage ist erledigt: Die Übersetzung in {0} ist da. Sag nach dem Spielen anderen, ob sie funktioniert.</value>
+  </data>
+  <data name="Gen_Request_OtherClaim" xml:space="preserve">
+    <value>{0} übersetzt sie schon ({1} %); du kannst trotzdem deine eigene machen.</value>
+  </data>
+  <data name="Library_Filter_Requested" xml:space="preserve">
+    <value>Angefragt</value>
+  </data>
+  <data name="Library_Badge_RequestTranslating" xml:space="preserve">
+    <value>{0} übersetzt</value>
+  </data>
+  <data name="Activity_Event_RequestTaken" xml:space="preserve">
+    <value>{0} übersetzt {1} für dich</value>
+  </data>
+  <data name="Activity_Event_RequestDone" xml:space="preserve">
+    <value>Deine Anfrage ist erledigt: „{0}“</value>
+  </data>
+  <data name="Activity_Detail_RequestTaken" xml:space="preserve">
+    <value>Du hast diese Übersetzung angefragt; du erfährst, wenn sie erscheint.</value>
+  </data>
+  <data name="Activity_Detail_RequestDone" xml:space="preserve">
+    <value>Veröffentlicht von {0}. Installiere sie auf der Spielseite.</value>
+  </data>
+  <data name="Activity_Action_ShowTranslation" xml:space="preserve">
+    <value>Übersetzung anzeigen</value>
+  </data>
+  <data name="Request_Empty_Others_One" xml:space="preserve">
+    <value>{0} Spieler hat eine Übersetzung in {1} angefragt. Schließ dich an: Je mehr fragen, desto eher übernimmt sie jemand mit einem KI-Agenten.</value>
+  </data>
+  <data name="Request_Empty_Others_Other" xml:space="preserve">
+    <value>{0} Spieler haben eine Übersetzung in {1} angefragt. Schließ dich an: Je mehr fragen, desto eher übernimmt sie jemand mit einem KI-Agenten.</value>
+  </data>
+  <data name="Request_Card_Sub_One" xml:space="preserve">
+    <value>Angefragt am {1} · du und {0} weiterer Spieler</value>
+  </data>
+  <data name="Request_Card_Sub_Other" xml:space="preserve">
+    <value>Angefragt am {1} · du und {0} weitere Spieler</value>
+  </data>
+  <data name="Request_Step_Players_One" xml:space="preserve">
+    <value>{0} Spieler</value>
+  </data>
+  <data name="Request_Step_Players_Other" xml:space="preserve">
+    <value>{0} Spieler</value>
+  </data>
+  <data name="Request_Dialog_Others_One" xml:space="preserve">
+    <value>{0} Spieler hat das schon angefragt. Deine Anfrage fügt deine Stimme und deine Notiz hinzu.</value>
+  </data>
+  <data name="Request_Dialog_Others_Other" xml:space="preserve">
+    <value>{0} Spieler haben das schon angefragt. Deine Anfrage fügt deine Stimme und deine Notiz hinzu.</value>
+  </data>
+  <data name="Gen_Request_Strip_One" xml:space="preserve">
+    <value>{0} Spieler hat eine Übersetzung in {1} angefragt. Wenn du deine veröffentlichst, wird die Anfrage geschlossen und er benachrichtigt.</value>
+  </data>
+  <data name="Gen_Request_Strip_Other" xml:space="preserve">
+    <value>{0} Spieler haben eine Übersetzung in {1} angefragt. Wenn du deine veröffentlichst, wird die Anfrage geschlossen und alle benachrichtigt.</value>
+  </data>
+  <data name="Gen_Request_Take_One" xml:space="preserve">
+    <value>Dem {0} Spieler, der angefragt hat, mitteilen, dass ich übersetze (auf GitHub unter meinem Namen)</value>
+  </data>
+  <data name="Gen_Request_Take_Other" xml:space="preserve">
+    <value>Den {0} Spielern, die angefragt haben, mitteilen, dass ich übersetze (auf GitHub unter meinem Namen)</value>
+  </data>
+  <data name="Library_Badge_RequestMine_One" xml:space="preserve">
+    <value>Von dir angefragt · {0}</value>
+  </data>
+  <data name="Library_Badge_RequestMine_Other" xml:space="preserve">
+    <value>Von dir angefragt · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_One" xml:space="preserve">
+    <value>Angefragt · {0}</value>
+  </data>
+  <data name="Library_Badge_Requested_Other" xml:space="preserve">
+    <value>Angefragt · {0}</value>
+  </data>
 </root>

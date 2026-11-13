@@ -48,6 +48,9 @@ public sealed class PublishFlow
     private PublishRun? _running;
     private ActivityTask? _task;
 
+    /// <summary>A pack went to the registry (its PR is open); any thread. Translation requests follow it (task 74).</summary>
+    public event EventHandler<Core.Packs.PackManifest>? Submitted;
+
     public PublishFlow(
         IPackPublishing publisher,
         PullRequestTracker tracker,
@@ -350,6 +353,7 @@ public sealed class PublishFlow
         switch (result)
         {
             case PublishResult.Published published:
+                Submitted?.Invoke(this, published.Manifest);
                 var detail = _localizer.Format(published.Resubmitted ? nameof(Strings.Publish_Resubmitted_Detail) : nameof(Strings.Publish_Checking_Title), published.PullRequest);
                 _activity.Add(ActivityEvent.Create(ActivityEventKind.PackSubmitted, _time.GetUtcNow()) with
                 {

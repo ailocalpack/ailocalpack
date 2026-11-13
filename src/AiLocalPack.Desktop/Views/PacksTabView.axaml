@@ -3,6 +3,7 @@
              xmlns:gp="using:AiLocalPack.Desktop.ViewModels.GamePage"
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:l="using:AiLocalPack.Desktop.Localization"
+             xmlns:rq="using:AiLocalPack.Desktop.Requests"
              x:Class="AiLocalPack.Desktop.Views.PacksTabView"
              x:DataType="gp:PacksTabViewModel">
     <!-- Design §4: toolbar (language popover, sort, count), list of registry packs + details panel of the selected one;
@@ -91,6 +92,20 @@
         </DockPanel>
 
         <!-- List + details -->
+        <!-- Task 74: the player's translation request has a pack now -->
+        <Border x:Name="RequestDone" Classes="compatBox ok" IsVisible="{Binding ShowRequestDone}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                <Viewbox Classes="icon" Width="16" Height="16" VerticalAlignment="Center">
+                    <Path Classes="icon" Data="{StaticResource IconCheckCircle}" />
+                </Viewbox>
+                <TextBlock Grid.Column="1" FontSize="13" Text="{Binding Request.DoneText}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <Button x:Name="RequestDoneClose" Grid.Column="2" Classes="icon sm" Command="{Binding Request.DismissDoneCommand}" VerticalAlignment="Center"
+                        ToolTip.Tip="{l:Loc Publish_Close}" AutomationProperties.Name="{l:Loc Publish_Close}">
+                    <Path Data="{StaticResource IconX}" />
+                </Button>
+            </Grid>
+        </Border>
+
         <Grid x:Name="PackSplit" ColumnDefinitions="340,*" ColumnSpacing="16" IsVisible="{Binding ShowList}">
             <StackPanel Spacing="6">
                 <!-- Mine: the generation job and the packs made on this machine -->
@@ -526,8 +541,8 @@
             </Button>
         </StackPanel>
 
-        <!-- No translation into this language -->
-        <Panel x:Name="NoPacks" IsVisible="{Binding ShowEmpty}">
+        <!-- No translation into this language; task 74: ask the community for one -->
+        <Panel x:Name="NoPacks" IsVisible="{Binding ShowNoPacks}">
             <Rectangle Classes="dropzone" StrokeThickness="1" />
             <StackPanel Margin="16,36" Spacing="10" HorizontalAlignment="Center" MaxWidth="560">
                 <Border Classes="illustration">
@@ -536,13 +551,36 @@
                     </Viewbox>
                 </Border>
                 <TextBlock x:Name="NoPacksTitle" Classes="h2" FontSize="18" Text="{Binding EmptyTitle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-                <TextBlock Classes="muted" Text="{l:Loc Game_Packs_NoneText}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-                <Button x:Name="EmptyCreateWithAi" Classes="ghost gen" HorizontalAlignment="Center" Margin="0,6,0,0" Command="{Binding OpenGenerationCommand}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Viewbox Classes="icon" Width="16" Height="16">
-                            <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                <TextBlock Classes="muted" Text="{l:Loc Game_Packs_NoneText}" IsVisible="{Binding ShowNoPacksText}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                <TextBlock x:Name="RequestAskText" Classes="muted" Text="{Binding Request.AskText, FallbackValue=''}" IsVisible="{Binding ShowRequestAsk}"
+                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8" Margin="0,6,0,0">
+                    <Button x:Name="RequestAsk" Classes="accent" IsVisible="{Binding ShowRequestAsk}" Command="{Binding Request.AskCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="16" Height="16">
+                                <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding Request.AskButtonText, FallbackValue=''}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="EmptyCreateWithAi" Classes="ghost gen" Command="{Binding OpenGenerationCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="16" Height="16">
+                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Game_Packs_Generate}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+                <TextBlock x:Name="RequestAskStatus" Classes="muted" FontSize="12" Classes.bad="{Binding Request.IsFailed, FallbackValue=False}" HorizontalAlignment="Center"
+                           TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Request.StatusText, FallbackValue=''}" IsVisible="{Binding Request.HasStatus, FallbackValue=False}" />
+                <Button x:Name="RequestAskOpen" Classes="link" FontSize="13" HorizontalAlignment="Center" Command="{Binding Request.OpenCommand}"
+                        IsVisible="{Binding Request.HasDiscussion, FallbackValue=False}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="{l:Loc Request_OpenOnGitHub}" VerticalAlignment="Center" />
+                        <Viewbox Classes="icon" Width="13" Height="13">
+                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
                         </Viewbox>
-                        <TextBlock Text="{l:Loc Game_Packs_Generate}" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
                 <WrapPanel x:Name="OtherLanguages" HorizontalAlignment="Center" ItemSpacing="4" IsVisible="{Binding HasOtherLanguages}">
@@ -560,5 +598,90 @@
                 </WrapPanel>
             </StackPanel>
         </Panel>
+
+        <!-- Task 74: the player's own request -->
+        <Border x:Name="RequestCard" Classes="genCard" IsVisible="{Binding ShowRequestCard}">
+            <StackPanel Spacing="16" DataContext="{Binding Request}" x:DataType="rq:RequestPanelViewModel">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Border Classes="genStepIcon current" Width="40" Height="40" CornerRadius="12">
+                        <Viewbox Classes="icon" Width="18" Height="18">
+                            <Path Classes="icon" Data="{StaticResource IconMessage}" />
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock x:Name="RequestCardTitle" Classes="genTitle" FontSize="18" Text="{Binding CardTitle}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="RequestCardSubtitle" Classes="muted" FontSize="13" Text="{Binding CardSubtitle}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+
+                <ItemsControl x:Name="RequestSteps" ItemsSource="{Binding Steps}" AutomationProperties.Name="{l:Loc Request_Steps_Label}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><UniformGrid Rows="1" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="rq:RequestStepViewModel">
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,30,*" RowSpacing="4" AutomationProperties.Name="{Binding Name}">
+                                <Border Grid.Column="2" Classes="genStepLine" Classes.done="{Binding IsDone}" Margin="8,0,-8,0"
+                                        VerticalAlignment="Center" IsVisible="{Binding HasLine}" />
+                                <Border Grid.Column="1" Classes="genStepIcon" Classes.done="{Binding IsDone}" Classes.paused="{Binding IsCurrent}">
+                                    <Viewbox Classes="icon" Width="15" Height="15">
+                                        <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                    </Viewbox>
+                                </Border>
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Classes="genStepName" Classes.reached="{Binding IsReached}" Text="{Binding Name}" />
+                                <TextBlock Grid.Row="2" Grid.ColumnSpan="3" Classes="muted" FontSize="12" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Detail}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Spacing="6">
+                    <TextBlock x:Name="RequestClaim" FontSize="14" Text="{Binding ClaimText}" TextWrapping="Wrap" />
+                    <ProgressBar Classes="installProgress" Minimum="0" Maximum="100" Value="{Binding ClaimPercent}" IsVisible="{Binding ShowClaimProgress}" />
+                    <TextBlock Classes="muted" FontSize="12" Text="{Binding ClaimDetail}" IsVisible="{Binding HasClaim}" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Spacing="8" IsVisible="{Binding HasNotes}">
+                    <TextBlock Classes="capsLabel" Text="{l:Loc Request_Notes}" />
+                    <ItemsControl x:Name="RequestNotes" ItemsSource="{Binding Notes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="rq:RequestNoteViewModel">
+                                <TextBlock FontSize="13" TextWrapping="Wrap" MaxLines="4" TextTrimming="CharacterEllipsis">
+                                    <Run FontWeight="SemiBold" Text="{Binding Author}" />
+                                    <Run Text=" " />
+                                    <Run Foreground="{DynamicResource AppMutedBrush}" Text="{Binding Text}" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <TextBlock x:Name="RequestCardStatus" Classes="muted" FontSize="12" Classes.bad="{Binding IsFailed}" Text="{Binding StatusText}" IsVisible="{Binding HasStatus}" TextWrapping="Wrap" />
+
+                <Border Height="1" Background="{DynamicResource AppBorderBrush}" />
+                <WrapPanel ItemSpacing="8" LineSpacing="8">
+                    <Button x:Name="RequestOpen" Classes="ghost sm" Command="{Binding OpenCommand}" IsVisible="{Binding HasDiscussion}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Request_OpenOnGitHub}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="RequestCreate" Classes="ghost gen sm" Command="{Binding OpenGenerationCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Request_CreateYourself}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="RequestWithdraw" Classes="ghost sm" Command="{Binding WithdrawCommand}" Content="{l:Loc Request_Withdraw}" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </UserControl>

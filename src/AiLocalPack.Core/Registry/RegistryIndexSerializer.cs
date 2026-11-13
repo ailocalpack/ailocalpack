@@ -136,7 +136,7 @@ public static class RegistryIndexSerializer
 
     /// <summary>
     /// The index as indented JSON: games, languages and packs in ordinal order (the same index always gives the same
-    /// bytes), defaults left out (<c>false</c> flags, no rating, no discussion, no dependency whitelist or anti-cheat rules);
+    /// bytes), defaults left out (<c>false</c> flags, no rating, no discussion, no requests, no dependency whitelist or anti-cheat rules);
     /// the whitelist's entries by ID, the rules in the policy's order.
     /// </summary>
     public static string Write(RegistryIndex index)
@@ -151,11 +151,18 @@ public static class RegistryIndexSerializer
                 packs[language] = [.. list.OrderBy(p => p.Id, StringComparer.Ordinal).Select(WritePack)];
             }
 
+            var requests = new SortedDictionary<string, RequestJson?>(StringComparer.Ordinal);
+            foreach (var (language, request) in game.Requests)
+            {
+                requests[language] = RegistryRequests.ToJson(request);
+            }
+
             games[game.Id.ToString()] = new RegistryGameJson(
                 game.OptOut ? true : null,
                 game.AntiCheatAllowed ? true : null,
                 game.AntiCheat,
-                packs.Count > 0 ? packs : null);
+                packs.Count > 0 ? packs : null,
+                requests.Count > 0 ? requests : null);
         }
 
         var file = new RegistryIndexJson(
@@ -235,7 +242,23 @@ public static class RegistryIndexSerializer
             skipped.Add($"{field}.antiCheat", $"'{antiCheat}' is not an anti-cheat ID (lowercase letters, digits, '-').");
         }
 
-        return new RegistryGame(id, entry.OptOut ?? false, entry.AntiCheatAllowed ?? false, languages) { AntiCheat = antiCheat };
+        var requests = new Dictionary<string, RegistryRequest>(StringComparer.Ordinal);
+        foreach (var (language, request) in entry.Requests ?? new Dictionary<string, RequestJson?>())
+        {
+            var requestField = $"{field}.requests{(IsPlainName(language) ? "." + language : PackFormat.Key("", language))}";
+            if (!GameLanguages.Tags.Contains(language, StringComparer.Ordinal))
+            {
+                skipped.Add(requestField, $"'{language}' is not a supported language.");
+                continue;
+            }
+
+            if (RegistryRequests.ReadEntry(request, requestField, skipped) is { } read)
+            {
+                requests[language] = read;
+            }
+        }
+
+        return new RegistryGame(id, entry.OptOut ?? false, entry.AntiCheatAllowed ?? false, languages) { AntiCheat = antiCheat, Requests = requests };
     }
 
     private static bool IsPlainName(string key) => key.Length > 0 && key.All(c => char.IsAsciiLetterOrDigit(c) || c == '-');

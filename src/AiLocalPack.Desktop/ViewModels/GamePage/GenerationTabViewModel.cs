@@ -3,6 +3,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Requests;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Dialogs;
@@ -10,6 +11,7 @@ using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Desktop.Requests;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.ViewModels.AddGame;
@@ -210,6 +212,12 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private bool _isLogOpen;
 
     private bool _starting;
+    private readonly TranslationRequests? _requests;
+    private RequestKey? _takeKey;
+
+    /// <summary>"Tell the 13 players who asked that I'm translating" (task 74), on by default unless someone else is on it.</summary>
+    [ObservableProperty]
+    private bool _takeRequest;
 
     public GenerationTabViewModel(
         Game game,
@@ -230,8 +238,10 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         TimeProvider time,
         ILogger logger,
         IUpdateBases? updateBases = null,
-        UpdateCandidate? update = null)
+        UpdateCandidate? update = null,
+        TranslationRequests? requests = null)
     {
+        _requests = requests;
         _publish = publish;
         _game = game;
         _updateBases = updateBases;
@@ -277,6 +287,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         Steps = BuildSteps();
         SyncReview();
         _install.Changed += OnInstallChanged;
+        RefreshRequest();
     }
 
     // ---------- Frame ----------
@@ -310,6 +321,45 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     /// <summary>Setup + the four pipeline stages (five with Study for a Thorough job).</summary>
     public IReadOnlyList<GenerationStepViewModel> Steps { get; private set; }
+
+    // ---------- Translation request (task 74) ----------
+
+    /// <summary>The request for the game into the form's language, or <c>null</c> without the requests service.</summary>
+    public RequestView? Request => _requests?.ViewOf(_game.Id, Language);
+
+    /// <summary>The form's strip and checkbox: players asked for this translation (not in update mode).</summary>
+    public bool ShowRequest => ShowForm && !IsUpdateMode && Request is { Exists: true, Discussion: not null };
+
+    /// <summary>"13 players asked for a translation into Русский. Publishing yours closes their request and tells all of them."</summary>
+    public string RequestStripText => Request is { } r ? _localizer.Plural(nameof(Strings.Gen_Request_Strip_One), r.Votes, LanguageName) : string.Empty;
+
+    /// <summary>"Tell the 13 players who asked that I'm translating (posted on GitHub under my name)".</summary>
+    public string TakeRequestText => Request is { } r ? _localizer.Plural(nameof(Strings.Gen_Request_Take_One), r.Votes) : string.Empty;
+
+    /// <summary>"alice is already translating it (45 %); you can still make your own." while someone else's claim is live.</summary>
+    public string RequestOtherClaimText => Request?.Claim is { ByMe: false } c
+        ? _localizer.Format(nameof(Strings.Gen_Request_OtherClaim), c.By, c.Percent.ToString(_localizer.Culture))
+        : string.Empty;
+
+    public bool HasRequestOtherClaim => RequestOtherClaimText.Length > 0;
+
+    /// <summary>The request or the pack list changed: the strip and checkbox follow; the checkbox's default is set once per request.</summary>
+    public void RefreshRequest()
+    {
+        var key = new RequestKey(_game.Id, Language);
+        if (_takeKey != key)
+        {
+            _takeKey = key;
+            TakeRequest = Request?.Claim is not { ByMe: false };
+        }
+
+        OnPropertyChanged(nameof(Request));
+        OnPropertyChanged(nameof(ShowRequest));
+        OnPropertyChanged(nameof(RequestStripText));
+        OnPropertyChanged(nameof(TakeRequestText));
+        OnPropertyChanged(nameof(RequestOtherClaimText));
+        OnPropertyChanged(nameof(HasRequestOtherClaim));
+    }
 
     // ---------- Title and language ----------
 
@@ -934,10 +984,16 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             Base: updateBase is null ? null : _base!.Reference,
             Quality: Quality,
             WebLookup: Quality == GenerationQuality.Thorough && WebLookup);
+        var take = ShowRequest && TakeRequest ? Request?.Discussion : null;
         var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (work.TimeLow + work.TimeHigh) / 2, updateBase);
         _ui.Post(() =>
         {
             _starting = false;
+            if (result.Job is { } started && take is not null)
+            {
+                _requests?.Take(started, take);
+            }
+
             StartError = result.Problem switch
             {
                 null => string.Empty,
@@ -1416,6 +1472,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         OnPropertyChanged(nameof(Language));
         OnPropertyChanged(nameof(LanguageName));
         OnPropertyChanged(nameof(LanguageOptions));
+        RefreshRequest();
     }
 
     private IReadOnlyList<GenerationStepViewModel> BuildSteps()
@@ -1492,6 +1549,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private void RaiseAll()
     {
+        if (_takeKey is not null && _takeKey != new RequestKey(_game.Id, Language))
+        {
+            RefreshRequest();
+        }
+
         OnPropertyChanged(string.Empty);
         StartCommand.NotifyCanExecuteChanged();
         RetryEstimateCommand.NotifyCanExecuteChanged();

@@ -9,6 +9,7 @@
              xmlns:pub="using:AiLocalPack.Desktop.Publishing"
              xmlns:startup="using:AiLocalPack.Desktop.Startup"
              xmlns:rate="using:AiLocalPack.Desktop.Ratings"
+             xmlns:rq="using:AiLocalPack.Desktop.Requests"
              xmlns:about="using:AiLocalPack.Desktop.ViewModels.Settings.About"
              xmlns:welcome="using:AiLocalPack.Desktop.Welcome"
              x:Class="AiLocalPack.Desktop.App"
@@ -50,6 +51,7 @@
         <DataTemplate DataType="pub:PublishSignInDialogViewModel"><views:PublishSignInDialogView /></DataTemplate>
         <DataTemplate DataType="pub:SimilarPackDialogViewModel"><views:SimilarPackDialogView /></DataTemplate>
         <DataTemplate DataType="rate:RatingSignInDialogViewModel"><views:RatingSignInDialogView /></DataTemplate>
+        <DataTemplate DataType="rq:RequestDialogViewModel"><views:RequestDialogView /></DataTemplate>
         <DataTemplate DataType="about:ThirdPartyNoticesDialogViewModel"><views:ThirdPartyNoticesDialogView /></DataTemplate>
         <DataTemplate DataType="welcome:WelcomeTourViewModel"><views:WelcomeTourView /></DataTemplate>
         <!-- Startup checklist rows (splash details, startup checks under the bell) -->

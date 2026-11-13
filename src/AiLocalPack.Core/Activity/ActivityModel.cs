@@ -80,6 +80,18 @@ public enum ActivityEventKind
     /// <see cref="ActivityEvent.Version"/> names it.
     /// </summary>
     AppUpdateReady,
+
+    /// <summary>
+    /// A translator took the player's translation request (task 74): <see cref="ActivityEvent.Detail"/> = their GitHub
+    /// login, <see cref="ActivityEvent.Link"/> = the request's Discussion.
+    /// </summary>
+    RequestTaken,
+
+    /// <summary>
+    /// The registry has a translation for the player's request now (task 74): <see cref="ActivityEvent.PackTitle"/> and its
+    /// author in <see cref="ActivityEvent.Detail"/>.
+    /// </summary>
+    RequestDone,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -253,7 +265,7 @@ public static class ActivityEvents
     {
         ActivityEventKind.PackInstalled or ActivityEventKind.PackReapplied or ActivityEventKind.PackAutoReapplied
             or ActivityEventKind.PackSubmitted or ActivityEventKind.PackMerged or ActivityEventKind.PackVerified
-            or ActivityEventKind.AppUpdateReady => ActivityTone.Ok,
+            or ActivityEventKind.AppUpdateReady or ActivityEventKind.RequestDone => ActivityTone.Ok,
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
             or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed or ActivityEventKind.PullRequestFailed => ActivityTone.Bad,
         ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied or ActivityEventKind.GlossaryReview => ActivityTone.Attention,

@@ -11,7 +11,7 @@ public enum NotificationCategory
     /// <summary><see cref="AppSettings.NotifyTaskFinished"/>: an install, re-apply or uninstall ended (done or failed).</summary>
     TaskFinished,
 
-    /// <summary><see cref="AppSettings.NotifyCommunity"/>: reviews, confirmations on the player's packs (tasks 62–64).</summary>
+    /// <summary><see cref="AppSettings.NotifyCommunity"/>: reviews, confirmations on the player's packs (tasks 62–64), the player's translation requests (task 74).</summary>
     Community,
 }
 
@@ -31,6 +31,7 @@ public static class ActivityNotifications
         }
 
         return activity.Kind is ActivityEventKind.PackMerged or ActivityEventKind.PackVerified or ActivityEventKind.PullRequestClosed
+            or ActivityEventKind.RequestTaken or ActivityEventKind.RequestDone
             ? NotificationCategory.Community
             : NotificationCategory.TaskFinished;
     }

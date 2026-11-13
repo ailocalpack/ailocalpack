@@ -35,6 +35,14 @@
         <!-- Start form (§6a) -->
         <Border x:Name="StartForm" Classes="genCard" IsVisible="{Binding ShowForm}">
             <StackPanel Spacing="18">
+                <Border x:Name="GenRequestStrip" Classes="banner" IsVisible="{Binding ShowRequest}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Viewbox Classes="icon" Width="16" Height="16" VerticalAlignment="Top">
+                            <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{DynamicResource AppAccentBrush}" />
+                        </Viewbox>
+                        <TextBlock FontSize="13" Text="{Binding RequestStripText}" TextWrapping="Wrap" MaxWidth="720" />
+                    </StackPanel>
+                </Border>
                 <!-- Title as a sentence: "Create a [Balanced ▾] translation into [Русский ▾]" (quality modes, decided 2026-11-13) -->
                 <StackPanel Spacing="4">
                 <WrapPanel ItemSpacing="10" LineSpacing="6">
@@ -301,6 +309,12 @@
                 </StackPanel>
 
                 <CheckBox x:Name="ReviewGlossary" IsChecked="{Binding ReviewGlossary}" Content="{l:Loc Gen_ReviewGlossary}" />
+
+                <!-- Task 74: players asked for this translation; taking the request tells them -->
+                <StackPanel x:Name="GenRequest" Spacing="6" IsVisible="{Binding ShowRequest}">
+                    <CheckBox x:Name="TakeRequest" IsChecked="{Binding TakeRequest}" Content="{Binding TakeRequestText}" />
+                    <TextBlock Classes="muted" FontSize="12" Margin="28,0,0,0" Text="{Binding RequestOtherClaimText}" IsVisible="{Binding HasRequestOtherClaim}" TextWrapping="Wrap" />
+                </StackPanel>
 
                 <!-- Footer: the copy note and Start (with the reason when it is off) -->
                 <Border Classes="genFoot">

@@ -33,6 +33,9 @@ public sealed record RegistryIndex(DateTimeOffset Generated, IReadOnlyDictionary
 
     /// <summary>The packs for <paramref name="game"/> into <paramref name="language"/> (an exact tag), or none.</summary>
     public IReadOnlyList<RegistryPack> PacksFor(GameId game, string language) => Find(game)?.PacksIn(language) ?? [];
+
+    /// <summary>The open translation request of <paramref name="game"/> into <paramref name="language"/> (task 74), or <c>null</c>.</summary>
+    public RegistryRequest? RequestFor(GameId game, string language) => Find(game)?.Requests.GetValueOrDefault(language);
 }
 
 /// <summary>A game the registry knows: its packs per language and the flags set for it.</summary>
@@ -50,6 +53,9 @@ public sealed record RegistryGame(
     /// <c>null</c> = none listed.
     /// </summary>
     public string? AntiCheat { get; init; }
+
+    /// <summary>Open translation requests by language tag (task 74); none for a language that has packs.</summary>
+    public IReadOnlyDictionary<string, RegistryRequest> Requests { get; init; } = new Dictionary<string, RegistryRequest>(StringComparer.Ordinal);
 
     public IEnumerable<RegistryPack> AllPacks => Packs.Values.SelectMany(p => p);
 

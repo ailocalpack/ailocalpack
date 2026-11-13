@@ -17,6 +17,14 @@ public static class ActivityTexts
             return localizer.Format(nameof(Strings.Activity_Event_AppUpdateReady), activity.Version ?? string.Empty);
         }
 
+        if (activity.Kind is ActivityEventKind.RequestTaken or ActivityEventKind.RequestDone)
+        {
+            // "alice is translating Neon Courier for you" / "Your request is done: «Неоновый курьер»".
+            return activity.Kind == ActivityEventKind.RequestTaken
+                ? localizer.Format(nameof(Strings.Activity_Event_RequestTaken), activity.Detail ?? string.Empty, activity.GameName ?? string.Empty)
+                : localizer.Format(nameof(Strings.Activity_Event_RequestDone), activity.PackTitle ?? activity.PackId ?? string.Empty);
+        }
+
         var key = activity.Kind switch
         {
             ActivityEventKind.PackInstalled => nameof(Strings.Activity_Event_PackInstalled),
@@ -62,6 +70,8 @@ public static class ActivityTexts
             ActivityEventKind.PackNotApplied => localizer[nameof(Strings.Activity_Detail_NotApplied)],
             ActivityEventKind.PackMerged => localizer[nameof(Strings.Activity_Detail_PackMerged)],
             ActivityEventKind.AppUpdateReady => localizer[nameof(Strings.Activity_Detail_AppUpdateReady)],
+            ActivityEventKind.RequestTaken => localizer[nameof(Strings.Activity_Detail_RequestTaken)],
+            ActivityEventKind.RequestDone => localizer.Format(nameof(Strings.Activity_Detail_RequestDone), activity.Detail ?? string.Empty),
             _ when activity.Detail is { } detail => activity.FilesRestored ? detail : detail + " " + localizer[nameof(Strings.Activity_Detail_NotRestored)],
             _ => null,
         };

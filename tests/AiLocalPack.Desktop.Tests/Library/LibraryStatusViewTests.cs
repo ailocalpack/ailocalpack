@@ -49,7 +49,7 @@ public sealed class LibraryStatusViewTests : IDisposable
         // Assert
         var chips = Find<ItemsControl>(window, "FilterChips").GetVisualDescendants().OfType<Button>()
             .Select(b => string.Join(' ', b.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text)));
-        chips.Should().Equal("All 2", "Installed 0", "Translation available 1", "No translation 1", "Needs update 0", "Generating 0");
+        chips.Should().Equal("All 2", "Installed 0", "Translation available 1", "No translation 1", "Needs update 0", "Generating 0", "Requested 0");
         window.Close();
     });
 

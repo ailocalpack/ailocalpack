@@ -180,6 +180,34 @@
           "type": "object",
           "propertyNames": { "$ref": "#/$defs/language" },
           "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/pack" } }
+        },
+        "requests": {
+          "description": "Language tag → the open translation request into that language (requests collect, task 74); never for a language that has packs.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/language" },
+          "additionalProperties": { "$ref": "#/$defs/request" }
+        }
+      }
+    },
+    "request": {
+      "description": "An open translation request: collected from its GitHub Discussion in the registry's Requests category.",
+      "type": "object",
+      "required": ["votes", "discussion", "opened"],
+      "properties": {
+        "votes": { "description": "Accounts that gave the request's Discussions a 👍 (bots left out).", "type": "integer", "minimum": 1 },
+        "discussion": { "description": "The request's Discussion (the oldest open one).", "type": "string", "pattern": "^https://" },
+        "opened": { "description": "When the Discussion was opened.", "$ref": "#/$defs/date" },
+        "claim": {
+          "description": "The translator working on it: their newest claim comment, edited at most 14 days ago.",
+          "type": "object",
+          "required": ["by", "state", "percent", "updated"],
+          "properties": {
+            "by": { "description": "The translator's GitHub login.", "type": "string", "maxLength": 39, "pattern": "^[A-Za-z0-9](-?[A-Za-z0-9]){0,38}$" },
+            "state": { "enum": ["working", "built", "published"] },
+            "stage": { "description": "The generation stage while working.", "enum": ["setup", "extract", "study", "glossary", "translate", "build", "done"] },
+            "percent": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "updated": { "description": "The claim comment's last edit: the last news.", "$ref": "#/$defs/date" }
+          }
         }
       }
     },

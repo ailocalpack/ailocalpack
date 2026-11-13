@@ -12,6 +12,7 @@ using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Desktop.Requests;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.Services;
 using AiLocalPack.Desktop.ViewModels.AddGame;
@@ -37,6 +38,7 @@ public sealed partial class LibraryViewModel : PageViewModel
 
     private readonly GameLibrary _library;
     private readonly ICoverLoader _covers;
+    private readonly TranslationRequests? _requests;
     private readonly GameStatuses _statuses;
     private readonly GenerationService _jobs;
     private readonly TimeProvider _time;
@@ -100,8 +102,10 @@ public sealed partial class LibraryViewModel : PageViewModel
         SettingsStore settings,
         InstallFlow install,
         GenerationService jobs,
-        TimeProvider time)
+        TimeProvider time,
+        TranslationRequests? requests = null)
     {
+        _requests = requests;
         _install = install;
         _jobs = jobs;
         _time = time;
@@ -131,6 +135,11 @@ public sealed partial class LibraryViewModel : PageViewModel
         _statuses.InstalledChanged += (_, _) => _ui.Post(ApplyStatuses);
         _statuses.JobChanged += (_, _) => _ui.Post(ApplyStatuses);
         _install.Changed += (_, _) => ApplyOperations();
+        if (_requests is not null)
+        {
+            _requests.Changed += (_, _) => _ui.Post(ApplyStatuses);
+        }
+
         UpdateChipLabels();
         SyncCards();
     }
@@ -358,11 +367,12 @@ public sealed partial class LibraryViewModel : PageViewModel
         {
             card.LibraryLanguage = language;
             card.ApplyStatus(_statuses.Resolve(card.Game, language), stale);
+            card.ApplyRequest(_requests?.ViewOf(card.Game.Id, language));
         }
 
         foreach (var chip in FilterChips)
         {
-            chip.Count = _cards.Values.Count(c => LibraryFilters.Matches(chip.Filter, c.StatusKind));
+            chip.Count = _cards.Values.Count(c => LibraryFilters.Matches(chip.Filter, c.StatusKind, c.IsRequested));
             chip.CountText = chip.Count.ToString("N0", _localizer.Culture);
         }
 
@@ -461,7 +471,7 @@ public sealed partial class LibraryViewModel : PageViewModel
         }
 
         var matching = _cards.Values.Where(c =>
-            LibraryFilters.Matches(SelectedFilter, c.StatusKind)
+            LibraryFilters.Matches(SelectedFilter, c.StatusKind, c.IsRequested)
             && (string.IsNullOrWhiteSpace(Query) || TextSearch.Matches(c.Name, Query)));
         VisibleCards = [.. Sort(matching, SelectedSort.Value, _localizer.Culture)];
     }
@@ -523,6 +533,7 @@ public sealed partial class LibraryViewModel : PageViewModel
                 LibraryFilter.NoPack => nameof(Strings.Library_Status_NoPack),
                 LibraryFilter.NeedsUpdate => nameof(Strings.Library_Status_NeedsUpdate),
                 LibraryFilter.Generating => nameof(Strings.Library_Filter_Generating),
+                LibraryFilter.Requested => nameof(Strings.Library_Filter_Requested),
                 _ => nameof(Strings.Library_Filter_All),
             }];
         }

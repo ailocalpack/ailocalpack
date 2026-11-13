@@ -2,6 +2,7 @@ using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Requests;
 
 namespace AiLocalPack.Core.Registry;
 
@@ -26,7 +27,7 @@ public sealed record RegistryBuildResult(RegistryIndex? Index, IReadOnlyList<Reg
 /// <see cref="RegistryOptOuts.Path"/> (packs of those games are left out) and <see cref="AntiCheatPolicyPath"/> (its rules,
 /// per-game anti-cheats and <c>allowed</c> list), the dependency
 /// whitelist from <see cref="DependencyWhitelist.PolicyPath"/> (packs naming anything else are left out), ratings and
-/// discussion links from the ratings file, the status worked out by <see cref="RegistryVerification"/> with the
+/// discussion links from the ratings file, open translation requests from the requests file (task 74), the status worked out by <see cref="RegistryVerification"/> with the
 /// maintainers' <see cref="VerifiedPolicy"/>. Manifest paths are relative to the root, where <c>index.json</c> is published.
 /// </summary>
 public static class RegistryIndexBuilder
@@ -37,7 +38,8 @@ public static class RegistryIndexBuilder
         string root,
         DateTimeOffset generated,
         IReadOnlyDictionary<RegistryPackKey, RegistryPackRating>? ratings = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IReadOnlyDictionary<RequestKey, RegistryRequest>? requests = null)
     {
         ArgumentNullException.ThrowIfNull(root);
         var problems = new List<RegistryBuildProblem>();
@@ -99,7 +101,25 @@ public static class RegistryIndexBuilder
                 .Select(k => new RegistryBuildProblem("", "", $"ratings for {k}, which is not in the registry, are left out.")));
         }
 
-        var ids = packs.Select(p => p.Game).Concat(optOuts!).Concat(antiCheat!.AllowedGames).Concat(antiCheat.KnownGames.Keys).Distinct();
+        // Requests (task 74): one whose language has a pack now is done; an opted-out game's are left out.
+        var open = new Dictionary<RequestKey, RegistryRequest>();
+        foreach (var (key, request) in (requests ?? new Dictionary<RequestKey, RegistryRequest>()).OrderBy(r => r.Key.ToString(), StringComparer.Ordinal))
+        {
+            if (packs.Any(p => p.Game == key.Game && p.Language == key.Language))
+            {
+                problems.Add(new RegistryBuildProblem("", "", $"request {key} has a pack now; left out."));
+            }
+            else if (optOuts!.Contains(key.Game))
+            {
+                problems.Add(new RegistryBuildProblem("", "", $"request {key} is for an opted-out game; left out."));
+            }
+            else
+            {
+                open[key] = request;
+            }
+        }
+
+        var ids = packs.Select(p => p.Game).Concat(open.Keys.Select(k => k.Game)).Concat(optOuts!).Concat(antiCheat!.AllowedGames).Concat(antiCheat.KnownGames.Keys).Distinct();
         var index = new RegistryIndex(
             generated,
             ids.ToDictionary(
@@ -110,7 +130,10 @@ public static class RegistryIndexBuilder
                     antiCheat.AllowedGames.Contains(id),
                     packs.Where(p => p.Game == id).GroupBy(p => p.Language, StringComparer.Ordinal)
                         .ToDictionary(g => g.Key, IReadOnlyList<RegistryPack> (g) => [.. g.OrderBy(p => p.Id, StringComparer.Ordinal)]))
-                { AntiCheat = antiCheat.KnownGames.GetValueOrDefault(id) }));
+                {
+                    AntiCheat = antiCheat.KnownGames.GetValueOrDefault(id),
+                    Requests = open.Where(r => r.Key.Game == id).ToDictionary(r => r.Key.Language, r => r.Value, StringComparer.Ordinal),
+                }));
         return new RegistryBuildResult(index with { Dependencies = dependencies!, AntiCheats = antiCheat.AntiCheats }, problems);
     }
 

@@ -15,6 +15,9 @@ public enum LibraryFilter
 
     /// <summary>Generating or paused.</summary>
     Generating,
+
+    /// <summary>No translation, and players asked for one (task 74): games a translator with an agent could do.</summary>
+    Requested,
 }
 
 public static class LibraryFilters
@@ -22,9 +25,10 @@ public static class LibraryFilters
     /// <summary>Chip order.</summary>
     public static IReadOnlyList<LibraryFilter> All { get; } = Enum.GetValues<LibraryFilter>();
 
-    /// <summary>Whether a game with <paramref name="status"/> passes <paramref name="filter"/>.</summary>
-    public static bool Matches(LibraryFilter filter, LocalizationStatusKind status) => filter switch
+    /// <summary>Whether a game with <paramref name="status"/> passes <paramref name="filter"/>; <paramref name="requested"/> = players asked for its translation.</summary>
+    public static bool Matches(LibraryFilter filter, LocalizationStatusKind status, bool requested = false) => filter switch
     {
+        LibraryFilter.Requested => requested && status == LocalizationStatusKind.NoPack,
         LibraryFilter.All => true,
         LibraryFilter.Installed => status == LocalizationStatusKind.Installed,
         LibraryFilter.PackAvailable => status == LocalizationStatusKind.PackAvailable,
