@@ -26,6 +26,59 @@
     <Style Selector="ComboBox:focus-visible /template/ ContentControl#ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
     </Style>
+    <!-- Number box (Settings → AI agents): one bordered field like a combo box, − and + as bare icon buttons inside it
+         around a borderless NumericUpDown (its own spinner is hidden: Fluent draws it as filled blocks with separators);
+         the border turns to the focus colour while the number is edited (↑ / ↓ still step it) -->
+    <Style Selector="Border.numberBox">
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.numberBox:focus-within">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppFocusBrush}" />
+    </Style>
+    <Style Selector="Border.numberBox Button.bare">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.numberBox Button.bare Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Border.numberBox Button.bare:pointerover Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <Style Selector="Border.numberBox Button.bare:disabled Path.icon">
+        <Setter Property="Stroke" Value="{DynamicResource AppBorderStrongBrush}" />
+    </Style>
+    <Style Selector="Border.numberBox NumericUpDown">
+        <Setter Property="ShowButtonSpinner" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Width" Value="44" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.numberBox NumericUpDown /template/ TextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+    </Style>
+    <Style Selector="Border.numberBox NumericUpDown /template/ TextBox:pointerover /template/ Border#PART_BorderElement, Border.numberBox NumericUpDown /template/ TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
     <!-- A check box's corner radius is also its 20 px box's -->
     <Style Selector="CheckBox">
         <Setter Property="CornerRadius" Value="5" />

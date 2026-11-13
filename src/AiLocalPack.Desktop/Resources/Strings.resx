@@ -2150,6 +2150,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>parallel workers threads concurrency speed chunks</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>Decrease</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>Increase</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Own API key or local model</value>
   </data>

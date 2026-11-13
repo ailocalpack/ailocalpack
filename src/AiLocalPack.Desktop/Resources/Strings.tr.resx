@@ -2122,6 +2122,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>paralel işçi iş parçacığı eşzamanlı hız parçalar workers</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>Azalt</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>Artır</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Kendi API anahtarı veya yerel model</value>
   </data>

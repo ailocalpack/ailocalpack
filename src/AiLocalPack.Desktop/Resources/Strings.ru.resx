@@ -2194,6 +2194,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>параллельно потоки воркеры скорость чанки</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>Уменьшить</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>Увеличить</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Свой API-ключ или локальная модель</value>
   </data>

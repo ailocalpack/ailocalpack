@@ -2194,6 +2194,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>równolegle wątki workery jednocześnie szybkość fragmenty</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>Zmniejsz</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>Zwiększ</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Własny klucz API lub lokalny model</value>
   </data>

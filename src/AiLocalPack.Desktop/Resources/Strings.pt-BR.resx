@@ -2194,6 +2194,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>paralelo workers threads simultâneo velocidade blocos</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>Diminuir</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>Aumentar</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>Chave de API própria ou modelo local</value>
   </data>

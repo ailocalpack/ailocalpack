@@ -76,6 +76,46 @@ public sealed class AgentsSettingsSectionTests : IDisposable
     }
 
     [Fact]
+    public void Plus_adds_one_chunk_at_once()
+    {
+        // Arrange
+        var row = Section().TranslateWorkers;
+
+        // Act
+        row.IncreaseCommand.Execute(null);
+
+        // Assert
+        Store.Current.TranslateWorkers.Should().Be(3);
+    }
+
+    [Fact]
+    public void Plus_is_off_at_the_maximum()
+    {
+        // Arrange
+        Store.Update(s => s with { TranslateWorkers = 8 });
+        var row = Section().TranslateWorkers;
+
+        // Act
+        var can = row.IncreaseCommand.CanExecute(null);
+
+        // Assert
+        can.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Minus_is_off_once_it_reaches_the_minimum()
+    {
+        // Arrange
+        var row = Section().TranslateWorkers;
+
+        // Act
+        row.DecreaseCommand.Execute(null);
+
+        // Assert
+        new { Stored = Store.Current.TranslateWorkers, Can = row.DecreaseCommand.CanExecute(null) }.Should().Be(new { Stored = 1, Can = false });
+    }
+
+    [Fact]
     public void Lists_one_row_per_agent()
     {
         // Act

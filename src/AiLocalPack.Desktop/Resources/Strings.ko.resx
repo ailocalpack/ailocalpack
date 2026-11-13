@@ -2050,6 +2050,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>병렬 워커 스레드 동시 속도 청크 parallel workers</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>줄이기</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>늘리기</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>개인 API 키 또는 로컬 모델</value>
   </data>

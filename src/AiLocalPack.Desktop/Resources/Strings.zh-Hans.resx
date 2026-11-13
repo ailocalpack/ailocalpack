@@ -2050,6 +2050,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>并行 工作线程 线程 同时 速度 分块 parallel workers</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>减少</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>增加</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>自己的 API 密钥或本地模型</value>
   </data>

@@ -67,10 +67,19 @@
             <Border Classes="settingRow">
                 <Grid ColumnDefinitions="*,Auto">
                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
-                    <NumericUpDown Grid.Column="1" MinWidth="120" VerticalAlignment="Center"
-                                   Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Increment="1" FormatString="0"
-                                   ParsingNumberStyle="Integer" ClipValueToMinMax="True"
-                                   Value="{Binding Value}" AutomationProperties.Name="{Binding Label}" />
+                    <Border Grid.Column="1" Classes="numberBox" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="2">
+                            <Button Classes="bare" Command="{Binding DecreaseCommand}" AutomationProperties.Name="{l:Loc Settings_Number_Decrease}">
+                                <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconMinus}" /></Viewbox>
+                            </Button>
+                            <NumericUpDown Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Increment="1" FormatString="0"
+                                           ParsingNumberStyle="Integer" ClipValueToMinMax="True"
+                                           Value="{Binding Value}" AutomationProperties.Name="{Binding Label}" />
+                            <Button Classes="bare" Command="{Binding IncreaseCommand}" AutomationProperties.Name="{l:Loc Settings_Number_Increase}">
+                                <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconPlus}" /></Viewbox>
+                            </Button>
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </Border>
         </DataTemplate>

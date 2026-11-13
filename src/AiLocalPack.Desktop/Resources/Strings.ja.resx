@@ -2050,6 +2050,12 @@
   <data name="Settings_TranslateWorkers_Keywords" xml:space="preserve">
     <value>並列 ワーカー スレッド 同時 速度 チャンク parallel workers</value>
   </data>
+  <data name="Settings_Number_Decrease" xml:space="preserve">
+    <value>減らす</value>
+  </data>
+  <data name="Settings_Number_Increase" xml:space="preserve">
+    <value>増やす</value>
+  </data>
   <data name="Settings_OwnKey_Label" xml:space="preserve">
     <value>独自の API キーまたはローカルモデル</value>
   </data>
