@@ -70,7 +70,7 @@ public sealed class InstallFlow
         _ui = ui;
         _activity = activity;
         _logger = logger ?? NullLogger<InstallFlow>.Instance;
-        _service.Changed += (_, _) => _ui.Post(RaiseChanged);
+        _service.Changed += (_, _) => PostChanged();
     }
 
     /// <summary>Raised on the UI thread when an operation starts, moves on or ends, or a check before one starts or ends.</summary>
@@ -399,6 +399,26 @@ public sealed class InstallFlow
     }
 
     private void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>
+    /// The service's change on the UI thread, at most one waiting: an operation reports every file it backs up, writes and
+    /// verifies, and the handlers read the current state anyway, so reports that come before the posted one ran are folded into it.
+    /// </summary>
+    private void PostChanged()
+    {
+        if (Interlocked.Exchange(ref _changePosted, 1) == 1)
+        {
+            return;
+        }
+
+        _ui.Post(() =>
+        {
+            Volatile.Write(ref _changePosted, 0);
+            RaiseChanged();
+        });
+    }
+
+    private int _changePosted;
 
     private static string ToastKey(Game game) => $"install:{game.Id}";
 }

@@ -292,6 +292,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         BuildLanguages();
         Steps = BuildSteps();
         SyncReview();
+        _installBusy = _install.IsBusy;
         _install.Changed += OnInstallChanged;
         if (_fixes is not null)
         {
@@ -1211,16 +1212,30 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             NotNow), _publish(result.Pack));
     }
 
-    /// <summary>An install started, moved on or ended (UI thread): the result's buttons follow.</summary>
+    /// <summary>
+    /// An install started, moved on or ended (UI thread): the result's and the conversation's buttons follow. Only a
+    /// start or an end changes them; an operation's progress (a report per file) is skipped, since rebuilding the
+    /// conversation reads the job's fix files and every local pack from disk (Barony: 71 files froze the window).
+    /// What the install changed comes through the installed record (<see cref="Update"/>).
+    /// </summary>
     private void OnInstallChanged(object? sender, EventArgs e)
     {
+        var busy = _install.IsBusy;
+        if (busy == _installBusy)
+        {
+            return;
+        }
+
+        _installBusy = busy;
         if (Result is { } result)
         {
-            result.Update(result.Result, _localPacks.IsInstalled(result.Pack), _install.IsBusy);
+            result.Update(result.Result, _localPacks.IsInstalled(result.Pack), busy);
         }
 
         Fix?.Refresh();
     }
+
+    private bool _installBusy;
 
     /// <summary><c>Discard</c>: asks, then deletes the local pack and the job's working copy; the start form comes back.</summary>
     private void AskDiscard(LocalPack pack) =>

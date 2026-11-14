@@ -245,6 +245,32 @@ public sealed class FixWithAiTests
     }
 
     [Fact]
+    public async Task An_uninstall_rebuilds_the_conversation_when_it_starts_and_ends_not_at_every_file()
+    {
+        // Arrange
+        using var bed = await BedAsync(new FakeClock(Now));
+        var service = bed.Services.GetRequiredService<Desktop.Install.PackInstallService>();
+        await service.InstallLocalAsync(bed.Game, bed.LocalPack(), TestContext.Current.CancellationToken);
+        var fix = Page(bed).Generation.Fix!;
+        var reports = 0;
+        service.Changed += (_, _) => Interlocked.Increment(ref reports);
+        var rebuilds = 0;
+        fix.Items.CollectionChanged += (_, e) =>
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            {
+                Interlocked.Increment(ref rebuilds);
+            }
+        };
+
+        // Act
+        await service.UninstallAsync(bed.Game, TestContext.Current.CancellationToken);
+
+        // Assert
+        (reports > 3, rebuilds).Should().Be((true, 3), "the start, the record removed and the end; not the files restored");
+    }
+
+    [Fact]
     public void The_crash_decision_names_the_translation_and_how_long_the_game_ran()
     {
         // Arrange
