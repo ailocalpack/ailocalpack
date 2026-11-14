@@ -1,17 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml.Templates;
 using Avalonia.VisualTree;
 
 namespace AiLocalPack.Desktop.Views;
 
 /// <summary>
-/// The Activity panel: ↑/↓ move between rows, Enter opens one (the row is a button), Esc closes the panel. The
-/// keyboard focus ring of a row's open button goes around the whole row (its card with the actions under it), not
-/// only the button, which covers the row's upper part.
+/// The Activity panel: ↑/↓ move between rows, Enter opens one (the row is a button), Esc closes the panel. A focused
+/// row shows by its fill (no focus ring).
 /// </summary>
 public sealed partial class ActivityPanelView : UserControl
 {
@@ -19,11 +16,7 @@ public sealed partial class ActivityPanelView : UserControl
     {
         InitializeComponent();
         AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
-        AddHandler(GotFocusEvent, OnGotFocus, RoutingStrategies.Bubble);
-        AddHandler(LostFocusEvent, OnLostFocus, RoutingStrategies.Bubble);
     }
-
-    private Border? _ringedRow;
 
     /// <summary>Esc pressed inside the panel.</summary>
     public event EventHandler? EscapePressed;
@@ -38,30 +31,6 @@ public sealed partial class ActivityPanelView : UserControl
         if (Rows.FirstOrDefault() is { } first)
         {
             first.Focus(NavigationMethod.Directional);
-        }
-    }
-
-    private void OnGotFocus(object? sender, FocusChangedEventArgs e)
-    {
-        RemoveRing();
-        if (e.Source is Button { } button && button.Classes.Contains("activityRowOpen")
-            && e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional
-            && button.FindAncestorOfType<Border>() is { } row && row.Classes.Contains("activityRow")
-            && this.TryFindResource("AppFocusRing", out var resource) && resource is FocusAdornerTemplate template)
-        {
-            AdornerLayer.SetAdorner(row, template.Build());
-            _ringedRow = row;
-        }
-    }
-
-    private void OnLostFocus(object? sender, RoutedEventArgs e) => RemoveRing();
-
-    private void RemoveRing()
-    {
-        if (_ringedRow is { } row)
-        {
-            AdornerLayer.SetAdorner(row, null);
-            _ringedRow = null;
         }
     }
 

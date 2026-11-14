@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -110,7 +111,7 @@ public sealed class ActivityPanelViewTests
     });
 
     [Fact]
-    public Task Keyboard_focus_rings_the_whole_row() => HeadlessUi.RunAsync(() =>
+    public Task Keyboard_focus_shows_no_ring() => HeadlessUi.RunAsync(() =>
     {
         // Arrange
         var (window, _) = Open(s => s.Add(Event("broken", ActivityEventKind.PackIncompatible)));
@@ -123,7 +124,7 @@ public sealed class ActivityPanelViewTests
 
         // Assert
         var row = button.FindAncestorOfType<Border>()!;
-        (AdornerLayer.GetAdorner(row) is not null, button.FocusAdorner).Should().Be((true, (Avalonia.Controls.ITemplate<Control>?)null));
+        (AdornerLayer.GetAdorner(row), button.FocusAdorner).Should().Be(((Control?)null, (ITemplate<Control>?)null));
         window.Close();
     });
 
