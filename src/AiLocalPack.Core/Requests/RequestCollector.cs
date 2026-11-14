@@ -103,7 +103,7 @@ public sealed class RequestCollector(RegistryDiscussionClient client, TimeProvid
             var closed = 0;
             if (close && outcome == RequestOutcome.Done)
             {
-                var names = string.Join(", ", done.Select(p => $"«{p.Title}»"));
+                var names = string.Join(", ", done.Select(p => $"«{p.Title}»").Distinct(StringComparer.Ordinal));
                 var body = $"""
                     ✅ **Done**: the registry has a translation now: {names}. Install it in {AppInfo.DisplayName} (game page → *Text*), and after playing, tell others whether it works.
 
