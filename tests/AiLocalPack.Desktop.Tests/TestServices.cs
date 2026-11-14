@@ -212,6 +212,11 @@ internal sealed class FakeFilePicker : IFilePicker
     public Task<string?> PickFolderAsync(string title) => Task.FromResult(Folder);
 
     public Task<string?> PickImageAsync(string title) => Task.FromResult(Image);
+
+    /// <summary>What the clipboard holds (<c>null</c> = no image).</summary>
+    public ClipboardImage? Clipboard { get; set; }
+
+    public Task<ClipboardImage?> ReadClipboardImageAsync() => Task.FromResult(Clipboard);
 }
 
 /// <summary>A process list the test fills, recording what the app started instead of starting it.</summary>

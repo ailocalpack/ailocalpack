@@ -4567,6 +4567,9 @@
   <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
     <value>Capture d'écran</value>
   </data>
+  <data name="Fix_Attach_AddScreenshotTip" xml:space="preserve">
+    <value>Choisissez un fichier image ou collez une image dans la demande avec {0}</value>
+  </data>
   <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
     <value>Choisir une capture pour l'agent</value>
   </data>

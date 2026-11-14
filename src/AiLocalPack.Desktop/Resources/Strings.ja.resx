@@ -4315,6 +4315,9 @@
   <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
     <value>スクリーンショット</value>
   </data>
+  <data name="Fix_Attach_AddScreenshotTip" xml:space="preserve">
+    <value>画像ファイルを選ぶか、{0} で依頼欄に画像を貼り付けます</value>
+  </data>
   <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
     <value>エージェントに送るスクリーンショットを選択</value>
   </data>

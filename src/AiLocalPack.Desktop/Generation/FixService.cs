@@ -198,6 +198,25 @@ public sealed class FixService : IDisposable
         }
     }
 
+    /// <summary>Writes an image pasted from the clipboard (PNG) into the job's attachments; <c>null</c> when it can't be written.</summary>
+    public FixAttachment? AddScreenshot(GameId game, string name, ReadOnlyMemory<byte> image)
+    {
+        if (Of(game) is not { } view)
+        {
+            return null;
+        }
+
+        try
+        {
+            return new FixFiles(view.Entry.Folder).AddScreenshot(name, image);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            _logger.LogWarning(e, "Couldn't add the pasted image {Name}", name);
+            return null;
+        }
+    }
+
     /// <summary>The game's log written since the last session started, kept for the request; <c>null</c> when none is found.</summary>
     public FixAttachment? AddGameLog(Game game, DateTimeOffset since)
     {

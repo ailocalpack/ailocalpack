@@ -83,7 +83,7 @@
                             <TextBlock Text="{l:Loc Fix_Attach_AddLog}" VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    <Button x:Name="FixAddScreenshot" Classes="ghost sm" Command="{Binding AddScreenshotCommand}">
+                    <Button x:Name="FixAddScreenshot" Classes="ghost sm" Command="{Binding AddScreenshotCommand}" ToolTip.Tip="{Binding AddScreenshotTip}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
                                 <Path Classes="icon" Data="{StaticResource IconImage}" Stroke="{Binding $parent[Button].Foreground}" />

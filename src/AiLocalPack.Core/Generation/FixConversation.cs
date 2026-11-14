@@ -203,6 +203,17 @@ public sealed class FixFiles(string jobFolder)
         return new FixAttachment(FixAttachmentKind.Screenshot, System.IO.Path.GetFileName(source), target);
     }
 
+    /// <summary>Writes an image pasted from the clipboard (PNG bytes) into <c>fix/attachments/</c> as <paramref name="name"/> under a free name.</summary>
+    /// <exception cref="IOException">It can't be written.</exception>
+    /// <exception cref="UnauthorizedAccessException">It can't be written.</exception>
+    public FixAttachment AddScreenshot(string name, ReadOnlyMemory<byte> image)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        var target = FreePath(name);
+        AtomicFile.WriteAllBytes(target, image);
+        return new FixAttachment(FixAttachmentKind.Screenshot, System.IO.Path.GetFileName(target), target);
+    }
+
     /// <summary>Keeps the lines of a game log in <c>fix/attachments/</c> (the game may write it again); returns the attachment.</summary>
     /// <exception cref="IOException">It can't be written.</exception>
     /// <exception cref="UnauthorizedAccessException">It can't be written.</exception>

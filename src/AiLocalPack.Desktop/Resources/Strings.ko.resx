@@ -4315,6 +4315,9 @@
   <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
     <value>스크린샷</value>
   </data>
+  <data name="Fix_Attach_AddScreenshotTip" xml:space="preserve">
+    <value>이미지 파일을 선택하거나 {0}(으)로 요청란에 이미지를 붙여 넣으세요</value>
+  </data>
   <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
     <value>에이전트에게 보낼 스크린샷 선택</value>
   </data>

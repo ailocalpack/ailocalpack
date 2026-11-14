@@ -4567,6 +4567,9 @@
   <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
     <value>Знімок екрана</value>
   </data>
+  <data name="Fix_Attach_AddScreenshotTip" xml:space="preserve">
+    <value>Виберіть файл із зображенням або вставте його в запит через {0}</value>
+  </data>
   <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
     <value>Виберіть знімок екрана для агента</value>
   </data>

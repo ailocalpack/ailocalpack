@@ -489,6 +489,35 @@ public sealed partial class FixViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// A paste into the request (Ctrl+V / ⌘V, the context menu): an image on the clipboard (a file copied in the file
+    /// manager, a screenshot taken to the clipboard, an image copied in a browser) becomes a screenshot chip, no file to
+    /// save first. False when the clipboard holds no image, so the view pastes its text as usual.
+    /// </summary>
+    public async Task<bool> PasteImageAsync()
+    {
+        if (_picker is null || IsRunning || await _picker.ReadClipboardImageAsync() is not { } image)
+        {
+            return false;
+        }
+
+        var attachment = image.Path is { } path
+            ? _fixes.AddScreenshot(_game.Id, path)
+            : _fixes.AddScreenshot(_game.Id, PastedName, image.Png ?? []);
+        if (attachment is not null)
+        {
+            AddChip(attachment);
+        }
+
+        return true;
+    }
+
+    /// <summary>The file name a pasted image gets in the job's attachments (a number added when taken).</summary>
+    public const string PastedName = "pasted.png";
+
+    /// <summary>The screenshot button's tooltip: pick a file, or paste an image into the request.</summary>
+    public string AddScreenshotTip => _localizer.Format(nameof(Strings.Fix_Attach_AddScreenshotTip), OperatingSystem.IsMacOS() ? "⌘V" : "Ctrl+V");
+
     private void AddGameLog()
     {
         var since = _view?.Pack.Report.Crash is { } crash ? crash.At - crash.Lasted : DateTimeOffset.UtcNow.AddHours(-6);

@@ -4441,6 +4441,9 @@
   <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
     <value>Ekran görüntüsü</value>
   </data>
+  <data name="Fix_Attach_AddScreenshotTip" xml:space="preserve">
+    <value>Bir görüntü dosyası seçin ya da {0} ile isteğe bir görüntü yapıştırın</value>
+  </data>
   <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
     <value>Ajan için bir ekran görüntüsü seç</value>
   </data>

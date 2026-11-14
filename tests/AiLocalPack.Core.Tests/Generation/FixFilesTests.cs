@@ -135,6 +135,19 @@ public sealed class FixFilesTests : IDisposable
         // Assert
         (attachment.Kind, File.ReadAllText(attachment.Path!)).Should().Be((FixAttachmentKind.Screenshot, "png"));
     }
+
+    [Fact]
+    public void A_pasted_image_is_written_into_the_job()
+    {
+        // Arrange
+        byte[] png = [1, 2, 3];
+
+        // Act
+        var attachment = Files.AddScreenshot("pasted.png", png);
+
+        // Assert
+        (attachment.Kind, attachment.Name, Convert.ToHexString(File.ReadAllBytes(attachment.Path!))).Should().Be((FixAttachmentKind.Screenshot, "pasted.png", "010203"));
+    }
 }
 
 /// <summary>The part of a job a fix changes, copied aside and back (task 75).</summary>

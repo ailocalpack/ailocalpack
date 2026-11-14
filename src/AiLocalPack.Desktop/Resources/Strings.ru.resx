@@ -4567,6 +4567,9 @@
   <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
     <value>Скриншот</value>
   </data>
+  <data name="Fix_Attach_AddScreenshotTip" xml:space="preserve">
+    <value>Выберите файл с картинкой или вставьте её в запрос через {0}</value>
+  </data>
   <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
     <value>Выберите скриншот для агента</value>
   </data>
