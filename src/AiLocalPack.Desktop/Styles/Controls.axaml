@@ -438,6 +438,12 @@
     <Style Selector="Button.gameCard:pointerover /template/ ContentPresenter, Button.gameCard:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent" />
     </Style>
+    <!-- Disabled = the library behind a modal dialog (the welcome tour): it looks as it is, only under the scrim; Fluent's
+         disabled fill would draw a grey box around every card -->
+    <Style Selector="Button.gameCard:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
     <Style Selector="Button.gameCard Border.cover">
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="ClipToBounds" Value="True" />
@@ -622,6 +628,17 @@
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
     </Style>
     <Style Selector="Button.chip.on">
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+    </Style>
+    <!-- Disabled = behind a modal dialog: the chip keeps its look under the scrim -->
+    <Style Selector="Button.chip:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+    </Style>
+    <Style Selector="Button.chip.on:disabled /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
