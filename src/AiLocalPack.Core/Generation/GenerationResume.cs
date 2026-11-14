@@ -82,8 +82,20 @@ public sealed class GenerationActivity(ActivityStore store, Func<GenerationJob, 
     {
         ArgumentNullException.ThrowIfNull(run);
         var started = run.Job.RunningSince ?? run.Job.Updated;
-        Publish(run, run.Job, started);
-        run.Changed += (_, job) => Publish(run, job, started);
+
+        // Subscribed before the first read, and every update reads the run's latest state under one lock: a change
+        // between the read and the subscription (the run ending) can't be missed and leave a running task behind.
+        var gate = new Lock();
+        void Update()
+        {
+            lock (gate)
+            {
+                Publish(run, run.Job, started);
+            }
+        }
+
+        run.Changed += (_, _) => Update();
+        Update();
     }
 
     private void Publish(GenerationRun run, GenerationJob job, DateTimeOffset started)

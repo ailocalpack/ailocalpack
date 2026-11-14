@@ -111,12 +111,15 @@ public sealed class GenerationResumeTests : IDisposable
         var jobs = new GenerationJobs(new GenerationJobStore(AppPaths.UnderHome(_dir.Combine("home")), _clock), new GenerationRunner(_clock), _clock);
         var game = new Game(GameId.Steam(620), "Sample Quest", GameSource.Steam, "/games/sample", null, null, null, "none", null, true);
         var policy = new AiLocalPack.Core.AntiCheat.AntiCheatPolicy([], new Dictionary<GameId, string>(), new HashSet<GameId>());
+        // The first stage waits until the run is followed, so the run can't end before Follow.
+        var followed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var run = jobs.Start(game, policy, null, "ru", "fake", GenerationOptions.Default, _ => new GenerationStages(
-            Enum.GetValues<GenerationStage>().Where(s => s != GenerationStage.Done).Select(s => (IGenerationStage)new Done(s))), cancellationToken: TestContext.Current.CancellationToken);
+            Enum.GetValues<GenerationStage>().Where(s => s != GenerationStage.Done).Select(s => (IGenerationStage)new Done(s, followed.Task))), cancellationToken: TestContext.Current.CancellationToken);
         var publisher = new GenerationActivity(activity, (job, progress) => ($"{job.Stage} {progress.Percent}%", null));
+        publisher.Follow(run);
 
         // Act
-        publisher.Follow(run);
+        followed.SetResult();
         await run.Completion;
 
         // Assert
@@ -187,11 +190,14 @@ public sealed class GenerationResumeTests : IDisposable
         state.Should().BeNull();
     }
 
-    private sealed class Done(GenerationStage stage) : IGenerationStage
+    private sealed class Done(GenerationStage stage, Task gate) : IGenerationStage
     {
         public GenerationStage Stage => stage;
 
-        public Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken) =>
-            Task.FromResult<GenerationStepResult>(new GenerationStepResult.StageDone());
+        public async Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken)
+        {
+            await gate;
+            return new GenerationStepResult.StageDone();
+        }
     }
 }
