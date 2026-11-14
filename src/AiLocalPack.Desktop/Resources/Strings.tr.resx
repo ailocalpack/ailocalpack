@@ -4429,6 +4429,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Taslak {0} ile oynadın · oyun {1} sn sonra kapandı</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Çökme değil, ben kapattım</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Taslak {0} ile oynadın</value>
   </data>

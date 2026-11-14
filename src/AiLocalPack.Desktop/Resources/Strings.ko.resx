@@ -4303,6 +4303,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>초안 {0}로 플레이 · 게임이 {1}초 만에 종료됨</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>충돌이 아니라 제가 닫았어요</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>초안 {0}로 플레이함</value>
   </data>

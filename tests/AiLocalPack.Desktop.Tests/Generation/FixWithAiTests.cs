@@ -122,6 +122,54 @@ public sealed class FixWithAiTests
     }
 
     [Fact]
+    public async Task Not_a_crash_counts_the_session_as_played_so_the_draft_can_be_published()
+    {
+        // Arrange
+        var (bed, page, _) = await CrashedAsync();
+        using var _bed = bed;
+        var line = page.Generation.Fix!.Items.OfType<FixSystemItem>().Single(i => i.HasNotCrash);
+
+        // Act
+        line.NotCrashCommand!.Execute(null);
+
+        // Assert
+        var report = bed.Services.GetRequiredService<LocalPackStore>().Find(InstallBed.Alpha, "ru", "claude-code")!.Report;
+        (report.Crash is null, report.IsTried).Should().Be((true, true));
+    }
+
+    [Fact]
+    public async Task Not_a_crash_settles_the_crash_decision()
+    {
+        // Arrange
+        var (bed, page, _) = await CrashedAsync();
+        using var _bed = bed;
+        var activity = bed.Services.GetRequiredService<ActivityStore>();
+        await Until(() => activity.Decisions.Any(e => e.Kind == ActivityEventKind.TranslationCrashed));
+
+        // Act
+        page.Generation.Fix!.NotCrashCommand.Execute(null);
+
+        // Assert
+        await Until(() => activity.Decisions.All(e => e.Kind != ActivityEventKind.TranslationCrashed));
+    }
+
+    [Fact]
+    public async Task Not_a_crash_clears_the_untouched_prefilled_request_and_shows_the_draft_played()
+    {
+        // Arrange
+        var (bed, page, _) = await CrashedAsync();
+        using var _bed = bed;
+        var fix = page.Generation.Fix!;
+
+        // Act
+        fix.NotCrashCommand.Execute(null);
+
+        // Assert
+        await Until(() => fix.Items.OfType<FixSystemItem>().Any(i => i.Text == "You played Draft 1"));
+        (fix.Text, fix.Attachments.Count, fix.ShowCrashBanner).Should().Be((string.Empty, 0, false));
+    }
+
+    [Fact]
     public async Task Sending_a_request_shows_it_and_the_agents_answer()
     {
         // Arrange

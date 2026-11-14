@@ -365,6 +365,8 @@
                         <TextBlock Text="{l:Loc Fix_Crash_Restore}" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
+                <Button x:Name="FixBannerNotCrash" DockPanel.Dock="Right" Classes="ghost sm" Margin="12,0,0,0" VerticalAlignment="Center"
+                        Command="{Binding Fix.NotCrashCommand, FallbackValue={x:Null}}" Content="{l:Loc Fix_NotCrash}" />
                 <TextBlock FontSize="13" Text="{Binding Fix.CrashBannerText, FallbackValue={x:Null}}" TextWrapping="Wrap" VerticalAlignment="Center" />
             </DockPanel>
         </Border>
@@ -776,7 +778,12 @@
                 <DataTemplate DataType="gp:FixSystemItem">
                     <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
                         <Border Classes="fixRule" />
-                        <TextBlock Grid.Column="1" Classes="fixSystem" Classes.bad="{Binding IsBad}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" MaxWidth="600" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="fixSystem" Classes.bad="{Binding IsBad}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" MaxWidth="600"
+                                       VerticalAlignment="Center" />
+                            <Button x:Name="FixNotCrash" Classes="link" FontSize="12" VerticalAlignment="Center" IsVisible="{Binding HasNotCrash}"
+                                    Command="{Binding NotCrashCommand}" Content="{l:Loc Fix_NotCrash}" />
+                        </StackPanel>
                         <Border Grid.Column="2" Classes="fixRule" />
                     </Grid>
                 </DataTemplate>

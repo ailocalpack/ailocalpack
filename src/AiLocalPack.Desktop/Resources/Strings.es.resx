@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Jugaste el borrador {0} · el juego se cerró a los {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>No fue un cierre inesperado, lo cerré yo</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Jugaste el borrador {0}</value>
   </data>

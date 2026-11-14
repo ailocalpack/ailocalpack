@@ -4303,6 +4303,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>下書き {0} でプレイ · ゲームは {1} 秒で終了</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>クラッシュではなく、自分で閉じました</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>下書き {0} でプレイしました</value>
   </data>

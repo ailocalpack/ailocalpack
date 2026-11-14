@@ -135,6 +135,19 @@ public sealed class LocalPacks
     public void MarkTried(GameId game, string language, string id, DateTimeOffset at) =>
         Change(game, language, id, r => r.Tried is null ? r with { Tried = at } : r);
 
+    /// <summary>
+    /// "Not a crash, I closed it": the short session was the player's own (a look at the menu), so it counts as tried at
+    /// the time the game closed (the first time only) and the crash goes. Nothing when the pack has no crash.
+    /// </summary>
+    public void DismissCrash(LocalPack pack)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        Change(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id, r => r.Crash is { } crash
+            ? r with { Crash = null, Tried = r.Tried ?? crash.At }
+            : r);
+        _logger.LogInformation("Local pack {Pack} of {Game}: the player says the short session wasn't a crash", pack.Manifest.Id, pack.Manifest.Game);
+    }
+
     private void Change(GameId game, string language, string id, Func<LocalPackReport, LocalPackReport> change)
     {
         try

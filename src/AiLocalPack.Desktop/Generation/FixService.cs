@@ -148,6 +148,22 @@ public sealed class FixService : IDisposable
         }
     }
 
+    /// <summary>
+    /// "Not a crash, I closed it" on the current draft's crash line: the session counts as tried (so the draft can be
+    /// published) and the Activity decision is settled.
+    /// </summary>
+    public void DismissCrash(GameId game)
+    {
+        if (Of(game) is not { Pack.Report.Crash: not null } view)
+        {
+            return;
+        }
+
+        _localPacks.DismissCrash(view.Pack);
+        _activity.ResolveGame(game, e => e.Kind == ActivityEventKind.TranslationCrashed);
+        Changed?.Invoke(this, game);
+    }
+
     /// <summary>The attachments a crash brings: the session, the game's log since it started (when found) and the draft's changes.</summary>
     public IReadOnlyList<FixAttachment> CrashAttachments(Game game)
     {

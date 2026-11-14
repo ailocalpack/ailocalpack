@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Zagrano z wersją roboczą {0} · gra zamknęła się po {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>To nie awaria, sam zamknąłem</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Zagrano z wersją roboczą {0}</value>
   </data>

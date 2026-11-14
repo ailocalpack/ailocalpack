@@ -13,8 +13,14 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AiLocalPack.Desktop.ViewModels.GamePage;
 
-/// <summary>A line of the thread between rules: a draft built, the player played it (and how it went).</summary>
-public sealed record FixSystemItem(string Text, bool IsBad) : FixItem;
+/// <summary>
+/// A line of the thread between rules: a draft built, the player played it (and how it went). The current draft's crash
+/// line carries <c>Not a crash, I closed it</c> (<paramref name="NotCrashCommand"/>).
+/// </summary>
+public sealed record FixSystemItem(string Text, bool IsBad, IRelayCommand? NotCrashCommand = null) : FixItem
+{
+    public bool HasNotCrash => NotCrashCommand is not null;
+}
 
 /// <summary>The player's request (right, accent tint) with its attachment chips.</summary>
 public sealed record FixPlayerItem(string Text, IReadOnlyList<FixAttachmentChip> Attachments) : FixItem
@@ -223,6 +229,7 @@ public sealed partial class FixViewModel : ObservableObject
             OnPropertyChanged(nameof(EarlierText));
         });
         RestoreCommand = new RelayCommand(() => _install.Uninstall(_game), () => !_install.IsBusy);
+        NotCrashCommand = new RelayCommand(NotCrash, () => !IsRunning);
         Refresh();
     }
 
@@ -326,6 +333,12 @@ public sealed partial class FixViewModel : ObservableObject
         ? _localizer.Format(nameof(Strings.Fix_Crash_Banner), Seconds(crash.Lasted.TotalSeconds), _view.Pack.Report.DraftNumber)
         : string.Empty;
 
+    /// <summary>
+    /// <c>Not a crash, I closed it</c> on the current draft's crash line: the session counts as played, so the draft can be
+    /// published; the crash's prefilled request goes when the player hasn't changed it.
+    /// </summary>
+    public IRelayCommand NotCrashCommand { get; }
+
     /// <summary><c>Restore original files</c>: uninstalls the translation (asks first).</summary>
     public IRelayCommand RestoreCommand { get; }
 
@@ -369,6 +382,25 @@ public sealed partial class FixViewModel : ObservableObject
         AddScreenshotCommand.NotifyCanExecuteChanged();
         AddGameLogCommand.NotifyCanExecuteChanged();
         RestoreCommand.NotifyCanExecuteChanged();
+        NotCrashCommand.NotifyCanExecuteChanged();
+    }
+
+    private void NotCrash()
+    {
+        if (_prefilledFor is not null && Text == _localizer[nameof(Strings.Fix_Chip_Crash_Text)])
+        {
+            Text = string.Empty;
+            Attachments.Clear();
+        }
+        else
+        {
+            foreach (var session in Attachments.Where(a => a.Attachment.Kind == FixAttachmentKind.Session).ToList())
+            {
+                Attachments.Remove(session);
+            }
+        }
+
+        _fixes.DismissCrash(_game.Id);
     }
 
     /// <summary>After a crash the player hasn't asked about yet: the request and its attachments, once per crash.</summary>
@@ -533,7 +565,9 @@ public sealed partial class FixViewModel : ObservableObject
         {
             if (draft.Report?.Crash is { } crash)
             {
-                timed.Add((crash.At, 1, new FixSystemItem(_localizer.Format(nameof(Strings.Fix_System_Crashed), draft.Number, Seconds(crash.Lasted.TotalSeconds)), true)));
+                var current = draft.IsCurrent && !view.IsRunning;
+                timed.Add((crash.At, 1, new FixSystemItem(_localizer.Format(nameof(Strings.Fix_System_Crashed), draft.Number, Seconds(crash.Lasted.TotalSeconds)), true,
+                    current ? NotCrashCommand : null)));
             }
             else if (draft.Report?.Tried is { } tried)
             {

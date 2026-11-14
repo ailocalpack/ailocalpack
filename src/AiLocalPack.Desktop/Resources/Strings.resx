@@ -4467,6 +4467,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>You played Draft {0} · the game closed after {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Not a crash, I closed it</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>You played Draft {0}</value>
   </data>

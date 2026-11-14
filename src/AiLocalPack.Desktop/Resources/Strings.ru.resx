@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Вы запустили черновик {0} · игра закрылась через {1} с</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Это не краш, я закрыл сам</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Вы поиграли с черновиком {0}</value>
   </data>

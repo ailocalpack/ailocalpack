@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Você jogou o rascunho {0} · o jogo fechou após {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Não foi um travamento, eu fechei</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Você jogou o rascunho {0}</value>
   </data>

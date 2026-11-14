@@ -4303,6 +4303,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>你试玩了草稿 {0} · 游戏在 {1} 秒后关闭</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>不是崩溃，是我自己关的</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>你试玩了草稿 {0}</value>
   </data>

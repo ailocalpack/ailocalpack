@@ -4429,6 +4429,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Du hast Entwurf {0} gespielt · das Spiel schloss sich nach {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Kein Absturz, ich habe es beendet</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Du hast Entwurf {0} gespielt</value>
   </data>

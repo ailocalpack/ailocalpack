@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Ви запустили чернетку {0} · гра закрилася через {1} с</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Це не збій, я закрив сам</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Ви пограли з чернеткою {0}</value>
   </data>

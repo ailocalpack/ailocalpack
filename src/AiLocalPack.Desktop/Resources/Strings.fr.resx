@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Vous avez joué le brouillon {0} · le jeu s'est fermé après {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Pas un plantage, je l’ai fermé</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Vous avez joué le brouillon {0}</value>
   </data>

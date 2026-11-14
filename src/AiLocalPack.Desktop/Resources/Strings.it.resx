@@ -4555,6 +4555,9 @@
   <data name="Fix_System_Crashed" xml:space="preserve">
     <value>Hai giocato la bozza {0} · il gioco si è chiuso dopo {1} s</value>
   </data>
+  <data name="Fix_NotCrash" xml:space="preserve">
+    <value>Non è un crash, l’ho chiuso io</value>
+  </data>
   <data name="Fix_System_Played" xml:space="preserve">
     <value>Hai giocato la bozza {0}</value>
   </data>
