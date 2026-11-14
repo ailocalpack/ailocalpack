@@ -4780,4 +4780,64 @@
   <data name="Fix_Problem_Agent" xml:space="preserve">
     <value>Не вдається запустити агента: {0}</value>
   </data>
+  <data name="Gen_Story_Request" xml:space="preserve">
+    <value>Створи переклад на {1} у режимі «{0}» за допомогою {2}.</value>
+  </data>
+  <data name="Gen_Story_RequestUpdate" xml:space="preserve">
+    <value>Переклади нові рядки на {0} за допомогою {1}.</value>
+  </data>
+  <data name="Gen_Story_RequestReview" xml:space="preserve">
+    <value>Спершу дай мені перевірити глосарій.</value>
+  </data>
+  <data name="Gen_Story_Setup" xml:space="preserve">
+    <value>Підготовка · робоча копія готова</value>
+  </data>
+  <data name="Gen_Story_Extract" xml:space="preserve">
+    <value>Видобування · рядків: {0}</value>
+  </data>
+  <data name="Gen_Story_ExtractDone" xml:space="preserve">
+    <value>Видобування · рядки прочитано</value>
+  </data>
+  <data name="Gen_Story_Study" xml:space="preserve">
+    <value>Вивчення · опис гри готовий</value>
+  </data>
+  <data name="Gen_Story_Glossary" xml:space="preserve">
+    <value>Глосарій · готовий</value>
+  </data>
+  <data name="Gen_Story_GlossaryReviewed" xml:space="preserve">
+    <value>Глосарій · перевірено вами</value>
+  </data>
+  <data name="Gen_Story_Translate" xml:space="preserve">
+    <value>Переклад · частин: {0}</value>
+  </data>
+  <data name="Gen_Story_TranslateDone" xml:space="preserve">
+    <value>Переклад · готово</value>
+  </data>
+  <data name="Gen_Story_Build" xml:space="preserve">
+    <value>Збирання й тест · переклад зібрано</value>
+  </data>
+  <data name="Gen_Story_BuildPassed" xml:space="preserve">
+    <value>Збирання й тест · тестовий запуск пройдено</value>
+  </data>
+  <data name="Gen_Story_FormHint" xml:space="preserve">
+    <value>Після запуску робота, ваші прохання й усі чернетки залишаться тут однією розмовою.</value>
+  </data>
+  <data name="Gen_Bar_Title" xml:space="preserve">
+    <value>Ваш переклад · {0}</value>
+  </data>
+  <data name="Gen_Composer_Later" xml:space="preserve">
+    <value>Коли переклад збереться, напишіть тут {0}, що змінити.</value>
+  </data>
+  <data name="Gen_Thread_Latest" xml:space="preserve">
+    <value>До останнього</value>
+  </data>
+  <data name="Gen_Thread_Label" xml:space="preserve">
+    <value>Розмова з агентом</value>
+  </data>
+  <data name="Fix_MoreSteps" xml:space="preserve">
+    <value>Ще кроків: {0}</value>
+  </data>
+  <data name="Fix_Earlier" xml:space="preserve">
+    <value>Показати раніші повідомлення ({0})</value>
+  </data>
 </root>

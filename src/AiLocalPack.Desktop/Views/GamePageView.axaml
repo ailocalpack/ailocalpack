@@ -295,6 +295,9 @@
                         <TextBlock Classes="muted" Text="{Binding SoonText}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
                     </StackPanel>
                 </Panel>
+
+                <!-- Room under the Create with AI thread for the docked composer (its height, set by the view) -->
+                <Border x:Name="ComposerSpacer" Height="0" />
             </StackPanel>
         </ScrollViewer>
 
@@ -323,5 +326,32 @@
                 </StackPanel>
             </Grid>
         </Border>
+
+        <!-- Create with AI (design §6, "one conversation"): the composer docked at the bottom of the page, under the thread;
+             before the translation is built a disabled box says when it opens. "Latest" jumps back to the newest message. -->
+        <Panel x:Name="ComposerLayer" VerticalAlignment="Bottom" IsVisible="{Binding IsGenerationTab}">
+            <Panel IsVisible="{Binding ShowTabs}">
+            <Border x:Name="ComposerDock" Classes="composerDock" IsVisible="{Binding Generation.ShowComposer}">
+                <Panel MaxWidth="860" Margin="24,10,24,12">
+                    <Panel IsVisible="{Binding Generation.ShowFix}">
+                        <views:FixComposerView DataContext="{Binding Generation.Fix}" />
+                    </Panel>
+                    <Border x:Name="ComposerStub" Classes="fixComposer" IsVisible="{Binding Generation.ShowComposerStub}">
+                        <TextBox x:Name="ComposerStubBox" IsEnabled="False" PlaceholderText="{Binding Generation.ComposerStubText}"
+                                 AutomationProperties.Name="{Binding Generation.ComposerStubText}" />
+                    </Border>
+                </Panel>
+            </Border>
+            </Panel>
+        </Panel>
+        <Button x:Name="LatestButton" Classes="latestJump" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,32,16"
+                IsVisible="False" Click="OnLatestClick" AutomationProperties.Name="{l:Loc Gen_Thread_Latest}">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Viewbox Classes="icon" Width="14" Height="14">
+                    <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{Binding $parent[Button].Foreground}" />
+                </Viewbox>
+                <TextBlock Text="{l:Loc Gen_Thread_Latest}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
     </Panel>
 </UserControl>

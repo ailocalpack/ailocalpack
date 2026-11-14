@@ -3,6 +3,7 @@ using AiLocalPack.Desktop.Tests.Install;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.Views;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Generation;
 
-/// <summary>The result card and Packs → Mine rendered headless at 1280×800 (task 55).</summary>
+/// <summary>The result card, the Fix with AI thread with its docked composer, and Packs → Mine rendered headless at 1280×800 (tasks 55, 75, 76).</summary>
 public sealed class GenerationResultViewTests
 {
     private static (MainWindow Window, GamePageViewModel Page) Open(InstallBed bed, GamePageTab tab)
@@ -41,7 +42,7 @@ public sealed class GenerationResultViewTests
             Find<ItemsControl>(window, "ResultTiles").ItemCount,
             Find<Button>(window, "ResultPlay").IsEffectivelyEnabled,
             Find<Button>(window, "ResultDiscard").IsEffectivelyVisible,
-            Find<Border>(window, "ShareStrip").IsVisible)
+            Find<StackPanel>(window, "ShareStrip").IsVisible)
             .Should().Be((true, 4, true, true, false));
         window.Close();
     });
@@ -57,7 +58,7 @@ public sealed class GenerationResultViewTests
         var (window, _) = Open(bed, GamePageTab.Generation);
 
         // Assert
-        (Find<Border>(window, "ShareStrip").IsEffectivelyVisible, Find<Button>(window, "SharePublish").IsEffectivelyEnabled, Find<Button>(window, "ResultShowInPacks").IsEffectivelyVisible)
+        (Find<StackPanel>(window, "ShareStrip").IsEffectivelyVisible, Find<Button>(window, "SharePublish").IsEffectivelyEnabled, Find<Button>(window, "ResultShowInPacks").IsEffectivelyVisible)
             .Should().Be((true, true, true));
         window.Close();
     });
@@ -100,9 +101,62 @@ public sealed class GenerationResultViewTests
         var (window, _) = Open(bed, GamePageTab.Generation);
 
         // Assert
-        (Find<Border>(window, "FixCard").IsEffectivelyVisible, Find<ItemsControl>(window, "FixThread").ItemCount, Find<TextBox>(window, "FixRequest").IsEffectivelyEnabled,
+        (Find<StackPanel>(window, "FixCard").IsEffectivelyVisible, Find<ItemsControl>(window, "FixThread").ItemCount, Find<TextBox>(window, "FixRequest").IsEffectivelyEnabled,
             Find<Button>(window, "FixSend").IsEffectivelyVisible, Find<ItemsControl>(window, "ResultTiles").IsVisible)
             .Should().Be((true, 3, true, true, false));
+        window.Close();
+    });
+
+    private static void Conversation(InstallBed bed, int rounds)
+    {
+        var folder = bed.Services.GetRequiredService<Desktop.Generation.GenerationService>().ResultOf(InstallBed.Alpha)!.Folder;
+        var at = new DateTimeOffset(2026, 11, 9, 21, 0, 0, TimeSpan.Zero);
+        var turns = Enumerable.Range(0, rounds).SelectMany(i => new[]
+        {
+            Core.Generation.FixTurn.FromPlayer(i * 2 + 1, at.AddMinutes(i * 10), $"Request {i + 1}", [Core.Generation.FixAttachment.Changes()]),
+            new Core.Generation.FixTurn(i * 2 + 2, Core.Generation.FixTurnKind.Agent, at.AddMinutes(i * 10 + 1), $"Answer {i + 1}", [], ["search"], [],
+                Core.Generation.FixTurnOutcome.Answered),
+        }).ToList();
+        new Core.Generation.FixFiles(folder).Write(new Core.Generation.FixState(turns, [], 1));
+    }
+
+    [Fact]
+    public Task The_composer_is_docked_at_the_bottom_of_the_page() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        bed.LocalPack();
+        Conversation(bed, rounds: 1);
+
+        // Act
+        var (window, _) = Open(bed, GamePageTab.Generation);
+
+        // Assert
+        var request = Find<TextBox>(window, "FixRequest");
+        (Find<Border>(window, "ComposerDock").IsEffectivelyVisible,
+            Find<Border>(window, "ComposerStub").IsEffectivelyVisible,
+            request.TranslatePoint(new Avalonia.Point(0, request.Bounds.Height), window)!.Value.Y > 800 - 160)
+            .Should().Be((true, false, true));
+        window.Close();
+    });
+
+    [Fact]
+    public Task A_long_conversation_folds_its_earlier_rounds() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        bed.LocalPack();
+        Conversation(bed, rounds: 4);
+        var (window, page) = Open(bed, GamePageTab.Generation);
+        var folded = (Find<Button>(window, "FixEarlier").IsEffectivelyVisible, Find<ItemsControl>(window, "FixThread").ItemCount);
+
+        // Act
+        page.Generation.Fix!.ShowEarlierCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (folded, Find<Button>(window, "FixEarlier").IsVisible, Find<ItemsControl>(window, "FixThread").ItemCount)
+            .Should().Be(((true, 4), false, 9));
         window.Close();
     });
 }

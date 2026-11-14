@@ -4780,4 +4780,64 @@
   <data name="Fix_Problem_Agent" xml:space="preserve">
     <value>Не удаётся запустить агента: {0}</value>
   </data>
+  <data name="Gen_Story_Request" xml:space="preserve">
+    <value>Создай перевод на {1} в режиме «{0}» с помощью {2}.</value>
+  </data>
+  <data name="Gen_Story_RequestUpdate" xml:space="preserve">
+    <value>Переведи новые строки на {0} с помощью {1}.</value>
+  </data>
+  <data name="Gen_Story_RequestReview" xml:space="preserve">
+    <value>Сначала дай мне проверить глоссарий.</value>
+  </data>
+  <data name="Gen_Story_Setup" xml:space="preserve">
+    <value>Подготовка · рабочая копия готова</value>
+  </data>
+  <data name="Gen_Story_Extract" xml:space="preserve">
+    <value>Извлечение · строк: {0}</value>
+  </data>
+  <data name="Gen_Story_ExtractDone" xml:space="preserve">
+    <value>Извлечение · строки прочитаны</value>
+  </data>
+  <data name="Gen_Story_Study" xml:space="preserve">
+    <value>Изучение · описание игры готово</value>
+  </data>
+  <data name="Gen_Story_Glossary" xml:space="preserve">
+    <value>Глоссарий · готов</value>
+  </data>
+  <data name="Gen_Story_GlossaryReviewed" xml:space="preserve">
+    <value>Глоссарий · проверен вами</value>
+  </data>
+  <data name="Gen_Story_Translate" xml:space="preserve">
+    <value>Перевод · частей: {0}</value>
+  </data>
+  <data name="Gen_Story_TranslateDone" xml:space="preserve">
+    <value>Перевод · готов</value>
+  </data>
+  <data name="Gen_Story_Build" xml:space="preserve">
+    <value>Сборка и проверка · перевод собран</value>
+  </data>
+  <data name="Gen_Story_BuildPassed" xml:space="preserve">
+    <value>Сборка и проверка · тестовый запуск пройден</value>
+  </data>
+  <data name="Gen_Story_FormHint" xml:space="preserve">
+    <value>После запуска работа, ваши просьбы и все черновики останутся здесь одним разговором.</value>
+  </data>
+  <data name="Gen_Bar_Title" xml:space="preserve">
+    <value>Ваш перевод на {0}</value>
+  </data>
+  <data name="Gen_Composer_Later" xml:space="preserve">
+    <value>Когда перевод соберётся, напишите здесь {0}, что изменить.</value>
+  </data>
+  <data name="Gen_Thread_Latest" xml:space="preserve">
+    <value>К последнему</value>
+  </data>
+  <data name="Gen_Thread_Label" xml:space="preserve">
+    <value>Разговор с агентом</value>
+  </data>
+  <data name="Fix_MoreSteps" xml:space="preserve">
+    <value>Ещё шагов: {0}</value>
+  </data>
+  <data name="Fix_Earlier" xml:space="preserve">
+    <value>Показать ранние сообщения ({0})</value>
+  </data>
 </root>

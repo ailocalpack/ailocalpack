@@ -4528,4 +4528,64 @@
   <data name="Fix_Problem_Agent" xml:space="preserve">
     <value>无法启动代理：{0}</value>
   </data>
+  <data name="Gen_Story_Request" xml:space="preserve">
+    <value>用 {2} 以“{0}”模式创建{1}翻译。</value>
+  </data>
+  <data name="Gen_Story_RequestUpdate" xml:space="preserve">
+    <value>用 {1} 将新文本翻译为{0}。</value>
+  </data>
+  <data name="Gen_Story_RequestReview" xml:space="preserve">
+    <value>先让我审阅术语表。</value>
+  </data>
+  <data name="Gen_Story_Setup" xml:space="preserve">
+    <value>准备 · 工作副本已就绪</value>
+  </data>
+  <data name="Gen_Story_Extract" xml:space="preserve">
+    <value>提取 · 文本数：{0}</value>
+  </data>
+  <data name="Gen_Story_ExtractDone" xml:space="preserve">
+    <value>提取 · 文本已读取</value>
+  </data>
+  <data name="Gen_Story_Study" xml:space="preserve">
+    <value>研读 · 游戏简介已写好</value>
+  </data>
+  <data name="Gen_Story_Glossary" xml:space="preserve">
+    <value>术语表 · 已就绪</value>
+  </data>
+  <data name="Gen_Story_GlossaryReviewed" xml:space="preserve">
+    <value>术语表 · 已由你审阅</value>
+  </data>
+  <data name="Gen_Story_Translate" xml:space="preserve">
+    <value>翻译 · 分块数：{0}</value>
+  </data>
+  <data name="Gen_Story_TranslateDone" xml:space="preserve">
+    <value>翻译 · 已完成</value>
+  </data>
+  <data name="Gen_Story_Build" xml:space="preserve">
+    <value>构建和测试 · 翻译已构建</value>
+  </data>
+  <data name="Gen_Story_BuildPassed" xml:space="preserve">
+    <value>构建和测试 · 试运行通过</value>
+  </data>
+  <data name="Gen_Story_FormHint" xml:space="preserve">
+    <value>开始后，任务、你的请求和每个草稿都会作为一段对话保留在这里。</value>
+  </data>
+  <data name="Gen_Bar_Title" xml:space="preserve">
+    <value>你的翻译 · {0}</value>
+  </data>
+  <data name="Gen_Composer_Later" xml:space="preserve">
+    <value>翻译构建完成后，在这里告诉 {0} 要改什么。</value>
+  </data>
+  <data name="Gen_Thread_Latest" xml:space="preserve">
+    <value>最新</value>
+  </data>
+  <data name="Gen_Thread_Label" xml:space="preserve">
+    <value>与智能体的对话</value>
+  </data>
+  <data name="Fix_MoreSteps" xml:space="preserve">
+    <value>更多步骤：{0}</value>
+  </data>
+  <data name="Fix_Earlier" xml:space="preserve">
+    <value>显示更早的消息（{0}）</value>
+  </data>
 </root>

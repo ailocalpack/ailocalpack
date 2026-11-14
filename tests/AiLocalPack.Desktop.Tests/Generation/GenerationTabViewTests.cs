@@ -261,4 +261,40 @@ public sealed class GenerationTabViewTests
             .Should().Be((true, false, 2, 3, true, false));
         window.Close();
     });
+
+    [Fact]
+    public Task The_start_form_has_no_docked_composer() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var (window, _) = Open(services);
+
+        // Assert
+        (Find<Border>(window, "ComposerDock").IsEffectivelyVisible, Find<TextBlock>(window, "GenFormHint").IsEffectivelyVisible).Should().Be((false, true));
+        window.Close();
+        return Task.CompletedTask;
+    });
+
+    [Fact]
+    public Task A_running_job_is_the_start_of_the_conversation() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var services = Build();
+        var (window, page) = Open(services);
+
+        // Act
+        await page.Generation.StartCommand.ExecuteAsync(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<ItemsControl>(window, "GenerationSteps").IsEffectivelyVisible,
+            Find<ItemsControl>(window, "GenerationStepsMini").ItemCount,
+            Find<ItemsControl>(window, "GenStory").ItemCount,
+            Find<Border>(window, "ComposerStub").IsEffectivelyVisible,
+            Find<TextBox>(window, "ComposerStubBox").IsEnabled)
+            .Should().Be((false, 5, 1, true, false));
+        window.Close();
+    });
 }

@@ -68,6 +68,9 @@ public sealed class FixWithAiTests
         var page = Page(bed);
         await CrashAsync(bed, page.Generation, clock);
         await Until(() => page.Generation.Fix?.ShowCrashBanner == true);
+
+        // The crash's request comes prefilled with the session once the conversation reads the crash again.
+        await Until(() => page.Generation.Fix?.Attachments.Any(a => a.Attachment.Kind == Core.Generation.FixAttachmentKind.Session) == true);
         return (bed, page, clock);
     }
 

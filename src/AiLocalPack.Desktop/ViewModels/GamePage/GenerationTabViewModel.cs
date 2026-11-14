@@ -318,6 +318,37 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     public bool ShowResultDetails => ShowResult && !IsResultFolded;
 
+    // ---------- One conversation (decided 2026-11-14, design §6) ----------
+
+    /// <summary>
+    /// The job's story at the top of the conversation: the start request as the player's message, a line per finished
+    /// stage; the running stage's card (progress, glossary review, banner), the result and the fixes follow it.
+    /// </summary>
+    public IReadOnlyList<GenerationStoryItem> Story => ShowForm ? [] : GenerationStory.Of(Job ?? Result?.Result.Job, Job is null ? Result?.Pack : null, _localizer);
+
+    /// <summary>Everything after the start form is one thread.</summary>
+    public bool ShowThread => !ShowForm;
+
+    /// <summary>The slim bar over the thread while the job runs: the steps in small and the overall %.</summary>
+    public bool ShowRunBar => Job is not null;
+
+    /// <summary>The slim bar once there is a result: the translation, Publish, Drafts.</summary>
+    public bool ShowResultBar => Job is null && Result is not null;
+
+    /// <summary>"Your translation into Русский".</summary>
+    public string ResultBarTitle => Result is { } r ? _localizer.Format(nameof(Strings.Gen_Bar_Title), LanguageNames.Native(r.Pack.Manifest.Language)) : string.Empty;
+
+    /// <summary>The composer docked at the bottom of the page: the fix composer once a result exists, a disabled one before.</summary>
+    public bool ShowComposer => !ShowForm;
+
+    /// <summary>Before the result (or without fixes) the docked composer is a disabled box saying when it opens.</summary>
+    public bool ShowComposerStub => ShowComposer && !ShowFix;
+
+    /// <summary>"Once the translation is built, tell Claude Code here what to change."</summary>
+    public string ComposerStubText => (Job ?? Result?.Result.Job) is { } job
+        ? _localizer.Format(nameof(Strings.Gen_Composer_Later), AgentInfo.Of(job.Agent).Name)
+        : string.Empty;
+
     private void SyncFix()
     {
         if (_fixes is null || Result is not { } result)
@@ -364,6 +395,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             OnPropertyChanged(nameof(ShowFix));
             OnPropertyChanged(nameof(IsResultFolded));
             OnPropertyChanged(nameof(ShowResultDetails));
+            OnPropertyChanged(nameof(ShowComposerStub));
         });
     }
 

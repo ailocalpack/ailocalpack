@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gp="using:AiLocalPack.Desktop.ViewModels.GamePage"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.FixComposerView"
+             x:DataType="gp:FixViewModel">
+    <!-- Fix with AI's composer (task 75, design §6e), docked at the bottom of the game page under the conversation
+         (design §6 "one conversation", 2026-11-14): suggestion chips, the request with its attachments, Send / Stop,
+         the cost and privacy lines. -->
+    <StackPanel Spacing="8">
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding ShowSend}">
+        <ItemsControl x:Name="FixSuggestions" ItemsSource="{Binding Suggestions}" Margin="0,0,0,4">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="6" /></ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="gp:FixSuggestion">
+                    <Button Classes="chip" Command="{Binding Command}" AutomationProperties.Name="{Binding Text}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        </ScrollViewer>
+
+        <Border x:Name="FixComposer" Classes="fixComposer">
+            <StackPanel Spacing="8">
+                <TextBox x:Name="FixRequest" Text="{Binding Text}" PlaceholderText="{Binding Placeholder}" IsEnabled="{Binding ShowSend}"
+                         MaxLength="4000" AutomationProperties.Name="{l:Loc Fix_Request_Label}" />
+                <DockPanel>
+                    <Button x:Name="FixSend" DockPanel.Dock="Right" Classes="genAction" Command="{Binding SendCommand}" IsVisible="{Binding ShowSend}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="16" Height="16">
+                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Fix_Send}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="FixStop" DockPanel.Dock="Right" Classes="ghost" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconPause}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Fix_Stop}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <WrapPanel ItemSpacing="6" LineSpacing="6" VerticalAlignment="Center">
+                    <ItemsControl x:Name="FixAttachments" ItemsSource="{Binding Attachments}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="gp:FixAttachmentChip">
+                                <Border Classes="fixAttach" Classes.bad="{Binding IsBad}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Viewbox Classes="icon" Width="14" Height="14">
+                                            <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                        </Viewbox>
+                                        <TextBlock FontSize="12" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                        <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" VerticalAlignment="Center" />
+                                        <Button Classes="bare sm" Padding="4" Command="{Binding RemoveCommand}" IsVisible="{Binding CanRemove}"
+                                                AutomationProperties.Name="{Binding RemoveName}" ToolTip.Tip="{Binding RemoveName}">
+                                            <Viewbox Classes="icon" Width="12" Height="12">
+                                                <Path Classes="icon" Data="{StaticResource IconX}" Stroke="{Binding $parent[Button].Foreground}" />
+                                            </Viewbox>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button x:Name="FixAddLog" Classes="ghost sm" Command="{Binding AddGameLogCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Fix_Attach_AddLog}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="FixAddScreenshot" Classes="ghost sm" Command="{Binding AddScreenshotCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconImage}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Fix_Attach_AddScreenshot}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    </WrapPanel>
+                </DockPanel>
+            </StackPanel>
+        </Border>
+        <TextBlock x:Name="FixNoLog" Classes="muted" FontSize="12" Text="{Binding NoLogText}" IsVisible="{Binding HasNoLog}" TextWrapping="Wrap" />
+        <TextBlock x:Name="FixProblem" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" Text="{Binding ProblemText}" IsVisible="{Binding HasProblem}" TextWrapping="Wrap" />
+        <WrapPanel ItemSpacing="14" LineSpacing="4">
+        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+            <Viewbox Classes="icon" Width="14" Height="14">
+                <Path Classes="icon" Data="{StaticResource IconBot}" Stroke="{DynamicResource AppFaintBrush}" />
+            </Viewbox>
+            <TextBlock Classes="faint" FontSize="12" Text="{Binding CostLine}" TextWrapping="Wrap" VerticalAlignment="Center" />
+        </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Viewbox Classes="icon" Width="13" Height="13">
+                    <Path Classes="icon" Data="{StaticResource IconShield}" Stroke="{DynamicResource AppOkBrush}" />
+                </Viewbox>
+                <TextBlock Classes="faint" FontSize="12" Text="{l:Loc Fix_Privacy}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            </StackPanel>
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

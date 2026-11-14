@@ -1731,6 +1731,46 @@
         <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
     </Style>
     <Style Selector="TextBlock.genStepName.reached"><Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" /></Style>
+    <!-- One conversation (design §6, 2026-11-14): the slim bar over the thread, the docked composer, Latest -->
+    <Style Selector="Border.genStepIcon.mini">
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="CornerRadius" Value="10" />
+    </Style>
+    <Style Selector="TextBlock.genStepName.mini"><Setter Property="TextWrapping" Value="NoWrap" /></Style>
+    <Style Selector="Border.genStepLine.mini">
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Margin" Value="2,0,0,0" />
+    </Style>
+    <Style Selector="Border.genJobBar">
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.genBarIcon">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.composerDock">
+        <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+    </Style>
+    <Style Selector="Button.latestJump">
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface3Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
     <Style Selector="Border.genCard">
         <Setter Property="Padding" Value="24,22" />
         <Setter Property="CornerRadius" Value="18" />
@@ -2005,6 +2045,26 @@
         <Setter Property="MinHeight" Value="64" />
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <!-- Docked under the thread (design §6, "one conversation"): a shorter box that grows with the text -->
+    <Style Selector="Border.composerDock Border.fixComposer TextBox">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="MaxHeight" Value="160" />
+    </Style>
+    <!-- "More steps: N" under an agent's first steps: a link that stays a link when open -->
+    <Style Selector="ToggleButton.stepsToggle">
+        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="ToggleButton.stepsToggle /template/ ContentPresenter#PART_ContentPresenter,
+                     ToggleButton.stepsToggle:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                     ToggleButton.stepsToggle:pressed /template/ ContentPresenter#PART_ContentPresenter,
+                     ToggleButton.stepsToggle:checked /template/ ContentPresenter#PART_ContentPresenter,
+                     ToggleButton.stepsToggle:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AppAccentBrush}" />
     </Style>
     <Style Selector="Path.fixStep"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
     <Style Selector="Path.fixStep.running"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>

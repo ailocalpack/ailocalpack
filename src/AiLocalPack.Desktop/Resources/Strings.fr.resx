@@ -4780,4 +4780,64 @@
   <data name="Fix_Problem_Agent" xml:space="preserve">
     <value>Impossible de lancer l'agent : {0}</value>
   </data>
+  <data name="Gen_Story_Request" xml:space="preserve">
+    <value>Crée une traduction en {1} en mode « {0} » avec {2}.</value>
+  </data>
+  <data name="Gen_Story_RequestUpdate" xml:space="preserve">
+    <value>Traduis les nouveaux textes en {0} avec {1}.</value>
+  </data>
+  <data name="Gen_Story_RequestReview" xml:space="preserve">
+    <value>Laisse-moi d'abord relire le glossaire.</value>
+  </data>
+  <data name="Gen_Story_Setup" xml:space="preserve">
+    <value>Préparation · copie de travail prête</value>
+  </data>
+  <data name="Gen_Story_Extract" xml:space="preserve">
+    <value>Extraction · textes : {0}</value>
+  </data>
+  <data name="Gen_Story_ExtractDone" xml:space="preserve">
+    <value>Extraction · textes lus</value>
+  </data>
+  <data name="Gen_Story_Study" xml:space="preserve">
+    <value>Étude · fiche du jeu rédigée</value>
+  </data>
+  <data name="Gen_Story_Glossary" xml:space="preserve">
+    <value>Glossaire · prêt</value>
+  </data>
+  <data name="Gen_Story_GlossaryReviewed" xml:space="preserve">
+    <value>Glossaire · relu par vous</value>
+  </data>
+  <data name="Gen_Story_Translate" xml:space="preserve">
+    <value>Traduction · lots : {0}</value>
+  </data>
+  <data name="Gen_Story_TranslateDone" xml:space="preserve">
+    <value>Traduction · terminée</value>
+  </data>
+  <data name="Gen_Story_Build" xml:space="preserve">
+    <value>Build et test · traduction construite</value>
+  </data>
+  <data name="Gen_Story_BuildPassed" xml:space="preserve">
+    <value>Build et test · lancement de test réussi</value>
+  </data>
+  <data name="Gen_Story_FormHint" xml:space="preserve">
+    <value>Une fois lancé, le travail, vos demandes et chaque brouillon restent ici dans une seule conversation.</value>
+  </data>
+  <data name="Gen_Bar_Title" xml:space="preserve">
+    <value>Votre traduction en {0}</value>
+  </data>
+  <data name="Gen_Composer_Later" xml:space="preserve">
+    <value>Une fois la traduction construite, dites ici à {0} ce qu'il faut changer.</value>
+  </data>
+  <data name="Gen_Thread_Latest" xml:space="preserve">
+    <value>Derniers messages</value>
+  </data>
+  <data name="Gen_Thread_Label" xml:space="preserve">
+    <value>Conversation avec l'agent</value>
+  </data>
+  <data name="Fix_MoreSteps" xml:space="preserve">
+    <value>Autres étapes : {0}</value>
+  </data>
+  <data name="Fix_Earlier" xml:space="preserve">
+    <value>Voir les messages précédents ({0})</value>
+  </data>
 </root>

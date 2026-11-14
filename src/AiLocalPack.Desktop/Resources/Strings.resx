@@ -4692,4 +4692,64 @@
   <data name="Fix_Problem_Agent" xml:space="preserve">
     <value>The agent can't be started: {0}</value>
   </data>
+  <data name="Gen_Story_Request" xml:space="preserve">
+    <value>Create a {0} translation into {1} with {2}.</value>
+  </data>
+  <data name="Gen_Story_RequestUpdate" xml:space="preserve">
+    <value>Translate the new strings into {0} with {1}.</value>
+  </data>
+  <data name="Gen_Story_RequestReview" xml:space="preserve">
+    <value>Let me review the glossary first.</value>
+  </data>
+  <data name="Gen_Story_Setup" xml:space="preserve">
+    <value>Setup · working copy ready</value>
+  </data>
+  <data name="Gen_Story_Extract" xml:space="preserve">
+    <value>Extract · strings: {0}</value>
+  </data>
+  <data name="Gen_Story_ExtractDone" xml:space="preserve">
+    <value>Extract · strings read</value>
+  </data>
+  <data name="Gen_Story_Study" xml:space="preserve">
+    <value>Study · game brief written</value>
+  </data>
+  <data name="Gen_Story_Glossary" xml:space="preserve">
+    <value>Glossary · ready</value>
+  </data>
+  <data name="Gen_Story_GlossaryReviewed" xml:space="preserve">
+    <value>Glossary · reviewed by you</value>
+  </data>
+  <data name="Gen_Story_Translate" xml:space="preserve">
+    <value>Translate · chunks: {0}</value>
+  </data>
+  <data name="Gen_Story_TranslateDone" xml:space="preserve">
+    <value>Translate · done</value>
+  </data>
+  <data name="Gen_Story_Build" xml:space="preserve">
+    <value>Build &amp; test · translation built</value>
+  </data>
+  <data name="Gen_Story_BuildPassed" xml:space="preserve">
+    <value>Build &amp; test · test run passed</value>
+  </data>
+  <data name="Gen_Story_FormHint" xml:space="preserve">
+    <value>Once you start, the job, your requests and every draft stay here as one conversation.</value>
+  </data>
+  <data name="Gen_Bar_Title" xml:space="preserve">
+    <value>Your translation into {0}</value>
+  </data>
+  <data name="Gen_Composer_Later" xml:space="preserve">
+    <value>Once the translation is built, tell {0} here what to change.</value>
+  </data>
+  <data name="Gen_Thread_Latest" xml:space="preserve">
+    <value>Latest</value>
+  </data>
+  <data name="Gen_Thread_Label" xml:space="preserve">
+    <value>Conversation with the agent</value>
+  </data>
+  <data name="Fix_MoreSteps" xml:space="preserve">
+    <value>More steps: {0}</value>
+  </data>
+  <data name="Fix_Earlier" xml:space="preserve">
+    <value>Show earlier messages ({0})</value>
+  </data>
 </root>

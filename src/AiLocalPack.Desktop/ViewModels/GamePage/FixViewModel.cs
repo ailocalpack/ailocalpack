@@ -122,7 +122,19 @@ public sealed record FixAgentItem(
     string FailureDetail,
     bool IsWorking) : FixItem
 {
+    /// <summary>A finished turn shows its first 4 steps and folds the rest behind "More steps: N" (more than 5 in all).</summary>
+    public const int ShownSteps = 4;
+
     public bool HasSteps => Steps.Count > 0;
+
+    public bool FoldsSteps => !IsWorking && Steps.Count > ShownSteps + 1;
+
+    public IReadOnlyList<FixStepRow> HeadSteps => FoldsSteps ? [.. Steps.Take(ShownSteps)] : Steps;
+
+    public IReadOnlyList<FixStepRow> MoreSteps => FoldsSteps ? [.. Steps.Skip(ShownSteps)] : [];
+
+    /// <summary>"More steps: 5".</summary>
+    public string MoreStepsText { get; init; } = string.Empty;
 
     public bool HasText => Text.Length > 0;
 
@@ -204,6 +216,15 @@ public sealed partial class FixViewModel : ObservableObject
         AddScreenshotCommand = new AsyncRelayCommand(AddScreenshotAsync, () => !IsRunning && _picker is not null);
         AddGameLogCommand = new RelayCommand(AddGameLog, () => !IsRunning);
         ToggleDraftsCommand = new RelayCommand(() => IsDraftsOpen = !IsDraftsOpen);
+        ShowEarlierCommand = new RelayCommand(() =>
+        {
+            _showEarlier = true;
+            Fold();
+            OnPropertyChanged(nameof(ShownItems));
+            OnPropertyChanged(nameof(EarlierCount));
+            OnPropertyChanged(nameof(HasEarlier));
+            OnPropertyChanged(nameof(EarlierText));
+        });
         RestoreCommand = new RelayCommand(() => _install.Uninstall(_game), () => !_install.IsBusy);
         Suggestions =
         [
@@ -218,6 +239,53 @@ public sealed partial class FixViewModel : ObservableObject
     }
 
     public ObservableCollection<FixItem> Items { get; } = [];
+
+    /// <summary>
+    /// The thread as shown: a long one keeps its last <see cref="ShownRounds"/> requests (with the lines just before them)
+    /// and folds the earlier items behind <c>Show earlier messages</c> until the player opens them.
+    /// </summary>
+    public IReadOnlyList<FixItem> ShownItems { get; private set; } = [];
+
+    /// <summary>Requests kept open in a long thread.</summary>
+    public const int ShownRounds = 2;
+
+    /// <summary>Items folded away at the top of the thread.</summary>
+    public int EarlierCount { get; private set; }
+
+    public bool HasEarlier => EarlierCount > 0;
+
+    /// <summary>"Show earlier messages (12)".</summary>
+    public string EarlierText => _localizer.Format(nameof(Strings.Fix_Earlier), EarlierCount);
+
+    public IRelayCommand ShowEarlierCommand { get; }
+
+    private bool _showEarlier;
+
+    private void Fold()
+    {
+        var start = _showEarlier ? 0 : FoldStart(Items);
+        EarlierCount = start;
+        ShownItems = [.. Items.Skip(start)];
+    }
+
+    /// <summary>Where the shown part starts: the lines before the <see cref="ShownRounds"/>-th request from the end; 0 when little would fold.</summary>
+    public static int FoldStart(IReadOnlyList<FixItem> items)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        var players = items.Select((item, i) => (item, i)).Where(x => x.item is FixPlayerItem).Select(x => x.i).ToList();
+        if (players.Count <= ShownRounds)
+        {
+            return 0;
+        }
+
+        var start = players[^ShownRounds];
+        while (start > 0 && items[start - 1] is FixSystemItem)
+        {
+            start--;
+        }
+
+        return start < 3 ? 0 : start;
+    }
 
     public ObservableCollection<FixAttachmentChip> Attachments { get; } = [];
 
@@ -297,12 +365,14 @@ public sealed partial class FixViewModel : ObservableObject
                 Items.Add(item);
             }
 
+            Fold();
             Pills = BuildPills(view);
             Drafts = BuildDrafts(view);
             Prefill(view);
         }
         else
         {
+            Fold();
             Pills = [];
             Drafts = [];
         }
@@ -498,7 +568,10 @@ public sealed partial class FixViewModel : ObservableObject
             _ => string.Empty,
         };
         return new FixAgentItem(who, steps, turn.Text, choices, Change(view, turn), Plan(view, turn), failure,
-            turn.Outcome == FixTurnOutcome.Failed ? turn.Problem ?? string.Empty : string.Empty, working);
+            turn.Outcome == FixTurnOutcome.Failed ? turn.Problem ?? string.Empty : string.Empty, working)
+        {
+            MoreStepsText = _localizer.Format(nameof(Strings.Fix_MoreSteps), Math.Max(0, steps.Count - FixAgentItem.ShownSteps)),
+        };
     }
 
     private FixChangeCard? Change(FixView view, FixTurn turn)
