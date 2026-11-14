@@ -107,6 +107,39 @@ public sealed class ActivityPanelViewModelTests
     }
 
     [Fact]
+    public void Opening_the_panel_keeps_the_rows_already_shown()
+    {
+        // Arrange
+        using var services = Services();
+        Store(services).Add(Event("today"));
+        var panel = Panel(services);
+        var row = panel.Days[0].Rows[0];
+
+        // Act
+        panel.OnOpened();
+
+        // Assert
+        panel.Days[0].Rows[0].Should().BeSameAs(row);
+    }
+
+    [Fact]
+    public void Opening_the_panel_on_the_next_day_moves_today_to_yesterday()
+    {
+        // Arrange
+        var clock = new FakeClock(Now);
+        using var services = Services(clock);
+        Store(services).Add(Event("today"));
+        var panel = Panel(services);
+        clock.Advance(TimeSpan.FromDays(1));
+
+        // Act
+        panel.OnOpened();
+
+        // Assert
+        panel.Days.Select(d => d.Heading).Should().Equal("Yesterday");
+    }
+
+    [Fact]
     public void Show_more_adds_the_older_days()
     {
         // Arrange

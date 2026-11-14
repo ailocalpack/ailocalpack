@@ -54,6 +54,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private readonly TimeProvider _time;
     private readonly Dictionary<GameId, Task<Bitmap?>> _coverLoads = [];
     private string? _eventsShown;
+    private DateOnly _daysShownOn;
     private bool _refreshQueued;
 
     public ActivityPanelViewModel(
@@ -163,8 +164,11 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     /// <summary>🔔's screen reader name: checks running, decisions waiting, or the count.</summary>
     public string BellName => ActivityTexts.BellName(Badge, Startup.IsBackgroundRunning, _localizer);
 
-    /// <summary>The panel opened: today may have become yesterday since the last look.</summary>
-    public void OnOpened() => Refresh(events: true);
+    /// <summary>
+    /// The panel opened: the rows follow the store already, so they are rebuilt only when today became yesterday since
+    /// the last look (rebuilding every row on each open made the popover stutter).
+    /// </summary>
+    public void OnOpened() => Refresh(events: LocalToday() != _daysShownOn);
 
     [RelayCommand]
     private void ReadAll() => _store.MarkAllRead();
@@ -239,6 +243,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         }
 
         var zone = _time.LocalTimeZone;
+        _daysShownOn = LocalToday();
         var feed = all.Where(e => e.IsInFeed).ToList();
         var days = ActivityFeed.ByDay(feed, _time.GetUtcNow(), zone);
         Days.Clear();
@@ -256,6 +261,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         OnPropertyChanged(nameof(HasDecisions));
         OnPropertyChanged(nameof(DecisionCount));
     }
+
+    private DateOnly LocalToday() => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(_time.GetUtcNow(), _time.LocalTimeZone).DateTime);
 
     private void RefreshRunning()
     {
