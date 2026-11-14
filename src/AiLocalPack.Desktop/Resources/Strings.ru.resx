@@ -4867,4 +4867,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>«{0}» уже есть в игре ({1}): ваш ИИ-перевод заменит её тексты</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>Через</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>Чем читать и собирать текст игры</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>Инструменты {0}</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>Свой код ИИ</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>Встроенный разборщик приложения: быстро и точно. Перевод — таблица строк, которая собирается на копии каждого игрока.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>Агент напишет свой разборщик и сборщик. Дольше и может не получиться; перевод — бинарный патч.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Пока не на этой системе</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>определён</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>Если выбранные инструменты не прочитают игру, агент напишет свой разборщик.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>Выбран свой код ИИ: агент напишет свой разборщик, перевод — бинарный патч</value>
+  </data>
 </root>

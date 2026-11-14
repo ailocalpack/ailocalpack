@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Generation;
 using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Toolkit.Recipes.Agent;
 
@@ -11,8 +12,11 @@ namespace AiLocalPack.Pipeline;
 /// <see cref="ChunkPlanner"/>) and sets the job's counters (strings, chunks, translations already stored). No agent
 /// runs for an engine the toolkit reads: its extraction is complete by construction, and the Glossary stage's agent
 /// reads every string anyway.
-/// An unknown engine, one switched off on this OS or without a tool (task 57), or one whose tool fails to read the game
-/// (an encrypted archive, a format change): the agent explores the copy and writes
+/// The game is read as <see cref="GameReader.Resolve"/> says: the player's choice on the start form
+/// (<see cref="GenerationOptions.Reader"/>: any engine's tool, or the agent's own code), else the detected engine's tool.
+/// An unknown engine, one switched off on this OS or without a tool (task 57), one whose tool fails to read the game
+/// (an encrypted archive, a format change, a tool the player picked for another engine), or the agent's code chosen
+/// by the player: the agent explores the copy and writes
 /// its own extractor and rebuilder in its workspace (<c>agent/</c>, <see cref="AgentWorkspace"/>, prompt
 /// <see cref="PromptTemplate.ExtractUnknown"/>), runs the extractor into <c>agent/strings.json</c> and checks the round
 /// trip; the app reads that file (<see cref="AgentScriptTool"/>: refused strings fail the stage, Agent kind, to retry)
@@ -30,13 +34,13 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
     public async Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var kind = new EngineDetector().Detect(context.CopyFolder).Kind;
+        var reader = GameReader.Resolve(tools, new EngineDetector().Detect(context.CopyFolder).Kind, context.Job.Options.Reader);
+        var kind = reader.Kind;
         RecipeExtraction extraction;
-        var problem = Problem(kind);
+        var problem = reader.Problem ?? string.Empty;
         string? toolkitError = null;
-        if (problem is null)
+        if (reader.Tool is { } tool)
         {
-            var tool = tools.For(kind)!;
             try
             {
                 extraction = tool.Extract(context.CopyFolder, cancellationToken);
@@ -63,7 +67,7 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
         var run = await agent.RunAsync(
             context,
             PromptTemplate.ExtractUnknown,
-            PromptValues.ExtractUnknown(gameName, context.Job.Language, kind, context.CopyFolder, CountFiles(context.CopyFolder), toolkitError),
+            PromptValues.ExtractUnknown(gameName, context.Job.Language, kind, context.CopyFolder, CountFiles(context.CopyFolder), toolkitError, reader.Source == TextSizeSource.AgentChosen),
             gameName,
             cancellationToken,
             new AgentWorkspace(files.AgentFolder)).ConfigureAwait(false);
@@ -161,16 +165,6 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
             return 0;
         }
     }
-
-    /// <summary>Why the toolkit can't extract games of <paramref name="kind"/>, or <c>null</c>.</summary>
-    private string? Problem(EngineKind kind) =>
-        kind.Engine == GameEngine.Unknown
-            ? "The game's engine wasn't recognized, so the toolkit can't read its strings."
-            : tools.IsDisabled(kind)
-            ? $"The toolkit doesn't handle {kind.DisplayName} games on this system for now."
-            : tools.For(kind) is null
-            ? $"The toolkit can't read {kind.DisplayName} games yet."
-            : null;
 
     /// <summary>Stored translations of keys the game still has (a stage run again keeps what an earlier run stored).</summary>
     private static int Translated(GenerationFiles files, SourceStrings source)

@@ -130,14 +130,23 @@ public enum GenerationQuality
 /// <param name="Base">An update job's base pack (task 56): only the strings it lacks or that changed are translated, and the result is its next revision.</param>
 /// <param name="Quality">How carefully to translate; picks the model of the stages after Extract unless <paramref name="Model"/> is given.</param>
 /// <param name="WebLookup"><see cref="GenerationQuality.Thorough"/> only: the Study stage may search the web about the game.</param>
+/// <param name="Reader">
+/// What reads and rebuilds the game, as the player chose on the start form: a toolkit recipe tool's ID
+/// (<c>unity</c>, <c>godot</c>…, whatever engine was detected), <see cref="AgentReader"/> (the agent writes its own
+/// extractor and rebuilder, the pack is a binary patch), or <c>null</c> = the tool of the detected engine, else the agent.
+/// </param>
 public sealed record GenerationOptions(
     bool ReviewGlossary = false,
     WorkingCopyScope? Scope = null,
     string? Model = null,
     GenerationBase? Base = null,
     GenerationQuality Quality = GenerationQuality.Balanced,
-    bool WebLookup = false)
+    bool WebLookup = false,
+    string? Reader = null)
 {
+    /// <summary><see cref="Reader"/> of a job whose game the agent reads with its own code (the toolkit's <c>agent-script</c> tool).</summary>
+    public const string AgentReader = "agent-script";
+
     public static readonly GenerationOptions Default = new();
 
     /// <summary>The job runs the <see cref="GenerationStage.Study"/> stage.</summary>

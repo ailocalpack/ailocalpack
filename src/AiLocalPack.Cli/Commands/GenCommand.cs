@@ -46,17 +46,19 @@ internal static class GenCommand
         var allFiles = AllFilesOption();
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
         var quality = new Option<string?>("--quality") { Description = "Estimate at this quality: quick, balanced (default) or thorough." };
+        var tool = GenJobCommands.ToolOption();
         var command = new Command("estimate", "Estimate a generation: strings and words to translate, working copy size, free space, agent time and subscription limits.")
         {
-            game, allFiles, quality, json,
+            game, allFiles, quality, tool, json,
         };
         command.SetAction((result, cancellationToken) =>
         {
             var error = result.InvocationConfiguration.Error;
             var (chosen, qualityError) = GenJobCommands.Quality(result.GetValue(quality));
-            if (qualityError is not null)
+            var (reader, toolError) = GenJobCommands.Reader(result.GetValue(tool));
+            if ((qualityError ?? toolError) is { } optionError)
             {
-                error.WriteLine(qualityError);
+                error.WriteLine(optionError);
                 return Task.FromResult(1);
             }
 
@@ -68,7 +70,7 @@ internal static class GenCommand
             GenerationSizeEstimate estimate;
             try
             {
-                estimate = Estimator(env, paths).Estimate(found.InstallPath, Engine(found), Scope(result.GetValue(allFiles)), cancellationToken);
+                estimate = Estimator(env, paths).Estimate(found.InstallPath, Engine(found), Scope(result.GetValue(allFiles)), cancellationToken, reader: reader);
                 estimate = estimate with { Work = estimate.Work.At(chosen) };
             }
             catch (WorkingCopyException e)
@@ -202,6 +204,7 @@ internal static class GenCommand
         TextSizeSource.UnknownEngine => "unknown engine, so the text is a rough guess from file sizes.",
         TextSizeSource.EngineDisabled => "the toolkit doesn't handle this engine on this system for now, so the text is a rough guess from file sizes.",
         TextSizeSource.NoTool => "the toolkit can't read this engine yet, so the text is a rough guess from file sizes.",
+        TextSizeSource.AgentChosen => "the agent will write its own reader, so the text is a rough guess from file sizes.",
         _ => $"the toolkit couldn't read the game ({estimate.ToolkitError}), so the text is a rough guess from file sizes.",
     };
 

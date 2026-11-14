@@ -321,6 +321,16 @@ public sealed class GenJobTests : IDisposable
     }
 
     [Fact]
+    public async Task An_unknown_tool_is_refused()
+    {
+        // Act
+        var result = await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru", "--tool", "frostbite");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "--tool takes rpgmaker, renpy, godot, unity, unreal or agent, not 'frostbite'.\n" });
+    }
+
+    [Fact]
     public async Task Web_lookup_needs_the_thorough_quality()
     {
         // Act

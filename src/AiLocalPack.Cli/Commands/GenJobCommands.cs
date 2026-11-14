@@ -65,6 +65,21 @@ internal static partial class GenJobCommands
         _ => (GenerationQuality.Balanced, $"--quality takes quick, balanced or thorough, not '{text}'."),
     };
 
+    /// <summary><c>--tool</c>: what reads the game (a toolkit tool's ID or <c>agent</c>).</summary>
+    internal static Option<string?> ToolOption() => new("--tool")
+    {
+        Description = $"What reads the game: a toolkit tool ({string.Join(", ", RecipeTools.Builtin.All.Select(t => t.Id))}) or agent (the agent writes its own reader; the pack is a binary patch). Default: the detected engine's tool, else agent.",
+    };
+
+    /// <summary>The <c>--tool</c> value as a <see cref="GenerationOptions.Reader"/>, or the reason it is wrong.</summary>
+    internal static (string? Reader, string? Error) Reader(string? text) => text?.ToLowerInvariant() switch
+    {
+        null => (null, null),
+        "agent" or GenerationOptions.AgentReader => (GenerationOptions.AgentReader, null),
+        var id when RecipeTools.Builtin.Find(id) is not null => (id, null),
+        _ => (null, $"--tool takes {string.Join(", ", RecipeTools.Builtin.All.Select(t => t.Id))} or agent, not '{text}'."),
+    };
+
     private static TimeSpan Middle(GenerationEstimate work) => (work.TimeLow + work.TimeHigh) / 2;
 
     private static Option<int?> WorkersOption() => new("--workers")
@@ -95,10 +110,11 @@ internal static partial class GenJobCommands
         var quality = new Option<string?>("--quality") { Description = "How carefully to translate: quick, balanced (default) or thorough (studies the whole game first)." };
         var web = new Option<bool>("--web") { Description = "Thorough only: let the Study stage look the game up on the web." };
         var update = new Option<bool>("--update") { Description = "Translate only the new and changed strings on top of the installed pack (its next revision, in its language)." };
+        var tool = ToolOption();
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, quality, web, update, until, workers, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, quality, web, update, tool, until, workers, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -145,7 +161,9 @@ internal static partial class GenJobCommands
             var (chunksAtOnce, workersError) = Workers(result.GetValue(workers));
             var (chosenQuality, qualityError) = Quality(result.GetValue(quality));
             var webError = result.GetValue(web) && chosenQuality != GenerationQuality.Thorough ? "--web works only with --quality thorough." : null;
-            if ((untilError ?? workersError ?? qualityError ?? webError) is { } optionError)
+            var (reader, toolError) = Reader(result.GetValue(tool));
+            toolError ??= reader is not null && updateBase is not null ? "--tool doesn't go with --update: an update reads the game as its base pack did." : null;
+            if ((untilError ?? workersError ?? qualityError ?? webError ?? toolError) is { } optionError)
             {
                 error.WriteLine(optionError);
                 return 1;
@@ -171,12 +189,13 @@ internal static partial class GenJobCommands
                 result.GetValue(model),
                 updateBase?.Reference(installed!.Local),
                 chosenQuality,
-                result.GetValue(web));
+                result.GetValue(web),
+                reader);
             var plan = new StagePlan(agentId, recording, pauseBefore, chunksAtOnce);
             GenerationRun run;
             try
             {
-                var estimate = context.Estimator.Estimate(context.Game.InstallPath, Engine(context.Game), options.Scope, cancellationToken, updateBase?.Strings);
+                var estimate = context.Estimator.Estimate(context.Game.InstallPath, Engine(context.Game), options.Scope, cancellationToken, updateBase?.Strings, options.Reader);
                 if (estimate.Update is { } diff)
                 {
                     output.WriteLine($"Update of {updateBase!.Manifest.Id} rev {updateBase.Manifest.Revision}: {diff.Added.Count} new strings, {diff.Changed.Count} changed, {diff.Removed.Count} removed, {diff.Unchanged.Count} kept.");

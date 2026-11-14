@@ -50,7 +50,7 @@ public sealed class ToolkitToolsTests
         var result = await mcp.ResultAsync("detect_engine");
 
         // Assert
-        result.GetProperty("problem").GetString().Should().Contain("engine is unknown");
+        result.GetProperty("problem").GetString().Should().Contain("engine wasn't recognized");
     }
 
     [Fact]
@@ -161,6 +161,32 @@ public sealed class ToolkitToolsTests
     }
 
     [Fact]
+    public async Task Extract_strings_with_the_agents_own_code_chosen_asks_for_the_agents_extractor()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(reader: GenerationOptions.AgentReader);
+
+        // Act
+        var error = await mcp.ErrorAsync("extract_strings");
+
+        // Assert
+        error.Should().Be("The player chose to have the game read with your own code instead of the toolkit. Write your own extractor: it must write strings.json in your workspace.");
+    }
+
+    [Fact]
+    public async Task Detect_engine_names_the_chosen_tool_of_another_engine()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync(reader: "renpy");
+
+        // Act
+        var result = await mcp.ResultAsync("detect_engine");
+
+        // Assert
+        (result.GetProperty("engine").GetString(), result.GetProperty("tool").GetString()).Should().Be(("rpgmaker:mz", "renpy"));
+    }
+
+    [Fact]
     public async Task Extract_strings_of_an_unknown_engine_is_a_tool_error()
     {
         // Arrange
@@ -170,7 +196,7 @@ public sealed class ToolkitToolsTests
         var error = await mcp.ErrorAsync("extract_strings");
 
         // Assert
-        error.Should().Be("The engine is unknown, so the toolkit can't read its strings. Write your own extractor: it must write strings.json in your workspace.");
+        error.Should().Be("The game's engine wasn't recognized, so the toolkit can't read its strings. Write your own extractor: it must write strings.json in your workspace.");
     }
 
     [Fact]

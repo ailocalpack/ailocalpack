@@ -34,7 +34,8 @@ public sealed class ToolkitServerProgram
     public static ToolkitServerProgram Cli(AppLaunch cli, OsEnvironment env) => new(cli, ["mcp"], Forwarded(env));
 
     /// <summary>The server of one job: confined to <paramref name="root"/>, storing into <paramref name="jobFolder"/>.</summary>
-    public AgentMcpServer For(string root, string jobFolder, string language)
+    /// <param name="reader">The job's <see cref="Core.Generation.GenerationOptions.Reader"/> (<c>--tool</c>), so the agent's tools read the game as the job does.</param>
+    public AgentMcpServer For(string root, string jobFolder, string language, string? reader = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(root);
         ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
@@ -42,7 +43,7 @@ public sealed class ToolkitServerProgram
         return new AgentMcpServer(
             ToolkitServerLaunch.AgentServerName,
             _app.Executable,
-            _app.With([.. _mode, "--root", Path.GetFullPath(root), "--job", Path.GetFullPath(jobFolder), "--lang", language]))
+            _app.With([.. _mode, "--root", Path.GetFullPath(root), "--job", Path.GetFullPath(jobFolder), "--lang", language, .. reader is null ? Array.Empty<string>() : ["--tool", reader]]))
         {
             Environment = Environment,
         };

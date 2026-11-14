@@ -391,7 +391,8 @@ public static class GenerationJobSerializer
                 job.Options.Model,
                 job.Options.Base is { } b ? new GenerationBaseJson(b.PackId, b.Revision, b.Local, b.Title) : null,
                 Name(job.Options.Quality),
-                job.Options.WebLookup ? true : null),
+                job.Options.WebLookup ? true : null,
+                job.Options.Reader),
             Name(job.Stage),
             Name(job.Status),
             Name(job.PauseReason),
@@ -488,6 +489,9 @@ public static class GenerationJobSerializer
             ? parsedQuality
             : GenerationQuality.Balanced;
 
+        // A reader that isn't a slug can't name a tool: the job reads the game as the detected engine does.
+        var reader = file.Options?.Reader is { } readerId && PackFormat.IsSlug(readerId) ? readerId : null;
+
         GenerationBase? baseRef = null;
         if (file.Options?.Base is { } b)
         {
@@ -518,7 +522,8 @@ public static class GenerationJobSerializer
                 file.Options?.Model,
                 baseRef,
                 quality,
-                file.Options?.WebLookup ?? false),
+                file.Options?.WebLookup ?? false,
+                reader),
             Stage = stage,
             Status = status,
             PauseReason = pause,
@@ -575,7 +580,8 @@ internal sealed record GenerationOptionsJson(
     string? Model,
     GenerationBaseJson? Base = null,
     string? Quality = null,
-    bool? WebLookup = null);
+    bool? WebLookup = null,
+    string? Reader = null);
 
 internal sealed record GenerationBaseJson(string? PackId, int Revision, bool Local, string? Title);
 

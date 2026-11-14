@@ -48,6 +48,32 @@ public sealed class ToolkitServerLaunchTests
     }
 
     [Fact]
+    public void Parse_reads_the_jobs_reader()
+    {
+        // Arrange
+        string[] args = ["--mcp-server", "--root", "/g", "--job", "/j", "--tool", "agent-script"];
+
+        // Act
+        var (options, _) = ToolkitServerLaunch.Parse(args, RecipeTools.Builtin);
+
+        // Assert
+        options!.Reader.Should().Be("agent-script");
+    }
+
+    [Fact]
+    public void Parse_refuses_a_tool_the_toolkit_lacks()
+    {
+        // Arrange
+        string[] args = ["--mcp-server", "--root", "/g", "--job", "/j", "--tool", "frostbite"];
+
+        // Act
+        var (_, error) = ToolkitServerLaunch.Parse(args, RecipeTools.Builtin);
+
+        // Assert
+        error.Should().StartWith("'frostbite' is not a toolkit tool");
+    }
+
+    [Fact]
     public void Parse_requires_root_and_job()
     {
         // Arrange

@@ -4776,4 +4776,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>{0} is already in the game ({1}): your AI translation replaces its text</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>With</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>What reads and rebuilds the game's text</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>{0} toolkit</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>AI's own code</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>The app's built-in reader: fast and exact. The translation is a string table, rebuilt on each player's copy.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>The agent writes its own reader and rebuilder. Slower and may not work; the translation is a binary patch.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Not on this system yet</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>detected</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>If the chosen toolkit can't read the game, the agent writes its own reader instead.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>You chose the AI's own code: the agent writes its own reader, and the translation is a binary patch</value>
+  </data>
 </root>

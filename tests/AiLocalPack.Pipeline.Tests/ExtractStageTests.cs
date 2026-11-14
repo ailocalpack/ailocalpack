@@ -136,6 +136,77 @@ public sealed class ExtractStageTests : IDisposable
     }
 
     [Fact]
+    public async Task The_agents_own_code_chosen_by_the_player_writes_the_extractor_though_the_toolkit_reads_the_game()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+        var agent = UnknownEngineExtractTests.Extracting();
+        var stage = new ExtractStage(RecipeTools.Builtin, agent: new PipelineAgent(agent, StageHarness.Server), gameName: "Sample Quest");
+
+        // Act
+        await stage.RunStepAsync(_h.Context(GenerationStage.Extract, options: new GenerationOptions(Reader: GenerationOptions.AgentReader)), TestContext.Current.CancellationToken);
+
+        // Assert
+        SourceStringsFile.Read(_h.Files)!.Tool.Should().Be(AiLocalPack.Toolkit.Recipes.Agent.AgentScriptTool.ToolId);
+    }
+
+    [Fact]
+    public async Task The_agent_is_told_the_player_asked_for_its_own_reader()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+        var agent = UnknownEngineExtractTests.Extracting();
+        var stage = new ExtractStage(RecipeTools.Builtin, agent: new PipelineAgent(agent, StageHarness.Server), gameName: "Sample Quest");
+
+        // Act
+        await stage.RunStepAsync(_h.Context(GenerationStage.Extract, options: new GenerationOptions(Reader: GenerationOptions.AgentReader)), TestContext.Current.CancellationToken);
+
+        // Assert
+        agent.Runs.Single().Request!.Prompt.Should().Contain("(RPG Maker MZ; the player asked for your own reader instead of the toolkit's)");
+    }
+
+    [Fact]
+    public async Task The_agent_s_tools_are_started_with_the_chosen_reader()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+        var agent = UnknownEngineExtractTests.Extracting();
+        var stage = new ExtractStage(RecipeTools.Builtin, agent: new PipelineAgent(agent, StageHarness.Server), gameName: "Sample Quest");
+
+        // Act
+        await stage.RunStepAsync(_h.Context(GenerationStage.Extract, options: new GenerationOptions(Reader: GenerationOptions.AgentReader)), TestContext.Current.CancellationToken);
+
+        // Assert
+        agent.Runs.Single().Request!.McpServers.Single().Arguments.Should().EndWith(["--tool", GenerationOptions.AgentReader]);
+    }
+
+    [Fact]
+    public async Task Another_engines_tool_chosen_reads_the_game_as_that_engine()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+
+        // Act
+        var result = await Stage().RunStepAsync(_h.Context(GenerationStage.Extract, options: new GenerationOptions(Reader: "renpy")), TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Should().BeOfType<GenerationStepResult.Failed>().Which.Message.Should().StartWith("The toolkit couldn't read this Ren'Py game");
+    }
+
+    [Fact]
+    public async Task The_agents_own_code_without_an_agent_fails_with_the_players_choice()
+    {
+        // Arrange
+        _h.WithRpgMakerCopy();
+
+        // Act
+        var result = await Stage().RunStepAsync(_h.Context(GenerationStage.Extract, options: new GenerationOptions(Reader: GenerationOptions.AgentReader)), TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Should().BeOfType<GenerationStepResult.Failed>().Which.Message.Should().Contain("player chose");
+    }
+
+    [Fact]
     public async Task The_extraction_is_logged()
     {
         // Arrange

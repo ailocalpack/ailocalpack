@@ -26,6 +26,7 @@ using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Recipes;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
@@ -127,7 +128,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         ILogger<GamePageViewModel>? logger = null,
         TranslationRequests? requests = null,
         FixService? fixes = null,
-        IFilePicker? picker = null)
+        IFilePicker? picker = null,
+        RecipeTools? tools = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         Game = game;
@@ -175,7 +177,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests, fixes, picker)
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests, fixes, picker, tools)
         {
             Official = statuses.OfficialOf(game),
         };
@@ -269,14 +271,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     public bool HasEngine => EngineText.Length > 0;
 
     /// <summary>The engine's mark on the chip (<c>Styles/BrandIcons.axaml</c>); <see langword="null"/> = the generic box (RPG Maker has no mark there).</summary>
-    public string? EngineBrandKey => !EngineKind.TryParse(Game.Engine, out var engine) ? null : engine.Engine switch
-    {
-        GameEngine.Unity => "BrandUnity",
-        GameEngine.Unreal => "BrandUnreal",
-        GameEngine.Godot => "BrandGodot",
-        GameEngine.RenPy => "BrandRenPy",
-        _ => null,
-    };
+    public string? EngineBrandKey => !EngineKind.TryParse(Game.Engine, out var engine) ? null : GenerationReaderTexts.BrandKey(engine.Engine);
 
     public bool HasEngineBrand => EngineBrandKey is not null;
 

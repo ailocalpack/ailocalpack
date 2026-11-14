@@ -4738,4 +4738,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>{0} ist schon im Spiel ({1}): Deine KI-Übersetzung ersetzt dessen Texte</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>Mit</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>Womit der Text des Spiels gelesen und neu gebaut wird</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>{0}-Toolkit</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>Eigener Code der KI</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>Der eingebaute Leser der App: schnell und genau. Die Übersetzung ist eine Stringtabelle, die auf der Kopie jedes Spielers neu gebaut wird.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>Der Agent schreibt seinen eigenen Leser und Builder. Langsamer und klappt vielleicht nicht; die Übersetzung wird ein Binärpatch.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Auf diesem System noch nicht</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>erkannt</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>Kann das gewählte Toolkit das Spiel nicht lesen, schreibt der Agent stattdessen seinen eigenen Leser.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>Eigener Code der KI gewählt: Der Agent schreibt seinen eigenen Leser, die Übersetzung wird ein Binärpatch</value>
+  </data>
 </root>

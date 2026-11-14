@@ -115,7 +115,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         {
             SystemPrompt = system,
             BuiltinTools = Tools(workspace, extraTools),
-            McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language)],
+            McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language, context.Job.Options.Reader)],
             Model = choice.Model,
             Effort = choice.Effort,
         };

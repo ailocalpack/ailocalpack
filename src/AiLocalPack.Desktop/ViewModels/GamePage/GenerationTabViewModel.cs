@@ -19,6 +19,7 @@ using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using AiLocalPack.Pipeline;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Generation;
+using AiLocalPack.Toolkit.Recipes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -215,7 +216,14 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     private readonly TranslationRequests? _requests;
     private readonly FixService? _fixes;
     private readonly IFilePicker? _picker;
+    private readonly RecipeTools _tools;
     private RequestKey? _takeKey;
+
+    /// <summary>The engine the catalog or the last automatic estimate found; <c>null</c> until known.</summary>
+    private EngineKind? _detected;
+
+    /// <summary>The reader the player picked (<see cref="GenerationOptions.Reader"/>); <c>null</c> = the detected engine's.</summary>
+    private string? _reader;
 
     /// <summary>"Tell the 13 players who asked that I'm translating" (task 74), on by default unless someone else is on it.</summary>
     [ObservableProperty]
@@ -243,8 +251,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         UpdateCandidate? update = null,
         TranslationRequests? requests = null,
         FixService? fixes = null,
-        IFilePicker? picker = null)
+        IFilePicker? picker = null,
+        RecipeTools? tools = null)
     {
+        _tools = tools ?? RecipeTools.Builtin;
+        _detected = EngineKind.TryParse(game.Engine, out var engine) && engine.Engine != GameEngine.Unknown ? engine : null;
         _requests = requests;
         _fixes = fixes;
         _picker = picker;
@@ -286,6 +297,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         ToggleLogCommand = new RelayCommand(() => IsLogOpen = !IsLogOpen);
         CompareQualitiesCommand = new RelayCommand(CompareQualities);
         QualityOptions = [.. GenerationQualityTexts.All.Select(q => new GenerationQualityOption(q, PickQuality))];
+        ReaderOptions = GenerationReaderTexts.Options(_tools, PickReader);
+        SyncReaderOptions();
         Job = jobs.FindOpen(game.Id);
         SyncResult();
         SelectDefaultAgent();
@@ -512,6 +525,33 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     /// <summary>An update keeps its pack's language.</summary>
     public bool CanPickLanguage => !IsUpdateMode;
+
+    // ---------- Reader: what reads the game (the toolkit of any engine, or the agent's own code) ----------
+
+    /// <summary>The reader popover's rows: every toolkit engine, then the agent's own code.</summary>
+    public IReadOnlyList<GenerationReaderOption> ReaderOptions { get; }
+
+    /// <summary>An update reads the game as its base pack did.</summary>
+    public bool CanPickReader => !IsUpdateMode;
+
+    /// <summary>The reader the job will use: the player's pick, else the detected engine's tool, else the agent's own code.</summary>
+    private string Reader => _reader ?? DefaultReader;
+
+    private string DefaultReader => _detected is { } kind && GameReader.Resolve(_tools, kind, null).Tool is { } tool
+        ? tool.Id
+        : GenerationOptions.AgentReader;
+
+    private GenerationReaderOption? SelectedReader => ReaderOptions.FirstOrDefault(o => o.Id == Reader);
+
+    /// <summary>"Unity toolkit" / "AI's own code": the reader button; empty while the engine isn't known yet.</summary>
+    public string ReaderName => _reader is null && _detected is null && !IsEstimated ? string.Empty
+        : SelectedReader is { } r ? r.Name : string.Empty;
+
+    public string? ReaderBrandKey => SelectedReader?.BrandKey;
+
+    public bool HasReaderBrand => ReaderBrandKey is not null;
+
+    public string ReaderIcon => SelectedReader?.Icon ?? "IconBox";
 
     /// <summary>"Based on the installed «Фонарщики» rev 3: the new revision keeps its translations."</summary>
     public string UpdateBannerText => _update is { } u ? _localizer.Format(nameof(Strings.Gen_Update_Banner), u.Title, u.Revision) : string.Empty;
@@ -981,6 +1021,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     {
         Steps = BuildSteps();
         SyncQualityOptions();
+        SyncReaderOptions();
         Review?.RefreshTexts();
         Result?.RefreshTexts();
         foreach (var card in Agents)
@@ -1076,7 +1117,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
             if (baseError is null)
             {
-                estimate = await _estimates.EstimateAsync(_game, unusable ? null : baseLoad?.Base?.Strings, _closed.Token);
+                estimate = await _estimates.EstimateAsync(_game, unusable ? null : baseLoad?.Base?.Strings, IsUpdateMode ? null : _reader, _closed.Token);
                 _logger.LogInformation(
                     "Generation estimate for {Game}: {Strings} strings ({Source}{Update}), copy {Bytes} bytes, needs {Needed} of {Free} free",
                     _game.Id,
@@ -1109,6 +1150,13 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             _baseUnusable = unusable;
             _baseError = baseError;
             _estimate = estimate;
+            if (estimate is not null && _reader is null && estimate.Engine.Engine != GameEngine.Unknown)
+            {
+                // Read the way the job would by default: the engine it found is the detected one.
+                _detected = estimate.Engine;
+            }
+
+            SyncReaderOptions();
             _estimateError = error;
             EstimateState = estimate is null ? EstimateState.Failed : EstimateState.Done;
         });
@@ -1129,7 +1177,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             ReviewGlossary,
             Base: updateBase is null ? null : _base!.Reference,
             Quality: Quality,
-            WebLookup: Quality == GenerationQuality.Thorough && WebLookup);
+            WebLookup: Quality == GenerationQuality.Thorough && WebLookup,
+            Reader: IsUpdateMode ? null : _reader);
         var take = ShowRequest && TakeRequest ? Request?.Discussion : null;
         var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (work.TimeLow + work.TimeHigh) / 2, updateBase);
         _ui.Post(() =>
@@ -1543,6 +1592,42 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private void PickQuality(GenerationQuality quality) => Quality = quality;
 
+    /// <summary>The player picked a reader: the estimate reads the game that way again (the detected engine's = automatic).</summary>
+    private void PickReader(string id)
+    {
+        if (!CanPickReader || id == Reader || ReaderOptions.FirstOrDefault(o => o.Id == id) is not { IsAvailable: true })
+        {
+            return;
+        }
+
+        _reader = id == DefaultReader ? null : id;
+        SyncReaderOptions();
+        Estimate();
+    }
+
+    private void SyncReaderOptions()
+    {
+        if (ReaderOptions is null)
+        {
+            return;
+        }
+
+        var reader = Reader;
+        foreach (var option in ReaderOptions)
+        {
+            option.IsSelected = option.Id == reader;
+            option.IsDetected = !option.IsAgent && option.Engine == _detected?.Engine;
+            option.Name = GenerationReaderTexts.Name(option.Engine, _localizer);
+            option.Blurb = GenerationReaderTexts.Blurb(option, _localizer);
+        }
+
+        OnPropertyChanged(nameof(ReaderName));
+        OnPropertyChanged(nameof(ReaderBrandKey));
+        OnPropertyChanged(nameof(HasReaderBrand));
+        OnPropertyChanged(nameof(ReaderIcon));
+        OnPropertyChanged(nameof(CanPickReader));
+    }
+
     partial void OnQualityChanged(GenerationQuality value)
     {
         SyncQualityOptions();
@@ -1660,6 +1745,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             TextSizeSource.UnknownEngine => new(GenerationCheckState.Warning, _localizer[nameof(Strings.Gen_Check_Engine_Unknown)]),
             TextSizeSource.EngineDisabled => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_Disabled), engine)),
             TextSizeSource.NoTool => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_NoTool), engine)),
+            TextSizeSource.AgentChosen => new(GenerationCheckState.Warning, _localizer[nameof(Strings.Gen_Check_Engine_Agent)]),
             _ => new(GenerationCheckState.Warning, _localizer.Format(nameof(Strings.Gen_Check_Engine_Failed), engine, e.ToolkitError?.TrimEnd('.'))),
         };
     }

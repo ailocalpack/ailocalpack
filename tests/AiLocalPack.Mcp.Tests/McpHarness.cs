@@ -33,7 +33,8 @@ internal sealed class McpHarness : IAsyncDisposable
 
     public McpClient Client { get; private set; } = null!;
 
-    public static async Task<McpHarness> StartAsync(string? language = "ru", Action<TempDir>? game = null)
+    /// <param name="reader">The job's reader (<c>--tool</c>), <c>null</c> = the detected engine's tool.</param>
+    public static async Task<McpHarness> StartAsync(string? language = "ru", Action<TempDir>? game = null, string? reader = null)
     {
         var dir = new TempDir();
         if (game is null)
@@ -47,7 +48,7 @@ internal sealed class McpHarness : IAsyncDisposable
         }
 
         var harness = new McpHarness(dir);
-        await harness.ConnectAsync(language);
+        await harness.ConnectAsync(language, reader);
         return harness;
     }
 
@@ -104,9 +105,9 @@ internal sealed class McpHarness : IAsyncDisposable
         Dir.Dispose();
     }
 
-    private async Task ConnectAsync(string? language)
+    private async Task ConnectAsync(string? language, string? reader)
     {
-        var session = new ToolkitSession(new ToolkitServerOptions(GameDir, JobDir, language, RecipeTools.Builtin));
+        var session = new ToolkitSession(new ToolkitServerOptions(GameDir, JobDir, language, RecipeTools.Builtin) { Reader = reader });
         var transport = new StreamServerTransport(clientToServer.Reader.AsStream(), serverToClient.Writer.AsStream());
         server = ToolkitMcpServer.Create(transport, session);
         serverRun = server.RunAsync(stop.Token);

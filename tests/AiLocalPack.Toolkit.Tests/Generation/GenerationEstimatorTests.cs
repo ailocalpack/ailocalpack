@@ -160,4 +160,37 @@ public sealed class GenerationEstimatorTests : IDisposable
     {
         public long? FreeBytes(string path) => 1L << 40;
     }
+
+    [Fact]
+    public void The_agents_own_code_chosen_over_the_toolkit_is_guessed_on_every_file()
+    {
+        // Arrange
+        _dir.RpgMakerGame("game");
+
+        // Act
+        var estimate = Estimator().Estimate(Game, cancellationToken: Ct, reader: GenerationOptions.AgentReader);
+
+        // Assert
+        estimate.Should().BeEquivalentTo(new
+        {
+            Engine = new EngineKind(GameEngine.RpgMaker, EngineVariants.RpgMakerMz),
+            Source = TextSizeSource.AgentChosen,
+            Tool = (IRecipeTool?)null,
+            Work = new { Basis = EstimateBasis.FileSizes },
+            Copy = new { Scope = WorkingCopyScope.AllFiles },
+        });
+    }
+
+    [Fact]
+    public void Another_engines_tool_chosen_reads_the_game_as_that_engine()
+    {
+        // Arrange
+        _dir.RpgMakerGame("game");
+
+        // Act
+        var estimate = Estimator().Estimate(Game, cancellationToken: Ct, reader: "renpy");
+
+        // Assert
+        estimate.Should().BeEquivalentTo(new { Engine = new EngineKind(GameEngine.RenPy), Source = TextSizeSource.ToolkitFailed, Tool = new { Id = "renpy" } });
+    }
 }

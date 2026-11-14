@@ -23,6 +23,9 @@ internal sealed class FakeEstimates : IGenerationEstimates
     /// <summary>The update base table of the last call (task 56), <c>null</c> for a new translation.</summary>
     public StringTable? LastBase { get; private set; }
 
+    /// <summary>The reader the last call asked for, <c>null</c> = the detected engine's.</summary>
+    public string? LastReader { get; private set; }
+
     /// <summary>An estimate: the text from the toolkit (or a guess), the copy and the disk.</summary>
     public static GenerationSizeEstimate Of(
         int strings = 1_200,
@@ -49,10 +52,11 @@ internal sealed class FakeEstimates : IGenerationEstimates
             0);
     }
 
-    public Task<GenerationSizeEstimate> EstimateAsync(Game game, StringTable? updateBase, CancellationToken cancellationToken)
+    public Task<GenerationSizeEstimate> EstimateAsync(Game game, StringTable? updateBase, string? reader, CancellationToken cancellationToken)
     {
         Calls++;
         LastBase = updateBase;
+        LastReader = reader;
         return Estimate(game, cancellationToken);
     }
 }

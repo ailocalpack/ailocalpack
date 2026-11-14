@@ -4738,4 +4738,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>Oyunda {0} zaten var ({1}): yapay zekâ çeviriniz oyunun metinlerinin yerini alır</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>Okuyan</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>Oyunun metnini neyin okuyup yeniden oluşturacağı</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>{0} araç seti</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>Yapay zekânın kendi kodu</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>Uygulamanın yerleşik okuyucusu: hızlı ve kesin. Çeviri, her oyuncunun kopyasında yeniden oluşturulan bir metin tablosudur.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>Ajan kendi okuyucusunu ve oluşturucusunu yazar. Daha yavaş ve başarısız olabilir; çeviri bir ikili yama olur.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Bu sistemde henüz yok</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>algılandı</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>Seçilen araç seti oyunu okuyamazsa ajan kendi okuyucusunu yazar.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>Yapay zekânın kendi kodunu seçtiniz: ajan kendi okuyucusunu yazar ve çeviri bir ikili yama olur</value>
+  </data>
 </root>

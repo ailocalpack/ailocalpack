@@ -1,18 +1,23 @@
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Toolkit.Engines;
+using AiLocalPack.Toolkit.Generation;
 using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Toolkit.Recipes.Agent;
 using ModelContextProtocol;
 
 namespace AiLocalPack.Mcp;
 
-/// <summary>How the server is started (<c>ailocalpack mcp --root … --job … [--lang …]</c>).</summary>
+/// <summary>How the server is started (<c>ailocalpack mcp --root … --job … [--lang …] [--tool …]</c>).</summary>
 /// <param name="Root">The working copy of the game (the only folder file tools see).</param>
 /// <param name="JobFolder">Where the string store, glossary and rebuild go (<see cref="GenerationFiles"/>); not inside <paramref name="Root"/>.</param>
 /// <param name="Language">The translation's language tag; <c>null</c> = the stored strings' language (writes are refused while neither is known).</param>
 /// <param name="Tools">The machine's recipe tools (<see cref="RecipeTools.Create"/>).</param>
-public sealed record ToolkitServerOptions(string Root, string JobFolder, string? Language, RecipeTools Tools);
+public sealed record ToolkitServerOptions(string Root, string JobFolder, string? Language, RecipeTools Tools)
+{
+    /// <summary>The job's <see cref="GenerationOptions.Reader"/>: the tool that reads the game, <see cref="GenerationOptions.AgentReader"/>, or <c>null</c> = the detected engine's tool.</summary>
+    public string? Reader { get; init; }
+}
 
 /// <summary>
 /// State shared by the tool calls of one server: the working copy, the job files and the extraction (cached for the
@@ -70,32 +75,25 @@ public sealed class ToolkitSession
     /// <exception cref="McpException">Unknown engine, an engine switched off on this OS, or one without a tool, and no agent extraction.</exception>
     public (IRecipeTool Tool, EngineKind Kind) Tool()
     {
-        var kind = Detect().Kind;
+        var reader = Reader();
         var agent = AgentTool();
         if (agent.Exists)
         {
-            return (agent, kind);
+            return (agent, reader.Kind);
         }
 
-        return ToolProblem(kind) is { } problem
-            ? throw new McpException(problem + WriteYourOwn)
-            : (Tools.For(kind)!, kind);
+        return reader.Tool is { } tool
+            ? (tool, reader.Kind)
+            : throw new McpException(reader.Problem + WriteYourOwn);
     }
+
+    /// <summary>What reads the copy: the job's choice (<see cref="ToolkitServerOptions.Reader"/>), else the detected engine's tool.</summary>
+    public GameReader Reader() => GameReader.Resolve(Tools, Detect().Kind, options.Reader);
 
     private const string WriteYourOwn = " Write your own extractor: it must write strings.json in your workspace.";
 
     /// <summary>The strings the agent's extractor wrote (<c>agent/strings.json</c> of the job folder).</summary>
     public AgentScriptTool AgentTool() => agentTool ??= new AgentScriptTool(Files.AgentStringsPath);
-
-    /// <summary>Why the toolkit can't read games of <paramref name="kind"/>, or <c>null</c> when it can.</summary>
-    public string? ToolProblem(EngineKind kind)
-    {
-        ArgumentNullException.ThrowIfNull(kind);
-        return kind.Engine == GameEngine.Unknown ? "The engine is unknown, so the toolkit can't read its strings."
-            : Tools.IsDisabled(kind) ? $"The toolkit doesn't handle {kind.DisplayName} games on this system for now."
-            : Tools.For(kind) is null ? $"The toolkit can't read {kind.DisplayName} games yet."
-            : null;
-    }
 
     /// <summary>The copy's strings (cached).</summary>
     /// <exception cref="McpException">No tool for the engine, or the game files can't be read.</exception>

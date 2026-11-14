@@ -4867,4 +4867,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>«{0}» уже є в грі ({1}): ваш ШІ-переклад замінить її тексти</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>Через</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>Чим читати й збирати текст гри</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>Інструменти {0}</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>Власний код ШІ</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>Вбудований зчитувач застосунку: швидко й точно. Переклад — таблиця рядків, яка збирається на копії кожного гравця.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>Агент напише власний зчитувач і збирач. Довше й може не вдатися; переклад — бінарний патч.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Поки що не на цій системі</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>визначено</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>Якщо обрані інструменти не прочитають гру, агент напише власний зчитувач.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>Обрано власний код ШІ: агент напише власний зчитувач, переклад — бінарний патч</value>
+  </data>
 </root>

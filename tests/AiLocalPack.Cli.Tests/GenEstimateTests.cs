@@ -88,6 +88,34 @@ public sealed class GenEstimateTests : IDisposable
     }
 
     [Fact]
+    public async Task Estimate_with_the_agents_own_code_guesses_from_every_file()
+    {
+        // Arrange
+        // (an RPG Maker MZ game in the Steam fixture)
+
+        // Act
+        var result = await RunAsync("gen", "estimate", "steam:620", "--tool", "agent", "--json");
+
+        // Assert
+        var json = JsonNode.Parse(result.StdOut)!;
+        new { Source = (string?)json["source"], Scope = (string?)json["copy"]!["scope"] }
+            .Should().BeEquivalentTo(new { Source = "agent-chosen", Scope = "all-files" });
+    }
+
+    [Fact]
+    public async Task Estimate_refuses_a_tool_the_toolkit_lacks()
+    {
+        // Arrange
+        // (an RPG Maker MZ game in the Steam fixture)
+
+        // Act
+        var result = await RunAsync("gen", "estimate", "steam:620", "--tool", "frostbite");
+
+        // Assert
+        result.Should().BeEquivalentTo(new { ExitCode = 1, StdErr = "--tool takes rpgmaker, renpy, godot, unity, unreal or agent, not 'frostbite'.\n" });
+    }
+
+    [Fact]
     public async Task A_game_not_in_the_catalog_exits_1()
     {
         // Arrange

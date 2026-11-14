@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Background;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Recipes;
@@ -34,12 +35,12 @@ public static class ToolkitServerLaunch
         return (app.Executable, language is null ? app.With(own) : app.With([.. own, "--lang", language]));
     }
 
-    /// <summary>The options of <c>--mcp-server --root &lt;dir&gt; --job &lt;dir&gt; [--lang &lt;tag&gt;]</c>, or the reason they are wrong.</summary>
+    /// <summary>The options of <c>--mcp-server --root &lt;dir&gt; --job &lt;dir&gt; [--lang &lt;tag&gt;] [--tool &lt;id&gt;]</c>, or the reason they are wrong.</summary>
     public static (ToolkitServerOptions? Options, string? Error) Parse(IReadOnlyList<string> args, RecipeTools tools)
     {
         ArgumentNullException.ThrowIfNull(args);
         ArgumentNullException.ThrowIfNull(tools);
-        string? root = null, job = null, language = null;
+        string? root = null, job = null, language = null, tool = null;
         for (var i = IsRequested(args) ? 1 : 0; i < args.Count; i++)
         {
             if (i + 1 >= args.Count)
@@ -52,6 +53,7 @@ public static class ToolkitServerLaunch
                 case "--root": root = args[++i]; break;
                 case "--job": job = args[++i]; break;
                 case "--lang": language = args[++i]; break;
+                case "--tool": tool = args[++i]; break;
                 default: return (null, $"Unknown option '{args[i]}'.");
             }
         }
@@ -61,9 +63,14 @@ public static class ToolkitServerLaunch
             return (null, "--root <working copy> and --job <job folder> are required.");
         }
 
+        if (tool is not null && tool != GenerationOptions.AgentReader && tools.Find(tool) is null)
+        {
+            return (null, $"'{tool}' is not a toolkit tool: use {string.Join(", ", tools.All.Select(t => t.Id))} or {GenerationOptions.AgentReader}.");
+        }
+
         return language is not null && !GameLanguages.Tags.Contains(language, StringComparer.Ordinal)
             ? (null, $"'{language}' is not a supported language tag (e.g. en, ru, pt-BR).")
-            : (new ToolkitServerOptions(root, job, language, tools), null);
+            : (new ToolkitServerOptions(root, job, language, tools) { Reader = tool }, null);
     }
 
     /// <summary>Serves until standard input closes; a refusal to start goes to <paramref name="error"/> with exit code 1.</summary>

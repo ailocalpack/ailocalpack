@@ -4867,4 +4867,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>{0} jest już w grze ({1}): twoje tłumaczenie AI zastąpi jej teksty</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>Przez</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>Co odczytuje i składa tekst gry</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>Narzędzia {0}</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>Własny kod AI</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>Wbudowany czytnik aplikacji: szybko i dokładnie. Tłumaczenie to tabela tekstów składana na kopii każdego gracza.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>Agent napisze własny czytnik i składacz. Wolniej i może się nie udać; tłumaczenie będzie łatką binarną.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Jeszcze nie w tym systemie</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>wykryty</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>Jeśli wybrane narzędzia nie odczytają gry, agent napisze własny czytnik.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>Wybrano własny kod AI: agent napisze własny czytnik, a tłumaczenie będzie łatką binarną</value>
+  </data>
 </root>

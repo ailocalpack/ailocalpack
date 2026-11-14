@@ -18,7 +18,7 @@ public sealed class SetupStage(Game game, GenerationEstimator estimator, Working
         ArgumentNullException.ThrowIfNull(context);
         try
         {
-            var estimate = estimator.Estimate(game.InstallPath, EngineKind.TryParse(game.Engine, out var kind) ? kind : null, context.Job.Options.Scope, cancellationToken);
+            var estimate = estimator.Estimate(game.InstallPath, EngineKind.TryParse(game.Engine, out var kind) ? kind : null, context.Job.Options.Scope, cancellationToken, reader: context.Job.Options.Reader);
             copies.DeleteCopy(context.Folder);
             var copy = copies.Create(estimate.Copy, context.Folder, estimate.ReserveBytes, cancellationToken: cancellationToken);
             context.Log($"Working copy: {copy.Files} files, {copy.ClonedBytes} bytes cloned, {copy.CopiedBytes} copied.");

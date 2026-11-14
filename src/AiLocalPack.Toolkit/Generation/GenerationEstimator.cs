@@ -21,6 +21,9 @@ public enum TextSizeSource
 
     /// <summary>The toolkit failed to read the game (<see cref="GenerationSizeEstimate.ToolkitError"/>): guessed.</summary>
     ToolkitFailed,
+
+    /// <summary>The player chose the agent's own code over the toolkit (<see cref="GenerationOptions.AgentReader"/>): guessed.</summary>
+    AgentChosen,
 }
 
 /// <summary>Everything the start form shows before a job: text to translate, its cost, the working copy and the disk.</summary>
@@ -77,13 +80,15 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
     /// <param name="engine">The game's engine as stored (<c>Game.Engine</c>), else it is detected.</param>
     /// <param name="scope">The working copy's scope, else <see cref="WorkingCopyScope.WithoutMedia"/> when the toolkit reads the game and <see cref="WorkingCopyScope.AllFiles"/> otherwise.</param>
     /// <param name="updateBase">An update's base string table (task 56): only the strings it lacks or that changed count.</param>
+    /// <param name="reader">What reads the game (<see cref="GenerationOptions.Reader"/>, <see cref="GameReader"/>); <c>null</c> = the detected engine's tool.</param>
     /// <exception cref="WorkingCopyException">The game folder is missing or can't be listed.</exception>
     public GenerationSizeEstimate Estimate(
         string gameFolder,
         EngineKind? engine = null,
         WorkingCopyScope? scope = null,
         CancellationToken cancellationToken = default,
-        Core.Packs.StringTable? updateBase = null)
+        Core.Packs.StringTable? updateBase = null,
+        string? reader = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
         var root = Path.GetFullPath(gameFolder);
@@ -92,8 +97,10 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
             throw new WorkingCopyException(WorkingCopyProblem.GameMissing, $"The game folder {root} doesn't exist.", root);
         }
 
-        var kind = engine is { Engine: not GameEngine.Unknown } ? engine : _detector.Detect(root).Kind;
-        var (source, tool, extraction, error) = Extract(root, kind, cancellationToken);
+        var detected = engine is { Engine: not GameEngine.Unknown } ? engine : _detector.Detect(root).Kind;
+        var chosen = GameReader.Resolve(tools, detected, reader);
+        var kind = chosen.Kind;
+        var (source, tool, extraction, error) = Extract(root, chosen, cancellationToken);
         var plan = copies.Plan(root, scope ?? (extraction is null ? WorkingCopyScope.AllFiles : WorkingCopyScope.WithoutMedia), cancellationToken);
 
         GenerationEstimate work;
@@ -139,21 +146,11 @@ public sealed class GenerationEstimator(RecipeTools tools, WorkingCopies copies,
         return GenerationEstimateModel.GuessFromFileSizes(text, data);
     }
 
-    private (TextSizeSource, IRecipeTool?, RecipeExtraction?, string?) Extract(string root, EngineKind kind, CancellationToken cancellationToken)
+    private (TextSizeSource, IRecipeTool?, RecipeExtraction?, string?) Extract(string root, GameReader reader, CancellationToken cancellationToken)
     {
-        if (kind.Engine == GameEngine.Unknown)
+        if (reader.Tool is not { } tool)
         {
-            return (TextSizeSource.UnknownEngine, null, null, null);
-        }
-
-        if (tools.IsDisabled(kind))
-        {
-            return (TextSizeSource.EngineDisabled, null, null, null);
-        }
-
-        if (tools.For(kind) is not { } tool)
-        {
-            return (TextSizeSource.NoTool, null, null, null);
+            return (reader.Source, null, null, null);
         }
 
         try

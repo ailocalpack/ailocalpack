@@ -46,7 +46,7 @@
                         <TextBlock FontSize="13" Text="{Binding RequestStripText}" TextWrapping="Wrap" MaxWidth="720" />
                     </StackPanel>
                 </Border>
-                <!-- Title as a sentence: "Create a [Balanced ▾] translation into [Русский ▾]" (quality modes, decided 2026-11-13) -->
+                <!-- Title as a sentence: "Create a [Balanced ▾] translation into [Русский ▾] [with Unity toolkit ▾]" (quality modes, decided 2026-11-13; reader 2026-11-14) -->
                 <StackPanel Spacing="4">
                 <WrapPanel ItemSpacing="10" LineSpacing="6">
                     <TextBlock x:Name="GenFormTitle" Classes="genTitle" Text="{Binding FormTitle}" VerticalAlignment="Center" IsVisible="{Binding HasFormTitle}" />
@@ -139,6 +139,61 @@
                                         </ItemsControl>
                                     </ScrollViewer>
                                     <TextBlock Classes="muted" FontSize="13" Margin="10,4" Text="{l:Loc Packs_Language_NoMatch}" IsVisible="{Binding HasNoLanguageMatch}" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <!-- What reads the game: the detected engine's toolkit by default, any other engine's, or the AI's own code (binary patch) -->
+                    <Button x:Name="GenReaderButton" Classes="langPicker" ToolTip.Tip="{l:Loc Gen_Reader_Tip}" IsEnabled="{Binding CanPickReader}"
+                            IsVisible="{Binding ReaderName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            AutomationProperties.Name="{l:Loc Gen_Reader_Tip}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="muted" Text="{l:Loc Gen_Reader_With}" VerticalAlignment="Center" />
+                            <Viewbox Classes="icon" Width="15" Height="15" IsVisible="{Binding HasReaderBrand}">
+                                <Path Classes="brand" Data="{Binding ReaderBrandKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                            </Viewbox>
+                            <Viewbox Classes="icon" Width="15" Height="15" IsVisible="{Binding !HasReaderBrand}">
+                                <Path Classes="icon" Data="{Binding ReaderIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                            </Viewbox>
+                            <TextBlock x:Name="GenReaderName" FontWeight="SemiBold" Text="{Binding ReaderName}" VerticalAlignment="Center" />
+                            <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon" Data="{StaticResource IconChevronDown}" /></Viewbox>
+                        </StackPanel>
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedLeft">
+                                <StackPanel Width="400" Spacing="2">
+                                    <ItemsControl x:Name="GenReaderList" ItemsSource="{Binding ReaderOptions}" AutomationProperties.Name="{l:Loc Gen_Reader_Tip}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:GenerationReaderOption">
+                                                <Button Classes="qualityItem" Classes.on="{Binding IsSelected}" Command="{Binding SelectCommand}"
+                                                        Click="OnReaderPicked" AutomationProperties.Name="{Binding Name}">
+                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                        <Border Classes="qualityItemIcon" VerticalAlignment="Top">
+                                                            <Panel>
+                                                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding HasBrand}">
+                                                                    <Path Classes="brand" Data="{Binding BrandKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                                </Viewbox>
+                                                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding !HasBrand}">
+                                                                    <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                                </Viewbox>
+                                                            </Panel>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" Spacing="2">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <TextBlock FontWeight="Bold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                                <Border Classes="qualityDefault" IsVisible="{Binding IsDetected}">
+                                                                    <TextBlock Text="{l:Loc Gen_Reader_Detected}" />
+                                                                </Border>
+                                                            </StackPanel>
+                                                            <TextBlock Classes="muted" FontSize="12" Text="{Binding Blurb}" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Border Classes="qualityFoot">
+                                        <TextBlock Classes="faint" FontSize="12" Text="{l:Loc Gen_Reader_Footer}" TextWrapping="Wrap" />
+                                    </Border>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>

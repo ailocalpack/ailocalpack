@@ -53,4 +53,17 @@ public sealed class ToolkitServerProgramTests
         // Assert
         server.Environment.Should().BeEquivalentTo(new Dictionary<string, string> { ["AILOCALPACK_HOME"] = "/tmp/h", ["AILOCALPACK_TOOLKIT_ALL_ENGINES"] = "1" });
     }
+
+    [Fact]
+    public void The_jobs_reader_is_passed_as_the_tool()
+    {
+        // Arrange
+        var env = Env(new() { ["PATH"] = "/bin" });
+
+        // Act
+        var server = ToolkitServerProgram.Cli(new AppLaunch("/bin/ailocalpack", []), env).For("/w/job/game", "/w/job", "ru", "godot");
+
+        // Assert
+        server.Arguments.Should().EndWith(["--lang", "ru", "--tool", "godot"]);
+    }
 }

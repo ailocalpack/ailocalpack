@@ -70,10 +70,12 @@ public static class PromptValues
     }
 
     /// <param name="toolkitError">The toolkit's own reader failed on the game with this message (the engine is known).</param>
-    public static Dictionary<string, string> ExtractUnknown(string gameName, string language, EngineKind engine, string gamePath, int files, string? toolkitError = null) => new(StringComparer.Ordinal)
+    /// <param name="chosen">The player chose the agent's own code over the toolkit (<see cref="Core.Generation.GenerationOptions.AgentReader"/>).</param>
+    public static Dictionary<string, string> ExtractUnknown(string gameName, string language, EngineKind engine, string gamePath, int files, string? toolkitError = null, bool chosen = false) => new(StringComparer.Ordinal)
     {
         ["gameName"] = gameName,
-        ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown"
+        ["engine"] = chosen ? (engine.Engine == GameEngine.Unknown ? "engine unknown" : engine.DisplayName) + "; the player asked for your own reader instead of the toolkit's"
+            : engine.Engine == GameEngine.Unknown ? "engine unknown"
             : toolkitError is null ? engine.DisplayName
             : $"{engine.DisplayName}; the toolkit's reader stopped with: {toolkitError.TrimEnd('.')}",
         ["gamePath"] = gamePath,

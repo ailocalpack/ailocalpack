@@ -4609,4 +4609,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>游戏已包含{0}（{1}）：你的 AI 翻译将替换其文本</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>读取方式</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>用什么读取并重建游戏文本</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>{0} 工具包</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>AI 自己的代码</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>应用内置的读取程序：快速而准确。翻译是字符串表，在每位玩家的副本上重建。</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>智能体自己编写读取和重建程序。更慢，也可能失败；翻译将是二进制补丁。</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>此系统暂不支持</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>已检测</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>如果所选工具包无法读取这款游戏，智能体会自己编写读取程序。</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>已选择 AI 自己的代码：智能体会自己编写读取程序，翻译将是二进制补丁</value>
+  </data>
 </root>

@@ -4609,4 +4609,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>{0}은(는) 이미 게임에 있습니다({1}): AI 번역이 게임의 텍스트를 대체합니다</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>읽기</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>게임 텍스트를 무엇으로 읽고 다시 빌드할지</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>{0} 툴킷</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>AI 자체 코드</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>앱 내장 읽기 도구: 빠르고 정확합니다. 번역은 문자열 표이며 각 플레이어의 사본에서 다시 빌드됩니다.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>에이전트가 직접 읽기·빌드 도구를 만듭니다. 더 느리고 실패할 수도 있으며, 번역은 바이너리 패치가 됩니다.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>이 시스템에서는 아직 지원되지 않음</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>감지됨</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>선택한 툴킷이 게임을 읽지 못하면 에이전트가 직접 읽기 도구를 만듭니다.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>AI 자체 코드 선택: 에이전트가 직접 읽기 도구를 만들고 번역은 바이너리 패치가 됩니다</value>
+  </data>
 </root>

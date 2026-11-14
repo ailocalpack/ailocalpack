@@ -82,12 +82,13 @@ public sealed class GenerationUpdateModeTests
         var tab = Open(services);
 
         // Assert
-        new { tab.IsUpdateMode, tab.FormTitle, tab.StartText, tab.CanPickLanguage }.Should().Be(new
+        new { tab.IsUpdateMode, tab.FormTitle, tab.StartText, tab.CanPickLanguage, tab.CanPickReader }.Should().Be(new
         {
             IsUpdateMode = true,
             FormTitle = "Translate the new strings at",
             StartText = "Translate new strings",
             CanPickLanguage = false,
+            CanPickReader = false,
         });
     }
 

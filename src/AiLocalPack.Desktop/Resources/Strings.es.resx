@@ -4867,4 +4867,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>El juego ya incluye {0} ({1}): tu traducción con IA reemplaza sus textos</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>Con</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>Qué lee y reconstruye el texto del juego</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>Toolkit de {0}</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>Código propio de la IA</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>El lector integrado de la app: rápido y exacto. La traducción es una tabla de cadenas que se reconstruye en la copia de cada jugador.</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>El agente escribe su propio lector y reconstructor. Es más lento y puede no funcionar; la traducción es un parche binario.</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>Aún no en este sistema</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>detectado</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>Si el toolkit elegido no puede leer el juego, el agente escribe su propio lector.</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>Elegiste el código propio de la IA: el agente escribe su propio lector y la traducción es un parche binario</value>
+  </data>
 </root>

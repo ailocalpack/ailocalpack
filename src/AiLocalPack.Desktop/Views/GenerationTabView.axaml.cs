@@ -37,4 +37,16 @@ public sealed partial class GenerationTabView : UserControl
         e.Handled = true;
         GenQualityButton.Flyout?.Hide();
     }
+
+    /// <summary>Runs the row's command before the reader popover closes (see <see cref="OnQualityPicked"/>).</summary>
+    private void OnReaderPicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Command: { } command } button && command.CanExecute(button.CommandParameter))
+        {
+            command.Execute(button.CommandParameter);
+        }
+
+        e.Handled = true;
+        GenReaderButton.Flyout?.Hide();
+    }
 }

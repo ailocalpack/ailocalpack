@@ -4609,4 +4609,34 @@
   <data name="Gen_Check_Official" xml:space="preserve">
     <value>{0}はすでにゲームに収録されています（{1}）：AI 翻訳はそのテキストを置き換えます</value>
   </data>
+  <data name="Gen_Reader_With" xml:space="preserve">
+    <value>読み取り</value>
+  </data>
+  <data name="Gen_Reader_Tip" xml:space="preserve">
+    <value>ゲームのテキストを何で読み取り・再構築するか</value>
+  </data>
+  <data name="Gen_Reader_Toolkit" xml:space="preserve">
+    <value>{0} ツールキット</value>
+  </data>
+  <data name="Gen_Reader_Agent" xml:space="preserve">
+    <value>AI 独自のコード</value>
+  </data>
+  <data name="Gen_Reader_Toolkit_Blurb" xml:space="preserve">
+    <value>アプリ内蔵の読み取りツール：高速で正確。翻訳は文字列テーブルで、各プレイヤーのコピー上で再構築されます。</value>
+  </data>
+  <data name="Gen_Reader_Agent_Blurb" xml:space="preserve">
+    <value>エージェントが独自の読み取り・再構築ツールを作成します。時間がかかり、うまくいかない場合もあります。翻訳はバイナリパッチになります。</value>
+  </data>
+  <data name="Gen_Reader_Unavailable" xml:space="preserve">
+    <value>このシステムではまだ使えません</value>
+  </data>
+  <data name="Gen_Reader_Detected" xml:space="preserve">
+    <value>検出</value>
+  </data>
+  <data name="Gen_Reader_Footer" xml:space="preserve">
+    <value>選んだツールキットでゲームを読み取れない場合は、エージェントが独自の読み取りツールを作成します。</value>
+  </data>
+  <data name="Gen_Check_Engine_Agent" xml:space="preserve">
+    <value>AI 独自のコードを選択：エージェントが独自の読み取りツールを作成し、翻訳はバイナリパッチになります</value>
+  </data>
 </root>

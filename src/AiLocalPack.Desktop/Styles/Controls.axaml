@@ -1493,6 +1493,14 @@
     <Style Selector="Button.qualityItem.on /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
     </Style>
+    <!-- A row that can't be picked here (the reader popover: an engine switched off on this OS): faded, no Fluent grey fill -->
+    <Style Selector="Button.qualityItem:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.qualityItem:disabled">
+        <Setter Property="Opacity" Value="0.6" />
+    </Style>
     <Style Selector="Border.qualityItemIcon">
         <Setter Property="Width" Value="32" />
         <Setter Property="Height" Value="32" />

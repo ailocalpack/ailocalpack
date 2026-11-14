@@ -17,7 +17,7 @@ namespace AiLocalPack.Toolkit.Recipes.Agent;
 public sealed class AgentScriptTool : IRecipeTool
 {
     /// <summary>The <c>tool</c> of <c>source.json</c> for strings the agent extracted.</summary>
-    public const string ToolId = "agent-script";
+    public const string ToolId = Core.Generation.GenerationOptions.AgentReader;
 
     public const int MaxStrings = 200_000;
 

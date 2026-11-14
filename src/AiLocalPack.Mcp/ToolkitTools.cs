@@ -44,8 +44,9 @@ public sealed class ToolkitTools(ToolkitSession session)
         {
             var detection = session.Detect(refresh: true);
             var kind = detection.Kind;
-            var problem = session.ToolProblem(kind);
-            IRecipeTool? tool = problem is null ? session.Tools.For(kind) : session.AgentTool() is { Exists: true } agent ? agent : null;
+            var reader = session.Reader();
+            var problem = reader.Problem;
+            IRecipeTool? tool = reader.Tool ?? (session.AgentTool() is { Exists: true } agent ? agent : null);
             return new DetectResult(
                 kind.ToString(),
                 kind.DisplayName,
