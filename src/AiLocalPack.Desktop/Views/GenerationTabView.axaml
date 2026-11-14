@@ -862,7 +862,7 @@
                                 </Viewbox>
                                 <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Working_Short}" />
                             </StackPanel>
-                            <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="14" LineHeight="21" IsVisible="{Binding HasText}" />
+                            <views:MarkdownView x:Name="FixAgentText" Markdown="{Binding Text}" TextElement.FontSize="14" IsVisible="{Binding HasText}" />
                             <ItemsControl ItemsSource="{Binding Choices}" IsVisible="{Binding HasChoices}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>

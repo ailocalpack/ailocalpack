@@ -159,4 +159,31 @@ public sealed class GenerationResultViewTests
             .Should().Be(((true, 4), false, 9));
         window.Close();
     });
+
+    [Fact]
+    public Task The_agent_reply_shows_its_markdown_formatted() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        bed.LocalPack();
+        var folder = bed.Services.GetRequiredService<Desktop.Generation.GenerationService>().ResultOf(InstallBed.Alpha)!.Folder;
+        var at = new DateTimeOffset(2026, 11, 9, 21, 0, 0, TimeSpan.Zero);
+        new Core.Generation.FixFiles(folder).Write(new Core.Generation.FixState(
+            [
+                Core.Generation.FixTurn.FromPlayer(1, at, "What did you change?", []),
+                new Core.Generation.FixTurn(2, Core.Generation.FixTurnKind.Agent, at.AddMinutes(1), "**Changed:**\n- `menu.start`\n- `menu.quit`", [], ["search"], [],
+                    Core.Generation.FixTurnOutcome.Answered),
+            ],
+            [],
+            1));
+
+        // Act
+        var (window, _) = Open(bed, GamePageTab.Generation);
+
+        // Assert
+        var reply = Find<MarkdownView>(window, "FixAgentText");
+        (reply.GetVisualDescendants().OfType<Grid>().Count(g => g.Classes.Contains("mdList")), Avalonia.Automation.AutomationProperties.GetName(reply))
+            .Should().Be((1, "Changed:\n• menu.start\n• menu.quit"));
+        window.Close();
+    });
 }

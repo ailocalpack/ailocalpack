@@ -2091,4 +2091,65 @@
     <Style Selector="TextBlock.fixValue.ok"><Setter Property="Foreground" Value="{DynamicResource AppOkBrush}" /></Style>
     <Style Selector="TextBlock.fixValue.bad"><Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" /></Style>
     <Style Selector="TextBlock.fixSystem.bad"><Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" /></Style>
+    <!-- Markdown in chat replies (Views/MarkdownView): paragraphs, headings, code, quotes, lists, rules, tables -->
+    <Style Selector="StackPanel.md"><Setter Property="Spacing" Value="8" /></Style>
+    <Style Selector="SelectableTextBlock.md">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineHeight" Value="21" />
+    </Style>
+    <Style Selector="SelectableTextBlock.md.h1"><Setter Property="FontSize" Value="18" /><Setter Property="FontWeight" Value="Bold" /><Setter Property="LineHeight" Value="26" /></Style>
+    <Style Selector="SelectableTextBlock.md.h2"><Setter Property="FontSize" Value="16" /><Setter Property="FontWeight" Value="Bold" /><Setter Property="LineHeight" Value="23" /></Style>
+    <Style Selector="SelectableTextBlock.md.h3"><Setter Property="FontSize" Value="15" /><Setter Property="FontWeight" Value="Bold" /></Style>
+    <Style Selector="SelectableTextBlock.md.h4"><Setter Property="FontWeight" Value="Bold" /></Style>
+    <Style Selector="Border.mdCode">
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="SelectableTextBlock.mdCode">
+        <Setter Property="FontFamily" Value="Menlo, Consolas, DejaVu Sans Mono, monospace" />
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="LineHeight" Value="19" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="Border.mdQuote">
+        <Setter Property="Padding" Value="12,0,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="3,0,0,0" />
+    </Style>
+    <Style Selector="Border.mdQuote SelectableTextBlock.md"><Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="Border.mdRule">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Margin" Value="0,4" />
+        <Setter Property="Background" Value="{DynamicResource AppBorderStrongBrush}" />
+    </Style>
+    <Style Selector="Grid.mdList">
+        <Setter Property="ColumnSpacing" Value="8" />
+        <Setter Property="RowSpacing" Value="4" />
+    </Style>
+    <Style Selector="TextBlock.mdMarker">
+        <Setter Property="LineHeight" Value="21" />
+        <Setter Property="Foreground" Value="{DynamicResource AppMutedBrush}" />
+        <Setter Property="MinWidth" Value="10" />
+    </Style>
+    <Style Selector="TextBlock.mdMarker.ordered">
+        <Setter Property="MinWidth" Value="18" />
+        <Setter Property="TextAlignment" Value="Right" />
+    </Style>
+    <Style Selector="Border.mdTable">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.mdCell">
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+    </Style>
+    <Style Selector="Border.mdCell.last"><Setter Property="BorderThickness" Value="0" /></Style>
+    <Style Selector="Border.mdCell.head"><Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" /></Style>
+    <Style Selector="Border.mdCell.head SelectableTextBlock.md"><Setter Property="FontWeight" Value="SemiBold" /></Style>
 </Styles>
