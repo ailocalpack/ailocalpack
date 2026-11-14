@@ -171,13 +171,10 @@ public sealed record FixDraftRow(
     public bool IsMuted => !IsBad && !IsOk;
 }
 
-/// <summary>A suggestion chip under the thread: a click puts its sentence into the request.</summary>
-public sealed record FixSuggestion(string Text, string Icon, IRelayCommand Command);
-
 /// <summary>
 /// The Generation tab's "Fix with AI" card (task 75, design §6e) under the result: the conversation with the job's agent
 /// (system lines for the drafts built and played, the player's requests with their attachments, the agent's answers with
-/// their steps, words, choices, change card or plan), the Drafts menu, the suggestion chips and the composer (request,
+/// their steps, words, choices, change card or plan), the Drafts menu and the composer (request,
 /// attachments, <c>Send</c> / <c>Stop</c>). After a crash with nothing asked since, the request is prefilled with the
 /// crash and its session, log and draft changes attached. Reads <see cref="FixService"/> again on every change.
 /// </summary>
@@ -226,15 +223,6 @@ public sealed partial class FixViewModel : ObservableObject
             OnPropertyChanged(nameof(EarlierText));
         });
         RestoreCommand = new RelayCommand(() => _install.Uninstall(_game), () => !_install.IsBusy);
-        Suggestions =
-        [
-            Suggestion(nameof(Strings.Fix_Chip_Crash), nameof(Strings.Fix_Chip_Crash_Text), "IconAlert"),
-            Suggestion(nameof(Strings.Fix_Chip_Fit), nameof(Strings.Fix_Chip_Fit_Text), "IconScan"),
-            Suggestion(nameof(Strings.Fix_Chip_Literal), nameof(Strings.Fix_Chip_Literal_Text), "IconMessage"),
-            Suggestion(nameof(Strings.Fix_Chip_Address), nameof(Strings.Fix_Chip_Address_Text), "IconPencil"),
-            Suggestion(nameof(Strings.Fix_Chip_Untranslated), nameof(Strings.Fix_Chip_Untranslated_Text), "IconGlobe"),
-            Suggestion(nameof(Strings.Fix_Chip_Squares), nameof(Strings.Fix_Chip_Squares_Text), "IconType"),
-        ];
         Refresh();
     }
 
@@ -292,8 +280,6 @@ public sealed partial class FixViewModel : ObservableObject
     public IReadOnlyList<FixDraftPill> Pills { get; private set; } = [];
 
     public IReadOnlyList<FixDraftRow> Drafts { get; private set; } = [];
-
-    public IReadOnlyList<FixSuggestion> Suggestions { get; }
 
     /// <summary>"Tell Claude Code what's wrong, in your own words. …"</summary>
     public string Intro => _localizer.Format(nameof(Strings.Fix_Intro), _agentName);
@@ -384,13 +370,6 @@ public sealed partial class FixViewModel : ObservableObject
         AddGameLogCommand.NotifyCanExecuteChanged();
         RestoreCommand.NotifyCanExecuteChanged();
     }
-
-    private FixSuggestion Suggestion(string name, string sentence, string icon) =>
-        new(_localizer[name], icon, new RelayCommand(() =>
-        {
-            var text = _localizer[sentence];
-            Text = Text.Trim().Length == 0 ? text : Text.TrimEnd() + " " + text;
-        }));
 
     /// <summary>After a crash the player hasn't asked about yet: the request and its attachments, once per crash.</summary>
     private void Prefill(FixView view)

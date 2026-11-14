@@ -6,29 +6,9 @@
              x:Class="AiLocalPack.Desktop.Views.FixComposerView"
              x:DataType="gp:FixViewModel">
     <!-- Fix with AI's composer (task 75, design §6e), docked at the bottom of the game page under the conversation
-         (design §6 "one conversation", 2026-11-14): suggestion chips, the request with its attachments, Send / Stop,
+         (design §6 "one conversation", 2026-11-14): the request with its attachments, Send / Stop,
          the cost and privacy lines. -->
     <StackPanel Spacing="8">
-        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding ShowSend}">
-        <ItemsControl x:Name="FixSuggestions" ItemsSource="{Binding Suggestions}" Margin="0,0,0,4">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="6" /></ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="gp:FixSuggestion">
-                    <Button Classes="chip" Command="{Binding Command}" AutomationProperties.Name="{Binding Text}">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" Stroke="{Binding $parent[Button].Foreground}" />
-                            </Viewbox>
-                            <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        </ScrollViewer>
-
         <Border x:Name="FixComposer" Classes="fixComposer">
             <StackPanel Spacing="8">
                 <TextBox x:Name="FixRequest" Text="{Binding Text}" PlaceholderText="{Binding Placeholder}" IsEnabled="{Binding ShowSend}"

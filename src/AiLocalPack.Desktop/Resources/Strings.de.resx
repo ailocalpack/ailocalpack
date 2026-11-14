@@ -4378,41 +4378,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Logs und Screenshots gehen nur an deinen Agenten; nichts wird veröffentlicht.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>Das Spiel stürzt ab</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>Das Spiel stürzt direkt nach dem ersten Ladebildschirm ab.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Text passt nicht</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Ein Text passt nicht auf den Bildschirm:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Zu wörtlich</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>Die Übersetzung klingt zu wörtlich:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Falsche Anrede</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>Die Anrede stimmt nicht:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Etwas ist nicht übersetzt</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Ein Text ist noch in der Originalsprache:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Kästchen statt Buchstaben</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Manche Buchstaben erscheinen als Kästchen:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Sitzung</value>

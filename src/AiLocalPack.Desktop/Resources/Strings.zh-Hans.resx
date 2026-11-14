@@ -4252,41 +4252,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>日志和截图只发给你的代理，不会公开。</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>游戏崩溃</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>游戏在第一个加载画面之后立刻崩溃。</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>文字放不下</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>有文字在屏幕上放不下：</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>太直译</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>译文读起来太直译了：</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>称呼不对</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>称呼不对：</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>有内容没翻译</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>有文字还是原语言：</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>字母显示成方块</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>部分字母显示成方块：</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>会话</value>

@@ -4416,41 +4416,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Logs and screenshots go only to your agent; nothing is published.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>The game crashes</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>The game crashes right after the first loading screen.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Text doesn't fit</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Some text doesn't fit on screen:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Too literal</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>The translation reads too literally:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Wrong form of address</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>The form of address is wrong:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Something isn't translated</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Some text is still in the original language:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Squares instead of letters</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Some letters show as squares:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Session</value>

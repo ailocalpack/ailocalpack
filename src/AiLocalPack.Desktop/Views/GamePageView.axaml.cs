@@ -22,6 +22,15 @@ public sealed partial class GamePageView : UserControl
     {
         InitializeComponent();
         Scroller.ScrollChanged += OnScrollChanged;
+        // ScrollToEnd from inside ScrollChanged (opening a conversation at its newest message) moves the offset without a
+        // ScrollChanged of its own, so the sticky bar follows the offset itself.
+        Scroller.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ScrollViewer.OffsetProperty)
+            {
+                UpdateStuck();
+            }
+        };
         TabBar.PropertyChanged += (_, e) =>
         {
             if (e.Property == BoundsProperty)

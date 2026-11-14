@@ -4504,41 +4504,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Les journaux et captures ne vont qu'à votre agent ; rien n'est publié.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>Le jeu plante</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>Le jeu plante juste après le premier écran de chargement.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Le texte déborde</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Un texte ne tient pas à l'écran :</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Trop littéral</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>La traduction est trop littérale :</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Mauvais tutoiement / vouvoiement</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>Le tutoiement ou vouvoiement ne convient pas :</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Quelque chose n'est pas traduit</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Un texte est encore dans la langue d'origine :</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Des carrés au lieu des lettres</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Certaines lettres s'affichent comme des carrés :</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Session</value>

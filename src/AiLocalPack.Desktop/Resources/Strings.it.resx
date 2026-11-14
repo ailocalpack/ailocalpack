@@ -4504,41 +4504,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Log e screenshot vanno solo al tuo agente; non viene pubblicato nulla.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>Il gioco si blocca</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>Il gioco si chiude subito dopo la prima schermata di caricamento.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Il testo non entra</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Un testo non entra nello schermo:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Troppo letterale</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>La traduzione suona troppo letterale:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Forma di cortesia sbagliata</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>La forma di cortesia è sbagliata:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Qualcosa non è tradotto</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Un testo è ancora nella lingua originale:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Quadrati al posto delle lettere</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Alcune lettere appaiono come quadrati:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Sessione</value>

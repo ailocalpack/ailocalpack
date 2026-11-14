@@ -4504,41 +4504,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Logs e capturas de tela vão só para o seu agente; nada é publicado.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>O jogo trava</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>O jogo fecha logo depois da primeira tela de carregamento.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Texto não cabe</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Um texto não cabe na tela:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Literal demais</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>A tradução soa literal demais:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Tratamento errado</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>O tratamento está errado:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Algo não foi traduzido</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Há texto ainda no idioma original:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Quadrados no lugar das letras</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Algumas letras aparecem como quadrados:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Sessão</value>

@@ -4252,41 +4252,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>ログとスクリーンショットはあなたのエージェントにだけ送られ、公開はされません。</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>ゲームが落ちる</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>最初のロード画面のすぐ後にゲームが落ちます。</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>文字がはみ出る</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>画面に収まらない文字があります：</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>直訳すぎる</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>訳が直訳っぽく読めます：</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>呼びかけ方が違う</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>呼びかけ方が違います：</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>訳されていない所がある</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>元の言語のままの文字があります：</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>文字が四角になる</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>一部の文字が四角で表示されます：</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>セッション</value>

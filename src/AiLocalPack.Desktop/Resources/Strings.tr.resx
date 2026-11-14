@@ -4378,41 +4378,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Günlükler ve ekran görüntüleri yalnızca ajanına gider; hiçbir şey yayımlanmaz.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>Oyun çöküyor</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>Oyun ilk yükleme ekranından hemen sonra çöküyor.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Metin sığmıyor</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Ekrana sığmayan bir metin var:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Fazla kelimesi kelimesine</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>Çeviri fazla kelimesi kelimesine okunuyor:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Yanlış hitap şekli</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>Hitap şekli yanlış:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Bir şey çevrilmemiş</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Bazı metinler hâlâ özgün dilde:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Harf yerine kareler</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Bazı harfler kare olarak görünüyor:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Oturum</value>

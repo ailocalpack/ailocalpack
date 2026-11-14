@@ -4252,41 +4252,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>로그와 스크린샷은 내 에이전트에게만 전달되며 게시되지 않습니다.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>게임이 튕김</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>첫 로딩 화면 직후에 게임이 튕깁니다.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>텍스트가 넘침</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>화면에 다 안 들어가는 텍스트가 있습니다:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>너무 직역함</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>번역이 너무 직역처럼 읽힙니다:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>호칭·말투가 틀림</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>호칭이나 말투가 틀렸습니다:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>번역 안 된 부분이 있음</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>아직 원래 언어로 남은 텍스트가 있습니다:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>글자 대신 네모</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>일부 글자가 네모로 보입니다:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>세션</value>

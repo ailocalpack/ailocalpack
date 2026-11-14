@@ -4504,41 +4504,8 @@
   <data name="Fix_Privacy" xml:space="preserve">
     <value>Логи и скриншоты уходят только вашему агенту; ничего не публикуется.</value>
   </data>
-  <data name="Fix_Chip_Crash" xml:space="preserve">
-    <value>Игра падает</value>
-  </data>
   <data name="Fix_Chip_Crash_Text" xml:space="preserve">
     <value>Игра падает сразу после первой загрузки.</value>
-  </data>
-  <data name="Fix_Chip_Fit" xml:space="preserve">
-    <value>Текст не влезает</value>
-  </data>
-  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
-    <value>Текст не помещается на экране:</value>
-  </data>
-  <data name="Fix_Chip_Literal" xml:space="preserve">
-    <value>Слишком дословно</value>
-  </data>
-  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
-    <value>Перевод звучит слишком дословно:</value>
-  </data>
-  <data name="Fix_Chip_Address" xml:space="preserve">
-    <value>Не то обращение</value>
-  </data>
-  <data name="Fix_Chip_Address_Text" xml:space="preserve">
-    <value>Обращение не то:</value>
-  </data>
-  <data name="Fix_Chip_Untranslated" xml:space="preserve">
-    <value>Что-то не переведено</value>
-  </data>
-  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
-    <value>Часть текста осталась на исходном языке:</value>
-  </data>
-  <data name="Fix_Chip_Squares" xml:space="preserve">
-    <value>Квадраты вместо букв</value>
-  </data>
-  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
-    <value>Некоторые буквы видны как квадраты:</value>
   </data>
   <data name="Fix_Attach_Session" xml:space="preserve">
     <value>Сессия</value>
