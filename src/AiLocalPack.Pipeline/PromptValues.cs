@@ -89,4 +89,34 @@ public static class PromptValues
         ["translationCount"] = translations.ToString("N0", CultureInfo.InvariantCulture),
         ["languageName"] = LanguageName(language),
     };
+
+    /// <summary>The fix system prompt's paragraph on where the agent works: the toolkit's tools, or its own scripts' workspace (unknown engines).</summary>
+    public static string FixWorkspace(string? gamePath) => gamePath is null
+        ? "Your working folder is a copy of the game's files. Work only through the tools of the `ailocalpack` server: `search` and `get_strings` find strings with their translations, `put_translations` stores fixed translations, `get_glossary` and `put_glossary` read and change the glossary. Never try to change the game's files: the app rebuilds them from the translations."
+        : $"The toolkit can't read this game's files, so earlier you wrote the extract and rebuild scripts in `scripts/` of your workspace (your working folder; `scripts/README.md` says how they run). A copy of the game is at `{gamePath}`: read it, never change it. Your commands run in a sandbox that can write only inside the workspace and has no network. Strings and their translations are reached with the `ailocalpack` tools (`search`, `get_strings`, `put_translations`, `get_glossary`, `put_glossary`).";
+
+    public static Dictionary<string, string> SystemFix(string gameName, string language, string? gamePath) => new(StringComparer.Ordinal)
+    {
+        ["gameName"] = gameName,
+        ["languageName"] = LanguageName(language),
+        ["languageTag"] = language,
+        ["workspace"] = FixWorkspace(gamePath),
+    };
+
+    /// <param name="attachments">What the player sent, rendered (<see cref="FixPrompt.Attachments"/>).</param>
+    /// <param name="history">The conversation so far, rendered (<see cref="FixPrompt.History"/>).</param>
+    /// <param name="scripts">The game is read by the agent's own scripts (unknown engines).</param>
+    public static Dictionary<string, string> Fix(string gameName, EngineKind engine, int strings, int draft, string request, string attachments, string history, bool scripts) => new(StringComparer.Ordinal)
+    {
+        ["gameName"] = gameName,
+        ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown" : engine.DisplayName,
+        ["stringCount"] = strings.ToString("N0", CultureInfo.InvariantCulture),
+        ["draft"] = draft.ToString(CultureInfo.InvariantCulture),
+        ["request"] = request.Trim(),
+        ["attachments"] = attachments,
+        ["history"] = history,
+        ["scriptsStep"] = scripts
+            ? ", or your rebuild script in `scripts/` when the problem is how the files are written (check the round trip as before; the app runs your rebuild again for the next draft)"
+            : string.Empty,
+    };
 }

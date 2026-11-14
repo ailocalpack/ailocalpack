@@ -4210,4 +4210,322 @@
   <data name="Library_Badge_Requested_Other" xml:space="preserve">
     <value>リクエスト · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>AIで修正</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>AIで修正</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>下書き {0} · ゲームが {1} 秒で終了しました</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>どこがおかしいかを {0} に自分の言葉で伝えてください。同じゲームのコピーで作業し、新しい下書きを作ります。古い下書きは公開するまで残ります。</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>何が起きたか、何を変えてほしいかをエージェントに伝えてください…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>ほかに変えたいことは？</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>回答するか、何か付け加えてください…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>または、計画のどこを変えるかをエージェントに伝えてください…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>エージェントへの依頼</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} が作業中です…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · 通常は1日の上限の 2〜5 %</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>ログとスクリーンショットはあなたのエージェントにだけ送られ、公開はされません。</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>ゲームが落ちる</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>最初のロード画面のすぐ後にゲームが落ちます。</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>文字がはみ出る</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>画面に収まらない文字があります：</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>直訳すぎる</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>訳が直訳っぽく読めます：</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>呼びかけ方が違う</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>呼びかけ方が違います：</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>訳されていない所がある</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>元の言語のままの文字があります：</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>文字が四角になる</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>一部の文字が四角で表示されます：</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>セッション</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>{0} 秒で終了</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>{0} 秒で終了 · 終了コード {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>ログの末尾</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>下書き {0} の変更</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>スクリーンショット</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>ゲームのログ</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>スクリーンショット</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>エージェントに送るスクリーンショットを選択</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>{0} を外す</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>前回のセッション以降に書かれたゲームのログが見つかりません。</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>下書き {0} を作成 · テスト起動に成功</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>下書き {0} を作成 · テスト起動は省略</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>下書き {0} でプレイ · ゲームは {1} 秒で終了</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>下書き {0} でプレイしました</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>テキストを確認</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>訳を保存</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>用語集を確認</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>用語集を変更</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>訳をチェック</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>ゲームのファイルを確認</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>コマンドを実行</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>スクリプトを編集</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>ファイルを読んだ</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>ゲームのファイルを作り直してテスト起動</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>新しい下書きを保存</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>{0} を使用</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>下書き {0} ができました</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>未プレイ</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>動作OK</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>落ちた</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>新規</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>あなたの確認待ち</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>適用済み</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>適用せず</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>変更したテキスト</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>変更した用語</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>適用のしかた</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>再構築スクリプトを変更</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>テスト起動</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>省略</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>ゲームが終了</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>キー</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>変更前</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>変更後</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>（訳なし）</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>下書き {0} をインストールしてプレイ</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>この修正を取り消す</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>下書き {0} の計画</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>50 を超えるテキストに関わるため、適用するまで何も変わりません。</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>変更する訳：{0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>変更する用語：{0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>再構築スクリプトも変わります。</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>適用するとゲームのファイルを作り直してテスト起動します。エージェントへの再依頼はありません。</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>計画を適用</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>依頼を変える</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>うまくいきませんでした。何も変わっていません。</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>停止しました。何も変わっていません。</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>下書き</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>戻ると、その下書きが再び現在の下書きになります。公開か破棄をするまで何も削除されません。</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>下書き {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>ゲームが {0} 秒で終了</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>ゲームで試した</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>未プレイ</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>これに戻す</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>これを公開</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>エージェントはこのゲームで作業中です。終わってからもう一度お試しください。</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>訳が「テキスト → 自分の」にありません。</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>修正用のファイルを読み書きできません：{0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>うまくいきませんでした：{0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>修正中 · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>あなたの訳（下書き {1}）を入れた状態で、ゲームが起動から {0} 秒で終了しました。セーブデータには触れていません。</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>元のファイルに戻す</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>ゲームが起動直後に終了しました</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>「{0}」をインストールした状態で {1} 秒後。エージェントに修正を頼めます。</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>作業中…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>エージェントを起動できません：{0}</value>
+  </data>
 </root>

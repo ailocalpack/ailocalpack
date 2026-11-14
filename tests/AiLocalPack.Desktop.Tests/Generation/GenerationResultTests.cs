@@ -44,7 +44,8 @@ public sealed class GenerationResultTests
     private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 
     /// <summary>Install &amp; play, then the game runs and closes again.</summary>
-    private static async Task PlayAndCloseAsync(InstallBed bed, GenerationTabViewModel tab, FakeClock clock)
+    /// <summary>Plays the result for a minute (a shorter session reads as a crash, task 75) and closes the game.</summary>
+    private static async Task PlayAndCloseAsync(InstallBed bed, GenerationTabViewModel tab, FakeClock clock, TimeSpan? played = null)
     {
         var processes = bed.Services.GetRequiredService<FakeProcesses>();
         await tab.Result!.PlayCommand.ExecuteAsync(null);
@@ -52,6 +53,13 @@ public sealed class GenerationResultTests
         processes.Run(Path.Combine(PathNames.RealPath(bed.GameDir), "Game.exe"));
         var sessions = bed.Services.GetRequiredService<GameSessions>();
         await Until(() => sessions.Find(InstallBed.Alpha)?.Phase == GameSessionPhase.Running);
+        // The tracker polls every 2 s of the clock and ends the session at the last time it saw the game.
+        for (var left = played ?? TimeSpan.FromMinutes(1); left > TimeSpan.Zero; left -= TimeSpan.FromSeconds(2))
+        {
+            clock.Advance(TimeSpan.FromSeconds(2));
+            await Task.Delay(10);
+        }
+
         processes.ExitAll();
         clock.Advance(TimeSpan.FromSeconds(11));
         await Until(() => sessions.Find(InstallBed.Alpha) is null);

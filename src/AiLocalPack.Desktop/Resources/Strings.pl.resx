@@ -4462,4 +4462,322 @@
   <data name="Library_Badge_Requested_Many" xml:space="preserve">
     <value>Próśb · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>Popraw z AI</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>Popraw z AI</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>Wersja robocza {0} · gra zamknęła się po {1} s</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>Opisz {0} własnymi słowami, co jest nie tak. Pracuje na tej samej kopii gry i tworzy nową wersję roboczą; poprzednia zostaje do publikacji.</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>Napisz agentowi, co poszło nie tak albo co zmienić…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>Coś jeszcze do zmiany?</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>Odpowiedz albo coś dodaj…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>Albo napisz agentowi, co zmienić w planie…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>Prośba do agenta</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>Wyślij</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>Zatrzymaj</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} nad tym pracuje…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · zwykle 2–5 % dziennego limitu</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>Logi i zrzuty ekranu trafiają tylko do twojego agenta; nic nie jest publikowane.</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>Gra się wyłącza</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>Gra wyłącza się zaraz po pierwszym ekranie ładowania.</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>Tekst się nie mieści</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>Jakiś tekst nie mieści się na ekranie:</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>Zbyt dosłownie</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>Tłumaczenie brzmi zbyt dosłownie:</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>Zła forma zwracania się</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>Forma zwracania się jest zła:</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>Coś nie jest przetłumaczone</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>Jakiś tekst jest nadal w oryginalnym języku:</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>Kwadraty zamiast liter</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>Niektóre litery wyświetlają się jako kwadraty:</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>Sesja</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>zamknięta po {0} s</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>zamknięta po {0} s · kod wyjścia {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>koniec logu</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>Zmiany wersji roboczej {0}</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>Zrzut ekranu</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>Teksty</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>Log gry</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>Zrzut ekranu</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>Wybierz zrzut ekranu dla agenta</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>Usuń {0}</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>Nie znaleziono logu gry zapisanego od ostatniej sesji.</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>Wersja robocza {0} gotowa · test zaliczony</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>Wersja robocza {0} gotowa · test pominięty</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>Zagrano z wersją roboczą {0} · gra zamknęła się po {1} s</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>Zagrano z wersją roboczą {0}</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>Przejrzał teksty</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>Zapisał tłumaczenia</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>Przeczytał glosariusz</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>Zmienił glosariusz</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>Sprawdził tłumaczenia</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>Przeczytał pliki gry</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>Uruchomił polecenie</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>Zmienił skrypt</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>Przeczytał plik</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>Przebudował pliki gry i uruchomił test</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>Zapisał nową wersję roboczą</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>Użył {0}</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>Wersja robocza {0} gotowa</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>jeszcze nie testowana</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>zainstalowana</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>działa</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>awaria</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>nowa</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>czeka na ciebie</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>zastosowany</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>niezastosowany</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>Zmienione teksty</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>Zmienione hasła glosariusza</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>Jak jest nakładane</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>Zmieniony skrypt przebudowy</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>Zaliczony</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>Pominięty</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>Gra się zamknęła</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>Klucz</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>Było</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>Jest</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>(brak tłumaczenia)</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>Zainstaluj i zagraj wersję roboczą {0}</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>Cofnij tę poprawkę</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>Plan dla wersji roboczej {0}</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>Dotyczy ponad 50 tekstów, więc nic się nie zmieni, dopóki go nie zastosujesz.</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>Tłumaczenia do zmiany: {0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>Hasła glosariusza do zmiany: {0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>Zmienia się też skrypt przebudowy.</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>Zastosowanie przebuduje pliki gry i uruchomi test; agent nie jest pytany ponownie.</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>Zastosuj plan</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>Zmień prośbę</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>Nie udało się; nic się nie zmieniło.</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>Zatrzymano; nic się nie zmieniło.</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>Wersje robocze</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>Powrót czyni tę wersję roboczą znów bieżącą; nic nie jest usuwane, dopóki nie opublikujesz albo nie odrzucisz.</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>Wersja robocza {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>gra zamknęła się po {0} s</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>sprawdzona w grze</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>jeszcze nie testowana</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>Wróć do niej</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>Opublikuj tę</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>Agent już pracuje nad tą grą; spróbuj, gdy skończy.</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>Tłumaczenia nie ma już w Tekst → Moje.</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>Nie można odczytać ani zapisać plików poprawki: {0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>Nie udało się: {0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>Poprawianie · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>Gra zamknęła się {0} s po uruchomieniu z zainstalowanym tłumaczeniem (wersja robocza {1}). Zapisy gry są nietknięte.</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>Przywróć oryginalne pliki</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>Gra zamknęła się zaraz po uruchomieniu</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>Z zainstalowanym «{0}», po {1} s. Poproś agenta o poprawkę.</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>Pracuje nad tym…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>Nie można uruchomić agenta: {0}</value>
+  </data>
 </root>

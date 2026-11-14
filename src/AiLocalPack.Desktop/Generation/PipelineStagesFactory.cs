@@ -29,9 +29,24 @@ public sealed class PipelineStagesFactory(
     WorkingCopies copies,
     FontFixer fonts,
     LocalPackStore localPacks,
-    SettingsStore settings) : IGenerationStagesFactory
+    SettingsStore settings) : IGenerationStagesFactory, IFixRunnerFactory
 {
     public GenerationStages Create(Game game, GenerationJobEntry entry)
+    {
+        var (agent, build) = AgentAndBuild(game, entry);
+        var services = new PipelineServices(game, agent, tools, estimator, copies, Build: build,
+            Translate: new TranslateOptions(Workers: settings.Current.TranslateWorkerCount));
+        return GenerationPipeline.Create(services);
+    }
+
+    /// <summary>Fixes with AI of the job's translation (task 75): the job's agent and the Build stage.</summary>
+    IFixRunner IFixRunnerFactory.Create(Game game, GenerationJobEntry entry)
+    {
+        var (agent, build) = AgentAndBuild(game, entry);
+        return new FixRunner(game, agent, new BuildStage(game, agent, tools, build), localPacks, TimeProvider.System);
+    }
+
+    private (PipelineAgent Agent, BuildServices Build) AgentAndBuild(Game game, GenerationJobEntry entry)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(entry);
@@ -41,8 +56,6 @@ public sealed class PipelineStagesFactory(
         var app = AppLaunch.ForCurrentProcess(environment, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
             ?? throw new InvalidOperationException("The app's own path is unknown, so the agent can't start its toolkit server.");
         var build = new BuildServices(fonts, localPacks, new GameTestRunner(runner, environment.Os));
-        var services = new PipelineServices(game, new PipelineAgent(adapter, ToolkitServerProgram.DesktopApp(app, environment)), tools, estimator, copies, Build: build,
-            Translate: new TranslateOptions(Workers: settings.Current.TranslateWorkerCount));
-        return GenerationPipeline.Create(services);
+        return (new PipelineAgent(adapter, ToolkitServerProgram.DesktopApp(app, environment)), build);
     }
 }

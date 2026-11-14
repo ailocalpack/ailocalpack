@@ -205,8 +205,9 @@ public sealed class InstallFlow
             return;
         }
 
-        if (installed is null)
+        if (installed is null || Generation.LocalPacks.IsSamePack(installed, pack))
         {
+            // An earlier draft of the same pack (task 75) is replaced without asking: the player asked for the fix.
             await RunInstallLocalAsync(game, pack, play);
             return;
         }

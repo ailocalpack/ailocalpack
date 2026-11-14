@@ -48,6 +48,12 @@ public sealed class LocalPacks
     /// <summary>Raised (on any thread) when a game's local packs changed: deleted, marked tried, "Not now".</summary>
     public event EventHandler<GameId>? Changed;
 
+    /// <summary>
+    /// Raised (on any thread) when the game closed within <see cref="GameCrashRule.Threshold"/> of starting with a local
+    /// pack installed (task 75): the pack is marked crashed (not tried), and the player is offered a fix with AI.
+    /// </summary>
+    public event EventHandler<LocalPack>? Crashed;
+
     /// <summary>The game's local packs, by language and ID. Reads the disk.</summary>
     public IReadOnlyList<LocalPack> List(GameId game) => _store.List(game);
 
@@ -76,8 +82,19 @@ public sealed class LocalPacks
         return IsInstalled(_installed.Find(pack.Manifest.Game), pack);
     }
 
-    /// <summary><paramref name="record"/> is <paramref name="pack"/> (the same revision: an update job's pack replaces its local base, task 56).</summary>
+    /// <summary>
+    /// <paramref name="record"/> is <paramref name="pack"/>: the same revision (an update job's pack replaces its local
+    /// base, task 56) and installed after it was built (a fix with AI rebuilds the pack as its next draft under the same
+    /// ID and revision, task 75, so the installed one is an earlier draft).
+    /// </summary>
     public static bool IsInstalled(InstalledPack? record, LocalPack pack)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        return IsSamePack(record, pack) && record!.InstalledAt >= pack.Report.Created;
+    }
+
+    /// <summary><paramref name="record"/> installed this pack's ID and revision, maybe an earlier draft of it (task 75).</summary>
+    public static bool IsSamePack(InstalledPack? record, LocalPack pack)
     {
         ArgumentNullException.ThrowIfNull(pack);
         return record is { Local: true } && record.Game == pack.Manifest.Game && record.Language == pack.Manifest.Language && record.PackId == pack.Manifest.Id
@@ -140,7 +157,25 @@ public sealed class LocalPacks
             return;
         }
 
-        if (_store.Find(record.Game, record.Language, record.PackId) is { Report.IsTried: false })
+        if (_store.Find(record.Game, record.Language, record.PackId) is not { } pack || !IsInstalled(record, pack))
+        {
+            return;
+        }
+
+        if (GameCrashRule.IsCrash(ended))
+        {
+            _logger.LogInformation("Local pack {Pack} of {Game}: the game closed {Duration} after it started", record.PackId, record.Game, ended.Duration);
+            var crash = new LocalPackCrash(ended.EndedAt, ended.Duration);
+            Change(record.Game, record.Language, record.PackId, r => r with { Crash = crash });
+            if (_store.Find(record.Game, record.Language, record.PackId) is { } crashed)
+            {
+                Crashed?.Invoke(this, crashed);
+            }
+
+            return;
+        }
+
+        if (!pack.Report.IsTried)
         {
             _logger.LogInformation("Local pack {Pack} of {Game} tried in game ({Duration} played)", record.PackId, record.Game, ended.Duration);
             MarkTried(record.Game, record.Language, record.PackId, ended.EndedAt);

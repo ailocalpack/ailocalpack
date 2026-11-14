@@ -44,6 +44,7 @@ public static class ActivityTexts
             ActivityEventKind.PackMerged => nameof(Strings.Activity_Event_PackMerged),
             ActivityEventKind.PullRequestClosed => nameof(Strings.Activity_Event_PullRequestClosed),
             ActivityEventKind.PackVerified => nameof(Strings.Activity_Event_PackVerified),
+            ActivityEventKind.TranslationCrashed => nameof(Strings.Activity_Event_TranslationCrashed),
             _ => nameof(Strings.Activity_Event_PackNotApplied),
         };
         return localizer.Format(key, activity.PackTitle ?? activity.PackId ?? string.Empty, activity.Revision ?? 0, activity.PullRequest ?? 0);
@@ -72,6 +73,7 @@ public static class ActivityTexts
             ActivityEventKind.AppUpdateReady => localizer[nameof(Strings.Activity_Detail_AppUpdateReady)],
             ActivityEventKind.RequestTaken => localizer[nameof(Strings.Activity_Detail_RequestTaken)],
             ActivityEventKind.RequestDone => localizer.Format(nameof(Strings.Activity_Detail_RequestDone), activity.Detail ?? string.Empty),
+            ActivityEventKind.TranslationCrashed => localizer.Format(nameof(Strings.Activity_Detail_TranslationCrashed), activity.PackTitle ?? string.Empty, activity.Detail ?? "?"),
             _ when activity.Detail is { } detail => activity.FilesRestored ? detail : detail + " " + localizer[nameof(Strings.Activity_Detail_NotRestored)],
             _ => null,
         };

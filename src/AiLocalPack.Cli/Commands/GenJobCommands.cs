@@ -30,9 +30,9 @@ namespace AiLocalPack.Cli.Commands;
 /// and the agent's usage so far are printed; a completed job prints its local pack (task 51). Ctrl+C / SIGTERM leaves
 /// the job interrupted.
 /// </summary>
-internal static class GenJobCommands
+internal static partial class GenJobCommands
 {
-    public static IEnumerable<Command> Build(OsEnvironment env) => [BuildRun(env), BuildResume(env), BuildStatus(env), BuildCancel(env)];
+    public static IEnumerable<Command> Build(OsEnvironment env) => [BuildRun(env), BuildResume(env), BuildStatus(env), BuildCancel(env), BuildFix(env), BuildDrafts(env)];
 
     private static Option<string?> FakeAgentOption() => new("--fake-agent")
     {
@@ -559,6 +559,21 @@ internal static class GenJobCommands
         /// <summary>Every stage, with the plan's agent.</summary>
         public GenerationStages Stages(StagePlan plan)
         {
+            var (agent, build) = AgentAndBuild(plan);
+            var services = new PipelineServices(Game, agent, Tools, Estimator, Copies, Build: build,
+                Translate: new TranslateOptions(Workers: plan.Workers ?? Settings.TranslateWorkerCount));
+            return GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore);
+        }
+
+        /// <summary>Fixes with AI (task 75) of the game's translation, with the plan's agent.</summary>
+        public FixRunner Fixer(StagePlan plan)
+        {
+            var (agent, build) = AgentAndBuild(plan);
+            return new FixRunner(Game, agent, new BuildStage(Game, agent, Tools, build), LocalPacks, TimeProvider.System);
+        }
+
+        private (PipelineAgent Agent, BuildServices Build) AgentAndBuild(StagePlan plan)
+        {
             IAgentAdapter adapter = plan.Recording is { } recording
                 ? new FakeAgentAdapter(new ProcessRunner(), FakeAgentReplayer.ForCurrentProcess("agent", "replay"), recording)
                 : AgentCommand.Adapter(Env, plan.AgentId)!;
@@ -570,9 +585,7 @@ internal static class GenJobCommands
             var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, entryAssembly)
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
             var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, new GameTestRunner(new ProcessRunner(), Env.Os));
-            var services = new PipelineServices(Game, new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), Tools, Estimator, Copies, Build: build,
-                Translate: new TranslateOptions(Workers: plan.Workers ?? Settings.TranslateWorkerCount));
-            return GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore);
+            return (new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), build);
         }
     }
 }

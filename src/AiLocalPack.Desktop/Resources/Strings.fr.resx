@@ -4462,4 +4462,322 @@
   <data name="Library_Badge_Requested_Other" xml:space="preserve">
     <value>Demandée · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>Corriger avec l'IA</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>Corriger avec l'IA</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>Brouillon {0} · le jeu s'est fermé après {1} s</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>Expliquez à {0} ce qui ne va pas, avec vos mots. Il travaille sur la même copie du jeu et crée un nouveau brouillon ; l'ancien est gardé jusqu'à la publication.</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>Dites à l'agent ce qui ne va pas ou quoi changer…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>Autre chose à changer ?</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>Répondez ou ajoutez quelque chose…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>Ou dites à l'agent quoi changer dans le plan…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>Demande à l'agent</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>Arrêter</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} s'en occupe…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · en général 2 à 5 % de la limite du jour</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>Les journaux et captures ne vont qu'à votre agent ; rien n'est publié.</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>Le jeu plante</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>Le jeu plante juste après le premier écran de chargement.</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>Le texte déborde</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>Un texte ne tient pas à l'écran :</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>Trop littéral</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>La traduction est trop littérale :</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>Mauvais tutoiement / vouvoiement</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>Le tutoiement ou vouvoiement ne convient pas :</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>Quelque chose n'est pas traduit</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>Un texte est encore dans la langue d'origine :</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>Des carrés au lieu des lettres</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>Certaines lettres s'affichent comme des carrés :</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>fermé après {0} s</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>fermé après {0} s · code de sortie {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>fin du journal</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>Changements du brouillon {0}</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>Capture d'écran</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>Textes</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>Journal du jeu</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>Capture d'écran</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>Choisir une capture pour l'agent</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>Retirer {0}</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>Aucun journal du jeu écrit depuis la dernière session n'a été trouvé.</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>Brouillon {0} créé · test réussi</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>Brouillon {0} créé · test ignoré</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>Vous avez joué le brouillon {0} · le jeu s'est fermé après {1} s</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>Vous avez joué le brouillon {0}</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>A parcouru les textes</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>A enregistré des traductions</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>A lu le glossaire</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>A modifié le glossaire</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>A vérifié des traductions</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>A lu les fichiers du jeu</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>A lancé une commande</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>A modifié un script</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>A lu un fichier</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>A reconstruit les fichiers et testé le jeu</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>A enregistré le nouveau brouillon</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>A utilisé {0}</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>Le brouillon {0} est prêt</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>pas encore essayé</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>installé</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>fonctionne</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>a planté</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>nouveau</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>attend votre accord</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>appliqué</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>non appliqué</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>Textes modifiés</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>Entrées du glossaire modifiées</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>Comment c'est appliqué</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>Script de reconstruction modifié</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>Réussi</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>Ignoré</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>Le jeu s'est fermé</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>Clé</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>Avant</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>Maintenant</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>(pas de traduction)</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>Installer et jouer le brouillon {0}</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>Annuler cette correction</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>Plan pour le brouillon {0}</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>Cela touche plus de 50 textes : rien ne change tant que vous ne l'appliquez pas.</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>Traductions à modifier : {0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>Entrées du glossaire à modifier : {0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>Le script de reconstruction change aussi.</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>L'appliquer reconstruit les fichiers et teste le jeu ; l'agent n'est pas sollicité à nouveau.</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>Appliquer le plan</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>Modifier la demande</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>Ça n'a pas marché ; rien n'a changé.</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>Arrêté ; rien n'a changé.</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>Brouillons</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>Revenir en arrière rend ce brouillon actuel ; rien n'est supprimé avant la publication ou l'abandon.</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>Brouillon {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>le jeu s'est fermé après {0} s</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>essayé en jeu</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>pas encore essayé</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>Revenir à celui-ci</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>Publier celui-ci</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>L'agent travaille déjà sur ce jeu ; réessayez quand il aura fini.</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>La traduction n'est plus dans Texte → Les miennes.</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>Impossible de lire ou d'écrire les fichiers de correction : {0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>Ça n'a pas marché : {0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>Correction · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>Le jeu s'est fermé {0} s après son lancement avec votre traduction (brouillon {1}) installée. Vos sauvegardes sont intactes.</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>Restaurer les fichiers d'origine</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>Le jeu s'est fermé dès son lancement</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>Avec « {0} » installée, après {1} s. Demandez à l'agent de corriger.</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>En cours…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>Impossible de lancer l'agent : {0}</value>
+  </data>
 </root>

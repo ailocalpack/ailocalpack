@@ -80,7 +80,7 @@ public sealed partial class GameCardViewModel : ObservableObject
 
     /// <summary>The last generation's local pack the card stands for (<see cref="StatusKind"/>), else <c>null</c>.</summary>
     public GenerationResultState? LocalResult => GamePrimaryActions.Resolve(Status) is
-        { Kind: GamePrimaryActionKind.InstallLocalPack or GamePrimaryActionKind.Play, Result: { } result } ? result : null;
+        { Kind: GamePrimaryActionKind.InstallLocalPack or GamePrimaryActionKind.Play or GamePrimaryActionKind.FixWithAi, Result: { } result } ? result : null;
 
     /// <summary>The translation request of the game into the library's language (task 74), when one exists and the game has no translation.</summary>
     public RequestView? Request { get; private set; }

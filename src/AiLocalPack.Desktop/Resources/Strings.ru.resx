@@ -4462,4 +4462,322 @@
   <data name="Library_Badge_Requested_Many" xml:space="preserve">
     <value>Запрошен · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>Исправить с ИИ</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>Исправить с ИИ</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>Черновик {0} · игра закрылась через {1} с</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>Опишите {0} своими словами, что не так. Он работает с той же копией игры и делает новый черновик; старый остаётся, пока вы не опубликуете.</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>Напишите агенту, что пошло не так или что изменить…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>Что-нибудь ещё изменить?</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>Ответьте или добавьте что-нибудь…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>Или напишите агенту, что изменить в плане…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>Запрос агенту</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>Остановить</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} работает над этим…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · обычно 2–5 % дневного лимита</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>Логи и скриншоты уходят только вашему агенту; ничего не публикуется.</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>Игра падает</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>Игра падает сразу после первой загрузки.</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>Текст не влезает</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>Текст не помещается на экране:</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>Слишком дословно</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>Перевод звучит слишком дословно:</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>Не то обращение</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>Обращение не то:</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>Что-то не переведено</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>Часть текста осталась на исходном языке:</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>Квадраты вместо букв</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>Некоторые буквы видны как квадраты:</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>Сессия</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>закрылась через {0} с</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>закрылась через {0} с · код выхода {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>конец лога</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>Изменения черновика {0}</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>Скриншот</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>Строки</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>Лог игры</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>Скриншот</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>Выберите скриншот для агента</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>Убрать {0}</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>Лог игры с последней сессии не найден.</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>Черновик {0} собран · тестовый запуск прошёл</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>Черновик {0} собран · тестовый запуск пропущен</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>Вы запустили черновик {0} · игра закрылась через {1} с</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>Вы поиграли с черновиком {0}</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>Просмотрел строки</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>Сохранил переводы</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>Прочитал глоссарий</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>Изменил глоссарий</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>Проверил переводы</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>Прочитал файлы игры</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>Выполнил команду</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>Изменил скрипт</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>Прочитал файл</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>Пересобрал файлы игры и запустил тест</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>Сохранил новый черновик</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>Использовал {0}</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>Черновик {0} готов</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>ещё не пробовали</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>установлен</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>работает</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>падает</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>новый</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>ждёт вас</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>применён</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>не применён</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>Изменено строк</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>Изменено в глоссарии</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>Как применяется</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>Изменён скрипт сборки</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>Тестовый запуск</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>Пройден</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>Пропущен</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>Игра закрылась</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>Ключ</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>Было</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>Стало</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>(нет перевода)</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>Установить и играть: черновик {0}</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>Отменить это исправление</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>План черновика {0}</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>Это затрагивает больше 50 строк, поэтому ничего не меняется, пока вы не примените план.</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>Переводов изменится: {0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>Записей глоссария изменится: {0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>Скрипт сборки тоже меняется.</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>При применении файлы игры пересобираются и запускается тест; агента заново не спрашивают.</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>Применить план</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>Изменить запрос</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>Не получилось; ничего не изменилось.</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>Остановлено; ничего не изменилось.</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>Черновики</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>Возврат снова делает тот черновик текущим; ничего не удаляется, пока вы не опубликуете или не отмените.</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>Черновик {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>игра закрылась через {0} с</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>проверен в игре</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>ещё не пробовали</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>Вернуться к нему</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>Опубликовать этот</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>Агент уже занят этой игрой; попробуйте, когда он закончит.</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>Перевода больше нет в «Текст → Мои».</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>Файлы исправления не читаются или не записываются: {0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>Не получилось: {0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>Исправление · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>Игра закрылась через {0} с после запуска с вашим переводом (черновик {1}). Сохранения не тронуты.</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>Вернуть исходные файлы</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>Игра закрылась сразу после запуска</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>С установленным «{0}», через {1} с. Попросите агента исправить.</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>Работает над этим…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>Не удаётся запустить агента: {0}</value>
+  </data>
 </root>

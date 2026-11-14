@@ -489,6 +489,24 @@
             </StackPanel>
         </Border>
 
+        <!-- Fix with AI (task 75, design §6e): the installed draft made the game close right after it started -->
+        <Border x:Name="FixCrashBanner" Classes="genBanner bad" IsVisible="{Binding Fix.ShowCrashBanner, FallbackValue=False}">
+            <DockPanel>
+                <Viewbox DockPanel.Dock="Left" Classes="icon" Width="20" Height="20" Margin="0,0,12,0" VerticalAlignment="Top">
+                    <Path Classes="icon bannerIcon" Data="{StaticResource IconAlert}" />
+                </Viewbox>
+                <Button x:Name="FixRestore" DockPanel.Dock="Right" Classes="ghost sm" Margin="12,0,0,0" VerticalAlignment="Center"
+                        Command="{Binding Fix.RestoreCommand, FallbackValue={x:Null}}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="14" Height="14">
+                            <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                        <TextBlock Text="{l:Loc Fix_Crash_Restore}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <TextBlock FontSize="13" Text="{Binding Fix.CrashBannerText, FallbackValue={x:Null}}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            </DockPanel>
+        </Border>
         <!-- Result (§6d, task 55): the share strip after playing, then the card with the four tiles and the actions -->
         <Border x:Name="ShareStrip" Classes="genBanner share" IsVisible="{Binding Result.ShowShare, FallbackValue=False}">
             <DockPanel>
@@ -531,7 +549,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <ItemsControl x:Name="ResultTiles" ItemsSource="{Binding Tiles}">
+                <ItemsControl x:Name="ResultTiles" ItemsSource="{Binding Tiles}" IsVisible="{Binding ShowDetails}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="10" /></ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
@@ -558,7 +576,7 @@
                            Text="{Binding InGameNote}" IsVisible="{Binding HasInGameNote}" />
 
                 <Button x:Name="ResultWarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
-                        Content="{Binding WarningsToggleText}" IsVisible="{Binding HasWarnings}" />
+                        Content="{Binding WarningsToggleText}" IsVisible="{Binding ShowWarningsToggle}" />
                 <ItemsControl x:Name="ResultWarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="gp:GenerationWarningRow">
@@ -627,6 +645,379 @@
         </Border>
         <TextBlock x:Name="ResultError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
                    Text="{Binding ActionError}" IsVisible="{Binding ShowResultError}" />
+
+        <!-- Fix with AI (task 75, design §6e): the conversation with the job's agent under the result -->
+        <Border x:Name="FixCard" Classes="genCard" IsVisible="{Binding ShowFix}">
+            <StackPanel Spacing="14" DataContext="{Binding Fix}" x:DataType="gp:FixViewModel">
+                <DockPanel>
+                    <Button x:Name="FixDraftsButton" DockPanel.Dock="Right" Classes="bare sm" IsVisible="{Binding HasDrafts}" VerticalAlignment="Top"
+                            AutomationProperties.Name="{l:Loc Fix_Drafts}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconClock}" Stroke="{Binding $parent[Button].Foreground}" />
+                            </Viewbox>
+                            <TextBlock Text="{l:Loc Fix_Drafts}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedRight">
+                                <StackPanel Width="520" Spacing="4">
+                                    <ItemsControl x:Name="FixDraftList" ItemsSource="{Binding Drafts}" AutomationProperties.Name="{l:Loc Fix_Drafts}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:FixDraftRow">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" Margin="6,6" AutomationProperties.Name="{Binding Name}">
+                                                    <StackPanel Spacing="2">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <TextBlock FontWeight="Bold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                            <Border Classes="packTag" Classes.muted="{Binding IsMuted}" Classes.bad="{Binding IsBad}">
+                                                                <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+                                                            </Border>
+                                                        </StackPanel>
+                                                        <TextBlock Classes="muted" FontSize="12" Text="{Binding Status}" TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                        <Button Classes="ghost sm" Command="{Binding PublishCommand}" IsVisible="{Binding CanPublish}" Content="{l:Loc Fix_Draft_Publish}" />
+                                                        <Button Classes="bare sm" Command="{Binding GoBackCommand}" IsVisible="{Binding CanGoBack}" Content="{l:Loc Fix_Draft_GoBack}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Classes="faint" FontSize="12" Margin="6,4" Text="{l:Loc Fix_Drafts_Note}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <WrapPanel ItemSpacing="8" LineSpacing="6">
+                        <TextBlock x:Name="FixTitle" Classes="genTitle" Text="{l:Loc Fix_Title}" VerticalAlignment="Center" />
+                        <ItemsControl x:Name="FixPills" ItemsSource="{Binding Pills}" VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="6" /></ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="gp:FixDraftPill">
+                                    <Border Classes="packTag" Classes.muted="{Binding IsMuted}" Classes.bad="{Binding IsBad}" Classes.gen="{Binding IsNew}">
+                                        <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </WrapPanel>
+                </DockPanel>
+                <TextBlock x:Name="FixIntro" Classes="muted" FontSize="13" Text="{Binding Intro}" TextWrapping="Wrap" Margin="0,-6,0,0" />
+
+                <ItemsControl x:Name="FixThread" ItemsSource="{Binding Items}" IsVisible="{Binding HasItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><StackPanel Spacing="14" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate DataType="gp:FixSystemItem">
+                            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+                                <Border Classes="fixRule" />
+                                <TextBlock Grid.Column="1" Classes="fixSystem" Classes.bad="{Binding IsBad}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" MaxWidth="600" />
+                                <Border Grid.Column="2" Classes="fixRule" />
+                            </Grid>
+                        </DataTemplate>
+                        <DataTemplate DataType="gp:FixPlayerItem">
+                            <Border Classes="fixPlayer">
+                                <StackPanel Spacing="8">
+                                    <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="14" />
+                                    <ItemsControl ItemsSource="{Binding Attachments}" IsVisible="{Binding HasAttachments}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:FixAttachmentChip">
+                                                <Border Classes="fixAttach" Classes.bad="{Binding IsBad}" Padding="10,0">
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <Viewbox Classes="icon" Width="14" Height="14">
+                                                            <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                        </Viewbox>
+                                                        <TextBlock FontSize="12" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                        <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                        <DataTemplate DataType="gp:FixAgentItem">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" MaxWidth="780" HorizontalAlignment="Left">
+                                <Border Classes="fixAvatar">
+                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconBot}" /></Viewbox>
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="10" Margin="0,5,0,0">
+                                    <TextBlock Classes="faint" FontSize="12" FontWeight="Bold" Text="{Binding Who}" />
+                                    <ItemsControl ItemsSource="{Binding Steps}" IsVisible="{Binding HasSteps}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:FixStepRow">
+                                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2">
+                                                    <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsRunning}" IsVisible="{Binding IsRunning}">
+                                                        <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                        <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
+                                                    </Viewbox>
+                                                    <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsRunning}">
+                                                        <Path Classes="icon fixStep" Data="{StaticResource IconCheck}" />
+                                                    </Viewbox>
+                                                    <TextBlock Classes="muted" FontSize="13" Text="{Binding Text}" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsWorking}">
+                                        <Viewbox Classes="icon spin" Width="14" Height="14">
+                                            <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                            <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
+                                        </Viewbox>
+                                        <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Working_Short}" />
+                                    </StackPanel>
+                                    <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="14" LineHeight="21" IsVisible="{Binding HasText}" />
+                                    <ItemsControl ItemsSource="{Binding Choices}" IsVisible="{Binding HasChoices}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="gp:FixChoice">
+                                                <Button Classes="chip" Command="{Binding Command}" Content="{Binding Text}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <!-- Change card: a new draft -->
+                                    <Border Classes="fixCard" IsVisible="{Binding HasChange}">
+                                        <StackPanel Spacing="12" DataContext="{Binding Change}" x:DataType="gp:FixChangeCard">
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Title}" VerticalAlignment="Center" />
+                                                <Border Classes="packTag" Classes.muted="{Binding PillIsMuted}" Classes.gen="{Binding PillIsNew}" Classes.bad="{Binding PillIsBad}">
+                                                    <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
+                                            <ItemsControl ItemsSource="{Binding Tiles}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="8" /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:FixTile">
+                                                        <Border Classes="fixTile" AutomationProperties.Name="{Binding Title}">
+                                                            <StackPanel Spacing="2">
+                                                                <TextBlock Classes="muted" FontSize="12" Text="{Binding Title}" TextWrapping="Wrap" />
+                                                                <TextBlock Classes="fixValue" FontWeight="Bold" FontSize="14" Text="{Binding Value}" TextWrapping="Wrap"
+                                                                           Classes.ok="{Binding IsOk}" Classes.bad="{Binding IsBad}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <StackPanel Spacing="6" IsVisible="{Binding HasSamples}">
+                                                <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10" Margin="10,0">
+                                                    <TextBlock Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Key}" />
+                                                    <TextBlock Grid.Column="1" Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Was}" />
+                                                    <TextBlock Grid.Column="2" Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Now}" />
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding Samples}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="gp:FixSampleRow">
+                                                            <Border Classes="fixSample">
+                                                                <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10">
+                                                                    <TextBlock Classes="genKey" Text="{Binding Key}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Key}" />
+                                                                    <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Before}" TextWrapping="Wrap" TextDecorations="Strikethrough" />
+                                                                    <Border Grid.Column="2" Classes="fixIns">
+                                                                        <TextBlock FontSize="13" Text="{Binding After}" TextWrapping="Wrap" />
+                                                                    </Border>
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <WrapPanel ItemSpacing="8" LineSpacing="6">
+                                                <Button Classes="accent" Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" AutomationProperties.Name="{Binding InstallText}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <Viewbox Classes="icon" Width="16" Height="16">
+                                                            <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        </Viewbox>
+                                                        <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Classes="bare" Command="{Binding UndoCommand}" IsVisible="{Binding CanUndo}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <Viewbox Classes="icon" Width="14" Height="14">
+                                                            <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        </Viewbox>
+                                                        <TextBlock Text="{l:Loc Fix_Undo}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Plan card: a change of more than 50 strings waits for the player -->
+                                    <Border Classes="fixCard" IsVisible="{Binding HasPlan}">
+                                        <StackPanel Spacing="10" DataContext="{Binding Plan}" x:DataType="gp:FixPlanCard">
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Title}" VerticalAlignment="Center" />
+                                                <Border Classes="packTag" Classes.muted="{Binding !IsWaiting}" Classes.warn="{Binding IsWaiting}">
+                                                    <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Plan_Intro}" TextWrapping="Wrap" />
+                                            <ItemsControl ItemsSource="{Binding Lines}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <Border Classes="fixSample" Margin="0,0,0,6">
+                                                            <TextBlock FontSize="13" Text="{Binding}" TextWrapping="Wrap" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <ItemsControl ItemsSource="{Binding Samples}" IsVisible="{Binding HasSamples}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:FixSampleRow">
+                                                        <Border Classes="fixSample">
+                                                            <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10">
+                                                                <TextBlock Classes="genKey" Text="{Binding Key}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Key}" />
+                                                                <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Before}" TextWrapping="Wrap" TextDecorations="Strikethrough" />
+                                                                <Border Grid.Column="2" Classes="fixIns">
+                                                                    <TextBlock FontSize="13" Text="{Binding After}" TextWrapping="Wrap" />
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <WrapPanel ItemSpacing="8" LineSpacing="6" IsVisible="{Binding IsWaiting}">
+                                                <Button Classes="genAction" Command="{Binding ApplyCommand}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <Viewbox Classes="icon" Width="16" Height="16">
+                                                            <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        </Viewbox>
+                                                        <TextBlock Text="{l:Loc Fix_Plan_Apply}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Classes="bare" Command="{Binding ChangeCommand}" Content="{l:Loc Fix_Plan_Change}" />
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Border>
+                                    <StackPanel Spacing="2" IsVisible="{Binding HasFailure}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Viewbox Classes="icon" Width="14" Height="14">
+                                                <Path Classes="icon" Data="{StaticResource IconXCircle}" Stroke="{DynamicResource AppBadBrush}" />
+                                            </Viewbox>
+                                            <TextBlock FontSize="13" Foreground="{DynamicResource AppBadBrush}" Text="{Binding Failure}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <SelectableTextBlock Classes="faint" FontSize="12" Text="{Binding FailureDetail}" TextWrapping="Wrap" IsVisible="{Binding HasFailureDetail}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.DataTemplates>
+                </ItemsControl>
+
+                <ItemsControl x:Name="FixSuggestions" ItemsSource="{Binding Suggestions}" IsVisible="{Binding ShowSend}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="gp:FixSuggestion">
+                            <Button Classes="chip" Command="{Binding Command}" AutomationProperties.Name="{Binding Text}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Border x:Name="FixComposer" Classes="fixComposer">
+                    <StackPanel Spacing="10">
+                        <TextBox x:Name="FixRequest" Text="{Binding Text}" PlaceholderText="{Binding Placeholder}" IsEnabled="{Binding ShowSend}"
+                                 MaxLength="4000" AutomationProperties.Name="{l:Loc Fix_Request_Label}" />
+                        <WrapPanel ItemSpacing="6" LineSpacing="6">
+                            <ItemsControl x:Name="FixAttachments" ItemsSource="{Binding Attachments}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="gp:FixAttachmentChip">
+                                        <Border Classes="fixAttach" Classes.bad="{Binding IsBad}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                                    <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                </Viewbox>
+                                                <TextBlock FontSize="12" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" VerticalAlignment="Center" />
+                                                <Button Classes="bare sm" Padding="4" Command="{Binding RemoveCommand}" IsVisible="{Binding CanRemove}"
+                                                        AutomationProperties.Name="{Binding RemoveName}" ToolTip.Tip="{Binding RemoveName}">
+                                                    <Viewbox Classes="icon" Width="12" Height="12">
+                                                        <Path Classes="icon" Data="{StaticResource IconX}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                </Button>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button x:Name="FixAddLog" Classes="ghost sm" Command="{Binding AddGameLogCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Fix_Attach_AddLog}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="FixAddScreenshot" Classes="ghost sm" Command="{Binding AddScreenshotCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconImage}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Fix_Attach_AddScreenshot}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </WrapPanel>
+                        <DockPanel>
+                            <Button x:Name="FixSend" DockPanel.Dock="Right" Classes="genAction" Command="{Binding SendCommand}" IsVisible="{Binding ShowSend}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Viewbox Classes="icon" Width="16" Height="16">
+                                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Fix_Send}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="FixStop" DockPanel.Dock="Right" Classes="ghost" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconPause}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Fix_Stop}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconBot}" Stroke="{DynamicResource AppFaintBrush}" />
+                                </Viewbox>
+                                <TextBlock Classes="faint" FontSize="12" Text="{Binding CostLine}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+                <TextBlock x:Name="FixNoLog" Classes="muted" FontSize="12" Text="{Binding NoLogText}" IsVisible="{Binding HasNoLog}" TextWrapping="Wrap" />
+                <TextBlock x:Name="FixProblem" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" Text="{Binding ProblemText}" IsVisible="{Binding HasProblem}" TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Viewbox Classes="icon" Width="13" Height="13">
+                        <Path Classes="icon" Data="{StaticResource IconShield}" Stroke="{DynamicResource AppOkBrush}" />
+                    </Viewbox>
+                    <TextBlock Classes="faint" FontSize="12" Text="{l:Loc Fix_Privacy}" TextWrapping="Wrap" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
 
         <!-- Progress card (§6b) -->
         <Border x:Name="ProgressCard" Classes="genCard" IsVisible="{Binding ShowProgress}">

@@ -4336,4 +4336,322 @@
   <data name="Library_Badge_Requested_Other" xml:space="preserve">
     <value>İstendi · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>Yapay zekâ ile düzelt</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>Yapay zekâ ile düzelt</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>Taslak {0} · oyun {1} sn sonra kapandı</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>Neyin yanlış olduğunu {0} aracına kendi sözlerinle anlat. Oyunun aynı kopyası üzerinde çalışır ve yeni bir taslak yapar; eski taslak yayımlayana kadar kalır.</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>Ajana neyin ters gittiğini ya da neyi değiştireceğini yaz…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>Değiştirilecek başka bir şey var mı?</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>Yanıtla ya da bir şey ekle…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>Ya da plandan neyi değiştireceğini ajana yaz…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>Ajana istek</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>Gönder</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>Durdur</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} üzerinde çalışıyor…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · genellikle günlük sınırın %2–5'i</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>Günlükler ve ekran görüntüleri yalnızca ajanına gider; hiçbir şey yayımlanmaz.</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>Oyun çöküyor</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>Oyun ilk yükleme ekranından hemen sonra çöküyor.</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>Metin sığmıyor</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>Ekrana sığmayan bir metin var:</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>Fazla kelimesi kelimesine</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>Çeviri fazla kelimesi kelimesine okunuyor:</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>Yanlış hitap şekli</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>Hitap şekli yanlış:</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>Bir şey çevrilmemiş</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>Bazı metinler hâlâ özgün dilde:</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>Harf yerine kareler</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>Bazı harfler kare olarak görünüyor:</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>Oturum</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>{0} sn sonra kapandı</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>{0} sn sonra kapandı · çıkış kodu {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>günlüğün sonu</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>Taslak {0} değişiklikleri</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>Ekran görüntüsü</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>Metinler</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>Oyun günlüğü</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>Ekran görüntüsü</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>Ajan için bir ekran görüntüsü seç</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>{0} kaldır</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>Son oturumdan beri yazılmış bir oyun günlüğü bulunamadı.</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>Taslak {0} oluşturuldu · test başarılı</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>Taslak {0} oluşturuldu · test atlandı</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>Taslak {0} ile oynadın · oyun {1} sn sonra kapandı</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>Taslak {0} ile oynadın</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>Metinleri inceledi</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>Çevirileri kaydetti</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>Sözlüğü okudu</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>Sözlüğü değiştirdi</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>Çevirileri denetledi</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>Oyunun dosyalarını okudu</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>Bir komut çalıştırdı</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>Bir betiği düzenledi</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>Bir dosya okudu</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>Oyun dosyalarını yeniden oluşturup test etti</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>Yeni taslağı kaydetti</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>{0} kullandı</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>Taslak {0} hazır</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>henüz denenmedi</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>kurulu</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>çalışıyor</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>çöktü</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>yeni</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>seni bekliyor</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>uygulandı</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>uygulanmadı</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>Değişen metinler</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>Değişen sözlük girdileri</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>Nasıl uygulanıyor</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>Yeniden oluşturma betiği değişti</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>Test çalıştırma</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>Başarılı</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>Atlandı</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>Oyun kapandı</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>Anahtar</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>Önce</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>Şimdi</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>(çeviri yok)</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>Taslak {0} kur ve oyna</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>Bu düzeltmeyi geri al</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>Taslak {0} için plan</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>Bu, 50'den fazla metni etkiliyor; uygulayana kadar hiçbir şey değişmez.</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>Değişecek çeviriler: {0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>Değişecek sözlük girdileri: {0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>Yeniden oluşturma betiği de değişiyor.</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>Uygulamak oyun dosyalarını yeniden oluşturur ve oyunu test eder; ajana yeniden sorulmaz.</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>Planı uygula</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>İsteği değiştir</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>Olmadı; hiçbir şey değişmedi.</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>Durduruldu; hiçbir şey değişmedi.</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>Taslaklar</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>Geri dönmek o taslağı yeniden geçerli yapar; yayımlayana ya da vazgeçene kadar hiçbir şey silinmez.</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>Taslak {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>oyun {0} sn sonra kapandı</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>oyunda denendi</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>henüz denenmedi</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>Buna geri dön</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>Bunu yayımla</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>Ajan zaten bu oyunla meşgul; bitince yeniden dene.</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>Çeviri artık Metin → Benimkiler'de değil.</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>Düzeltme dosyaları okunamıyor ya da yazılamıyor: {0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>Olmadı: {0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>Düzeltiliyor · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>Çevirin (taslak {1}) kuruluyken oyun başladıktan {0} sn sonra kapandı. Kayıtların olduğu gibi duruyor.</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>Özgün dosyaları geri yükle</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>Oyun başlar başlamaz kapandı</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>«{0}» kuruluyken, {1} sn sonra. Ajandan düzeltmesini iste.</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>Üzerinde çalışıyor…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>Ajan başlatılamıyor: {0}</value>
+  </data>
 </root>

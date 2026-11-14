@@ -30,6 +30,8 @@ public sealed record LocalPack(string Folder, PackManifest Manifest, LocalPackRe
 /// <param name="ShareDismissed">The player answered "Not now" to the result's "Share it" strip.</param>
 /// <param name="Update">Made by an update job (task 56): the revision it builds on and what the game update changed.</param>
 /// <param name="Published">The last time the pack was sent to the registry (task 60): its PR.</param>
+/// <param name="Draft">Which draft of the job's translation this is (task 75: every fix with AI makes the next one); <c>null</c> = the first.</param>
+/// <param name="Crash">The game closed soon after it started with this pack installed (task 75); such a session doesn't count as tried.</param>
 public sealed record LocalPackReport(
     string Job,
     DateTimeOffset Created,
@@ -43,11 +45,22 @@ public sealed record LocalPackReport(
     DateTimeOffset? Tried = null,
     bool ShareDismissed = false,
     LocalPackUpdate? Update = null,
-    LocalPackPublication? Published = null)
+    LocalPackPublication? Published = null,
+    int? Draft = null,
+    LocalPackCrash? Crash = null)
 {
     /// <summary>The player has played the game with the pack installed.</summary>
     public bool IsTried => Tried is not null;
+
+    /// <summary>The draft number, 1 for a pack no fix made.</summary>
+    public int DraftNumber => Draft ?? 1;
 }
+
+/// <summary>A game session with the pack installed that ended too soon to be play (task 75, <see cref="Launch.GameCrashRule"/>).</summary>
+/// <param name="At">When the game closed.</param>
+/// <param name="Lasted">How long it ran.</param>
+/// <param name="ExitCode">Its exit code, where the app knows it.</param>
+public sealed record LocalPackCrash(DateTimeOffset At, TimeSpan Lasted, int? ExitCode = null);
 
 /// <summary>What an update job (task 56) changed against the revision it builds on.</summary>
 /// <param name="BaseRevision">The base pack's revision; the pack is the next one.</param>
@@ -97,7 +110,7 @@ public sealed record LocalPackString(string Key, string Original);
 /// (<c>{schemaVersion: 1, job, created, testRun {outcome, skip?, detail?, ranMs?, exitCode?}, fonts {checked,
 /// replacement?, swapped, uncovered}, warnings [{key, rule, message, original, translation}], untranslated [{key,
 /// original}], keptAsIs, sizeBytes, inGameLanguage?, tried?, shareDismissed?, update? {baseRevision, added, changed,
-/// removed}, published? {registry, packId, revision, pullRequest, pullRequestUrl, fork, branch, at, state?, stateAt?}}</c>; tried and
+/// removed}, published? {registry, packId, revision, pullRequest, pullRequestUrl, fork, branch, at, state?, stateAt?}, draft?, crash? {at, lastedMs, exitCode?}}</c>; draft and crash are task 75's; tried and
 /// shareDismissed are the player's, task 55; update is task 56's; published task 60's, its state (<c>merged</c> / <c>closed</c>) task 62's), since a pack folder holds
 /// nothing else; a binary patch pack's archive (task 57) is in <c>releases/&lt;Release asset name&gt;</c>
 /// (<see cref="PatchArchiveName"/>), as a local registry keeps it (<c>PackFetcher.LocalReleasesFolder</c>); beside the
@@ -371,6 +384,106 @@ public sealed class LocalPackStore
         return pack with { Report = report };
     }
 
+    /// <summary>
+    /// Copies the pack into <paramref name="destination"/> (task 75: a draft kept while the player asks for fixes):
+    /// <c>pack/</c> (manifest + string table), <c>report.json</c>, <c>glossary.json</c> (when kept) and
+    /// <c>archive.zip</c> (a patch pack's). An earlier copy there is replaced. Returns <c>false</c> when the pack is gone.
+    /// </summary>
+    /// <exception cref="IOException">A file can't be copied.</exception>
+    /// <exception cref="UnauthorizedAccessException">A file can't be copied.</exception>
+    public bool Snapshot(GameId game, string language, string id, string destination)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(destination);
+        if (Find(game, language, id) is not { } pack)
+        {
+            return false;
+        }
+
+        var parent = Path.GetDirectoryName(Path.GetFullPath(destination))!;
+        Directory.CreateDirectory(parent);
+        var staging = Path.Combine(parent, $".{Path.GetFileName(destination)}.{Guid.NewGuid():N}.tmp");
+        try
+        {
+            Directory.CreateDirectory(staging);
+            FolderCopy.Replace(pack.Folder, Path.Combine(staging, SnapshotPackFolder));
+            File.Copy(ReportPath(game, language, id), Path.Combine(staging, SnapshotReport));
+            var glossary = GlossaryPath(game, language, id);
+            if (File.Exists(glossary))
+            {
+                File.Copy(glossary, Path.Combine(staging, SnapshotGlossary));
+            }
+
+            if (PatchArchivePath(pack.Manifest) is { } archive && File.Exists(archive))
+            {
+                File.Copy(archive, Path.Combine(staging, SnapshotArchive));
+            }
+
+            FolderCopy.Delete(destination);
+            Directory.Move(staging, destination);
+        }
+        finally
+        {
+            FolderCopy.Delete(staging);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Puts a pack copied by <see cref="Snapshot"/> back in place (replacing the pack with its game, language and ID),
+    /// with its report changed by <paramref name="change"/>. Returns the pack, or <c>null</c> when the copy is unreadable.
+    /// </summary>
+    /// <exception cref="IOException">A file can't be written.</exception>
+    /// <exception cref="UnauthorizedAccessException">A file can't be written.</exception>
+    public LocalPack? Restore(string snapshot, Func<LocalPackReport, LocalPackReport>? change = null)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(snapshot);
+        var packCopy = Path.Combine(snapshot, SnapshotPackFolder);
+        var manifestPath = Path.Combine(packCopy, RegistryLayout.ManifestFileName);
+        if (!File.Exists(manifestPath) || PackManifestSerializer.Read(File.ReadAllText(manifestPath)).Value is not { } manifest
+            || ReadReport(Path.Combine(snapshot, SnapshotReport)) is not { } report)
+        {
+            return null;
+        }
+
+        if (PatchArchivePath(manifest) is { } archive)
+        {
+            var copy = Path.Combine(snapshot, SnapshotArchive);
+            if (!File.Exists(copy))
+            {
+                return null;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(archive)!);
+            File.Copy(copy, archive, overwrite: true);
+        }
+
+        FolderCopy.Replace(packCopy, PackFolder(manifest.Game, manifest.Language, manifest.Id));
+        var glossary = GlossaryPath(manifest.Game, manifest.Language, manifest.Id);
+        Directory.CreateDirectory(Path.GetDirectoryName(glossary)!);
+        var glossaryCopy = Path.Combine(snapshot, SnapshotGlossary);
+        if (File.Exists(glossaryCopy))
+        {
+            File.Copy(glossaryCopy, glossary, overwrite: true);
+        }
+        else
+        {
+            File.Delete(glossary);
+        }
+
+        var changed = change is null ? report : change(report);
+        WriteReport(ReportPath(manifest.Game, manifest.Language, manifest.Id), changed);
+        return Find(manifest.Game, manifest.Language, manifest.Id);
+    }
+
+    /// <summary>The report of a pack copied by <see cref="Snapshot"/>, or <c>null</c>.</summary>
+    public static LocalPackReport? SnapshotReportOf(string snapshot) => ReadReport(Path.Combine(snapshot, SnapshotReport));
+
+    private const string SnapshotPackFolder = "pack";
+    private const string SnapshotReport = "report.json";
+    private const string SnapshotGlossary = "glossary.json";
+    private const string SnapshotArchive = "archive.zip";
+
     /// <summary>Deletes the pack folder, its patch archive and its report (nothing when absent).</summary>
     /// <exception cref="IOException">A file can't be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">A file can't be deleted.</exception>
@@ -457,7 +570,9 @@ public sealed class LocalPackStore
                 p.Branch,
                 p.At.ToUniversalTime(),
                 p.State == PullRequestState.Open ? null : p.State.ToString().ToLowerInvariant(),
-                p.StateAt?.ToUniversalTime()) : null);
+                p.StateAt?.ToUniversalTime()) : null,
+            report.Draft is > 1 ? report.Draft : null,
+            report.Crash is { } c ? new CrashJson(c.At.ToUniversalTime(), (long)c.Lasted.TotalMilliseconds, c.ExitCode) : null);
         AtomicFile.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(LocalPackReportJson))));
     }
 
@@ -500,7 +615,9 @@ public sealed class LocalPackStore
             json.Tried,
             json.ShareDismissed == true,
             json.Update is { BaseRevision: >= 1 } u ? new LocalPackUpdate(u.BaseRevision, Math.Max(0, u.Added), Math.Max(0, u.Changed), Math.Max(0, u.Removed)) : null,
-            ReadPublished(json.Published));
+            ReadPublished(json.Published),
+            json.Draft is > 1 ? json.Draft : null,
+            json.Crash is { LastedMs: >= 0 } crash ? new LocalPackCrash(crash.At, TimeSpan.FromMilliseconds(crash.LastedMs), crash.ExitCode) : null);
     }
 
     private static LocalPackPublication? ReadPublished(PublishedJson? json) =>
@@ -534,7 +651,11 @@ internal sealed record LocalPackReportJson(
     DateTimeOffset? Tried = null,
     bool? ShareDismissed = null,
     UpdateJson? Update = null,
-    PublishedJson? Published = null);
+    PublishedJson? Published = null,
+    int? Draft = null,
+    CrashJson? Crash = null);
+
+internal sealed record CrashJson(DateTimeOffset At, long LastedMs, int? ExitCode = null);
 
 internal sealed record PublishedJson(
     string? Registry,

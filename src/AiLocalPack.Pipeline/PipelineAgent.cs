@@ -12,6 +12,13 @@ public sealed record PipelineAgentResult(GenerationStepResult? Stop, string? Rep
     public bool Succeeded => Stop is null;
 }
 
+/// <summary>A system prompt in place of the run's usual one, with its values.</summary>
+public sealed record AgentSystemPrompt(PromptTemplate Template, IReadOnlyDictionary<string, string> Values);
+
+/// <summary>What a run may do besides the usual (task 75's fix runs): its own system prompt, every event seen as it comes, its transcript's name.</summary>
+/// <param name="Transcript">The transcript is <c>logs/agent-&lt;name&gt;.jsonl</c> instead of the stage's.</param>
+public sealed record AgentRunExtras(AgentSystemPrompt? System = null, Action<AgentEvent>? OnEvent = null, string? Transcript = null);
+
 /// <summary>
 /// A run in the agent's own workspace (task 57, a game the toolkit can't read): the job's <c>agent/</c> folder as the
 /// working folder, reading files, editing them and running commands there (each adapter's sandbox keeps writes inside
@@ -51,14 +58,16 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         CancellationToken cancellationToken,
         AgentWorkspace? workspace = null,
         string? logTag = null,
-        IReadOnlySet<AgentBuiltinTool>? extraTools = null)
+        IReadOnlySet<AgentBuiltinTool>? extraTools = null,
+        AgentRunExtras? extras = null)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(prompt);
         ArgumentNullException.ThrowIfNull(values);
         var task = prompt.Render(values);
-        var systemTemplate = workspace is null ? PromptTemplate.System : PromptTemplate.SystemScripts;
-        var system = workspace is null
+        var systemTemplate = extras?.System?.Template ?? (workspace is null ? PromptTemplate.System : PromptTemplate.SystemScripts);
+        var system = extras?.System is { } own ? own.Template.Render(own.Values)
+            : workspace is null
             ? PromptTemplate.System.Render(PromptValues.System(gameName, context.Job.Language))
             : PromptTemplate.SystemScripts.Render(PromptValues.SystemScripts(gameName, context.Job.Language, context.CopyFolder));
         string? brief;
@@ -117,7 +126,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             + $", quality {context.Job.Options.Quality.ToString().ToLowerInvariant()}"
             + (request.Model is { } model ? $", model {model}" : "")
             + (request.Effort is { } effort ? $", effort {effort.ToString().ToLowerInvariant()}." : "."));
-        var transcript = Transcript(context);
+        var transcript = Transcript(context, extras?.Transcript);
         var usage = new List<AgentUsage>();
         var seenModel = request.Model;
         try
@@ -143,6 +152,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                     }
 
                     Record(context, logTag, transcript, e);
+                    extras?.OnEvent?.Invoke(e);
                 },
                 cancellationToken).ConfigureAwait(false);
             return new PipelineAgentResult(outcome.Stop, outcome.Done.Result);
@@ -196,11 +206,11 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         return new PipelineAgentResult(failed, null);
     }
 
-    private static string Transcript(GenerationStepContext context)
+    private static string Transcript(GenerationStepContext context, string? name)
     {
         var logs = Path.Combine(context.Folder, "logs");
         Directory.CreateDirectory(logs);
-        return Path.Combine(logs, $"agent-{context.Job.Stage.ToString().ToLowerInvariant()}.jsonl");
+        return Path.Combine(logs, $"agent-{name ?? context.Job.Stage.ToString().ToLowerInvariant()}.jsonl");
     }
 
     /// <summary>A job log line, after <c>logTag: </c> when runs go side by side (Translate chunks).</summary>

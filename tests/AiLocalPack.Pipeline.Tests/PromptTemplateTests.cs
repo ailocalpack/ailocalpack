@@ -1,3 +1,4 @@
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Toolkit.Engines;
 
 namespace AiLocalPack.Pipeline.Tests;
@@ -242,5 +243,56 @@ public sealed class PromptTemplateTests
 
         // Assert
         result.Should().Be(name);
+    }
+
+    [Fact]
+    public void The_fix_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var context = new FixContext(1, 64, 64, ["data/Map001.json", "data/Items.json"],
+            new Dictionary<string, string> { ["Items/1/name"] = "Fire | Ice" }, new Dictionary<string, string> { ["Items/1/name"] = "Огонь | Лёд" });
+        var attachments = FixPrompt.Attachments([FixAttachment.Session(TimeSpan.FromSeconds(4), 3), FixAttachment.Changes(), FixAttachment.ForStrings(["Items/1/name"])], context);
+        var history = FixPrompt.History([FixTurn.FromPlayer(1, new DateTimeOffset(2026, 11, 14, 12, 0, 0, TimeSpan.Zero), "Names are too long.", [])]);
+        var values = PromptValues.Fix("Sample Quest", new EngineKind(GameEngine.RpgMaker, "mz"), 64, 1, "The game crashes right after the first loading screen.", attachments, history, scripts: false);
+
+        // Act
+        var prompt = PromptTemplate.Fix.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("fix.v1.ru.txt", prompt));
+    }
+
+    [Fact]
+    public void The_fix_prompt_for_the_agents_own_scripts_matches_its_snapshot()
+    {
+        // Arrange
+        var context = new FixContext(1, 10, 12, [], new Dictionary<string, string>(), new Dictionary<string, string>());
+        var values = PromptValues.Fix("Lantern Tale", new EngineKind(GameEngine.Unknown, null), 12, 2, "Squares instead of letters.", FixPrompt.Attachments([], context), FixPrompt.History([]), scripts: true);
+
+        // Act
+        var prompt = PromptTemplate.Fix.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("fix.v1.scripts.txt", prompt));
+    }
+
+    [Fact]
+    public void The_fix_system_prompt_matches_its_snapshot()
+    {
+        // Act
+        var prompt = PromptTemplate.SystemFix.Render(PromptValues.SystemFix("Sample Quest", "ru", null));
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-fix.v1.ru.txt", prompt));
+    }
+
+    [Fact]
+    public void The_fix_system_prompt_for_the_agents_own_scripts_matches_its_snapshot()
+    {
+        // Act
+        var prompt = PromptTemplate.SystemFix.Render(PromptValues.SystemFix("Lantern Tale", "ru", "/work/job/game"));
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-fix.v1.scripts.txt", prompt));
     }
 }

@@ -4210,4 +4210,322 @@
   <data name="Library_Badge_Requested_Other" xml:space="preserve">
     <value>已请求 · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>用 AI 修复</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>用 AI 修复</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>草稿 {0} · 游戏在 {1} 秒后关闭</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>用你自己的话告诉 {0} 哪里有问题。它在同一份游戏副本上工作并生成新的草稿；旧草稿会保留到你发布为止。</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>告诉代理哪里出了问题或要改什么…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>还有别的要改吗？</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>回答，或补充一些内容…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>或者告诉代理计划里要改什么…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>给代理的请求</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} 正在处理…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · 通常占每日限额的 2–5 %</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>日志和截图只发给你的代理，不会公开。</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>游戏崩溃</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>游戏在第一个加载画面之后立刻崩溃。</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>文字放不下</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>有文字在屏幕上放不下：</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>太直译</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>译文读起来太直译了：</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>称呼不对</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>称呼不对：</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>有内容没翻译</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>有文字还是原语言：</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>字母显示成方块</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>部分字母显示成方块：</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>会话</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>{0} 秒后关闭</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>{0} 秒后关闭 · 退出代码 {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>日志末尾</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>草稿 {0} 的改动</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>截图</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>游戏日志</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>截图</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>为代理选择一张截图</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>移除 {0}</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>没有找到上次会话以来写入的游戏日志。</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>草稿 {0} 已生成 · 试运行通过</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>草稿 {0} 已生成 · 跳过试运行</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>你试玩了草稿 {0} · 游戏在 {1} 秒后关闭</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>你试玩了草稿 {0}</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>查看了文本</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>保存了译文</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>读取了术语表</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>修改了术语表</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>检查了译文</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>读取了游戏文件</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>运行了命令</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>修改了脚本</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>读取了文件</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>重建了游戏文件并试运行</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>保存了新草稿</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>使用了 {0}</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>草稿 {0} 已就绪</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>尚未试玩</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>可用</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>崩溃</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>新</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>等待你确认</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>已应用</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>未应用</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>改动的文本</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>改动的术语</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>应用方式</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>重建脚本已修改</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>试运行</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>通过</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>已跳过</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>游戏已关闭</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>键</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>原来</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>现在</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>（无译文）</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>安装并试玩草稿 {0}</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>撤销此修复</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>草稿 {0} 的计划</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>这会影响 50 多条文本，所以在你应用之前不会有任何改动。</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>要修改的译文：{0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>要修改的术语：{0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>重建脚本也会改动。</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>应用时会重建游戏文件并试运行游戏，不会再询问代理。</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>应用计划</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>修改请求</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>没有成功，什么都没改。</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>已停止，什么都没改。</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>草稿</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>回到某个草稿会让它重新成为当前草稿；在你发布或丢弃之前不会删除任何内容。</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>草稿 {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>游戏在 {0} 秒后关闭</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>已在游戏中试玩</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>尚未试玩</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>回到这个</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>发布这个</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>代理正在处理这个游戏，请等它完成后再试。</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>该翻译已不在“文本 → 我的”中。</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>无法读写修复文件：{0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>没有成功：{0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>正在修复 · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>安装了你的翻译（草稿 {1}）后，游戏在启动 {0} 秒后关闭。你的存档没有被改动。</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>恢复原始文件</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>游戏启动后立刻关闭</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>安装了「{0}」，{1} 秒后。让代理来修复。</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>正在处理…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>无法启动代理：{0}</value>
+  </data>
 </root>

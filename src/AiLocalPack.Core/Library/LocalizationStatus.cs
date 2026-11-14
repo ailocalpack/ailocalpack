@@ -137,7 +137,9 @@ public sealed record GenerationJobState(
 /// <param name="TestPassed">The test run of the Build stage passed (not skipped).</param>
 /// <param name="Tried">The player has played the game with it installed.</param>
 /// <param name="Installed">It is the pack installed into the game (whatever the target language).</param>
-public sealed record GenerationResultState(string PackId, string Language, string Title, double Coverage, bool TestPassed, bool Tried, bool Installed = false);
+/// <param name="Draft">The pack's draft (task 75: each fix with AI makes the next one).</param>
+/// <param name="CrashSeconds">The game closed this soon after it started with this draft installed (task 75); <c>null</c> when it didn't.</param>
+public sealed record GenerationResultState(string PackId, string Language, string Title, double Coverage, bool TestPassed, bool Tried, bool Installed = false, int Draft = 1, double? CrashSeconds = null);
 
 /// <summary>
 /// The status of one game for one language with the data the card's context line needs: the registry packs, the

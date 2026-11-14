@@ -94,6 +94,20 @@ public sealed partial class GenerationResultViewModel : ObservableObject
 
     public bool HasUpdateLine => UpdateLine.Length > 0;
 
+    /// <summary>The tiles, the in-game note and the warnings show until the card folds (task 75: once the player played it or asked for a fix).</summary>
+    public bool ShowDetails { get; private set; } = true;
+
+    internal void Fold(bool folded)
+    {
+        if (ShowDetails == !folded)
+        {
+            return;
+        }
+
+        ShowDetails = !folded;
+        OnPropertyChanged(string.Empty);
+    }
+
     // ---------- Tiles and warnings ----------
 
     public IReadOnlyList<ResultTile> Tiles => LocalPackTexts.Tiles(Pack, _localizer);
@@ -109,14 +123,17 @@ public sealed partial class GenerationResultViewModel : ObservableObject
 
     public IReadOnlyList<GenerationWarningRow> Warnings => LocalPackTexts.Warnings(Pack.Report, _localizer, GenerationTabViewModel.MaxWarningRows);
 
-    public bool ShowWarnings => IsWarningsOpen && HasWarnings;
+    public bool ShowWarnings => IsWarningsOpen && HasWarnings && ShowDetails;
+
+    /// <summary><c>Show the N warnings</c> while the card isn't folded.</summary>
+    public bool ShowWarningsToggle => HasWarnings && ShowDetails;
 
     /// <summary>"In the game, choose English as the language." when the game has no slot for the pack's language.</summary>
     public string InGameNote => Pack.Report.InGameLanguage is { } language
         ? _localizer.Format(nameof(Strings.Gen_Result_InGame), LanguageNames.Native(language))
         : string.Empty;
 
-    public bool HasInGameNote => InGameNote.Length > 0;
+    public bool HasInGameNote => InGameNote.Length > 0 && ShowDetails;
 
     // ---------- State and actions ----------
 

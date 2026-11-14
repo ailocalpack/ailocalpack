@@ -78,4 +78,31 @@ public sealed class GenerationResultViewTests
             .Should().Be((1, "Claude Code translation", "100% of strings", true));
         window.Close();
     });
+
+    [Fact]
+    public Task The_fix_card_shows_the_conversation_and_the_composer() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        bed.LocalPack();
+        var folder = bed.Services.GetRequiredService<Desktop.Generation.GenerationService>().ResultOf(InstallBed.Alpha)!.Folder;
+        var at = new DateTimeOffset(2026, 11, 9, 21, 0, 0, TimeSpan.Zero);
+        new Core.Generation.FixFiles(folder).Write(new Core.Generation.FixState(
+            [
+                Core.Generation.FixTurn.FromPlayer(1, at, "Use «вы».", [Core.Generation.FixAttachment.Changes()]),
+                new Core.Generation.FixTurn(2, Core.Generation.FixTurnKind.Agent, at.AddMinutes(1), "That touches 60 strings.", [], ["search"], [],
+                    Core.Generation.FixTurnOutcome.Planned, Plan: new Core.Generation.FixPlan(60, 0, false, [new Core.Generation.FixStringChange("a", "Hi", "Привет", "Здравствуйте")])),
+            ],
+            [],
+            1));
+
+        // Act
+        var (window, _) = Open(bed, GamePageTab.Generation);
+
+        // Assert
+        (Find<Border>(window, "FixCard").IsEffectivelyVisible, Find<ItemsControl>(window, "FixThread").ItemCount, Find<TextBox>(window, "FixRequest").IsEffectivelyEnabled,
+            Find<Button>(window, "FixSend").IsEffectivelyVisible, Find<ItemsControl>(window, "ResultTiles").IsVisible)
+            .Should().Be((true, 3, true, true, false));
+        window.Close();
+    });
 }

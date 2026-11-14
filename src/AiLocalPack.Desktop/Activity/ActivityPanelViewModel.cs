@@ -370,6 +370,9 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             case ActivityEventKind.GlossaryReview:
                 actions.Add(Action(nameof(Strings.Game_Action_ReviewGlossary), "IconPencil", true, () => OpenGame(activity.Game, GamePageTab.Generation)));
                 break;
+            case ActivityEventKind.TranslationCrashed:
+                actions.Add(Action(nameof(Strings.Game_Action_FixWithAi), "IconSparkles", true, () => OpenGame(activity.Game, GamePageTab.Generation)));
+                break;
             case ActivityEventKind.PullRequestFailed:
                 if (PublishedPack(activity) is { } pack)
                 {
@@ -505,7 +508,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
             return;
         }
 
-        var generation = activity.Kind is ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview
+        var generation = activity.Kind is ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview or ActivityEventKind.TranslationCrashed
             || (activity.Kind == ActivityEventKind.PackIncompatible && LaterRevision(activity) is null);
         OpenGame(activity.Game, generation ? GamePageTab.Generation : GamePageTab.Packs);
     }

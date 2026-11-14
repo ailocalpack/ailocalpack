@@ -301,6 +301,14 @@
                                                 <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Button>
+                                        <Button x:Name="MineFix" Classes="genAction" Command="{Binding FixCommand}" IsVisible="{Binding CanFix}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Game_Action_FixWithAi}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
                                         <Button x:Name="MineDelete" Classes="ghost" Command="{Binding DeleteCommand}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">

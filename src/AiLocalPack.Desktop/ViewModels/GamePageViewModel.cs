@@ -125,7 +125,9 @@ public sealed partial class GamePageViewModel : PageViewModel
         PackRatings ratings,
         GamePageTab initialTab = GamePageTab.Default,
         ILogger<GamePageViewModel>? logger = null,
-        TranslationRequests? requests = null)
+        TranslationRequests? requests = null,
+        FixService? fixes = null,
+        IFilePicker? picker = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         Game = game;
@@ -173,7 +175,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests, fixes, picker);
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -344,7 +346,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     };
 
     /// <summary>View progress and Resume are teal (generation), the others the accent.</summary>
-    public bool IsPrimaryGen => Action.Kind is GamePrimaryActionKind.ViewProgress or GamePrimaryActionKind.ResumeGeneration;
+    public bool IsPrimaryGen => Action.Kind is GamePrimaryActionKind.ViewProgress or GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.FixWithAi;
 
     /// <summary>The loader icon turns while the job runs.</summary>
     public bool IsPrimarySpinning => Action.Kind == GamePrimaryActionKind.ViewProgress;
@@ -790,7 +792,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         SelectedTab = Action.Kind switch
         {
             GamePrimaryActionKind.Generate or GamePrimaryActionKind.TranslateNewStrings or GamePrimaryActionKind.ViewProgress
-                or GamePrimaryActionKind.ReviewGlossary => GamePageTab.Generation,
+                or GamePrimaryActionKind.ReviewGlossary or GamePrimaryActionKind.FixWithAi => GamePageTab.Generation,
             _ => SelectedTab,
         };
     }

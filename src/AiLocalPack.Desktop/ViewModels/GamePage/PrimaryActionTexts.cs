@@ -28,6 +28,7 @@ public static class PrimaryActionTexts
             GamePrimaryActionKind.RetryStage => localizer[nameof(Strings.Game_Action_RetryStage)],
             GamePrimaryActionKind.ReviewGlossary => localizer[nameof(Strings.Game_Action_ReviewGlossary)],
             GamePrimaryActionKind.InstallLocalPack => localizer[nameof(Strings.Game_Action_InstallPlay)],
+            GamePrimaryActionKind.FixWithAi => localizer[nameof(Strings.Game_Action_FixWithAi)],
             _ => string.Empty,
         };
     }
@@ -55,6 +56,8 @@ public static class PrimaryActionTexts
             { Kind: GamePrimaryActionKind.TranslateNewStrings } => localizer[nameof(Strings.Game_Caption_TranslateNew)],
             { Kind: GamePrimaryActionKind.Reapply, Installed: { } installed } => localizer.Format(
                 nameof(Strings.Game_Caption_Reapply), action.Pack?.Title ?? installed.Title ?? installed.PackId, installed.Revision),
+            { Kind: GamePrimaryActionKind.FixWithAi, Result: { CrashSeconds: { } seconds } crashed } => localizer.Format(
+                nameof(Strings.Game_Caption_Crashed), crashed.Draft, Math.Max(1, Math.Round(seconds)).ToString(localizer.Culture)),
             { Kind: GamePrimaryActionKind.InstallLocalPack, Result: { } result } => localizer.Format(
                 nameof(Strings.Game_Caption_LocalPack),
                 Math.Floor(result.Coverage * 100).ToString("0", localizer.Culture),

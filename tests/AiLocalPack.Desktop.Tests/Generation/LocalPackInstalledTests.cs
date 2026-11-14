@@ -55,4 +55,17 @@ public sealed class LocalPackInstalledTests
         // Assert
         installed.Should().BeFalse();
     }
+
+    [Fact]
+    public void A_draft_built_after_the_install_is_not_installed()
+    {
+        // Arrange
+        var rebuilt = Pack(3) with { Report = Pack(3).Report with { Created = T0.AddMinutes(5), Draft = 2 } };
+
+        // Act
+        var installed = LocalPacks.IsInstalled(Record(3), rebuilt);
+
+        // Assert
+        (installed, LocalPacks.IsSamePack(Record(3), rebuilt)).Should().Be((false, true));
+    }
 }

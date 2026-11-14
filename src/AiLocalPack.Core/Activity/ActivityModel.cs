@@ -92,6 +92,13 @@ public enum ActivityEventKind
     /// author in <see cref="ActivityEvent.Detail"/>.
     /// </summary>
     RequestDone,
+
+    /// <summary>
+    /// The game closed right after it started with the player's AI translation installed (task 75): a decision (<c>Fix
+    /// with AI</c> opens the Create with AI tab) until a fix is sent, or the pack is installed again or uninstalled;
+    /// <see cref="ActivityEvent.Detail"/> = the seconds it ran, <see cref="ActivityEvent.PackTitle"/> = the pack's title.
+    /// </summary>
+    TranslationCrashed,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -267,7 +274,8 @@ public static class ActivityEvents
             or ActivityEventKind.PackSubmitted or ActivityEventKind.PackMerged or ActivityEventKind.PackVerified
             or ActivityEventKind.AppUpdateReady or ActivityEventKind.RequestDone => ActivityTone.Ok,
         ActivityEventKind.InstallFailed or ActivityEventKind.UninstallFailed or ActivityEventKind.ReapplyFailed
-            or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed or ActivityEventKind.PullRequestFailed => ActivityTone.Bad,
+            or ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PublishFailed or ActivityEventKind.PullRequestFailed
+            or ActivityEventKind.TranslationCrashed => ActivityTone.Bad,
         ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied or ActivityEventKind.GlossaryReview => ActivityTone.Attention,
         ActivityEventKind.GenerationPaused => ActivityTone.Paused,
         _ => ActivityTone.Info,
@@ -279,9 +287,11 @@ public static class ActivityEvents
     /// </summary>
     public static bool IsDecisionKind(ActivityEventKind kind) =>
         kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied
-            or ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview or ActivityEventKind.PullRequestFailed;
+            or ActivityEventKind.GenerationPaused or ActivityEventKind.GlossaryReview or ActivityEventKind.PullRequestFailed
+            or ActivityEventKind.TranslationCrashed;
 
     /// <summary>Decisions about a game's installed pack: settled once the pack is installed, re-applied or uninstalled again.</summary>
     public static bool IsPackProblem(ActivityEventKind kind) =>
-        kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied;
+        kind is ActivityEventKind.AutoReapplyFailed or ActivityEventKind.PackIncompatible or ActivityEventKind.PackNotApplied
+            or ActivityEventKind.TranslationCrashed;
 }

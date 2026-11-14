@@ -267,7 +267,10 @@ internal static class Composition
         services.AddSingleton<IGenerationEstimates, GenerationEstimates>();
         services.AddSingleton<IUpdateBases, UpdateBases>();
         services.AddSingleton(sp => new LocalPackStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<LocalPackStore>>()));
-        services.AddSingleton<IGenerationStagesFactory, PipelineStagesFactory>();
+        services.AddSingleton<PipelineStagesFactory>();
+        services.AddSingleton<IGenerationStagesFactory>(sp => sp.GetRequiredService<PipelineStagesFactory>());
+        services.AddSingleton<IFixRunnerFactory>(sp => sp.GetRequiredService<PipelineStagesFactory>());
+        services.AddSingleton<FixService>();
         services.AddSingleton<LocalPacks>();
         services.AddSingleton<GenerationService>();
     }

@@ -314,4 +314,100 @@ public sealed class LocalPackStoreTests : IDisposable
         // Assert
         pack.Should().BeNull();
     }
+
+    [Fact]
+    public void The_draft_number_and_the_crash_round_trip_in_the_report()
+    {
+        // Arrange
+        var crash = new LocalPackCrash(T0.AddHours(1), TimeSpan.FromSeconds(4.2), 3);
+        _store.Save(Manifest(), Table, Report() with { Draft = 3, Crash = crash });
+
+        // Act
+        var report = _store.Find(Game, "ru", "claude-code")!.Report;
+
+        // Assert
+        (report.DraftNumber, report.Crash).Should().Be((3, crash));
+    }
+
+    [Fact]
+    public void A_pack_without_a_draft_number_is_the_first_draft()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+
+        // Act
+        var report = _store.Find(Game, "ru", "claude-code")!.Report;
+
+        // Assert
+        (report.Draft, report.DraftNumber).Should().Be(((int?)null, 1));
+    }
+
+    [Fact]
+    public void A_snapshot_restored_over_a_later_build_brings_the_pack_back()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+        var snapshot = _dir.Combine("drafts/1");
+        _store.Snapshot(Game, "ru", "claude-code", snapshot);
+        _store.Save(Manifest(), new StringTable("ru", new Dictionary<string, string> { ["a"] = "Другое" }), Report() with { Draft = 2 });
+
+        // Act
+        _store.Restore(snapshot);
+
+        // Assert
+        var pack = _store.Find(Game, "ru", "claude-code")!;
+        (pack.Report.DraftNumber, pack.Manifest.Coverage).Should().Be((1, new PackCoverage(2, 3)));
+    }
+
+    [Fact]
+    public void Restoring_changes_the_report_as_asked()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report());
+        var snapshot = _dir.Combine("drafts/1");
+        _store.Snapshot(Game, "ru", "claude-code", snapshot);
+
+        // Act
+        var pack = _store.Restore(snapshot, r => r with { Created = T0.AddDays(1) });
+
+        // Assert
+        pack!.Report.Created.Should().Be(T0.AddDays(1));
+    }
+
+    [Fact]
+    public void Snapshot_of_a_missing_pack_says_so()
+    {
+        // Act
+        var taken = _store.Snapshot(Game, "ru", "nothing", _dir.Combine("drafts/9"));
+
+        // Assert
+        taken.Should().BeFalse();
+    }
+
+    [Fact]
+    public void An_unreadable_snapshot_restores_nothing()
+    {
+        // Arrange
+        Directory.CreateDirectory(_dir.Combine("drafts/1"));
+
+        // Act
+        var pack = _store.Restore(_dir.Combine("drafts/1"));
+
+        // Assert
+        pack.Should().BeNull();
+    }
+
+    [Fact]
+    public void The_report_of_a_snapshot_is_read_without_restoring_it()
+    {
+        // Arrange
+        _store.Save(Manifest(), Table, Report() with { Draft = 2 });
+        _store.Snapshot(Game, "ru", "claude-code", _dir.Combine("drafts/2"));
+
+        // Act
+        var report = LocalPackStore.SnapshotReportOf(_dir.Combine("drafts/2"));
+
+        // Assert
+        report!.DraftNumber.Should().Be(2);
+    }
 }

@@ -78,6 +78,27 @@ public sealed partial class MinePackRowViewModel : ObservableObject
         UninstallCommand = new RelayCommand(_actions.Uninstall, () => _installed && !_busy);
         DeleteCommand = new RelayCommand(() => _actions.Delete(Pack!), () => CanDelete);
         PublishCommand = new RelayCommand(() => { }, () => false);
+        FixCommand = new RelayCommand(_actions.OpenGeneration, () => CanFix);
+    }
+
+    /// <summary>
+    /// <c>Fix with AI</c> (task 75): the pack is the game's last generation result (its job folder is still there), so the
+    /// Create with AI tab can ask the agent to fix it.
+    /// </summary>
+    public bool CanFix { get; private set; }
+
+    public IRelayCommand FixCommand { get; }
+
+    internal void SetCanFix(bool canFix)
+    {
+        if (CanFix == canFix)
+        {
+            return;
+        }
+
+        CanFix = canFix;
+        OnPropertyChanged(nameof(CanFix));
+        FixCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>A local pack's publish state and <c>Publish</c> (task 61); <c>null</c> for the job's row.</summary>

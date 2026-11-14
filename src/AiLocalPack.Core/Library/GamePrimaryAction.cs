@@ -46,6 +46,12 @@ public enum GamePrimaryActionKind
     /// the game (<c>Install &amp; play</c>).
     /// </summary>
     InstallLocalPack,
+
+    /// <summary>
+    /// The installed AI translation (the last generation's local pack) made the game close right after it started
+    /// (task 75): opens the Create with AI tab, where the player asks the agent to fix it.
+    /// </summary>
+    FixWithAi,
 }
 
 /// <summary>The header's primary action with what its caption names.</summary>
@@ -77,6 +83,11 @@ public static class GamePrimaryActions
         var installedPack = status.Installed is { Local: false } installed
             ? status.Packs.FirstOrDefault(p => p.Id == installed.PackId)
             : null;
+        if (status.Result is { Installed: true, CrashSeconds: not null } crashed && status.Job is null && !status.IsBlocked)
+        {
+            return new(GamePrimaryActionKind.FixWithAi, Installed: status.Installed, Result: crashed);
+        }
+
         if (status.Result is { } result && status.Installed is null && status.Job is null && !status.IsBlocked)
         {
             // Installed in another language than the page's target: the status doesn't count it, the result does.
@@ -116,11 +127,12 @@ public static class GamePrimaryActions
     };
 
     /// <summary>
-    /// The tab the page opens on: Generation while a job exists or its result waits to be tried (task 55), otherwise Packs.
+    /// The tab the page opens on: Generation while a job exists, its result waits to be tried (task 55) or crashed the game
+    /// (task 75), otherwise Packs.
     /// </summary>
     public static bool OpensOnGeneration(LocalizationStatus status)
     {
         ArgumentNullException.ThrowIfNull(status);
-        return !status.IsBlocked && (status.Job is not null || status.Result is { Tried: false });
+        return !status.IsBlocked && (status.Job is not null || status.Result is { Tried: false } or { Installed: true, CrashSeconds: not null });
     }
 }

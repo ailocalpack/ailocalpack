@@ -85,7 +85,9 @@ public sealed record GenerationResult(string Folder, GenerationJob Job, LocalPac
         Pack.Manifest.Title,
         Pack.Manifest.Coverage?.Ratio ?? 0,
         Pack.Report.TestRun.Outcome == TestRunOutcome.Passed,
-        Pack.Report.IsTried);
+        Pack.Report.IsTried,
+        Draft: Pack.Report.DraftNumber,
+        CrashSeconds: Pack.Report.Crash?.Lasted.TotalSeconds);
 }
 
 /// <summary>The stage handlers of one job: the real pipeline (<see cref="PipelineStagesFactory"/>), or fakes in tests.</summary>

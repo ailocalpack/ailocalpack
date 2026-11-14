@@ -213,6 +213,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private bool _starting;
     private readonly TranslationRequests? _requests;
+    private readonly FixService? _fixes;
+    private readonly IFilePicker? _picker;
     private RequestKey? _takeKey;
 
     /// <summary>"Tell the 13 players who asked that I'm translating" (task 74), on by default unless someone else is on it.</summary>
@@ -239,9 +241,13 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         ILogger logger,
         IUpdateBases? updateBases = null,
         UpdateCandidate? update = null,
-        TranslationRequests? requests = null)
+        TranslationRequests? requests = null,
+        FixService? fixes = null,
+        IFilePicker? picker = null)
     {
         _requests = requests;
+        _fixes = fixes;
+        _picker = picker;
         _publish = publish;
         _game = game;
         _updateBases = updateBases;
@@ -287,7 +293,77 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         Steps = BuildSteps();
         SyncReview();
         _install.Changed += OnInstallChanged;
+        if (_fixes is not null)
+        {
+            _fixes.Changed += OnFixChanged;
+        }
+
+        SyncFix();
         RefreshRequest();
+    }
+
+    // ---------- Fix with AI (task 75, design §6e) ----------
+
+    /// <summary>The conversation with the agent under the result, or <c>null</c> without a result (or without the fix service).</summary>
+    public FixViewModel? Fix { get; private set; }
+
+    public bool ShowFix => ShowResult && Fix is not null;
+
+    /// <summary>
+    /// The result card folds (no tiles, warnings or footer) once the player played the translation or asked for a fix:
+    /// the conversation is what matters then.
+    /// </summary>
+    public bool IsResultFolded => Result is { } r && Fix is { } f && (r.IsTried || r.Pack.Report.Crash is not null || f.HasItems && f.Items.Any(i => i is FixPlayerItem));
+
+    public bool ShowResultDetails => ShowResult && !IsResultFolded;
+
+    private void SyncFix()
+    {
+        if (_fixes is null || Result is not { } result)
+        {
+            Fix = null;
+            return;
+        }
+
+        if (Fix is { } current && _fixFor == result.Result.Job.Id)
+        {
+            current.Refresh();
+            result.Fold(IsResultFolded);
+            return;
+        }
+
+        _fixFor = result.Result.Job.Id;
+        Fix = new FixViewModel(_game, _fixes, _install, _localPacks, _localizer, _picker, PublishPack, AgentInfo.Of(result.Result.Job.Agent).Name);
+        result.Fold(IsResultFolded);
+    }
+
+    private string? _fixFor;
+
+    /// <summary>"Publish this one" in the Drafts menu: the result's own publish (task 61).</summary>
+    private void PublishPack(LocalPack pack)
+    {
+        if (Result?.Publish.PublishCommand is { } publish && publish.CanExecute(null))
+        {
+            publish.Execute(null);
+        }
+    }
+
+    private void OnFixChanged(object? sender, GameId game)
+    {
+        if (game != _game.Id)
+        {
+            return;
+        }
+
+        _ui.Post(() =>
+        {
+            Fix?.Refresh();
+            Result?.Fold(IsResultFolded);
+            OnPropertyChanged(nameof(Fix));
+            OnPropertyChanged(nameof(ShowFix));
+            OnPropertyChanged(nameof(IsResultFolded));
+            OnPropertyChanged(nameof(ShowResultDetails));
+        });
     }
 
     // ---------- Frame ----------
@@ -821,6 +897,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         var hadJob = Job is not null || Result is not null;
         Job = _jobs.FindOpen(game.Id);
         SyncResult();
+        SyncFix();
         BuildLanguages();
         Steps = BuildSteps();
         SyncReview();
@@ -854,6 +931,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     {
         _closed.Cancel();
         _install.Changed -= OnInstallChanged;
+        if (_fixes is not null)
+        {
+            _fixes.Changed -= OnFixChanged;
+        }
+
         foreach (var card in Agents)
         {
             card.StateChanged -= OnAgentStateChanged;
@@ -1136,6 +1218,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         {
             result.Update(result.Result, _localPacks.IsInstalled(result.Pack), _install.IsBusy);
         }
+
+        Fix?.Refresh();
     }
 
     /// <summary><c>Discard</c>: asks, then deletes the local pack and the job's working copy; the start form comes back.</summary>

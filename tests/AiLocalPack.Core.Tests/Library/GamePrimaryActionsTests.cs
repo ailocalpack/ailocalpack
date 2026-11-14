@@ -354,4 +354,46 @@ public sealed class GamePrimaryActionsTests
         // Assert
         action.Kind.Should().Be(GamePrimaryActionKind.TranslateNewStrings);
     }
+
+    [Fact]
+    public void An_installed_result_that_crashed_the_game_offers_a_fix_with_ai()
+    {
+        // Arrange
+        var installed = new InstalledPackState("claude-code", InstalledPackProblem.None, 1, Local: true);
+        var crashed = Result() with { Installed = true, CrashSeconds = 4 };
+        var status = Status(LocalizationStatusKind.Installed, [], installed) with { Result = crashed };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.FixWithAi, Installed: installed, Result: crashed));
+    }
+
+    [Fact]
+    public void A_crashed_result_that_isnt_installed_any_more_offers_no_fix()
+    {
+        // Arrange
+        var status = Status(LocalizationStatusKind.NoPack) with { Result = Result() with { CrashSeconds = 4 } };
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Kind.Should().Be(GamePrimaryActionKind.InstallLocalPack);
+    }
+
+    [Fact]
+    public void A_crashed_installed_result_opens_the_generation_tab()
+    {
+        // Arrange
+        var status = Status(LocalizationStatusKind.Installed, [], new InstalledPackState("claude-code", InstalledPackProblem.None, 1))
+            with { Result = Result(tried: true) with { Installed = true, CrashSeconds = 4 } };
+
+        // Act
+        var opens = GamePrimaryActions.OpensOnGeneration(status);
+
+        // Assert
+        opens.Should().BeTrue();
+    }
 }

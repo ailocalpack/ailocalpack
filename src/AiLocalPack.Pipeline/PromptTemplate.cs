@@ -48,6 +48,12 @@ public sealed partial class PromptTemplate
     /// <summary>Build stage for such a game: the agent runs its rebuilder on the final translations (task 57).</summary>
     public static PromptTemplate RebuildUnknown { get; } = Load("rebuild-unknown", 1);
 
+    /// <summary>System prompt of a fix run (task 75): a person reads the reply, the agent may ask one question with choices.</summary>
+    public static PromptTemplate SystemFix { get; } = Load("system-fix", 1);
+
+    /// <summary>A fix request (task 75): the player's words, what they attached, the conversation so far.</summary>
+    public static PromptTemplate Fix { get; } = Load("fix", 1);
+
     public string Name { get; }
 
     public int Version { get; }

@@ -4374,4 +4374,322 @@
   <data name="Library_Badge_Requested_Other" xml:space="preserve">
     <value>Requested · {0}</value>
   </data>
+  <data name="Fix_Title" xml:space="preserve">
+    <value>Fix with AI</value>
+  </data>
+  <data name="Game_Action_FixWithAi" xml:space="preserve">
+    <value>Fix with AI</value>
+  </data>
+  <data name="Game_Caption_Crashed" xml:space="preserve">
+    <value>Draft {0} · the game closed after {1} s</value>
+  </data>
+  <data name="Fix_Intro" xml:space="preserve">
+    <value>Tell {0} what's wrong, in your own words. It works on the same copy of the game and makes a new draft; the old draft stays until you publish.</value>
+  </data>
+  <data name="Fix_Placeholder" xml:space="preserve">
+    <value>Tell the agent what went wrong or what to change…</value>
+  </data>
+  <data name="Fix_Placeholder_More" xml:space="preserve">
+    <value>Anything else to change?</value>
+  </data>
+  <data name="Fix_Placeholder_Answer" xml:space="preserve">
+    <value>Answer, or add something…</value>
+  </data>
+  <data name="Fix_Placeholder_Plan" xml:space="preserve">
+    <value>Or tell the agent what to change in the plan…</value>
+  </data>
+  <data name="Fix_Request_Label" xml:space="preserve">
+    <value>Request to the agent</value>
+  </data>
+  <data name="Fix_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Fix_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Fix_Working" xml:space="preserve">
+    <value>{0} is working on it…</value>
+  </data>
+  <data name="Fix_Cost" xml:space="preserve">
+    <value>{0} · usually 2–5 % of a day's limit</value>
+  </data>
+  <data name="Fix_Privacy" xml:space="preserve">
+    <value>Logs and screenshots go only to your agent; nothing is published.</value>
+  </data>
+  <data name="Fix_Chip_Crash" xml:space="preserve">
+    <value>The game crashes</value>
+  </data>
+  <data name="Fix_Chip_Crash_Text" xml:space="preserve">
+    <value>The game crashes right after the first loading screen.</value>
+  </data>
+  <data name="Fix_Chip_Fit" xml:space="preserve">
+    <value>Text doesn't fit</value>
+  </data>
+  <data name="Fix_Chip_Fit_Text" xml:space="preserve">
+    <value>Some text doesn't fit on screen:</value>
+  </data>
+  <data name="Fix_Chip_Literal" xml:space="preserve">
+    <value>Too literal</value>
+  </data>
+  <data name="Fix_Chip_Literal_Text" xml:space="preserve">
+    <value>The translation reads too literally:</value>
+  </data>
+  <data name="Fix_Chip_Address" xml:space="preserve">
+    <value>Wrong form of address</value>
+  </data>
+  <data name="Fix_Chip_Address_Text" xml:space="preserve">
+    <value>The form of address is wrong:</value>
+  </data>
+  <data name="Fix_Chip_Untranslated" xml:space="preserve">
+    <value>Something isn't translated</value>
+  </data>
+  <data name="Fix_Chip_Untranslated_Text" xml:space="preserve">
+    <value>Some text is still in the original language:</value>
+  </data>
+  <data name="Fix_Chip_Squares" xml:space="preserve">
+    <value>Squares instead of letters</value>
+  </data>
+  <data name="Fix_Chip_Squares_Text" xml:space="preserve">
+    <value>Some letters show as squares:</value>
+  </data>
+  <data name="Fix_Attach_Session" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="Fix_Attach_SessionDetail" xml:space="preserve">
+    <value>closed after {0} s</value>
+  </data>
+  <data name="Fix_Attach_SessionExit" xml:space="preserve">
+    <value>closed after {0} s · exit code {1}</value>
+  </data>
+  <data name="Fix_Attach_LogDetail" xml:space="preserve">
+    <value>end of the log</value>
+  </data>
+  <data name="Fix_Attach_Changes" xml:space="preserve">
+    <value>Draft {0} changes</value>
+  </data>
+  <data name="Fix_Attach_Screenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+  <data name="Fix_Attach_Strings" xml:space="preserve">
+    <value>Strings</value>
+  </data>
+  <data name="Fix_Attach_AddLog" xml:space="preserve">
+    <value>Game log</value>
+  </data>
+  <data name="Fix_Attach_AddScreenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+  <data name="Fix_Attach_PickScreenshot" xml:space="preserve">
+    <value>Choose a screenshot for the agent</value>
+  </data>
+  <data name="Fix_Attach_Remove" xml:space="preserve">
+    <value>Remove {0}</value>
+  </data>
+  <data name="Fix_Attach_NoLog" xml:space="preserve">
+    <value>No game log written since the last session was found.</value>
+  </data>
+  <data name="Fix_System_Built_Passed" xml:space="preserve">
+    <value>Draft {0} built · test run passed</value>
+  </data>
+  <data name="Fix_System_Built_Skipped" xml:space="preserve">
+    <value>Draft {0} built · test run skipped</value>
+  </data>
+  <data name="Fix_System_Crashed" xml:space="preserve">
+    <value>You played Draft {0} · the game closed after {1} s</value>
+  </data>
+  <data name="Fix_System_Played" xml:space="preserve">
+    <value>You played Draft {0}</value>
+  </data>
+  <data name="Fix_Step_Search" xml:space="preserve">
+    <value>Looked through the strings</value>
+  </data>
+  <data name="Fix_Step_Store" xml:space="preserve">
+    <value>Stored translations</value>
+  </data>
+  <data name="Fix_Step_ReadGlossary" xml:space="preserve">
+    <value>Read the glossary</value>
+  </data>
+  <data name="Fix_Step_Glossary" xml:space="preserve">
+    <value>Changed the glossary</value>
+  </data>
+  <data name="Fix_Step_Validate" xml:space="preserve">
+    <value>Checked translations</value>
+  </data>
+  <data name="Fix_Step_ReadGame" xml:space="preserve">
+    <value>Read the game's files</value>
+  </data>
+  <data name="Fix_Step_Command" xml:space="preserve">
+    <value>Ran a command</value>
+  </data>
+  <data name="Fix_Step_Edit" xml:space="preserve">
+    <value>Edited a script</value>
+  </data>
+  <data name="Fix_Step_ReadFile" xml:space="preserve">
+    <value>Read a file</value>
+  </data>
+  <data name="Fix_Step_Build" xml:space="preserve">
+    <value>Rebuilt the game files and test-ran the game</value>
+  </data>
+  <data name="Fix_Step_Saved" xml:space="preserve">
+    <value>Saved the new draft</value>
+  </data>
+  <data name="Fix_Step_Tool" xml:space="preserve">
+    <value>Used {0}</value>
+  </data>
+  <data name="Fix_Change_Title" xml:space="preserve">
+    <value>Draft {0} is ready</value>
+  </data>
+  <data name="Fix_Pill_NotTried" xml:space="preserve">
+    <value>not tried yet</value>
+  </data>
+  <data name="Fix_Pill_Installed" xml:space="preserve">
+    <value>installed</value>
+  </data>
+  <data name="Fix_Pill_Works" xml:space="preserve">
+    <value>works</value>
+  </data>
+  <data name="Fix_Pill_Crashed" xml:space="preserve">
+    <value>crashed</value>
+  </data>
+  <data name="Fix_Pill_New" xml:space="preserve">
+    <value>new</value>
+  </data>
+  <data name="Fix_Pill_Waiting" xml:space="preserve">
+    <value>waits for you</value>
+  </data>
+  <data name="Fix_Pill_Applied" xml:space="preserve">
+    <value>applied</value>
+  </data>
+  <data name="Fix_Pill_Dropped" xml:space="preserve">
+    <value>not applied</value>
+  </data>
+  <data name="Fix_Tile_Strings" xml:space="preserve">
+    <value>Strings changed</value>
+  </data>
+  <data name="Fix_Tile_Glossary" xml:space="preserve">
+    <value>Glossary entries changed</value>
+  </data>
+  <data name="Fix_Tile_Applied" xml:space="preserve">
+    <value>How it's applied</value>
+  </data>
+  <data name="Fix_Tile_Scripts" xml:space="preserve">
+    <value>Rebuild script changed</value>
+  </data>
+  <data name="Fix_Tile_TestRun" xml:space="preserve">
+    <value>Test run</value>
+  </data>
+  <data name="Fix_TestRun_Passed" xml:space="preserve">
+    <value>Passed</value>
+  </data>
+  <data name="Fix_TestRun_Skipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="Fix_TestRun_Crashed" xml:space="preserve">
+    <value>The game closed</value>
+  </data>
+  <data name="Fix_Samples_Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="Fix_Samples_Was" xml:space="preserve">
+    <value>Was</value>
+  </data>
+  <data name="Fix_Samples_Now" xml:space="preserve">
+    <value>Now</value>
+  </data>
+  <data name="Fix_Samples_None" xml:space="preserve">
+    <value>(no translation)</value>
+  </data>
+  <data name="Fix_InstallPlay" xml:space="preserve">
+    <value>Install &amp; play Draft {0}</value>
+  </data>
+  <data name="Fix_Undo" xml:space="preserve">
+    <value>Undo this fix</value>
+  </data>
+  <data name="Fix_Plan_Title" xml:space="preserve">
+    <value>Plan for Draft {0}</value>
+  </data>
+  <data name="Fix_Plan_Intro" xml:space="preserve">
+    <value>This touches more than 50 strings, so nothing changes until you apply it.</value>
+  </data>
+  <data name="Fix_Plan_Strings" xml:space="preserve">
+    <value>Translations to change: {0}</value>
+  </data>
+  <data name="Fix_Plan_Terms" xml:space="preserve">
+    <value>Glossary entries to change: {0}</value>
+  </data>
+  <data name="Fix_Plan_Scripts" xml:space="preserve">
+    <value>The rebuild script changes too.</value>
+  </data>
+  <data name="Fix_Plan_Applying" xml:space="preserve">
+    <value>Applying rebuilds the game files and test-runs the game; the agent isn't asked again.</value>
+  </data>
+  <data name="Fix_Plan_Apply" xml:space="preserve">
+    <value>Apply the plan</value>
+  </data>
+  <data name="Fix_Plan_Change" xml:space="preserve">
+    <value>Change the request</value>
+  </data>
+  <data name="Fix_Failed" xml:space="preserve">
+    <value>It didn't work; nothing changed.</value>
+  </data>
+  <data name="Fix_Stopped" xml:space="preserve">
+    <value>Stopped; nothing changed.</value>
+  </data>
+  <data name="Fix_Drafts" xml:space="preserve">
+    <value>Drafts</value>
+  </data>
+  <data name="Fix_Drafts_Note" xml:space="preserve">
+    <value>Going back makes that draft the current one again; nothing is deleted until you publish or discard.</value>
+  </data>
+  <data name="Fix_Draft_Name" xml:space="preserve">
+    <value>Draft {0}</value>
+  </data>
+  <data name="Fix_Draft_StatusCrashed" xml:space="preserve">
+    <value>the game closed after {0} s</value>
+  </data>
+  <data name="Fix_Draft_StatusTried" xml:space="preserve">
+    <value>tried in game</value>
+  </data>
+  <data name="Fix_Draft_StatusNotTried" xml:space="preserve">
+    <value>not tried yet</value>
+  </data>
+  <data name="Fix_Draft_GoBack" xml:space="preserve">
+    <value>Go back to it</value>
+  </data>
+  <data name="Fix_Draft_Publish" xml:space="preserve">
+    <value>Publish this one</value>
+  </data>
+  <data name="Fix_Problem_Busy" xml:space="preserve">
+    <value>The agent is already busy with this game; try again when it's done.</value>
+  </data>
+  <data name="Fix_Problem_NoPack" xml:space="preserve">
+    <value>The translation is gone from Text → Mine.</value>
+  </data>
+  <data name="Fix_Problem_Disk" xml:space="preserve">
+    <value>The fix files can't be read or written: {0}</value>
+  </data>
+  <data name="Fix_Problem_Unknown" xml:space="preserve">
+    <value>That didn't work: {0}</value>
+  </data>
+  <data name="Fix_Activity_Task" xml:space="preserve">
+    <value>Fixing · {0}</value>
+  </data>
+  <data name="Fix_Crash_Banner" xml:space="preserve">
+    <value>The game closed {0} s after it started with your translation (Draft {1}) installed. Your saves are untouched.</value>
+  </data>
+  <data name="Fix_Crash_Restore" xml:space="preserve">
+    <value>Restore original files</value>
+  </data>
+  <data name="Activity_Event_TranslationCrashed" xml:space="preserve">
+    <value>The game closed right after it started</value>
+  </data>
+  <data name="Activity_Detail_TranslationCrashed" xml:space="preserve">
+    <value>With «{0}» installed, after {1} s. Ask the agent to fix it.</value>
+  </data>
+  <data name="Fix_Working_Short" xml:space="preserve">
+    <value>Working on it…</value>
+  </data>
+  <data name="Fix_Problem_Agent" xml:space="preserve">
+    <value>The agent can't be started: {0}</value>
+  </data>
 </root>

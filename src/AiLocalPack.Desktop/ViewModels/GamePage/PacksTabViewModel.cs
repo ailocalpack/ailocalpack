@@ -521,6 +521,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             rows.Add(row);
         }
 
+        var result = _jobs.ResultOf(_game.Id);
         foreach (var pack in _localPacks.List(_game.Id))
         {
             var key = $"{pack.Manifest.Language}/{pack.Manifest.Id}";
@@ -536,6 +537,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             }
 
             row.SetInstallState(_busy, pack.Manifest.Id == _installingPackId);
+            row.SetCanFix(result is { } r && r.Job.Id == pack.Report.Job);
             rows.Add(row);
         }
 

@@ -2,6 +2,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Desktop.Generation;
+using AiLocalPack.Pipeline;
 using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Generation;
 
@@ -121,5 +122,72 @@ internal sealed class FakeUpdateBases : IUpdateBases
     {
         Calls++;
         return Load(game, language);
+    }
+}
+
+/// <summary>
+/// Fixes with AI for tests (task 75), so no test runs an agent: a request is recorded and kept in the job's
+/// <c>fix/state.json</c> as the real runner keeps it, with the answer <see cref="Answer"/> gives (by default the agent
+/// only replies "Done."); <see cref="Hold"/> keeps the run going (a step reported) until it is stopped or released.
+/// </summary>
+internal sealed class FakeFixRunners(TimeProvider time) : IFixRunnerFactory, IFixRunner
+{
+    private TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    public List<FixRequest> Requests { get; } = [];
+
+    public bool Hold { get; set; }
+
+    /// <summary>The agent's turn for a request (its ID given); <c>null</c> = a plain answer.</summary>
+    public Func<int, FixRequest, FixTurn>? Answer { get; set; }
+
+    public List<int> Applied { get; } = [];
+
+    public void Release() => _release.TrySetResult();
+
+    /// <summary>Thrown by <see cref="Create"/> (the job's agent unknown to this version).</summary>
+    public Exception? Refuse { get; set; }
+
+    public IFixRunner Create(Game game, GenerationJobEntry entry) => Refuse is { } e ? throw e : this;
+
+    public async Task<FixTurn> SendAsync(GenerationJobEntry entry, FixRequest request, IProgress<FixProgress>? progress, CancellationToken cancellationToken)
+    {
+        Requests.Add(request);
+        var files = new FixFiles(entry.Folder);
+        var state = files.Read();
+        var player = FixTurn.FromPlayer(state.NextTurnId, time.GetUtcNow(), request.Text, request.Attachments);
+        state = state.With(player);
+        files.Write(state);
+        var id = state.NextTurnId;
+        progress?.Report(new FixProgress(id, ["search"], null));
+        if (Hold)
+        {
+            await _release.Task.WaitAsync(cancellationToken);
+        }
+
+        var turn = Answer?.Invoke(id, request) ?? new FixTurn(id, FixTurnKind.Agent, time.GetUtcNow(), "Done.", [], ["search"], [], FixTurnOutcome.Answered);
+        files.Write(state.With(turn));
+        return turn;
+    }
+
+    public Task<FixTurn> ApplyPlanAsync(GenerationJobEntry entry, int turnId, IProgress<FixProgress>? progress, CancellationToken cancellationToken)
+    {
+        Applied.Add(turnId);
+        var files = new FixFiles(entry.Folder);
+        var state = files.Read();
+        var turn = state.Turns.Single(t => t.Id == turnId);
+        var applied = turn with { Plan = turn.Plan! with { State = FixPlanState.Applied } };
+        files.Write(state.With(applied));
+        return Task.FromResult(applied);
+    }
+
+    public FixTurn DropPlan(GenerationJobEntry entry, int turnId)
+    {
+        var files = new FixFiles(entry.Folder);
+        var state = files.Read();
+        var turn = state.Turns.Single(t => t.Id == turnId);
+        var dropped = turn with { Plan = turn.Plan! with { State = FixPlanState.Dropped } };
+        files.Write(state.With(dropped));
+        return dropped;
     }
 }

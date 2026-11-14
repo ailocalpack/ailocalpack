@@ -128,6 +128,8 @@ internal static class TestServices
             // Generation never runs the real pipeline, and the start form's estimate is the test's.
             services.AddSingleton<FakeGenerationStages>();
             services.AddSingleton<IGenerationStagesFactory>(sp => sp.GetRequiredService<FakeGenerationStages>());
+            services.AddSingleton(sp => new FakeFixRunners(sp.GetRequiredService<TimeProvider>()));
+            services.AddSingleton<IFixRunnerFactory>(sp => sp.GetRequiredService<FakeFixRunners>());
             services.AddSingleton<FakeEstimates>();
             services.AddSingleton<IGenerationEstimates>(sp => sp.GetRequiredService<FakeEstimates>());
             services.AddSingleton<FakeUpdateBases>();

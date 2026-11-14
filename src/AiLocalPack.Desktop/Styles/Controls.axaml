@@ -1937,4 +1937,79 @@
     <Style Selector="ProgressBar.genLimit.reached">
         <Setter Property="Foreground" Value="{DynamicResource AppWarnBrush}" />
     </Style>
+
+    <!-- Fix with AI (task 75, design §6e): the conversation under the result -->
+    <Style Selector="Border.packTag.bad">
+        <Setter Property="Background" Value="{DynamicResource AppBadSoftBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppBadBrush}" />
+    </Style>
+    <Style Selector="Border.fixRule">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource AppBorderBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.fixPlayer">
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="MaxWidth" Value="620" />
+    </Style>
+    <Style Selector="Border.fixAvatar">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppGenSoftBrush}" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Border.fixAvatar Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>
+    <Style Selector="Border.fixCard">
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppGenSoftBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.fixTile">
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+    </Style>
+    <Style Selector="Border.fixSample">
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+    </Style>
+    <Style Selector="Border.fixIns">
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="{DynamicResource AppOkSoftBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    <Style Selector="Border.fixAttach">
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Padding" Value="10,0,4,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+    </Style>
+    <Style Selector="Border.fixAttach Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppMutedBrush}" /></Style>
+    <Style Selector="Border.fixAttach.bad Path.icon"><Setter Property="Stroke" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="Border.fixComposer">
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.fixComposer TextBox">
+        <Setter Property="MinHeight" Value="64" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="Path.fixStep"><Setter Property="Stroke" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="Path.fixStep.running"><Setter Property="Stroke" Value="{DynamicResource AppGenBrush}" /></Style>
+    <Style Selector="TextBlock.fixSystem"><Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" /></Style>
+    <Style Selector="TextBlock.fixValue.ok"><Setter Property="Foreground" Value="{DynamicResource AppOkBrush}" /></Style>
+    <Style Selector="TextBlock.fixValue.bad"><Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" /></Style>
+    <Style Selector="TextBlock.fixSystem.bad"><Setter Property="Foreground" Value="{DynamicResource AppBadBrush}" /></Style>
 </Styles>
