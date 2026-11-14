@@ -85,6 +85,19 @@ internal sealed class InstallBed : IDisposable
 
     public string Read(string relativePath) => File.ReadAllText(Path.Combine(GameDir, relativePath));
 
+    /// <summary>The file's text, or null while another process (a background install) holds it open.</summary>
+    public string? TryRead(string relativePath)
+    {
+        try
+        {
+            return Read(relativePath);
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+    }
+
     /// <summary>
     /// Adds a recipe pack of game 10 to the index and writes its files: every string translated as <paramref name="prefix"/>
     /// + the original ("RU ": letters every font has; "РУ " needs a font with Cyrillic), made for <paramref name="buildId"/>

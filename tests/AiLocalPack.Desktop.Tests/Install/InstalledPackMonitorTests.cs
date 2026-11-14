@@ -199,8 +199,9 @@ public sealed class InstalledPackMonitorTests
 
         // Act
         await bed.Services.GetRequiredService<GameLibrary>().RefreshAsync();
-        await Wait.UntilAsync(() => bed.Read(InstallBed.SystemFile).Contains("RU ", StringComparison.Ordinal)
-            && bed.Services.GetRequiredService<PackInstallService>().Current is null);
+        // The re-apply runs in the background: on Windows the file can't be read while it writes, so look only between installs.
+        await Wait.UntilAsync(() => bed.Services.GetRequiredService<PackInstallService>().Current is null
+            && bed.TryRead(InstallBed.SystemFile)?.Contains("RU ", StringComparison.Ordinal) == true);
 
         // Assert
         Installed(bed)!.Problem.Should().Be(InstalledPackProblem.None);

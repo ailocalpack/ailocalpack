@@ -103,10 +103,10 @@ public static class FixPrompt
                     text.Append("The game session: it closed ")
                         .Append(a.Seconds is { } seconds ? string.Create(CultureInfo.InvariantCulture, $"{seconds:0.#} s after it started") : "soon after it started")
                         .Append(a.ExitCode is { } code ? string.Create(CultureInfo.InvariantCulture, $" with exit code {code}") : string.Empty)
-                        .AppendLine(".");
+                        .Append(".\n");
                     break;
                 case FixAttachmentKind.GameLog when a.Path is { } log && ReadText(log) is { } lines:
-                    text.Append("The end of the game's log `").Append(a.Name).AppendLine("`:").AppendLine("```").AppendLine(lines.TrimEnd()).AppendLine("```");
+                    text.Append("The end of the game's log `").Append(a.Name).Append("`:\n").Append("```\n").Append(lines.TrimEnd()).Append('\n').Append("```\n");
                     break;
                 case FixAttachmentKind.DraftChanges:
                     text.Append("What Draft ").Append(context.Draft.ToString(CultureInfo.InvariantCulture)).Append(" changes in the game: ")
@@ -121,16 +121,16 @@ public static class FixPrompt
                         }
                     }
 
-                    text.AppendLine(".");
+                    text.Append(".\n");
                     break;
                 case FixAttachmentKind.Screenshot when a.Path is { } image:
-                    text.Append("A screenshot the player took: `").Append(image).AppendLine("` (look at it with your file reading tool).");
+                    text.Append("A screenshot the player took: `").Append(image).Append("` (look at it with your file reading tool).\n");
                     break;
                 case FixAttachmentKind.Strings when a.Keys is { Count: > 0 } keys:
-                    text.AppendLine("Strings the player points at (key, original, your translation):");
+                    text.Append("Strings the player points at (key, original, your translation):\n");
                     foreach (var key in keys)
                     {
-                        text.AppendLine(JsonSerializer.Serialize(new FixStringLine(key, context.Original(key), context.Translation(key)), LineOptions.GetTypeInfo(typeof(FixStringLine))));
+                        text.Append(JsonSerializer.Serialize(new FixStringLine(key, context.Original(key), context.Translation(key)), LineOptions.GetTypeInfo(typeof(FixStringLine)))).Append('\n');
                     }
 
                     break;
@@ -169,7 +169,7 @@ public static class FixPrompt
                 FixTurnOutcome.Stopped => " (stopped by the player, nothing changed)",
                 _ => string.Empty,
             } : string.Empty;
-            text.Append("- ").Append(what).Append(outcome).Append(": ").AppendLine(words.Length == 0 ? "(no words)" : words);
+            text.Append("- ").Append(what).Append(outcome).Append(": ").Append(words.Length == 0 ? "(no words)" : words).Append('\n');
         }
 
         return text.ToString().TrimEnd();
