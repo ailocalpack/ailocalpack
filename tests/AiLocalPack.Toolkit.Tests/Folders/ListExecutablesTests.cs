@@ -61,6 +61,32 @@ public sealed class ListExecutablesTests : IDisposable
     }
 
     [Fact]
+    public void Program_named_like_the_game_comes_before_its_editor()
+    {
+        // Arrange
+        _dir.File("Barony Editor.app/Contents/MacOS/Barony Editor", "macho").File("Barony.app/Contents/MacOS/Barony", "macho");
+
+        // Act
+        var list = FolderRecognizer.ListExecutables(_dir.Path, null, "Barony");
+
+        // Assert
+        list.Should().Equal("Barony.app", "Barony Editor.app");
+    }
+
+    [Fact]
+    public void Editors_and_servers_come_last_without_a_name_match()
+    {
+        // Arrange
+        _dir.File("AEditor.exe", "MZ").File("BServer.exe", "MZ").File("Play.exe", "MZ");
+
+        // Act
+        var list = FolderRecognizer.ListExecutables(_dir.Path, null, "Lantern");
+
+        // Assert
+        list.Should().Equal("Play.exe", "AEditor.exe", "BServer.exe");
+    }
+
+    [Fact]
     public void Missing_folder_lists_only_the_given_executable()
     {
         // Arrange

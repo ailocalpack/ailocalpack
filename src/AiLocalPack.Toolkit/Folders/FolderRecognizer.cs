@@ -187,24 +187,21 @@ public sealed class FolderRecognizer(EngineDetector? engines = null, ILogger<Fol
     /// <summary>
     /// Executables of a game folder a player can choose as the main one (Edit game details): <paramref name="mainExecutable"/>
     /// first, then the folder's executables in the recognizer's order (Windows, Linux, scripts, bundles; a bundle's
-    /// <c>Contents/MacOS</c> binaries), then those of binaries subfolders (<c>bin/x64</c>…). Relative, '/'-separated.
-    /// Never throws for disk state.
+    /// <c>Contents/MacOS</c> binaries), then those of binaries subfolders (<c>bin/x64</c>…), ranked like the main one is
+    /// picked: one named like <paramref name="gameName"/> (default: the folder's name) first, editors, servers and settings
+    /// tools last (<c>Barony.app</c> before <c>Barony Editor.app</c>). Relative, '/'-separated. Never throws for disk state.
     /// </summary>
-    public static IReadOnlyList<string> ListExecutables(string gameFolder, string? mainExecutable)
+    public static IReadOnlyList<string> ListExecutables(string gameFolder, string? mainExecutable, string? gameName = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
         var folder = FolderView.Root(Path.GetFullPath(gameFolder));
-        var list = new List<string>();
-        if (mainExecutable is not null)
-        {
-            list.Add(mainExecutable);
-        }
+        var found = new List<string>();
 
         if (IsBundleLike(folder))
         {
             if (folder.At("Contents/MacOS") is { } macOs)
             {
-                list.AddRange(macOs.FileNames.Select(macOs.RelativeOf));
+                found.AddRange(macOs.FileNames.Select(macOs.RelativeOf));
             }
         }
         else
@@ -213,10 +210,17 @@ public sealed class FolderRecognizer(EngineDetector? engines = null, ILogger<Fol
                 .Where(n => n.EndsWith(".sh", StringComparison.OrdinalIgnoreCase) && !Executables.IsInstaller(n) && !Executables.IsHelper(n))
                 .Select(folder.RelativeOf);
             var bundles = folder.DirNames.Where(EngineDetector.IsBundle).Select(folder.RelativeOf);
-            list.AddRange(Executables.In(folder).Concat(scripts).Concat(bundles));
-            AddBinaryFolders(folder, list, 2);
+            found.AddRange(Executables.In(folder).Concat(scripts).Concat(bundles));
+            AddBinaryFolders(folder, found, 2);
         }
 
+        var list = new List<string>();
+        if (mainExecutable is not null)
+        {
+            list.Add(mainExecutable);
+        }
+
+        list.AddRange(Ranked(found, gameName ?? folder.Name));
         return [.. list.Distinct(StringComparer.Ordinal)];
 
         static void AddBinaryFolders(FolderView folder, List<string> list, int levels)
@@ -261,15 +265,17 @@ public sealed class FolderRecognizer(EngineDetector? engines = null, ILogger<Fol
         return Pick(Executables.In(folder).Concat(scripts).Concat(bundles), folder.Name);
     }
 
-    private static string? Pick(IEnumerable<string> candidates, string folderName)
+    private static string? Pick(IEnumerable<string> candidates, string folderName) => Ranked(candidates, folderName).FirstOrDefault();
+
+    /// <summary>Candidates named like the game first, editors, servers and settings tools last; otherwise in their order.</summary>
+    private static IEnumerable<string> Ranked(IEnumerable<string> candidates, string gameName)
     {
-        var stem = Normalize(EngineDetector.IsBundle(folderName) ? folderName[..^4] : folderName);
+        var stem = Normalize(EngineDetector.IsBundle(gameName) ? gameName[..^4] : gameName);
         return candidates
             .Select((path, order) => (Path: path, Order: order, Name: Path.GetFileNameWithoutExtension(path.Split('/')[^1])))
             .OrderBy(c => Normalize(c.Name) == stem ? 0 : SecondaryNameParts.Any(p => c.Name.Contains(p, StringComparison.OrdinalIgnoreCase)) ? 2 : 1)
             .ThenBy(c => c.Order)
-            .Select(c => c.Path)
-            .FirstOrDefault();
+            .Select(c => c.Path);
 
         static string Normalize(string name) => new([.. name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant)]);
     }

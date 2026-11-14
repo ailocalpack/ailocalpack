@@ -172,7 +172,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.RebuildUnknown.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("rebuild-unknown.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("rebuild-unknown.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Fix.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("fix.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("fix.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -273,7 +273,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Fix.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("fix.v1.scripts.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("fix.v2.scripts.txt", prompt));
     }
 
     [Fact]

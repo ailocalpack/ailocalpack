@@ -297,13 +297,14 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
         }
 
         var scripts = source.Tool == AgentScriptTool.ToolId;
+        var shared = SharedAttachments.Share(request.Attachments, scripts ? context.Files.AgentFolder : context.CopyFolder, context.Log);
         var values = PromptValues.Fix(
             game.Name,
             source.Engine,
             source.Strings.Count,
             pack.Report.DraftNumber,
             text,
-            FixPrompt.Attachments(request.Attachments, Context(pack, source, context.Files)),
+            FixPrompt.Attachments(shared.Attachments, Context(pack, source, context.Files)),
             FixPrompt.History([.. state.Turns.Where(t => t.Id < player.Id)]),
             scripts);
         var system = new AgentSystemPrompt(PromptTemplate.SystemFix, PromptValues.SystemFix(game.Name, entry.Job.Language, scripts ? context.CopyFolder : null));
@@ -331,6 +332,10 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
             PutBack(fix, context.Files);
             Finish(fix, state, new FixTurn(turnId, FixTurnKind.Agent, time.GetUtcNow(), string.Empty, [], [.. steps], [], FixTurnOutcome.Stopped));
             throw;
+        }
+        finally
+        {
+            shared.Remove(context.Log);
         }
 
         var model = PipelineProgressFile.Read(context.Files).Agent?.Model;
@@ -754,5 +759,77 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
     {
         var flat = text.ReplaceLineEndings(" ");
         return flat.Length <= 200 ? flat : flat[..200] + "…";
+    }
+}
+
+/// <summary>
+/// Screenshots copied into the agent's working folder for one fix run (<c>.fix-attachments/</c>: the job's <c>agent/</c>
+/// workspace, else the working copy): the agent's file tools reach only that folder (Claude Code's <c>--restricted</c>),
+/// so a path in <c>fix/attachments/</c> can't be read. Removed when the run ends, before the rebuild and the test run.
+/// </summary>
+internal sealed class SharedAttachments
+{
+    public const string FolderName = ".fix-attachments";
+
+    private readonly string? _folder;
+
+    private SharedAttachments(IReadOnlyList<FixAttachment> attachments, string? folder)
+    {
+        Attachments = attachments;
+        _folder = folder;
+    }
+
+    /// <summary>The attachments with each screenshot's path in the working folder (one that can't be copied keeps its own).</summary>
+    public IReadOnlyList<FixAttachment> Attachments { get; }
+
+    public static SharedAttachments Share(IReadOnlyList<FixAttachment> attachments, string workingFolder, Action<string> log)
+    {
+        if (!attachments.Any(a => a.Kind == FixAttachmentKind.Screenshot && a.Path is not null))
+        {
+            return new(attachments, null);
+        }
+
+        var folder = Path.Combine(workingFolder, FolderName);
+        var shared = new List<FixAttachment>();
+        foreach (var (a, i) in attachments.Select((a, i) => (a, i)))
+        {
+            if (a.Kind != FixAttachmentKind.Screenshot || a.Path is not { } path)
+            {
+                shared.Add(a);
+                continue;
+            }
+
+            try
+            {
+                Directory.CreateDirectory(folder);
+                var copy = Path.Combine(folder, $"{i + 1}-{Path.GetFileName(path)}");
+                File.Copy(path, copy, overwrite: true);
+                shared.Add(a with { Path = copy });
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                log($"Fix: the screenshot {path} can't be copied for the agent: {e.Message}");
+                shared.Add(a);
+            }
+        }
+
+        return new(shared, folder);
+    }
+
+    public void Remove(Action<string> log)
+    {
+        if (_folder is null || !Directory.Exists(_folder))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.Delete(_folder, recursive: true);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            log($"Fix: {_folder} can't be removed: {e.Message}");
+        }
     }
 }

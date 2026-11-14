@@ -112,7 +112,7 @@ public sealed class DependencyPreparer(DependencyStore store, EngineDetector eng
         ArgumentNullException.ThrowIfNull(game);
         var folder = game.InstallPath;
         var main = game.MainExecutable ?? _engines.Detect(folder).Match?.MainExecutable;
-        foreach (var executable in FolderRecognizer.ListExecutables(folder, main))
+        foreach (var executable in FolderRecognizer.ListExecutables(folder, main, game.Name))
         {
             if (GamePlatforms.Detect(Path.Combine(folder, executable.Replace('/', Path.DirectorySeparatorChar)), GamePlatforms.MachineArch) is { } platform)
             {

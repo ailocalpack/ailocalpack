@@ -108,6 +108,41 @@ public sealed class FixRunnerTests : IDisposable
     }
 
     [Fact]
+    public async Task The_agent_reads_the_screenshot_inside_its_working_folder()
+    {
+        // Arrange
+        var shot = _h.Dir.File("shot.png", "png").Combine("shot.png");
+        string? seen = null;
+        var agent = new ScriptedAgent((run, _, _) =>
+        {
+            seen = Directory.EnumerateFiles(run.Request!.WorkingDirectory, "*shot.png", SearchOption.AllDirectories)
+                .FirstOrDefault(f => run.Prompt.Contains(f, StringComparison.Ordinal) && File.ReadAllText(f) == "png");
+            return Task.FromResult<IReadOnlyList<AgentEvent>>([new AgentDone(AgentOutcome.Succeeded, "Seen.")]);
+        });
+        var request = new FixRequest("The menu shows boxes.", [new FixAttachment(FixAttachmentKind.Screenshot, "shot.png", shot)]);
+
+        // Act
+        await Runner(agent).SendAsync(Entry, request, null, TestContext.Current.CancellationToken);
+
+        // Assert
+        seen.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task The_screenshot_copy_is_gone_after_the_run()
+    {
+        // Arrange
+        var shot = _h.Dir.File("shot.png", "png").Combine("shot.png");
+        var request = new FixRequest("The menu shows boxes.", [new FixAttachment(FixAttachmentKind.Screenshot, "shot.png", shot)]);
+
+        // Act
+        await Runner(Changing(1)).SendAsync(Entry, request, null, TestContext.Current.CancellationToken);
+
+        // Assert
+        Directory.Exists(Path.Combine(_h.Copy, SharedAttachments.FolderName)).Should().BeFalse();
+    }
+
+    [Fact]
     public async Task The_change_card_shows_samples_of_what_changed()
     {
         // Arrange

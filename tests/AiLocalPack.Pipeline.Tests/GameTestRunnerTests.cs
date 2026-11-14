@@ -181,6 +181,22 @@ public sealed class GameTestRunnerTests : IDisposable
     }
 
     [Fact]
+    public async Task The_game_runs_rather_than_its_editor_beside_it()
+    {
+        // Arrange
+        File.Delete(CopyFile("Game.sh"));
+        _dir.File("job/game/Lantern Editor.app/Contents/MacOS/Lantern Editor", "macho")
+            .File("job/game/Lantern.app/Contents/MacOS/Lantern", "macho");
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning);
+
+        // Act
+        await RunAsync(processes, os: OsKind.MacOS);
+
+        // Assert
+        Path.GetFileName(processes.Started.Single().FileName).Should().Be("Lantern");
+    }
+
+    [Fact]
     public async Task A_copy_without_a_program_is_skipped()
     {
         // Arrange

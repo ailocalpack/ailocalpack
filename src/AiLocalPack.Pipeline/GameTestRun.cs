@@ -132,7 +132,7 @@ public sealed class GameTestRunner(IProcessRunner runner, OsKind os, TestRunOpti
     internal static (ProcessLaunch? Launch, TestRunResult? Skip) Plan(Game game, string copyFolder, OsKind os)
     {
         var main = new EngineDetector().Detect(copyFolder).Match?.MainExecutable ?? game.MainExecutable;
-        var candidates = FolderRecognizer.ListExecutables(copyFolder, main)
+        var candidates = FolderRecognizer.ListExecutables(copyFolder, main, game.Name)
             .Select(exe => new LaunchCandidate(exe, ExecutableFormats.Detect(Path.Combine(copyFolder, exe.Replace('/', Path.DirectorySeparatorChar)))))
             .ToList();
         switch (GameLaunchPlanner.PlanProgram(copyFolder, os, candidates, watchable: true))

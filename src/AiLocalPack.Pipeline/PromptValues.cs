@@ -116,7 +116,7 @@ public static class PromptValues
         ["attachments"] = attachments,
         ["history"] = history,
         ["scriptsStep"] = scripts
-            ? ", or your rebuild script in `scripts/` when the problem is how the files are written (check the round trip as before; the app runs your rebuild again for the next draft)"
+            ? ", or your rebuild script in `scripts/` when the problem is how the files are written (check the round trip as before; the app runs your rebuild again for the next draft). Whatever the scripts change beyond the strings (a font with the missing letters, a file kept under a size the game reads) must be on by default and described in `scripts/README.md`: the app's rebuild run follows the README and keeps it"
             : string.Empty,
     };
 }

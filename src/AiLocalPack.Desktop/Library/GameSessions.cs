@@ -142,7 +142,7 @@ public sealed class GameSessions : IDisposable
     /// <summary>The main executable first, then the folder's other programs, each with its format read from disk.</summary>
     private static List<LaunchCandidate> Candidates(Game game) =>
         game.Source != GameSource.Manual || !Directory.Exists(game.InstallPath) ? []
-        : [.. FolderRecognizer.ListExecutables(game.InstallPath, game.MainExecutable)
+        : [.. FolderRecognizer.ListExecutables(game.InstallPath, game.MainExecutable, game.Name)
             .Select(exe => new LaunchCandidate(exe, ExecutableFormats.Detect(Path.Combine(game.InstallPath, exe.Replace('/', Path.DirectorySeparatorChar)))))];
 
     private async Task PollAsync()
