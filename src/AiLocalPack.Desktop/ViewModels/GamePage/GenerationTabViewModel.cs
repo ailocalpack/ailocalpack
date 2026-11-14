@@ -588,7 +588,38 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     // ---------- Checks ----------
 
-    public IReadOnlyList<GenerationCheckViewModel> Checks => [EngineCheck(), DiskCheck(), AgentCheck(), new(GenerationCheckState.Ok, _localizer[nameof(Strings.Gen_Check_NoAntiCheat)])];
+    public IReadOnlyList<GenerationCheckViewModel> Checks =>
+    [
+        .. OfficialCheck(), EngineCheck(), DiskCheck(), AgentCheck(), new(GenerationCheckState.Ok, _localizer[nameof(Strings.Gen_Check_NoAntiCheat)]),
+    ];
+
+    /// <summary>The game's own languages (task 80): a warning line when it already ships the form's language. Set by the page.</summary>
+    public OfficialLanguages? Official
+    {
+        get => _official;
+        set
+        {
+            if (value?.SameAs(_official) == true || value == _official)
+            {
+                return;
+            }
+
+            _official = value;
+            OnPropertyChanged(nameof(Checks));
+        }
+    }
+
+    private OfficialLanguages? _official;
+
+    /// <summary>"Русский is already in the game (interface, subtitles): your AI translation replaces its text." Not a blocker.</summary>
+    private IEnumerable<GenerationCheckViewModel> OfficialCheck()
+    {
+        if (_official?.TextIn(Language) is { } here)
+        {
+            yield return new(GenerationCheckState.Warning, _localizer.Format(
+                nameof(Strings.Gen_Check_Official), LanguageName, ViewModels.Library.OfficialLanguageTexts.Levels(here, _official.Source, _localizer)));
+        }
+    }
 
     // ---------- Start ----------
 
@@ -1603,6 +1634,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         OnPropertyChanged(nameof(Language));
         OnPropertyChanged(nameof(LanguageName));
         OnPropertyChanged(nameof(LanguageOptions));
+        OnPropertyChanged(nameof(Checks));
         RefreshRequest();
     }
 

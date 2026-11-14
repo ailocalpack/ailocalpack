@@ -49,6 +49,9 @@ public static class PrimaryActionTexts
         {
             { Kind: GamePrimaryActionKind.InstallBestPack, Pack: { } pack } => InstallCaption(pack, game, localizer),
             { Kind: GamePrimaryActionKind.Generate } => localizer[nameof(Strings.Game_Caption_Generate)],
+            { Kind: GamePrimaryActionKind.Play, Official: { } official } => localizer.Format(
+                game.Source == GameSource.Steam ? nameof(Strings.Game_Caption_PlayOfficialSteam) : nameof(Strings.Game_Caption_PlayOfficial),
+                Core.Languages.LanguageNames.Native(official.Tag)),
             { Kind: GamePrimaryActionKind.Play } => localizer.Format(
                 game.Source == GameSource.Steam ? nameof(Strings.Game_Caption_PlaySteam) : nameof(Strings.Game_Caption_Play),
                 action.Pack?.Title ?? action.Installed?.Title ?? action.Installed?.PackId ?? action.Result?.Title),

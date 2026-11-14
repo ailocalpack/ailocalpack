@@ -171,11 +171,14 @@ public sealed partial class GamePageViewModel : PageViewModel
 
         Packs = new PacksTabViewModel(
             game, Status, Language, packIndex, manifests, localizer, shell, OpenGeneration, localPacks, jobs,
-            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, ratings, _logger, requests);
+            pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, ratings, _logger, requests, _statuses.OfficialOf(game));
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
-        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests, fixes, picker);
+        Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests, fixes, picker)
+        {
+            Official = statuses.OfficialOf(game),
+        };
         ActivateTab();
 
         _library.Catalog.Changed += OnCatalogChanged;
@@ -185,6 +188,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _sessions.Changed += OnSessionChanged;
         _install.Changed += OnInstallChanged;
         _statuses.InstalledChanged += OnInstalledChanged;
+        _statuses.OfficialChanged += OnOfficialChanged;
         _statuses.JobChanged += OnJobChanged;
         _localPacks.Changed += OnLocalPacksChanged;
         _publish.Changed += OnLocalPacksChanged;
@@ -654,6 +658,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         _sessions.Changed -= OnSessionChanged;
         _install.Changed -= OnInstallChanged;
         _statuses.InstalledChanged -= OnInstalledChanged;
+        _statuses.OfficialChanged -= OnOfficialChanged;
         _statuses.JobChanged -= OnJobChanged;
         _localPacks.Changed -= OnLocalPacksChanged;
         _publish.Changed -= OnLocalPacksChanged;
@@ -850,6 +855,15 @@ public sealed partial class GamePageViewModel : PageViewModel
         }
     }
 
+    /// <summary>Games' own languages were read (task 80, any thread): this one's status and Text tab may change.</summary>
+    private void OnOfficialChanged(object? sender, IReadOnlyList<GameId> games)
+    {
+        if (games.Contains(Game.Id))
+        {
+            _ui.Post(Refresh);
+        }
+    }
+
     /// <summary>The game's generation job started, moved on or ended (any thread): status, tab % and the tab's card follow.</summary>
     private void OnJobChanged(object? sender, Core.Generation.GenerationJob job)
     {
@@ -937,8 +951,9 @@ public sealed partial class GamePageViewModel : PageViewModel
         Status = _statuses.Resolve(Game);
         Action = GamePrimaryActions.Resolve(Status);
         UpdateTabs();
-        Packs.Update(Game, Status, Language);
+        Packs.Update(Game, Status, Language, _statuses.OfficialOf(Game));
         Generation.Update(Game, Language, UpdateCandidate);
+        Generation.Official = _statuses.OfficialOf(Game);
         ActivateTab();
         OnPropertyChanged(string.Empty);
         PrimaryCommand.NotifyCanExecuteChanged();

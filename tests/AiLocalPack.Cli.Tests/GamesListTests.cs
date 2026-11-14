@@ -51,6 +51,8 @@ public sealed class GamesListTests : IDisposable
                 ["libraryPath"] = _steam.Root,
                 ["lastPlayed"] = "2027-01-15T08:00:00+00:00",
                 ["available"] = true,
+                ["steamLanguage"] = null,
+                ["languages"] = null,
             }),
         };
 
@@ -60,6 +62,23 @@ public sealed class GamesListTests : IDisposable
         // Assert
         result.ExitCode.Should().Be(0);
         JsonNode.DeepEquals(JsonNode.Parse(result.StdOut), expected).Should().BeTrue(result.StdOut);
+    }
+
+    [Fact]
+    public async Task Json_lists_the_games_own_languages_from_steams_app_info()
+    {
+        // Arrange
+        _steam.AddGame(1942280, "Brotato", language: "english");
+        new SteamAppInfoWriter().AddApp(1942280, "Brotato", new AppInfoLanguage("english"), new AppInfoLanguage("russian", Subtitles: true)).WriteTo(_steam.Root);
+
+        // Act
+        var result = await RunAsync("games", "list", "--json");
+
+        // Assert
+        var game = Games(result).Single()!;
+        (game["steamLanguage"]!.GetValue<string>(), game["languages"]!.ToJsonString()).Should().Be((
+            "en",
+            """[{"tag":"en","interface":true,"subtitles":false,"fullAudio":false},{"tag":"ru","interface":true,"subtitles":true,"fullAudio":false}]"""));
     }
 
     [Fact]

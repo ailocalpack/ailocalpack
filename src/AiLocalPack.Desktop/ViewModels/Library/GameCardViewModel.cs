@@ -169,6 +169,7 @@ public sealed partial class GameCardViewModel : ObservableObject
         LocalizationStatusKind.PackAvailable => _localizer[nameof(Strings.Library_Status_PackAvailable)],
         LocalizationStatusKind.NoPack => _localizer[nameof(Strings.Library_Status_NoPack)],
         LocalizationStatusKind.NeedsUpdate => _localizer[nameof(Strings.Library_Status_NeedsUpdate)],
+        LocalizationStatusKind.InGame => _localizer[nameof(Strings.Library_Status_InGame)],
         LocalizationStatusKind.Generating => _localizer.Format(nameof(Strings.Library_Badge_Generating), Percent),
         LocalizationStatusKind.Paused => _localizer.Format(nameof(Strings.Library_Badge_Paused), Percent),
         LocalizationStatusKind.Blocked when Status.Block == LocalizationBlock.AntiCheat => _localizer[nameof(Strings.Library_Badge_AntiCheat)],
@@ -187,10 +188,11 @@ public sealed partial class GameCardViewModel : ObservableObject
         LocalizationStatusKind.Generating => "IconLoader",
         LocalizationStatusKind.Paused => "IconPause",
         LocalizationStatusKind.Blocked => "IconShield",
+        LocalizationStatusKind.InGame => "IconGlobe",
         _ => "IconCircleDashed",
     };
 
-    public bool IsToneOk => !IsInstalling && StatusKind == LocalizationStatusKind.Installed;
+    public bool IsToneOk => !IsInstalling && StatusKind is LocalizationStatusKind.Installed or LocalizationStatusKind.InGame;
 
     public bool IsToneAccent => IsInstalling || StatusKind == LocalizationStatusKind.PackAvailable;
 
@@ -302,6 +304,14 @@ public sealed partial class GameCardViewModel : ObservableObject
                 return local.Language == LibraryLanguage
                     ? _localizer.Format(nameof(Strings.Library_Card_LocalPack), Math.Floor(local.Coverage * 100).ToString("0", _localizer.Culture))
                     : _localizer.Format(nameof(Strings.Library_Card_LocalPackLanguage), Core.Languages.LanguageNames.Native(local.Language));
+            }
+
+            if (StatusKind == LocalizationStatusKind.InGame && Status.Official is { } official)
+            {
+                // "+2 translations" when the registry has some too, else how much of the game is in the language.
+                return Status.Packs.Count > 0
+                    ? _localizer.Plural(nameof(Strings.Library_Card_AlsoPacks_One), Status.Packs.Count)
+                    : OfficialLanguageTexts.Levels(official, Status.OfficialSource, _localizer);
             }
 
             if (ShowsPackInfo && Status.BestPack is { } best)

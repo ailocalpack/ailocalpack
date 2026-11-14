@@ -4725,4 +4725,55 @@
   <data name="Fix_Earlier" xml:space="preserve">
     <value>Show earlier messages ({0})</value>
   </data>
+  <data name="Library_Status_InGame" xml:space="preserve">
+    <value>In game</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_One" xml:space="preserve">
+    <value>+{0} translation</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_Other" xml:space="preserve">
+    <value>+{0} translations</value>
+  </data>
+  <data name="Official_Level_Interface" xml:space="preserve">
+    <value>interface</value>
+  </data>
+  <data name="Official_Level_Subtitles" xml:space="preserve">
+    <value>subtitles</value>
+  </data>
+  <data name="Official_Level_Audio" xml:space="preserve">
+    <value>full audio</value>
+  </data>
+  <data name="Official_Level_Text" xml:space="preserve">
+    <value>text</value>
+  </data>
+  <data name="Official_Level_Separator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="Packs_Official_Title" xml:space="preserve">
+    <value>{0} is in the game itself: {1}.</value>
+  </data>
+  <data name="Packs_Official_HintSteam" xml:space="preserve">
+    <value>If the game shows another language, pick {0} in its own settings or in Steam: the game’s Properties → General → Language.</value>
+  </data>
+  <data name="Packs_Official_HintSteamOther" xml:space="preserve">
+    <value>Steam starts it in {0}: pick {1} in the game’s Properties in Steam → General → Language, or in the game’s own settings.</value>
+  </data>
+  <data name="Packs_Official_HintSteamSame" xml:space="preserve">
+    <value>Steam already starts it in {0}. If the text still shows another language, pick {0} in the game’s own settings.</value>
+  </data>
+  <data name="Packs_Official_HintManual" xml:space="preserve">
+    <value>Pick {0} in the game’s own settings.</value>
+  </data>
+  <data name="Packs_Official_OpenSteam" xml:space="preserve">
+    <value>Open in Steam</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
+    <value>via Steam · in {0}, the game’s own</value>
+  </data>
+  <data name="Game_Caption_PlayOfficial" xml:space="preserve">
+    <value>in {0}, the game’s own</value>
+  </data>
+  <data name="Gen_Check_Official" xml:space="preserve">
+    <value>{0} is already in the game ({1}): your AI translation replaces its text</value>
+  </data>
 </root>

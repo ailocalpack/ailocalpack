@@ -4561,4 +4561,52 @@
   <data name="Fix_Earlier" xml:space="preserve">
     <value>以前のメッセージを表示 ({0})</value>
   </data>
+  <data name="Library_Status_InGame" xml:space="preserve">
+    <value>ゲームに収録</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_Other" xml:space="preserve">
+    <value>+{0} 件の翻訳</value>
+  </data>
+  <data name="Official_Level_Interface" xml:space="preserve">
+    <value>インターフェース</value>
+  </data>
+  <data name="Official_Level_Subtitles" xml:space="preserve">
+    <value>字幕</value>
+  </data>
+  <data name="Official_Level_Audio" xml:space="preserve">
+    <value>フル音声</value>
+  </data>
+  <data name="Official_Level_Text" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+  <data name="Official_Level_Separator" xml:space="preserve">
+    <value>、</value>
+  </data>
+  <data name="Packs_Official_Title" xml:space="preserve">
+    <value>{0}はゲーム本体に収録されています：{1}。</value>
+  </data>
+  <data name="Packs_Official_HintSteam" xml:space="preserve">
+    <value>ゲームが別の言語で表示される場合は、ゲームの設定か Steam で{0}を選んでください：ゲームのプロパティ → 一般 → 言語。</value>
+  </data>
+  <data name="Packs_Official_HintSteamOther" xml:space="preserve">
+    <value>Steam は{0}で起動しています：Steam でゲームのプロパティ → 一般 → 言語、またはゲーム本体の設定で{1}を選んでください。</value>
+  </data>
+  <data name="Packs_Official_HintSteamSame" xml:space="preserve">
+    <value>Steam はすでに{0}で起動しています。テキストが別の言語のままなら、ゲーム本体の設定で{0}を選んでください。</value>
+  </data>
+  <data name="Packs_Official_HintManual" xml:space="preserve">
+    <value>ゲーム本体の設定で{0}を選んでください。</value>
+  </data>
+  <data name="Packs_Official_OpenSteam" xml:space="preserve">
+    <value>Steam で開く</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
+    <value>Steam 経由 · ゲームの言語：{0}</value>
+  </data>
+  <data name="Game_Caption_PlayOfficial" xml:space="preserve">
+    <value>ゲームの言語：{0}</value>
+  </data>
+  <data name="Gen_Check_Official" xml:space="preserve">
+    <value>{0}はすでにゲームに収録されています（{1}）：AI 翻訳はそのテキストを置き換えます</value>
+  </data>
 </root>

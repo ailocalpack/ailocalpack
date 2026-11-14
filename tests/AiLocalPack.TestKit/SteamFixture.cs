@@ -49,14 +49,17 @@ public sealed class SteamFixture
     }
 
     /// <summary>Writes <c>appmanifest_&lt;appId&gt;.acf</c> into <paramref name="library"/> (default: the root) and creates the game folder.</summary>
+    /// <param name="language">The Steam API name Steam starts the game in (<c>UserConfig/language</c>); none when <c>null</c>.</param>
     public SteamFixture AddGame(
         uint appId,
         string name,
         string buildId = "1000",
         int stateFlags = FullyInstalled,
         string? library = null,
-        long lastPlayed = 0)
+        long lastPlayed = 0,
+        string? language = null)
     {
+        var userConfig = language is null ? string.Empty : $"\t\"UserConfig\"\n\t{{\n\t\t\"language\"\t\t\"{Escape(language)}\"\n\t}}\n";
         library ??= Root;
         var installDir = name;
         var manifest = $$"""
@@ -69,7 +72,7 @@ public sealed class SteamFixture
             	"installdir"		"{{Escape(installDir)}}"
             	"LastPlayed"		"{{lastPlayed}}"
             	"buildid"		"{{buildId}}"
-            }
+            {{userConfig}}}
             """;
         Write(Path.Combine(library, "steamapps", $"appmanifest_{appId}.acf"), manifest);
         Directory.CreateDirectory(Path.Combine(library, "steamapps", "common", installDir));

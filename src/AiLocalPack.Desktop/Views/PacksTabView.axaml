@@ -10,6 +10,28 @@
          empty state for a language without packs, offline banner over the saved list. Task 55: the Mine section on top of the
          list (the generation job, local packs) with its own details. -->
     <StackPanel Spacing="14">
+        <!-- Task 80: the game ships the language itself -->
+        <Border x:Name="OfficialBox" Classes="compatBox ok" IsVisible="{Binding ShowOfficial}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                <Viewbox Classes="icon" Width="16" Height="16" VerticalAlignment="Top" Margin="0,2,0,0">
+                    <Path Classes="icon" Data="{StaticResource IconGlobe}" />
+                </Viewbox>
+                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock x:Name="OfficialTitle" FontSize="13" FontWeight="SemiBold" Text="{Binding OfficialTitle}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="OfficialHint" FontSize="13" Text="{Binding OfficialHint}" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button x:Name="OpenInSteam" Grid.Column="2" Classes="ghost sm" VerticalAlignment="Center"
+                        IsVisible="{Binding ShowOpenInSteam}" Command="{Binding OpenInSteamCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="{l:Loc Packs_Official_OpenSteam}" VerticalAlignment="Center" />
+                        <Viewbox Classes="icon" Width="14" Height="14">
+                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                        </Viewbox>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
         <TextBlock Classes="muted" Text="{l:Loc Game_Packs_Unknown}" IsVisible="{Binding IsUnknown}" TextWrapping="Wrap" />
 
         <!-- Offline: the saved list -->

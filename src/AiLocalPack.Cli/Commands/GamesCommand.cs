@@ -27,7 +27,8 @@ internal static class GamesCommand
             var paths = AppPaths.Resolve(env);
             // The library folders the player added or removed in Settings → Libraries count here too.
             var settings = new SettingsStore(paths, NullLogger<SettingsStore>.Instance, TimeProvider.System).Load();
-            var scan = new SteamLibraryScanner(new SteamLocator(env)).Scan(settings.SteamLibraries);
+            var locator = new SteamLocator(env);
+            var scan = new SteamLibraryScanner(locator).Scan(settings.SteamLibraries);
             var catalog = new GameCatalog(paths, NullLogger<GameCatalog>.Instance, TimeProvider.System);
             catalog.Load();
             var changes = catalog.Refresh(scan);
@@ -38,7 +39,7 @@ internal static class GamesCommand
             var output = result.InvocationConfiguration.Output;
             if (result.GetValue(json))
             {
-                WriteJson(output, scan, catalog.Games, policy);
+                WriteJson(output, scan, catalog.Games, policy, ReadLanguages(locator, scan));
             }
             else
             {
@@ -51,7 +52,14 @@ internal static class GamesCommand
         return new Command("games", "Installed games.") { list };
     }
 
-    private static void WriteJson(TextWriter output, SteamScan scan, IReadOnlyList<Game> games, AntiCheatPolicy policy)
+    /// <summary>The games' own languages from the Steam client's app info cache (task 80; no store lookups here).</summary>
+    private static SteamAppInfoLanguages ReadLanguages(SteamLocator locator, SteamScan scan)
+    {
+        var file = locator.FindRoots().Select(SteamAppInfo.FileIn).FirstOrDefault(File.Exists);
+        return file is null ? SteamAppInfoLanguages.Missing : SteamAppInfo.ReadLanguages(file, [.. scan.Games.Select(g => g.AppId)]);
+    }
+
+    private static void WriteJson(TextWriter output, SteamScan scan, IReadOnlyList<Game> games, AntiCheatPolicy policy, SteamAppInfoLanguages languages)
     {
         var dto = new GamesListJson(
             [.. scan.Libraries.Select(l => new LibraryJson(l.Path, l.IsAvailable, l.IsAddedByHand))],
@@ -67,7 +75,11 @@ internal static class GamesCommand
                 g.InstallPath,
                 g.LibraryPath,
                 g.LastPlayed?.ToUniversalTime(),
-                g.IsAvailable))]);
+                g.IsAvailable,
+                g.Id.SteamAppId is { } app ? scan.Games.FirstOrDefault(s => s.AppId == app)?.Language : null,
+                g.Id.SteamAppId is { } id && languages.Apps.TryGetValue(id, out var own)
+                    ? [.. own.Select(l => new GameLanguageJson(l.Tag, l.Interface, l.Subtitles, l.FullAudio))]
+                    : null))]);
         output.WriteLine(JsonSerializer.Serialize(dto, CliJsonContext.Default.GamesListJson));
     }
 
@@ -152,7 +164,12 @@ internal sealed record GameJson(
     string InstallPath,
     string? LibraryPath,
     DateTimeOffset? LastPlayed,
-    bool Available);
+    bool Available,
+    string? SteamLanguage,
+    IReadOnlyList<GameLanguageJson>? Languages);
+
+/// <summary>A language the game ships (task 80): from the Steam client's app info.</summary>
+internal sealed record GameLanguageJson(string Tag, bool Interface, bool Subtitles, bool FullAudio);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(GamesListJson))]

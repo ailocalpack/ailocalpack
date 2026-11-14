@@ -90,6 +90,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
     private Game _game;
     private LocalizationStatus _status;
     private string _target;
+    private OfficialLanguages? _official;
     private bool _active;
     private PackSort _sort = PackSort.StatusRating;
     private bool _pumping;
@@ -131,8 +132,10 @@ public sealed partial class PacksTabViewModel : ObservableObject
         Func<LocalPack, PackPublishViewModel> publish,
         PackRatings ratings,
         ILogger logger,
-        TranslationRequests? requests = null)
+        TranslationRequests? requests = null,
+        OfficialLanguages? official = null)
     {
+        _official = official;
         _publish = publish;
         _ratings = ratings;
         _game = game;
@@ -158,11 +161,62 @@ public sealed partial class PacksTabViewModel : ObservableObject
     /// <summary>The translation request of the game into <see cref="Language"/> (task 74); <c>null</c> without the requests service.</summary>
     public RequestPanelViewModel? Request { get; }
 
-    /// <summary>The empty state asks for a translation (nobody asked, or others did and the player not yet).</summary>
-    public bool ShowRequestAsk => ShowEmpty && Request is { IsMine: false };
+    /// <summary>The empty state asks for a translation (nobody asked, or others did and the player not yet); not for a language the game ships.</summary>
+    public bool ShowRequestAsk => ShowEmpty && Request is { IsMine: false } && !ShowOfficial;
 
     /// <summary>The player's own request replaces the empty state.</summary>
     public bool ShowRequestCard => ShowEmpty && Request is { IsMine: true };
+
+    /// <summary>The game's own text in <see cref="Language"/> (task 80), or <c>null</c>.</summary>
+    private OfficialLanguage? OfficialHere => _official?.TextIn(Language);
+
+    /// <summary>The game ships <see cref="Language"/>: a green box on top says so and how to switch to it.</summary>
+    public bool ShowOfficial => OfficialHere is not null;
+
+    /// <summary>"Русский is in the game itself: interface, subtitles."</summary>
+    public string OfficialTitle => OfficialHere is { } here
+        ? _localizer.Format(nameof(Strings.Packs_Official_Title), LanguageName, ViewModels.Library.OfficialLanguageTexts.Levels(here, _official!.Source, _localizer))
+        : string.Empty;
+
+    /// <summary>
+    /// How to get it: Steam starts the game in another language → pick this one in its Steam properties; Steam starts it in
+    /// this one already → the game's own settings; unknown → either.
+    /// </summary>
+    public string OfficialHint
+    {
+        get
+        {
+            if (OfficialHere is null)
+            {
+                return string.Empty;
+            }
+
+            if (_game.Source != GameSource.Steam)
+            {
+                return _localizer.Format(nameof(Strings.Packs_Official_HintManual), LanguageName);
+            }
+
+            return _official!.SteamLanguage switch
+            {
+                null => _localizer.Format(nameof(Strings.Packs_Official_HintSteam), LanguageName),
+                var steam when string.Equals(steam, Language, StringComparison.OrdinalIgnoreCase) =>
+                    _localizer.Format(nameof(Strings.Packs_Official_HintSteamSame), LanguageName),
+                var steam => _localizer.Format(nameof(Strings.Packs_Official_HintSteamOther), LanguageNames.Native(steam), LanguageName),
+            };
+        }
+    }
+
+    /// <summary><c>Open in Steam</c>: the game's page in the Steam library (its gear → Properties → Language).</summary>
+    public bool ShowOpenInSteam => ShowOfficial && _game.Id.SteamAppId is not null;
+
+    [RelayCommand]
+    private void OpenInSteam()
+    {
+        if (_game.Id.SteamAppId is { } appId)
+        {
+            _shell.OpenUrl(new Uri(string.Create(CultureInfo.InvariantCulture, $"steam://nav/games/details/{appId}")));
+        }
+    }
 
     /// <summary>The usual empty state ("No translation into Русский yet" + Create with AI), with or without the ask.</summary>
     public bool ShowNoPacks => ShowEmpty && Request is not { IsMine: true };
@@ -281,8 +335,10 @@ public sealed partial class PacksTabViewModel : ObservableObject
     }
 
     /// <summary>The page's game, status or target language changed, or a new pack list came.</summary>
-    public void Update(Game game, LocalizationStatus status, string target)
+    /// <param name="official">The game's own languages (task 80); <c>null</c> when unknown.</param>
+    public void Update(Game game, LocalizationStatus status, string target, OfficialLanguages? official = null)
     {
+        _official = official;
         var gameChanged = game.Version != _game.Version || game.IsAvailable != _game.IsAvailable || game.InstallPath != _game.InstallPath;
         _game = game;
         _status = status;

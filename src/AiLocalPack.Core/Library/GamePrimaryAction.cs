@@ -14,7 +14,7 @@ public enum GamePrimaryActionKind
     /// <summary>Nothing in the registry for the language: opens the Generation tab.</summary>
     Generate,
 
-    /// <summary>A pack is installed and fits the game.</summary>
+    /// <summary>A pack is installed and fits the game, or the game ships the language itself (<see cref="GamePrimaryAction.Official"/>, task 80).</summary>
     Play,
 
     /// <summary>An update broke the installed pack and the registry has a later revision of it.</summary>
@@ -59,12 +59,14 @@ public enum GamePrimaryActionKind
 /// <param name="Installed">The installed pack (<see cref="GamePrimaryActionKind.Play"/>, update kinds).</param>
 /// <param name="Job">The generation job (<see cref="GamePrimaryActionKind.ViewProgress"/> and the other job kinds).</param>
 /// <param name="Result">The local pack <see cref="GamePrimaryActionKind.InstallLocalPack"/> installs.</param>
+/// <param name="Official">The game's own language <see cref="GamePrimaryActionKind.Play"/> plays in (in game, task 80).</param>
 public sealed record GamePrimaryAction(
     GamePrimaryActionKind Kind,
     RegistryPack? Pack = null,
     InstalledPackState? Installed = null,
     GenerationJobState? Job = null,
-    GenerationResultState? Result = null)
+    GenerationResultState? Result = null,
+    Games.OfficialLanguage? Official = null)
 {
     public static GamePrimaryAction None { get; } = new(GamePrimaryActionKind.None);
 }
@@ -74,8 +76,8 @@ public static class GamePrimaryActions
 {
     /// <summary>
     /// Blocked or unknown → none (a waiting local pack with nothing installed and no job → install it and play, task 55); a job → by its phase (<see cref="JobKind"/>); a pack broken by an update → update to the registry's later
-    /// revision of the same pack, else re-apply a pack that still fits, else translate the new strings; installed → play; packs → install the best; else
-    /// generate.
+    /// revision of the same pack, else re-apply a pack that still fits, else translate the new strings; installed or in
+    /// game → play; packs → install the best; else generate.
     /// </summary>
     public static GamePrimaryAction Resolve(LocalizationStatus status)
     {
@@ -112,6 +114,7 @@ public static class GamePrimaryActions
             LocalizationStatusKind.NeedsUpdate when status.Installed is { NeedsReapply: true } => new(GamePrimaryActionKind.Reapply, installedPack, status.Installed),
             LocalizationStatusKind.NeedsUpdate => new(GamePrimaryActionKind.TranslateNewStrings, installedPack, status.Installed),
             LocalizationStatusKind.Installed => new(GamePrimaryActionKind.Play, installedPack, status.Installed),
+            LocalizationStatusKind.InGame => new(GamePrimaryActionKind.Play, Official: status.Official),
             LocalizationStatusKind.PackAvailable => new(GamePrimaryActionKind.InstallBestPack, status.BestPack),
             _ => new(GamePrimaryActionKind.Generate),
         };

@@ -396,4 +396,18 @@ public sealed class GamePrimaryActionsTests
         // Assert
         opens.Should().BeTrue();
     }
+
+    [Fact]
+    public void In_game_plays_in_the_games_own_language()
+    {
+        // Arrange
+        var official = new OfficialLanguage("ru", true, false, false);
+        var status = new LocalizationStatus(LocalizationStatusKind.InGame, LocalizationBlock.None, [], Official: official);
+
+        // Act
+        var action = GamePrimaryActions.Resolve(status);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.Play, Official: official));
+    }
 }

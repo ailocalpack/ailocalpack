@@ -4687,4 +4687,55 @@
   <data name="Fix_Earlier" xml:space="preserve">
     <value>Frühere Nachrichten zeigen ({0})</value>
   </data>
+  <data name="Library_Status_InGame" xml:space="preserve">
+    <value>Im Spiel</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_One" xml:space="preserve">
+    <value>+{0} Übersetzung</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_Other" xml:space="preserve">
+    <value>+{0} Übersetzungen</value>
+  </data>
+  <data name="Official_Level_Interface" xml:space="preserve">
+    <value>Oberfläche</value>
+  </data>
+  <data name="Official_Level_Subtitles" xml:space="preserve">
+    <value>Untertitel</value>
+  </data>
+  <data name="Official_Level_Audio" xml:space="preserve">
+    <value>volle Sprachausgabe</value>
+  </data>
+  <data name="Official_Level_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Official_Level_Separator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="Packs_Official_Title" xml:space="preserve">
+    <value>{0} ist im Spiel selbst enthalten: {1}.</value>
+  </data>
+  <data name="Packs_Official_HintSteam" xml:space="preserve">
+    <value>Zeigt das Spiel eine andere Sprache, wähle {0} in seinen Einstellungen oder in Steam: Eigenschaften des Spiels → Allgemein → Sprache.</value>
+  </data>
+  <data name="Packs_Official_HintSteamOther" xml:space="preserve">
+    <value>Steam startet es auf {0}: Wähle {1} in den Eigenschaften des Spiels in Steam → Allgemein → Sprache oder in den Einstellungen des Spiels.</value>
+  </data>
+  <data name="Packs_Official_HintSteamSame" xml:space="preserve">
+    <value>Steam startet es schon auf {0}. Ist der Text noch in einer anderen Sprache, wähle {0} in den Einstellungen des Spiels.</value>
+  </data>
+  <data name="Packs_Official_HintManual" xml:space="preserve">
+    <value>Wähle {0} in den Einstellungen des Spiels.</value>
+  </data>
+  <data name="Packs_Official_OpenSteam" xml:space="preserve">
+    <value>In Steam öffnen</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
+    <value>über Steam · Spielsprache {0}</value>
+  </data>
+  <data name="Game_Caption_PlayOfficial" xml:space="preserve">
+    <value>Spielsprache {0}</value>
+  </data>
+  <data name="Gen_Check_Official" xml:space="preserve">
+    <value>{0} ist schon im Spiel ({1}): Deine KI-Übersetzung ersetzt dessen Texte</value>
+  </data>
 </root>

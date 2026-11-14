@@ -119,6 +119,10 @@ internal static class TestServices
             services.AddSingleton<FakeRequestDiscussions>();
             services.AddSingleton<IRequestDiscussions>(sp => sp.GetRequiredService<FakeRequestDiscussions>());
 
+            // The Steam store is never asked: "too many requests" unless the test gives answers (task 80).
+            services.AddSingleton<FakeSteamStore>();
+            services.AddSingleton<ISteamStoreLanguages>(sp => sp.GetRequiredService<FakeSteamStore>());
+
             // App updates never touch Velopack or GitHub, and nothing quits the test host.
             services.AddSingleton<FakeUpdateSource>();
             services.AddSingleton<IAppUpdateSource>(sp => sp.GetRequiredService<FakeUpdateSource>());
@@ -145,10 +149,29 @@ internal static class TestServices
         provider.GetRequiredService<TempDir>();
         if (steam is not null)
         {
+            // Subscribed before the scan, so the games' own languages (task 80) are read by the time the graph is returned.
+            var official = provider.GetRequiredService<GameOfficialLanguages>();
             provider.GetRequiredService<GameLibrary>().Refresh();
+            official.WhenIdle.GetAwaiter().GetResult();
         }
 
         return provider;
+    }
+}
+
+/// <summary>The Steam store's app details in tests: answers by app ID, "too many requests" for the rest; records what was asked.</summary>
+internal sealed class FakeSteamStore : ISteamStoreLanguages
+{
+    private readonly System.Collections.Concurrent.ConcurrentQueue<uint> _asked = new();
+
+    public Dictionary<uint, SteamStoreLanguagesResult> Answers { get; } = [];
+
+    public IReadOnlyList<uint> Asked => [.. _asked];
+
+    public Task<SteamStoreLanguagesResult> GetAsync(uint appId, CancellationToken cancellationToken = default)
+    {
+        _asked.Enqueue(appId);
+        return Task.FromResult(Answers.TryGetValue(appId, out var answer) ? answer : new SteamStoreLanguagesResult(SteamStoreLookup.RateLimited));
     }
 }
 

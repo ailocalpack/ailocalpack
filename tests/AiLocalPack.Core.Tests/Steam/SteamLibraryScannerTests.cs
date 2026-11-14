@@ -395,4 +395,17 @@ public sealed class SteamLibraryScannerTests : IDisposable
         // Assert
         folder.Should().BeNull();
     }
+
+    [Fact]
+    public void Reads_the_language_steam_starts_the_game_in()
+    {
+        // Arrange
+        _steam.AddGame(1942280, "Brotato", language: "russian");
+
+        // Act
+        var scan = Scanner().Scan();
+
+        // Assert
+        scan.Games.Should().ContainSingle().Which.Language.Should().Be("ru");
+    }
 }

@@ -23,6 +23,9 @@ public static class GameLanguages
     /// <summary>Whether <paramref name="tag"/> is one of <see cref="Tags"/> (case-insensitive).</summary>
     public static bool IsKnown(string? tag) => Find(tag) is not null;
 
+    /// <summary><paramref name="tag"/> as spelled in <see cref="Tags"/> (<c>ZH-hans</c> → <c>zh-Hans</c>); <c>null</c> when unknown.</summary>
+    public static string? Canonical(string? tag) => Find(tag);
+
     /// <summary>
     /// The language games are translated into: the setting when it is a known tag, else the OS UI culture
     /// (<c>ru-RU</c> → <c>ru</c>, <c>zh-CN</c> → <c>zh-Hans</c>, <c>es-MX</c> → <c>es-419</c>, <c>pt</c> → <c>pt-BR</c>), else <see cref="Fallback"/>.

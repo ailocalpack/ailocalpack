@@ -4813,4 +4813,58 @@
   <data name="Fix_Earlier" xml:space="preserve">
     <value>Voir les messages précédents ({0})</value>
   </data>
+  <data name="Library_Status_InGame" xml:space="preserve">
+    <value>Dans le jeu</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_One" xml:space="preserve">
+    <value>+{0} traduction</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_Many" xml:space="preserve">
+    <value>+{0} traductions</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_Other" xml:space="preserve">
+    <value>+{0} traductions</value>
+  </data>
+  <data name="Official_Level_Interface" xml:space="preserve">
+    <value>interface</value>
+  </data>
+  <data name="Official_Level_Subtitles" xml:space="preserve">
+    <value>sous-titres</value>
+  </data>
+  <data name="Official_Level_Audio" xml:space="preserve">
+    <value>doublage complet</value>
+  </data>
+  <data name="Official_Level_Text" xml:space="preserve">
+    <value>texte</value>
+  </data>
+  <data name="Official_Level_Separator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="Packs_Official_Title" xml:space="preserve">
+    <value>Le jeu inclut déjà {0} : {1}.</value>
+  </data>
+  <data name="Packs_Official_HintSteam" xml:space="preserve">
+    <value>Si le jeu affiche une autre langue, choisissez {0} dans ses paramètres ou dans Steam : Propriétés du jeu → Général → Langue.</value>
+  </data>
+  <data name="Packs_Official_HintSteamOther" xml:space="preserve">
+    <value>Steam le lance en {0} : choisissez {1} dans les Propriétés du jeu dans Steam → Général → Langue, ou dans les paramètres du jeu.</value>
+  </data>
+  <data name="Packs_Official_HintSteamSame" xml:space="preserve">
+    <value>Steam le lance déjà en {0}. Si le texte reste dans une autre langue, choisissez {0} dans les paramètres du jeu.</value>
+  </data>
+  <data name="Packs_Official_HintManual" xml:space="preserve">
+    <value>Choisissez {0} dans les paramètres du jeu.</value>
+  </data>
+  <data name="Packs_Official_OpenSteam" xml:space="preserve">
+    <value>Ouvrir dans Steam</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
+    <value>via Steam · langue du jeu : {0}</value>
+  </data>
+  <data name="Game_Caption_PlayOfficial" xml:space="preserve">
+    <value>langue du jeu : {0}</value>
+  </data>
+  <data name="Gen_Check_Official" xml:space="preserve">
+    <value>Le jeu inclut déjà {0} ({1}) : votre traduction IA remplace ses textes</value>
+  </data>
 </root>

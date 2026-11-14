@@ -133,6 +133,7 @@ public sealed partial class LibraryViewModel : PageViewModel
         _packIndex.Changed += (_, snapshot) => _ui.Post(() => OnPackIndexChanged(snapshot));
         _settings.Changed += (_, s) => _ui.Post(() => OnSettingsChanged(s));
         _statuses.InstalledChanged += (_, _) => _ui.Post(ApplyStatuses);
+        _statuses.OfficialChanged += (_, _) => _ui.Post(ApplyStatuses);
         _statuses.JobChanged += (_, _) => _ui.Post(ApplyStatuses);
         _install.Changed += (_, _) => ApplyOperations();
         if (_requests is not null)
@@ -533,6 +534,7 @@ public sealed partial class LibraryViewModel : PageViewModel
                 LibraryFilter.NoPack => nameof(Strings.Library_Status_NoPack),
                 LibraryFilter.NeedsUpdate => nameof(Strings.Library_Status_NeedsUpdate),
                 LibraryFilter.Generating => nameof(Strings.Library_Filter_Generating),
+                LibraryFilter.InGame => nameof(Strings.Library_Status_InGame),
                 LibraryFilter.Requested => nameof(Strings.Library_Filter_Requested),
                 _ => nameof(Strings.Library_Filter_All),
             }];

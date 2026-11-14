@@ -241,7 +241,8 @@ public sealed class SteamLibraryScanner(SteamLocator locator, ILogger<SteamLibra
             played = fromManifest;
         }
 
-        return new SteamGame(appId, name, buildId, Path.Combine(library, "steamapps", "common", installDir), library, played);
+        var language = SteamLanguageNames.FromApiName(state.GetObject("UserConfig")?.GetString("language"));
+        return new SteamGame(appId, name, buildId, Path.Combine(library, "steamapps", "common", installDir), library, played, language);
     }
 
     /// <summary>App ID → latest launch across every Steam user that signed in on this machine.</summary>

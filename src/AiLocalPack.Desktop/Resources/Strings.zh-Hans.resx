@@ -4561,4 +4561,52 @@
   <data name="Fix_Earlier" xml:space="preserve">
     <value>显示更早的消息（{0}）</value>
   </data>
+  <data name="Library_Status_InGame" xml:space="preserve">
+    <value>游戏自带</value>
+  </data>
+  <data name="Library_Card_AlsoPacks_Other" xml:space="preserve">
+    <value>另有 {0} 个翻译</value>
+  </data>
+  <data name="Official_Level_Interface" xml:space="preserve">
+    <value>界面</value>
+  </data>
+  <data name="Official_Level_Subtitles" xml:space="preserve">
+    <value>字幕</value>
+  </data>
+  <data name="Official_Level_Audio" xml:space="preserve">
+    <value>完全音频</value>
+  </data>
+  <data name="Official_Level_Text" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="Official_Level_Separator" xml:space="preserve">
+    <value>、</value>
+  </data>
+  <data name="Packs_Official_Title" xml:space="preserve">
+    <value>游戏本身已包含{0}：{1}。</value>
+  </data>
+  <data name="Packs_Official_HintSteam" xml:space="preserve">
+    <value>如果游戏显示的是其他语言，请在游戏设置或 Steam 中选择{0}：游戏属性 → 通用 → 语言。</value>
+  </data>
+  <data name="Packs_Official_HintSteamOther" xml:space="preserve">
+    <value>Steam 以{0}启动游戏：请在 Steam 的游戏属性 → 通用 → 语言或游戏自身设置中选择{1}。</value>
+  </data>
+  <data name="Packs_Official_HintSteamSame" xml:space="preserve">
+    <value>Steam 已经以{0}启动游戏。如果文本仍是其他语言，请在游戏自身设置中选择{0}。</value>
+  </data>
+  <data name="Packs_Official_HintManual" xml:space="preserve">
+    <value>请在游戏自身设置中选择{0}。</value>
+  </data>
+  <data name="Packs_Official_OpenSteam" xml:space="preserve">
+    <value>在 Steam 中打开</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
+    <value>通过 Steam · 游戏语言：{0}</value>
+  </data>
+  <data name="Game_Caption_PlayOfficial" xml:space="preserve">
+    <value>游戏语言：{0}</value>
+  </data>
+  <data name="Gen_Check_Official" xml:space="preserve">
+    <value>游戏已包含{0}（{1}）：你的 AI 翻译将替换其文本</value>
+  </data>
 </root>

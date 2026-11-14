@@ -290,6 +290,9 @@ internal static class Composition
             return new AntiCheatDetector(() => rules.Value.Current, sp.GetService<ILogger<AntiCheatDetector>>());
         });
         services.AddSingleton<GameLibrary>();
+        services.AddSingleton(sp => new OfficialLanguageStore(sp.GetRequiredService<AppPaths>(), sp.GetService<ILogger<OfficialLanguageStore>>()));
+        services.AddSingleton<ISteamStoreLanguages>(sp => new SteamStoreLanguages(sp.GetRequiredService<HttpClient>()));
+        services.AddSingleton<GameOfficialLanguages>();
         services.AddSingleton<IProcessList, SystemProcessList>();
         services.AddSingleton<IProcessStarter, SystemProcessStarter>();
         services.AddSingleton<GameSessions>();

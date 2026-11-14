@@ -13,9 +13,10 @@ namespace AiLocalPack.Desktop.Library;
 /// <summary>
 /// A game's <see cref="LocalizationStatus"/> for the "Translate games into" language (<see cref="AppSettings.GameLanguage"/>),
 /// from the anti-cheat policy and the latest pack list. The library cards and the game page read the same answer;
-/// installed packs (task 29), broken ones (task 33) and generation jobs (task 47) join here.
+/// installed packs (task 29), broken ones (task 33), generation jobs (task 47) and the game's own languages (task 80) join here.
 /// </summary>
-public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings, IInstalledPacks installed, GenerationService jobs)
+public sealed class GameStatuses(
+    AntiCheatPolicy policy, PackIndex packIndex, SettingsStore settings, IInstalledPacks installed, GenerationService jobs, GameOfficialLanguages official)
 {
     /// <summary>Raised (on any thread) when a game's generation job started, moved on or ended: its status may have changed.</summary>
     public event EventHandler<GenerationJob>? JobChanged
@@ -30,6 +31,16 @@ public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, Se
         add => installed.Changed += value;
         remove => installed.Changed -= value;
     }
+
+    /// <summary>Raised (on any thread) when games' own languages were read: their status may have changed.</summary>
+    public event EventHandler<IReadOnlyList<GameId>>? OfficialChanged
+    {
+        add => official.Changed += value;
+        remove => official.Changed -= value;
+    }
+
+    /// <summary>The languages the game ships with (task 80); <c>null</c> when unknown.</summary>
+    public OfficialLanguages? OfficialOf(Game game) => official.Find(game.Id);
 
     /// <summary>The target language: an exact <see cref="GameLanguages.Tags"/> tag (setting, else the OS language).</summary>
     public string Language => GameLanguages.Resolve(settings.Current.GameLanguage, UiLanguages.Os);
@@ -46,6 +57,6 @@ public sealed class GameStatuses(AntiCheatPolicy policy, PackIndex packIndex, Se
     {
         ArgumentNullException.ThrowIfNull(game);
         var index = packIndex.Current?.Index;
-        return LocalizationStatuses.Resolve(game, language, policy.WithRegistry(index).Resolve(game), index, installed.Find(game.Id, language), jobs.StateOf(game.Id), jobs.ResultStateOf(game.Id));
+        return LocalizationStatuses.Resolve(game, language, policy.WithRegistry(index).Resolve(game), index, installed.Find(game.Id, language), jobs.StateOf(game.Id), jobs.ResultStateOf(game.Id), official.Find(game.Id));
     }
 }

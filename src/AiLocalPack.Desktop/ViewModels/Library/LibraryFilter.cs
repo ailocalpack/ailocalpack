@@ -16,6 +16,9 @@ public enum LibraryFilter
     /// <summary>Generating or paused.</summary>
     Generating,
 
+    /// <summary>The game ships the language itself (task 80).</summary>
+    InGame,
+
     /// <summary>No translation, and players asked for one (task 74): games a translator with an agent could do.</summary>
     Requested,
 }
@@ -35,6 +38,7 @@ public static class LibraryFilters
         LibraryFilter.NoPack => status == LocalizationStatusKind.NoPack,
         LibraryFilter.NeedsUpdate => status == LocalizationStatusKind.NeedsUpdate,
         LibraryFilter.Generating => status is LocalizationStatusKind.Generating or LocalizationStatusKind.Paused,
+        LibraryFilter.InGame => status == LocalizationStatusKind.InGame,
         _ => false,
     };
 }

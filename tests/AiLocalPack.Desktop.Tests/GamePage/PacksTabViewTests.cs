@@ -27,7 +27,10 @@ public sealed class PacksTabViewTests : IDisposable
 
     private static string AlphaHash => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(AlphaData)));
 
-    /// <summary>Game 10 "Alpha" with <c>data/a.json</c>; «lanterns» made for its build, «old» touching a file it lacks.</summary>
+    /// <summary>
+    /// Game 10 "Alpha" with <c>data/a.json</c>; «lanterns» made for its build, «old» touching a file it lacks. Game 20 "Beta"
+    /// ships Russian subtitles (Steam's app info, task 80).
+    /// </summary>
     private ServiceProvider Build()
     {
         _registry
@@ -43,6 +46,7 @@ public sealed class PacksTabViewTests : IDisposable
                 var data = Path.Combine(s.Root, "steamapps", "common", "Alpha", "data");
                 Directory.CreateDirectory(data);
                 File.WriteAllText(Path.Combine(data, "a.json"), AlphaData);
+                new SteamAppInfoWriter().AddApp(20, "Beta", new AppInfoLanguage("english"), new AppInfoLanguage("russian", Supported: false, Subtitles: true)).WriteTo(s.Root);
             },
             registry: _registry.Path);
         services.GetRequiredService<SettingsStore>().Update(s => s with { GameLanguage = "ru" });
@@ -64,6 +68,21 @@ public sealed class PacksTabViewTests : IDisposable
 
     private static T Find<T>(Window window, string name) where T : Control =>
         window.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
+
+    [Fact]
+    public Task Official_box_says_the_game_has_the_language() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var (window, _) = await OpenAsync(services, 20);
+
+        // Assert
+        (Find<Border>(window, "OfficialBox").IsEffectivelyVisible, Find<TextBlock>(window, "OfficialTitle").Text, Find<Button>(window, "OpenInSteam").IsEffectivelyVisible)
+            .Should().Be((true, "Русский is in the game itself: subtitles.", true));
+        window.Close();
+    });
 
     [Fact]
     public Task List_shows_a_row_per_pack() => HeadlessUi.RunAsync(async () =>

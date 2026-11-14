@@ -7,13 +7,18 @@ namespace AiLocalPack.Core.Steam;
 /// <param name="InstallPath">Game folder: <c>&lt;library&gt;/steamapps/common/&lt;installdir&gt;</c>.</param>
 /// <param name="LibraryPath">The library folder the game is installed in.</param>
 /// <param name="LastPlayed">Last launch, or <c>null</c> when never played or unknown.</param>
+/// <param name="Language">
+/// The language Steam starts the game in (the manifest's <c>UserConfig/language</c>, as a <see cref="Languages.GameLanguages"/>
+/// tag); <c>null</c> when the manifest doesn't say or names a language Steam doesn't sell games in.
+/// </param>
 public sealed record SteamGame(
     uint AppId,
     string Name,
     string? BuildId,
     string InstallPath,
     string LibraryPath,
-    DateTimeOffset? LastPlayed);
+    DateTimeOffset? LastPlayed,
+    string? Language = null);
 
 /// <summary>
 /// A Steam library folder (holds <c>steamapps/</c>). Not available = listed but missing right now (unplugged drive,

@@ -132,6 +132,12 @@ public sealed record AppPaths
     /// </summary>
     public string AntiCheatRulesFile => Path.Combine(Cache, "anti-cheat-rules.json");
 
+    /// <summary>
+    /// The languages each game ships with, as its store lists them (<c>OfficialLanguageStore</c>, task 80; safe to delete:
+    /// read again from Steam).
+    /// </summary>
+    public string OfficialLanguagesFile => Path.Combine(Cache, "official-languages.json");
+
     /// <summary>All three roots under <paramref name="home"/> (made absolute against the current directory).</summary>
     public static AppPaths UnderHome(string home)
     {

@@ -289,7 +289,7 @@ public sealed class LocalizationStatusesTests
         [
             LocalizationStatusKind.NeedsUpdate, LocalizationStatusKind.Paused, LocalizationStatusKind.Generating,
             LocalizationStatusKind.PackAvailable, LocalizationStatusKind.Installed, LocalizationStatusKind.NoPack,
-            LocalizationStatusKind.Blocked,
+            LocalizationStatusKind.Blocked, LocalizationStatusKind.InGame,
         ];
 
         // Act
@@ -333,5 +333,116 @@ public sealed class LocalizationStatusesTests
 
         // Assert
         (status.Kind, status.Result).Should().Be((LocalizationStatusKind.PackAvailable, result));
+    }
+
+    // ---------- Task 80: the game's own languages ----------
+
+    private static OfficialLanguages Official(params OfficialLanguage[] languages) =>
+        new(languages, OfficialLanguagesSource.SteamClient, DateTimeOffset.UnixEpoch);
+
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void A_game_with_its_own_interface_or_subtitles_in_the_language_is_in_game(bool ui, bool subtitles)
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", ui, subtitles, FullAudio: false));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(), official: official);
+
+        // Assert
+        status.Should().Match<LocalizationStatus>(s => s.Kind == LocalizationStatusKind.InGame && s.Official!.Tag == "ru");
+    }
+
+    [Fact]
+    public void Audio_alone_is_not_the_game_in_the_language()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", Interface: false, Subtitles: false, FullAudio: true));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(), official: official);
+
+        // Assert
+        status.Kind.Should().Be(LocalizationStatusKind.NoPack);
+    }
+
+    [Fact]
+    public void Another_language_of_the_game_does_not_count()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("de", true, true, true));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(), official: official);
+
+        // Assert
+        status.Kind.Should().Be(LocalizationStatusKind.NoPack);
+    }
+
+    [Fact]
+    public void In_game_keeps_the_registry_packs()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", true, false, false));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(packs: Pack("a")), official: official);
+
+        // Assert
+        status.Should().Match<LocalizationStatus>(s => s.Kind == LocalizationStatusKind.InGame && s.Packs.Count == 1);
+    }
+
+    [Fact]
+    public void In_game_is_known_without_a_pack_list()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", true, false, false));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, index: null, official: official);
+
+        // Assert
+        status.Kind.Should().Be(LocalizationStatusKind.InGame);
+    }
+
+    [Fact]
+    public void In_game_beats_a_blocking_anti_cheat()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", true, false, false));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", Eac, Index(), official: official);
+
+        // Assert
+        status.Kind.Should().Be(LocalizationStatusKind.InGame);
+    }
+
+    [Fact]
+    public void An_installed_pack_beats_the_games_own_language_and_keeps_it()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", true, false, false));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(packs: Pack("a")), new InstalledPackState("a"), official: official);
+
+        // Assert
+        status.Should().Match<LocalizationStatus>(s => s.Kind == LocalizationStatusKind.Installed && s.Official != null);
+    }
+
+    [Fact]
+    public void A_generation_job_beats_the_games_own_language()
+    {
+        // Arrange
+        var official = Official(new OfficialLanguage("ru", true, false, false));
+
+        // Act
+        var status = LocalizationStatuses.Resolve(Game(), "ru", NoAntiCheat, Index(), job: new GenerationJobState(40, GenerationJobPhase.Running), official: official);
+
+        // Assert
+        status.Kind.Should().Be(LocalizationStatusKind.Generating);
     }
 }

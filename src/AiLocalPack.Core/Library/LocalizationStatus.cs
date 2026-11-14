@@ -31,6 +31,12 @@ public enum LocalizationStatusKind
 
     /// <summary>Install and generation are blocked: anti-cheat or the studio opted out.</summary>
     Blocked,
+
+    /// <summary>
+    /// The game itself ships the language's text (interface or subtitles, task 80): nothing to install. Registry packs
+    /// for it stay listed on the Text tab.
+    /// </summary>
+    InGame,
 }
 
 /// <summary>Why a game is <see cref="LocalizationStatusKind.Blocked"/>.</summary>
@@ -148,6 +154,8 @@ public sealed record GenerationResultState(string PackId, string Language, strin
 /// <param name="Packs">The registry's packs for the game and language (any status), best first.</param>
 /// <param name="AntiCheatName">Name of the blocking anti-cheat (<see cref="LocalizationBlock.AntiCheat"/>).</param>
 /// <param name="Result">The last generation's local pack (task 55), whatever the language; <c>null</c> when none waits.</param>
+/// <param name="Official">The game's own text in the language (task 80), whatever the status; <c>null</c> when it has none.</param>
+/// <param name="OfficialSource">Where <paramref name="Official"/> came from (the store doesn't tell interface from subtitles).</param>
 public sealed record LocalizationStatus(
     LocalizationStatusKind Kind,
     LocalizationBlock Block,
@@ -155,7 +163,9 @@ public sealed record LocalizationStatus(
     string? AntiCheatName = null,
     InstalledPackState? Installed = null,
     GenerationJobState? Job = null,
-    GenerationResultState? Result = null)
+    GenerationResultState? Result = null,
+    OfficialLanguage? Official = null,
+    OfficialLanguagesSource OfficialSource = OfficialLanguagesSource.SteamClient)
 {
     public static LocalizationStatus Unknown { get; } = new(LocalizationStatusKind.Unknown, LocalizationBlock.None, []);
 
@@ -169,14 +179,16 @@ public sealed record LocalizationStatus(
 public static class LocalizationStatuses
 {
     /// <summary>
-    /// In this order: opt-out, then a blocking anti-cheat (unless the registry allows the game) → blocked
-    /// (<see cref="GameBlocks.Resolve(GameId, AntiCheatVerdict, RegistryIndex?)"/>); a generation
-    /// job → generating / paused; an installed pack → needs update when an update broke it, else installed; no index →
+    /// In this order: the game's own text in the language with no job and no installed pack → in game (whatever blocks
+    /// it: the player needs nothing installed); opt-out, then a blocking anti-cheat (unless the registry allows the game)
+    /// → blocked (<see cref="GameBlocks.Resolve(GameId, AntiCheatVerdict, RegistryIndex?)"/>); a generation job →
+    /// generating / paused; an installed pack → needs update when an update broke it, else installed; no index →
     /// unknown; packs for the language → pack available; else no pack.
     /// </summary>
     /// <param name="language">An exact <see cref="Languages.GameLanguages.Tags"/> tag.</param>
     /// <param name="antiCheat">What the anti-cheat policy says about the game.</param>
     /// <param name="index">The registry index (fresh or the saved copy); <c>null</c> when there is none.</param>
+    /// <param name="official">The game's own languages (task 80); <c>null</c> when unknown.</param>
     public static LocalizationStatus Resolve(
         Game game,
         string language,
@@ -184,7 +196,8 @@ public static class LocalizationStatuses
         RegistryIndex? index,
         InstalledPackState? installed = null,
         GenerationJobState? job = null,
-        GenerationResultState? result = null)
+        GenerationResultState? result = null,
+        OfficialLanguages? official = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
@@ -192,27 +205,34 @@ public static class LocalizationStatuses
 
         var registryGame = index?.Find(game.Id);
         IReadOnlyList<RegistryPack> packs = registryGame is null ? [] : Rank(registryGame.PacksIn(language), game);
+        var inGame = official?.TextIn(language);
+        var source = official?.Source ?? OfficialLanguagesSource.SteamClient;
+
+        if (inGame is not null && job is null && installed is null)
+        {
+            return new(LocalizationStatusKind.InGame, LocalizationBlock.None, packs, Result: result, Official: inGame, OfficialSource: source);
+        }
 
         if (GameBlocks.Resolve(game.Id, antiCheat, index) is { } block)
         {
-            return new(LocalizationStatusKind.Blocked, block.Reason, packs, block.AntiCheatName);
+            return new(LocalizationStatusKind.Blocked, block.Reason, packs, block.AntiCheatName, Official: inGame, OfficialSource: source);
         }
 
         if (job is not null)
         {
             var kind = job.IsPaused ? LocalizationStatusKind.Paused : LocalizationStatusKind.Generating;
-            return new(kind, LocalizationBlock.None, packs, Installed: installed, Job: job, Result: result);
+            return new(kind, LocalizationBlock.None, packs, Installed: installed, Job: job, Result: result, Official: inGame, OfficialSource: source);
         }
 
         if (installed is not null)
         {
             var kind = installed.BrokenByUpdate ? LocalizationStatusKind.NeedsUpdate : LocalizationStatusKind.Installed;
-            return new(kind, LocalizationBlock.None, packs, Installed: installed, Result: result);
+            return new(kind, LocalizationBlock.None, packs, Installed: installed, Result: result, Official: inGame, OfficialSource: source);
         }
 
         if (index is null)
         {
-            return result is null ? LocalizationStatus.Unknown : LocalizationStatus.Unknown with { Result = result };
+            return LocalizationStatus.Unknown with { Result = result };
         }
 
         return new(packs.Count > 0 ? LocalizationStatusKind.PackAvailable : LocalizationStatusKind.NoPack, LocalizationBlock.None, packs, Result: result);
@@ -241,7 +261,7 @@ public static class LocalizationStatuses
 
     /// <summary>
     /// Place in the <c>Important first</c> order (lower first): needs update, paused, generating, pack available,
-    /// installed, no pack (and unknown), blocked.
+    /// installed, no pack (and unknown), blocked, in game (nothing to do).
     /// </summary>
     public static int Importance(LocalizationStatusKind kind) => kind switch
     {
@@ -251,6 +271,7 @@ public static class LocalizationStatuses
         LocalizationStatusKind.PackAvailable => 3,
         LocalizationStatusKind.Installed => 4,
         LocalizationStatusKind.NoPack or LocalizationStatusKind.Unknown => 5,
+        LocalizationStatusKind.InGame => 7,
         _ => 6,
     };
 }
