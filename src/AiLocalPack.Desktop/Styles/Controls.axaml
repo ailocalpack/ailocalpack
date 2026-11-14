@@ -1025,6 +1025,8 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        <!-- The ring goes around the whole row instead (ActivityPanelView), with its actions under the button -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
     </Style>
     <Style Selector="Button.activityRowOpen:pointerover /template/ ContentPresenter, Button.activityRowOpen:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent" />
