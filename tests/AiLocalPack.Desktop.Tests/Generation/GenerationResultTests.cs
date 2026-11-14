@@ -41,14 +41,7 @@ public sealed class GenerationResultTests
 
     private static GenerationTabViewModel Tab(InstallBed bed) => Page(bed, GamePageTab.Generation).Generation;
 
-    private static async Task Until(Func<bool> condition)
-    {
-        var deadline = DateTime.UtcNow.AddSeconds(10);
-        while (!condition() && DateTime.UtcNow < deadline)
-        {
-            await Task.Delay(10);
-        }
-    }
+    private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 
     /// <summary>Install &amp; play, then the game runs and closes again.</summary>
     private static async Task PlayAndCloseAsync(InstallBed bed, GenerationTabViewModel tab, FakeClock clock)

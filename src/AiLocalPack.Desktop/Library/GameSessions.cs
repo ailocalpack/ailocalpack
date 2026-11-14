@@ -152,12 +152,15 @@ public sealed class GameSessions : IDisposable
             using var timer = new PeriodicTimer(PollInterval, _time);
             while (await timer.WaitForNextTickAsync(_disposed.Token))
             {
+                // The time first: a process seen in the snapshot was running at that time, never later. Read after it, the
+                // time could be past a process's end (a game seen running "after" it closed) and push its end out.
+                var now = _time.GetUtcNow();
                 var snapshot = _processes.Snapshot();
                 IReadOnlyList<GameSessionEvent> events;
                 bool done;
                 lock (_lock)
                 {
-                    events = _tracker.Observe(snapshot, _time.GetUtcNow());
+                    events = _tracker.Observe(snapshot, now);
                     done = _tracker.IsEmpty;
                     _polling = !done;
                 }

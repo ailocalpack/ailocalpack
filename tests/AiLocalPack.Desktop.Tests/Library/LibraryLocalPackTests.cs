@@ -15,14 +15,7 @@ public sealed class LibraryLocalPackTests
     private static GameCardViewModel Card(InstallBed bed) =>
         bed.Services.GetRequiredService<IPageFactory>().Create<LibraryViewModel>().Cards.Single(c => c.Game.Id == InstallBed.Alpha);
 
-    private static async Task Until(Func<bool> condition)
-    {
-        var deadline = DateTime.UtcNow.AddSeconds(10);
-        while (!condition() && DateTime.UtcNow < deadline)
-        {
-            await Task.Delay(10);
-        }
-    }
+    private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 
     [Fact]
     public async Task Waiting_local_pack_shows_your_pack_ready()

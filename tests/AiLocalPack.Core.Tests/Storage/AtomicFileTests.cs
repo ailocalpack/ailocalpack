@@ -14,7 +14,13 @@ public sealed class AtomicFileTests
         using var dir = new TempDir().File("file.json", "old");
         var path = dir.Combine("file.json");
         var reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var release = new Timer(_ => reader.Dispose(), null, TimeSpan.FromMilliseconds(150), Timeout.InfiniteTimeSpan);
+        // Its own thread, not a pool timer: with the pool busy running other tests a timer fired after the 2 s of retries.
+        var release = new Thread(() =>
+        {
+            Thread.Sleep(150);
+            reader.Dispose();
+        }) { IsBackground = true };
+        release.Start();
 
         // Act
         AtomicFile.WriteAllBytes(path, "new"u8.ToArray());

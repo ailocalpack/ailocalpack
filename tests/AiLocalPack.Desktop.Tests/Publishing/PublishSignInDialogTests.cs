@@ -12,14 +12,7 @@ public sealed class PublishSignInDialogTests
     private static PublishSignInDialogViewModel Show(ServiceProvider services, Action? onContinue = null) =>
         services.GetRequiredService<IDialogService>().Show<PublishSignInDialogViewModel>(new PublishSignInRequest(onContinue ?? (() => { })));
 
-    private static async Task Until(Func<bool> condition)
-    {
-        var deadline = DateTime.UtcNow.AddSeconds(10);
-        while (!condition() && DateTime.UtcNow < deadline)
-        {
-            await Task.Delay(10);
-        }
-    }
+    private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 
     [Fact]
     public async Task Signed_out_it_starts_the_sign_in_and_waits_for_GitHub()

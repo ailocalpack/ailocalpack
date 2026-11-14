@@ -163,12 +163,5 @@ public sealed class PacksTabMineTests
         (page.Packs.HasMine, bed.Services.GetRequiredService<LocalPackStore>().List(InstallBed.Alpha).Count).Should().Be((false, 0));
     }
 
-    private static async Task Until(Func<bool> condition)
-    {
-        var deadline = DateTime.UtcNow.AddSeconds(10);
-        while (!condition() && DateTime.UtcNow < deadline)
-        {
-            await Task.Delay(10);
-        }
-    }
+    private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 }

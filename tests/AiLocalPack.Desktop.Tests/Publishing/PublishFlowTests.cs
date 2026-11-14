@@ -34,14 +34,7 @@ public sealed class PublishFlowTests
     private static Core.Packs.LocalPack Fresh(InstallBed bed) =>
         bed.Services.GetRequiredService<LocalPacks>().Find(InstallBed.Alpha, "ru", "claude-code")!;
 
-    private static async Task Until(Func<bool> condition)
-    {
-        var deadline = DateTime.UtcNow.AddSeconds(10);
-        while (!condition() && DateTime.UtcNow < deadline)
-        {
-            await Task.Delay(10);
-        }
-    }
+    private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 
     [Fact]
     public async Task Signed_out_the_first_time_dialog_shows_and_nothing_is_sent()
