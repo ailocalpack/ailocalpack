@@ -2650,6 +2650,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} більше не встановлено. Встановіть його в Налаштування → Агенти ШІ й повторіть спробу.</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} не може запустити пісочницю на цьому комп'ютері, тож не може виконати код, який пише для читання цієї гри. Дозвольте виконувати цей код без пісочниці або почніть знову з іншим ШІ-агентом.</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>Запустити без пісочниці</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>Виконувати код ШІ без пісочниці?</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>ШІ пише власний код, щоб прочитати цю гру. Без пісочниці цей код працює з правами вашого облікового запису: він може читати й змінювати будь-які ваші файли та виходити в інтернет. Йому наказано працювати лише в теці цього перекладу, але ніщо цього не забезпечує. Дозволяйте, лише якщо довіряєте агентові; вибір діє тільки для цього перекладу.</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Інструментам не вдалося обробити файли гри. Причина — у подробицях.</value>
   </data>

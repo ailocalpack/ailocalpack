@@ -1,5 +1,6 @@
 using System.Globalization;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
@@ -402,7 +403,9 @@ public sealed partial class LibraryViewModel : PageViewModel
         }
 
         if (card.StatusKind == LocalizationStatusKind.Paused
-            && GamePrimaryActions.JobKind(card.Status.Job) is GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.RetryStage)
+            && GamePrimaryActions.JobKind(card.Status.Job) is GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.RetryStage
+            // Running without the agent's sandbox is asked on the game page, never retried from here.
+            && _jobs.FindOpen(card.Game.Id) is not { Failure.Kind: GenerationFailureKind.SandboxUnavailable, Options.Unsandboxed: false })
         {
             _ = _jobs.ResumeAsync(card.Game);
             return;

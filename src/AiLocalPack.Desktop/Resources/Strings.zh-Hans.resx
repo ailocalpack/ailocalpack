@@ -2494,6 +2494,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} 已不再安装。请在 设置 → AI 智能体 中安装，然后重试。</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} 无法在这台电脑上启动沙盒，因此无法运行它为读取此游戏而编写的代码。请允许它在没有沙盒的情况下运行这些代码，或换一个 AI 代理重新开始。</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>不使用沙盒运行</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>要在没有沙盒的情况下运行 AI 的代码吗？</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>AI 会自己编写代码来读取此游戏。没有沙盒时，这些代码以你账户的权限运行：可以读取和修改你的任何文件，也可以访问互联网。它被要求只在此翻译的文件夹中工作，但没有任何机制强制这一点。只有在信任该代理时才允许；此选择只适用于这次翻译。</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>工具包无法处理游戏文件。原因见详情。</value>
   </data>

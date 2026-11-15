@@ -92,7 +92,7 @@ public sealed class ClaudeCodeAdapter(
             if (commands)
             {
                 settings = Path.Combine(scratch, ClaudeCodeCommandLine.SettingsFileName);
-                File.WriteAllText(settings, ClaudeCodeCommandLine.SandboxSettings);
+                File.WriteAllText(settings, ClaudeCodeCommandLine.Settings(request));
             }
         }
 

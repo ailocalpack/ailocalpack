@@ -79,6 +79,26 @@ public sealed class GenerationJobStoreTests : IDisposable
     }
 
     [Fact]
+    public void The_players_consent_to_run_without_a_sandbox_reads_back_with_the_failure_that_asked_for_it()
+    {
+        // Arrange
+        var job = FullJob() with
+        {
+            Options = new GenerationOptions(Unsandboxed: true),
+            Status = GenerationJobStatus.Failed,
+            PauseReason = null,
+            ResumeAt = null,
+            Failure = new GenerationFailure(GenerationStage.Extract, GenerationFailureKind.SandboxUnavailable, "Sandbox required but unavailable"),
+        };
+
+        // Act
+        var (read, _) = GenerationJobSerializer.Read(GenerationJobSerializer.Write(job));
+
+        // Assert
+        (read!.Options.Unsandboxed, read.Failure!.Kind).Should().Be((true, GenerationFailureKind.SandboxUnavailable));
+    }
+
+    [Fact]
     public void Enums_are_written_camelCase()
     {
         // Arrange

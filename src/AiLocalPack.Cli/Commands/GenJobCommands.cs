@@ -232,9 +232,13 @@ internal static partial class GenJobCommands
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
+        var unsandboxed = new Option<bool>("--unsandboxed")
+        {
+            Description = "Let the agent's own commands (an unknown engine's scripts) run without a sandbox where its sandbox can't start (Claude Code on Windows), for this job from now on. They run with your rights and network.",
+        };
         var command = new Command("resume", "Resume the game's paused or interrupted job from its stage and chunk, retry a failed stage, or approve the glossary under review.")
         {
-            game, fake, until, workers, wait,
+            game, fake, until, workers, wait, unsandboxed,
         };
         command.SetAction(async (result, cancellationToken) =>
         {
@@ -276,7 +280,7 @@ internal static partial class GenJobCommands
             GenerationRun run;
             try
             {
-                run = Resume(context, entry, plan, cancellationToken);
+                run = Resume(context, entry, plan, cancellationToken, result.GetValue(unsandboxed));
             }
             catch (Exception e) when (e is GameBlockedException or GenerationJobException or IOException)
             {
@@ -377,8 +381,8 @@ internal static partial class GenJobCommands
         return command;
     }
 
-    private static GenerationRun Resume(JobContext context, GenerationJobEntry entry, StagePlan plan, CancellationToken cancellationToken) =>
-        context.Jobs.Resume(entry.Folder, context.Game, context.Policy, context.Index, _ => context.Stages(plan), cancellationToken);
+    private static GenerationRun Resume(JobContext context, GenerationJobEntry entry, StagePlan plan, CancellationToken cancellationToken, bool allowUnsandboxed = false) =>
+        context.Jobs.Resume(entry.Folder, context.Game, context.Policy, context.Index, _ => context.Stages(plan), cancellationToken, allowUnsandboxed);
 
     /// <summary>Prints each change; with <paramref name="wait"/> a limit pause is waited out and the job resumed.</summary>
     private static async Task<int> FollowAsync(JobContext context, GenerationRun run, StagePlan plan, bool wait, TextWriter output, CancellationToken cancellationToken)
@@ -505,6 +509,8 @@ internal static partial class GenJobCommands
             GenerationJobStatus.Paused => $"paused at {Stage(job)}",
             GenerationJobStatus.WaitingForReview => "waiting for the glossary review ('gen resume' approves it)",
             GenerationJobStatus.Interrupted => $"interrupted at {Stage(job)} ('gen resume' goes on)",
+            GenerationJobStatus.Failed when job.Failure?.Kind == GenerationFailureKind.SandboxUnavailable && !job.Options.Unsandboxed =>
+                $"{job.Failure.Stage} failed: {job.Failure.Message} ('gen resume --unsandboxed' runs the agent's commands without a sandbox)",
             GenerationJobStatus.Failed => $"{job.Failure?.Stage} failed: {job.Failure?.Message}",
             GenerationJobStatus.Cancelled => "cancelled",
             _ => "completed",

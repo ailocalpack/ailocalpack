@@ -1091,7 +1091,7 @@
                                 <Viewbox Classes="icon" Width="16" Height="16">
                                     <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
                                 </Viewbox>
-                                <TextBlock Text="{l:Loc Gen_Action_Retry}" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding RetryText}" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
                         <Button x:Name="GenCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"

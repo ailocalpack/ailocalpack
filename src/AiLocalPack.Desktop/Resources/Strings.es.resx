@@ -2650,6 +2650,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} ya no está instalado. Instálalo en Ajustes → Agentes de IA y reinténtalo.</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} no puede iniciar su sandbox en este equipo, así que no puede ejecutar el código que escribe para leer este juego. Permite que ejecute ese código sin sandbox o empieza de nuevo con otro agente de IA.</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>Ejecutar sin sandbox</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>¿Ejecutar el código de la IA sin sandbox?</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>La IA escribe su propio código para leer este juego. Sin sandbox, ese código se ejecuta con los permisos de tu cuenta: puede leer y cambiar cualquiera de tus archivos y usar internet. Se le indica que trabaje solo en la carpeta de esta traducción, pero nada lo garantiza. Permítelo solo si confías en el agente; la elección vale solo para esta traducción.</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>El toolkit no pudo procesar los archivos del juego. El motivo está en Detalles.</value>
   </data>

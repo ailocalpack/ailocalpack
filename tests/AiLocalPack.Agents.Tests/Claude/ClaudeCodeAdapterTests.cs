@@ -244,6 +244,33 @@ public sealed class ClaudeCodeAdapterTests : IDisposable
     }
 
     [Fact]
+    public async Task A_run_the_player_allowed_unsandboxed_runs_commands_without_the_sandbox_only_where_it_cant_start()
+    {
+        // Arrange
+        string? settings = null;
+        var runner = new RoutingProcessRunner(spec =>
+        {
+            settings = File.ReadAllText(spec.Arguments[spec.Arguments.ToList().IndexOf("--settings") + 1]);
+            return ClaudeTranscripts.Output("success");
+        });
+        var request = new AgentRunRequest("Write an extractor.", _dir.Path)
+        {
+            BuiltinTools = new HashSet<AgentBuiltinTool> { AgentBuiltinTool.RunCommands },
+            AllowUnsandboxed = true,
+        };
+
+        // Act
+        await foreach (var _ in Adapter(runner).RunAsync(new AgentInstallation("claude", "/bin/claude", null, AgentSource.Path), request, TestContext.Current.CancellationToken))
+        {
+        }
+
+        // Assert
+        var sandbox = System.Text.Json.JsonDocument.Parse(settings!).RootElement.GetProperty("sandbox");
+        (sandbox.GetProperty("enabled").GetBoolean(), sandbox.GetProperty("failIfUnavailable").GetBoolean(), sandbox.GetProperty("allowUnsandboxedCommands").GetBoolean())
+            .Should().Be((true, false, false));
+    }
+
+    [Fact]
     public async Task A_run_with_commands_has_its_temporary_folder_inside_the_working_folder()
     {
         // Arrange

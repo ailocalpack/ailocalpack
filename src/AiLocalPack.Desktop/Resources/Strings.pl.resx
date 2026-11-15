@@ -2650,6 +2650,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} nie jest już zainstalowany. Zainstaluj go w Ustawienia → Agenci AI i ponów.</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} nie może uruchomić piaskownicy na tym komputerze, więc nie może wykonać kodu, który pisze, by odczytać tę grę. Pozwól wykonać ten kod bez piaskownicy albo zacznij od nowa z innym agentem AI.</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>Uruchom bez piaskownicy</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>Wykonać kod AI bez piaskownicy?</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>AI pisze własny kod, by odczytać tę grę. Bez piaskownicy ten kod działa z uprawnieniami Twojego konta: może czytać i zmieniać dowolne Twoje pliki i korzystać z internetu. Ma polecenie pracować tylko w folderze tego tłumaczenia, ale nic tego nie wymusza. Zezwól tylko wtedy, gdy ufasz agentowi; wybór dotyczy tylko tego tłumaczenia.</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Narzędziom aplikacji nie udało się przetworzyć plików gry. Przyczyna jest w szczegółach.</value>
   </data>

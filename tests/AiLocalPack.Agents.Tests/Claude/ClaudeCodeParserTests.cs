@@ -207,6 +207,32 @@ public sealed class ClaudeCodeParserTests
     }
 
     [Fact]
+    public void A_required_sandbox_that_cant_start_is_reported_before_the_failure()
+    {
+        // Arrange
+        const string Text = "Sandbox required but unavailable: sandbox is enabled but the Windows sandbox is not active on this session (feature gate off).";
+
+        // Act
+        var events = Parse($$"""{"type":"result","subtype":"error_during_execution","is_error":true,"errors":["{{Text}}"]}""");
+
+        // Assert
+        events.Should().Equal(new AgentError(AgentErrorKind.SandboxUnavailable, Text), new AgentDone(AgentOutcome.Failed, Message: Text));
+    }
+
+    [Fact]
+    public void A_required_sandbox_that_cant_start_on_standard_error_is_reported_too()
+    {
+        // Arrange
+        const string Line = "Error: Sandbox required but unavailable: bubblewrap is missing.";
+
+        // Act
+        var events = new ClaudeCodeParser().ParseErrorLine(Line).ToList();
+
+        // Assert
+        events.Should().Equal(new AgentDiagnostic(Line), new AgentError(AgentErrorKind.SandboxUnavailable, Line));
+    }
+
+    [Fact]
     public void An_unknown_message_type_is_left_out()
     {
         // Act

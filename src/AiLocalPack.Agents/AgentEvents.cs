@@ -68,6 +68,9 @@ public enum AgentErrorKind
     /// <summary>The agent's program couldn't be started.</summary>
     StartFailed,
 
+    /// <summary>The run needs the agent's sandbox for its commands, which can't start on this machine; it ran nothing.</summary>
+    SandboxUnavailable,
+
     /// <summary>An error the agent itself reported (API error, refused tool…).</summary>
     Reported,
 }

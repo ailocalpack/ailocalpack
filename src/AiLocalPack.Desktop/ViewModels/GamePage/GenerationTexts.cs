@@ -76,6 +76,7 @@ public static class GenerationTexts
             GenerationFailureKind.Agent => localizer[nameof(Strings.Gen_Failure_Agent)],
             GenerationFailureKind.SignedOut => localizer.Format(nameof(Strings.Gen_Failure_SignedOut), agentName),
             GenerationFailureKind.AgentMissing => localizer.Format(nameof(Strings.Gen_Failure_AgentMissing), agentName),
+            GenerationFailureKind.SandboxUnavailable => localizer.Format(nameof(Strings.Gen_Failure_SandboxUnavailable), agentName),
             GenerationFailureKind.Toolkit => localizer[nameof(Strings.Gen_Failure_Toolkit)],
             GenerationFailureKind.WorkingCopy => localizer[nameof(Strings.Gen_Failure_WorkingCopy)],
             GenerationFailureKind.Disk => localizer[nameof(Strings.Gen_Failure_Disk)],

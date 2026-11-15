@@ -375,7 +375,8 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
     /// <summary>
     /// Goes on with a paused or interrupted job from its stage and chunk, tries a failed stage again, or starts the
     /// translation once the glossary is approved (waiting for review). A job left running with no runner is taken as
-    /// interrupted.
+    /// interrupted. <paramref name="allowUnsandboxed"/>: the player allowed the agent's commands to run without a sandbox
+    /// from now on (<see cref="GenerationOptions.Unsandboxed"/>, kept in the job).
     /// </summary>
     /// <exception cref="GameBlockedException">The game is blocked by now.</exception>
     /// <exception cref="GenerationJobException">Not found, unreadable, busy (another runner has it), or cancelled / completed.</exception>
@@ -385,7 +386,8 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
         AntiCheatPolicy policy,
         RegistryIndex? index,
         Func<GenerationJobEntry, GenerationStages> stages,
-        CancellationToken cancellationToken = default) => Continue(
+        CancellationToken cancellationToken = default,
+        bool allowUnsandboxed = false) => Continue(
             folder,
             game,
             policy,
@@ -398,7 +400,8 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
                 _ => new GenerationTrigger.Resumed(),
             },
             null,
-            cancellationToken);
+            cancellationToken,
+            allowUnsandboxed);
 
     /// <summary>
     /// The player asks the agent to draft the glossary of a job waiting for review again (task 54): the entries the player
@@ -469,7 +472,8 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
         Func<GenerationJobEntry, GenerationStages> stages,
         Func<GenerationJob, GenerationTrigger> pick,
         Action? before,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool allowUnsandboxed = false)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(stages);
@@ -498,6 +502,12 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
             }
 
             before?.Invoke();
+            if (allowUnsandboxed && !job.Options.Unsandboxed)
+            {
+                job = job with { Options = job.Options with { Unsandboxed = true } };
+                GenerationJobLog.Append(folder, _time, "The player allowed the agent's commands to run without a sandbox where it can't start.");
+            }
+
             job = GenerationJobMachine.Apply(job, trigger, now);
             GenerationJobStore.Write(folder, job);
             GenerationJobLog.Append(folder, _time, trigger switch

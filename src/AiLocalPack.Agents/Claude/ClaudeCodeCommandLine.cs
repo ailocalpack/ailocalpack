@@ -26,7 +26,9 @@ namespace AiLocalPack.Agents.Claude;
 /// (and the temporary folder, which <see cref="AgentSandbox"/> moves inside it) and reach no network host;
 /// <c>failIfUnavailable</c> + <c>allowUnsandboxedCommands: false</c>, so a sandbox that can't start (Linux without
 /// bubblewrap) runs no command at all instead of running it unconfined (checked with 2.1.322 on macOS: without them a
-/// sandbox that failed to start ran the commands unconfined).</item>
+/// sandbox that failed to start ran the commands unconfined). A run with <see cref="AgentRunRequest.AllowUnsandboxed"/>
+/// (the player's consent, given after such a failure: Claude Code's sandbox isn't available on Windows yet) gets
+/// <see cref="UnsandboxedSettings"/> instead: the sandbox where it starts, else the commands run without it.</item>
 /// <item>The MCP config and the system prompt go in files (<see cref="McpConfigFileName"/>,
 /// <see cref="SystemPromptFileName"/>) so no quoting or length limit applies (cmd.exe takes 8 191 characters).</item>
 /// </list>
@@ -54,6 +56,29 @@ public static partial class ClaudeCodeCommandLine
           }
         }
         """;
+
+    /// <summary>
+    /// The <c>--settings</c> of a run with commands the player allowed to run unconfined: the sandbox where it can start
+    /// (still no network, never bypassed), else the commands run without it, with the player's own rights and network.
+    /// </summary>
+    public const string UnsandboxedSettings = """
+        {
+          "sandbox": {
+            "enabled": true,
+            "failIfUnavailable": false,
+            "autoAllowBashIfSandboxed": true,
+            "allowUnsandboxedCommands": false,
+            "network": { "allowedDomains": [], "strictAllowlist": true }
+          }
+        }
+        """;
+
+    /// <summary>The <c>--settings</c> of a run with commands: <see cref="SandboxSettings"/>, or <see cref="UnsandboxedSettings"/> when the player allowed it.</summary>
+    public static string Settings(AgentRunRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return request.AllowUnsandboxed ? UnsandboxedSettings : SandboxSettings;
+    }
 
     /// <summary>The run's arguments (after the installation's own), given where its MCP config and system prompt files are.</summary>
     public static IReadOnlyList<string> Arguments(AgentRunRequest request, string? mcpConfigFile, string? systemPromptFile, string? settingsFile = null)

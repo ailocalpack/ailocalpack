@@ -35,6 +35,7 @@ public static class AgentStepRun
         AgentUsage? usage = null;
         AgentDone? done = null;
         var startFailed = false;
+        var noSandbox = false;
         await foreach (var e in adapter.RunAsync(installation, request, cancellationToken).ConfigureAwait(false))
         {
             onEvent?.Invoke(e);
@@ -49,6 +50,9 @@ public static class AgentStepRun
                 case AgentError { Kind: AgentErrorKind.StartFailed }:
                     startFailed = true;
                     break;
+                case AgentError { Kind: AgentErrorKind.SandboxUnavailable }:
+                    noSandbox = true;
+                    break;
                 case AgentDone d:
                     done = d;
                     break;
@@ -56,14 +60,15 @@ public static class AgentStepRun
         }
 
         done ??= new AgentDone(AgentOutcome.Failed, Message: "The agent's run ended without a result.");
-        return new AgentStepOutcome(done, ToResult(done, limit, startFailed, cancellationToken), usage);
+        return new AgentStepOutcome(done, ToResult(done, limit, startFailed, cancellationToken, noSandbox), usage);
     }
 
     /// <summary>
     /// The step's result for a run that ended with <paramref name="done"/>; <c>null</c> = succeeded.
-    /// <paramref name="startFailed"/>: the program couldn't be started (<see cref="AgentErrorKind.StartFailed"/>).
+    /// <paramref name="startFailed"/>: the program couldn't be started (<see cref="AgentErrorKind.StartFailed"/>);
+    /// <paramref name="noSandbox"/>: its sandbox couldn't (<see cref="AgentErrorKind.SandboxUnavailable"/>).
     /// </summary>
-    public static GenerationStepResult? ToResult(AgentDone done, AgentLimitReached? limit, bool startFailed = false, CancellationToken cancellationToken = default)
+    public static GenerationStepResult? ToResult(AgentDone done, AgentLimitReached? limit, bool startFailed = false, CancellationToken cancellationToken = default, bool noSandbox = false)
     {
         ArgumentNullException.ThrowIfNull(done);
         return done.Outcome switch
@@ -73,7 +78,7 @@ public static class AgentStepRun
             AgentOutcome.SignedOut => new GenerationStepResult.Failed(GenerationFailureKind.SignedOut, done.Message ?? "The agent isn't signed in."),
             AgentOutcome.Cancelled => throw new OperationCanceledException("The agent's run was cancelled.", cancellationToken),
             _ => new GenerationStepResult.Failed(
-                startFailed ? GenerationFailureKind.AgentMissing : GenerationFailureKind.Agent,
+                startFailed ? GenerationFailureKind.AgentMissing : noSandbox ? GenerationFailureKind.SandboxUnavailable : GenerationFailureKind.Agent,
                 done.Message ?? done.Result ?? "The agent failed."),
         };
     }

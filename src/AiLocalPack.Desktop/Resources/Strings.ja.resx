@@ -2494,6 +2494,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} がインストールされていません。設定 → AI エージェントでインストールしてから再試行してください。</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} はこのコンピューターでサンドボックスを起動できないため、このゲームを読むために書くコードを実行できません。サンドボックスなしでそのコードを実行することを許可するか、別の AI エージェントでやり直してください。</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>サンドボックスなしで実行</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>AI のコードをサンドボックスなしで実行しますか？</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>AI はこのゲームを読むために独自のコードを書きます。サンドボックスがないと、そのコードはあなたのアカウントの権限で動作し、あなたのどのファイルも読み書きでき、インターネットにも接続できます。この翻訳のフォルダー内だけで作業するよう指示していますが、それを強制する仕組みはありません。エージェントを信頼できる場合にのみ許可してください。この選択はこの翻訳にだけ適用されます。</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>ツールキットがゲームファイルを処理できませんでした。理由は詳細にあります。</value>
   </data>

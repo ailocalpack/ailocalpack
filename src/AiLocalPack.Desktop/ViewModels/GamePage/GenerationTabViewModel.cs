@@ -763,6 +763,15 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     public bool ShowRetry => Job?.Status == GenerationJobStatus.Failed;
 
+    /// <summary>
+    /// The stage failed because the agent's sandbox can't start here and the player hasn't allowed running without it:
+    /// Retry becomes <c>Run without sandbox</c>, which asks first.
+    /// </summary>
+    public bool NeedsUnsandboxedConsent => Job is { Status: GenerationJobStatus.Failed, Failure.Kind: GenerationFailureKind.SandboxUnavailable, Options.Unsandboxed: false };
+
+    /// <summary>"Retry stage", or "Run without sandbox" (<see cref="NeedsUnsandboxedConsent"/>).</summary>
+    public string RetryText => _localizer[NeedsUnsandboxedConsent ? nameof(Strings.Gen_Action_RunUnsandboxed) : nameof(Strings.Gen_Action_Retry)];
+
     public IRelayCommand PauseCommand { get; }
 
     /// <summary>Resume, Resume now, Retry stage (and Continue to translation, after the review's saves): the job goes on (<see cref="GenerationService.ResumeAsync"/>).</summary>
@@ -835,6 +844,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     public string BannerActionText => _localizer[Banner switch
     {
         GenerationBanner.Limit => nameof(Strings.Gen_Action_ResumeNow),
+        GenerationBanner.Failed when NeedsUnsandboxedConsent => nameof(Strings.Gen_Action_RunUnsandboxed),
         GenerationBanner.Failed => nameof(Strings.Gen_Action_Retry),
         GenerationBanner.Review => nameof(Strings.Gen_Action_ContinueTranslation),
         _ => nameof(Strings.Gen_Action_Resume),
@@ -1213,8 +1223,31 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         }
     }
 
-    /// <summary>Resume, Resume now, Retry stage or Continue: the job goes on; a refusal shows under the controls.</summary>
+    /// <summary>
+    /// Resume, Resume now, Retry stage or Continue: the job goes on; a refusal shows under the controls. Run without
+    /// sandbox (<see cref="NeedsUnsandboxedConsent"/>) asks first and goes on only when the player agrees.
+    /// </summary>
     public async Task ResumeAsync()
+    {
+        if (_acting || Job is null)
+        {
+            return;
+        }
+
+        if (NeedsUnsandboxedConsent)
+        {
+            _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
+                _localizer[nameof(Strings.Gen_Unsandboxed_Title)],
+                _localizer[nameof(Strings.Gen_Unsandboxed_Text)],
+                _localizer[nameof(Strings.Gen_Action_RunUnsandboxed)],
+                () => _ = ResumeAsync(allowUnsandboxed: true)));
+            return;
+        }
+
+        await ResumeAsync(allowUnsandboxed: false);
+    }
+
+    private async Task ResumeAsync(bool allowUnsandboxed)
     {
         if (_acting || Job is null)
         {
@@ -1224,7 +1257,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _acting = true;
         ActionError = string.Empty;
         RaiseControls();
-        var result = await _jobs.ResumeAsync(_game);
+        var result = await _jobs.ResumeAsync(_game, allowUnsandboxed);
         _ui.Post(() =>
         {
             _acting = false;

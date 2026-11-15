@@ -232,6 +232,62 @@ public sealed class GenerationProgressTests
         tab.BannerText.Should().Be("Claude Code is signed out. Sign in in Settings → AI agents, then retry.");
     }
 
+    private static GenerationJob SandboxFailed(GenerationJob job) => job with
+    {
+        Stage = GenerationStage.Extract,
+        Status = GenerationJobStatus.Failed,
+        Failure = new GenerationFailure(GenerationStage.Extract, GenerationFailureKind.SandboxUnavailable, "Sandbox required but unavailable"),
+    };
+
+    [Fact]
+    public void A_sandbox_that_cant_start_offers_running_without_it()
+    {
+        // Arrange
+        using var services = Build();
+        JobOnDisk(services, SandboxFailed);
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        (tab.BannerActionText, tab.RetryText, tab.BannerText.StartsWith("Claude Code can't start its sandbox", StringComparison.Ordinal))
+            .Should().Be(("Run without sandbox", "Run without sandbox", true));
+    }
+
+    [Fact]
+    public async Task Run_without_sandbox_asks_first_and_doesnt_resume_until_the_player_agrees()
+    {
+        // Arrange
+        using var services = Build();
+        JobOnDisk(services, SandboxFailed);
+        var tab = Open(services);
+
+        // Act
+        await tab.ResumeAsync();
+
+        // Assert
+        ((services.GetRequiredService<IDialogService>().Current as ConfirmDialogViewModel)?.Title, tab.Job?.Status)
+            .Should().Be(("Run the AI's code without a sandbox?", GenerationJobStatus.Failed));
+    }
+
+    [Fact]
+    public async Task Agreeing_to_run_without_sandbox_retries_the_stage_with_the_consent_kept_in_the_job()
+    {
+        // Arrange
+        using var services = Build();
+        JobOnDisk(services, SandboxFailed);
+        var tab = Open(services);
+        await tab.ResumeAsync();
+        var dialog = (ConfirmDialogViewModel)services.GetRequiredService<IDialogService>().Current!;
+
+        // Act
+        dialog.ConfirmCommand.Execute(null);
+        await WaitUntil(() => tab.Job?.Status == GenerationJobStatus.Running);
+
+        // Assert
+        (tab.Job?.Options.Unsandboxed, tab.Job?.Stage, tab.NeedsUnsandboxedConsent).Should().Be((true, GenerationStage.Extract, false));
+    }
+
     // ---------- Card ----------
 
     [Fact]

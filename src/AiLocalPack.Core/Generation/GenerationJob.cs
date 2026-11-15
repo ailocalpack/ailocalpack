@@ -76,6 +76,12 @@ public enum GenerationFailureKind
     /// <summary>The agent isn't installed, or its program can't start.</summary>
     AgentMissing,
 
+    /// <summary>
+    /// The agent's sandbox for its own commands can't start on this machine (Claude Code on Windows while its sandbox is
+    /// off), so it ran nothing; the player may retry with <see cref="GenerationOptions.Unsandboxed"/>.
+    /// </summary>
+    SandboxUnavailable,
+
     /// <summary>The toolkit couldn't read or rebuild the game.</summary>
     Toolkit,
 
@@ -135,6 +141,10 @@ public enum GenerationQuality
 /// (<c>unity</c>, <c>godot</c>…, whatever engine was detected), <see cref="AgentReader"/> (the agent writes its own
 /// extractor and rebuilder, the pack is a binary patch), or <c>null</c> = the tool of the detected engine, else the agent.
 /// </param>
+/// <param name="Unsandboxed">
+/// The player allowed the agent's own commands (an unknown engine's scripts) to run without a sandbox when the agent's
+/// sandbox can't start here (<see cref="GenerationFailureKind.SandboxUnavailable"/>); where it can, it is still used.
+/// </param>
 public sealed record GenerationOptions(
     bool ReviewGlossary = false,
     WorkingCopyScope? Scope = null,
@@ -142,7 +152,8 @@ public sealed record GenerationOptions(
     GenerationBase? Base = null,
     GenerationQuality Quality = GenerationQuality.Balanced,
     bool WebLookup = false,
-    string? Reader = null)
+    string? Reader = null,
+    bool Unsandboxed = false)
 {
     /// <summary><see cref="Reader"/> of a job whose game the agent reads with its own code (the toolkit's <c>agent-script</c> tool).</summary>
     public const string AgentReader = "agent-script";

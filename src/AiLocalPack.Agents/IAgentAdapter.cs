@@ -122,6 +122,13 @@ public sealed record AgentRunRequest(string Prompt, string WorkingDirectory)
     /// <summary>The reasoning effort; <c>null</c> = the agent's default for the model.</summary>
     public AgentEffort? Effort { get; init; }
 
+    /// <summary>
+    /// With <see cref="AgentBuiltinTool.RunCommands"/>: when the agent's sandbox can't start, commands run without it
+    /// (the player allowed it); else such a run ends with <see cref="AgentErrorKind.SandboxUnavailable"/>. Where the
+    /// sandbox starts it is used either way.
+    /// </summary>
+    public bool AllowUnsandboxed { get; init; }
+
     /// <summary>A session to continue (from <see cref="AgentSessionStarted.SessionId"/>), else a new one.</summary>
     public string? ResumeSessionId { get; init; }
 }

@@ -385,10 +385,11 @@ public sealed class GenerationService : IDisposable
 
     /// <summary>
     /// Goes on with the game's job: a paused or interrupted one from its stage and chunk, a failed one from the failed
-    /// stage, one waiting for review with the translation. Never throws.
+    /// stage, one waiting for review with the translation. <paramref name="allowUnsandboxed"/>: the player allowed the
+    /// agent's commands to run without a sandbox (<see cref="GenerationOptions.Unsandboxed"/>). Never throws.
     /// </summary>
-    public Task<GenerationActionResult> ResumeAsync(Game game) =>
-        ContinueAsync(game, "Resuming", (folder, stages) => _jobs.Resume(folder, game, _policy, _packIndex.Current?.Index, stages, _quit.Token));
+    public Task<GenerationActionResult> ResumeAsync(Game game, bool allowUnsandboxed = false) =>
+        ContinueAsync(game, "Resuming", (folder, stages) => _jobs.Resume(folder, game, _policy, _packIndex.Current?.Index, stages, _quit.Token, allowUnsandboxed));
 
     /// <summary>
     /// The player has the glossary of the job waiting for review drafted again (task 54): the entries they didn't edit

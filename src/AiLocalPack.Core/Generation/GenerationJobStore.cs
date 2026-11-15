@@ -392,7 +392,8 @@ public static class GenerationJobSerializer
                 job.Options.Base is { } b ? new GenerationBaseJson(b.PackId, b.Revision, b.Local, b.Title) : null,
                 Name(job.Options.Quality),
                 job.Options.WebLookup ? true : null,
-                job.Options.Reader),
+                job.Options.Reader,
+                job.Options.Unsandboxed ? true : null),
             Name(job.Stage),
             Name(job.Status),
             Name(job.PauseReason),
@@ -523,7 +524,8 @@ public static class GenerationJobSerializer
                 baseRef,
                 quality,
                 file.Options?.WebLookup ?? false,
-                reader),
+                reader,
+                file.Options?.Unsandboxed ?? false),
             Stage = stage,
             Status = status,
             PauseReason = pause,
@@ -581,7 +583,8 @@ internal sealed record GenerationOptionsJson(
     GenerationBaseJson? Base = null,
     string? Quality = null,
     bool? WebLookup = null,
-    string? Reader = null);
+    string? Reader = null,
+    bool? Unsandboxed = null);
 
 internal sealed record GenerationBaseJson(string? PackId, int Revision, bool Local, string? Title);
 

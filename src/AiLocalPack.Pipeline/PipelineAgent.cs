@@ -118,10 +118,12 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language, context.Job.Options.Reader)],
             Model = choice.Model,
             Effort = choice.Effort,
+            AllowUnsandboxed = workspace is not null && context.Job.Options.Unsandboxed,
         };
         Log(context, logTag, $"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
             + (brief is null ? "" : $" + {PromptTemplate.SystemBrief.Label}")
             + (workspace is null ? "" : $", in its workspace {workspace.Folder} with file and command tools")
+            + (request.AllowUnsandboxed ? " (without a sandbox where it can't start, as the player allowed)" : "")
             + (extraTools is { Count: > 0 } ? $", with {string.Join(", ", extraTools.Order())}" : "")
             + $", quality {context.Job.Options.Quality.ToString().ToLowerInvariant()}"
             + (request.Model is { } model ? $", model {model}" : "")

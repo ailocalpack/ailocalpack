@@ -371,6 +371,40 @@ public sealed class GenerationRunnerTests : IDisposable
     }
 
     [Fact]
+    public async Task Resuming_with_the_players_consent_keeps_it_in_the_job_for_the_stages_that_follow()
+    {
+        // Arrange
+        var first = Start(Stages(glossary: () => new GenerationStepResult.Failed(GenerationFailureKind.SandboxUnavailable, "Sandbox required but unavailable")));
+        await first.Completion;
+        var seen = new List<bool>();
+        var stages = Stages(translate: (context, _) =>
+        {
+            seen.Add(context.Job.Options.Unsandboxed);
+            return Task.FromResult<GenerationStepResult>(new GenerationStepResult.ChunkDone(10));
+        });
+
+        // Act
+        var job = await _jobs.Resume(first.Folder, Game(), Policy, null, _ => stages, Ct, allowUnsandboxed: true).Completion;
+
+        // Assert
+        new { job.Status, job.Options.Unsandboxed, Seen = seen }.Should().BeEquivalentTo(new { Status = GenerationJobStatus.Completed, Unsandboxed = true, Seen = new[] { true, true, true } });
+    }
+
+    [Fact]
+    public async Task A_plain_resume_doesnt_allow_running_without_a_sandbox()
+    {
+        // Arrange
+        var first = Start(Stages(glossary: () => new GenerationStepResult.Failed(GenerationFailureKind.SandboxUnavailable, "Sandbox required but unavailable")));
+        await first.Completion;
+
+        // Act
+        var job = await Resume(first, Stages()).Completion;
+
+        // Assert
+        job.Options.Unsandboxed.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task With_review_the_job_waits_after_the_glossary_and_resume_approves_it()
     {
         // Arrange

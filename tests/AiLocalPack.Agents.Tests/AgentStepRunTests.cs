@@ -49,6 +49,19 @@ public sealed class AgentStepRunTests : IDisposable
     }
 
     [Fact]
+    public async Task A_sandbox_that_cant_start_fails_the_stage_as_sandbox_unavailable()
+    {
+        // Arrange
+        string[] lines = [Event(new AgentError(AgentErrorKind.SandboxUnavailable, "Sandbox required but unavailable")), Event(new AgentDone(AgentOutcome.Failed, Message: "Sandbox required but unavailable"))];
+
+        // Act
+        var outcome = await RunAsync(lines);
+
+        // Assert
+        outcome.Stop.Should().Be(new GenerationStepResult.Failed(GenerationFailureKind.SandboxUnavailable, "Sandbox required but unavailable"));
+    }
+
+    [Fact]
     public void Signed_out_fails_the_stage_as_signed_out()
     {
         // Arrange

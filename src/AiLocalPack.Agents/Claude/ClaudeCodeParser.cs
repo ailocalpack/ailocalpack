@@ -20,6 +20,8 @@ namespace AiLocalPack.Agents.Claude;
 /// event's window (<c>unifiedWindows[rateLimitType]</c>, else <c>utilization</c>), when it has one.</item>
 /// <item><c>result</c> → <see cref="AgentUsage"/> of the whole run (tokens, <c>total_cost_usd</c>), then the verdict:
 /// <c>success</c> without <c>is_error</c> → succeeded with <c>result</c>, else failed with its text or <c>errors</c>.</item>
+/// <item>A required sandbox that can't start ("Sandbox required but unavailable", in the result or on standard error) →
+/// <see cref="AgentErrorKind.SandboxUnavailable"/> as well.</item>
 /// </list>
 /// A limit is reported once (the rejected event, else the assistant error, whose old <c>…|&lt;unix seconds&gt;</c> text
 /// names the reset). Unknown message types are left out (newer Claude Code); a line that isn't a JSON object with a
@@ -248,9 +250,23 @@ public sealed class ClaudeCodeParser : IAgentOutputParser
         var message = !string.IsNullOrWhiteSpace(result) ? result
             : !string.IsNullOrWhiteSpace(errors) ? errors
             : $"Claude Code ended with \"{subtype ?? "an error"}\".";
+        if (IsSandboxUnavailable(message))
+        {
+            events.Add(new AgentError(AgentErrorKind.SandboxUnavailable, message));
+        }
+
         events.Add(new AgentDone(AgentOutcome.Failed, string.IsNullOrEmpty(result) ? null : result, message));
         return events;
     }
+
+    /// <summary>Claude Code refusing a run whose required sandbox can't start (2.1.325 on Windows: "Sandbox required but unavailable: …").</summary>
+    public static bool IsSandboxUnavailable(string text) =>
+        text.Contains(SandboxUnavailableText, StringComparison.OrdinalIgnoreCase);
+
+    public IEnumerable<AgentEvent> ParseErrorLine(string line) =>
+        IsSandboxUnavailable(line) ? [new AgentDiagnostic(line), new AgentError(AgentErrorKind.SandboxUnavailable, line.Trim())] : [new AgentDiagnostic(line)];
+
+    private const string SandboxUnavailableText = "Sandbox required but unavailable";
 
     private static List<JsonElement> Content(JsonElement root) =>
         root.TryGetProperty("message", out var message)

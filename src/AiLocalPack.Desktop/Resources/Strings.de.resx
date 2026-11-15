@@ -2572,6 +2572,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} ist nicht mehr installiert. Installiere es unter Einstellungen → KI-Agenten und wiederhole dann.</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} kann auf diesem Computer seine Sandbox nicht starten und darum den Code nicht ausführen, den es zum Lesen dieses Spiels schreibt. Erlaube, diesen Code ohne Sandbox auszuführen, oder beginne neu mit einem anderen KI-Agenten.</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>Ohne Sandbox ausführen</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>Den Code der KI ohne Sandbox ausführen?</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>Die KI schreibt eigenen Code, um dieses Spiel zu lesen. Ohne Sandbox läuft dieser Code mit den Rechten deines Kontos: Er kann alle deine Dateien lesen und ändern und das Internet nutzen. Er soll nur im Ordner dieser Übersetzung arbeiten, aber nichts erzwingt das. Erlaube es nur, wenn du dem Agenten vertraust; die Wahl gilt nur für diese Übersetzung.</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Das Toolkit konnte die Spieldateien nicht verarbeiten. Der Grund steht in den Details.</value>
   </data>

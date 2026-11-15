@@ -2600,6 +2600,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} isn't installed any more. Install it in Settings → AI agents, then retry.</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} can't start its sandbox on this computer, so it can't run the code it writes to read this game. Let it run that code without a sandbox, or start again with another AI agent.</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>Run without sandbox</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>Run the AI's code without a sandbox?</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>The AI writes its own code to read this game. Without a sandbox that code runs with your account's rights: it can read and change any of your files and use the internet. It is told to work only in this translation's folder, but nothing enforces it. Allow it only if you trust the agent; the choice applies to this translation only.</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>The toolkit couldn't process the game files. Details have the reason.</value>
   </data>

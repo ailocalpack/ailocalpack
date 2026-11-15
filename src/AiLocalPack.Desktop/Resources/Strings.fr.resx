@@ -2650,6 +2650,18 @@
   <data name="Gen_Failure_AgentMissing" xml:space="preserve">
     <value>{0} n’est plus installé. Installez-le dans Paramètres → Agents IA, puis réessayez.</value>
   </data>
+  <data name="Gen_Failure_SandboxUnavailable" xml:space="preserve">
+    <value>{0} ne peut pas démarrer son bac à sable sur cet ordinateur et ne peut donc pas exécuter le code qu'il écrit pour lire ce jeu. Autorisez-le à exécuter ce code sans bac à sable, ou recommencez avec un autre agent IA.</value>
+  </data>
+  <data name="Gen_Action_RunUnsandboxed" xml:space="preserve">
+    <value>Exécuter sans bac à sable</value>
+  </data>
+  <data name="Gen_Unsandboxed_Title" xml:space="preserve">
+    <value>Exécuter le code de l'IA sans bac à sable ?</value>
+  </data>
+  <data name="Gen_Unsandboxed_Text" xml:space="preserve">
+    <value>L'IA écrit son propre code pour lire ce jeu. Sans bac à sable, ce code s'exécute avec les droits de votre compte : il peut lire et modifier n'importe lequel de vos fichiers et utiliser Internet. Il a pour consigne de travailler uniquement dans le dossier de cette traduction, mais rien ne l'y oblige. Ne l'autorisez que si vous faites confiance à l'agent ; ce choix ne vaut que pour cette traduction.</value>
+  </data>
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>La boîte à outils n’a pas pu traiter les fichiers du jeu. La raison est dans les détails.</value>
   </data>
