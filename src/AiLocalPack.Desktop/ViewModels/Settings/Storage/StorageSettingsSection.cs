@@ -138,7 +138,18 @@ public sealed class StorageSettingsSection : SettingsSection
         }
         else if (usage is not null)
         {
-            _ui.Post(() => Apply(usage));
+            // Checked again when it applies: a newer measure may have started (and applied) since, and an older one must
+            // never overwrite it (the immediate dispatcher of the tests applies on the measuring thread).
+            _ui.Post(() =>
+            {
+                lock (_refreshLock)
+                {
+                    if (version == _version)
+                    {
+                        Apply(usage);
+                    }
+                }
+            });
         }
     }
 
