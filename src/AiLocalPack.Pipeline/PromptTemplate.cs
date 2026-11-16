@@ -28,10 +28,10 @@ public sealed partial class PromptTemplate
     public static PromptTemplate GlossaryUpdate { get; } = Load("glossary-update", 1);
 
     /// <summary>The Translate stage's task for one chunk.</summary>
-    public static PromptTemplate Translate { get; } = Load("translate", 1);
+    public static PromptTemplate Translate { get; } = Load("translate", 2);
 
     /// <summary>The Translate stage's task for the strings an earlier attempt at the chunk left without a valid translation.</summary>
-    public static PromptTemplate TranslateRetry { get; } = Load("translate-retry", 1);
+    public static PromptTemplate TranslateRetry { get; } = Load("translate-retry", 2);
 
     /// <summary>The Study stage's task (Thorough jobs): read the whole game, optionally look it up on the web, reply with the game brief.</summary>
     public static PromptTemplate Study { get; } = Load("study", 1);
@@ -52,7 +52,7 @@ public sealed partial class PromptTemplate
     public static PromptTemplate SystemFix { get; } = Load("system-fix", 1);
 
     /// <summary>A fix request (task 75): the player's words, what they attached, the conversation so far.</summary>
-    public static PromptTemplate Fix { get; } = Load("fix", 2);
+    public static PromptTemplate Fix { get; } = Load("fix", 3);
 
     public string Name { get; }
 

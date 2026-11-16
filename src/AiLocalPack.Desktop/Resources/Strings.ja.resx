@@ -2386,6 +2386,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>改行</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>長すぎ</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>要確認</value>
   </data>

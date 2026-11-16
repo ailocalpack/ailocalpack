@@ -2386,6 +2386,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>换行</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>过长</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>检查</value>
   </data>

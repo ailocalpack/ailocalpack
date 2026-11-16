@@ -2461,6 +2461,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>satır sonları</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>çok daha uzun</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>kontrol</value>
   </data>

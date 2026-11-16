@@ -33,6 +33,10 @@ public sealed record StringIssue(StringIssueSeverity Severity, string Rule, stri
 /// Skipped when the original itself isn't balanced (a tag spanning several strings).</item>
 /// <item><c>too-long</c> (error): the drawn text (markup left out, line breaks not counted) is longer than the engine's
 /// limit, in <see cref="ExtractedString.MaxLengthUnit"/>.</item>
+/// <item><c>much-longer</c> (warning): no limit is known and the translation is more than half as long again as the
+/// original and at least 5 cells longer, in display width (<see cref="MuchLongerRatio"/>, <see cref="MuchLongerSlack"/>;
+/// the original's markup counts on both sides, since a placeholder stands for a name or number the game fills in, and
+/// markup the translation adds is left to <c>placeholder-extra</c>): the game's UI often doesn't grow to fit, so text that runs long is cut off or spills over.</item>
 /// <item><c>untranslated</c> (warning): same as the original, when the original has letters.</item>
 /// <item><c>whitespace</c> (warning): leading or trailing whitespace differs.</item>
 /// <item><c>line-breaks</c> (warning): another number of line breaks.</item>
@@ -46,13 +50,20 @@ public static partial class StringValidator
     public const string PlaceholderOrder = "placeholder-order";
     public const string TagUnbalanced = "tag-unbalanced";
     public const string TooLong = "too-long";
+    public const string MuchLonger = "much-longer";
     public const string Untranslated = "untranslated";
     public const string Whitespace = "whitespace";
     public const string LineBreaks = "line-breaks";
 
     /// <summary>Every rule ID, in the order issues are reported.</summary>
     public static IReadOnlyList<string> Rules { get; } =
-        [Empty, PlaceholderMissing, PlaceholderExtra, PlaceholderOrder, TagUnbalanced, TooLong, Untranslated, Whitespace, LineBreaks];
+        [Empty, PlaceholderMissing, PlaceholderExtra, PlaceholderOrder, TagUnbalanced, TooLong, MuchLonger, Untranslated, Whitespace, LineBreaks];
+
+    /// <summary><c>much-longer</c> warns when the translation is wider than the original times this…</summary>
+    public const double MuchLongerRatio = 1.5;
+
+    /// <summary>…and at least this many cells wider, so a short word ("OK" → "Хорошо") isn't flagged.</summary>
+    public const int MuchLongerSlack = 5;
 
     public static IReadOnlyList<StringIssue> Validate(ExtractedString source, string translation, TextMarkup markup)
     {
@@ -115,6 +126,18 @@ public static partial class StringValidator
             issues.Add(new StringIssue(StringIssueSeverity.Error, TooLong, source.MaxLengthUnit == LengthUnit.DisplayWidth
                 ? $"The translation is {length} cells wide (wide characters such as CJK and emoji count 2); the game allows at most {limit}."
                 : $"The translation has {length} characters; the game allows at most {limit}."));
+        }
+
+        if (source.MaxLength is null
+            && TextLength.Measure(source.Original, LengthUnit.DisplayWidth) is var originalWidth and > 0
+            && TextLength.Measure(markup.Visible(translation), LengthUnit.DisplayWidth)
+                + originalWidth - TextLength.Measure(markup.Visible(source.Original), LengthUnit.DisplayWidth) is var translatedWidth
+            && translatedWidth > originalWidth * MuchLongerRatio
+            && translatedWidth - originalWidth >= MuchLongerSlack)
+        {
+            issues.Add(new StringIssue(StringIssueSeverity.Warning, MuchLonger,
+                $"The translation is {translatedWidth} characters wide, the original {originalWidth}; the game may not fit it. "
+                + "Keep it about as long as the original: a shorter synonym or a looser phrasing, without leaving out information."));
         }
 
         if (string.Equals(translation, source.Original, StringComparison.Ordinal) && markup.Visible(source.Original).Any(char.IsLetter))

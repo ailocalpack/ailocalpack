@@ -2536,6 +2536,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>переносы строк</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>намного длиннее</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>проверить</value>
   </data>

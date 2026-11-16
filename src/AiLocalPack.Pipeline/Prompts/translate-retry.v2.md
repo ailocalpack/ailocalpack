@@ -8,6 +8,7 @@ Glossary entries these strings mention (use these translations, inflected as {{l
 Rules for every string:
 - Translate its `original` naturally; its `context` says where the text is shown and who says it.
 - Keep every token listed in `placeholders` exactly as written and as many times as the original has it. Don't add any the original doesn't have. Printf fields such as `%s` and `%d` keep their order.
+- Keep the translation about as long as the original, ideally the same length and at most about a third longer (the game's UI often doesn't grow to fit): prefer a shorter synonym or a looser phrasing, never leave out information.
 - When `maxLength` is given, the drawn text (markup not counted) must not be longer: shorten the wording, use common abbreviations if you must.
 - No spaces at the start or end the original doesn't have.
 

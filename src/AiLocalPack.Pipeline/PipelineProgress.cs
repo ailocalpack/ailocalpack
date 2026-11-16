@@ -8,11 +8,11 @@ using AiLocalPack.Core.Storage;
 namespace AiLocalPack.Pipeline;
 
 /// <summary>A string just translated, for the "just translated" feed.</summary>
-/// <param name="Warning">The validator's warning about it (its rule, <c>untranslated</c>, <c>whitespace</c>, <c>line-breaks</c>), if any.</param>
+/// <param name="Warning">The validator's warning about it (its rule, <c>much-longer</c>, <c>untranslated</c>, <c>whitespace</c>, <c>line-breaks</c>), if any.</param>
 public sealed record RecentTranslation(string Key, string Original, string Translation, string? Warning = null);
 
 /// <summary>A stored translation the validator warns about (task 53: the progress card's validator box).</summary>
-/// <param name="Rule">The rule (<see cref="Toolkit.Validation.StringValidator"/>: <c>untranslated</c>, <c>whitespace</c>, <c>line-breaks</c>).</param>
+/// <param name="Rule">The rule (<see cref="Toolkit.Validation.StringValidator"/>: <c>much-longer</c>, <c>untranslated</c>, <c>whitespace</c>, <c>line-breaks</c>).</param>
 public sealed record TranslationWarning(string Key, string Rule, string Original, string Translation);
 
 /// <summary>The agent's usage window as last reported (<see cref="AgentLimitStatus"/>).</summary>

@@ -85,7 +85,7 @@ public static class GenerationTexts
         };
     }
 
-    /// <summary>A validator rule as a short tag: "same as original", "spaces", "line breaks".</summary>
+    /// <summary>A validator rule as a short tag: "same as original", "spaces", "line breaks", "too long".</summary>
     public static string Rule(string rule, Localizer localizer)
     {
         ArgumentNullException.ThrowIfNull(localizer);
@@ -94,6 +94,7 @@ public static class GenerationTexts
             StringValidator.Untranslated => nameof(Strings.Gen_Warning_Rule_Untranslated),
             StringValidator.Whitespace => nameof(Strings.Gen_Warning_Rule_Whitespace),
             StringValidator.LineBreaks => nameof(Strings.Gen_Warning_Rule_LineBreaks),
+            StringValidator.MuchLonger => nameof(Strings.Gen_Warning_Rule_MuchLonger),
             _ => nameof(Strings.Gen_Warning_Rule_Unknown),
         }];
     }

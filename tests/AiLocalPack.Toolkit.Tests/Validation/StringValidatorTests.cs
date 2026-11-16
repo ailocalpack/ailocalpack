@@ -115,7 +115,7 @@ public sealed class StringValidatorTests
 
     [Theory]
     [InlineData("unity", "{0} of {1}", "{1}: {0}")]
-    [InlineData("unreal", "{Name} hits {Target}", "{Target} получает удар от {Name}")]
+    [InlineData("unreal", "{Name} hits {Target}", "{Target}: удар от {Name}")]
     [InlineData("renpy", "%(a)s and %(b)s", "%(b)s и %(a)s")]
     [InlineData("godot", "%s and %s", "%s и %s")]
     public void Named_and_numbered_placeholders_may_move(string tool, string original, string translation)
@@ -285,6 +285,38 @@ public sealed class StringValidatorTests
 
         // Assert
         issues.Select(i => (i.Severity, i.Rule)).Should().Equal((StringIssueSeverity.Warning, "whitespace"));
+    }
+
+    [Fact]
+    public void Translation_much_longer_than_the_original_is_a_warning()
+    {
+        // Act
+        var issues = Validate("rpgmaker", "Save", "Сохранить");
+
+        // Assert
+        issues.Select(i => (i.Severity, i.Rule)).Should().Equal((StringIssueSeverity.Warning, "much-longer"));
+    }
+
+    [Theory]
+    [InlineData("OK", "Хорошо")]
+    [InlineData("A young knight from the north.", "Молодой рыцарь с северных земель.")]
+    public void Translation_a_little_longer_than_the_original_has_no_issues(string original, string translation)
+    {
+        // Act
+        var issues = Validate("rpgmaker", original, translation);
+
+        // Assert
+        issues.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Much_longer_is_not_reported_when_the_game_gives_a_limit()
+    {
+        // Act
+        var issues = Validate("rpgmaker", "Save", "Сохранить", maxLength: 12);
+
+        // Assert
+        issues.Should().BeEmpty();
     }
 
     [Fact]

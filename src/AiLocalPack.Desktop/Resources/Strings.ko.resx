@@ -2386,6 +2386,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>줄바꿈</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>너무 김</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>확인</value>
   </data>

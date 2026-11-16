@@ -68,7 +68,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Translate.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("translate.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("translate.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.TranslateRetry.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("translate-retry.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("translate-retry.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Fix.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("fix.v2.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("fix.v3.ru.txt", prompt));
     }
 
     [Fact]
@@ -273,7 +273,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Fix.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("fix.v2.scripts.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("fix.v3.scripts.txt", prompt));
     }
 
     [Fact]

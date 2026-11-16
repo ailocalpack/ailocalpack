@@ -2536,6 +2536,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>a capo</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>molto più lungo</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>controllo</value>
   </data>

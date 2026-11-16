@@ -2461,6 +2461,9 @@
   <data name="Gen_Warning_Rule_LineBreaks" xml:space="preserve">
     <value>Zeilenumbrüche</value>
   </data>
+  <data name="Gen_Warning_Rule_MuchLonger" xml:space="preserve">
+    <value>viel länger</value>
+  </data>
   <data name="Gen_Warning_Rule_Unknown" xml:space="preserve">
     <value>prüfen</value>
   </data>
