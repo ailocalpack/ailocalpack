@@ -4,6 +4,7 @@ using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Registry;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Pipeline;
 using Microsoft.Extensions.Logging;
@@ -118,6 +119,7 @@ public sealed class GenerationService : IDisposable
     private readonly LocalPacks _localPacks;
     private readonly TimeProvider _time;
     private readonly ILogger<GenerationService> _logger;
+    private readonly ReferenceFetcher? _references;
     private readonly CancellationTokenSource _quit = new();
     private readonly Lock _lock = new();
     private readonly Dictionary<GameId, GenerationJobEntry> _open = [];
@@ -137,7 +139,8 @@ public sealed class GenerationService : IDisposable
         LocalPacks localPacks,
         TimeProvider time,
         ILogger<GenerationService> logger,
-        ILogger<GenerationRunner> runnerLogger)
+        ILogger<GenerationRunner> runnerLogger,
+        ReferenceFetcher? references = null)
     {
         ArgumentNullException.ThrowIfNull(store);
         _jobs = new GenerationJobs(store, new GenerationRunner(time, runnerLogger), time);
@@ -149,6 +152,7 @@ public sealed class GenerationService : IDisposable
         _localPacks = localPacks;
         _time = time;
         _logger = logger;
+        _references = references;
         _localPacks.Changed += (_, game) => RefreshResult(game, raise: true);
     }
 
@@ -562,8 +566,33 @@ public sealed class GenerationService : IDisposable
     /// Creates the game's job and runs it in the background with the pipeline's stages. Never throws: a blocked game,
     /// an open job already, a folder that can't be written come back as the result's problem.
     /// </summary>
+    /// <summary>
+    /// The registry's confirmed translations of the game a new job into <paramref name="language"/> would learn from
+    /// (decided 2026-11-16, <see cref="ReferenceSelection"/>), downloaded through the pack cache. Empty without a registry
+    /// index or when none qualifies; a pack that can't be downloaded is left out. Never throws but for cancellation.
+    /// </summary>
+    public async Task<IReadOnlyList<ReferencePack>> LoadReferencesAsync(Game game, string language, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        if (_references is null || _packIndex.Current is not { Location: { } location, Index: { } index })
+        {
+            return [];
+        }
+
+        try
+        {
+            return await _references.FetchAsync(location, index, game, language, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception e) when (e is not OperationCanceledException)
+        {
+            _logger.LogWarning(e, "Couldn't load the reference packs of {Game} for {Language}", game.Id, language);
+            return [];
+        }
+    }
+
     /// <param name="updateBase">An update job's base pack (task 56; <paramref name="options"/> name it), copied into the job folder.</param>
-    public async Task<GenerationStartResult> StartAsync(Game game, string language, string agentId, GenerationOptions options, TimeSpan? estimatedTime, UpdateBase? updateBase = null)
+    /// <param name="references">The reference packs the job learns from (<see cref="LoadReferencesAsync"/>), copied into the job folder.</param>
+    public async Task<GenerationStartResult> StartAsync(Game game, string language, string agentId, GenerationOptions options, TimeSpan? estimatedTime, UpdateBase? updateBase = null, IReadOnlyList<ReferencePack>? references = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         GenerationRun run;
@@ -579,7 +608,8 @@ public sealed class GenerationService : IDisposable
                 entry => _stages.Create(game, entry),
                 estimatedTime,
                 _quit.Token,
-                updateBase));
+                updateBase,
+                references));
         }
         catch (GameBlockedException e)
         {

@@ -4140,6 +4140,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>Only while studying the game: wikis, the store page, official translations into other languages. Nothing from your computer is sent; translating stays offline.</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>Learn from published translations of this game</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}: confirmed by players. The AI uses them as hints for names and meaning and still translates from the original.</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>These translations were made with the AI's own code, not the toolkit: the toolkit probably can't read this game.</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>Compare translation modes</value>
   </data>

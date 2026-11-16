@@ -51,6 +51,33 @@ public static class PromptValues
 
     public static Dictionary<string, string> SystemBrief(string brief) => new(StringComparer.Ordinal) { ["brief"] = brief };
 
+    /// <summary>At most this many files the references changed are named to an Extract run.</summary>
+    public const int ReferenceFilesShown = 30;
+
+    /// <param name="files">The extract run's hint: the game files the references changed; <c>null</c> for other runs.</param>
+    public static Dictionary<string, string> SystemReferences(string gameName, string language, Core.Generation.ReferenceSet references, IReadOnlyList<string>? files)
+    {
+        ArgumentNullException.ThrowIfNull(references);
+        var packs = string.Join("; ", references.Packs.Select(p =>
+            $"{LanguageName(p.Manifest.Language)} (\"{p.Manifest.Title}\" rev {p.Manifest.Revision}"
+            + (p.Manifest.Status == Core.Packs.PackStatus.Verified ? ", verified" : "")
+            + (p.SameBuild ? ", made for this version of the game" : ", made for another version of the game")
+            + (p.Manifest.Patch is not null ? ", a binary patch: no strings to compare" : "")
+            + ")"));
+        var filesNote = files is { Count: > 0 }
+            ? "\n- The game files these translations changed are where the text most likely is; look there first: "
+                + string.Join(", ", files.Take(ReferenceFilesShown).Select(f => $"`{f}`"))
+                + (files.Count > ReferenceFilesShown ? $" and {files.Count - ReferenceFilesShown} more." : ".")
+            : string.Empty;
+        return new(StringComparer.Ordinal)
+        {
+            ["gameName"] = gameName,
+            ["languageName"] = LanguageName(language),
+            ["packs"] = packs,
+            ["filesNote"] = filesNote,
+        };
+    }
+
     /// <param name="baseTitle">The base pack's title.</param>
     /// <param name="kept">Strings that already have the base's translation.</param>
     public static Dictionary<string, string> GlossaryUpdate(string gameName, string language, EngineKind engine, int strings, int files, string baseTitle, int kept)

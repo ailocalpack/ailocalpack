@@ -1102,8 +1102,93 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         RaiseAll();
     }
 
+    // ---------- Reference packs: the registry's confirmed translations of the game (decided 2026-11-16) ----------
+
+    /// <summary>"Use published translations as reference": on by default, shown only when a pack qualifies.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowReferencesPatchNote))]
+    private bool _useReferences = true;
+
+    private IReadOnlyList<ReferencePack> _referencePacks = [];
+    private string? _referencesLanguage;
+    private int _referencesRun;
+    private bool _referenceReaderApplied;
+
+    /// <summary>The checkbox: some confirmed translation of the game can be a reference.</summary>
+    public bool ShowReferences => _referencePacks.Count > 0;
+
+    /// <summary>"English, Українська: confirmed by players; the AI uses them as hints and translates from the original."</summary>
+    public string ReferencesDetail => _referencePacks.Count == 0 ? string.Empty
+        : _localizer.Format(nameof(Strings.Gen_References_Detail), string.Join(", ", _referencePacks.Select(p => LanguageNames.Native(p.Manifest.Language))));
+
+    /// <summary>Every reference is a binary patch (the AI's own code read the game) while the toolkit is to read it.</summary>
+    public bool ShowReferencesPatchNote => UseReferences && _referencePacks.Count > 0
+        && _referencePacks.All(p => p.Manifest.Patch is not null) && Reader != GenerationOptions.AgentReader;
+
+    /// <summary>Loads the references for the form's language once per language (a cached pack isn't downloaded again).</summary>
+    private void LoadReferences()
+    {
+        if (_referencesLanguage == Language)
+        {
+            return;
+        }
+
+        _referencesLanguage = Language;
+        var run = ++_referencesRun;
+        var language = Language;
+        var game = _game;
+        _ = Task.Run(async () =>
+        {
+            IReadOnlyList<ReferencePack> packs;
+            try
+            {
+                packs = await _jobs.LoadReferencesAsync(game, language, _closed.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            _ui.Post(() =>
+            {
+                if (run != _referencesRun)
+                {
+                    return;
+                }
+
+                _referencePacks = packs;
+                ApplyReferenceReader();
+                OnPropertyChanged(nameof(ShowReferences));
+                OnPropertyChanged(nameof(ReferencesDetail));
+                OnPropertyChanged(nameof(ShowReferencesPatchNote));
+            });
+        });
+    }
+
+    /// <summary>
+    /// When the toolkit found no tool for the game but a reference was rebuilt by one of its tools, that tool reads the
+    /// game (preselected once, as if the player picked it; the estimate runs again).
+    /// </summary>
+    private void ApplyReferenceReader()
+    {
+        if (_referenceReaderApplied || _reader is not null || IsUpdateMode || EstimateState != EstimateState.Done
+            || DefaultReader != GenerationOptions.AgentReader
+            || new ReferenceSet(_referencePacks).Recipe?.Tool is not { } tool
+            || ReaderOptions.FirstOrDefault(o => o.Id == tool) is not { IsAvailable: true })
+        {
+            return;
+        }
+
+        _referenceReaderApplied = true;
+        _logger.LogInformation("Generation for {Game}: the {Tool} toolkit preselected, as a reference pack was made with it", _game.Id, tool);
+        _reader = tool;
+        SyncReaderOptions();
+        Estimate();
+    }
+
     private void Estimate()
     {
+        LoadReferences();
         var run = ++_estimateRun;
         _estimate = null;
         _estimateError = null;
@@ -1172,6 +1257,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             SyncReaderOptions();
             _estimateError = error;
             EstimateState = estimate is null ? EstimateState.Failed : EstimateState.Done;
+            ApplyReferenceReader();
         });
     }
 
@@ -1193,7 +1279,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             WebLookup: Quality == GenerationQuality.Thorough && WebLookup,
             Reader: IsUpdateMode ? null : _reader);
         var take = ShowRequest && TakeRequest ? Request?.Discussion : null;
-        var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (work.TimeLow + work.TimeHigh) / 2, updateBase);
+        var references = UseReferences && _referencesLanguage == Language ? _referencePacks : null;
+        var result = await _jobs.StartAsync(_game, Language, agent.AgentId, options, (work.TimeLow + work.TimeHigh) / 2, updateBase, references);
         _ui.Post(() =>
         {
             _starting = false;
@@ -1673,6 +1760,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         OnPropertyChanged(nameof(ReaderBrandKey));
         OnPropertyChanged(nameof(HasReaderBrand));
         OnPropertyChanged(nameof(ReaderIcon));
+        OnPropertyChanged(nameof(ShowReferencesPatchNote));
         OnPropertyChanged(nameof(CanPickReader));
     }
 
@@ -1769,6 +1857,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         OnPropertyChanged(nameof(LanguageOptions));
         OnPropertyChanged(nameof(Checks));
         RefreshRequest();
+        LoadReferences();
     }
 
     private IReadOnlyList<GenerationStepViewModel> BuildSteps()

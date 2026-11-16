@@ -83,7 +83,14 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
 
         if (brief is not null)
         {
-            system += PromptTemplate.SystemBrief.Render(PromptValues.SystemBrief(brief));
+            system += "\n\n" + PromptTemplate.SystemBrief.Render(PromptValues.SystemBrief(brief));
+        }
+
+        var references = ReferencesFor(context, workspace, extras);
+        if (references is not null)
+        {
+            var files = context.Job.Stage == GenerationStage.Extract ? references.TouchedFiles : null;
+            system += "\n\n" + PromptTemplate.SystemReferences.Render(PromptValues.SystemReferences(gameName, context.Job.Language, references, files));
         }
 
         var choice = ModelFor(context.Job, Id, workspace is not null);
@@ -123,6 +130,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         };
         Log(context, logTag, $"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
             + (brief is null ? "" : $" + {PromptTemplate.SystemBrief.Label}")
+            + (references is null ? "" : $" + {PromptTemplate.SystemReferences.Label} ({references.Packs.Count} packs)")
             + (workspace is null ? "" : $", in its workspace {workspace.Folder} with file and command tools")
             + (request.AllowUnsandboxed ? " (without a sandbox where it can't start, as the player allowed)" : "")
             + (extraTools is { Count: > 0 } ? $", with {string.Join(", ", extraTools.Order())}" : "")
@@ -191,6 +199,23 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         context.Job.Options.Studies && context.Job.Stage is GenerationStage.Glossary or GenerationStage.Translate
             ? context.Files.ReadBrief()
             : null;
+
+    /// <summary>
+    /// The reference packs a run hears about: a job with references, in its Glossary and Translate runs, an Extract run
+    /// with the agent's own code, and fix runs. <c>null</c> otherwise.
+    /// </summary>
+    private static ReferenceSet? ReferencesFor(GenerationStepContext context, AgentWorkspace? workspace, AgentRunExtras? extras)
+    {
+        if (context.Job.Options.References is not { Count: > 0 })
+        {
+            return null;
+        }
+
+        var wanted = extras?.System?.Template == PromptTemplate.SystemFix
+            || (extras?.System is null && context.Job.Stage is GenerationStage.Glossary or GenerationStage.Translate)
+            || (workspace is not null && context.Job.Stage == GenerationStage.Extract);
+        return wanted && context.Files.ReadReferences() is { IsEmpty: false } set ? set : null;
+    }
 
     private static HashSet<AgentBuiltinTool> Tools(AgentWorkspace? workspace, IReadOnlySet<AgentBuiltinTool>? extra)
     {

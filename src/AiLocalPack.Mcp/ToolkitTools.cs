@@ -209,6 +209,60 @@ public sealed class ToolkitTools(ToolkitSession session)
         }
     }
 
+    [McpServerTool(Name = "get_references", ReadOnly = true, Idempotent = true)]
+    [Description("How published translations of this game that players confirmed work (the job's reference packs) translated strings: the keys asked for, or the strings whose original or published translation contains a word. A translation is given only when it was made from the same original. Hints, never text to copy.")]
+    public ReferencePage GetReferences(
+        [Description("Keys to return (instead of a search).")] string[]? keys = null,
+        [Description("Without keys: the strings whose original or published translation contains this text (ignoring case).")] string? search = null,
+        [Description("Strings to skip.")] int offset = 0,
+        [Description("Strings to return (at most 200; a page also stops at about 20 000 characters).")] int limit = 50,
+        CancellationToken cancellationToken = default)
+    {
+        lock (session.Gate)
+        {
+            var references = session.References();
+            var packs = references.Packs
+                .Select(p => new ReferencePackInfo(p.Manifest.Language, p.Manifest.Id, p.Manifest.Title, p.Manifest.Revision, p.SameBuild, p.Strings is not null))
+                .ToList();
+            if (references.IsEmpty)
+            {
+                return new ReferencePage(packs, 0, [], null, []);
+            }
+
+            if (keys is not { Length: > 0 } && string.IsNullOrWhiteSpace(search))
+            {
+                throw new McpException("Give the keys to look up, or a word to search for.");
+            }
+
+            var extracted = session.Extract(cancellationToken: cancellationToken);
+            List<ExtractedString> selected = [];
+            List<string> unknown = [];
+            if (keys is { Length: > 0 })
+            {
+                foreach (var key in keys.Distinct(StringComparer.Ordinal))
+                {
+                    if (extracted.ByKey.TryGetValue(key, out var item))
+                    {
+                        selected.Add(item);
+                    }
+                    else
+                    {
+                        unknown.Add(key);
+                    }
+                }
+            }
+            else
+            {
+                selected = [.. extracted.Result.Strings.Where(s =>
+                    references.For(s.Key, s.Original) is { Count: > 0 } found
+                    && (s.Original.Contains(search!, StringComparison.OrdinalIgnoreCase) || found.Values.Any(t => t.Contains(search!, StringComparison.OrdinalIgnoreCase))))];
+            }
+
+            var (start, items) = Page(selected, offset, limit, s => new ReferenceItem(s.Key, s.Original, references.For(s.Key, s.Original)));
+            return new ReferencePage(packs, selected.Count, items, Next(start + items.Count, selected.Count), unknown);
+        }
+    }
+
     [McpServerTool(Name = "put_translations", Destructive = false, Idempotent = true)]
     [Description("Stores translations by key in the job's string store. Each is validated first: one with an error (missing placeholder, too long, empty) is refused, warnings are stored and reported. An empty text removes a stored translation.")]
     public PutTranslationsResult PutTranslations(
@@ -678,6 +732,22 @@ public sealed record StringPage(
     int Translated,
     int Total,
     IReadOnlyList<StringItem> Strings,
+    int? NextOffset,
+    IReadOnlyList<string> UnknownKeys);
+
+/// <param name="SameBuild">Made for the game's current version.</param>
+/// <param name="HasStrings">A string table to compare (a binary patch pack has none).</param>
+public sealed record ReferencePackInfo(string Language, string Pack, string Title, int Revision, bool SameBuild, bool HasStrings);
+
+/// <param name="Translations">Language → the published translation made from this original; empty when none.</param>
+public sealed record ReferenceItem(string Key, string Original, IReadOnlyDictionary<string, string> Translations);
+
+/// <param name="Packs">The job's reference packs (none: the job has no references).</param>
+/// <param name="Total">Strings matching the request (what <paramref name="NextOffset"/> pages through).</param>
+public sealed record ReferencePage(
+    IReadOnlyList<ReferencePackInfo> Packs,
+    int Total,
+    IReadOnlyList<ReferenceItem> Strings,
     int? NextOffset,
     IReadOnlyList<string> UnknownKeys);
 

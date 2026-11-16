@@ -154,8 +154,23 @@ public static class PublishPayloads
             Status = PackStatus.Alpha,
             Created = existing.Created,
             Updated = date,
+            References = MergeReferences(existing, local),
         };
         return WithPatchUrl(manifest, registry);
+    }
+
+    /// <summary>
+    /// A revision's reference packs (decided 2026-11-16): the existing pack's and the local pack's, each pack once (its
+    /// latest revision), never the pack itself; <c>null</c> = none.
+    /// </summary>
+    private static List<PackReference>? MergeReferences(PackManifest existing, PackManifest local)
+    {
+        var all = (existing.References ?? []).Concat(local.References ?? [])
+            .Where(r => !(r.Language == existing.Language && r.Pack == existing.Id))
+            .GroupBy(r => (r.Language, r.Pack))
+            .Select(g => g.MaxBy(r => r.Revision)!)
+            .ToList();
+        return all.Count > 0 ? all : null;
     }
 
     /// <summary>The commit's message.</summary>
@@ -210,6 +225,12 @@ public static class PublishPayloads
         }
 
         Row(body, "Fonts", m.Fonts.Count == 0 ? "the game's own" : string.Join(", ", m.Fonts.Select(f => $"`{f}`")));
+        if (m.References is { Count: > 0 } references)
+        {
+            Row(body, "References", string.Join(", ", references.Select(r => $"`{RegistryLayout.GamesFolder}/{RegistryLayout.GameFolder(m.Game)}/{r.Language}/{r.Pack}` rev {r.Revision.ToString(CultureInfo.InvariantCulture)}"))
+                + ": published translations the AI learned from; thanks to their authors");
+        }
+
         if (m.Dependencies.Count > 0)
         {
             Row(body, "Dependencies", string.Join(", ", m.Dependencies.Select(d => $"`{d.Id}` {d.Version}")));

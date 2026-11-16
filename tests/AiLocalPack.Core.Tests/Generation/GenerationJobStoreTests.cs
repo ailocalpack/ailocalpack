@@ -99,6 +99,19 @@ public sealed class GenerationJobStoreTests : IDisposable
     }
 
     [Fact]
+    public void A_jobs_reference_packs_read_back_as_written()
+    {
+        // Arrange
+        var job = FullJob() with { Options = new GenerationOptions(References: [new("en", "full", 3), new("uk", "community", 1)]) };
+
+        // Act
+        var (read, _) = GenerationJobSerializer.Read(GenerationJobSerializer.Write(job));
+
+        // Assert
+        read!.Options.References.Should().Equal(new AiLocalPack.Core.Packs.PackReference("en", "full", 3), new AiLocalPack.Core.Packs.PackReference("uk", "community", 1));
+    }
+
+    [Fact]
     public void Enums_are_written_camelCase()
     {
         // Arrange

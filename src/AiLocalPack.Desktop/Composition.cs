@@ -267,6 +267,7 @@ internal static class Composition
         services.AddSingleton(sp => new GenerationEstimator(sp.GetRequiredService<RecipeTools>(), sp.GetRequiredService<WorkingCopies>(), sp.GetRequiredService<EngineDetector>()));
         services.AddSingleton<IGenerationEstimates, GenerationEstimates>();
         services.AddSingleton<IUpdateBases, UpdateBases>();
+        services.AddSingleton(sp => new ReferenceFetcher(sp.GetRequiredService<PackManifestClient>(), sp.GetRequiredService<PackFetcher>(), sp.GetRequiredService<ILogger<ReferenceFetcher>>()));
         services.AddSingleton(sp => new LocalPackStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<LocalPackStore>>()));
         services.AddSingleton(sp => new TestRunBaselines(sp.GetRequiredService<AppPaths>().TestRuns));
         services.AddSingleton<IGameTestRunner>(sp => new GameTestRunner(

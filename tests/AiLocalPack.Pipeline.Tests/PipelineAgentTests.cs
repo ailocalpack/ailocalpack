@@ -55,6 +55,25 @@ public sealed class PipelineAgentTests : IDisposable
     }
 
     [Fact]
+    public async Task A_job_with_reference_packs_tells_the_glossary_run_about_them()
+    {
+        // Arrange
+        var manifest = new Core.Packs.PackManifest(
+            "full", Core.Games.GameId.Steam(620), "en", "Full translation", [new Core.Packs.PackAuthor("alice")],
+            [new Core.Packs.PackRevision(1, DateTimeOffset.UnixEpoch, "alice")], Core.Packs.PackStatus.Verified, null,
+            [new Core.Packs.PackBuild("1000", new Dictionary<string, string> { ["data/Map001.json"] = new('a', 64) })],
+            new Core.Packs.PackRecipe("rpgmaker", "1.0.0"), new Core.Packs.PackStringsFile(Core.Packs.PackStringsFile.DefaultPath, new string('e', 64), 10),
+            null, [], [], new Core.Packs.PackCoverage(1, 1), DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch);
+        new GenerationFiles(_h.Folder).WriteReferences([new ReferencePack(manifest, new Core.Packs.StringTable("en", new Dictionary<string, string>()), true)]);
+
+        // Act
+        var request = await RunAsync(new GenerationOptions(References: [new("en", "full", 1)]));
+
+        // Assert
+        request.SystemPrompt.Should().Contain("\n\nPlayers already published translations of \"Sample Quest\"");
+    }
+
+    [Fact]
     public async Task The_jobs_model_is_used()
     {
         // Arrange

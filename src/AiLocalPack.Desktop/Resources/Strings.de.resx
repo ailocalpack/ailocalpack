@@ -4102,6 +4102,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>Nur beim Studieren des Spiels: Wikis, die Shopseite, offizielle Übersetzungen in andere Sprachen. Nichts von deinem Computer wird gesendet; das Übersetzen bleibt offline.</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>Aus veröffentlichten Übersetzungen dieses Spiels lernen</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}: von Spielern bestätigt. Die KI nutzt sie als Hinweise für Namen und Bedeutung und übersetzt trotzdem aus dem Original.</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>Diese Übersetzungen wurden mit eigenem Code der KI erstellt, nicht mit dem Toolkit: Das Toolkit kann dieses Spiel wahrscheinlich nicht lesen.</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>Übersetzungsmodi vergleichen</value>
   </data>

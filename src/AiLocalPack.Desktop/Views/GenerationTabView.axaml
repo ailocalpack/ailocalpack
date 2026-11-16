@@ -218,6 +218,21 @@
                     </CheckBox>
                 </Border>
 
+                <!-- Reference packs (decided 2026-11-16): the registry's confirmed translations of the game as hints -->
+                <Border x:Name="GenReferences" Classes="genBanner" IsVisible="{Binding ShowReferences}">
+                    <CheckBox IsChecked="{Binding UseReferences}" VerticalAlignment="Top" AutomationProperties.Name="{l:Loc Gen_References_Use}">
+                        <StackPanel Spacing="3">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14"><Path Classes="icon bannerIcon" Data="{StaticResource IconChecks}" /></Viewbox>
+                                <TextBlock FontWeight="SemiBold" Text="{l:Loc Gen_References_Use}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <TextBlock x:Name="GenReferencesDetail" Classes="muted" FontSize="12" Text="{Binding ReferencesDetail}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="GenReferencesPatches" Classes="muted" FontSize="12" Text="{l:Loc Gen_References_Patches}" TextWrapping="Wrap"
+                                       IsVisible="{Binding ShowReferencesPatchNote}" />
+                        </StackPanel>
+                    </CheckBox>
+                </Border>
+
                 <!-- Update mode (task 56): the base pack and what the game update changed -->
                 <Border x:Name="GenUpdateBanner" Classes="genBanner" IsVisible="{Binding IsUpdateMode}">
                     <DockPanel>

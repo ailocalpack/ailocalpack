@@ -84,6 +84,7 @@ public static class PackManifestSerializer
                 : null,
             manifest.Dependencies.Count > 0 ? [.. manifest.Dependencies.Select(d => new PackDependencyJson(d.Id, d.Version))] : null,
             manifest.Fonts.Count > 0 ? [.. manifest.Fonts] : null,
+            manifest.References is { Count: > 0 } references ? [.. references.Select(r => new PackReferenceJson(r.Language, r.Pack, r.Revision))] : null,
             new PackCoverageJson(manifest.Coverage.Translated, manifest.Coverage.Total),
             PackManifest.License,
             PackFormat.FormatDate(manifest.Created),
@@ -119,6 +120,7 @@ public static class PackManifestSerializer
             var (recipe, strings, patch) = Rebuild(file, builds);
             var dependencies = Dependencies(file.Dependencies);
             var fonts = Fonts(file.Fonts);
+            var references = References(file.References);
             var coverage = Coverage(file.Coverage);
             License(file.License);
             var (created, updated) = Dates(file.Created, file.Updated);
@@ -127,7 +129,7 @@ public static class PackManifestSerializer
                 ? null
                 : new PackManifest(
                     id!, game!, language!, title!, authors, revisions, status!.Value, agent, builds, recipe, strings, patch,
-                    dependencies, fonts, coverage!, created, updated);
+                    dependencies, fonts, coverage!, created, updated, references);
         }
 
         private string? Slug(string field, string? value, bool required = true)
@@ -653,6 +655,48 @@ public static class PackManifestSerializer
             }
 
             return fonts;
+        }
+
+        private List<PackReference>? References(IReadOnlyList<PackReferenceJson?>? list)
+        {
+            if (list is null)
+            {
+                return null;
+            }
+
+            var references = new List<PackReference>();
+            for (var i = 0; i < list.Count; i++)
+            {
+                var field = $"references[{i}]";
+                if (list[i] is not { } entry)
+                {
+                    errors.Add(field, "is empty.");
+                    continue;
+                }
+
+                var language = Language($"{field}.language", entry.Language);
+                var pack = Slug($"{field}.pack", entry.Pack);
+                if (entry.Revision is not { } revision || revision < 1)
+                {
+                    errors.Add($"{field}.revision", entry.Revision is null ? "is missing." : $"must be 1 or more, not {entry.Revision}.");
+                    continue;
+                }
+
+                if (language is null || pack is null)
+                {
+                    continue;
+                }
+
+                if (references.Any(r => r.Language == language && r.Pack == pack))
+                {
+                    errors.Add(field, $"'{language}/{pack}' is listed twice.");
+                    continue;
+                }
+
+                references.Add(new PackReference(language, pack, revision));
+            }
+
+            return references.Count > 0 ? references : null;
         }
 
         private PackCoverage? Coverage(PackCoverageJson? coverage)

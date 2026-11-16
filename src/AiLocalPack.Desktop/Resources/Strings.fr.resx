@@ -4204,6 +4204,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>Uniquement pendant l’étude du jeu : wikis, page du magasin, traductions officielles dans d’autres langues. Rien de ton ordinateur n’est envoyé ; la traduction reste hors ligne.</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>S'inspirer des traductions publiées de ce jeu</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0} : confirmées par les joueurs. L'IA s'en sert comme indices pour les noms et le sens, et traduit toujours depuis l'original.</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>Ces traductions ont été faites avec le code de l'IA, pas avec la boîte à outils : elle ne sait probablement pas lire ce jeu.</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>Comparer les modes de traduction</value>
   </data>

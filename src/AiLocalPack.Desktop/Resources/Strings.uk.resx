@@ -4204,6 +4204,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>Лише поки вивчає гру: вікі, сторінка в магазині, офіційні переклади іншими мовами. З вашого комп’ютера нічого не надсилається; переклад іде без мережі.</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>Вчитися на опублікованих перекладах цієї гри</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}: гравці підтвердили, що вони працюють. AI бере з них підказки щодо імен і змісту, але перекладає з оригіналу.</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>Ці переклади зроблено власним кодом AI, а не інструментами застосунку: найімовірніше, вони цю гру не прочитають.</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>Порівняння режимів перекладу</value>
   </data>

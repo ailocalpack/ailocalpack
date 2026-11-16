@@ -158,7 +158,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         var patch = new PackPatch(PackPatch.VcdiffFormat, LocalPackStore.PatchUrl(game.Id, job.Language, id, 1), archive.Sha256, archive.Size, archive.Patched);
         var manifest = LocalPackBuilder.Manifest(new LocalPackInput(
             id, game, job.Language, agent.Id, agent.DisplayName, progress.Agent, job.Options.Model, source.Tool, source.ToolVersion, archive.Originals, [], collected.Coverage, now,
-            Patch: patch, Quality: job.Options.Quality));
+            Patch: patch, Quality: job.Options.Quality, References: job.Options.References));
         var report = new LocalPackReport(job.Id, now, testRun, LocalPackFonts.NotChecked, collected.Warnings, collected.Untranslated, collected.KeptAsIs);
         LocalPack pack;
         try

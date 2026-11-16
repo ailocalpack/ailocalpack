@@ -178,7 +178,7 @@ internal sealed class FixTestRuns(
 
         var output = new DirectoryRebuildOutput(BuildFolder);
         var rebuilt = tool.Rebuild(context.CopyFolder, context.Job.Language, accepted.Translations, output, cancellationToken);
-        var fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, context.Job.Language, accepted.Translations, [], output, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, context.Job.Language, accepted.Translations, context.Files.ReadReferences().FontsFor(context.Job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (fonts.Failure is { } failure)
         {
             return ([], new TestRunAnswer("failed", $"The font the translation needs couldn't be downloaded ({failure.Problem}).", MaxRuns - _runs));

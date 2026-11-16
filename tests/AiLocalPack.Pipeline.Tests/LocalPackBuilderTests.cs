@@ -166,6 +166,33 @@ public sealed class LocalPackBuilderTests
     }
 
     [Fact]
+    public void The_manifest_credits_the_jobs_reference_packs()
+    {
+        // Arrange
+        var input = Input() with { References = [new PackReference("en", "full", 3)] };
+
+        // Act
+        var manifest = LocalPackBuilder.Manifest(input);
+
+        // Assert
+        manifest.References.Should().Equal(new PackReference("en", "full", 3));
+    }
+
+    [Fact]
+    public void An_update_keeps_its_bases_references_and_never_lists_itself()
+    {
+        // Arrange
+        var first = LocalPackBuilder.Manifest(Input() with { References = [new PackReference("en", "full", 2), new PackReference("uk", "community", 1)] });
+        var input = Input() with { Base = first, References = [new PackReference("en", "full", 3), new PackReference("ru", "claude-code", 1)] };
+
+        // Act
+        var manifest = LocalPackBuilder.Manifest(input);
+
+        // Assert
+        manifest.References.Should().BeEquivalentTo([new PackReference("en", "full", 3), new PackReference("uk", "community", 1)]);
+    }
+
+    [Fact]
     public void The_jobs_model_option_stands_in_when_the_agent_reported_none()
     {
         // Arrange

@@ -35,7 +35,8 @@ public static class ChunkPlanner
     /// <summary>Tokens a string costs in a prompt besides its text (key, JSON, placeholders).</summary>
     private const int TokensPerString = 20;
 
-    public static IReadOnlyList<TranslationChunk> Plan(string tool, IReadOnlyList<ExtractedString> strings, ChunkBudget? budget = null)
+    /// <param name="extraTokens">Tokens a string costs besides <see cref="Tokens"/>: its reference translations (<c>ref</c>).</param>
+    public static IReadOnlyList<TranslationChunk> Plan(string tool, IReadOnlyList<ExtractedString> strings, ChunkBudget? budget = null, Func<ExtractedString, int>? extraTokens = null)
     {
         ArgumentNullException.ThrowIfNull(tool);
         ArgumentNullException.ThrowIfNull(strings);
@@ -65,7 +66,7 @@ public static class ChunkPlanner
         var tokens = 0;
         foreach (var group in groups)
         {
-            var groupTokens = group.Sum(Tokens);
+            var groupTokens = group.Sum(Cost);
             var fits = keys.Count + group.Count <= budget.MaxStrings && tokens + groupTokens <= budget.MaxTokens;
             var halfFull = keys.Count * 2 >= budget.MaxStrings || tokens * 2 >= budget.MaxTokens;
             if (keys.Count > 0 && !fits && halfFull)
@@ -75,7 +76,7 @@ public static class ChunkPlanner
 
             foreach (var s in group)
             {
-                var cost = Tokens(s);
+                var cost = Cost(s);
                 if (keys.Count > 0 && (keys.Count + 1 > budget.MaxStrings || tokens + cost > budget.MaxTokens))
                 {
                     Close();
@@ -93,6 +94,8 @@ public static class ChunkPlanner
 
         return chunks;
 
+        int Cost(ExtractedString s) => Tokens(s) + (extraTokens?.Invoke(s) ?? 0);
+
         void Close()
         {
             chunks.Add(new TranslationChunk([.. keys]));
@@ -106,6 +109,14 @@ public static class ChunkPlanner
     {
         ArgumentNullException.ThrowIfNull(s);
         return ((s.Original.Length + (s.Context?.Length ?? 0) + 3) / 4) + TokensPerString;
+    }
+
+    /// <summary>Estimated prompt tokens of a string's reference translations: each text at ~4 characters a token plus its language key.</summary>
+    public static int ReferenceTokens(ReferenceSet references, ExtractedString s)
+    {
+        ArgumentNullException.ThrowIfNull(references);
+        ArgumentNullException.ThrowIfNull(s);
+        return references.IsEmpty ? 0 : references.For(s.Key, s.Original).Sum(r => ((r.Value.Length + 3) / 4) + 4);
     }
 
     /// <summary>

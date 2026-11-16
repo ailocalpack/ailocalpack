@@ -23,7 +23,8 @@ public static class ToolkitMcpServer
         "Tools of ailocalpack's toolkit for translating one game. Every path is relative to the game folder (a working copy; "
         + "the tools can't leave it). Start with detect_engine, then extract_strings / get_strings to read the strings (originals, "
         + "context, length limits, placeholders to keep exactly), put_translations to store translations (each is validated; "
-        + "refused ones come back with the reason), put_glossary / get_glossary for names, terms and tone, validate_strings to "
+        + "refused ones come back with the reason), put_glossary / get_glossary for names, terms and tone, get_references for how "
+        + "published translations of the game put a string (when the job has any), validate_strings to "
         + "check, rebuild to write the game files from the stored translations into the job's build folder. Results are paged: "
         + "call again with offset = nextOffset until it is null.";
 

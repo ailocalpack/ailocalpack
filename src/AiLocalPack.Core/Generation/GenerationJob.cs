@@ -1,4 +1,5 @@
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Packs;
 
 namespace AiLocalPack.Core.Generation;
 
@@ -145,6 +146,10 @@ public enum GenerationQuality
 /// The player allowed the agent's own commands (an unknown engine's scripts) to run without a sandbox when the agent's
 /// sandbox can't start here (<see cref="GenerationFailureKind.SandboxUnavailable"/>); where it can, it is still used.
 /// </param>
+/// <param name="References">
+/// The registry packs of the game the job learns from (decided 2026-11-16, <see cref="ReferenceSelection"/>), fixed at
+/// the start; their files are in the job folder's <c>refs/</c>. <c>null</c> = none (the player turned them off, or none qualified).
+/// </param>
 public sealed record GenerationOptions(
     bool ReviewGlossary = false,
     WorkingCopyScope? Scope = null,
@@ -153,7 +158,8 @@ public sealed record GenerationOptions(
     GenerationQuality Quality = GenerationQuality.Balanced,
     bool WebLookup = false,
     string? Reader = null,
-    bool Unsandboxed = false)
+    bool Unsandboxed = false,
+    IReadOnlyList<PackReference>? References = null)
 {
     /// <summary><see cref="Reader"/> of a job whose game the agent reads with its own code (the toolkit's <c>agent-script</c> tool).</summary>
     public const string AgentReader = "agent-script";

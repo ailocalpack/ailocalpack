@@ -4000,6 +4000,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>仅在研读游戏时：维基、商店页面、其他语言的官方翻译。不会发送你电脑上的任何内容；翻译过程保持离线。</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>参考这款游戏已发布的翻译</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}：已经过玩家确认。AI 只把它们当作人名和含义的提示，仍然从原文翻译。</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>这些翻译是用 AI 自己的代码完成的，而非工具包：工具包很可能无法读取这款游戏。</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>比较翻译模式</value>
   </data>

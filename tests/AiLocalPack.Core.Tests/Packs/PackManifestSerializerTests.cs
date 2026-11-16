@@ -23,6 +23,7 @@ public sealed class PackManifestSerializerTests
         { "coverage-over-total", "coverage.translated", "more than the total of 1520 strings", false },
         { "date-without-time", "created", "is not a date and time with a time zone", true },
         { "duplicate-font", "fonts[1]", "'noto-sans' is listed twice", true },
+        { "duplicate-reference", "references[1]", "'en/full' is listed twice", true },
         { "file-path-escapes", "builds[0].files[\"../save.json\"]", "is not a relative file path", true },
         { "manual-game-with-build-id", "builds[0].buildId", "is only for store games", false },
         { "missing-game", "game", "is missing", true },
@@ -169,6 +170,45 @@ public sealed class PackManifestSerializerTests
             Coverage = new PackCoverage(1500, 1520),
             Updated = new DateTimeOffset(2026, 11, 1, 6, 30, 0, TimeSpan.Zero),
         });
+    }
+
+    [Fact]
+    public void Reads_the_reference_packs()
+    {
+        // Arrange
+        var json = PackFixtures.ReadValid("references");
+
+        // Act
+        var manifest = PackManifestSerializer.Read(json).Value!;
+
+        // Assert
+        manifest.References.Should().Equal(new PackReference("en", "full", 3), new PackReference("uk", "community", 1));
+    }
+
+    [Fact]
+    public void The_reference_packs_are_written_back()
+    {
+        // Arrange
+        var manifest = PackManifestSerializer.Read(PackFixtures.ReadValid("references")).Value!;
+
+        // Act
+        var json = PackManifestSerializer.Write(manifest);
+
+        // Assert
+        PackManifestSerializer.Read(json).Value!.References.Should().Equal(manifest.References);
+    }
+
+    [Fact]
+    public void A_manifest_without_references_writes_none()
+    {
+        // Arrange
+        var manifest = PackManifestSerializer.Read(PackFixtures.ReadValid("recipe-steam")).Value!;
+
+        // Act
+        var json = PackManifestSerializer.Write(manifest);
+
+        // Assert
+        json.Should().NotContain("references");
     }
 
     [Fact]

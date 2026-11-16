@@ -19,6 +19,8 @@ namespace AiLocalPack.Core.Packs;
 /// <param name="Builds">Game builds the pack was made for or tested on, with the original hashes of the files it touches.</param>
 /// <param name="Dependencies">Executable components from the registry whitelist.</param>
 /// <param name="Fonts">Whitelisted open fonts swapped in at install.</param>
+/// <param name="References">Packs of the same game (other languages, or the same one) the generation used as
+/// reference (decided 2026-11-16, _Reference packs_ in <c>docs/generation.md</c>): credited, CC BY-SA 4.0; <c>null</c> = none.</param>
 public sealed record PackManifest(
     string Id,
     GameId Game,
@@ -36,7 +38,8 @@ public sealed record PackManifest(
     IReadOnlyList<string> Fonts,
     PackCoverage Coverage,
     DateTimeOffset Created,
-    DateTimeOffset Updated)
+    DateTimeOffset Updated,
+    IReadOnlyList<PackReference>? References = null)
 {
     public const int CurrentSchemaVersion = 1;
 
@@ -112,6 +115,12 @@ public sealed record PackPatch(string Format, Uri Url, string Sha256, long Size,
 {
     public const string VcdiffFormat = "vcdiff";
 }
+
+/// <summary>A registry pack a generated pack was made with as reference (<see cref="PackManifest.References"/>).</summary>
+/// <param name="Language">The reference pack's language.</param>
+/// <param name="Pack">Its pack ID.</param>
+/// <param name="Revision">The revision used.</param>
+public sealed record PackReference(string Language, string Pack, int Revision);
 
 /// <param name="Id">Whitelist ID in the registry (<c>bepinex</c>…).</param>
 public sealed record PackDependency(string Id, string Version);

@@ -23,7 +23,60 @@ public sealed class ToolkitToolsTests
         // Assert
         tools.Select(t => t.Name).Should().BeEquivalentTo(
             "detect_engine", "list_files", "read_file_snippet", "extract_strings", "get_strings", "put_translations",
-            "validate_strings", "get_glossary", "put_glossary", "rebuild");
+            "validate_strings", "get_glossary", "put_glossary", "get_references", "rebuild");
+    }
+
+    /// <summary>A job reference pack in English that translates the potion (made for this build, no original hashes).</summary>
+    private static void WriteReference(McpHarness mcp) => new GenerationFiles(mcp.JobDir).WriteReferences(
+    [
+        new ReferencePack(
+            new PackManifest(
+                "full", Core.Games.GameId.Steam(620), "en", "Full", [new PackAuthor("alice")], [new PackRevision(1, DateTimeOffset.UnixEpoch, "alice")],
+                PackStatus.Verified, null, [new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('a', 64) })],
+                new PackRecipe("rpgmaker", "1.0.0"), new PackStringsFile(PackStringsFile.DefaultPath, new string('e', 64), 10), null, [], [], new PackCoverage(1, 1), DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch),
+            new StringTable("en", new Dictionary<string, string> { [PotionKey] = "Healing Draught" }),
+            SameBuild: true),
+    ]);
+
+    [Fact]
+    public async Task Get_references_gives_the_published_translation_of_a_key()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        WriteReference(mcp);
+
+        // Act
+        var result = await mcp.ResultAsync("get_references", new { keys = new[] { PotionKey } });
+
+        // Assert
+        result.GetProperty("strings")[0].GetProperty("translations").GetProperty("en").GetString().Should().Be("Healing Draught");
+    }
+
+    [Fact]
+    public async Task Get_references_searches_the_published_translations()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        WriteReference(mcp);
+
+        // Act
+        var result = await mcp.ResultAsync("get_references", new { search = "draught" });
+
+        // Assert
+        Keys(result).Should().Equal(PotionKey);
+    }
+
+    [Fact]
+    public async Task Get_references_of_a_job_without_references_is_empty()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+
+        // Act
+        var result = await mcp.ResultAsync("get_references", new { search = "potion" });
+
+        // Assert
+        result.GetProperty("packs").GetArrayLength().Should().Be(0);
     }
 
     [Fact]

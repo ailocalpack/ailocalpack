@@ -39,6 +39,12 @@ public sealed partial class PromptTemplate
     /// <summary>Appended to the system prompt of a Thorough job's Glossary and Translate runs: the game brief from Study.</summary>
     public static PromptTemplate SystemBrief { get; } = Load("system-brief", 1);
 
+    /// <summary>
+    /// Appended to the system prompt of a job with reference packs (decided 2026-11-16): the Glossary, Translate and fix
+    /// runs, and an Extract run with the agent's own code (with the files the references changed).
+    /// </summary>
+    public static PromptTemplate SystemReferences { get; } = Load("system-refs", 1);
+
     /// <summary>The system prompt of a run that writes and runs its own scripts in its workspace (task 57).</summary>
     public static PromptTemplate SystemScripts { get; } = Load("system-scripts", 1);
 

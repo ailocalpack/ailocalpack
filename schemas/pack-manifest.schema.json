@@ -132,6 +132,20 @@
       "uniqueItems": true,
       "items": { "$ref": "#/$defs/slug" }
     },
+    "references": {
+      "description": "Packs of the same game the generation used as reference (credited, CC BY-SA 4.0): language, pack ID and revision; each pack once.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["language", "pack", "revision"],
+        "properties": {
+          "language": { "$ref": "#/properties/language" },
+          "pack": { "$ref": "#/$defs/slug" },
+          "revision": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
     "coverage": {
       "type": "object",
       "required": ["translated", "total"],

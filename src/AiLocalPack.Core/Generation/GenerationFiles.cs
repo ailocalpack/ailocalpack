@@ -16,6 +16,7 @@ public sealed class GenerationFiles
     private const string BaseManifestName = "manifest.json";
     private const string BaseStringsName = "strings.json.gz";
     private const string BaseGlossaryName = "glossary.json";
+    private const string ReferencesIndexName = "refs.json";
 
     public GenerationFiles(string jobFolder)
     {
@@ -71,6 +72,87 @@ public sealed class GenerationFiles
 
     /// <summary>The agent's extract and rebuild code.</summary>
     public string AgentScriptsFolder => Path.Combine(AgentFolder, "scripts");
+
+    /// <summary>
+    /// The job's reference packs (decided 2026-11-16): <c>refs.json</c> (their order and whether each was made for the
+    /// game's build), and per pack <c>&lt;language&gt;/&lt;pack id&gt;/manifest.json</c> + <c>strings.json.gz</c> (none for a patch pack).
+    /// </summary>
+    public string ReferencesFolder => Path.Combine(Folder, "refs");
+
+    /// <summary>Writes the reference packs (<see cref="ReferencesFolder"/>, emptied first); <c>refs.json</c> last.</summary>
+    /// <exception cref="IOException">A file can't be written.</exception>
+    public void WriteReferences(IReadOnlyList<ReferencePack> packs)
+    {
+        ArgumentNullException.ThrowIfNull(packs);
+        if (Directory.Exists(ReferencesFolder))
+        {
+            Directory.Delete(ReferencesFolder, recursive: true);
+        }
+
+        if (packs.Count == 0)
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(ReferencesFolder);
+        foreach (var pack in packs)
+        {
+            var folder = ReferenceFolder(pack.Manifest.Language, pack.Manifest.Id);
+            Directory.CreateDirectory(folder);
+            if (pack.Strings is { } strings)
+            {
+                AtomicFile.Write(Path.Combine(folder, BaseStringsName), stream => StringTableSerializer.Write(strings, stream));
+            }
+
+            AtomicFile.WriteAllBytes(Path.Combine(folder, BaseManifestName), System.Text.Encoding.UTF8.GetBytes(PackManifestSerializer.Write(pack.Manifest)));
+        }
+
+        AtomicFile.WriteAllBytes(Path.Combine(ReferencesFolder, ReferencesIndexName), ReferenceIndexJson.Write(packs));
+    }
+
+    /// <summary>
+    /// The reference packs, in their order; <see cref="ReferenceSet.Empty"/> when the job has none. Best effort: a pack
+    /// whose files are gone or broken is left out, so a run never fails for a hint.
+    /// </summary>
+    public ReferenceSet ReadReferences()
+    {
+        try
+        {
+            var indexPath = Path.Combine(ReferencesFolder, ReferencesIndexName);
+            if (!File.Exists(indexPath) || ReferenceIndexJson.Read(File.ReadAllBytes(indexPath)) is not { } entries)
+            {
+                return ReferenceSet.Empty;
+            }
+
+            var packs = new List<ReferencePack>();
+            foreach (var (language, packId, sameBuild) in entries)
+            {
+                if (!Languages.GameLanguages.Tags.Contains(language, StringComparer.Ordinal) || !PackFormat.IsSlug(packId))
+                {
+                    continue;
+                }
+
+                var folder = ReferenceFolder(language, packId);
+                var manifestPath = Path.Combine(folder, BaseManifestName);
+                if (!File.Exists(manifestPath) || PackManifestSerializer.Read(File.ReadAllText(manifestPath)).Value is not { } manifest)
+                {
+                    continue;
+                }
+
+                var stringsPath = Path.Combine(folder, BaseStringsName);
+                var strings = File.Exists(stringsPath) ? StringTableSerializer.Read(File.ReadAllBytes(stringsPath)).Value : null;
+                packs.Add(new ReferencePack(manifest, strings, sameBuild));
+            }
+
+            return packs.Count == 0 ? ReferenceSet.Empty : new ReferenceSet(packs);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return ReferenceSet.Empty;
+        }
+    }
+
+    private string ReferenceFolder(string language, string packId) => Path.Combine(ReferencesFolder, language, packId);
 
     /// <summary>Writes the base pack's files (<see cref="BaseFolder"/>); the manifest last.</summary>
     /// <exception cref="IOException">A file can't be written.</exception>

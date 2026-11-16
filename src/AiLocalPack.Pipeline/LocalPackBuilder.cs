@@ -53,7 +53,8 @@ public sealed record LocalPackInput(
     PackManifest? Base = null,
     LocalPackUpdate? Update = null,
     PackPatch? Patch = null,
-    GenerationQuality? Quality = null);
+    GenerationQuality? Quality = null,
+    IReadOnlyList<PackReference>? References = null);
 
 /// <summary>
 /// Turns a finished translation into a local pack (task 51). Pure. The string table holds the accepted translations
@@ -186,6 +187,21 @@ public static class LocalPackBuilder
             [.. input.Fonts],
             input.Coverage,
             created,
-            now);
+            now,
+            References(input));
+    }
+
+    /// <summary>
+    /// The packs credited as references (decided 2026-11-16): the base's (an update keeps them) and the job's, each pack
+    /// once (its latest revision used), never the pack itself; <c>null</c> = none.
+    /// </summary>
+    private static List<PackReference>? References(LocalPackInput input)
+    {
+        var all = (input.Base?.References ?? []).Concat(input.References ?? [])
+            .Where(r => !(r.Language == input.Language && r.Pack == input.Id))
+            .GroupBy(r => (r.Language, r.Pack))
+            .Select(g => g.MaxBy(r => r.Revision)!)
+            .ToList();
+        return all.Count > 0 ? all : null;
     }
 }

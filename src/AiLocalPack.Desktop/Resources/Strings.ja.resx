@@ -4000,6 +4000,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>ゲームを読み込む間だけ：Wiki、ストアページ、他言語の公式翻訳。PC のデータは送信されず、翻訳はオフラインのままです。</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>このゲームの公開済み翻訳を参考にする</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}：プレイヤーが動作を確認済み。AI は名前や意味のヒントとして使い、翻訳はあくまで原文から行います。</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>これらの翻訳はツールキットではなく AI 独自のコードで作られています。ツールキットではこのゲームを読めない可能性が高いです。</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>翻訳モードを比較</value>
   </data>

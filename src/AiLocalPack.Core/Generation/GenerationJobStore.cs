@@ -393,7 +393,8 @@ public static class GenerationJobSerializer
                 Name(job.Options.Quality),
                 job.Options.WebLookup ? true : null,
                 job.Options.Reader,
-                job.Options.Unsandboxed ? true : null),
+                job.Options.Unsandboxed ? true : null,
+                job.Options.References is { Count: > 0 } references ? [.. references.Select(r => new GenerationReferenceJson(r.Language, r.Pack, r.Revision))] : null),
             Name(job.Stage),
             Name(job.Status),
             Name(job.PauseReason),
@@ -504,6 +505,13 @@ public static class GenerationJobSerializer
             baseRef = new GenerationBase(b.PackId!, b.Revision, b.Local, b.Title ?? b.PackId!);
         }
 
+        // A damaged reference entry is left out: references are only hints.
+        IReadOnlyList<PackReference>? references = file.Options?.References is { } list
+            ? [.. list.Where(r => r is { Language: not null, Pack: not null, Revision: >= 1 } && Languages.GameLanguages.Tags.Contains(r.Language!, StringComparer.Ordinal) && PackFormat.IsSlug(r.Pack))
+                .Select(r => new PackReference(r!.Language!, r.Pack!, r.Revision))]
+            : null;
+        references = references is { Count: > 0 } ? references : null;
+
         var counters = file.Counters ?? new GenerationCountersJson(0, 0, 0, 0);
         if (counters.Strings < 0 || counters.Translated < 0 || counters.Chunks < 0 || counters.ChunksDone < 0 || counters.ChunksDone > counters.Chunks)
         {
@@ -525,7 +533,8 @@ public static class GenerationJobSerializer
                 quality,
                 file.Options?.WebLookup ?? false,
                 reader,
-                file.Options?.Unsandboxed ?? false),
+                file.Options?.Unsandboxed ?? false,
+                references),
             Stage = stage,
             Status = status,
             PauseReason = pause,
@@ -584,7 +593,10 @@ internal sealed record GenerationOptionsJson(
     string? Quality = null,
     bool? WebLookup = null,
     string? Reader = null,
-    bool? Unsandboxed = null);
+    bool? Unsandboxed = null,
+    IReadOnlyList<GenerationReferenceJson?>? References = null);
+
+internal sealed record GenerationReferenceJson(string? Language, string? Pack, int Revision);
 
 internal sealed record GenerationBaseJson(string? PackId, int Revision, bool Local, string? Title);
 

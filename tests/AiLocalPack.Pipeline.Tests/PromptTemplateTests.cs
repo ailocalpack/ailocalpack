@@ -124,6 +124,26 @@ public sealed class PromptTemplateTests
     }
 
     [Fact]
+    public void The_references_system_prompt_of_an_extract_run_matches_its_snapshot()
+    {
+        // Arrange
+        var manifest = new Core.Packs.PackManifest(
+            "full", Core.Games.GameId.Steam(620), "en", "Full translation",
+            [new Core.Packs.PackAuthor("alice")], [new Core.Packs.PackRevision(3, DateTimeOffset.UnixEpoch, "alice")],
+            Core.Packs.PackStatus.Verified, null,
+            [new Core.Packs.PackBuild("1000", new Dictionary<string, string> { ["data/Map001.json"] = new('a', 64) })],
+            new Core.Packs.PackRecipe("rpgmaker", "1.0.0"), null, null, [], [], new Core.Packs.PackCoverage(1, 1), DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch);
+        var references = new ReferenceSet([new ReferencePack(manifest, null, SameBuild: true)]);
+        var values = PromptValues.SystemReferences("Sample Quest", "ru", references, references.TouchedFiles);
+
+        // Act
+        var prompt = PromptTemplate.SystemReferences.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-refs.v1.ru.txt", prompt));
+    }
+
+    [Fact]
     public void The_system_prompt_matches_its_snapshot()
     {
         // Arrange

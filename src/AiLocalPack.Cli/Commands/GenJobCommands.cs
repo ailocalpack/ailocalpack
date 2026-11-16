@@ -111,10 +111,11 @@ internal static partial class GenJobCommands
         var web = new Option<bool>("--web") { Description = "Thorough only: let the Study stage look the game up on the web." };
         var update = new Option<bool>("--update") { Description = "Translate only the new and changed strings on top of the installed pack (its next revision, in its language)." };
         var tool = ToolOption();
+        var noRefs = new Option<bool>("--no-refs") { Description = "Don't learn from the registry's confirmed translations of the game (reference packs)." };
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, quality, web, update, tool, until, workers, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, quality, web, update, tool, noRefs, until, workers, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -192,6 +193,12 @@ internal static partial class GenJobCommands
                 result.GetValue(web),
                 reader);
             var plan = new StagePlan(agentId, recording, pauseBefore, chunksAtOnce);
+            var references = result.GetValue(noRefs) ? [] : await References(context, tag, cancellationToken);
+            foreach (var reference in references)
+            {
+                output.WriteLine($"Reference: {reference.Manifest.Language}/{reference.Manifest.Id} rev {reference.Manifest.Revision} ({(reference.Strings is null ? "binary patch" : $"{reference.Strings.Strings.Count:N0} strings")}{(reference.SameBuild ? ", this build" : "")}).");
+            }
+
             GenerationRun run;
             try
             {
@@ -211,7 +218,8 @@ internal static partial class GenJobCommands
                     _ => context.Stages(plan),
                     Middle(estimate.Work.At(options.Quality)),
                     cancellationToken,
-                    updateBase);
+                    updateBase,
+                    references);
             }
             catch (Exception e) when (e is GameBlockedException or GenerationJobException or WorkingCopyException or IOException)
             {
@@ -223,6 +231,21 @@ internal static partial class GenJobCommands
             return await FollowAsync(context, run, plan, result.GetValue(wait), output, cancellationToken);
         });
         return command;
+    }
+
+    /// <summary>The reference packs of a new job (decided 2026-11-16) from the saved index; none when there is no registry.</summary>
+    private static async Task<IReadOnlyList<ReferencePack>> References(JobContext context, string language, CancellationToken cancellationToken)
+    {
+        if (context.Index is null || !RegistryLocation.TryResolve(context.Env, context.Settings.RegistryIndexUrl, out var location, out _))
+        {
+            return [];
+        }
+
+        using var http = IndexCommand.CreateHttpClient();
+        using var files = PackFetcher.CreateHttpClient(new System.Net.Http.Headers.ProductInfoHeaderValue("ailocalpack-cli", typeof(GenJobCommands).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
+        var manifests = new PackManifestClient(http);
+        var fetcher = new ReferenceFetcher(manifests, new PackFetcher(manifests, files, new PackCache(context.Paths)));
+        return await fetcher.FetchAsync(location, context.Index, context.Game, language, cancellationToken);
     }
 
     private static Command BuildResume(OsEnvironment env)

@@ -342,7 +342,10 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
 
     public GenerationJobStore Store => store;
 
-    /// <summary>Creates the game's job (an update job with its base pack's files, task 56) and runs it in the background.</summary>
+    /// <summary>
+    /// Creates the game's job (an update job with its base pack's files, task 56; the reference packs it learns from,
+    /// whose list replaces <see cref="GenerationOptions.References"/>) and runs it in the background.
+    /// </summary>
     /// <exception cref="GameBlockedException">The game is blocked (anti-cheat, opt-out).</exception>
     /// <exception cref="GenerationJobException">The game already has an open job.</exception>
     /// <exception cref="IOException">The job folder can't be written.</exception>
@@ -356,7 +359,8 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
         Func<GenerationJobEntry, GenerationStages> stages,
         TimeSpan? estimatedTime = null,
         CancellationToken cancellationToken = default,
-        UpdateBase? updateBase = null)
+        UpdateBase? updateBase = null,
+        IReadOnlyList<ReferencePack>? references = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(stages);
@@ -367,8 +371,22 @@ public sealed class GenerationJobs(GenerationJobStore store, GenerationRunner ru
         }
 
         GameBlocks.EnsureAllowed(game, policy, index, BlockedOperation.Generate);
-        var (entry, jobLock) = store.Create(game, language, agent, options, estimatedTime, updateBase is null ? null : files => files.WriteBase(updateBase));
-        GenerationJobLog.Append(entry.Folder, _time, $"Created for {game.Name} ({game.Id}) into {language} with agent {agent}.");
+        references ??= [];
+        options = options with { References = references.Count > 0 ? [.. references.Select(r => r.Reference)] : null };
+        var (entry, jobLock) = store.Create(game, language, agent, options, estimatedTime, updateBase is null && references.Count == 0 ? null : files =>
+        {
+            if (updateBase is not null)
+            {
+                files.WriteBase(updateBase);
+            }
+
+            if (references.Count > 0)
+            {
+                files.WriteReferences(references);
+            }
+        });
+        GenerationJobLog.Append(entry.Folder, _time, $"Created for {game.Name} ({game.Id}) into {language} with agent {agent}"
+            + (references.Count > 0 ? $", references {string.Join(", ", references.Select(r => $"{r.Manifest.Language}/{r.Manifest.Id} rev {r.Manifest.Revision}"))}." : "."));
         return Launch(entry, jobLock, stages, cancellationToken);
     }
 

@@ -585,6 +585,24 @@ public sealed class TranslateStageTests : IDisposable
     }
 
     [Fact]
+    public void A_string_line_carries_the_reference_translations_of_its_original()
+    {
+        // Arrange
+        var s = new ExtractedString("k", "Feuer!", null, null, []);
+        var manifest = new PackManifest(
+            "full", Core.Games.GameId.Steam(620), "en", "Full", [new PackAuthor("alice")], [new PackRevision(1, DateTimeOffset.UnixEpoch, "alice")],
+            PackStatus.Verified, null, [], new PackRecipe("rpgmaker", "1.0.0"), null, null, [], [], new PackCoverage(1, 1), DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch);
+        var table = new StringTable("en", new Dictionary<string, string> { ["k"] = "Fire!" }) { Originals = new Dictionary<string, string> { ["k"] = OriginalHash.Of("Feuer!") } };
+        var references = new ReferenceSet([new ReferencePack(manifest, table, SameBuild: false)]);
+
+        // Act
+        var line = TranslateStage.StringLines([s], null, references);
+
+        // Assert
+        line.Should().Be("""{"key":"k","original":"Feuer!","ref":{"en":"Fire!"}}""");
+    }
+
+    [Fact]
     public void Glossary_lines_name_grammar_notes_and_terms_kept_as_is()
     {
         // Arrange

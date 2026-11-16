@@ -109,7 +109,8 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
             Step(context, new BuildProgress(BuildStep.Rebuilding));
             rebuilt = tool.Rebuild(context.CopyFolder, job.Language, collected.Translations, output, cancellationToken);
             Step(context, new BuildProgress(BuildStep.Fonts, rebuilt.ChangedFiles.Count));
-            fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, job.Language, collected.Translations, [], output, cancellationToken: cancellationToken).ConfigureAwait(false);
+            // A reference in a language of the same script names the fonts that worked for this game (decided 2026-11-16).
+            fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, job.Language, collected.Translations, context.Files.ReadReferences().FontsFor(job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
             touched = Hashes(context.CopyFolder, tool.TouchedFiles(context.CopyFolder, collected.Translations.Keys));
         }
         catch (RecipeException e)
@@ -198,7 +199,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         var progress = PipelineProgressFile.Read(context.Files);
         var manifest = LocalPackBuilder.Manifest(new LocalPackInput(
             id, game, job.Language, agent.Id, agent.DisplayName, progress.Agent, job.Options.Model, tool.Id, tool.Version, touched, fonts.ManifestFonts, collected.Coverage, now,
-            updateBase?.Manifest, update, Quality: job.Options.Quality));
+            updateBase?.Manifest, update, Quality: job.Options.Quality, References: job.Options.References));
         var report = new LocalPackReport(
             job.Id,
             now,

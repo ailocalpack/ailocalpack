@@ -98,6 +98,11 @@ public sealed class ToolkitSession
 
     private const string WriteYourOwn = " Write your own extractor: it must write strings.json in your workspace.";
 
+    /// <summary>The job's reference packs (<c>refs/</c> of the job folder, read once; best effort).</summary>
+    public ReferenceSet References() => references ??= Files.ReadReferences();
+
+    private ReferenceSet? references;
+
     /// <summary>The strings the agent's extractor wrote (<c>agent/strings.json</c> of the job folder).</summary>
     public AgentScriptTool AgentTool() => agentTool ??= new AgentScriptTool(Files.AgentStringsPath);
 

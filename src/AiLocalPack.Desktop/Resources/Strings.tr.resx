@@ -4102,6 +4102,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>Yalnızca oyunu incelerken: vikiler, mağaza sayfası, diğer dillere resmî çeviriler. Bilgisayarından hiçbir şey gönderilmez; çeviri çevrimdışı kalır.</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>Bu oyunun yayımlanmış çevirilerinden yararlan</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}: oyuncular çalıştığını onayladı. Yapay zekâ bunları adlar ve anlam için ipucu olarak kullanır, çeviriyi yine orijinalden yapar.</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>Bu çeviriler araç setiyle değil, yapay zekânın kendi koduyla yapıldı: araç seti bu oyunu büyük olasılıkla okuyamaz.</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>Çeviri modlarını karşılaştır</value>
   </data>

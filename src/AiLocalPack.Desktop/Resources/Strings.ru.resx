@@ -4204,6 +4204,15 @@
   <data name="Gen_Quality_Web_Detail" xml:space="preserve">
     <value>Только пока изучает игру: вики, страница в магазине, официальные переводы на другие языки. С вашего компьютера ничего не отправляется; перевод идёт без сети.</value>
   </data>
+  <data name="Gen_References_Use" xml:space="preserve">
+    <value>Учиться на опубликованных переводах этой игры</value>
+  </data>
+  <data name="Gen_References_Detail" xml:space="preserve">
+    <value>{0}: игроки подтвердили, что они работают. AI берёт из них подсказки по именам и смыслу, но переводит с оригинала.</value>
+  </data>
+  <data name="Gen_References_Patches" xml:space="preserve">
+    <value>Эти переводы сделаны собственным кодом AI, а не инструментами приложения: скорее всего, они эту игру не прочитают.</value>
+  </data>
   <data name="Gen_Quality_Compare_Title" xml:space="preserve">
     <value>Сравнение режимов перевода</value>
   </data>

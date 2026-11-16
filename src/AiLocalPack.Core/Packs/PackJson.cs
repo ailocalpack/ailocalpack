@@ -23,10 +23,13 @@ internal sealed record PackManifestJson(
     PackPatchJson? Patch,
     IReadOnlyList<PackDependencyJson?>? Dependencies,
     IReadOnlyList<string?>? Fonts,
+    IReadOnlyList<PackReferenceJson?>? References,
     PackCoverageJson? Coverage,
     string? License,
     string? Created,
     string? Updated);
+
+internal sealed record PackReferenceJson(string? Language, string? Pack, int? Revision);
 
 internal sealed record PackAuthorJson(string? Github, string? Name);
 

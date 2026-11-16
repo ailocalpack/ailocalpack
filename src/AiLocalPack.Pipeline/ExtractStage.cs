@@ -123,7 +123,8 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
                 toTranslate = [.. source.Strings.Where(s => diff.ToTranslate.Contains(s.Key))];
             }
 
-            chunks = ChunkPlanner.Plan(tool.Id, toTranslate, budget);
+            var references = context.Files.ReadReferences();
+            chunks = ChunkPlanner.Plan(tool.Id, toTranslate, budget, references.IsEmpty ? null : s => ChunkPlanner.ReferenceTokens(references, s));
             translated = Translated(context.Files, source);
             SourceStringsFile.Write(context.Files, source);
             ChunkPlanFile.Write(context.Files, chunks);

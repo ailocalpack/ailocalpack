@@ -88,7 +88,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
             chunks.Add(chunk);
         }
 
-        var shared = new Shared(source, SourceMarkup.Of(tools, source), Glossary(context), plan.Count, count > 1);
+        var shared = new Shared(source, SourceMarkup.Of(tools, source), Glossary(context), plan.Count, count > 1, context.Files.ReadReferences());
         if (count > 1)
         {
             context.Log($"Chunks {job.Counters.ChunksDone + 1}–{job.Counters.ChunksDone + count} of {plan.Count} side by side.");
@@ -115,7 +115,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
     }
 
     /// <summary>What every chunk of a step reads.</summary>
-    private sealed record Shared(SourceStrings Source, TextMarkup Markup, Glossary? Glossary, int Chunks, bool SideBySide);
+    private sealed record Shared(SourceStrings Source, TextMarkup Markup, Glossary? Glossary, int Chunks, bool SideBySide, ReferenceSet References);
 
     /// <summary>Translates one chunk (<paramref name="number"/> is 1-based); <c>null</c> = done, else why it stopped.</summary>
     private async Task<GenerationStepResult?> RunChunkAsync(GenerationStepContext context, Shared shared, int number, List<ExtractedString> chunk, CancellationToken cancellationToken)
@@ -146,7 +146,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
             var entries = GlossaryFilter.Relevant(shared.Glossary, pending.Select(s => s.Original));
             context.Log($"{label}: {pending.Count} strings, {entries.Count} glossary entries, attempt {attempt} of {_options.MaxAttempts}.");
             var retry = attempt > 1;
-            var values = Values(gameName, job.Language, shared.Source, number, shared.Chunks, pending, entries, GlossaryReview.ToneForPrompt(shared.Glossary), retry ? problems : null);
+            var values = Values(gameName, job.Language, shared.Source, number, shared.Chunks, pending, entries, GlossaryReview.ToneForPrompt(shared.Glossary), retry ? problems : null, shared.References);
             var run = await agent.RunAsync(
                 context,
                 retry ? PromptTemplate.TranslateRetry : PromptTemplate.Translate,
@@ -300,7 +300,8 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         IReadOnlyList<ExtractedString> strings,
         IReadOnlyList<GlossaryEntry> entries,
         string? tone,
-        IReadOnlyDictionary<string, string?>? problems) => new(StringComparer.Ordinal)
+        IReadOnlyDictionary<string, string?>? problems,
+        ReferenceSet? references = null) => new(StringComparer.Ordinal)
     {
         ["gameName"] = gameName,
         ["engine"] = source.Engine.DisplayName,
@@ -310,7 +311,7 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         ["stringCount"] = strings.Count.ToString("N0", CultureInfo.InvariantCulture),
         ["tone"] = string.IsNullOrWhiteSpace(tone) ? "not set; keep it consistent with the context of the strings." : tone.Trim(),
         ["glossary"] = GlossaryLines(entries),
-        ["strings"] = StringLines(strings, problems),
+        ["strings"] = StringLines(strings, problems, references),
     };
 
     /// <summary><c>- "Potion" → "Зелье" (noun, neuter): a healing drink</c>, one per entry; <c>(none)</c> without any.</summary>
@@ -341,8 +342,11 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
         return text.ToString();
     }
 
-    /// <summary>One JSON object per string: key, original, context, maxLength (+ unit when not characters), placeholders, problem.</summary>
-    internal static string StringLines(IReadOnlyList<ExtractedString> strings, IReadOnlyDictionary<string, string?>? problems)
+    /// <summary>
+    /// One JSON object per string: key, original, context, maxLength (+ unit when not characters), placeholders, problem,
+    /// and <c>ref</c> = language → how the job's reference packs translated this very original (decided 2026-11-16).
+    /// </summary>
+    internal static string StringLines(IReadOnlyList<ExtractedString> strings, IReadOnlyDictionary<string, string?>? problems, ReferenceSet? references = null)
     {
         var lines = new List<string>();
         foreach (var s in strings)
@@ -376,6 +380,17 @@ public sealed class TranslateStage(PipelineAgent agent, string gameName, RecipeT
                     }
 
                     writer.WriteEndArray();
+                }
+
+                if (references?.For(s.Key, s.Original) is { Count: > 0 } found)
+                {
+                    writer.WriteStartObject("ref");
+                    foreach (var (language, text) in found)
+                    {
+                        writer.WriteString(language, text);
+                    }
+
+                    writer.WriteEndObject();
                 }
 
                 if (problems is not null && problems.TryGetValue(s.Key, out var problem))
