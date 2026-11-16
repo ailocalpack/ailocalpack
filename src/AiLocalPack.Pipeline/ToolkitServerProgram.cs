@@ -35,7 +35,8 @@ public sealed class ToolkitServerProgram
 
     /// <summary>The server of one job: confined to <paramref name="root"/>, storing into <paramref name="jobFolder"/>.</summary>
     /// <param name="reader">The job's <see cref="Core.Generation.GenerationOptions.Reader"/> (<c>--tool</c>), so the agent's tools read the game as the job does.</param>
-    public AgentMcpServer For(string root, string jobFolder, string language, string? reader = null)
+    /// <param name="testRuns">Offer <c>test_run</c> with this many game runs (a fix with AI), or <c>null</c>.</param>
+    public AgentMcpServer For(string root, string jobFolder, string language, string? reader = null, int? testRuns = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(root);
         ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
@@ -43,9 +44,10 @@ public sealed class ToolkitServerProgram
         return new AgentMcpServer(
             ToolkitServerLaunch.AgentServerName,
             _app.Executable,
-            _app.With([.. _mode, "--root", Path.GetFullPath(root), "--job", Path.GetFullPath(jobFolder), "--lang", language, .. reader is null ? Array.Empty<string>() : ["--tool", reader]]))
+            _app.With([.. _mode, "--root", Path.GetFullPath(root), "--job", Path.GetFullPath(jobFolder), "--lang", language, .. reader is null ? Array.Empty<string>() : ["--tool", reader], .. testRuns is { } runs ? ["--test-runs", runs.ToString(System.Globalization.CultureInfo.InvariantCulture)] : Array.Empty<string>()]))
         {
             Environment = Environment,
+            ToolTimeout = testRuns is null ? null : TestRunTools.AnswerTimeout + TimeSpan.FromMinutes(1),
         };
     }
 

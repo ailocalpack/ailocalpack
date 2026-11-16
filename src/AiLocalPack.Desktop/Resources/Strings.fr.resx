@@ -4912,4 +4912,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Vous avez choisi le code propre de l’IA : l’agent écrit son propre lecteur et la traduction sera un patch binaire</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>Le jeu s'ouvre à l'écran pendant quelques minutes : d'abord sans traduction, puis avec. Ne le fermez pas.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>La traduction s'affiche-t-elle dans le jeu ?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Vous avez indiqué que la traduction s'affiche dans le jeu.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Vous avez indiqué que la traduction ne s'affiche pas : dites à l'IA ci-dessous ce qui ne va pas.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>Le jeu traduit s'est chargé en {0} s et a tourné {1} s.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>Le jeu traduit a tourné {0} s sans finir de charger : l'image est peut-être encore un écran de chargement.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>Avec la traduction</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>La traduction s'affiche</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Pas traduit</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>Sur la capture de l'essai, le jeu est toujours dans sa langue d'origine : la traduction n'arrive pas jusqu'au jeu.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Jeu lancé pour vérifier ({0} sur {1}) ; sa fenêtre s'ouvre une ou deux minutes, ne la fermez pas</value>
+  </data>
 </root>

@@ -1,0 +1,15 @@
+The player tried Draft {{draft}} of your translation of "{{gameName}}" ({{engine}}, {{stringCount}} strings) and writes:
+
+{{request}}
+
+{{attachments}}
+
+{{history}}
+
+How to work:
+1. When the request is about a crash, a game that won't start or text that doesn't show, see it for yourself first: call `test_run` (with `seconds` when the player says the game closes later than that, e.g. 60) and read what comes back: the exit code, the crash report, the last lines of the game's log, and the screenshots.
+2. Find the cause. A game that closes right after it starts usually can't read a rebuilt file: a separator, quote or escape its format needs, a length or count it checks, a line break where it splits lines. Read the log, look at the strings the request is about and their translations (`search`, `get_strings`), and at the files they come from. The last thing the game's log shows before it stops points at the file it was reading.
+3. Fix the cause where it is: the translations (`put_translations`; an empty text removes one so the original shows), the glossary (`put_glossary`, so every later translation follows it){{scriptsStep}}. When the same mistake is in many strings, fix all of them, not only the example.
+4. Keep every text you change about as long as its original, at most about a third longer, unless the request asks otherwise: the game's UI often doesn't grow to fit, and text that runs over is cut off or spills out of its box.
+5. Don't translate again the strings the request isn't about.
+6. Check your fix with `test_run` before you end: the game keeps running where it crashed before, and the translated screenshot shows your text where the original shows its own language. When you can't tell the cause apart from two guesses, try one, test it, then the other. If it still fails when your runs are used up, say so plainly and what to try next.

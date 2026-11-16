@@ -4912,4 +4912,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Hai scelto il codice proprio dell'IA: l'agente scrive un proprio lettore e la traduzione sarà una patch binaria</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>Il gioco si aprirà sullo schermo per alcuni minuti: prima senza traduzione, poi con la traduzione. Non chiuderlo.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>La traduzione si vede nel gioco?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Hai indicato che la traduzione si vede nel gioco.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Hai indicato che la traduzione non si vede: di' qui sotto all'IA cosa non va.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>Il gioco tradotto si è caricato in {0} s ed è rimasto aperto {1} s.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>Il gioco tradotto è rimasto aperto {0} s ma non ha finito di caricare: l'immagine può essere ancora una schermata di caricamento.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Originale</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>Con la traduzione</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>La traduzione si vede</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Non tradotto</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>Nello screenshot della prova il gioco è ancora nella lingua originale: la traduzione non arriva al gioco.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Ho avviato il gioco per verificarlo ({0} di {1}); la sua finestra si apre per un paio di minuti, non chiuderla</value>
+  </data>
 </root>

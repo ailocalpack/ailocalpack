@@ -4912,4 +4912,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Wybrano własny kod AI: agent napisze własny czytnik, a tłumaczenie będzie łatką binarną</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>Gra otworzy się na ekranie na kilka minut: najpierw bez tłumaczenia, potem z nim. Nie zamykaj jej.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>Czy tłumaczenie widać w grze?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Zaznaczono, że tłumaczenie widać w grze.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Zaznaczono, że tłumaczenia nie widać: napisz niżej SI, co jest nie tak.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>Gra z tłumaczeniem wczytała się w {0} s i działała {1} s.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>Gra z tłumaczeniem działała {0} s, ale nie skończyła się wczytywać: na zrzucie może być jeszcze ekran wczytywania.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Oryginał</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>Z tłumaczeniem</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>Tłumaczenie widać</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Nieprzetłumaczone</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>Na zrzucie z próbnego uruchomienia gra jest nadal w oryginalnym języku: tłumaczenie nie trafia do gry.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Uruchomiono grę do sprawdzenia ({0} z {1}); jej okno otworzy się na minutę lub dwie, nie zamykaj go</value>
+  </data>
 </root>

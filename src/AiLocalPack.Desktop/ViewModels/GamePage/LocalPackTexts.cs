@@ -76,7 +76,7 @@ public static class LocalPackTexts
             TestRunOutcome.Passed => new ResultTile(
                 title,
                 localizer[nameof(Strings.Gen_Result_TestRun_Passed)],
-                localizer.Format(nameof(Strings.Gen_Result_TestRun_PassedDetail), Math.Round((run.Ran ?? Pipeline.TestRunOptions.Default.Watch).TotalSeconds).ToString("0", localizer.Culture)),
+                localizer.Format(nameof(Strings.Gen_Result_TestRun_PassedDetail), Math.Round((run.Ran ?? run.Watch ?? TimeSpan.Zero).TotalSeconds).ToString("0", localizer.Culture)),
                 ResultTone.Ok),
             TestRunOutcome.Crashed => new ResultTile(title, localizer[nameof(Strings.Gen_Result_TestRun_Crashed)], run.Detail ?? string.Empty, ResultTone.Warn),
             _ => new ResultTile(title, localizer[nameof(Strings.Gen_Result_TestRun_Skipped)], SkipReason(run.Skip, localizer), ResultTone.Info),

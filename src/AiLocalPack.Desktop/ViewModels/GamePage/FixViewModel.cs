@@ -403,6 +403,25 @@ public sealed partial class FixViewModel : ObservableObject
         _fixes.DismissCrash(_game.Id);
     }
 
+    /// <summary>"Not translated" on the test run's screenshot: the request prefilled with that screenshot attached.</summary>
+    internal void AskAboutMissingTranslation(string? screenshot)
+    {
+        if (IsRunning)
+        {
+            return;
+        }
+
+        if (Text.Trim().Length == 0)
+        {
+            Text = _localizer[nameof(Strings.Fix_Chip_NotTranslated_Text)];
+        }
+
+        if (screenshot is not null && _fixes.AddScreenshot(_game.Id, screenshot) is { } attachment)
+        {
+            AddChip(attachment);
+        }
+    }
+
     /// <summary>After a crash the player hasn't asked about yet: the request and its attachments, once per crash.</summary>
     private void Prefill(FixView view)
     {
@@ -719,6 +738,7 @@ public sealed partial class FixViewModel : ObservableObject
         "Edit" or "Write" or "MultiEdit" or "apply_patch" or "file_change" => _localizer[nameof(Strings.Fix_Step_Edit)],
         "Read" or "Glob" or "Grep" or "LS" => _localizer[nameof(Strings.Fix_Step_ReadFile)],
         FixSteps.Build => _localizer[nameof(Strings.Fix_Step_Build)],
+        _ when FixSteps.ParseTestRun(step) is var (number, max) => _localizer.Format(nameof(Strings.Fix_Step_TestRun), number.ToString(_localizer.Culture), max.ToString(_localizer.Culture)),
         FixSteps.Saved => _localizer[nameof(Strings.Fix_Step_Saved)],
         _ => _localizer.Format(nameof(Strings.Fix_Step_Tool), step),
     };

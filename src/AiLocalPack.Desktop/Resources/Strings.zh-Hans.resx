@@ -4654,4 +4654,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>已选择 AI 自己的代码：智能体会自己编写读取程序，翻译将是二进制补丁</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>游戏会在屏幕上打开几分钟：先是未翻译的版本，然后是翻译后的版本。请不要关闭它。</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>游戏中能看到翻译吗？</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>你已确认游戏中能看到翻译。</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>你已标记看不到翻译：请在下方告诉 AI 哪里不对。</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>翻译后的游戏在 {0} 秒内加载完成，并运行了 {1} 秒。</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>翻译后的游戏运行了 {0} 秒，但始终没有加载完：截图可能仍是加载画面。</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>原版</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>翻译后</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>能看到翻译</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>没有翻译</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>测试运行的截图中游戏仍是原始语言：翻译没有进入游戏。</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>已启动游戏进行检查（{0}/{1}）；游戏窗口会打开一两分钟，请不要关闭</value>
+  </data>
 </root>

@@ -100,6 +100,9 @@ public sealed record AgentMcpServer(string Name, string Command, IReadOnlyList<s
 {
     /// <summary>Extra environment variables of the server.</summary>
     public IReadOnlyDictionary<string, string> Environment { get; init; } = new Dictionary<string, string>();
+
+    /// <summary>How long one tool call may take when longer than the agent's default (a test run that starts the game); <c>null</c> = the default.</summary>
+    public TimeSpan? ToolTimeout { get; init; }
 }
 
 /// <summary>One headless run of an agent.</summary>

@@ -86,6 +86,12 @@ public sealed record AppPaths
     public string WorkingCopies => Path.Combine(Data, "work");
 
     /// <summary>
+    /// How each game's untranslated working copy behaves in a test run (its loading time and screenshot, once per game
+    /// version; <c>Pipeline.TestRunBaselines</c>): <c>&lt;game folder&gt;.json</c> + <c>.png</c>.
+    /// </summary>
+    public string TestRuns => Path.Combine(Data, "test-runs");
+
+    /// <summary>
     /// Packs generated on this machine (task 51, <see cref="Packs.LocalPackStore"/>): laid out like the registry
     /// (<c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;/</c>) with each pack's build report in <c>reports/</c>.
     /// </summary>

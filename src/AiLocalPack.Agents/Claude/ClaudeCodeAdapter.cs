@@ -96,11 +96,18 @@ public sealed class ClaudeCodeAdapter(
             }
         }
 
+        var environment = AgentSandbox.Environment(request);
+        if (request.McpServers.Select(s => s.ToolTimeout).Max() is { } toolTimeout)
+        {
+            // Claude Code's limit of one MCP tool call, in milliseconds.
+            environment = new Dictionary<string, string?>(environment) { ["MCP_TOOL_TIMEOUT"] = ((long)toolTimeout.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture) };
+        }
+
         var template = new ProcessSpec(installation.Executable, [])
         {
             WorkingDirectory = request.WorkingDirectory,
             StandardInput = request.Prompt,
-            Environment = AgentSandbox.Environment(request),
+            Environment = environment,
         };
         var arguments = ClaudeCodeCommandLine.Arguments(request, mcpConfig, systemPrompt, settings);
         var spec = Spec(installation, arguments, template);

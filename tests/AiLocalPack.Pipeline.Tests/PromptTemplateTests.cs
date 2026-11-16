@@ -259,7 +259,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Fix.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("fix.v3.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("fix.v4.ru.txt", prompt));
     }
 
     [Fact]
@@ -273,7 +273,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.Fix.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("fix.v3.scripts.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("fix.v4.scripts.txt", prompt));
     }
 
     [Fact]
@@ -283,7 +283,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.SystemFix.Render(PromptValues.SystemFix("Sample Quest", "ru", null));
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("system-fix.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("system-fix.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -293,6 +293,6 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.SystemFix.Render(PromptValues.SystemFix("Lantern Tale", "ru", "/work/job/game"));
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("system-fix.v1.scripts.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("system-fix.v2.scripts.txt", prompt));
     }
 }

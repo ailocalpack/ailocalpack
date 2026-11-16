@@ -895,6 +895,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     public bool HasBuildFontNote => BuildFontNote.Length > 0;
 
+    /// <summary>While the test run runs: the game opens on the screen (the untranslated one first), don't close it.</summary>
+    public bool ShowTestRunNote => _details.Progress.Build?.Step == BuildStep.TestRun && IsRunning;
+
     // ---------- Validator ----------
 
     public int WarningCount => _details.Progress.Warnings.Count;
@@ -1354,7 +1357,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             AskDiscard,
             _showInPacks,
             () => _ = NewTranslationAsync(),
-            NotNow), _publish(result.Pack));
+            NotNow,
+            Confirm), _publish(result.Pack));
     }
 
     /// <summary>
@@ -1426,6 +1430,17 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     }
 
     /// <summary><c>Not now</c> on the share strip: hidden for the pack from now on; publishing stays in Packs → Mine.</summary>
+    /// <summary>The player's answer to the test run's screenshot; "Not translated" also starts a request to the AI with it.</summary>
+    private void Confirm(LocalPack pack, bool visible)
+    {
+        _localPacks.Confirm(pack, visible);
+        if (!visible)
+        {
+            var shot = pack.Report.TestRun.Shot(TestRunShotKind.Translated) ?? pack.Report.TestRun.Shot(TestRunShotKind.Last);
+            Fix?.AskAboutMissingTranslation(shot?.Path);
+        }
+    }
+
     private void NotNow(LocalPack pack)
     {
         _ = Task.Run(() => _localPacks.DismissShare(pack));

@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Fonts;
 using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Toolkit.Recipes.Agent;
@@ -9,7 +10,8 @@ using AiLocalPack.Toolkit.Recipes.Agent;
 namespace AiLocalPack.Pipeline;
 
 /// <summary>What the Build stage needs besides the toolkit: the font swap, where local packs go and the test run.</summary>
-public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, IGameTestRunner TestRunner);
+/// <param name="Environment">This machine (where a fix's test run finds the game's log); <c>null</c> = no log is looked for.</param>
+public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, IGameTestRunner TestRunner, OsEnvironment? Environment = null);
 
 /// <summary>
 /// Stage Build (task 51), one step, no agent: the stored translations are checked again (<see cref="LocalPackBuilder.Collect"/>;
@@ -26,6 +28,9 @@ public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, I
 /// </summary>
 public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools, BuildServices services) : IGenerationStage
 {
+    /// <summary>The recipe tools and services, for a fix's test runs built the same way.</summary>
+    public (RecipeTools Tools, BuildServices Services) TestRunServices => (tools, services);
+
     public GenerationStage Stage => GenerationStage.Build;
 
     public async Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken)

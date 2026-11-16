@@ -32,6 +32,7 @@ public sealed record LocalPack(string Folder, PackManifest Manifest, LocalPackRe
 /// <param name="Published">The last time the pack was sent to the registry (task 60): its PR.</param>
 /// <param name="Draft">Which draft of the job's translation this is (task 75: every fix with AI makes the next one); <c>null</c> = the first.</param>
 /// <param name="Crash">The game closed soon after it started with this pack installed (task 75); such a session doesn't count as tried.</param>
+/// <param name="Confirmed">The player's answer to the test run's screenshot: the translation shows in the game, or not.</param>
 public sealed record LocalPackReport(
     string Job,
     DateTimeOffset Created,
@@ -47,7 +48,8 @@ public sealed record LocalPackReport(
     LocalPackUpdate? Update = null,
     LocalPackPublication? Published = null,
     int? Draft = null,
-    LocalPackCrash? Crash = null)
+    LocalPackCrash? Crash = null,
+    LocalPackConfirmation? Confirmed = null)
 {
     /// <summary>The player has played the game with the pack installed.</summary>
     public bool IsTried => Tried is not null;
@@ -55,6 +57,10 @@ public sealed record LocalPackReport(
     /// <summary>The draft number, 1 for a pack no fix made.</summary>
     public int DraftNumber => Draft ?? 1;
 }
+
+/// <summary>The player looked at the test run's screenshot of the translated game.</summary>
+/// <param name="Visible"><c>true</c> = "The translation shows", <c>false</c> = "Not translated".</param>
+public sealed record LocalPackConfirmation(DateTimeOffset At, bool Visible);
 
 /// <summary>A game session with the pack installed that ended too soon to be play (task 75, <see cref="Launch.GameCrashRule"/>).</summary>
 /// <param name="At">When the game closed.</param>
@@ -550,7 +556,11 @@ public sealed class LocalPackStore
                 run.Skip is { } skip ? JsonNamingPolicy.CamelCase.ConvertName(skip.ToString()) : null,
                 run.Detail,
                 run.Ran is { } ran ? (long)ran.TotalMilliseconds : null,
-                run.ExitCode),
+                run.ExitCode,
+                run.Ready is { } ready ? (long)ready.TotalMilliseconds : null,
+                run.Watch is { } watch ? (long)watch.TotalMilliseconds : null,
+                run.Shots is { Count: > 0 } shots ? [.. shots.Select(s => new ShotJson(JsonNamingPolicy.CamelCase.ConvertName(s.Kind.ToString()), s.Path))] : null,
+                run.CrashReport),
             new FontsJson(report.Fonts.Checked, report.Fonts.Replacement, report.Fonts.Swapped, report.Fonts.Uncovered),
             [.. report.Warnings.Select(w => new WarningJson(w.Key, w.Rule, w.Message, w.Original, w.Translation))],
             [.. report.Untranslated.Select(s => new StringJson(s.Key, s.Original))],
@@ -572,7 +582,8 @@ public sealed class LocalPackStore
                 p.State == PullRequestState.Open ? null : p.State.ToString().ToLowerInvariant(),
                 p.StateAt?.ToUniversalTime()) : null,
             report.Draft is > 1 ? report.Draft : null,
-            report.Crash is { } c ? new CrashJson(c.At.ToUniversalTime(), (long)c.Lasted.TotalMilliseconds, c.ExitCode) : null);
+            report.Crash is { } c ? new CrashJson(c.At.ToUniversalTime(), (long)c.Lasted.TotalMilliseconds, c.ExitCode) : null,
+            report.Confirmed is { } confirmed ? new ConfirmedJson(confirmed.At.ToUniversalTime(), confirmed.Visible) : null);
         AtomicFile.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(LocalPackReportJson))));
     }
 
@@ -605,7 +616,16 @@ public sealed class LocalPackStore
         return new LocalPackReport(
             job,
             json.Created,
-            new TestRunResult(outcome, skip, run.Detail, run.RanMs is { } ms ? TimeSpan.FromMilliseconds(ms) : null, run.ExitCode),
+            new TestRunResult(
+                outcome,
+                skip,
+                run.Detail,
+                run.RanMs is { } ms ? TimeSpan.FromMilliseconds(ms) : null,
+                run.ExitCode,
+                run.ReadyMs is >= 0 and var readyMs ? TimeSpan.FromMilliseconds(readyMs) : null,
+                run.WatchMs is >= 0 and var watchMs ? TimeSpan.FromMilliseconds(watchMs) : null,
+                ReadShots(run.Shots),
+                run.CrashReport),
             fonts,
             [.. (json.Warnings ?? []).OfType<WarningJson>().Select(w => new LocalPackWarning(w.Key ?? "", w.Rule ?? "", w.Message ?? "", w.Original ?? "", w.Translation ?? ""))],
             [.. (json.Untranslated ?? []).OfType<StringJson>().Select(s => new LocalPackString(s.Key ?? "", s.Original ?? ""))],
@@ -617,7 +637,22 @@ public sealed class LocalPackStore
             json.Update is { BaseRevision: >= 1 } u ? new LocalPackUpdate(u.BaseRevision, Math.Max(0, u.Added), Math.Max(0, u.Changed), Math.Max(0, u.Removed)) : null,
             ReadPublished(json.Published),
             json.Draft is > 1 ? json.Draft : null,
-            json.Crash is { LastedMs: >= 0 } crash ? new LocalPackCrash(crash.At, TimeSpan.FromMilliseconds(crash.LastedMs), crash.ExitCode) : null);
+            json.Crash is { LastedMs: >= 0 } crash ? new LocalPackCrash(crash.At, TimeSpan.FromMilliseconds(crash.LastedMs), crash.ExitCode) : null,
+            json.Confirmed is { } confirmed ? new LocalPackConfirmation(confirmed.At, confirmed.Visible) : null);
+    }
+
+    private static List<TestRunShot>? ReadShots(IReadOnlyList<ShotJson?>? shots)
+    {
+        var list = new List<TestRunShot>();
+        foreach (var shot in (shots ?? []).OfType<ShotJson>())
+        {
+            if (shot.Path is { Length: > 0 } path && Enum.TryParse<TestRunShotKind>(shot.Kind, ignoreCase: true, out var kind))
+            {
+                list.Add(new TestRunShot(kind, path));
+            }
+        }
+
+        return list.Count > 0 ? list : null;
     }
 
     private static LocalPackPublication? ReadPublished(PublishedJson? json) =>
@@ -653,7 +688,10 @@ internal sealed record LocalPackReportJson(
     UpdateJson? Update = null,
     PublishedJson? Published = null,
     int? Draft = null,
-    CrashJson? Crash = null);
+    CrashJson? Crash = null,
+    ConfirmedJson? Confirmed = null);
+
+internal sealed record ConfirmedJson(DateTimeOffset At, bool Visible);
 
 internal sealed record CrashJson(DateTimeOffset At, long LastedMs, int? ExitCode = null);
 
@@ -671,7 +709,18 @@ internal sealed record PublishedJson(
 
 internal sealed record UpdateJson(int BaseRevision, int Added, int Changed, int Removed);
 
-internal sealed record TestRunJson(string? Outcome, string? Skip, string? Detail, long? RanMs, int? ExitCode);
+internal sealed record TestRunJson(
+    string? Outcome,
+    string? Skip,
+    string? Detail,
+    long? RanMs,
+    int? ExitCode,
+    long? ReadyMs = null,
+    long? WatchMs = null,
+    IReadOnlyList<ShotJson?>? Shots = null,
+    string? CrashReport = null);
+
+internal sealed record ShotJson(string? Kind, string? Path);
 
 internal sealed record FontsJson(bool Checked, string? Replacement, IReadOnlyList<string>? Swapped, IReadOnlyList<int>? Uncovered);
 

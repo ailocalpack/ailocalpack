@@ -143,6 +143,16 @@ internal static class PackCommand
             + (report.KeptAsIs > 0 ? $" ({report.KeptAsIs} kept as is)" : "")
             + (report.Untranslated.Count > 0 ? $", {report.Untranslated.Count} stay untranslated" : "");
         yield return $"test run: {report.TestRun.Outcome.ToString().ToLowerInvariant()}" + (report.TestRun.Detail is { } detail ? $" ({detail})" : "");
+        foreach (var shot in report.TestRun.Shots ?? [])
+        {
+            yield return $"screenshot ({shot.Kind.ToString().ToLowerInvariant()}): {shot.Path}";
+        }
+
+        if (report.Confirmed is { } confirmed)
+        {
+            yield return confirmed.Visible ? "player: the translation shows in the game" : "player: the translation doesn't show in the game";
+        }
+
         yield return report.Fonts switch
         {
             { Checked: false } => "fonts: not checked for this engine",

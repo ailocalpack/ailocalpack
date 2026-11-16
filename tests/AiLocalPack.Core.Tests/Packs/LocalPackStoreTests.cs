@@ -330,6 +330,45 @@ public sealed class LocalPackStoreTests : IDisposable
     }
 
     [Fact]
+    public void The_test_runs_loading_time_watch_and_screenshots_round_trip_in_the_report()
+    {
+        // Arrange
+        var run = new TestRunResult(
+            TestRunOutcome.Passed,
+            Detail: "still running",
+            Ran: TimeSpan.FromSeconds(58),
+            Ready: TimeSpan.FromSeconds(24),
+            Watch: TimeSpan.FromSeconds(58),
+            Shots: [new TestRunShot(TestRunShotKind.Original, "/shots/original.png"), new TestRunShot(TestRunShotKind.Translated, "/shots/translated.png")]);
+        _store.Save(Manifest(), Table, Report() with { TestRun = run });
+
+        // Act
+        var saved = _store.Find(Game, "ru", "claude-code")!.Report.TestRun;
+
+        // Assert
+        new { saved.Ready, saved.Watch, Shots = saved.Shots!.Select(s => (s.Kind, s.Path)).ToList() }.Should().BeEquivalentTo(new
+        {
+            Ready = (TimeSpan?)TimeSpan.FromSeconds(24),
+            Watch = (TimeSpan?)TimeSpan.FromSeconds(58),
+            Shots = new List<(TestRunShotKind, string)> { (TestRunShotKind.Original, "/shots/original.png"), (TestRunShotKind.Translated, "/shots/translated.png") },
+        });
+    }
+
+    [Fact]
+    public void The_players_answer_to_the_screenshot_round_trips_in_the_report()
+    {
+        // Arrange
+        var confirmed = new LocalPackConfirmation(T0.AddHours(2), Visible: false);
+        _store.Save(Manifest(), Table, Report() with { Confirmed = confirmed });
+
+        // Act
+        var report = _store.Find(Game, "ru", "claude-code")!.Report;
+
+        // Assert
+        report.Confirmed.Should().Be(confirmed);
+    }
+
+    [Fact]
     public void A_pack_without_a_draft_number_is_the_first_draft()
     {
         // Arrange

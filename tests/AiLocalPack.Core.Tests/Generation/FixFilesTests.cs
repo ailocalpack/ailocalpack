@@ -261,6 +261,32 @@ public sealed class GameCrashRuleTests
         // Assert
         isCrash.Should().Be(crash);
     }
+
+    [Fact]
+    public void A_game_that_loads_long_gets_its_test_runs_watch_as_the_window()
+    {
+        // Arrange
+        var ended = new GameSessionEnded(GameId.Steam(371970), T0, T0.AddSeconds(45));
+
+        // Act
+        var isCrash = GameCrashRule.IsCrash(ended, TimeSpan.FromSeconds(58));
+
+        // Assert
+        isCrash.Should().BeTrue();
+    }
+
+    [Fact]
+    public void A_watch_shorter_than_30_seconds_keeps_the_30_second_window()
+    {
+        // Arrange
+        var watch = TimeSpan.FromSeconds(10);
+
+        // Act
+        var window = GameCrashRule.WindowFor(watch);
+
+        // Assert
+        window.Should().Be(TimeSpan.FromSeconds(30));
+    }
 }
 
 /// <summary>Folder copies for drafts (task 75).</summary>

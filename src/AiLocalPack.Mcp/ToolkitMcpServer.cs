@@ -40,15 +40,23 @@ public static class ToolkitMcpServer
     public static McpServerPrimitiveCollection<McpServerTool> CreateTools(ToolkitSession session)
     {
         ArgumentNullException.ThrowIfNull(session);
-        var target = new ToolkitTools(session);
         var tools = new McpServerPrimitiveCollection<McpServerTool>();
-        foreach (var method in typeof(ToolkitTools).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+        Add(tools, new ToolkitTools(session));
+        if (session.TestRuns is > 0)
+        {
+            Add(tools, new TestRunTools(session));
+        }
+
+        return tools;
+    }
+
+    private static void Add(McpServerPrimitiveCollection<McpServerTool> tools, object target)
+    {
+        foreach (var method in target.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance)
                      .Where(m => m.GetCustomAttribute<McpServerToolAttribute>() is not null))
         {
             tools.Add(McpServerTool.Create(method, target, new McpServerToolCreateOptions { SerializerOptions = SerializerOptions }));
         }
-
-        return tools;
     }
 
     public static McpServer Create(ITransport transport, ToolkitSession session, ILoggerFactory? loggerFactory = null)

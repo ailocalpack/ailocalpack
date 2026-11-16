@@ -4654,4 +4654,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>AI 独自のコードを選択：エージェントが独自の読み取りツールを作成し、翻訳はバイナリパッチになります</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>ゲームが数分ほど画面に開きます。まず翻訳なし、次に翻訳ありで起動します。閉じないでください。</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>ゲーム内に翻訳は表示されていますか？</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>翻訳がゲーム内に表示されていると回答しました。</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>翻訳が表示されていないと回答しました。下でAIに問題を伝えてください。</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>翻訳版のゲームは{0}秒で読み込みを終え、{1}秒動作しました。</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>翻訳版のゲームは{0}秒動作しましたが、読み込みが終わりませんでした。画像はまだ読み込み画面かもしれません。</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>オリジナル</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>翻訳あり</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>翻訳が表示されている</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>翻訳されていない</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>テスト実行のスクリーンショットではゲームが元の言語のままです。翻訳がゲームに届いていません。</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>確認のためにゲームを起動しました（{0}/{1}）。ゲームのウィンドウが1〜2分開きます。閉じないでください</value>
+  </data>
 </root>

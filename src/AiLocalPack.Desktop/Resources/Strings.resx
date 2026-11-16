@@ -4821,4 +4821,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>You chose the AI's own code: the agent writes its own reader, and the translation is a binary patch</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>The game opens on your screen for up to a few minutes: the untranslated one first, then the translation. Don't close it.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>Does the translation show in the game?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>You said the translation shows in the game.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>You said the translation doesn't show: tell the AI below what's wrong.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>The translated game loaded in {0} s and kept running for {1} s.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>The translated game kept running for {0} s but never finished loading: the picture may still be a loading screen.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>With the translation</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>The translation shows</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Not translated</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>On the test run's screenshot the game is still in its original language: the translation doesn't reach the game.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Ran the game to check it ({0} of {1}); its window opens for a minute or two, don't close it</value>
+  </data>
 </root>

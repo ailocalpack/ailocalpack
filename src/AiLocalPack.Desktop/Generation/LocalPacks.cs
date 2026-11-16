@@ -4,6 +4,7 @@ using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Library;
+using AiLocalPack.Pipeline;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -34,13 +35,16 @@ public sealed class LocalPacks
 {
     private readonly LocalPackStore _store;
     private readonly InstalledPackStore _installed;
+    private readonly TestRunBaselines? _baselines;
     private readonly ILogger _logger;
 
-    public LocalPacks(LocalPackStore store, InstalledPackStore installed, GameSessions sessions, ILogger<LocalPacks>? logger = null)
+    /// <param name="baselines">The test run's measures: a game that loads long gets a longer crash window (<see cref="GameCrashRule.WindowFor"/>).</param>
+    public LocalPacks(LocalPackStore store, InstalledPackStore installed, GameSessions sessions, TestRunBaselines? baselines = null, ILogger<LocalPacks>? logger = null)
     {
         ArgumentNullException.ThrowIfNull(sessions);
         _store = store;
         _installed = installed;
+        _baselines = baselines;
         _logger = logger ?? NullLogger<LocalPacks>.Instance;
         sessions.Changed += OnSessionChanged;
     }
@@ -148,6 +152,15 @@ public sealed class LocalPacks
         _logger.LogInformation("Local pack {Pack} of {Game}: the player says the short session wasn't a crash", pack.Manifest.Id, pack.Manifest.Game);
     }
 
+    /// <summary>The player's answer to the test run's screenshot: the translation shows in the game (<c>true</c>) or not.</summary>
+    public void Confirm(LocalPack pack, bool visible)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        var confirmation = new LocalPackConfirmation(DateTimeOffset.UtcNow, visible);
+        Change(pack.Manifest.Game, pack.Manifest.Language, pack.Manifest.Id, r => r with { Confirmed = confirmation });
+        _logger.LogInformation("Local pack {Pack} of {Game}: the player says the translation {Shows} on the test run's screenshot", pack.Manifest.Id, pack.Manifest.Game, visible ? "shows" : "doesn't show");
+    }
+
     private void Change(GameId game, string language, string id, Func<LocalPackReport, LocalPackReport> change)
     {
         try
@@ -175,7 +188,7 @@ public sealed class LocalPacks
             return;
         }
 
-        if (GameCrashRule.IsCrash(ended))
+        if (GameCrashRule.IsCrash(ended, _baselines?.WatchOf(record.Game)))
         {
             _logger.LogInformation("Local pack {Pack} of {Game}: the game closed {Duration} after it started", record.PackId, record.Game, ended.Duration);
             var crash = new LocalPackCrash(ended.EndedAt, ended.Duration);

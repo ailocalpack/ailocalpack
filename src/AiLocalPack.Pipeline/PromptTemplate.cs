@@ -49,10 +49,10 @@ public sealed partial class PromptTemplate
     public static PromptTemplate RebuildUnknown { get; } = Load("rebuild-unknown", 2);
 
     /// <summary>System prompt of a fix run (task 75): a person reads the reply, the agent may ask one question with choices.</summary>
-    public static PromptTemplate SystemFix { get; } = Load("system-fix", 1);
+    public static PromptTemplate SystemFix { get; } = Load("system-fix", 2);
 
     /// <summary>A fix request (task 75): the player's words, what they attached, the conversation so far.</summary>
-    public static PromptTemplate Fix { get; } = Load("fix", 3);
+    public static PromptTemplate Fix { get; } = Load("fix", 4);
 
     public string Name { get; }
 

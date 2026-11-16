@@ -59,6 +59,7 @@ using Microsoft.Extensions.Logging;
 
 using AiLocalPack.Agents.Install;
 using AiLocalPack.Agents.Processes;
+using AiLocalPack.Pipeline;
 using AiLocalPack.Desktop.Agents;
 
 namespace AiLocalPack.Desktop;
@@ -267,6 +268,13 @@ internal static class Composition
         services.AddSingleton<IGenerationEstimates, GenerationEstimates>();
         services.AddSingleton<IUpdateBases, UpdateBases>();
         services.AddSingleton(sp => new LocalPackStore(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<ILogger<LocalPackStore>>()));
+        services.AddSingleton(sp => new TestRunBaselines(sp.GetRequiredService<AppPaths>().TestRuns));
+        services.AddSingleton<IGameTestRunner>(sp => new GameTestRunner(
+            sp.GetRequiredService<IProcessRunner>(),
+            sp.GetRequiredService<OsEnvironment>().Os,
+            probe: GameProbes.For(sp.GetRequiredService<OsEnvironment>().Os),
+            baselines: sp.GetRequiredService<TestRunBaselines>(),
+            environment: sp.GetRequiredService<OsEnvironment>()));
         services.AddSingleton<PipelineStagesFactory>();
         services.AddSingleton<IGenerationStagesFactory>(sp => sp.GetRequiredService<PipelineStagesFactory>());
         services.AddSingleton<IFixRunnerFactory>(sp => sp.GetRequiredService<PipelineStagesFactory>());

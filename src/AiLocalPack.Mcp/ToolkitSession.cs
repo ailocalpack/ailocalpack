@@ -17,6 +17,9 @@ public sealed record ToolkitServerOptions(string Root, string JobFolder, string?
 {
     /// <summary>The job's <see cref="GenerationOptions.Reader"/>: the tool that reads the game, <see cref="GenerationOptions.AgentReader"/>, or <c>null</c> = the detected engine's tool.</summary>
     public string? Reader { get; init; }
+
+    /// <summary>How many game runs the agent may ask for with <c>test_run</c> (<c>--test-runs</c>); <c>null</c> = the tool isn't offered.</summary>
+    public int? TestRuns { get; init; }
 }
 
 /// <summary>
@@ -60,6 +63,9 @@ public sealed class ToolkitSession
     public GenerationFiles Files { get; }
 
     public RecipeTools Tools => options.Tools;
+
+    /// <summary>Whether <c>test_run</c> is offered (<see cref="ToolkitServerOptions.TestRuns"/>).</summary>
+    public int? TestRuns => options.TestRuns;
 
     /// <summary>Serializes the tool calls (the SDK may run requests concurrently).</summary>
     public object Gate { get; } = new();

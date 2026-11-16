@@ -4783,4 +4783,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Yapay zekânın kendi kodunu seçtiniz: ajan kendi okuyucusunu yazar ve çeviri bir ikili yama olur</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>Oyun birkaç dakikalığına ekranında açılacak: önce çevirisiz, sonra çeviriyle. Kapatma.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>Çeviri oyunda görünüyor mu?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Çevirinin oyunda göründüğünü belirttin.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Çevirinin görünmediğini belirttin: neyin yanlış olduğunu aşağıda yapay zekâya yaz.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>Çevrilmiş oyun {0} sn'de yüklendi ve {1} sn açık kaldı.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>Çevrilmiş oyun {0} sn açık kaldı ama yüklemeyi bitirmedi: görüntü hâlâ bir yükleme ekranı olabilir.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Orijinal</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>Çeviriyle</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>Çeviri görünüyor</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Çevrilmemiş</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>Deneme çalıştırmasının ekran görüntüsünde oyun hâlâ özgün dilinde: çeviri oyuna ulaşmıyor.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Kontrol için oyunu açtım ({0}/{1}); penceresi bir iki dakika açık kalır, kapatma</value>
+  </data>
 </root>

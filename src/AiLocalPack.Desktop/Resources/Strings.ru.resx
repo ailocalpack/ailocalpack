@@ -4912,4 +4912,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Выбран свой код ИИ: агент напишет свой разборщик, перевод — бинарный патч</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>Игра откроется на экране на несколько минут: сначала без перевода, потом с переводом. Не закрывайте её.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>Перевод виден в игре?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Вы отметили, что перевод виден в игре.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Вы отметили, что перевода не видно: напишите ИИ ниже, что не так.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>Игра с переводом загрузилась за {0} с и проработала {1} с.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>Игра с переводом проработала {0} с, но так и не загрузилась до конца: на снимке может быть экран загрузки.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Оригинал</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>С переводом</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>Перевод виден</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Не переведено</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>На снимке пробного запуска игра всё ещё на исходном языке: перевод не доходит до игры.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Запустил игру для проверки ({0} из {1}); окно игры откроется на минуту-две, не закрывайте его</value>
+  </data>
 </root>

@@ -35,12 +35,13 @@ public static class ToolkitServerLaunch
         return (app.Executable, language is null ? app.With(own) : app.With([.. own, "--lang", language]));
     }
 
-    /// <summary>The options of <c>--mcp-server --root &lt;dir&gt; --job &lt;dir&gt; [--lang &lt;tag&gt;] [--tool &lt;id&gt;]</c>, or the reason they are wrong.</summary>
+    /// <summary>The options of <c>--mcp-server --root &lt;dir&gt; --job &lt;dir&gt; [--lang &lt;tag&gt;] [--tool &lt;id&gt;] [--test-runs &lt;n&gt;]</c>, or the reason they are wrong.</summary>
     public static (ToolkitServerOptions? Options, string? Error) Parse(IReadOnlyList<string> args, RecipeTools tools)
     {
         ArgumentNullException.ThrowIfNull(args);
         ArgumentNullException.ThrowIfNull(tools);
         string? root = null, job = null, language = null, tool = null;
+        int? testRuns = null;
         for (var i = IsRequested(args) ? 1 : 0; i < args.Count; i++)
         {
             if (i + 1 >= args.Count)
@@ -54,6 +55,11 @@ public static class ToolkitServerLaunch
                 case "--job": job = args[++i]; break;
                 case "--lang": language = args[++i]; break;
                 case "--tool": tool = args[++i]; break;
+                case "--test-runs" when int.TryParse(args[i + 1], System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var runs) && runs is >= 1 and <= 20:
+                    testRuns = runs;
+                    i++;
+                    break;
+                case "--test-runs": return (null, "--test-runs needs a number from 1 to 20.");
                 default: return (null, $"Unknown option '{args[i]}'.");
             }
         }
@@ -70,7 +76,7 @@ public static class ToolkitServerLaunch
 
         return language is not null && !GameLanguages.Tags.Contains(language, StringComparer.Ordinal)
             ? (null, $"'{language}' is not a supported language tag (e.g. en, ru, pt-BR).")
-            : (new ToolkitServerOptions(root, job, language, tools) { Reader = tool }, null);
+            : (new ToolkitServerOptions(root, job, language, tools) { Reader = tool, TestRuns = testRuns }, null);
     }
 
     /// <summary>Serves until standard input closes; a refusal to start goes to <paramref name="error"/> with exit code 1.</summary>

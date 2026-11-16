@@ -4,10 +4,22 @@ using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Pipeline.Tests;
 
-/// <summary>The Build stage's test run (task 51): outcomes, the rebuilt files laid over the copy and taken off again.</summary>
+/// <summary>The test run: the untranslated copy measured first, then the translation watched; outcomes, the rebuilt files laid over the copy and taken off again.</summary>
 public sealed class GameTestRunnerTests : IDisposable
 {
-    private static readonly TestRunOptions Short = new(TimeSpan.FromMilliseconds(100));
+    private static readonly TestRunOptions Short = new()
+    {
+        MinWatch = TimeSpan.FromMilliseconds(100),
+        MaxWatch = TimeSpan.FromMilliseconds(150),
+        MaxReady = TimeSpan.FromMilliseconds(120),
+        Sample = TimeSpan.FromMilliseconds(10),
+        QuietSpan = TimeSpan.FromMilliseconds(20),
+        MinReady = TimeSpan.Zero,
+        NoPictureAfter = TimeSpan.FromMilliseconds(50),
+        ShotEvery = TimeSpan.FromMilliseconds(10),
+        Margin = TimeSpan.Zero,
+        Factor = 1,
+    };
 
     private static readonly Game Manual = new(
         GameId.Fingerprint(new string('a', 64)), "Lantern", GameSource.Manual, "/games/lantern", null, null, null, "none", null, true);
@@ -34,9 +46,16 @@ public sealed class GameTestRunnerTests : IDisposable
 
     private string CopyFile(string relative) => Path.Combine(Copy, relative.Replace('/', Path.DirectorySeparatorChar));
 
-    private Task<TestRunResult> RunAsync(FakeGameProcesses processes, Game? game = null, OsKind os = OsKind.Linux, TestRunOptions? options = null) =>
-        new GameTestRunner(processes, os, options ?? Short).RunAsync(
-            new TestRunRequest(game ?? Manual, Copy, _dir.Combine("job/build"), BuildFiles, Job, _ => { }),
+    private Task<TestRunResult> RunAsync(
+        FakeGameProcesses processes,
+        Game? game = null,
+        OsKind os = OsKind.Linux,
+        TestRunOptions? options = null,
+        IGameProbe? probe = null,
+        TestRunBaselines? baselines = null,
+        TimeSpan? atLeast = null) =>
+        new GameTestRunner(processes, os, options ?? Short, probe, baselines).RunAsync(
+            new TestRunRequest(game ?? Manual, Copy, _dir.Combine("job/build"), BuildFiles, Job, _ => { }) { AtLeast = atLeast, ShotsFolder = _dir.Combine("shots") },
             TestContext.Current.CancellationToken);
 
     private static byte[] SteamStubPe()
@@ -56,34 +75,34 @@ public sealed class GameTestRunnerTests : IDisposable
     public async Task A_game_still_running_when_the_watch_ends_passes()
     {
         // Arrange
-        var processes = new FakeGameProcesses(FakeGame.KeepsRunning);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning);
 
         // Act
         var result = await RunAsync(processes);
 
         // Assert
-        new { result.Outcome, Starts = processes.Started.Count }.Should().Be(new { Outcome = TestRunOutcome.Passed, Starts = 1 });
+        new { result.Outcome, Starts = processes.Started.Count }.Should().Be(new { Outcome = TestRunOutcome.Passed, Starts = 2 });
     }
 
     [Fact]
-    public async Task The_translated_run_sees_the_rebuilt_files()
+    public async Task The_untranslated_copy_runs_first_then_the_translation()
     {
         // Arrange
-        string? seen = null;
-        var processes = new FakeGameProcesses(FakeGame.KeepsRunning) { OnStart = _ => seen = File.ReadAllText(CopyFile("data/a.json")) };
+        var seen = new List<string>();
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning) { OnStart = _ => seen.Add(File.ReadAllText(CopyFile("data/a.json"))) };
 
         // Act
         await RunAsync(processes);
 
         // Assert
-        seen.Should().Be("translated");
+        seen.Should().Equal("original", "translated");
     }
 
     [Fact]
     public async Task Closing_early_while_the_untranslated_copy_keeps_running_is_a_crash()
     {
         // Arrange
-        var processes = new FakeGameProcesses(FakeGame.Closes(3, "TypeError: font"), FakeGame.KeepsRunning);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.Closes(3, "TypeError: font"));
 
         // Act
         var result = await RunAsync(processes);
@@ -94,37 +113,24 @@ public sealed class GameTestRunnerTests : IDisposable
     }
 
     [Fact]
-    public async Task The_untranslated_run_sees_the_original_files()
+    public async Task A_game_that_closes_untranslated_is_skipped_without_trying_the_translation()
     {
         // Arrange
-        var seen = new List<string>();
-        var processes = new FakeGameProcesses(FakeGame.Closes(1), FakeGame.KeepsRunning) { OnStart = _ => seen.Add(File.ReadAllText(CopyFile("data/a.json"))) };
-
-        // Act
-        await RunAsync(processes);
-
-        // Assert
-        seen.Should().Equal("translated", "original");
-    }
-
-    [Fact]
-    public async Task A_game_that_closes_untranslated_too_is_skipped()
-    {
-        // Arrange
-        var processes = new FakeGameProcesses(FakeGame.Closes(1), FakeGame.Closes(1));
+        var processes = new FakeGameProcesses(FakeGame.Closes(1));
 
         // Act
         var result = await RunAsync(processes);
 
         // Assert
-        new { result.Outcome, result.Skip }.Should().Be(new { Outcome = TestRunOutcome.Skipped, Skip = (TestRunSkip?)TestRunSkip.ClosesUntranslated });
+        new { result.Outcome, result.Skip, Starts = processes.Started.Count }
+            .Should().Be(new { Outcome = TestRunOutcome.Skipped, Skip = (TestRunSkip?)TestRunSkip.ClosesUntranslated, Starts = 1 });
     }
 
     [Fact]
     public async Task After_the_run_the_copy_is_as_before()
     {
         // Arrange
-        var processes = new FakeGameProcesses(FakeGame.Closes(3), FakeGame.KeepsRunning);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.Closes(3));
 
         // Act
         await RunAsync(processes);
@@ -142,13 +148,150 @@ public sealed class GameTestRunnerTests : IDisposable
     public async Task The_games_error_output_goes_to_the_test_run_log()
     {
         // Arrange
-        var processes = new FakeGameProcesses(FakeGame.Closes(3, "TypeError: font"), FakeGame.KeepsRunning);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.Closes(3, "TypeError: font"));
 
         // Act
         await RunAsync(processes);
 
         // Assert
         (await File.ReadAllTextAsync(Path.Combine(Job, "logs", "test-run.log"), TestContext.Current.CancellationToken)).Should().Contain("[err] TypeError: font");
+    }
+
+    [Fact]
+    public async Task A_measured_untranslated_copy_isnt_run_again()
+    {
+        // Arrange
+        var baselines = new TestRunBaselines(_dir.Combine("baselines"));
+        await RunAsync(new FakeGameProcesses(), baselines: baselines);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning);
+
+        // Act
+        await RunAsync(processes, baselines: baselines);
+
+        // Assert
+        processes.Started.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task A_game_that_closes_untranslated_isnt_remembered()
+    {
+        // Arrange
+        var baselines = new TestRunBaselines(_dir.Combine("baselines"));
+
+        // Act
+        await RunAsync(new FakeGameProcesses(FakeGame.Closes(1)), baselines: baselines);
+
+        // Assert
+        baselines.Find(Manual).Should().BeNull();
+    }
+
+    [Fact]
+    public async Task A_picture_on_the_window_with_calm_disk_reads_is_loaded()
+    {
+        // Arrange
+        var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000);
+
+        // Act
+        var result = await RunAsync(new FakeGameProcesses(), probe: probe);
+
+        // Assert
+        result.Ready.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task A_window_that_stays_black_without_read_counts_never_reads_as_loaded()
+    {
+        // Arrange
+        var probe = new FakeProbe(FakeProbe.Black, bytes: null);
+
+        // Act
+        var result = await RunAsync(new FakeGameProcesses(), probe: probe);
+
+        // Assert
+        result.Ready.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Disk_reads_still_growing_keep_the_game_loading()
+    {
+        // Arrange
+        var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000) { Growth = 10 * 1024 * 1024 };
+
+        // Act
+        var result = await RunAsync(new FakeGameProcesses(), probe: probe);
+
+        // Assert
+        result.Ready.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Screenshots_of_the_original_and_the_translation_are_saved()
+    {
+        // Arrange
+        var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000);
+
+        // Act
+        var result = await RunAsync(new FakeGameProcesses(), probe: probe);
+
+        // Assert
+        result.Shots!.Select(s => (s.Kind, Exists: File.Exists(s.Path)))
+            .Should().Equal((TestRunShotKind.Original, true), (TestRunShotKind.Translated, true), (TestRunShotKind.Last, true));
+    }
+
+    [Fact]
+    public async Task The_agent_can_ask_for_a_longer_watch()
+    {
+        // Arrange
+        var options = Short with { MaxWatch = TimeSpan.FromMilliseconds(400) };
+        var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000);
+
+        // Act
+        var result = await RunAsync(new FakeGameProcesses(), options: options, probe: probe, atLeast: TimeSpan.FromMilliseconds(300));
+
+        // Assert
+        result.Watch.Should().Be(TimeSpan.FromMilliseconds(300));
+    }
+
+    [Fact]
+    public async Task A_longer_watch_than_the_cap_is_cut_to_the_cap()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses();
+
+        // Act
+        var result = await RunAsync(processes, atLeast: TimeSpan.FromHours(1));
+
+        // Assert
+        result.Watch.Should().Be(Short.MaxWatch);
+    }
+
+    [Theory]
+    [InlineData(20, 50)]
+    [InlineData(1, 30)]
+    [InlineData(110, 180)]
+    public void The_watch_is_the_loading_time_and_a_half_and_20_seconds_within_30_seconds_and_3_minutes(int readySeconds, int watchSeconds)
+    {
+        // Arrange
+        var options = TestRunOptions.Default;
+
+        // Act
+        var watch = options.WatchFor(TimeSpan.FromSeconds(readySeconds));
+
+        // Assert
+        watch.Should().Be(TimeSpan.FromSeconds(watchSeconds));
+    }
+
+    [Fact]
+    public void A_game_never_seen_loaded_is_watched_for_the_cap()
+    {
+        // Arrange
+        var options = TestRunOptions.Default;
+
+        // Act
+        var watch = options.WatchFor(null);
+
+        // Assert
+        watch.Should().Be(TimeSpan.FromMinutes(3));
     }
 
     [Fact]
@@ -193,7 +336,7 @@ public sealed class GameTestRunnerTests : IDisposable
         await RunAsync(processes, os: OsKind.MacOS);
 
         // Assert
-        Path.GetFileName(processes.Started.Single().FileName).Should().Be("Lantern");
+        processes.Started.Select(s => Path.GetFileName(s.FileName)).Should().AllBe("Lantern");
     }
 
     [Fact]
@@ -243,7 +386,7 @@ public sealed class GameTestRunnerTests : IDisposable
     {
         // Arrange
         string? appIdFile = null;
-        var processes = new FakeGameProcesses(FakeGame.KeepsRunning) { OnStart = _ => appIdFile = File.ReadAllText(CopyFile("steam_appid.txt")) };
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning) { OnStart = _ => appIdFile = File.ReadAllText(CopyFile("steam_appid.txt")) };
 
         // Act
         await RunAsync(processes, Steam);
@@ -278,5 +421,38 @@ public sealed class GameTestRunnerTests : IDisposable
         // Assert
         Directory.EnumerateFiles(Copy, "*", SearchOption.AllDirectories).Select(f => Path.GetRelativePath(Copy, f).Replace('\\', '/')).Order(StringComparer.Ordinal)
             .Should().Equal("Game.sh", "data/a.json");
+    }
+
+    /// <summary>A probe that always sees the same picture and a read count that grows by <see cref="Growth"/> per look.</summary>
+    private sealed class FakeProbe(GameFrame frame, long? bytes) : IGameProbe
+    {
+        private long? _bytes = bytes;
+
+        public static GameFrame Checkers { get; } = Pattern(i => (i / 4 + i / 64) % 2 == 0 ? (byte)230 : (byte)20);
+
+        public static GameFrame Black { get; } = Pattern(_ => 0);
+
+        public long Growth { get; init; }
+
+        public bool CanCapture => true;
+
+        public long? ReadBytes(int processId) => _bytes += Growth;
+
+        public GameFrame? Capture(int processId) => frame;
+
+        private static GameFrame Pattern(Func<int, byte> value)
+        {
+            var pixels = new byte[64 * 64 * 4];
+            for (var i = 0; i < 64 * 64; i++)
+            {
+                var v = value(i);
+                pixels[i * 4] = v;
+                pixels[i * 4 + 1] = v;
+                pixels[i * 4 + 2] = v;
+                pixels[i * 4 + 3] = 255;
+            }
+
+            return new GameFrame(64, 64, pixels);
+        }
     }
 }

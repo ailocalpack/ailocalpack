@@ -594,7 +594,8 @@ internal static partial class GenJobCommands
         public FixRunner Fixer(StagePlan plan)
         {
             var (agent, build) = AgentAndBuild(plan);
-            return new FixRunner(Game, agent, new BuildStage(Game, agent, Tools, build), LocalPacks, TimeProvider.System);
+            var stage = new BuildStage(Game, agent, Tools, build);
+            return new FixRunner(Game, agent, stage, LocalPacks, TimeProvider.System, stage.TestRunServices);
         }
 
         private (PipelineAgent Agent, BuildServices Build) AgentAndBuild(StagePlan plan)
@@ -609,7 +610,7 @@ internal static partial class GenJobCommands
 #pragma warning restore IL3000
             var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, entryAssembly)
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
-            var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, new GameTestRunner(new ProcessRunner(), Env.Os));
+            var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, GameTestRunner.ForMachine(new ProcessRunner(), Env, AppPaths.Resolve(Env)), Env);
             return (new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), build);
         }
     }

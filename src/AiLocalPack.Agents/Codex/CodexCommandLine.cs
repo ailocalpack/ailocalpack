@@ -106,6 +106,11 @@ public static partial class CodexCommandLine
                 Set($"{prefix}.env", "{" + string.Join(", ", server.Environment.OrderBy(e => e.Key, StringComparer.Ordinal).Select(e => $"{Key(e.Key)} = {Toml(e.Value)}")) + "}");
             }
 
+            if (server.ToolTimeout is { } timeout)
+            {
+                Set($"{prefix}.tool_timeout_sec", ((long)timeout.TotalSeconds).ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+
             Set($"{prefix}.default_tools_approval_mode", Toml("approve"));
             Set($"{prefix}.required", "true");
         }

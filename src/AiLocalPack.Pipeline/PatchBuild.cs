@@ -54,9 +54,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
 
         try
         {
-            Directory.CreateDirectory(files.AgentFolder);
-            var translations = new SortedDictionary<string, string>(collected.Translations.ToDictionary(), StringComparer.Ordinal);
-            AtomicFile.WriteAllBytes(files.AgentTranslationsPath, JsonSerializer.SerializeToUtf8Bytes(new { language = job.Language, strings = translations }, TranslationsJson));
+            WriteTranslations(files, job.Language, collected);
             DeleteFolder(files.AgentOutputFolder);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
@@ -187,6 +185,25 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
     }
 
     /// <summary>
+    /// Writes the accepted translations to the workspace's <c>translations.json</c> (what the agent's rebuild script
+    /// reads); <c>false</c> when the file already held exactly that.
+    /// </summary>
+    /// <exception cref="IOException">The file can't be written.</exception>
+    internal static bool WriteTranslations(GenerationFiles files, string language, BuildTranslations collected)
+    {
+        Directory.CreateDirectory(files.AgentFolder);
+        var translations = new SortedDictionary<string, string>(collected.Translations.ToDictionary(), StringComparer.Ordinal);
+        var bytes = JsonSerializer.SerializeToUtf8Bytes(new { language, strings = translations }, TranslationsJson);
+        if (File.Exists(files.AgentTranslationsPath) && File.ReadAllBytes(files.AgentTranslationsPath).AsSpan().SequenceEqual(bytes))
+        {
+            return false;
+        }
+
+        AtomicFile.WriteAllBytes(files.AgentTranslationsPath, bytes);
+        return true;
+    }
+
+    /// <summary>
     /// The files in <paramref name="output"/> that differ from the copy's (ordinal order), or <c>null</c> with the
     /// problem: a link, a file the game doesn't have, nothing written or nothing changed.
     /// </summary>
@@ -266,9 +283,9 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         return true;
     }
 
-    private static string Local(string root, string relative) => Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar));
+    internal static string Local(string root, string relative) => Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar));
 
-    private static void DeleteFolder(string folder)
+    internal static void DeleteFolder(string folder)
     {
         if (Directory.Exists(folder))
         {

@@ -17,7 +17,8 @@ public sealed record GenerationResultActions(
     Action<LocalPack> Discard,
     Action<LocalPack> ShowInPacks,
     Action NewTranslation,
-    Action<LocalPack> NotNow);
+    Action<LocalPack> NotNow,
+    Action<LocalPack, bool>? Confirm = null);
 
 /// <summary>
 /// The Generation tab's result (task 55, design §6d): "Translation ready", where the pack is saved and its size; four
@@ -57,6 +58,8 @@ public sealed partial class GenerationResultViewModel : ObservableObject
         NewTranslationCommand = new RelayCommand(_actions.NewTranslation, () => !_busy);
         NotNowCommand = new RelayCommand(() => _actions.NotNow(Pack));
         ToggleWarningsCommand = new RelayCommand(() => IsWarningsOpen = !IsWarningsOpen);
+        ConfirmShowsCommand = new RelayCommand(() => _actions.Confirm?.Invoke(Pack, true));
+        ConfirmMissingCommand = new RelayCommand(() => _actions.Confirm?.Invoke(Pack, false));
     }
 
     public GenerationResult Result { get; private set; }
@@ -134,6 +137,52 @@ public sealed partial class GenerationResultViewModel : ObservableObject
         : string.Empty;
 
     public bool HasInGameNote => InGameNote.Length > 0 && ShowDetails;
+
+    // ---------- The test run's screenshots ----------
+
+    /// <summary>The untranslated game once loaded, when the test run took a picture.</summary>
+    public string? OriginalShot => Existing(Pack.Report.TestRun.Shot(TestRunShotKind.Original)?.Path);
+
+    /// <summary>The translated game once loaded, else its last picture.</summary>
+    public string? TranslatedShot => Existing(Pack.Report.TestRun.Shot(TestRunShotKind.Translated)?.Path) ?? Existing(Pack.Report.TestRun.Shot(TestRunShotKind.Last)?.Path);
+
+    public bool HasOriginalShot => OriginalShot is not null;
+
+    /// <summary>The screenshots block shows while the card isn't folded and the translated game was pictured.</summary>
+    public bool ShowShots => TranslatedShot is not null && ShowDetails;
+
+    /// <summary>"Does the translation show?" until the player answered, then what they said.</summary>
+    public string ShotsQuestion => _localizer[Pack.Report.Confirmed switch
+    {
+        null => nameof(Strings.Gen_Result_Shots_Question),
+        { Visible: true } => nameof(Strings.Gen_Result_Shots_Shows),
+        _ => nameof(Strings.Gen_Result_Shots_Missing),
+    }];
+
+    /// <summary>"The game loaded in 24 s; the untranslated one in 21 s." or how long it ran without loading.</summary>
+    public string ShotsDetail
+    {
+        get
+        {
+            var run = Pack.Report.TestRun;
+            var seconds = (TimeSpan? t) => Math.Round((t ?? TimeSpan.Zero).TotalSeconds).ToString("0", _localizer.Culture);
+            return run.Ready is { } ready
+                ? _localizer.Format(nameof(Strings.Gen_Result_Shots_Loaded), seconds(ready), seconds(run.Watch ?? run.Ran))
+                : _localizer.Format(nameof(Strings.Gen_Result_Shots_NotLoaded), seconds(run.Ran ?? run.Watch));
+        }
+    }
+
+    public bool ShowConfirm => Pack.Report.Confirmed is null && _actions.Confirm is not null;
+
+    public bool IsConfirmedMissing => Pack.Report.Confirmed is { Visible: false };
+
+    /// <summary><c>The translation shows</c>.</summary>
+    public IRelayCommand ConfirmShowsCommand { get; }
+
+    /// <summary><c>Not translated</c>: recorded, and the request to the AI prefilled with the screenshot.</summary>
+    public IRelayCommand ConfirmMissingCommand { get; }
+
+    private static string? Existing(string? path) => path is not null && File.Exists(path) ? path : null;
 
     // ---------- State and actions ----------
 

@@ -17,6 +17,47 @@ public sealed class ResourceKeyConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+/// <summary>
+/// A PNG or JPEG file on this machine as a picture (the test run's screenshots), decoded at most 640 pixels wide;
+/// <c>null</c> for a missing or unreadable file. Decoded pictures are kept by path and write time.
+/// </summary>
+public sealed class FileBitmapConverter : IValueConverter
+{
+    private const int DecodeWidth = 640;
+    private static readonly Dictionary<string, (DateTime Written, Avalonia.Media.Imaging.Bitmap Bitmap)> Cache = new(StringComparer.Ordinal);
+
+    public static FileBitmapConverter Instance { get; } = new();
+
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not string path || path.Length == 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            var written = File.GetLastWriteTimeUtc(path);
+            if (Cache.TryGetValue(path, out var cached) && cached.Written == written)
+            {
+                return cached.Bitmap;
+            }
+
+            using var stream = File.OpenRead(path);
+            var bitmap = Avalonia.Media.Imaging.Bitmap.DecodeToWidth(stream, DecodeWidth);
+            Cache[path] = (written, bitmap);
+            return bitmap;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 /// <summary>Upper-cases text in the UI language (group titles; XAML has no text-transform).</summary>
 public sealed class UpperCaseConverter : IValueConverter
 {

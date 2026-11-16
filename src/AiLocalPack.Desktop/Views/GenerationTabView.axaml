@@ -738,6 +738,41 @@
                 <TextBlock x:Name="ResultInGame" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
                            Text="{Binding InGameNote}" IsVisible="{Binding HasInGameNote}" />
 
+                <!-- The test run's screenshots: the original and the translation once loaded, and the player's answer -->
+                <Border x:Name="ResultShots" Classes="genBox" IsVisible="{Binding ShowShots}">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="2">
+                            <TextBlock FontWeight="SemiBold" Text="{Binding ShotsQuestion}" TextWrapping="Wrap" />
+                            <TextBlock Classes="faint" FontSize="12" Text="{Binding ShotsDetail}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <StackPanel Spacing="4" IsVisible="{Binding HasOriginalShot}">
+                                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Result_Shots_Original}" />
+                                <Image x:Name="ResultShotOriginal" Stretch="Uniform" MaxHeight="260" HorizontalAlignment="Left"
+                                       Source="{Binding OriginalShot, Converter={x:Static views:FileBitmapConverter.Instance}}"
+                                       AutomationProperties.Name="{l:Loc Gen_Result_Shots_Original}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Result_Shots_Translated}" />
+                                <Image x:Name="ResultShotTranslated" Stretch="Uniform" MaxHeight="260" HorizontalAlignment="Left"
+                                       Source="{Binding TranslatedShot, Converter={x:Static views:FileBitmapConverter.Instance}}"
+                                       AutomationProperties.Name="{l:Loc Gen_Result_Shots_Translated}" />
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding ShowConfirm}">
+                            <Button x:Name="ResultShotsShows" Classes="ghost sm" Command="{Binding ConfirmShowsCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Gen_Result_Shots_Yes}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="ResultShotsMissing" Classes="ghost sm" Command="{Binding ConfirmMissingCommand}" Content="{l:Loc Gen_Result_Shots_No}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
                 <Button x:Name="ResultWarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
                         Content="{Binding WarningsToggleText}" IsVisible="{Binding ShowWarningsToggle}" />
                 <ItemsControl x:Name="ResultWarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
@@ -1161,6 +1196,8 @@
                         </StackPanel>
                         <TextBlock x:Name="BuildFonts" Classes="muted" FontSize="13" Text="{Binding BuildFontNote}" TextWrapping="Wrap"
                                    IsVisible="{Binding HasBuildFontNote}" />
+                        <TextBlock x:Name="BuildTestRunNote" Classes="muted" FontSize="13" Text="{l:Loc Gen_Build_TestRunNote}" TextWrapping="Wrap"
+                                   IsVisible="{Binding ShowTestRunNote}" />
                     </StackPanel>
                 </Border>
 

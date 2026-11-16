@@ -4,6 +4,7 @@ using System.Text.Json;
 using AiLocalPack.Agents;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Recipes.Agent;
@@ -54,6 +55,32 @@ public static class FixSteps
     public const string Build = "app:build";
 
     public const string Saved = "app:saved";
+
+    /// <summary>The prefix of <see cref="TestRun"/>'s codes.</summary>
+    public const string TestRunPrefix = "app:test-run:";
+
+    /// <summary>The agent's <c>test_run</c> tool (left out of the steps: the app adds <see cref="TestRun"/> when the game starts).</summary>
+    public const string TestRunTool = "test_run";
+
+    /// <summary>The app started the game for the agent's test run <paramref name="number"/> of <paramref name="max"/>.</summary>
+    public static string TestRun(int number, int max) => string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{TestRunPrefix}{number}:{max}");
+
+    /// <summary>The number and the maximum of a <see cref="TestRun"/> code, or <c>null</c> for another step.</summary>
+    public static (int Number, int Max)? ParseTestRun(string step)
+    {
+        ArgumentNullException.ThrowIfNull(step);
+        if (!step.StartsWith(TestRunPrefix, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        var parts = step[TestRunPrefix.Length..].Split(':');
+        return parts.Length == 2
+            && int.TryParse(parts[0], System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var number)
+            && int.TryParse(parts[1], System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var max)
+            ? (number, max)
+            : null;
+    }
 
     /// <summary>The tool's name without <c>mcp__&lt;server&gt;__</c>.</summary>
     public static string Of(string toolName)
@@ -251,7 +278,8 @@ public interface IFixRunner
 /// (test run) fix puts the job and the pack back as they were. The job's lock is held throughout, so a fix never runs
 /// beside another or beside a generation run. Every turn is saved in <c>fix/state.json</c> as it is made.
 /// </summary>
-public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage build, LocalPackStore packs, TimeProvider time) : IFixRunner
+/// <param name="testRuns">The recipe tools and Build services the agent's <c>test_run</c> builds and runs the game with; <c>null</c> = the tool isn't offered.</param>
+public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage build, LocalPackStore packs, TimeProvider time, (RecipeTools Tools, BuildServices Services)? testRuns = null) : IFixRunner
 {
     /// <summary>
     /// Sends the request; returns the agent's turn. Throws <see cref="FixException"/> when it can't start, and
@@ -310,16 +338,31 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
         var system = new AgentSystemPrompt(PromptTemplate.SystemFix, PromptValues.SystemFix(game.Name, entry.Job.Language, scripts ? context.CopyFolder : null));
         var extras = new AgentRunExtras(system, e =>
         {
-            if (e is AgentToolCall call)
+            if (e is AgentToolCall call && FixSteps.Of(call.Name) is var code && code != FixSteps.TestRunTool)
             {
                 lock (steps)
                 {
-                    FixSteps.Add(steps, FixSteps.Of(call.Name));
+                    FixSteps.Add(steps, code);
                     progress?.Report(new FixProgress(turnId, [.. steps], null));
                 }
             }
-        }, "fix");
-        var tools = request.Attachments.Any(a => a.Kind == FixAttachmentKind.Screenshot) ? new HashSet<AgentBuiltinTool> { AgentBuiltinTool.ReadFiles } : null;
+        }, "fix", testRuns is null ? null : FixTestRuns.MaxRuns);
+
+        // Reading files is how the agent looks at screenshots: the player's and the test runs'.
+        var tools = testRuns is not null || request.Attachments.Any(a => a.Kind == FixAttachmentKind.Screenshot) ? new HashSet<AgentBuiltinTool> { AgentBuiltinTool.ReadFiles } : null;
+        var host = testRuns is { } services
+            ? new FixTestRuns(game, services.Tools, services.Services, context, source, scripts ? context.Files.AgentFolder : context.CopyFolder, (number, max) =>
+            {
+                lock (steps)
+                {
+                    FixSteps.Add(steps, FixSteps.TestRun(number, max));
+                    progress?.Report(new FixProgress(turnId, [.. steps], null));
+                }
+            })
+            : null;
+        host?.Clean();
+        using var serving = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        var served = host?.ServeAsync(serving.Token) ?? Task.CompletedTask;
 
         PipelineAgentResult run;
         try
@@ -335,6 +378,9 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
         }
         finally
         {
+            await serving.CancelAsync().ConfigureAwait(false);
+            await served.ConfigureAwait(false);
+            host?.Clean();
             shared.Remove(context.Log);
         }
 

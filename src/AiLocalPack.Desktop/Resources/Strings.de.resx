@@ -4783,4 +4783,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Eigener Code der KI gewählt: Der Agent schreibt seinen eigenen Leser, die Übersetzung wird ein Binärpatch</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>Das Spiel öffnet sich für bis zu einige Minuten auf deinem Bildschirm: zuerst ohne, dann mit Übersetzung. Schließe es nicht.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>Ist die Übersetzung im Spiel zu sehen?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Du hast angegeben, dass die Übersetzung im Spiel zu sehen ist.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Du hast angegeben, dass die Übersetzung nicht zu sehen ist: Sag der KI unten, was nicht stimmt.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>Das übersetzte Spiel hat in {0} s geladen und lief {1} s.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>Das übersetzte Spiel lief {0} s, hat aber nie fertig geladen: Das Bild kann noch ein Ladebildschirm sein.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>Mit Übersetzung</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>Übersetzung ist zu sehen</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Nicht übersetzt</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>Auf dem Screenshot des Testlaufs ist das Spiel noch in seiner Originalsprache: Die Übersetzung kommt nicht im Spiel an.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Spiel zur Prüfung gestartet ({0} von {1}); sein Fenster öffnet sich für ein, zwei Minuten, schließe es nicht</value>
+  </data>
 </root>

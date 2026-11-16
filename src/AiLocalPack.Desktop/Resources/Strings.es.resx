@@ -4912,4 +4912,40 @@
   <data name="Gen_Check_Engine_Agent" xml:space="preserve">
     <value>Elegiste el código propio de la IA: el agente escribe su propio lector y la traducción es un parche binario</value>
   </data>
+  <data name="Gen_Build_TestRunNote" xml:space="preserve">
+    <value>El juego se abrirá en tu pantalla durante unos minutos: primero sin traducir y luego con la traducción. No lo cierres.</value>
+  </data>
+  <data name="Gen_Result_Shots_Question" xml:space="preserve">
+    <value>¿Se ve la traducción en el juego?</value>
+  </data>
+  <data name="Gen_Result_Shots_Shows" xml:space="preserve">
+    <value>Indicaste que la traducción se ve en el juego.</value>
+  </data>
+  <data name="Gen_Result_Shots_Missing" xml:space="preserve">
+    <value>Indicaste que la traducción no se ve: dile abajo a la IA qué falla.</value>
+  </data>
+  <data name="Gen_Result_Shots_Loaded" xml:space="preserve">
+    <value>El juego traducido cargó en {0} s y siguió abierto {1} s.</value>
+  </data>
+  <data name="Gen_Result_Shots_NotLoaded" xml:space="preserve">
+    <value>El juego traducido siguió abierto {0} s pero no terminó de cargar: la imagen puede ser aún una pantalla de carga.</value>
+  </data>
+  <data name="Gen_Result_Shots_Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Gen_Result_Shots_Translated" xml:space="preserve">
+    <value>Con la traducción</value>
+  </data>
+  <data name="Gen_Result_Shots_Yes" xml:space="preserve">
+    <value>La traducción se ve</value>
+  </data>
+  <data name="Gen_Result_Shots_No" xml:space="preserve">
+    <value>Sin traducir</value>
+  </data>
+  <data name="Fix_Chip_NotTranslated_Text" xml:space="preserve">
+    <value>En la captura de la prueba el juego sigue en su idioma original: la traducción no llega al juego.</value>
+  </data>
+  <data name="Fix_Step_TestRun" xml:space="preserve">
+    <value>Abrí el juego para comprobarlo ({0} de {1}); su ventana se abre uno o dos minutos, no la cierres</value>
+  </data>
 </root>

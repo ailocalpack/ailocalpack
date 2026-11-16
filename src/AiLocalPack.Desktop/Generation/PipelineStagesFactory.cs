@@ -29,7 +29,8 @@ public sealed class PipelineStagesFactory(
     WorkingCopies copies,
     FontFixer fonts,
     LocalPackStore localPacks,
-    SettingsStore settings) : IGenerationStagesFactory, IFixRunnerFactory
+    SettingsStore settings,
+    IGameTestRunner testRunner) : IGenerationStagesFactory, IFixRunnerFactory
 {
     public GenerationStages Create(Game game, GenerationJobEntry entry)
     {
@@ -43,7 +44,8 @@ public sealed class PipelineStagesFactory(
     IFixRunner IFixRunnerFactory.Create(Game game, GenerationJobEntry entry)
     {
         var (agent, build) = AgentAndBuild(game, entry);
-        return new FixRunner(game, agent, new BuildStage(game, agent, tools, build), localPacks, TimeProvider.System);
+        var stage = new BuildStage(game, agent, tools, build);
+        return new FixRunner(game, agent, stage, localPacks, TimeProvider.System, stage.TestRunServices);
     }
 
     private (PipelineAgent Agent, BuildServices Build) AgentAndBuild(Game game, GenerationJobEntry entry)
@@ -55,7 +57,7 @@ public sealed class PipelineStagesFactory(
             ?? throw new InvalidOperationException($"The agent \"{agentId}\" is unknown to this version.");
         var app = AppLaunch.ForCurrentProcess(environment, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
             ?? throw new InvalidOperationException("The app's own path is unknown, so the agent can't start its toolkit server.");
-        var build = new BuildServices(fonts, localPacks, new GameTestRunner(runner, environment.Os));
+        var build = new BuildServices(fonts, localPacks, testRunner, environment);
         return (new PipelineAgent(adapter, ToolkitServerProgram.DesktopApp(app, environment)), build);
     }
 }

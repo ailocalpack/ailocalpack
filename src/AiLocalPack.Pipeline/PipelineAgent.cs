@@ -17,7 +17,8 @@ public sealed record AgentSystemPrompt(PromptTemplate Template, IReadOnlyDiction
 
 /// <summary>What a run may do besides the usual (task 75's fix runs): its own system prompt, every event seen as it comes, its transcript's name.</summary>
 /// <param name="Transcript">The transcript is <c>logs/agent-&lt;name&gt;.jsonl</c> instead of the stage's.</param>
-public sealed record AgentRunExtras(AgentSystemPrompt? System = null, Action<AgentEvent>? OnEvent = null, string? Transcript = null);
+/// <param name="TestRuns">Offer the toolkit server's <c>test_run</c> with this many game runs (a fix with AI), or <c>null</c>.</param>
+public sealed record AgentRunExtras(AgentSystemPrompt? System = null, Action<AgentEvent>? OnEvent = null, string? Transcript = null, int? TestRuns = null);
 
 /// <summary>
 /// A run in the agent's own workspace (task 57, a game the toolkit can't read): the job's <c>agent/</c> folder as the
@@ -115,7 +116,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         {
             SystemPrompt = system,
             BuiltinTools = Tools(workspace, extraTools),
-            McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language, context.Job.Options.Reader)],
+            McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language, context.Job.Options.Reader, extras?.TestRuns)],
             Model = choice.Model,
             Effort = choice.Effort,
             AllowUnsandboxed = workspace is not null && context.Job.Options.Unsandboxed,
