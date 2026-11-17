@@ -367,6 +367,51 @@ public sealed class ToolkitToolsTests
     }
 
     [Fact]
+    public async Task Put_translations_refuses_one_over_a_learned_byte_limit()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        StringLimitsFile.Put(mcp.JobDir, new StringLimit("data/Items.json:*", 8, "item names go into an 8-byte buffer"));
+
+        // Act
+        var result = await mcp.ResultAsync("put_translations", new { translations = new Dictionary<string, string> { [PotionKey] = "Зелье" } });
+
+        // Assert
+        (result.GetProperty("stored").GetInt32(), result.GetProperty("rejected")[0].GetProperty("issues")[0].GetProperty("rule").GetString())
+            .Should().Be((0, "too-many-bytes"));
+    }
+
+    [Fact]
+    public async Task A_limit_put_lists_the_stored_translations_over_it()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        await mcp.ResultAsync("put_translations", new { translations = new Dictionary<string, string> { [PotionKey] = "Зелье" } });
+        var tools = new LimitTools(new ToolkitSession(new ToolkitServerOptions(mcp.GameDir, mcp.JobDir, "ru", AiLocalPack.Toolkit.Recipes.RecipeTools.Builtin)));
+
+        // Act
+        var result = tools.PutLimit("data/Items.json:*", 8, "item names go into an 8-byte buffer", TestContext.Current.CancellationToken);
+
+        // Assert
+        new { result.OverCount, Key = result.Over[0].Key, result.Over[0].Bytes, Limit = result.Limits.Single().Keys }
+            .Should().Be(new { OverCount = 1, Key = PotionKey, Bytes = 10, Limit = "data/Items.json:*" });
+    }
+
+    [Fact]
+    public async Task A_limit_needs_a_reason()
+    {
+        // Arrange
+        await using var mcp = await McpHarness.StartAsync();
+        var tools = new LimitTools(new ToolkitSession(new ToolkitServerOptions(mcp.GameDir, mcp.JobDir, "ru", AiLocalPack.Toolkit.Recipes.RecipeTools.Builtin)));
+
+        // Act
+        var act = () => tools.PutLimit("data/Items.json:*", 8, " ", TestContext.Current.CancellationToken);
+
+        // Assert
+        act.Should().Throw<ModelContextProtocol.McpException>();
+    }
+
+    [Fact]
     public async Task Put_translations_lists_unknown_keys()
     {
         // Arrange

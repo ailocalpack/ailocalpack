@@ -90,6 +90,31 @@ public sealed record ExtractedString(string Key, string Original, string? Contex
 {
     /// <summary>What <see cref="MaxLength"/> counts.</summary>
     public LengthUnit MaxLengthUnit { get; init; } = LengthUnit.Characters;
+
+    /// <summary>The most UTF-8 bytes the whole translation (markup included) may take: a limit the agent learned (<see cref="AiLocalPack.Core.Generation.StringLimit"/>); <c>null</c> = none.</summary>
+    public int? MaxBytes { get; init; }
+
+    /// <summary>Why <see cref="MaxBytes"/> holds, in English.</summary>
+    public string? MaxBytesReason { get; init; }
+}
+
+/// <summary>Learned limits laid over extracted strings.</summary>
+public static class ExtractedStringLimits
+{
+    /// <summary>The strings with <see cref="ExtractedString.MaxBytes"/> set from the smallest matching limit (the others as they are).</summary>
+    public static IReadOnlyList<ExtractedString> WithLimits(this IReadOnlyList<ExtractedString> strings, IReadOnlyList<AiLocalPack.Core.Generation.StringLimit> limits)
+    {
+        ArgumentNullException.ThrowIfNull(strings);
+        ArgumentNullException.ThrowIfNull(limits);
+        if (limits.Count == 0)
+        {
+            return strings;
+        }
+
+        return [.. strings.Select(s => AiLocalPack.Core.Generation.StringLimit.For(limits, s.Key) is { } limit
+            ? s with { MaxBytes = limit.MaxBytes, MaxBytesReason = limit.Reason }
+            : s)];
+    }
 }
 
 /// <summary>Result of <see cref="IRecipeTool.Extract"/>.</summary>

@@ -57,6 +57,9 @@ public sealed class GenerationFiles
     /// </summary>
     public string BuildFailurePath => Path.Combine(Folder, "build-failure.json");
 
+    /// <summary>The limits the agent learned about the game (<see cref="StringLimitsFile"/>).</summary>
+    public string LimitsPath => StringLimitsFile.PathIn(Folder);
+
     /// <summary>An update job's base pack (task 56): <c>manifest.json</c>, <c>strings.json.gz</c>, <c>glossary.json</c> when it had one.</summary>
     public string BaseFolder => Path.Combine(Folder, "base");
 

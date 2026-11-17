@@ -46,6 +46,7 @@ public static class ToolkitMcpServer
         if (session.TestRuns is > 0)
         {
             Add(tools, new TestRunTools(session));
+            Add(tools, new LimitTools(session));
         }
 
         return tools;

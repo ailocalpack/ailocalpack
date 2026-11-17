@@ -495,7 +495,7 @@ public sealed class ToolkitTools(ToolkitSession session)
     }
 
     private static StringItem Item(ExtractedString s, string? translation) =>
-        new(s.Key, s.Original, translation, s.Context, s.MaxLength, s.Placeholders);
+        new(s.Key, s.Original, translation, s.Context, s.MaxLength, s.Placeholders, s.MaxBytes);
 
     private static IssueText Issue(StringIssue issue) => new(Severity(issue.Severity), issue.Rule, issue.Message);
 
@@ -722,7 +722,8 @@ public sealed record SnippetResult(string Path, long Size, string Kind, string C
 /// <param name="Translation">The stored translation, or <c>null</c>.</param>
 /// <param name="MaxLength">Length limit in characters, or <c>null</c> = none known.</param>
 /// <param name="Placeholders">Codes and tags to keep exactly as written.</param>
-public sealed record StringItem(string Key, string Original, string? Translation, string? Context, int? MaxLength, IReadOnlyList<string> Placeholders);
+/// <param name="MaxBytes">The most UTF-8 bytes the translation may take (a limit learned about the game), or <c>null</c>.</param>
+public sealed record StringItem(string Key, string Original, string? Translation, string? Context, int? MaxLength, IReadOnlyList<string> Placeholders, int? MaxBytes = null);
 
 /// <param name="TotalStrings">Strings the game has.</param>
 /// <param name="Translated">Translations stored.</param>

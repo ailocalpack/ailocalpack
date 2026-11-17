@@ -33,6 +33,8 @@ public sealed record StringIssue(StringIssueSeverity Severity, string Rule, stri
 /// Skipped when the original itself isn't balanced (a tag spanning several strings).</item>
 /// <item><c>too-long</c> (error): the drawn text (markup left out, line breaks not counted) is longer than the engine's
 /// limit, in <see cref="ExtractedString.MaxLengthUnit"/>.</item>
+/// <item><c>too-many-bytes</c> (error): the whole translation, markup included, takes more UTF-8 bytes than
+/// <see cref="ExtractedString.MaxBytes"/> (a limit the agent learned, e.g. a fixed-size buffer in the game).</item>
 /// <item><c>much-longer</c> (warning): no limit is known and the translation is more than half as long again as the
 /// original and at least 5 cells longer, in display width (<see cref="MuchLongerRatio"/>, <see cref="MuchLongerSlack"/>;
 /// the original's markup counts on both sides, since a placeholder stands for a name or number the game fills in, and
@@ -50,6 +52,7 @@ public static partial class StringValidator
     public const string PlaceholderOrder = "placeholder-order";
     public const string TagUnbalanced = "tag-unbalanced";
     public const string TooLong = "too-long";
+    public const string TooManyBytes = "too-many-bytes";
     public const string MuchLonger = "much-longer";
     public const string Untranslated = "untranslated";
     public const string Whitespace = "whitespace";
@@ -57,7 +60,7 @@ public static partial class StringValidator
 
     /// <summary>Every rule ID, in the order issues are reported.</summary>
     public static IReadOnlyList<string> Rules { get; } =
-        [Empty, PlaceholderMissing, PlaceholderExtra, PlaceholderOrder, TagUnbalanced, TooLong, MuchLonger, Untranslated, Whitespace, LineBreaks];
+        [Empty, PlaceholderMissing, PlaceholderExtra, PlaceholderOrder, TagUnbalanced, TooLong, TooManyBytes, MuchLonger, Untranslated, Whitespace, LineBreaks];
 
     /// <summary><c>much-longer</c> warns when the translation is wider than the original times this…</summary>
     public const double MuchLongerRatio = 1.5;
@@ -126,6 +129,14 @@ public static partial class StringValidator
             issues.Add(new StringIssue(StringIssueSeverity.Error, TooLong, source.MaxLengthUnit == LengthUnit.DisplayWidth
                 ? $"The translation is {length} cells wide (wide characters such as CJK and emoji count 2); the game allows at most {limit}."
                 : $"The translation has {length} characters; the game allows at most {limit}."));
+        }
+
+        if (source.MaxBytes is { } maxBytes && System.Text.Encoding.UTF8.GetByteCount(translation) is var bytes && bytes > maxBytes)
+        {
+            issues.Add(new StringIssue(StringIssueSeverity.Error, TooManyBytes,
+                $"The translation takes {bytes} bytes in UTF-8; the game holds at most {maxBytes} here"
+                + (source.MaxBytesReason is { Length: > 0 } reason ? $" ({reason.TrimEnd('.')})" : "")
+                + ". Shorten it: letters outside ASCII take two or three bytes each."));
         }
 
         if (source.MaxLength is null

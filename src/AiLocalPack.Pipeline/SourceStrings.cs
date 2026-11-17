@@ -134,7 +134,8 @@ public static class SourceStringsFile
             strings.Add(new ExtractedString(item.Key, item.Original, item.Context, item.MaxLength, item.Placeholders ?? []) { MaxLengthUnit = unit });
         }
 
-        return new SourceStrings(engine, json.Tool, version, json.Files ?? [], strings);
+        // The limits the agent learned about the game (limits.json) count wherever the strings are checked.
+        return new SourceStrings(engine, json.Tool, version, json.Files ?? [], strings.WithLimits(StringLimitsFile.Read(files.Folder)));
     }
 }
 

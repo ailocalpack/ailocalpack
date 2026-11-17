@@ -412,6 +412,20 @@ public sealed class BuildStageTests : IDisposable
     }
 
     [Fact]
+    public async Task A_translation_over_a_learned_byte_limit_stays_out_of_the_pack()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        StringLimitsFile.Put(_h.Folder, new StringLimit("data/Items.json:*", 4, "item names go into a 4-byte buffer"));
+
+        // Act
+        await RunAsync();
+
+        // Assert
+        _store.List().Single().Report.Untranslated.Should().Contain(s => s.Key.StartsWith("data/Items.json:", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task Nothing_translated_fails_the_stage()
     {
         // Arrange

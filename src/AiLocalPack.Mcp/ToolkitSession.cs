@@ -37,6 +37,20 @@ public sealed class ToolkitSession
     private readonly ToolkitServerOptions options;
     private EngineDetection? detection;
     private Extracted? extraction;
+    private DateTime? limitsStamp;
+
+    /// <summary>When <c>limits.json</c> was last written, or <c>null</c> without one.</summary>
+    private DateTime? LimitsStamp()
+    {
+        try
+        {
+            return File.Exists(Files.LimitsPath) ? File.GetLastWriteTimeUtc(Files.LimitsPath) : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
     private AgentScriptTool? agentTool;
 
     /// <exception cref="ArgumentException">The root is missing, or the job folder is the root or inside it.</exception>
@@ -121,7 +135,7 @@ public sealed class ToolkitSession
     /// <exception cref="McpException">No tool for the engine, or the game files can't be read.</exception>
     public Extracted Extract(bool refresh = false, CancellationToken cancellationToken = default)
     {
-        if (extraction is not null && !refresh)
+        if (extraction is not null && !refresh && LimitsStamp() == limitsStamp)
         {
             return extraction;
         }
@@ -136,7 +150,10 @@ public sealed class ToolkitSession
 
         try
         {
-            var result = tool.Extract(Game, cancellationToken);
+            var raw = tool.Extract(Game, cancellationToken);
+            // The limits the agent learned (limits.json) are checked on every string; read again when the file changes.
+            limitsStamp = LimitsStamp();
+            var result = raw with { Strings = raw.Strings.WithLimits(StringLimitsFile.Read(Files.Folder)) };
             return extraction = new Extracted(tool, kind, result, result.Strings.ToDictionary(s => s.Key, StringComparer.Ordinal));
         }
         catch (RecipeException e)

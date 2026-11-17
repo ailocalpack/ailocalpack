@@ -212,6 +212,46 @@ public sealed class StringValidatorTests
     }
 
     [Fact]
+    public void A_translation_that_fits_a_learned_byte_limit_passes()
+    {
+        // Arrange
+        var source = Source("rpgmaker", "Potion") with { MaxBytes = 10, MaxBytesReason = "names go into a 10-byte buffer" };
+
+        // Act
+        var issues = StringValidator.Validate(source, "Зелье", Markup("rpgmaker"));
+
+        // Assert
+        issues.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Cyrillic_counts_two_bytes_a_letter_against_a_byte_limit()
+    {
+        // Arrange
+        var source = Source("rpgmaker", "Potion") with { MaxBytes = 9, MaxBytesReason = "a 9-byte buffer" };
+
+        // Act
+        var issues = StringValidator.Validate(source, "Зелье", Markup("rpgmaker"));
+
+        // Assert
+        issues.Should().Equal(new StringIssue(StringIssueSeverity.Error, "too-many-bytes",
+            "The translation takes 10 bytes in UTF-8; the game holds at most 9 here (a 9-byte buffer). Shorten it: letters outside ASCII take two or three bytes each."));
+    }
+
+    [Fact]
+    public void A_learned_limit_applies_to_the_strings_its_pattern_matches()
+    {
+        // Arrange
+        IReadOnlyList<ExtractedString> strings = [new("lang/en.txt:1", "a", null, null, []), new("data/x.json:1", "b", null, null, [])];
+
+        // Act
+        var limited = strings.WithLimits([new AiLocalPack.Core.Generation.StringLimit("lang/en.txt:*", 64, "buffer")]);
+
+        // Assert
+        limited.Select(s => s.MaxBytes).Should().Equal(64, null);
+    }
+
+    [Fact]
     public void Display_width_limit_names_the_cells()
     {
         // Act
