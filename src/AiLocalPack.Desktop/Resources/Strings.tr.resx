@@ -2536,6 +2536,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>Yapay zekâ bir düzeltmeyi oyunda deniyor ({0}/{1}): oyun penceresi bir iki dakika açılacak, kapatmayın</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>Oyunu çökerten dosya aranıyor: hızlı çalıştırma {0}/{1}, oyun penceresi birkaç saniye açılacak</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Yazı tipleri: {0} içinde çevirinin bazı harfleri yok; yerine {1} (OFL) kullanılıyor.</value>
   </data>

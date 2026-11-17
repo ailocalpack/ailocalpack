@@ -34,6 +34,9 @@ public enum BuildStep
     /// <summary>Launching the translated copy for the test run.</summary>
     TestRun,
 
+    /// <summary>The translated game crashed in the test run: the app looks for the rebuilt file that crashes it with quick runs (<see cref="BuildProgress.RepairRuns"/> = the run's number).</summary>
+    Narrowing,
+
     /// <summary>The translated game crashed in the test run: the agent looks for the cause and fixes it (<see cref="BuildProgress.RepairRuns"/> game runs so far).</summary>
     Repairing,
 

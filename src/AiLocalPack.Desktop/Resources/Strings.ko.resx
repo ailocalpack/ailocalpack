@@ -2458,6 +2458,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>AI가 게임에서 수정 사항을 확인하고 있습니다({0}/{1}). 게임 창이 1~2분 열리니 닫지 마세요</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>게임을 비정상 종료시키는 파일을 찾고 있습니다: 빠른 실행 {0}/{1}, 게임 창이 몇 초 동안 열립니다</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>글꼴: {0}에 번역에 필요한 글자가 없어 대신 {1}(OFL)을(를) 사용합니다.</value>
   </data>

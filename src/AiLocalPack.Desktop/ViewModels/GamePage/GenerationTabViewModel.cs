@@ -879,9 +879,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     public bool ShowBuild => Job?.Stage == GenerationStage.Build;
 
     /// <summary>"Rebuilding the game files", "Launching the test build", the agent repairing a crash…</summary>
-    public string BuildStepText => _details.Progress.Build is { Step: BuildStep.Repairing, RepairRuns: > 0 and var run }
-        ? _localizer.Format(nameof(Strings.Gen_Build_RepairRun), run, BuildRepair.MaxTestRuns)
-        : _localizer[(_details.Progress.Build?.Step ?? BuildStep.Checking) switch
+    public string BuildStepText => _details.Progress.Build switch
+    {
+        { Step: BuildStep.Repairing, RepairRuns: > 0 and var run } => _localizer.Format(nameof(Strings.Gen_Build_RepairRun), run, BuildRepair.MaxTestRuns),
+        { Step: BuildStep.Narrowing } narrowing => _localizer.Format(nameof(Strings.Gen_Build_Narrowing), Math.Max(1, narrowing.RepairRuns), TestRunBisect.DefaultMaxRuns),
+        _ => _localizer[(_details.Progress.Build?.Step ?? BuildStep.Checking) switch
         {
             BuildStep.Rebuilding => nameof(Strings.Gen_Build_Rebuilding),
             BuildStep.Fonts => nameof(Strings.Gen_Build_Fonts),
@@ -889,7 +891,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             BuildStep.Repairing => nameof(Strings.Gen_Build_Repairing),
             BuildStep.Packing => nameof(Strings.Gen_Build_Packing),
             _ => nameof(Strings.Gen_Build_Checking),
-        }];
+        }],
+    };
 
     /// <summary>"Fonts: “Orbitron” lack letters of the translation; Noto Sans (OFL) is used instead."</summary>
     public string BuildFontNote => _details.Progress.Build is { SwappedFonts: { Count: > 0 } fonts, Replacement: { } replacement }

@@ -61,13 +61,13 @@ public sealed class FixTestRunsTests : IDisposable
     /// What the agent does: asks for a test run as the toolkit server would, runs its rebuild when told to, asks again,
     /// and keeps every answer.
     /// </summary>
-    private static ScriptedAgent Testing(List<TestRunAnswer> answers) => new(async (run, _, token) =>
+    private static ScriptedAgent Testing(List<TestRunAnswer> answers, Func<int, TestRunAsk>? ask = null) => new(async (run, _, token) =>
     {
         var mailbox = new TestRunMailbox(run.Files.Folder);
         for (var attempt = 0; attempt < 2; attempt++)
         {
             var number = mailbox.NextNumber();
-            mailbox.Ask(new TestRunAsk(number, 60));
+            mailbox.Ask(ask?.Invoke(number) ?? new TestRunAsk(number, 60));
             TestRunAnswer? answer;
             while ((answer = mailbox.Answer(number)) is null)
             {
@@ -133,7 +133,7 @@ public sealed class FixTestRunsTests : IDisposable
         await runner.SendAsync(Entry, new FixRequest("The game crashes.", []), progress, TestContext.Current.CancellationToken);
 
         // Assert
-        progress.Reports.SelectMany(p => p.Steps).Should().Contain(FixSteps.TestRun(1, FixTestRuns.MaxRuns)).And.NotContain(FixSteps.TestRunTool);
+        progress.Reports.SelectMany(p => p.Steps).Should().Contain(FixSteps.TestRun(1, FixTestRuns.MaxRuns + FixTestRuns.MaxQuickRuns)).And.NotContain(FixSteps.TestRunTool);
     }
 
     [Fact]
@@ -152,6 +152,85 @@ public sealed class FixTestRunsTests : IDisposable
             Build = Directory.Exists(Path.Combine(_h.Folder, "test-build")),
             Shots = Directory.Exists(Path.Combine(_h.Files.AgentFolder, FixTestRuns.FolderName)),
         }.Should().Be(new { Mailbox = false, Build = false, Shots = false });
+    }
+
+    [Fact]
+    public async Task A_quick_run_counts_against_the_quick_runs_only()
+    {
+        // Arrange
+        var answers = new List<TestRunAnswer>();
+        var testRunner = new FakeTestRunner(new TestRunResult(TestRunOutcome.Passed, Ran: TimeSpan.FromSeconds(20)));
+        var runner = Runner(Testing(answers, n => new TestRunAsk(n, null, Quick: true)), testRunner);
+
+        // Act
+        await runner.SendAsync(Entry, new FixRequest("The game crashes.", []), null, TestContext.Current.CancellationToken);
+
+        // Assert
+        new { Last = (answers[^1].RunsLeft, answers[^1].QuickRunsLeft), Quick = testRunner.Requests.Single().Quick }
+            .Should().Be(new { Last = (FixTestRuns.MaxRuns, (int?)(FixTestRuns.MaxQuickRuns - 1)), Quick = true });
+    }
+
+    [Fact]
+    public async Task Only_the_files_the_agent_names_are_laid_over_the_game()
+    {
+        // Arrange
+        File.WriteAllText(Path.Combine(_h.Copy, "data", "more.txt"), "Bye");
+        var testRunner = new FakeTestRunner(new TestRunResult(TestRunOutcome.Passed, Ran: TimeSpan.FromSeconds(20)));
+        var agent = new ScriptedAgent(async (run, _, token) =>
+        {
+            var mailbox = new TestRunMailbox(run.Files.Folder);
+            var output = Path.Combine(run.Request!.WorkingDirectory, "out", "data");
+            Directory.CreateDirectory(output);
+            await File.WriteAllTextAsync(Path.Combine(output, "text.txt"), "Привет", token);
+            await File.WriteAllTextAsync(Path.Combine(output, "more.txt"), "Пока", token);
+            for (var attempt = 0; attempt < 2; attempt++)
+            {
+                var number = mailbox.NextNumber();
+                mailbox.Ask(new TestRunAsk(number, null, Quick: true, Files: ["data/more.txt"]));
+                while (mailbox.Answer(number) is null)
+                {
+                    await Task.Delay(20, token);
+                }
+            }
+
+            return [new AgentDone(AgentOutcome.Succeeded, "Checked.")];
+        });
+        var runner = Runner(agent, testRunner);
+
+        // Act
+        await runner.SendAsync(Entry, new FixRequest("The game crashes.", []), null, TestContext.Current.CancellationToken);
+
+        // Assert
+        testRunner.Requests.Select(r => string.Join(",", r.BuildFiles)).Should().NotBeEmpty().And.AllBe("data/more.txt");
+    }
+
+    [Fact]
+    public async Task A_file_that_wasnt_rebuilt_is_refused_without_running_the_game()
+    {
+        // Arrange
+        var answers = new List<TestRunAnswer>();
+        var testRunner = new FakeTestRunner(new TestRunResult(TestRunOutcome.Passed, Ran: TimeSpan.FromSeconds(20)));
+        var runner = Runner(Testing(answers, n => new TestRunAsk(n, null, Files: ["data/missing.txt"])), testRunner);
+
+        // Act
+        await runner.SendAsync(Entry, new FixRequest("The game crashes.", []), null, TestContext.Current.CancellationToken);
+
+        // Assert
+        new { answers[^1].Outcome, Runs = testRunner.Requests.Count }.Should().Be(new { Outcome = "failed", Runs = 0 });
+    }
+
+    [Fact]
+    public async Task Untranslated_keys_are_refused_for_a_game_read_by_the_agents_scripts()
+    {
+        // Arrange
+        var answers = new List<TestRunAnswer>();
+        var runner = Runner(Testing(answers, n => new TestRunAsk(n, null, Untranslated: ["t1"])), new FakeTestRunner(new TestRunResult(TestRunOutcome.Passed, Ran: TimeSpan.FromSeconds(20))));
+
+        // Act
+        await runner.SendAsync(Entry, new FixRequest("The game crashes.", []), null, TestContext.Current.CancellationToken);
+
+        // Assert
+        answers.Should().AllSatisfy(a => a.Outcome.Should().Be("failed"));
     }
 
     [Fact]

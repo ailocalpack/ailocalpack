@@ -27,8 +27,11 @@ internal sealed class FixTestRuns(
     string workingFolder,
     Action<int, int> onRun)
 {
-    /// <summary>Game runs a fix may make.</summary>
+    /// <summary>Full game runs a fix may make.</summary>
     public const int MaxRuns = 5;
+
+    /// <summary>Quick runs (<see cref="TestRunRequest.Quick"/>) a fix may make besides.</summary>
+    public const int MaxQuickRuns = 15;
 
     /// <summary>The screenshots' folder in the agent's working folder; removed when the fix run ends.</summary>
     public const string FolderName = ".test-runs";
@@ -37,6 +40,11 @@ internal sealed class FixTestRuns(
     private static readonly TimeSpan Poll = TimeSpan.FromMilliseconds(400);
 
     private int _runs;
+    private int _quickRuns;
+
+    private int RunsLeft => MaxRuns - _runs;
+
+    private int QuickLeft => MaxQuickRuns - _quickRuns;
 
     private TestRunMailbox Mailbox => new(context.Folder);
 
@@ -60,7 +68,7 @@ internal sealed class FixTestRuns(
                 }
                 catch (Exception e) when (e is IOException or UnauthorizedAccessException or RecipeException)
                 {
-                    answer = new TestRunAnswer("failed", $"The app couldn't build or start the game: {e.Message}", MaxRuns - _runs);
+                    answer = Answer("failed", $"The app couldn't build or start the game: {e.Message}");
                 }
 
                 try
@@ -101,35 +109,70 @@ internal sealed class FixTestRuns(
         }
     }
 
+    private TestRunAnswer Answer(string outcome, string message) => new(outcome, message, RunsLeft, QuickRunsLeft: QuickLeft);
+
     private async Task<TestRunAnswer> AnswerAsync(TestRunAsk ask, CancellationToken cancellationToken)
     {
-        if (_runs >= MaxRuns)
+        if (ask.Quick ? _quickRuns >= MaxQuickRuns : _runs >= MaxRuns)
         {
-            return new TestRunAnswer("refused", $"This fix has used all its {MaxRuns} test runs; tell the player what you found and what to try in game.", 0);
+            return Answer("refused", ask.Quick
+                ? $"All {MaxQuickRuns} quick runs are used; a full run is still possible while runsLeft > 0."
+                : $"All {MaxRuns} full test runs are used; say what you found and what to try in game.");
         }
 
-        var prepared = await PrepareAsync(cancellationToken).ConfigureAwait(false);
+        if (ask.Untranslated is { Count: > 0 } && source.Tool == AgentScriptTool.ToolId)
+        {
+            return Answer("failed", "`untranslated` works only for a game the toolkit reads; with your own scripts, empty the translations to try (and put them back), or lay only some files with `files`. This call didn't count.");
+        }
+
+        var prepared = await PrepareAsync(ask.Untranslated, cancellationToken).ConfigureAwait(false);
         if (prepared.Answer is { } early)
         {
             return early;
         }
 
-        _runs++;
-        onRun(_runs, MaxRuns);
-        var shots = Path.Combine(workingFolder, FolderName, $"run-{_runs}");
+        var laid = prepared.Files;
+        if (ask.Files is { Count: > 0 } wanted)
+        {
+            var asked = wanted.Select(f => f.Replace('\\', '/')).Distinct(StringComparer.Ordinal).ToList();
+            var known = laid.ToHashSet(StringComparer.Ordinal);
+            var unknown = asked.Where(f => !known.Contains(f)).ToList();
+            if (unknown.Count > 0)
+            {
+                return Answer("failed", $"Not among the rebuilt files: {string.Join(", ", unknown.Take(10))}. The rebuilt files: {string.Join(", ", laid.Take(40))}{(laid.Count > 40 ? ", …" : "")}. This call didn't count.") with { Laid = laid };
+            }
+
+            laid = [.. asked.Order(StringComparer.Ordinal)];
+        }
+
+        if (ask.Quick)
+        {
+            _quickRuns++;
+        }
+        else
+        {
+            _runs++;
+        }
+
+        onRun(_runs + _quickRuns, MaxRuns + MaxQuickRuns);
+        var shots = Path.Combine(workingFolder, FolderName, $"run-{_runs + _quickRuns}");
         var started = DateTimeOffset.UtcNow;
-        context.Log($"Fix: test run {_runs} of {MaxRuns} for the agent" + (ask.Seconds is { } s ? $" (at least {s} s)" : "") + ".");
+        context.Log($"Fix: {(ask.Quick ? $"quick run {_quickRuns} of {MaxQuickRuns}" : $"test run {_runs} of {MaxRuns}")} for the agent"
+            + (ask.Seconds is { } s ? $" (at least {s} s)" : "")
+            + (ask.Files is { Count: > 0 } ? $", {laid.Count} of {prepared.Files.Count} files" : "")
+            + (ask.Untranslated is { Count: > 0 } u ? $", {u.Count} keys untranslated" : "") + ".");
         var result = await services.TestRunner.RunAsync(
-            new TestRunRequest(game, context.GameFolder, BuildFolder, prepared.Files, context.Folder, context.Log)
+            new TestRunRequest(game, context.GameFolder, BuildFolder, laid, context.Folder, context.Log)
             {
                 AtLeast = ask.Seconds is { } seconds ? TimeSpan.FromSeconds(seconds) : null,
                 ShotsFolder = shots,
+                Quick = ask.Quick,
             },
             cancellationToken).ConfigureAwait(false);
-        return Answer(result, shots, started);
+        return Answer(result, shots, started) with { Laid = laid };
     }
 
-    private async Task<(IReadOnlyList<string> Files, TestRunAnswer? Answer)> PrepareAsync(CancellationToken cancellationToken)
+    private async Task<(IReadOnlyList<string> Files, TestRunAnswer? Answer)> PrepareAsync(IReadOnlyList<string>? untranslated, CancellationToken cancellationToken)
     {
         var stored = context.Files.ReadStrings();
         PatchBuild.DeleteFolder(BuildFolder);
@@ -138,21 +181,20 @@ internal sealed class FixTestRuns(
             var collected = LocalPackBuilder.Collect(source, stored, SourceMarkup.Of(RecipeTools.Builtin, source));
             if (collected.Translations.Count == 0)
             {
-                return ([], new TestRunAnswer("failed", "No string has an accepted translation yet.", MaxRuns - _runs));
+                return ([], Answer("failed", "No string has an accepted translation yet."));
             }
 
             var files = context.Files;
             if (PatchBuild.WriteTranslations(files, context.Job.Language, collected) || !Directory.Exists(files.AgentOutputFolder))
             {
-                return ([], new TestRunAnswer(
+                return ([], Answer(
                     "rebuildFirst",
-                    "translations.json in your workspace now holds the stored translations; run your rebuild script (it writes out/), then call test_run again. This call didn't count.",
-                    MaxRuns - _runs));
+                    "translations.json in your workspace now holds the stored translations; run your rebuild script (it writes out/), then call test_run again. This call didn't count."));
             }
 
             if (PatchBuild.Changed(files.AgentOutputFolder, context.GameFolder, out var problem) is not { } changed)
             {
-                return ([], new TestRunAnswer("failed", problem!, MaxRuns - _runs));
+                return ([], Answer("failed", problem!));
             }
 
             foreach (var file in changed)
@@ -167,13 +209,16 @@ internal sealed class FixTestRuns(
 
         if (tools.Find(source.Tool) is not { } tool)
         {
-            return ([], new TestRunAnswer("failed", $"The toolkit has no '{source.Tool}' tool any more.", MaxRuns - _runs));
+            return ([], Answer("failed", $"The toolkit has no '{source.Tool}' tool any more."));
         }
 
-        var accepted = LocalPackBuilder.Collect(source, stored, tool.Markup);
+        var all = LocalPackBuilder.Collect(source, stored, tool.Markup);
+        var accepted = untranslated is { Count: > 0 } left
+            ? all with { Translations = all.Translations.Where(t => !left.Contains(t.Key, StringComparer.Ordinal)).ToDictionary(StringComparer.Ordinal) }
+            : all;
         if (accepted.Translations.Count == 0)
         {
-            return ([], new TestRunAnswer("failed", "No string has an accepted translation yet.", MaxRuns - _runs));
+            return ([], Answer("failed", "No string has an accepted translation yet."));
         }
 
         var output = new DirectoryRebuildOutput(BuildFolder);
@@ -182,7 +227,7 @@ internal sealed class FixTestRuns(
         var fonts = await services.Fonts.ApplyAsync(tool, original, context.Job.Language, accepted.Translations, context.Files.ReadReferences().FontsFor(context.Job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (fonts.Failure is { } failure)
         {
-            return ([], new TestRunAnswer("failed", $"The font the translation needs couldn't be downloaded ({failure.Problem}).", MaxRuns - _runs));
+            return ([], Answer("failed", $"The font the translation needs couldn't be downloaded ({failure.Problem})."));
         }
 
         return ([.. rebuilt.ChangedFiles.Union(fonts.Files.Files, StringComparer.Ordinal).Order(StringComparer.Ordinal)], null);
@@ -224,6 +269,8 @@ internal sealed class FixTestRuns(
         };
         var message = result.Outcome switch
         {
+            TestRunOutcome.Passed when result.Detail?.StartsWith("quick run", StringComparison.Ordinal) == true => $"Quick run: the translated game got past loading and kept running for {Round(result.Ran)} s"
+                + (result.Ready is null ? " (it never read as loaded: look at the last screenshot)." : "."),
             TestRunOutcome.Passed => $"The translated game kept running for {Round(result.Watch ?? result.Ran)} s"
                 + (result.Ready is null ? " but never read as loaded (no picture, or still reading from disk): look at the last screenshot." : ". Look at the screenshots to check the translation shows."),
             TestRunOutcome.Crashed => $"The translated game closed after {Round(result.Ran)} s while the untranslated one kept running: {result.Detail}",
@@ -232,7 +279,7 @@ internal sealed class FixTestRuns(
         return new TestRunAnswer(
             outcome,
             message,
-            MaxRuns - _runs,
+            RunsLeft,
             result.Ran is { } ran ? Round(ran) : null,
             result.Ready is { } ready ? Round(ready) : null,
             result.Watch is { } watch ? Round(watch) : null,
@@ -240,7 +287,8 @@ internal sealed class FixTestRuns(
             pictures,
             log?.Path,
             log is null ? null : [.. log.Lines.TakeLast(LogLines)],
-            result.CrashReport);
+            result.CrashReport,
+            QuickLeft);
     }
 
     private static double Round(TimeSpan? time) => Math.Round((time ?? TimeSpan.Zero).TotalSeconds, 1);

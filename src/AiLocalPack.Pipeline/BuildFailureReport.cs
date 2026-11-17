@@ -125,6 +125,23 @@ public static class BuildFailureReport
         return files.Count > max ? text + $"\n- and {files.Count - max} more files" : text;
     }
 
+    /// <summary>The report's rebuilt files (relative, '/'-separated); empty when it can't be read.</summary>
+    public static IReadOnlyList<string> Files(GenerationFiles job)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        try
+        {
+            return System.IO.File.Exists(job.BuildFailurePath)
+                && JsonSerializer.Deserialize(System.IO.File.ReadAllBytes(job.BuildFailurePath), BuildFailureJsonContext.Default.BuildFailureJson) is { Files: { } files }
+                ? [.. files.Select(f => f.Path)]
+                : [];
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return [];
+        }
+    }
+
     /// <summary>Deletes the report (the stage starts again); best effort.</summary>
     public static void Delete(GenerationFiles job)
     {

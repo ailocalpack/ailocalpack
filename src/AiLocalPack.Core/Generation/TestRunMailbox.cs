@@ -7,12 +7,17 @@ namespace AiLocalPack.Core.Generation;
 /// <summary>The agent's <c>test_run</c> call as the toolkit server hands it to the app.</summary>
 /// <param name="Number">The call's number in this fix run (1, 2, …).</param>
 /// <param name="Seconds">Keep the translated game running at least this long (the agent asked), or <c>null</c>.</param>
-public sealed record TestRunAsk(int Number, int? Seconds);
+/// <param name="Quick">One short launch that only shows whether the game gets past loading (a separate, larger budget).</param>
+/// <param name="Files">Lay only these rebuilt files over the game (the rest stay original); <c>null</c> = all.</param>
+/// <param name="Untranslated">Leave these keys untranslated for this run only (the stored translations don't change); <c>null</c> = none.</param>
+public sealed record TestRunAsk(int Number, int? Seconds, bool Quick = false, IReadOnlyList<string>? Files = null, IReadOnlyList<string>? Untranslated = null);
 
 /// <summary>What the agent gets back from <c>test_run</c> (camelCase JSON, nulls left out).</summary>
 /// <param name="Outcome"><c>passed</c>, <c>crashed</c>, <c>skipped</c>, <c>rebuildFirst</c> (an unknown engine: run your rebuild script, then call again; not counted), <c>refused</c> (no runs left) or <c>failed</c> (the app couldn't build or start it).</param>
 /// <param name="Message">What happened, in plain English.</param>
-/// <param name="RunsLeft">How many test runs this fix may still make.</param>
+/// <param name="RunsLeft">How many full test runs this run may still make.</param>
+/// <param name="QuickRunsLeft">How many quick runs it may still make.</param>
+/// <param name="Laid">The rebuilt files laid over the game for this run.</param>
 public sealed record TestRunAnswer(
     string Outcome,
     string Message,
@@ -24,7 +29,9 @@ public sealed record TestRunAnswer(
     TestRunPictures? Screenshots = null,
     string? GameLogFile = null,
     IReadOnlyList<string>? GameLog = null,
-    string? CrashReport = null);
+    string? CrashReport = null,
+    int? QuickRunsLeft = null,
+    IReadOnlyList<string>? Laid = null);
 
 /// <summary>Screenshot files the agent can read: the original once loaded, the translation once loaded, the translation's last picture.</summary>
 public sealed record TestRunPictures(string? Original, string? Translated, string? Last);

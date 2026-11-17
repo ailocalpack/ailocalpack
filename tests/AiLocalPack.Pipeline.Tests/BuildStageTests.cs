@@ -292,7 +292,7 @@ public sealed class BuildStageTests : IDisposable
         var result = await RepairAsync(Repairing(change: true), runner);
 
         // Assert
-        new { Done = result is GenerationStepResult.StageDone, Runs = runner.Requests.Count }.Should().Be(new { Done = true, Runs = 2 });
+        new { Done = result is GenerationStepResult.StageDone, Runs = runner.FullRuns }.Should().Be(new { Done = true, Runs = 2 });
     }
 
     [Fact]
@@ -341,7 +341,7 @@ public sealed class BuildStageTests : IDisposable
         var result = await RepairAsync(Repairing(change: false, "The game reads a file I can't change."), runner);
 
         // Assert
-        new { Message = ((GenerationStepResult.Failed)result).Message.Contains("found no fix: The game reads a file I can't change.", StringComparison.Ordinal), Runs = runner.Requests.Count }
+        new { Message = ((GenerationStepResult.Failed)result).Message.Contains("found no fix: The game reads a file I can't change.", StringComparison.Ordinal), Runs = runner.FullRuns }
             .Should().Be(new { Message = true, Runs = 1 });
     }
 
@@ -375,6 +375,24 @@ public sealed class BuildStageTests : IDisposable
             Reply = attempts.Contains("Shortened a name.", StringComparison.Ordinal),
             Outcome = attempts.Contains("Test run after it: crashed again.", StringComparison.Ordinal),
         }.Should().Be(new { Attempt = true, Reply = true, Outcome = true });
+    }
+
+    [Fact]
+    public async Task The_app_narrows_the_crash_down_to_a_file_before_the_agent_repairs_it()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var agent = Repairing(change: false);
+        var runner = new FakeTestRunner(Crash)
+        {
+            QuickResult = r => r.BuildFiles.Contains("data/Items.json") ? Crash : TestRunResult.Passed(TimeSpan.FromSeconds(10)),
+        };
+
+        // Act
+        await RepairAsync(agent, runner);
+
+        // Assert
+        agent.Runs.Single().Prompt.Should().Contain("The game crashes with only `data/Items.json` laid over it");
     }
 
     [Fact]
@@ -474,14 +492,21 @@ public sealed class BuildStageTests : IDisposable
     }
 }
 
-/// <summary>Returns the results in order (the last one for every run after) and records the requests.</summary>
+/// <summary>
+/// Returns the results in order to full runs (the last one for every run after) and <see cref="QuickResult"/> to quick
+/// ones (skipped by default, which stops narrowing a crash down), and records the requests.
+/// </summary>
 internal sealed class FakeTestRunner(params TestRunResult[] results) : IGameTestRunner
 {
     public List<TestRunRequest> Requests { get; } = [];
 
+    public Func<TestRunRequest, TestRunResult> QuickResult { get; init; } = _ => TestRunResult.Skipped(TestRunSkip.TurnedOff, "no quick runs here");
+
+    public int FullRuns => Requests.Count(r => !r.Quick);
+
     public Task<TestRunResult> RunAsync(TestRunRequest request, CancellationToken cancellationToken)
     {
         Requests.Add(request);
-        return Task.FromResult(results[Math.Min(Requests.Count, results.Length) - 1]);
+        return Task.FromResult(request.Quick ? QuickResult(request) : results[Math.Min(FullRuns, results.Length) - 1]);
     }
 }

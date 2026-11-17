@@ -47,6 +47,16 @@ public sealed record TestRunOptions(bool Enabled = true)
     /// <summary>How often the translated game's last picture is taken while it runs.</summary>
     public TimeSpan ShotEvery { get; init; } = TimeSpan.FromSeconds(5);
 
+    /// <summary>A quick run watches the original's loading time and this much more (never past the full watch).</summary>
+    public TimeSpan QuickMargin { get; init; } = TimeSpan.FromSeconds(10);
+
+    /// <summary>A quick run passes this long after the translated game reads as loaded.</summary>
+    public TimeSpan QuickSettle { get; init; } = TimeSpan.FromSeconds(3);
+
+    /// <summary>The watch of a quick run of a game whose full watch is <paramref name="watch"/> and that loads in <paramref name="ready"/>.</summary>
+    public TimeSpan QuickWatch(TimeSpan? ready, TimeSpan watch) =>
+        ready is { } r && r + QuickMargin < watch ? r + QuickMargin : watch;
+
     /// <summary>The default: 30 s – 3 min by the original's loading time.</summary>
     public static TestRunOptions Default { get; } = new();
 
@@ -77,6 +87,14 @@ public sealed record TestRunRequest(Game Game, string GameFolder, string BuildFo
 
     /// <summary>Told when a run starts: the untranslated game (<c>false</c>) or the translation (<c>true</c>), and how long it is watched at most.</summary>
     public Action<bool, TimeSpan>? Starting { get; init; }
+
+    /// <summary>
+    /// A quick run (to narrow a crash down, decided 2026-11-17): one launch of the translation, watched until it has
+    /// loaded (and <see cref="TestRunOptions.QuickSettle"/> more) or for the original's loading time and
+    /// <see cref="TestRunOptions.QuickMargin"/> (<see cref="TestRunOptions.QuickWatch"/>), no second launch; passing says
+    /// only that it gets past loading.
+    /// </summary>
+    public bool Quick { get; init; }
 }
 
 /// <summary>Tries the translated game (task 51, reworked); behind an interface so stages are tested without games.</summary>
@@ -251,8 +269,11 @@ public sealed class GameTestRunner(
                     baseline.ExitCode);
             }
 
-            var limit = request.AtLeast is { } atLeast && atLeast > baseline.Watch ? (atLeast > _options.MaxWatch ? _options.MaxWatch : atLeast) : baseline.Watch;
-            request.Log($"Test run: {launch} with the translation for {Seconds(limit)}.");
+            var full = request.AtLeast is { } atLeast && atLeast > baseline.Watch ? (atLeast > _options.MaxWatch ? _options.MaxWatch : atLeast) : baseline.Watch;
+            var limit = request.Quick
+                ? (request.AtLeast is { } quickAtLeast && quickAtLeast > _options.QuickWatch(baseline.Ready, baseline.Watch) ? full : _options.QuickWatch(baseline.Ready, baseline.Watch))
+                : full;
+            request.Log($"Test run: {launch} with the translation for {Seconds(limit)}" + (request.Quick ? " (quick)." : "."));
             request.Starting?.Invoke(true, limit);
             var started = _time.GetUtcNow();
             trial.Lay(request.BuildFolder, request.BuildFiles, added);
@@ -261,8 +282,9 @@ public sealed class GameTestRunner(
             try
             {
                 await WriteAddedAsync(request, added, cancellationToken).ConfigureAwait(false);
-                translated = await WatchAsync(spec, "translated", log, limit, Path.Combine(shots, "translated.png"), Path.Combine(shots, "last.png"), cancellationToken).ConfigureAwait(false);
-                if (translated.StillRunning)
+                translated = await WatchAsync(spec, request.Quick ? "translated, quick" : "translated", log, limit, Path.Combine(shots, "translated.png"), Path.Combine(shots, "last.png"), cancellationToken,
+                    settle: request.Quick ? _options.QuickSettle : null).ConfigureAwait(false);
+                if (translated.StillRunning && !request.Quick)
                 {
                     // A game may write a cache from the translated files on its first launch (Barony compiles its books)
                     // that only breaks the launches after it: start it once more on what the first launch left.
@@ -301,7 +323,9 @@ public sealed class GameTestRunner(
                 var firstLoaded = first?.Ready is { } firstReady ? $"loaded after {Seconds(firstReady)}" : loaded;
                 return new TestRunResult(
                     TestRunOutcome.Passed,
-                    Detail: first is null
+                    Detail: request.Quick
+                        ? $"quick run: still running after {Seconds(translated.Ran)} ({loaded}; {originalLoads})"
+                        : first is null
                         ? $"still running after {Seconds(translated.Ran)} ({loaded}; {originalLoads})"
                         : $"still running after {Seconds(first.Ran)}, and again after {Seconds(translated.Ran)} on a second launch ({firstLoaded}; {originalLoads})",
                     Ran: translated.Ran,
@@ -423,7 +447,8 @@ public sealed class GameTestRunner(
     /// Runs the program and looks at it every <see cref="TestRunOptions.Sample"/> until it closes or the watch ends
     /// (<paramref name="limit"/>; <c>null</c> = the watch its own loading time gives, <see cref="TestRunOptions.WatchFor"/>).
     /// </summary>
-    private async Task<Watch> WatchAsync(ProcessSpec spec, string label, StreamWriter log, TimeSpan? limit, string? readyShot, string? lastShot, CancellationToken cancellationToken)
+    /// <param name="settle">Stop this long after the game reads as loaded (a quick run), else <c>null</c>.</param>
+    private async Task<Watch> WatchAsync(ProcessSpec spec, string label, StreamWriter log, TimeSpan? limit, string? readyShot, string? lastShot, CancellationToken cancellationToken, TimeSpan? settle = null)
     {
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var clock = Stopwatch.StartNew();
@@ -474,7 +499,7 @@ public sealed class GameTestRunner(
                 }
             }
 
-            if (now >= (limit ?? (ready is { } r ? _options.WatchFor(r) : _options.MaxWatch)))
+            if (now >= (limit ?? (ready is { } r ? _options.WatchFor(r) : _options.MaxWatch)) || (settle is { } calm && ready is { } loadedAt && now >= loadedAt + calm))
             {
                 if (_probe.CanCapture && _probe.Capture(process.Id) is { HasContent: true } final)
                 {

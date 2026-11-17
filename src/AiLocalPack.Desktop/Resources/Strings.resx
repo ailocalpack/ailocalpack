@@ -2564,6 +2564,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>The AI is checking a fix in the game ({0} of {1}): its window opens for a minute or two, don't close it</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>Looking for the file that crashes the game: quick run {0} of {1}, its window opens for a few seconds</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Fonts: {0} lack letters of the translation; {1} (OFL) is used instead.</value>
   </data>

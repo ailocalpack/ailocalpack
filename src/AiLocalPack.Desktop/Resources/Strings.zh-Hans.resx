@@ -2458,6 +2458,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>AI 正在游戏中检查修复（第 {0} 次，共 {1} 次）：游戏窗口会打开一两分钟，请不要关闭</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>正在查找导致游戏崩溃的文件：快速运行第 {0} 次，共 {1} 次，游戏窗口会打开几秒钟</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>字体：{0} 缺少翻译所需的字符；改用 {1}（OFL）。</value>
   </data>

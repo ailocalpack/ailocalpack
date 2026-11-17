@@ -2536,6 +2536,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>Die KI prüft eine Korrektur im Spiel ({0} von {1}): Das Spielfenster öffnet sich für ein, zwei Minuten, bitte nicht schließen</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>Suche nach der Datei, die das Spiel abstürzen lässt: Schnelllauf {0} von {1}, das Fenster öffnet sich für ein paar Sekunden</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Schriften: {0} fehlen Buchstaben der Übersetzung; stattdessen wird {1} (OFL) genutzt.</value>
   </data>

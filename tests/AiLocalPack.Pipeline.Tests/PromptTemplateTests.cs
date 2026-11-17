@@ -329,7 +329,9 @@ public sealed class PromptTemplateTests
             BuildRepair.ReportCopy,
             BuildRepair.LogCopy,
             BuildRepair.AttemptsText("/no/such/job"),
-            BuildRepair.MaxTestRuns,
+            "The game crashes with only `lang/en.txt` laid over it, and gets past loading without it.\nQuick runs:\n- 43 files (`books/A.txt`, `books/B.txt`, `books/C.txt`, …): got past loading\n- `lang/en.txt` alone: crashed after 6.4 s",
+            BuildRepair.MaxFullRuns,
+            BuildRepair.MaxQuickRuns,
             scripts: true);
 
         // Act
@@ -340,16 +342,17 @@ public sealed class PromptTemplateTests
     }
 
     [Fact]
-    public void The_repair_prompt_for_a_toolkit_engine_offers_the_glossary_instead_of_scripts()
+    public void The_repair_prompt_for_a_toolkit_engine_offers_the_glossary_and_untranslated_keys()
     {
         // Arrange
-        var values = PromptValues.RepairBuild("Sample Quest", new EngineKind(GameEngine.RpgMaker, "mz"), 64, "Test run failed.", "(none)", "build-failure.json", "test-run.log", "This is the first attempt to fix this crash.", 5, scripts: false);
+        var values = PromptValues.RepairBuild("Sample Quest", new EngineKind(GameEngine.RpgMaker, "mz"), 64, "Test run failed.", "(none)", "build-failure.json", "test-run.log", "This is the first attempt to fix this crash.", "The app didn't narrow the crash down to a file.", 5, 15, scripts: false);
 
         // Act
         var prompt = PromptTemplate.RepairBuild.Render(values);
 
         // Assert
-        prompt.Should().Contain("or the glossary (`put_glossary`)");
+        new { Glossary = prompt.Contains("or the glossary (`put_glossary`)", StringComparison.Ordinal), Untranslated = prompt.Contains("one with `untranslated`", StringComparison.Ordinal) }
+            .Should().Be(new { Glossary = true, Untranslated = true });
     }
 
     [Fact]

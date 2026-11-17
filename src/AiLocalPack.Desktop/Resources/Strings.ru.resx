@@ -2614,6 +2614,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>ИИ проверяет исправление в игре ({0} из {1}): окно игры откроется на минуту-две, не закрывайте его</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>Ищем файл, из-за которого игра вылетает: быстрый запуск {0} из {1}, окно игры откроется на несколько секунд</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Шрифты: в {0} нет букв перевода, вместо них используется {1} (OFL).</value>
   </data>

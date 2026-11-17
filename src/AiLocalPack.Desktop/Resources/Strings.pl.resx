@@ -2614,6 +2614,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>AI sprawdza poprawkę w grze ({0} z {1}): okno gry otworzy się na minutę lub dwie, nie zamykaj go</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>Szukamy pliku, przez który gra się zawiesza: szybkie uruchomienie {0} z {1}, okno gry otworzy się na kilka sekund</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Czcionki: {0} nie mają liter tłumaczenia; zamiast nich używana jest {1} (OFL).</value>
   </data>

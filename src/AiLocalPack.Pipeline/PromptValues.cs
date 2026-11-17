@@ -143,8 +143,9 @@ public static class PromptValues
     /// <param name="failure">The crashed test run's detail.</param>
     /// <param name="files">The rebuilt files, rendered (<see cref="BuildFailureReport.DescribeFiles"/>).</param>
     /// <param name="attempts">Earlier repair attempts of this job, rendered (<see cref="BuildRepair.Attempts"/>).</param>
+    /// <param name="bisect">What the app's quick runs found (<see cref="TestRunBisectResult.Summary"/>).</param>
     /// <param name="scripts">The game is read by the agent's own scripts (unknown engines).</param>
-    public static Dictionary<string, string> RepairBuild(string gameName, EngineKind engine, int strings, string failure, string files, string reportFile, string logFile, string attempts, int testRuns, bool scripts) => new(StringComparer.Ordinal)
+    public static Dictionary<string, string> RepairBuild(string gameName, EngineKind engine, int strings, string failure, string files, string reportFile, string logFile, string attempts, string bisect, int testRuns, int quickRuns, bool scripts) => new(StringComparer.Ordinal)
     {
         ["gameName"] = gameName,
         ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown" : engine.DisplayName,
@@ -154,7 +155,12 @@ public static class PromptValues
         ["reportFile"] = reportFile,
         ["logFile"] = logFile,
         ["attempts"] = attempts,
+        ["bisect"] = bisect.Trim(),
         ["testRuns"] = testRuns.ToString(CultureInfo.InvariantCulture),
+        ["quickRuns"] = quickRuns.ToString(CultureInfo.InvariantCulture),
+        ["narrowStep"] = scripts
+            ? "a quick run with `files` lays only some rebuilt files over the game; to try without some strings, empty their translations for that run (`put_translations` with an empty text keeps the original), run your rebuild, and put back every translation you emptied only to test"
+            : "a quick run with `files` lays only some rebuilt files over the game, and one with `untranslated` leaves the keys you name untranslated for that run without changing what is stored",
         ["scriptsStep"] = scripts
             ? ", or your rebuild script in `scripts/` when the problem is how the files are written (check the round trip as before; the app runs your rebuild again before the next test). Whatever the scripts change beyond the strings (a text cut to a byte limit, a font with the missing letters) must be on by default and described in `scripts/README.md`: the app's rebuild run follows the README and keeps it"
             : ", or the glossary (`put_glossary`) when a term's translation is what breaks it",

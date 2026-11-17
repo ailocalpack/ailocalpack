@@ -2614,6 +2614,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>A IA está verificando uma correção no jogo ({0} de {1}): a janela dele abre por um ou dois minutos, não a feche</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>Procurando o arquivo que faz o jogo travar: teste rápido {0} de {1}, a janela abre por alguns segundos</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Fontes: {0} não têm letras da tradução; {1} (OFL) é usada no lugar.</value>
   </data>

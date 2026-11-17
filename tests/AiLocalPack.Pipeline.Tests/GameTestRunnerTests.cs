@@ -62,9 +62,10 @@ public sealed class GameTestRunnerTests : IDisposable
         TestRunOptions? options = null,
         IGameProbe? probe = null,
         TestRunBaselines? baselines = null,
-        TimeSpan? atLeast = null) =>
+        TimeSpan? atLeast = null,
+        bool quick = false) =>
         new GameTestRunner(processes, os, options ?? Short, probe, baselines).RunAsync(
-            new TestRunRequest(game ?? Manual, Copy, _dir.Combine("job/build"), BuildFiles, Job, _ => { }) { AtLeast = atLeast, ShotsFolder = _dir.Combine("shots") },
+            new TestRunRequest(game ?? Manual, Copy, _dir.Combine("job/build"), BuildFiles, Job, _ => { }) { AtLeast = atLeast, ShotsFolder = _dir.Combine("shots"), Quick = quick },
             TestContext.Current.CancellationToken);
 
     private static byte[] SteamStubPe()
@@ -427,6 +428,61 @@ public sealed class GameTestRunnerTests : IDisposable
 
         // Assert
         processes.Started.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public async Task A_quick_run_launches_the_translation_once()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning);
+
+        // Act
+        var result = await RunAsync(processes, quick: true);
+
+        // Assert
+        new { result.Outcome, Starts = processes.Started.Count, Quick = result.Detail!.StartsWith("quick run", StringComparison.Ordinal) }
+            .Should().Be(new { Outcome = TestRunOutcome.Passed, Starts = 2, Quick = true });
+    }
+
+    [Fact]
+    public async Task A_quick_run_still_tells_a_crash()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.Closes(3));
+
+        // Act
+        var result = await RunAsync(processes, quick: true);
+
+        // Assert
+        result.Outcome.Should().Be(TestRunOutcome.Crashed);
+    }
+
+    [Theory]
+    [InlineData(20, 50, 30)]
+    [InlineData(45, 50, 50)]
+    public void A_quick_run_watches_the_loading_time_and_ten_seconds_within_the_full_watch(int readySeconds, int watchSeconds, int quickSeconds)
+    {
+        // Arrange
+        var options = TestRunOptions.Default;
+
+        // Act
+        var watch = options.QuickWatch(TimeSpan.FromSeconds(readySeconds), TimeSpan.FromSeconds(watchSeconds));
+
+        // Assert
+        watch.Should().Be(TimeSpan.FromSeconds(quickSeconds));
+    }
+
+    [Fact]
+    public void A_game_never_seen_loaded_gets_the_full_watch_on_a_quick_run()
+    {
+        // Arrange
+        var options = TestRunOptions.Default;
+
+        // Act
+        var watch = options.QuickWatch(null, TimeSpan.FromSeconds(50));
+
+        // Assert
+        watch.Should().Be(TimeSpan.FromSeconds(50));
     }
 
     [Fact]

@@ -38,8 +38,14 @@ public sealed class BuildRepair(Game game, PipelineAgent agent, RecipeTools tool
 
     public const string LogCopy = "test-run.log";
 
-    /// <summary>Game runs the agent may make in one repair (each opens the game on the player's screen).</summary>
-    public const int MaxTestRuns = FixTestRuns.MaxRuns;
+    /// <summary>Full game runs the agent may make in one repair (each opens the game on the player's screen).</summary>
+    public const int MaxFullRuns = FixTestRuns.MaxRuns;
+
+    /// <summary>Quick runs the agent may make besides (<see cref="TestRunRequest.Quick"/>).</summary>
+    public const int MaxQuickRuns = FixTestRuns.MaxQuickRuns;
+
+    /// <summary>All the game runs of one repair (the progress card counts them together).</summary>
+    public const int MaxTestRuns = MaxFullRuns + MaxQuickRuns;
 
     private const int AttemptsChars = 4000;
 
@@ -79,6 +85,7 @@ public sealed class BuildRepair(Game game, PipelineAgent agent, RecipeTools tool
         var before = Snapshot(files);
         var attempt = Attempts(context.Folder).Count(l => l.StartsWith("## ", StringComparison.Ordinal)) + 1;
         context.Log($"Repair {attempt}: the translated game crashed in the test run; {agent.DisplayName} looks for the cause.");
+        var bisect = await NarrowAsync(context, cancellationToken).ConfigureAwait(false);
         BuildStage.Step(context, new BuildProgress(BuildStep.Repairing));
 
         var values = PromptValues.RepairBuild(
@@ -90,7 +97,9 @@ public sealed class BuildRepair(Game game, PipelineAgent agent, RecipeTools tool
             ReportCopy,
             LogCopy,
             AttemptsText(context.Folder),
-            FixTestRuns.MaxRuns,
+            bisect?.Summary ?? "The app didn't narrow the crash down to a file.",
+            MaxFullRuns,
+            MaxQuickRuns,
             scripts);
         var system = new AgentSystemPrompt(PromptTemplate.SystemRepair, PromptValues.SystemRepair(game.Name, context.Job.Language, scripts ? context.GameFolder : null));
         var host = new FixTestRuns(game, tools, services, context, source, working, (number, _) =>
@@ -137,10 +146,42 @@ public sealed class BuildRepair(Game game, PipelineAgent agent, RecipeTools tool
         var changed = strings > 0 || scriptsChanged || before.Glossary != after.Glossary;
         var reply = (run.Reply ?? string.Empty).Trim();
         context.Log($"Repair {attempt}: {strings} translations changed" + (scriptsChanged ? ", scripts changed" : "") + (before.Glossary != after.Glossary ? ", glossary changed" : "") + ".");
-        AddAttempt(context, attempt, (changed
-            ? $"Changed {strings} translations" + (scriptsChanged ? " and the scripts" : "") + "."
-            : "Changed nothing.") + (reply.Length > 0 ? "\n\n" + reply : string.Empty));
+        AddAttempt(context, attempt, (bisect is { Crashing.Count: > 0 } found ? $"The app found the game crashes with {string.Join(", ", found.Crashing.Take(5).Select(f => $"`{f}`"))}. " : string.Empty)
+            + (changed ? $"Changed {strings} translations" + (scriptsChanged ? " and the scripts" : "") + "." : "Changed nothing.")
+            + (reply.Length > 0 ? "\n\n" + reply : string.Empty));
         return new BuildRepairResult(null, null, changed, strings, scriptsChanged, reply);
+    }
+
+    /// <summary>
+    /// Narrows the crash down to the rebuilt file that causes it with quick runs (<see cref="TestRunBisect"/>) when more
+    /// than one file was rebuilt; <c>null</c> when it wasn't tried. The build folder still holds the crashed build.
+    /// </summary>
+    private async Task<TestRunBisectResult?> NarrowAsync(GenerationStepContext context, CancellationToken cancellationToken)
+    {
+        var files = BuildFailureReport.Files(context.Files);
+        if (files.Count <= 1 || !Directory.Exists(context.Files.BuildFolder))
+        {
+            return null;
+        }
+
+        BuildStage.Step(context, new BuildProgress(BuildStep.Narrowing));
+        try
+        {
+            return await new TestRunBisect(services.TestRunner).RunAsync(
+                game,
+                context.GameFolder,
+                context.Files.BuildFolder,
+                files,
+                context.Folder,
+                context.Log,
+                (number, _) => BuildStage.Step(context, new BuildProgress(BuildStep.Narrowing, RepairRuns: number)),
+                cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            context.Log($"Narrowing the crash down stopped: {e.Message}");
+            return null;
+        }
     }
 
     /// <summary>Adds what the test run after a repair showed to its section of <c>build-repairs.md</c>.</summary>

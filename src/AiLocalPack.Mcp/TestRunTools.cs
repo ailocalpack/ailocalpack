@@ -23,14 +23,24 @@ public sealed class TestRunTools(ToolkitSession session)
         + "then the translated one for as long again plus a margin (30 s to 3 min). Returns whether it kept running or crashed (exit code, the OS crash report, "
         + "its error output), when it finished loading, the game's own log, and screenshots (PNG paths you can read) of the original and the translation "
         + "once loaded and of the translation's last picture. Store and rebuild first: it builds from the stored translations (an unknown engine: run your "
-        + "rebuild script into out/ first). Each call opens the game on the player's screen, so the number of runs is limited.")]
+        + "rebuild script into out/ first). Each call opens the game on the player's screen, so the number of runs is limited. To narrow a crash down, "
+        + "use quick runs (one short launch until the game has loaded; a larger budget of their own) with `files` (lay only some rebuilt files) or "
+        + "`untranslated` (leave some keys untranslated for this run only, without changing what is stored), then check the fix with a full run.")]
     public async Task<TestRunAnswer> TestRun(
         [Description("Keep the translated game running at least this many seconds (e.g. when it crashes later than the default watch); at most 180.")] int? seconds = null,
+        [Description("A quick run: one launch watched only until the game has loaded (about its loading time), no second launch. Passing says only that it gets past loading.")] bool quick = false,
+        [Description("Lay only these rebuilt files over the game (paths relative to the game folder, as the answer's `laid` lists them); the others stay original. Default: all.")] string[]? files = null,
+        [Description("Leave these string keys untranslated for this run only; the stored translations don't change. Not for a game read by your own scripts (empty translations there instead).")] string[]? untranslated = null,
         CancellationToken cancellationToken = default)
     {
         if (seconds is < 1 or > 180)
         {
             throw new McpException("seconds must be between 1 and 180.");
+        }
+
+        if (files is { Length: 0 })
+        {
+            throw new McpException("files, when given, must name at least one file.");
         }
 
         var mailbox = new TestRunMailbox(session.Files.Folder);
@@ -40,7 +50,7 @@ public sealed class TestRunTools(ToolkitSession session)
             number = mailbox.NextNumber();
             try
             {
-                mailbox.Ask(new TestRunAsk(number, seconds));
+                mailbox.Ask(new TestRunAsk(number, seconds, quick, files, untranslated is { Length: > 0 } ? untranslated : null));
             }
             catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {

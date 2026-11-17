@@ -2458,6 +2458,9 @@
   <data name="Gen_Build_RepairRun" xml:space="preserve">
     <value>AI がゲームで修正を確認しています（{0}/{1}）。ゲームのウィンドウが 1〜2 分開きます。閉じないでください</value>
   </data>
+  <data name="Gen_Build_Narrowing" xml:space="preserve">
+    <value>ゲームをクラッシュさせるファイルを探しています：クイック実行 {0}/{1}。ウィンドウが数秒開きます</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>フォント: {0} に翻訳の文字が不足しているため、代わりに {1}（OFL）を使います。</value>
   </data>
