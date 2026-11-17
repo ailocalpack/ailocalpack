@@ -98,7 +98,8 @@ public interface IGameTestRunner
 /// that, the game can't be tried when this app starts it (it needs its store running): skipped, and nothing is remembered.</item>
 /// <item><b>Then the translation</b>, with the rebuilt files laid over the game (<see cref="GameTrial.Lay"/>), for the
 /// same watch (longer when <see cref="TestRunRequest.AtLeast"/> asks): still running at the end = passed; closed earlier
-/// = crashed, with the last error lines and what the OS recorded about it (<see cref="CrashReports"/>). A first launch
+/// = crashed, with its last lines of output, where its output parted from the untranslated game's (kept with the
+/// baseline, <see cref="TestRunOutputDiff"/>) and what the OS recorded about it (<see cref="CrashReports"/>). A first launch
 /// that passes is followed by a <b>second launch</b> for the same watch, on the files the first one wrote (a cache built
 /// from the translated files that only breaks the next start, as Barony's compiled books did). Screenshots: once loaded
 /// (<see cref="TestRunShotKind.Translated"/>, the first launch) and the last one (<see cref="TestRunShotKind.Last"/>: at
@@ -194,6 +195,13 @@ public sealed class GameTestRunner(
         try
         {
             var baseline = baselines?.Find(request.Game);
+            var originalOutput = baseline is null ? null : baselines!.ReadOutput(request.Game.Id);
+            if (baseline is not null && originalOutput is null)
+            {
+                // Measured before its output was kept: measured again, so a crash can be compared with it.
+                baseline = null;
+            }
+
             if (baseline is null)
             {
                 request.Log($"Test run: {launch}: measuring how the untranslated game loads (up to {Seconds(_options.MaxWatch)}).");
@@ -228,7 +236,10 @@ public sealed class GameTestRunner(
                 if (survived)
                 {
                     baselines?.Save(request.Game.Id, baseline);
+                    baselines?.SaveOutput(request.Game.Id, original.Lines);
                 }
+
+                originalOutput = original.Lines;
             }
 
             if (!baseline.Survived)
@@ -300,20 +311,43 @@ public sealed class GameTestRunner(
             }
 
             var crash = environment is null ? null : CrashReports.Find(environment, launch.FileName, started);
-            var tail = translated.Tail.Count > 0 ? ": " + string.Join(" | ", translated.Tail) : ".";
+            var fault = crash is null ? null : CrashReports.Fault(crash.Lines, launch.FileName);
+            var diff = originalOutput is null ? null : TestRunOutputDiff.Compare(originalOutput, translated.Lines);
             var code = CrashReports.ExitCodeText(translated.ExitCode);
             var which = first is null ? "translated game" : "translated game's second launch";
             request.Log($"Test run: the {which} closed after {Seconds(translated.Ran)} with exit code {code}" + (crash is null ? "." : $"; {crash.Name} has a report."));
             var secondLaunch = first is null ? "" : $"on its second launch, with the files its first launch wrote (that one kept running for {Seconds(first.Ran)}), ";
+            var detail = $"{secondLaunch}the game closed with exit code {code} {Seconds(translated.Ran)} after start ({loaded}), while the untranslated game kept running for {Seconds(baseline.Watch)} ({originalLoads}).";
+            if (diff?.Describe() is { } compared)
+            {
+                detail += " " + compared;
+            }
+
+            if (fault is not null)
+            {
+                detail += " " + fault.Describe();
+            }
+
+            if (translated.Tail.Count > 0)
+            {
+                detail += " Last output: " + string.Join(" | ", translated.Tail);
+            }
+
             return new TestRunResult(
                 TestRunOutcome.Crashed,
-                Detail: $"{secondLaunch}the game closed with exit code {code} {Seconds(translated.Ran)} after start ({loaded}), while the untranslated game kept running for {Seconds(baseline.Watch)} ({originalLoads}){tail}",
+                Detail: detail,
                 Ran: translated.Ran,
                 ExitCode: translated.ExitCode,
                 Ready: translated.Ready,
                 Watch: limit,
                 Shots: list,
-                CrashReport: crash is null ? null : string.Join('\n', crash.Lines));
+                CrashReport: crash is null ? null : string.Join('\n', crash.Lines))
+            {
+                LastOutput = translated.Tail,
+                OutputDiff = diff,
+                Fault = fault,
+                SecondLaunch = first is not null,
+            };
         }
         catch (ProcessStartException e)
         {
@@ -395,8 +429,9 @@ public sealed class GameTestRunner(
         var clock = Stopwatch.StartNew();
         await log.WriteLineAsync($"== {label} run: {spec.FileName} ==").ConfigureAwait(false);
         var tail = new Queue<string>();
+        var lines = new List<string>();
         await using var process = runner.Start(spec, stop.Token);
-        var reading = ReadAsync(process, log, tail);
+        var reading = ReadAsync(process, log, tail, lines);
         var reads = new List<(TimeSpan At, long Bytes)>();
         TimeSpan? ready = null;
         TimeSpan? firstPicture = null;
@@ -468,7 +503,7 @@ public sealed class GameTestRunner(
         await log.WriteLineAsync(ready is { } loaded ? $"== loaded after {Seconds(loaded)} ==" : "== never read as loaded ==").ConfigureAwait(false);
         await log.WriteLineAsync(stillRunning ? $"== still running after {Seconds(ran)}: closed ==" : $"== closed by itself after {Seconds(ran)}, exit code {exit.ExitCode} ==").ConfigureAwait(false);
         await log.FlushAsync(cancellationToken).ConfigureAwait(false);
-        return new Watch(stillRunning, ran, exit.ExitCode, [.. tail], ready, savedReady, savedLast);
+        return new Watch(stillRunning, ran, exit.ExitCode, [.. tail], [.. lines], ready, savedReady, savedLast);
     }
 
     /// <summary>
@@ -507,17 +542,21 @@ public sealed class GameTestRunner(
         }
     }
 
-    private static async Task ReadAsync(IRunningProcess process, StreamWriter log, Queue<string> tail)
+    /// <summary>
+    /// Copies the game's output into the log and <paramref name="lines"/> (at most <see cref="MaxLogLines"/> each) and keeps
+    /// its last non-empty lines of both streams in <paramref name="tail"/> (a game may write its progress to either).
+    /// </summary>
+    private static async Task ReadAsync(IRunningProcess process, StreamWriter log, Queue<string> tail, List<string> lines)
     {
-        var lines = 0;
         await foreach (var line in process.ReadLinesAsync(CancellationToken.None).ConfigureAwait(false))
         {
-            if (++lines <= MaxLogLines)
+            if (lines.Count < MaxLogLines)
             {
+                lines.Add(line.Text);
                 await log.WriteLineAsync($"[{(line.Stream == ProcessStream.StandardError ? "err" : "out")}] {line.Text}").ConfigureAwait(false);
             }
 
-            if (line.Stream == ProcessStream.StandardError && line.Text.Trim().Length > 0)
+            if (line.Text.Trim().Length > 0)
             {
                 lock (tail)
                 {
@@ -533,5 +572,5 @@ public sealed class GameTestRunner(
 
     internal static string Seconds(TimeSpan time) => string.Create(CultureInfo.InvariantCulture, $"{time.TotalSeconds:0.#} s");
 
-    private sealed record Watch(bool StillRunning, TimeSpan Ran, int ExitCode, IReadOnlyList<string> Tail, TimeSpan? Ready, string? ReadyShot, string? LastShot);
+    private sealed record Watch(bool StillRunning, TimeSpan Ran, int ExitCode, IReadOnlyList<string> Tail, IReadOnlyList<string> Lines, TimeSpan? Ready, string? ReadyShot, string? LastShot);
 }

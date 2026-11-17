@@ -50,6 +50,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         try
         {
             gameFolder = context.GameFolder;
+            BuildFailureReport.Delete(context.Files);
             TestRunOverlay.Recover(context.Folder, gameFolder);
             source = SourceStringsFile.Read(context.Files);
             stored = context.Files.ReadStrings();
@@ -103,6 +104,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
 
         cancellationToken.ThrowIfCancellationRequested();
         var build = context.Files.BuildFolder;
+        IGameFiles original;
         RebuildResult rebuilt;
         FontFixResult fonts;
         IReadOnlyDictionary<string, string> touched;
@@ -115,7 +117,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
 
             var output = new DirectoryRebuildOutput(build);
             Step(context, new BuildProgress(BuildStep.Rebuilding));
-            var original = services.Read(gameFolder);
+            original = services.Read(gameFolder);
             rebuilt = tool.Rebuild(original, job.Language, collected.Translations, output, cancellationToken);
             Step(context, new BuildProgress(BuildStep.Fonts, rebuilt.ChangedFiles.Count));
             // A reference in a language of the same script names the fonts that worked for this game (decided 2026-11-16).
@@ -158,7 +160,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         context.Log($"Test run {testRun.Outcome.ToString().ToLowerInvariant()}" + (testRun.Skip is { } skip ? $" ({skip})" : "") + (testRun.Detail is { } detail ? $": {detail}" : "."));
         if (testRun.Outcome == TestRunOutcome.Crashed)
         {
-            return new GenerationStepResult.Failed(GenerationFailureKind.TestRun, $"Test run failed: {testRun.Detail}");
+            return Crashed(context, testRun, files, file => SizeOf(original, file), source, collected.Translations);
         }
 
         Step(context, swapped with { Step = BuildStep.Packing });
@@ -269,6 +271,45 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         else
         {
             context.Log("Fonts: the game's fonts have every letter of the translation.");
+        }
+    }
+
+    /// <summary>A crashed test run: the stage fails, with <c>build-failure.json</c> written for the agent and the player.</summary>
+    internal static GenerationStepResult.Failed Crashed(
+        GenerationStepContext context,
+        TestRunResult testRun,
+        IReadOnlyList<string> files,
+        Func<string, long?> originalSize,
+        SourceStrings source,
+        IReadOnlyDictionary<string, string> translations)
+    {
+        var originals = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var s in source.Strings)
+        {
+            originals.TryAdd(s.Key, s.Original);
+        }
+
+        BuildFailureReport.Write(context.Files, context.Time.GetUtcNow(), testRun, files, originalSize, originals, translations);
+        context.Log($"What the test run found is in {Path.GetFileName(context.Files.BuildFailurePath)}.");
+        return new GenerationStepResult.Failed(GenerationFailureKind.TestRun, $"Test run failed: {testRun.Detail}");
+    }
+
+    /// <summary>The game's own size of a file; <c>null</c> = none, or it can't be read.</summary>
+    private static long? SizeOf(IGameFiles game, string file)
+    {
+        try
+        {
+            if (!game.FileExists(file))
+            {
+                return null;
+            }
+
+            using var stream = game.OpenRead(file);
+            return stream.Length;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return null;
         }
     }
 

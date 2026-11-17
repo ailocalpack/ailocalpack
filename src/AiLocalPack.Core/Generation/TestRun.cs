@@ -76,6 +76,18 @@ public sealed record TestRunResult(
     IReadOnlyList<TestRunShot>? Shots = null,
     string? CrashReport = null)
 {
+    /// <summary>A crash: the translated game's last lines of output (both streams), oldest first.</summary>
+    public IReadOnlyList<string> LastOutput { get; init; } = [];
+
+    /// <summary>A crash: where the translated game's output parted from the untranslated game's; <c>null</c> = not compared.</summary>
+    public TestRunOutputDiff? OutputDiff { get; init; }
+
+    /// <summary>A crash: the fault the OS recorded (module, exception code, offset); <c>null</c> = none read.</summary>
+    public CrashFault? Fault { get; init; }
+
+    /// <summary>A crash on the second launch, on the files the first one wrote.</summary>
+    public bool SecondLaunch { get; init; }
+
     public static TestRunResult Passed(TimeSpan ran, string? detail = null) => new(TestRunOutcome.Passed, Detail: detail, Ran: ran);
 
     public static TestRunResult Skipped(TestRunSkip skip, string detail, TimeSpan? ran = null, int? exitCode = null) =>

@@ -31,7 +31,7 @@ public sealed record TestRunBaseline(
 
 /// <summary>
 /// The measured baselines, one file per game in <c>&lt;data&gt;/test-runs/</c> (<c>&lt;game folder&gt;.json</c> and
-/// its screenshot <c>&lt;game folder&gt;.png</c>); a baseline of another game version doesn't count. Beside them
+/// its screenshot <c>&lt;game folder&gt;.png</c>, its output <c>&lt;game folder&gt;.output.log</c>); a baseline of another game version doesn't count. Beside them
 /// <c>&lt;game folder&gt;.writes.json</c>: the files the game's test runs write (<see cref="Writes"/>). Never throws for
 /// disk state: a broken file reads as none.
 /// </summary>
@@ -135,6 +135,40 @@ public sealed class TestRunBaselines(string folder)
                 baseline.ExitCode,
                 baseline.Screenshot is { } shot ? Path.GetFileName(shot) : null);
             AtomicFile.WriteAllBytes(JsonPath(game), JsonSerializer.SerializeToUtf8Bytes(json, BaselineJsonContext.Default.BaselineJson));
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+        }
+    }
+
+    /// <summary>Where the untranslated game's output of its measured run goes (one line per line it printed, both streams).</summary>
+    public string OutputPath(GameId game) => Path.Combine(Folder, Name(game) + ".output.log");
+
+    /// <summary>
+    /// The untranslated game's output of its measured run (to compare a crashed translation's with), or <c>null</c>
+    /// when none is kept (measured before the output was kept: the game is measured again).
+    /// </summary>
+    public IReadOnlyList<string>? ReadOutput(GameId game)
+    {
+        try
+        {
+            var path = OutputPath(game);
+            return File.Exists(path) ? File.ReadAllLines(path) : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Keeps the untranslated game's output with its baseline (best effort).</summary>
+    public void SaveOutput(GameId game, IReadOnlyList<string> lines)
+    {
+        ArgumentNullException.ThrowIfNull(lines);
+        try
+        {
+            Directory.CreateDirectory(Folder);
+            AtomicFile.WriteAllBytes(OutputPath(game), Encoding.UTF8.GetBytes(string.Concat(lines.Select(l => l + "\n"))));
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {

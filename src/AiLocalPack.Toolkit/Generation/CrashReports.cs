@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Toolkit.Generation;
@@ -38,6 +39,39 @@ public static class CrashReports
             return null;
         }
     }
+
+    /// <summary>
+    /// The fault of a Windows <i>Application Error</i> event (its <c>wevtutil /f:text</c> lines: <c>Faulting module name:</c>,
+    /// <c>Exception code:</c>, <c>Fault offset:</c>); <c>null</c> when the lines don't name a module (another OS, another
+    /// display language of Windows).
+    /// </summary>
+    /// <param name="program">The game's program (file name), to tell its own code from a library.</param>
+    public static CrashFault? Fault(IReadOnlyList<string> lines, string program)
+    {
+        ArgumentNullException.ThrowIfNull(lines);
+        string? Value(string label) => lines
+            .Select(l => l.Trim())
+            .FirstOrDefault(l => l.StartsWith(label, StringComparison.OrdinalIgnoreCase))?[label.Length..].Trim();
+
+        if (Value("Faulting module name:") is not { Length: > 0 } module)
+        {
+            return null;
+        }
+
+        var parts = module.Split(',', StringSplitOptions.TrimEntries);
+        var name = parts[0];
+        var version = parts.Skip(1).FirstOrDefault(p => p.StartsWith("version:", StringComparison.OrdinalIgnoreCase))?["version:".Length..].Trim();
+        var code = Value("Exception code:") is { Length: > 0 } c ? Hex(c) : null;
+        var offset = Value("Fault offset:") is { Length: > 0 } o ? Hex(o) : null;
+        var inGame = string.Equals(name, Path.GetFileName(program), StringComparison.OrdinalIgnoreCase);
+        return new CrashFault(name, version, code, offset, inGame);
+    }
+
+    /// <summary><c>0x0000000000a3b505</c> → <c>0xa3b505</c>; other text as it is.</summary>
+    private static string Hex(string text) =>
+        text.StartsWith("0x", StringComparison.OrdinalIgnoreCase) && text.Length > 2
+            ? "0x" + (text[2..].TrimStart('0') is { Length: > 0 } digits ? digits.ToLowerInvariant() : "0")
+            : text;
 
     /// <summary>A Windows exit code as Windows writes it (<c>0xC0000409</c>) when it is an NTSTATUS, else the number.</summary>
     public static string ExitCodeText(int exitCode) => exitCode < 0

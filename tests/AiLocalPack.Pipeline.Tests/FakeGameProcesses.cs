@@ -3,12 +3,17 @@ using AiLocalPack.Agents.Processes;
 
 namespace AiLocalPack.Pipeline.Tests;
 
-/// <summary>How a fake game process behaves: closes by itself with an exit code and error lines, or runs until killed.</summary>
+/// <summary>How a fake game process behaves: closes by itself with an exit code and error lines, or runs until killed; <see cref="Output"/> = standard output lines printed first.</summary>
 internal sealed record FakeGame(int? ExitCode, IReadOnlyList<string> Errors)
 {
     public static FakeGame KeepsRunning { get; } = new(null, []);
 
+    public IReadOnlyList<string> Output { get; init; } = [];
+
     public static FakeGame Closes(int exitCode, params string[] errors) => new(exitCode, errors);
+
+    /// <summary>Prints these lines on standard output and keeps running.</summary>
+    public static FakeGame Prints(params string[] output) => new(null, []) { Output = output };
 }
 
 /// <summary>A process runner for test runs: each start plays the next <see cref="FakeGame"/> and records the spec and what the copy held.</summary>
@@ -59,6 +64,11 @@ internal sealed class FakeGameProcesses(params FakeGame[] games) : IProcessRunne
 
         public async IAsyncEnumerable<ProcessLine> ReadLinesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
+            foreach (var line in _game.Output)
+            {
+                yield return new ProcessLine(ProcessStream.StandardOutput, line);
+            }
+
             foreach (var line in _game.Errors)
             {
                 yield return new ProcessLine(ProcessStream.StandardError, line);

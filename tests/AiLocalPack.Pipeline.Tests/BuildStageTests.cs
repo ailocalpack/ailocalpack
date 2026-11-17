@@ -221,6 +221,41 @@ public sealed class BuildStageTests : IDisposable
     }
 
     [Fact]
+    public async Task A_crash_in_the_test_run_writes_what_it_found_with_the_rebuilt_files_and_their_strings()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var runner = new FakeTestRunner(TestRunResult.Crashed(TimeSpan.FromSeconds(4), 3, "the game closed with exit code 3"));
+
+        // Act
+        await RunAsync(runner: runner);
+
+        // Assert
+        using var json = System.Text.Json.JsonDocument.Parse(File.ReadAllBytes(_h.Files.BuildFailurePath));
+        var items = json.RootElement.GetProperty("files").EnumerateArray().Single(f => f.GetProperty("path").GetString() == "data/Items.json");
+        new
+        {
+            ExitCode = json.RootElement.GetProperty("testRun").GetProperty("exitCode").GetInt32(),
+            Strings = items.GetProperty("strings").GetInt32() > 0,
+            Longest = items.GetProperty("longest").EnumerateArray().First().GetProperty("translation").GetString()!.StartsWith("RU ", StringComparison.Ordinal),
+        }.Should().Be(new { ExitCode = 3, Strings = true, Longest = true });
+    }
+
+    [Fact]
+    public async Task The_failure_report_goes_when_the_stage_runs_again()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        await RunAsync(runner: new FakeTestRunner(TestRunResult.Crashed(TimeSpan.FromSeconds(4), 3, "the game closed with exit code 3")));
+
+        // Act
+        await RunAsync();
+
+        // Assert
+        File.Exists(_h.Files.BuildFailurePath).Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Nothing_translated_fails_the_stage()
     {
         // Arrange

@@ -372,6 +372,64 @@ public sealed class GameTestRunnerTests : IDisposable
     }
 
     [Fact]
+    public async Task A_crash_names_where_its_output_parted_from_the_untranslated_games()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(
+            FakeGame.Prints("[10-00-01] read items.json", "[10-00-02] read follower_wheel.json", "[10-00-03] read monsters.json"),
+            FakeGame.Closes(-1073740791) with { Output = ["[11-30-01] read items.json", "[11-30-02] read follower_wheel.json"] });
+
+        // Act
+        var result = await RunAsync(processes);
+
+        // Assert
+        new { result.OutputDiff!.LastShared, Next = result.OutputDiff.OriginalNext.Single() }
+            .Should().Be(new { LastShared = (string?)"[11-30-02] read follower_wheel.json", Next = "[10-00-03] read monsters.json" });
+    }
+
+    [Fact]
+    public async Task A_crash_keeps_its_last_lines_of_standard_output()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.Closes(3) with { Output = ["loading", "read follower_wheel.json"] });
+
+        // Act
+        var result = await RunAsync(processes);
+
+        // Assert
+        result.LastOutput.Should().Equal("loading", "read follower_wheel.json");
+    }
+
+    [Fact]
+    public async Task The_untranslated_games_output_is_kept_with_its_baseline()
+    {
+        // Arrange
+        var baselines = new TestRunBaselines(_dir.Combine("baselines"));
+
+        // Act
+        await RunAsync(new FakeGameProcesses(FakeGame.Prints("read items.json")), baselines: baselines);
+
+        // Assert
+        baselines.ReadOutput(Manual.Id).Should().Equal("read items.json");
+    }
+
+    [Fact]
+    public async Task A_baseline_measured_without_its_output_is_measured_again()
+    {
+        // Arrange
+        var baselines = new TestRunBaselines(_dir.Combine("baselines"));
+        await RunAsync(new FakeGameProcesses(), baselines: baselines);
+        File.Delete(baselines.OutputPath(Manual.Id));
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning);
+
+        // Act
+        await RunAsync(processes, baselines: baselines);
+
+        // Assert
+        processes.Started.Should().HaveCount(3);
+    }
+
+    [Fact]
     public async Task A_game_that_closes_untranslated_isnt_remembered()
     {
         // Arrange

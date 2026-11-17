@@ -51,6 +51,12 @@ public sealed class GenerationFiles
 
     public string BuildFolder => Path.Combine(Folder, "build");
 
+    /// <summary>
+    /// What the Build stage's last crashed test run found, for the agent and the player (written by the stage when the
+    /// translated game crashes, deleted when the stage starts again): <c>Pipeline/BuildFailureReport</c>.
+    /// </summary>
+    public string BuildFailurePath => Path.Combine(Folder, "build-failure.json");
+
     /// <summary>An update job's base pack (task 56): <c>manifest.json</c>, <c>strings.json.gz</c>, <c>glossary.json</c> when it had one.</summary>
     public string BaseFolder => Path.Combine(Folder, "base");
 

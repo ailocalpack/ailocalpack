@@ -121,7 +121,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         context.Log($"Test run {testRun.Outcome.ToString().ToLowerInvariant()}" + (testRun.Skip is { } skip ? $" ({skip})" : "") + (testRun.Detail is { } detail ? $": {detail}" : "."));
         if (testRun.Outcome == TestRunOutcome.Crashed)
         {
-            return new GenerationStepResult.Failed(GenerationFailureKind.TestRun, $"Test run failed: {testRun.Detail}");
+            return BuildStage.Crashed(context, testRun, changed, file => GameSize(gameFolder, file), source, collected.Translations);
         }
 
         BuildStage.Step(context, testStep with { Step = BuildStep.Packing });
@@ -288,6 +288,13 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         }
 
         return true;
+    }
+
+    /// <summary>The game folder's size of a file; <c>null</c> = none.</summary>
+    private static long? GameSize(string gameFolder, string file)
+    {
+        var path = Local(gameFolder, file);
+        return File.Exists(path) ? new FileInfo(path).Length : null;
     }
 
     internal static string Local(string root, string relative) => Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar));
