@@ -32,7 +32,7 @@ namespace AiLocalPack.Cli.Commands;
 /// </summary>
 internal static partial class GenJobCommands
 {
-    public static IEnumerable<Command> Build(OsEnvironment env) => [BuildRun(env), BuildResume(env), BuildStatus(env), BuildCancel(env), BuildFix(env), BuildDrafts(env)];
+    public static IEnumerable<Command> Build(OsEnvironment env) => [BuildRun(env), BuildResume(env), BuildStatus(env), BuildCancel(env), BuildFix(env), BuildDrafts(env), BuildTest(env), BuildBisect(env), BuildLimits(env)];
 
     private static Option<string?> FakeAgentOption() => new("--fake-agent")
     {

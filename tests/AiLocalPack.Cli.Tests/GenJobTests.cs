@@ -413,4 +413,81 @@ public sealed class GenJobTests : IDisposable
         // Assert
         new { result.ExitCode, result.StdErr }.Should().BeEquivalentTo(new { ExitCode = 1, StdErr = "Sample Quest has no installed pack to update.\n" });
     }
+
+    [Fact]
+    public async Task Gen_limits_sets_a_limit_and_lists_the_translations_over_it()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("gen", "limits", "steam:620", "--set", "data/Items.json:*", "--bytes", "4", "--reason", "item names go into a 4-byte buffer");
+
+        // Assert
+        new { result.ExitCode, Listed = result.StdOut.Contains("data/Items.json:*: at most 4 bytes", StringComparison.Ordinal), Over = !result.StdOut.Contains(", 0 stored translations over it", StringComparison.Ordinal) }
+            .Should().Be(new { ExitCode = 0, Listed = true, Over = true });
+    }
+
+    [Fact]
+    public async Task Gen_limits_removes_a_limit()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+        await RunAsync("gen", "limits", "steam:620", "--set", "data/Items.json:*", "--bytes", "4", "--reason", "buffer");
+
+        // Act
+        var result = await RunAsync("gen", "limits", "steam:620", "--remove", "data/Items.json:*");
+
+        // Assert
+        result.StdOut.Should().Be("No limits.\n");
+    }
+
+    [Fact]
+    public async Task Gen_limits_without_a_job_says_so()
+    {
+        // Act
+        var result = await RunAsync("gen", "limits", "steam:620");
+
+        // Assert
+        new { result.ExitCode, result.StdErr }.Should().BeEquivalentTo(new { ExitCode = 1, StdErr = "Sample Quest has no generation job: start one with 'gen run'.\n" });
+    }
+
+    [Fact]
+    public async Task Gen_test_runs_the_last_build_and_prints_the_outcome()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("gen", "test", "steam:620", "--quick");
+
+        // Assert
+        new { result.ExitCode, Skipped = result.StdOut.Contains("skipped (", StringComparison.Ordinal) }.Should().Be(new { ExitCode = 0, Skipped = true });
+    }
+
+    [Fact]
+    public async Task Gen_test_refuses_a_file_that_isnt_in_the_build()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("gen", "test", "steam:620", "--files", "data/Nothing.json");
+
+        // Assert
+        new { result.ExitCode, Says = result.StdErr.StartsWith("Not in the build: data/Nothing.json.", StringComparison.Ordinal) }.Should().Be(new { ExitCode = 1, Says = true });
+    }
+
+    [Fact]
+    public async Task Gen_bisect_stops_when_the_game_cant_be_started()
+    {
+        // Arrange
+        await RunAsync("gen", "run", "steam:620", "--fake-agent", Success, "--lang", "ru");
+
+        // Act
+        var result = await RunAsync("gen", "bisect", "steam:620");
+
+        // Assert
+        new { result.ExitCode, Says = result.StdOut.Contains("so the crash wasn't narrowed down", StringComparison.Ordinal) }.Should().Be(new { ExitCode = 2, Says = true });
+    }
 }
