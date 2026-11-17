@@ -7,6 +7,7 @@ using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.Views;
 using AiLocalPack.Toolkit.Generation;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -205,6 +206,34 @@ public sealed class GenerationTabViewTests
             Find<Button>(window, "GenPause").IsEffectivelyVisible,
             Find<Border>(window, "ProgressCard").IsEffectivelyVisible)
             .Should().Be((true, "Stage Build & test failed.", true, false, true));
+        window.Close();
+        return Task.CompletedTask;
+    });
+
+    [Fact]
+    public Task Progress_card_text_wraps_before_the_buttons() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build();
+        var game = services.GetRequiredService<GameLibrary>().Catalog.Games.Single(g => g.Id == GameId.Steam(10));
+        var (entry, jobLock) = services.GetRequiredService<AiLocalPack.Core.Generation.GenerationJobStore>().Create(game, "ru", "claude", AiLocalPack.Core.Generation.GenerationOptions.Default);
+        jobLock.Dispose();
+        AiLocalPack.Core.Generation.GenerationJobStore.Write(entry.Folder, entry.Job with
+        {
+            Stage = AiLocalPack.Core.Generation.GenerationStage.Build,
+            Status = AiLocalPack.Core.Generation.GenerationJobStatus.Failed,
+            Failure = new AiLocalPack.Core.Generation.GenerationFailure(AiLocalPack.Core.Generation.GenerationStage.Build, AiLocalPack.Core.Generation.GenerationFailureKind.TestRun, "crashed"),
+        });
+
+        // Act
+        var (window, _) = Open(services);
+
+        // Assert
+        var detail = Find<TextBlock>(window, "ProgressDetail");
+        var retry = Find<Button>(window, "GenRetry");
+        var detailRight = detail.TranslatePoint(new Point(detail.Bounds.Width, 0), window)!.Value.X;
+        var retryLeft = retry.TranslatePoint(default, window)!.Value.X;
+        detailRight.Should().BeLessThanOrEqualTo(retryLeft);
         window.Close();
         return Task.CompletedTask;
     });

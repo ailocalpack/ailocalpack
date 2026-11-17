@@ -1170,9 +1170,10 @@
                                         <Button x:Name="GenCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
                                                 Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
                                     </WrapPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="16">
+                                    <!-- A Grid, not a horizontal StackPanel: the text column gets the width left beside the buttons and wraps there. -->
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
                                         <TextBlock x:Name="ProgressPercent" Classes="genPercent" Text="{Binding PercentText}" VerticalAlignment="Bottom" />
-                                        <StackPanel Spacing="2" VerticalAlignment="Bottom" Margin="0,0,0,6">
+                                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Bottom" Margin="0,0,0,6">
                                             <WrapPanel ItemSpacing="10" LineSpacing="4">
                                                 <TextBlock x:Name="ProgressTitle" FontWeight="Bold" Text="{Binding ProgressTitle}" VerticalAlignment="Center" />
                                                 <Border x:Name="ProgressQuality" Classes="qualityChip">
@@ -1186,7 +1187,7 @@
                                             </WrapPanel>
                                             <TextBlock x:Name="ProgressDetail" Classes="muted" FontSize="13" Text="{Binding ProgressDetail}" TextWrapping="Wrap" />
                                         </StackPanel>
-                                    </StackPanel>
+                                    </Grid>
                                 </DockPanel>
                                 <ProgressBar x:Name="ProgressBar" Classes="genProgress" Classes.paused="{Binding IsBarPaused}" Minimum="0" Maximum="100" Value="{Binding Percent}"
                                              AutomationProperties.Name="{Binding PercentText}" />
