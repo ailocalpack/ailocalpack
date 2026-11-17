@@ -1,3 +1,4 @@
+using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Storage;
@@ -207,6 +208,69 @@ public sealed class GameTestRunnerTests : IDisposable
 
         // Assert
         log.Should().Contain(line => line.Contains("can't be put back", StringComparison.Ordinal) && line.Contains("settings.ini", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task A_file_the_game_is_known_to_write_is_saved_first_and_taken_back_though_the_game_folder_changed()
+    {
+        // Arrange
+        var game = Manual with { InstallPath = _dir.Combine("installed") };
+        _dir.File("installed/books/compiled.json", "the player's own session").File("job/game/books/compiled.json", "english");
+        var baselines = new TestRunBaselines(_dir.Combine("baselines"));
+        baselines.AddWrites(game.Id, ["books/compiled.json"]);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ => File.WriteAllText(CopyFile("books/compiled.json"), "русский, длиннее"),
+        };
+
+        // Act
+        await RunAsync(processes, game: game, baselines: baselines);
+
+        // Assert
+        File.ReadAllText(CopyFile("books/compiled.json")).Should().Be("english");
+    }
+
+    [Fact]
+    public async Task A_file_taken_back_from_the_game_folder_is_saved_for_the_runs_after_the_game_folder_changes()
+    {
+        // Arrange
+        var game = Manual with { InstallPath = _dir.Combine("installed") };
+        _dir.File("installed/books/compiled.json", "english").File("job/game/books/compiled.json", "english");
+        var written = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        File.SetLastWriteTimeUtc(_dir.Combine("installed/books/compiled.json"), written);
+        File.SetLastWriteTimeUtc(CopyFile("books/compiled.json"), written);
+        Action<ProcessSpec> rewrite = _ => File.WriteAllText(CopyFile("books/compiled.json"), "русский, длиннее");
+        await RunAsync(new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning, FakeGame.KeepsRunning) { OnStart = rewrite }, game: game);
+        File.WriteAllText(_dir.Combine("installed/books/compiled.json"), "the player's own session");
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning, FakeGame.KeepsRunning) { OnStart = rewrite };
+
+        // Act
+        await RunAsync(processes, game: game);
+
+        // Assert
+        File.ReadAllText(CopyFile("books/compiled.json")).Should().Be("english");
+    }
+
+    [Fact]
+    public async Task The_copy_files_a_game_rewrites_are_remembered_for_its_next_runs()
+    {
+        // Arrange
+        var baselines = new TestRunBaselines(_dir.Combine("baselines"));
+        _dir.File("job/game/config/config.json", "{}");
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ =>
+            {
+                File.WriteAllText(CopyFile("config/config.json"), "{\"seen\":true}");
+                File.WriteAllText(CopyFile("log.txt"), "a new log");
+            },
+        };
+
+        // Act
+        await RunAsync(processes, baselines: baselines);
+
+        // Assert
+        baselines.Writes(Manual.Id).Should().Equal("config/config.json");
     }
 
     [Fact]

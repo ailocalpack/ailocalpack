@@ -105,7 +105,8 @@ public interface IGameTestRunner
 /// the end, or the last before it closed).</item>
 /// </list>
 /// What the game writes into the working copy itself is undone after the original's run and after the translation's
-/// (<see cref="TestRunCopyGuard"/>), so every run starts from the copy as extracted.
+/// (<see cref="TestRunCopyGuard"/>: from the copy's own versions saved in the job folder, the files a game writes
+/// remembered with its baseline so later runs and jobs save them first), so every run starts from the copy as extracted.
 /// Skipped before starting: no program this OS runs (<see cref="GameLaunchPlanner.PlanProgram"/>, a bundle's own binary
 /// so the process can be watched), a Windows program wrapped in Steam's DRM (<see cref="SteamStub"/>), the OS refusing to
 /// start it. A Steam game gets <c>steam_appid.txt</c> next to its program and <c>SteamAppId</c> / <c>SteamGameId</c> in
@@ -167,7 +168,7 @@ public sealed class GameTestRunner(
         var logs = Path.Combine(request.JobFolder, "logs");
         Directory.CreateDirectory(logs);
         await using var log = new StreamWriter(Path.Combine(logs, "test-run.log"), append: false);
-        var guard = TestRunCopyGuard.Take(request.CopyFolder);
+        var guard = TestRunCopyGuard.Take(request.CopyFolder, WorkingCopies.SavedOriginalsFolder(request.JobFolder), baselines?.Writes(request.Game.Id) ?? []);
         try
         {
             var baseline = baselines?.Find(request.Game);
@@ -186,7 +187,7 @@ public sealed class GameTestRunner(
                 finally
                 {
                     overlay.Restore();
-                    guard.Undo(request.Game.InstallPath, request.Log);
+                    Undo(guard, request);
                 }
 
                 var watch = _options.WatchFor(original.Ready);
@@ -243,7 +244,7 @@ public sealed class GameTestRunner(
             finally
             {
                 translatedOverlay.Restore();
-                guard.Undo(request.Game.InstallPath, request.Log);
+                Undo(guard, request);
             }
 
             var list = new List<TestRunShot>();
@@ -297,6 +298,16 @@ public sealed class GameTestRunner(
         catch (ProcessStartException e)
         {
             return TestRunResult.Skipped(TestRunSkip.StartFailed, $"{launch.FileName} couldn't be started: {e.Message}");
+        }
+    }
+
+    /// <summary>Undoes what the game wrote into the copy and remembers which of the copy's files it writes.</summary>
+    private void Undo(TestRunCopyGuard guard, TestRunRequest request)
+    {
+        var undo = guard.Undo(request.Game.InstallPath, request.Log);
+        if (undo.Written.Count > 0)
+        {
+            baselines?.AddWrites(request.Game.Id, [.. undo.Written]);
         }
     }
 

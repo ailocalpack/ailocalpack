@@ -31,11 +31,15 @@ public sealed record TestRunBaseline(
 
 /// <summary>
 /// The measured baselines, one file per game in <c>&lt;data&gt;/test-runs/</c> (<c>&lt;game folder&gt;.json</c> and
-/// its screenshot <c>&lt;game folder&gt;.png</c>); a baseline of another game version doesn't count. Never throws for
+/// its screenshot <c>&lt;game folder&gt;.png</c>); a baseline of another game version doesn't count. Beside them
+/// <c>&lt;game folder&gt;.writes.json</c>: the files the game's test runs write (<see cref="Writes"/>). Never throws for
 /// disk state: a broken file reads as none.
 /// </summary>
 public sealed class TestRunBaselines(string folder)
 {
+    /// <summary>The most files remembered per game in <see cref="Writes"/>.</summary>
+    public const int MaxWrites = 200;
+
     private const int SchemaVersion = 1;
 
     public string Folder { get; } = folder;
@@ -137,7 +141,51 @@ public sealed class TestRunBaselines(string folder)
         }
     }
 
+    /// <summary>
+    /// The files of the game's folder its test runs changed or deleted (relative, '/'-separated; any version): the next
+    /// runs save the working copy's own versions of them first (<see cref="TestRunCopyGuard"/>). Empty when none are known.
+    /// </summary>
+    public IReadOnlyList<string> Writes(GameId game)
+    {
+        try
+        {
+            var path = WritesPath(game);
+            return File.Exists(path)
+                && JsonSerializer.Deserialize(File.ReadAllBytes(path), BaselineJsonContext.Default.WritesJson) is { SchemaVersion: SchemaVersion, Files: { } files }
+                ? [.. files.Where(f => !string.IsNullOrWhiteSpace(f))]
+                : [];
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return [];
+        }
+    }
+
+    /// <summary>Adds to <see cref="Writes"/> (at most <see cref="MaxWrites"/> kept; best effort: a disk error forgets them).</summary>
+    public void AddWrites(GameId game, IReadOnlyCollection<string> files)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        var known = Writes(game);
+        var added = files.Where(f => !known.Contains(f, StringComparer.Ordinal)).Distinct(StringComparer.Ordinal).ToList();
+        if (added.Count == 0 || known.Count >= MaxWrites)
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(Folder);
+            var all = known.Concat(added).Take(MaxWrites).Order(StringComparer.Ordinal).ToList();
+            AtomicFile.WriteAllBytes(WritesPath(game), JsonSerializer.SerializeToUtf8Bytes(new WritesJson(SchemaVersion, all), BaselineJsonContext.Default.WritesJson));
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+        }
+    }
+
     private string JsonPath(GameId game) => Path.Combine(Folder, Name(game) + ".json");
+
+    private string WritesPath(GameId game) => Path.Combine(Folder, Name(game) + ".writes.json");
 
     private static string Name(GameId game) => game.ToString().Replace(':', '-');
 }
@@ -153,10 +201,13 @@ internal sealed record BaselineJson(
     int? ExitCode = null,
     string? Screenshot = null);
 
+internal sealed record WritesJson(int SchemaVersion, IReadOnlyList<string>? Files);
+
 [JsonSourceGenerationOptions(
     WriteIndented = true,
     NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(BaselineJson))]
+[JsonSerializable(typeof(WritesJson))]
 internal sealed partial class BaselineJsonContext : JsonSerializerContext;

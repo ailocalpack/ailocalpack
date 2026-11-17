@@ -71,6 +71,23 @@ public sealed class WorkingCopiesTests : IDisposable
     }
 
     [Fact]
+    public void Deleting_the_copy_deletes_its_saved_originals_too()
+    {
+        // Arrange
+        var copies = Copies();
+        copies.Create(copies.Plan(Game, WorkingCopyScope.AllFiles, Ct), JobFolder, cancellationToken: Ct);
+        var saved = WorkingCopies.SavedOriginalsFolder(JobFolder);
+        Directory.CreateDirectory(Path.Combine(saved, "books"));
+        File.WriteAllText(Path.Combine(saved, "books", "compiled.json"), "english");
+
+        // Act
+        copies.DeleteCopy(JobFolder);
+
+        // Assert
+        Directory.Exists(saved).Should().BeFalse();
+    }
+
+    [Fact]
     public void The_copy_goes_into_the_game_subfolder_of_the_job_folder()
     {
         // Arrange

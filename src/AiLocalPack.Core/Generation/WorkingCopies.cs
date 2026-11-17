@@ -157,6 +157,7 @@ public sealed class WorkingCopies
 
     private const string CopyFolderName = "game";
     private const string ScratchFolderName = ".scratch";
+    private const string SavedOriginalsFolderName = "game-originals";
     private const int BufferSize = 1 << 20;
 
     private static readonly HashSet<string> MediaExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -202,6 +203,16 @@ public sealed class WorkingCopies
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
         return Path.Combine(jobFolder, CopyFolderName);
+    }
+
+    /// <summary>
+    /// The working copy's own versions of the files a test run's game writes (caches, settings, logs), saved beside the
+    /// copy before the game first changes them, so every later run starts from the copy as extracted; deleted with the copy.
+    /// </summary>
+    public static string SavedOriginalsFolder(string jobFolder)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
+        return Path.Combine(jobFolder, SavedOriginalsFolderName);
     }
 
     /// <summary>A new job ID: UTC time (sorts by age) + random suffix.</summary>
@@ -437,13 +448,15 @@ public sealed class WorkingCopies
 
     /// <summary>
     /// Deletes only the working copy of a job folder (a copy half made when the app died: the Setup stage makes it
-    /// again); the job's files stay. Nothing to delete is fine.
+    /// again), with its saved originals (<see cref="SavedOriginalsFolder"/>); the job's files stay. Nothing to delete is fine.
     /// </summary>
     /// <exception cref="IOException">A file can't be deleted (in use).</exception>
     public void DeleteCopy(string jobFolder)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(jobFolder);
-        DeleteTree(CopyFolder(Path.GetFullPath(jobFolder)), throwOnFailure: true);
+        var job = Path.GetFullPath(jobFolder);
+        DeleteTree(SavedOriginalsFolder(job), throwOnFailure: true);
+        DeleteTree(CopyFolder(job), throwOnFailure: true);
     }
 
     private WorkingCopyResult Copy(WorkingCopyPlan plan, string copy, bool clone, IProgress<WorkingCopyProgress>? progress, CancellationToken cancellationToken)
