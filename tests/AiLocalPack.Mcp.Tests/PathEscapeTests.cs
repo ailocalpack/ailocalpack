@@ -41,7 +41,7 @@ public sealed class PathEscapeTests
         error.Should().StartWith($"Path '{path}' refused");
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public async Task Read_file_snippet_refuses_a_file_symlink_leading_out()
     {
         // Arrange
@@ -58,7 +58,7 @@ public sealed class PathEscapeTests
         error.Should().Be("Path 'link.txt' refused: it leads out of the game folder through a link.");
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public async Task Read_file_snippet_refuses_a_path_through_a_folder_symlink_leading_out()
     {
         // Arrange
@@ -75,7 +75,7 @@ public sealed class PathEscapeTests
         error.Should().Be("Path 'inner/secret.txt' refused: it leads out of the game folder through a link.");
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public async Task Read_file_snippet_refuses_a_dangling_symlink()
     {
         // Arrange
@@ -89,7 +89,7 @@ public sealed class PathEscapeTests
         error.Should().Be("Path 'gone.txt' refused: it passes through a link whose target is missing.");
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public async Task Read_file_snippet_follows_a_symlink_staying_inside()
     {
         // Arrange
@@ -106,7 +106,7 @@ public sealed class PathEscapeTests
         result.GetProperty("content").GetString().Should().Be("1\tinside\n");
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public async Task List_files_lists_a_folder_symlink_without_descending_into_it()
     {
         // Arrange

@@ -24,6 +24,12 @@ public sealed class GameTestRunnerTests : IDisposable
         Factor = 1,
     };
 
+    /// <summary>
+    /// <see cref="Short"/> for a game that must read as loaded: it still watches <see cref="TestRunOptions.MinWatch"/>
+    /// once loaded, but a busy machine that delays the samples gets seconds, not 150 ms, to see it load.
+    /// </summary>
+    private static readonly TestRunOptions Loading = Short with { MaxWatch = TimeSpan.FromSeconds(5), MaxReady = TimeSpan.FromSeconds(5) };
+
     private static readonly Game Manual = new(
         GameId.Fingerprint(new string('a', 64)), "Lantern", GameSource.Manual, "/games/lantern", null, null, null, "none", null, true);
 
@@ -385,7 +391,7 @@ public sealed class GameTestRunnerTests : IDisposable
         var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000);
 
         // Act
-        var result = await RunAsync(new FakeGameProcesses(), probe: probe);
+        var result = await RunAsync(new FakeGameProcesses(), options: Loading, probe: probe);
 
         // Assert
         result.Ready.Should().NotBeNull();
@@ -424,7 +430,7 @@ public sealed class GameTestRunnerTests : IDisposable
         var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000);
 
         // Act
-        var result = await RunAsync(new FakeGameProcesses(), probe: probe);
+        var result = await RunAsync(new FakeGameProcesses(), options: Loading, probe: probe);
 
         // Assert
         result.Shots!.Select(s => (s.Kind, Exists: File.Exists(s.Path)))

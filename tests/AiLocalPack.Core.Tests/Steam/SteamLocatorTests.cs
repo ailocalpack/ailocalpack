@@ -46,7 +46,7 @@ public sealed class SteamLocatorTests : IDisposable
         var steam = SteamAt("custom/Steam");
 
         // Act
-        var roots = Locator(OsKind.Windows, registrySteamPath: steam).FindRoots();
+        var roots = Locator(OsKind.Windows, steam, ("ProgramFiles(x86)", _home.Combine("Program Files (x86)"))).FindRoots(); // not the machine's own Program Files
 
         // Assert
         roots.Should().Equal(steam);

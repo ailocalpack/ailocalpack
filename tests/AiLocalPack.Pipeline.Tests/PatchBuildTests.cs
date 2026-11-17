@@ -237,7 +237,7 @@ public sealed class PatchBuildTests : IDisposable
             f => f.Kind == GenerationFailureKind.Agent && f.Message.Contains("out/new.dat, which isn't a file of the game", StringComparison.Ordinal));
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public async Task A_link_in_the_output_fails_the_stage()
     {
         // Arrange

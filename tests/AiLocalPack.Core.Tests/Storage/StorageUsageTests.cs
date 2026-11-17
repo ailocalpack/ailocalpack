@@ -51,7 +51,7 @@ public sealed class StorageUsageTests : IDisposable
         size.Should().Be(0);
     }
 
-    [Fact]
+    [Fact(SkipType = typeof(Symlinks), SkipWhen = nameof(Symlinks.Unavailable), Skip = Symlinks.Reason)]
     public void Folder_size_does_not_follow_folder_links()
     {
         // Arrange

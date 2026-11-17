@@ -171,11 +171,43 @@ public sealed class GenerationJobFolders(AppPaths paths, IDiskSpace disk)
             }
 
             ClearReadOnly(new DirectoryInfo(path));
-            Directory.Delete(path, recursive: true);
+            DeleteFolder(path);
         }
         catch (Exception e) when (!throwOnFailure && e is IOException or UnauthorizedAccessException)
         {
             // Best effort.
+        }
+    }
+
+    /// <summary>How long deleting a job folder is retried while another reader holds one of its files.</summary>
+    internal static readonly TimeSpan DeleteRetryLimit = TimeSpan.FromSeconds(2);
+
+    /// <summary>
+    /// Deletes the folder and everything in it. On Windows a reader holding a file open for a moment (Settings → Storage
+    /// measuring the folders and reading <c>job.json</c> as the cancelled job is announced, an antivirus scan) makes the
+    /// delete fail; what is left is retried with growing waits for up to <see cref="DeleteRetryLimit"/>, then the last
+    /// error is thrown.
+    /// </summary>
+    private static void DeleteFolder(string path)
+    {
+        var waited = TimeSpan.Zero;
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                Directory.Delete(path, recursive: true);
+                return;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return;
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException && waited < DeleteRetryLimit && Directory.Exists(path))
+            {
+                var wait = TimeSpan.FromMilliseconds(Math.Min(10 * attempt, 200));
+                Thread.Sleep(wait);
+                waited += wait;
+            }
         }
     }
 
