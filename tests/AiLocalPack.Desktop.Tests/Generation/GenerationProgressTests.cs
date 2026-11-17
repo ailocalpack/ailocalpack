@@ -206,7 +206,7 @@ public sealed class GenerationProgressTests
         var tab = Open(services);
 
         // Assert
-        (tab.BannerTitle, tab.BannerText, tab.ShowBannerDetails, tab.ShowRetry).Should().Be((
+        (tab.BannerTitle, tab.BannerText, tab.ShowBannerDetails, tab.ShowBannerAction).Should().Be((
             "Stage Build & test failed.",
             "The translated game closed with an error during the test run, and the AI couldn't fix it. Retrying gives the AI another try with what it found; your translations are kept.",
             true,
@@ -250,8 +250,27 @@ public sealed class GenerationProgressTests
         var tab = Open(services);
 
         // Assert
-        (tab.BannerActionText, tab.RetryText, tab.BannerText.StartsWith("Claude Code can't start its sandbox", StringComparison.Ordinal))
-            .Should().Be(("Run without sandbox", "Run without sandbox", true));
+        (tab.BannerActionText, tab.BannerText.StartsWith("Claude Code can't start its sandbox", StringComparison.Ordinal))
+            .Should().Be(("Run without sandbox", true));
+    }
+
+    [Fact]
+    public void A_failed_stage_s_card_says_it_stopped_without_the_build_step()
+    {
+        // Arrange
+        using var services = Build();
+        JobOnDisk(services, j => j with
+        {
+            Stage = GenerationStage.Build,
+            Status = GenerationJobStatus.Failed,
+            Failure = new GenerationFailure(GenerationStage.Build, GenerationFailureKind.TestRun, "Test run failed: exit code 3"),
+        });
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        (tab.ProgressDetail, tab.ShowBuild).Should().Be(("Stopped: this stage failed", false));
     }
 
     [Fact]

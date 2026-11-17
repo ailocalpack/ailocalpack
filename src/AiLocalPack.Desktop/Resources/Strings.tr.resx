@@ -2425,6 +2425,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Oyun dosyaları yeniden oluşturulup oyunda deneniyor, sonra orijinaller geri konuyor</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Durdu: bu aşama başarısız oldu</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Duraklat</value>
   </data>

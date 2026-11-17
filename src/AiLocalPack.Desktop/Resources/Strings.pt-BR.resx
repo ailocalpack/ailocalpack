@@ -2500,6 +2500,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Reconstruindo os arquivos do jogo e testando no jogo; depois os originais voltam</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Parado: esta etapa falhou</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Pausar</value>
   </data>

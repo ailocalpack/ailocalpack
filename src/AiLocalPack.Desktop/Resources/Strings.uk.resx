@@ -2500,6 +2500,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Перезбираємо файли гри й пробуємо їх у грі, потім повертаємо оригінали</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Зупинено: етап не вдався</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Пауза</value>
   </data>

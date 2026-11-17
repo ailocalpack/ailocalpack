@@ -2500,6 +2500,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Пересобираем файлы игры и пробуем их в игре, потом возвращаем оригиналы</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Остановлено: стадия не удалась</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Пауза</value>
   </data>

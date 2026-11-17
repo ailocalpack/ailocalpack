@@ -1159,14 +1159,6 @@
                                                 <TextBlock Text="{l:Loc Gen_Action_Resume}" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Button>
-                                        <Button x:Name="GenRetry" Classes="accent" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowRetry}">
-                                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                                <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
-                                                </Viewbox>
-                                                <TextBlock Text="{Binding RetryText}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </Button>
                                         <Button x:Name="GenCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
                                                 Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
                                     </WrapPanel>

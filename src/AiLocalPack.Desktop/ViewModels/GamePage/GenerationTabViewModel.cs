@@ -721,7 +721,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         { } job => GenerationTexts.StageName(job.Stage, _localizer),
     };
 
-    /// <summary>"Chunk 327 of 800 · ≈ 2 h 10 min left" (the ETA only while it runs); the stage's line otherwise.</summary>
+    /// <summary>"Chunk 327 of 800 · ≈ 2 h 10 min left" (the ETA only while it runs); the stage's line otherwise; "Stopped" when it failed (the banner above says why and retries).</summary>
     public string ProgressDetail
     {
         get
@@ -729,6 +729,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             if (Job is not { } job)
             {
                 return string.Empty;
+            }
+
+            if (job.Status == GenerationJobStatus.Failed)
+            {
+                return _localizer[nameof(Strings.Gen_Progress_Sub_Failed)];
             }
 
             var counters = job.Counters;
@@ -761,16 +766,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     public bool ShowResume => Job?.Status is GenerationJobStatus.Paused or GenerationJobStatus.Interrupted;
 
-    public bool ShowRetry => Job?.Status == GenerationJobStatus.Failed;
-
     /// <summary>
     /// The stage failed because the agent's sandbox can't start here and the player hasn't allowed running without it:
     /// Retry becomes <c>Run without sandbox</c>, which asks first.
     /// </summary>
     public bool NeedsUnsandboxedConsent => Job is { Status: GenerationJobStatus.Failed, Failure.Kind: GenerationFailureKind.SandboxUnavailable, Options.Unsandboxed: false };
-
-    /// <summary>"Retry stage", or "Run without sandbox" (<see cref="NeedsUnsandboxedConsent"/>).</summary>
-    public string RetryText => _localizer[NeedsUnsandboxedConsent ? nameof(Strings.Gen_Action_RunUnsandboxed) : nameof(Strings.Gen_Action_Retry)];
 
     public IRelayCommand PauseCommand { get; }
 
@@ -876,7 +876,8 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     // ---------- Build & test ----------
 
-    public bool ShowBuild => Job?.Stage == GenerationStage.Build;
+    /// <summary>The Build stage's current step, while the stage runs or waits (not once it failed: the banner tells what happened).</summary>
+    public bool ShowBuild => Job is { Stage: GenerationStage.Build, Status: not GenerationJobStatus.Failed };
 
     /// <summary>"Rebuilding the game files", "Launching the test build", the agent repairing a crash…</summary>
     public string BuildStepText => _details.Progress.Build switch

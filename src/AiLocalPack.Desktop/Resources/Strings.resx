@@ -2453,6 +2453,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Rebuilding the game files and trying them in the game, then putting the originals back</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Stopped: this stage failed</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Pause</value>
   </data>

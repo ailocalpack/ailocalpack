@@ -2500,6 +2500,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Ricostruzione dei file del gioco e prova nel gioco, poi vengono rimessi gli originali</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Interrotto: questa fase non è riuscita</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Pausa</value>
   </data>

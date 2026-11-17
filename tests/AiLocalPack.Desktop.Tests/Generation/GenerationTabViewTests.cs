@@ -202,7 +202,7 @@ public sealed class GenerationTabViewTests
         // Assert
         (Find<Border>(window, "GenBanner").IsEffectivelyVisible,
             Find<TextBlock>(window, "GenBannerTitle").Text,
-            Find<Button>(window, "GenRetry").IsEffectivelyVisible,
+            Find<Button>(window, "GenBannerAction").IsEffectivelyVisible,
             Find<Button>(window, "GenPause").IsEffectivelyVisible,
             Find<Border>(window, "ProgressCard").IsEffectivelyVisible)
             .Should().Be((true, "Stage Build & test failed.", true, false, true));
@@ -230,10 +230,10 @@ public sealed class GenerationTabViewTests
 
         // Assert
         var detail = Find<TextBlock>(window, "ProgressDetail");
-        var retry = Find<Button>(window, "GenRetry");
+        var cancel = Find<Button>(window, "GenCancel");
         var detailRight = detail.TranslatePoint(new Point(detail.Bounds.Width, 0), window)!.Value.X;
-        var retryLeft = retry.TranslatePoint(default, window)!.Value.X;
-        detailRight.Should().BeLessThanOrEqualTo(retryLeft);
+        var cancelLeft = cancel.TranslatePoint(default, window)!.Value.X;
+        detailRight.Should().BeLessThanOrEqualTo(cancelLeft);
         window.Close();
         return Task.CompletedTask;
     });

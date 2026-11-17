@@ -2500,6 +2500,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>Odbudowa plików gry i próba w grze, a potem przywrócenie oryginałów</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>Zatrzymano: ten etap się nie powiódł</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Wstrzymaj</value>
   </data>

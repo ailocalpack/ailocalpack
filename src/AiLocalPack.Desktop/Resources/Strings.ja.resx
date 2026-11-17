@@ -2350,6 +2350,9 @@
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
     <value>ゲームファイルを再構築してゲームで試し、そのあと元のファイルに戻します</value>
   </data>
+  <data name="Gen_Progress_Sub_Failed" xml:space="preserve">
+    <value>停止しました：この段階は失敗しました</value>
+  </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>一時停止</value>
   </data>
