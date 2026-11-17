@@ -15,8 +15,8 @@ public sealed record ReferencePack(PackManifest Manifest, StringTable? Strings, 
     /// <summary>The job options' and the new manifest's entry for it.</summary>
     public PackReference Reference => new(Manifest.Language, Manifest.Id, Manifest.Revision);
 
-    /// <summary>Whether <paramref name="version"/> is one of the builds the manifest was made for.</summary>
-    public static bool IsSameBuild(PackManifest manifest, GameVersion? version)
+    /// <summary>Whether <paramref name="version"/> is one of the builds the manifest was made for (on <paramref name="platform"/> when known).</summary>
+    public static bool IsSameBuild(PackManifest manifest, GameVersion? version, Storage.OsKind? platform = null)
     {
         ArgumentNullException.ThrowIfNull(manifest);
         if (version is null)
@@ -26,7 +26,7 @@ public sealed record ReferencePack(PackManifest Manifest, StringTable? Strings, 
 
         if (version.BuildId is { } buildId)
         {
-            return manifest.Builds.Any(b => b.BuildId == buildId);
+            return manifest.Builds.Any(b => b.Matches(buildId, platform));
         }
 
         var hashes = version.FileHashes ?? new Dictionary<string, string>();
@@ -151,7 +151,7 @@ public static class ReferenceSelection
         return pack.Status == PackStatus.Verified || pack.Rating.Works > pack.Rating.DoesNotWork;
     }
 
-    public static IReadOnlyList<RegistryPack> Select(RegistryIndex? index, GameId game, string language, string? buildId)
+    public static IReadOnlyList<RegistryPack> Select(RegistryIndex? index, GameId game, string language, string? buildId, Storage.OsKind? platform = null)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
@@ -164,7 +164,7 @@ public static class ReferenceSelection
             .Where(Qualifies)
             .GroupBy(p => p.Language, StringComparer.Ordinal)
             .Select(g => g
-                .OrderByDescending(p => buildId is not null && p.BuildIds.Contains(buildId, StringComparer.Ordinal))
+                .OrderByDescending(p => p.IsMadeFor(buildId, platform))
                 .ThenByDescending(p => p.Status == PackStatus.Verified)
                 .ThenByDescending(p => p.Rating.Works - p.Rating.DoesNotWork)
                 .ThenByDescending(p => p.Rating.Likes)

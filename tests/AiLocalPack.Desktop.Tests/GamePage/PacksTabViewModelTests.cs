@@ -2,6 +2,7 @@ using AiLocalPack.Core.Dependencies;
 using System.Security.Cryptography;
 using System.Text;
 using AiLocalPack.Core.Games;
+using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
@@ -408,6 +409,54 @@ public sealed class PacksTabViewModelTests : IDisposable
         // Assert
         page.Packs.Rows.Select(r => (r.Pack.Id, r.CompatText)).Should().Equal(
             ("lanterns", "compatible"), ("full", "probably compatible"), ("old", "incompatible"));
+    }
+
+    [Fact]
+    public async Task Header_offers_creating_a_translation_when_no_pack_fits()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r
+            .Pack(10, "ru", "old", buildId: "1000")
+            .Manifest(10, "ru", "old", "1000", new Dictionary<string, string> { ["data/gone.json"] = OtherHash }));
+        var page = Open(services, 10);
+
+        // Act
+        await page.Packs.WhenIdle;
+
+        // Assert
+        (page.Action.Kind, page.HasPrimaryAction, page.PrimaryText, page.PrimaryCaption).Should().Be((
+            GamePrimaryActionKind.Generate, true, "Create translation with AI", "No translation fits your version of the game"));
+    }
+
+    [Fact]
+    public async Task Header_create_with_ai_opens_the_create_with_ai_tab()
+    {
+        // Arrange
+        using var services = await BuildAsync(r => r
+            .Pack(10, "ru", "old", buildId: "1000")
+            .Manifest(10, "ru", "old", "1000", new Dictionary<string, string> { ["data/gone.json"] = OtherHash }));
+        var page = Open(services, 10);
+        await page.Packs.WhenIdle;
+
+        // Act
+        page.PrimaryCommand.Execute(null);
+
+        // Assert
+        page.SelectedTab.Should().Be(GamePageTab.Generation);
+    }
+
+    [Fact]
+    public async Task Header_keeps_install_while_one_pack_fits()
+    {
+        // Arrange
+        using var services = await BuildAsync(ThreePacks);
+        var page = Open(services, 10);
+
+        // Act
+        await page.Packs.WhenIdle;
+
+        // Assert
+        page.Action.Kind.Should().Be(GamePrimaryActionKind.InstallBestPack);
     }
 
     [Fact]

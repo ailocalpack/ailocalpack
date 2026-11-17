@@ -1012,6 +1012,9 @@
   <data name="Game_Caption_Generate" xml:space="preserve">
     <value>내 Claude Code 또는 Codex 구독을 사용합니다</value>
   </data>
+  <data name="Game_Caption_NoneFits" xml:space="preserve">
+    <value>게임 버전에 맞는 번역이 없습니다</value>
+  </data>
   <data name="Game_Caption_PlaySteam" xml:space="preserve">
     <value>Steam으로 실행 · “{0}” 적용</value>
   </data>

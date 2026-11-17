@@ -50,6 +50,20 @@ public sealed class PrimaryActionTextsTests
     }
 
     [Fact]
+    public void Install_of_a_pack_made_for_the_build_on_another_platform_leaves_the_version_out()
+    {
+        // Arrange
+        var pack = Pack(status: PackStatus.Alpha) with { BuildOs = new Dictionary<string, IReadOnlyList<Core.Storage.OsKind>> { ["1000"] = [Core.Storage.OsKind.MacOS] } };
+        var game = TestGames.Steam(10, "Lantern") with { Version = GameVersion.FromBuildId("1000"), Platform = Core.Storage.OsKind.Windows };
+
+        // Act
+        var texts = Texts(new GamePrimaryAction(GamePrimaryActionKind.InstallBestPack, pack), game);
+
+        // Assert
+        texts.Should().Be(("Install translation", "«Фонарщики» · alpha"));
+    }
+
+    [Fact]
     public void Install_of_a_pack_for_another_build_leaves_the_version_out()
     {
         // Arrange

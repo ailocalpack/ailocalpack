@@ -37,7 +37,7 @@ internal sealed record PackRevisionJson(int? Revision, string? Date, string? By,
 
 internal sealed record PackAgentJson(string? Id, string? Version, string? Model, string? Quality = null);
 
-internal sealed record PackBuildJson(string? BuildId, IReadOnlyDictionary<string, string?>? Files);
+internal sealed record PackBuildJson(string? BuildId, IReadOnlyDictionary<string, string?>? Files, string? Os = null);
 
 internal sealed record PackRecipeJson(string? Tool, string? Version, JsonElement? Parameters);
 

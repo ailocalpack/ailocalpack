@@ -17,6 +17,9 @@ public sealed class EngineDetector(ILogger<EngineDetector>? logger = null)
 
     private readonly ILogger _logger = logger ?? NullLogger<EngineDetector>.Instance;
 
+    /// <summary>Games whose platform was looked for in this run (one with no program that tells isn't scanned again).</summary>
+    private readonly HashSet<GameId> _platformTried = [];
+
     public EngineDetection Detect(string gameFolder)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
@@ -66,7 +69,9 @@ public sealed class EngineDetector(ILogger<EngineDetector>? logger = null)
     /// <summary>
     /// Detects the engine of available catalog games that have none stored yet or appear in <paramref name="changes"/> as
     /// added or updated (a new build may have moved to another engine version), and stores its ID
-    /// (<see cref="EngineKind"/> text, <c>unknown</c> when nothing matched). Returns how many games were checked.
+    /// (<see cref="EngineKind"/> text, <c>unknown</c> when nothing matched) with the platform of its files
+    /// (<see cref="GamePlatformDetector"/>). Games stored before the platform was get only the platform, looked for once
+    /// per run. Returns how many games had their engine checked.
     /// </summary>
     public int UpdateCatalog(GameCatalog catalog, IEnumerable<GameChange> changes)
     {
@@ -74,10 +79,27 @@ public sealed class EngineDetector(ILogger<EngineDetector>? logger = null)
         ArgumentNullException.ThrowIfNull(changes);
         var changed = changes.Where(c => c is GameAdded or GameVersionChanged).Select(c => c.Game.Id).ToHashSet();
         var due = catalog.Games.Where(g => g.IsAvailable && (g.Engine is null || changed.Contains(g.Id))).ToList();
+        List<Game> platformOnly;
+        lock (_platformTried)
+        {
+            _platformTried.UnionWith(due.Select(g => g.Id));
+            platformOnly = [.. catalog.Games.Where(g => g.IsAvailable && g.Platform is null && _platformTried.Add(g.Id))];
+        }
+
         foreach (var game in due)
         {
-            var engine = Detect(game.InstallPath).Kind.ToString();
-            catalog.Update(game.Id, g => g with { Engine = engine });
+            var detection = Detect(game.InstallPath);
+            var engine = detection.Kind.ToString();
+            var platform = GamePlatformDetector.Detect(game.InstallPath, detection.Match?.MainExecutable, game.MainExecutable, game.Name);
+            catalog.Update(game.Id, g => g with { Engine = engine, Platform = platform ?? g.Platform });
+        }
+
+        foreach (var game in platformOnly)
+        {
+            if (GamePlatformDetector.Detect(game.InstallPath, null, game.MainExecutable, game.Name) is { } platform)
+            {
+                catalog.Update(game.Id, g => g with { Platform = platform });
+            }
         }
 
         return due.Count;

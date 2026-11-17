@@ -3,6 +3,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Library;
 
@@ -223,6 +224,20 @@ public sealed class LocalizationStatusesTests
 
         // Assert
         ranked.Select(p => p.Id).Should().Equal("exact", "popular");
+    }
+
+    [Fact]
+    public void Pack_made_for_the_build_on_another_platform_ranks_like_any()
+    {
+        // Arrange
+        var macOnly = Pack("mac", buildIds: ["1000"]) with { BuildOs = new Dictionary<string, IReadOnlyList<OsKind>> { ["1000"] = [OsKind.MacOS] } };
+        var packs = new[] { macOnly, Pack("popular", PackStatus.Verified, likes: 50) };
+
+        // Act
+        var ranked = LocalizationStatuses.Rank(packs, Game("1000") with { Platform = OsKind.Windows });
+
+        // Assert
+        ranked.Select(p => p.Id).Should().Equal("popular", "mac");
     }
 
     [Fact]

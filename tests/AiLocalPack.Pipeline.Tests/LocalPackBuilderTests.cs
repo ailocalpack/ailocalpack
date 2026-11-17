@@ -130,6 +130,19 @@ public sealed class LocalPackBuilderTests
     }
 
     [Fact]
+    public void The_manifest_build_records_the_games_platform()
+    {
+        // Arrange
+        var game = SteamGame with { Platform = Core.Storage.OsKind.MacOS };
+
+        // Act
+        var manifest = LocalPackBuilder.Manifest(Input(game));
+
+        // Assert
+        manifest.Builds[0].Os.Should().Be(Core.Storage.OsKind.MacOS);
+    }
+
+    [Fact]
     public void A_manual_games_manifest_has_no_build_id()
     {
         // Arrange

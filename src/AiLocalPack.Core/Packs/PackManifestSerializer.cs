@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Packs;
 
@@ -76,7 +77,7 @@ public static class PackManifestSerializer
             [.. manifest.Revisions.Select(r => new PackRevisionJson(r.Number, PackFormat.FormatDate(r.Date), r.By, r.Notes))],
             StatusText(manifest.Status),
             manifest.Agent is { } agent ? new PackAgentJson(agent.Id, agent.Version, agent.Model, agent.Quality) : null,
-            [.. manifest.Builds.Select(b => new PackBuildJson(b.BuildId, Sorted(b.Files)))],
+            [.. manifest.Builds.Select(b => new PackBuildJson(b.BuildId, Sorted(b.Files), b.Os is { } os ? OsNames.Name(os) : null))],
             manifest.Recipe is { } recipe ? new PackRecipeJson(recipe.Tool, recipe.Version, recipe.Parameters) : null,
             manifest.Strings is { } strings ? new PackStringsJson(strings.Path, strings.Sha256, strings.Size) : null,
             manifest.Patch is { } patch
@@ -413,6 +414,7 @@ public static class PackManifestSerializer
                 return builds;
             }
 
+            // A build ID once per platform: the same Steam build made on Windows and on macOS are two builds.
             var buildIds = new HashSet<string>(StringComparer.Ordinal);
             for (var i = 0; i < list.Count; i++)
             {
@@ -421,6 +423,19 @@ public static class PackManifestSerializer
                 {
                     errors.Add(field, "is empty.");
                     continue;
+                }
+
+                OsKind? os = null;
+                if (entry.Os is not null)
+                {
+                    if (OsNames.TryParse(entry.Os, out var parsed))
+                    {
+                        os = parsed;
+                    }
+                    else
+                    {
+                        errors.Add($"{field}.os", $"'{entry.Os}' is not a platform (windows, macos or linux).");
+                    }
                 }
 
                 var buildId = entry.BuildId;
@@ -435,9 +450,11 @@ public static class PackManifestSerializer
                     {
                         errors.Add($"{field}.buildId", "is only for store games; a manually added game is matched by file hashes.");
                     }
-                    else if (!buildIds.Add(buildId))
+                    else if (!buildIds.Add(os is { } platform ? $"{buildId}/{OsNames.Name(platform)}" : buildId))
                     {
-                        errors.Add($"{field}.buildId", $"build {buildId} is listed twice.");
+                        errors.Add($"{field}.buildId", os is { } platform2
+                            ? $"build {buildId} for {OsNames.Name(platform2)} is listed twice."
+                            : $"build {buildId} is listed twice.");
                     }
                 }
                 else if (game?.Kind == GameIdKind.Steam)
@@ -448,7 +465,7 @@ public static class PackManifestSerializer
                 var files = FileHashes($"{field}.files", entry.Files);
                 if (files is not null)
                 {
-                    builds.Add(new PackBuild(buildId, files));
+                    builds.Add(new PackBuild(buildId, files, os));
                 }
             }
 

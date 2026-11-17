@@ -48,6 +48,7 @@ public static class PrimaryActionTexts
         return action switch
         {
             { Kind: GamePrimaryActionKind.InstallBestPack, Pack: { } pack } => InstallCaption(pack, game, localizer),
+            { Kind: GamePrimaryActionKind.Generate, NoneFits: true } => localizer[nameof(Strings.Game_Caption_NoneFits)],
             { Kind: GamePrimaryActionKind.Generate } => localizer[nameof(Strings.Game_Caption_Generate)],
             { Kind: GamePrimaryActionKind.Play, Official: { } official } => localizer.Format(
                 game.Source == GameSource.Steam ? nameof(Strings.Game_Caption_PlayOfficialSteam) : nameof(Strings.Game_Caption_PlayOfficial),
@@ -79,8 +80,9 @@ public static class PrimaryActionTexts
             localizer[pack.Status == PackStatus.Verified ? nameof(Strings.Library_Card_Verified) : nameof(Strings.Library_Card_Alpha)],
         };
 
-        // Whether the files match is the Packs tab's check (task 24); the index alone tells whether the pack was made for this build.
-        if (game.Version?.BuildId is { } build && pack.BuildIds.Contains(build, StringComparer.Ordinal))
+        // Whether the files match is the Packs tab's check (task 24); the index alone tells whether the pack was made for
+        // this build on this platform (a Steam build ID is the same on every OS).
+        if (pack.IsMadeFor(game.Version?.BuildId, game.Platform))
         {
             parts.Add(localizer[nameof(Strings.Game_Caption_ForYourVersion)]);
         }

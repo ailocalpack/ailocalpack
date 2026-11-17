@@ -48,6 +48,48 @@ public sealed class GamePrimaryActionsTests
         action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.InstallBestPack, best));
     }
 
+    private static PackCompatibility Check(PackCompatibilityVerdict verdict) =>
+        new(verdict, verdict == PackCompatibilityVerdict.Compatible ? PackCompatibilityReason.BuildListed : PackCompatibilityReason.FilesMissing, ["1000"], "1000", null, 1, [], []);
+
+    [Fact]
+    public void Every_pack_checked_incompatible_offers_generation()
+    {
+        // Arrange
+        var install = new GamePrimaryAction(GamePrimaryActionKind.InstallBestPack, Pack("old"));
+
+        // Act
+        var action = GamePrimaryActions.WithChecks(install, [Check(PackCompatibilityVerdict.Incompatible), Check(PackCompatibilityVerdict.Incompatible)]);
+
+        // Assert
+        action.Should().Be(new GamePrimaryAction(GamePrimaryActionKind.Generate, NoneFits: true));
+    }
+
+    [Fact]
+    public void One_compatible_pack_keeps_install()
+    {
+        // Arrange
+        var install = new GamePrimaryAction(GamePrimaryActionKind.InstallBestPack, Pack("best"));
+
+        // Act
+        var action = GamePrimaryActions.WithChecks(install, [Check(PackCompatibilityVerdict.Incompatible), Check(PackCompatibilityVerdict.Compatible)]);
+
+        // Assert
+        action.Should().BeSameAs(install);
+    }
+
+    [Fact]
+    public void Unchecked_pack_keeps_install()
+    {
+        // Arrange
+        var install = new GamePrimaryAction(GamePrimaryActionKind.InstallBestPack, Pack("best"));
+
+        // Act
+        var action = GamePrimaryActions.WithChecks(install, [Check(PackCompatibilityVerdict.Incompatible), null]);
+
+        // Assert
+        action.Should().BeSameAs(install);
+    }
+
     [Fact]
     public void No_pack_offers_generation()
     {

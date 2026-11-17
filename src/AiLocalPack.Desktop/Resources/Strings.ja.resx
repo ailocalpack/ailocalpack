@@ -1012,6 +1012,9 @@
   <data name="Game_Caption_Generate" xml:space="preserve">
     <value>Claude Code または Codex のサブスクリプションを使います</value>
   </data>
+  <data name="Game_Caption_NoneFits" xml:space="preserve">
+    <value>お使いのゲームのバージョンに合う翻訳はありません</value>
+  </data>
   <data name="Game_Caption_PlaySteam" xml:space="preserve">
     <value>Steam 経由 · 「{0}」を使用</value>
   </data>

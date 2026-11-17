@@ -1012,6 +1012,9 @@
   <data name="Game_Caption_Generate" xml:space="preserve">
     <value>使用你的 Claude Code 或 Codex 订阅</value>
   </data>
+  <data name="Game_Caption_NoneFits" xml:space="preserve">
+    <value>没有适合你游戏版本的翻译</value>
+  </data>
   <data name="Game_Caption_PlaySteam" xml:space="preserve">
     <value>通过 Steam · 使用“{0}”</value>
   </data>

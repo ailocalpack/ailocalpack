@@ -11,7 +11,10 @@ public enum GamePrimaryActionKind
     /// <summary>No pack installed and the registry has one: installs the best one.</summary>
     InstallBestPack,
 
-    /// <summary>Nothing in the registry for the language: opens the Generation tab.</summary>
+    /// <summary>
+    /// Nothing in the registry for the language, or every pack of it checked incompatible with the game's files
+    /// (<see cref="GamePrimaryAction.NoneFits"/>): opens the Generation tab.
+    /// </summary>
     Generate,
 
     /// <summary>A pack is installed and fits the game, or the game ships the language itself (<see cref="GamePrimaryAction.Official"/>, task 80).</summary>
@@ -60,13 +63,18 @@ public enum GamePrimaryActionKind
 /// <param name="Job">The generation job (<see cref="GamePrimaryActionKind.ViewProgress"/> and the other job kinds).</param>
 /// <param name="Result">The local pack <see cref="GamePrimaryActionKind.InstallLocalPack"/> installs.</param>
 /// <param name="Official">The game's own language <see cref="GamePrimaryActionKind.Play"/> plays in (in game, task 80).</param>
+/// <param name="NoneFits">
+/// <see cref="GamePrimaryActionKind.Generate"/> because the registry has packs of the language but none of them can be
+/// installed on the game's files (<see cref="GamePrimaryActions.WithChecks"/>).
+/// </param>
 public sealed record GamePrimaryAction(
     GamePrimaryActionKind Kind,
     RegistryPack? Pack = null,
     InstalledPackState? Installed = null,
     GenerationJobState? Job = null,
     GenerationResultState? Result = null,
-    Games.OfficialLanguage? Official = null)
+    Games.OfficialLanguage? Official = null,
+    bool NoneFits = false)
 {
     public static GamePrimaryAction None { get; } = new(GamePrimaryActionKind.None);
 }
@@ -118,6 +126,21 @@ public static class GamePrimaryActions
             LocalizationStatusKind.PackAvailable => new(GamePrimaryActionKind.InstallBestPack, status.BestPack),
             _ => new(GamePrimaryActionKind.Generate),
         };
+    }
+
+    /// <summary>
+    /// The action once the packs' files were compared with the game (the Text tab's checks): <c>Install</c> becomes
+    /// <see cref="GamePrimaryActionKind.Generate"/> with <see cref="GamePrimaryAction.NoneFits"/> when every pack of the
+    /// language was checked and none can be installed. Unchanged while any pack is unchecked, couldn't be checked, or fits.
+    /// </summary>
+    /// <param name="checks">One entry per registry pack of the language: its check, <c>null</c> when not (yet) known.</param>
+    public static GamePrimaryAction WithChecks(GamePrimaryAction action, IReadOnlyCollection<Packs.PackCompatibility?> checks)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        ArgumentNullException.ThrowIfNull(checks);
+        return action.Kind == GamePrimaryActionKind.InstallBestPack && checks.Count > 0 && checks.All(c => c is { CanInstall: false })
+            ? new(GamePrimaryActionKind.Generate, NoneFits: true)
+            : action;
     }
 
     /// <summary>Running → view progress; paused or interrupted → resume; failed → retry the stage; waiting → review the glossary.</summary>

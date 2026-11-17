@@ -2,6 +2,7 @@ using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Registry;
 
@@ -69,6 +70,10 @@ public sealed record RegistryGame(
 /// <param name="ManifestPath">The manifest, relative to <c>index.json</c> (<see cref="RegistryLocation.Resolve"/>).</param>
 /// <param name="Size">Download size in bytes (string table or binary patch).</param>
 /// <param name="Discussion">The pack's GitHub Discussion, once it exists.</param>
+/// <param name="BuildOs">
+/// The platforms each build ID was made on (index <c>buildOs</c>), for the build IDs whose every manifest build records
+/// one; a build ID missing here matches on any platform (packs from before platforms were recorded).
+/// </param>
 public sealed record RegistryPack(
     string Id,
     GameId Game,
@@ -84,7 +89,29 @@ public sealed record RegistryPack(
     string ManifestPath,
     long Size,
     RegistryRating Rating,
-    Uri? Discussion = null);
+    Uri? Discussion = null,
+    IReadOnlyDictionary<string, IReadOnlyList<OsKind>>? BuildOs = null)
+{
+    /// <summary>
+    /// Whether the pack was made for the player's build: <paramref name="buildId"/> listed, on <paramref name="platform"/>
+    /// where both the pack and the game know theirs (a Steam build ID is the same on every OS, its files are not).
+    /// </summary>
+    public bool IsMadeFor(string? buildId, OsKind? platform) =>
+        buildId is not null
+        && BuildIds.Contains(buildId, StringComparer.Ordinal)
+        && (platform is null || BuildOs is null || !BuildOs.TryGetValue(buildId, out var platforms) || platforms.Contains(platform.Value));
+
+    /// <summary>The <see cref="BuildOs"/> of manifest builds: build IDs whose builds all record their platform.</summary>
+    public static IReadOnlyDictionary<string, IReadOnlyList<OsKind>>? BuildOsOf(IEnumerable<PackBuild> builds)
+    {
+        ArgumentNullException.ThrowIfNull(builds);
+        var map = builds.Where(b => b.BuildId is not null)
+            .GroupBy(b => b.BuildId!, StringComparer.Ordinal)
+            .Where(g => g.All(b => b.Os is not null))
+            .ToDictionary(g => g.Key, g => (IReadOnlyList<OsKind>)[.. g.Select(b => b.Os!.Value).Distinct().Order()], StringComparer.Ordinal);
+        return map.Count > 0 ? map : null;
+    }
+}
 
 /// <summary>Community numbers of a pack, from its GitHub Discussion.</summary>
 /// <param name="Likes">👍 reactions.</param>

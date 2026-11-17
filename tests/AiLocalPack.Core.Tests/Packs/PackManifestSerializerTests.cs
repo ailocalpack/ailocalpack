@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Packs;
 
@@ -15,6 +16,7 @@ public sealed class PackManifestSerializerTests
     /// <summary>Invalid sample → the error it must produce, and whether the JSON Schema can see it too.</summary>
     public static TheoryData<string, string, string, bool> InvalidCases => new()
     {
+        { "bad-build-os", "builds[0].os", "'android' is not a platform", true },
         { "bad-file-hash", "builds[0].files[\"www/data/System.json\"]", "is not a SHA-256 hash", true },
         { "bad-game-id", "game", "'steam:0620' is not a game ID", true },
         { "bad-pack-id", "id", "'Full_RU' is not a valid ID", true },
@@ -235,6 +237,45 @@ public sealed class PackManifestSerializerTests
 
         // Assert
         result.Errors.Should().ContainSingle().Which.Message.Should().StartWith("Not valid JSON (line 3");
+    }
+
+    [Fact]
+    public void Build_platforms_are_read()
+    {
+        // Arrange
+        var json = PackFixtures.ReadValid("build-per-platform");
+
+        // Act
+        var result = PackManifestSerializer.Read(json);
+
+        // Assert
+        result.Value!.Builds.Select(b => (b.BuildId, b.Os)).Should().Equal(("1234567", OsKind.Windows), ("1234567", OsKind.MacOS));
+    }
+
+    [Fact]
+    public void Build_platform_round_trips()
+    {
+        // Arrange
+        var manifest = PackManifestSerializer.Read(PackFixtures.ReadValid("build-per-platform")).Value!;
+
+        // Act
+        var again = PackManifestSerializer.Read(PackManifestSerializer.Write(manifest)).Value!;
+
+        // Assert
+        again.Builds.Select(b => b.Os).Should().Equal(OsKind.Windows, OsKind.MacOS);
+    }
+
+    [Fact]
+    public void Same_build_on_the_same_platform_twice_is_rejected()
+    {
+        // Arrange
+        var json = PackFixtures.ReadValid("build-per-platform").Replace("\"os\": \"macos\"", "\"os\": \"windows\"", StringComparison.Ordinal);
+
+        // Act
+        var result = PackManifestSerializer.Read(json);
+
+        // Assert
+        result.Errors.Should().ContainSingle().Which.Message.Should().Be("build 1234567 for windows is listed twice.");
     }
 
     [Fact]

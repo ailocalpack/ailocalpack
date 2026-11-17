@@ -36,6 +36,11 @@ public enum GameSource
 /// when it was added: the one launched first when it runs on this OS. <c>null</c> for Steam games (Steam starts them)
 /// and when unknown.
 /// </param>
+/// <param name="Platform">
+/// The OS the installed game files are for, from its executables (a Windows build under Proton on Linux is
+/// <see cref="Storage.OsKind.Windows"/>); found with the engine, <c>null</c> while unknown. A Steam build ID is the same
+/// on every OS, so a pack's build matches only on the same platform (<c>PackBuild.Matches</c>).
+/// </param>
 public sealed record Game(
     GameId Id,
     string Name,
@@ -47,7 +52,8 @@ public sealed record Game(
     string? AntiCheat,
     DateTimeOffset? LastPlayed,
     bool IsAvailable,
-    string? MainExecutable = null);
+    string? MainExecutable = null,
+    Storage.OsKind? Platform = null);
 
 /// <summary>Something that happened to a game when the catalog changed.</summary>
 public abstract record GameChange(Game Game);

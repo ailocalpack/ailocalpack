@@ -89,7 +89,16 @@ public sealed record PackAgent(string Id, string? Version = null, string? Model 
 /// <summary>A game build the pack supports.</summary>
 /// <param name="BuildId">Store build ID (Steam games); <c>null</c> for a manually added game.</param>
 /// <param name="Files">Touched file (relative, '/'-separated) → its original SHA-256 lowercase hex in this build.</param>
-public sealed record PackBuild(string? BuildId, IReadOnlyDictionary<string, string> Files);
+/// <param name="Os">
+/// The platform of the game files the pack was made from (a Steam build ID is the same on every OS, its files are not);
+/// <c>null</c> for packs from before it was recorded: they match the build ID on any platform.
+/// </param>
+public sealed record PackBuild(string? BuildId, IReadOnlyDictionary<string, string> Files, Storage.OsKind? Os = null)
+{
+    /// <summary>Whether this is the player's build: the same build ID, and the same platform where both are known.</summary>
+    public bool Matches(string buildId, Storage.OsKind? platform) =>
+        BuildId == buildId && (Os is null || platform is null || Os == platform);
+}
 
 /// <param name="Tool">Toolkit tool ID that rebuilds game files from the string table (<c>rpgmaker</c>…).</param>
 /// <param name="Version">Tool version, <c>major.minor.patch</c>.</param>

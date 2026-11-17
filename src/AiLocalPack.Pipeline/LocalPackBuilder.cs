@@ -1,6 +1,8 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Validation;
 
 namespace AiLocalPack.Pipeline;
@@ -179,7 +181,7 @@ public static class LocalPackBuilder
             revisions,
             PackStatus.Alpha,
             new PackAgent(ManifestAgentId(input.AgentId), input.Agent?.Version, model, input.Quality?.ToString().ToLowerInvariant()),
-            [new PackBuild(buildId, new SortedDictionary<string, string>(input.Touched.ToDictionary(), StringComparer.Ordinal))],
+            [new PackBuild(buildId, new SortedDictionary<string, string>(input.Touched.ToDictionary(), StringComparer.Ordinal), Platform(input.Game))],
             input.Patch is null ? new PackRecipe(input.Tool, input.ToolVersion.ToString(3)) : null,
             null,
             input.Patch,
@@ -190,6 +192,13 @@ public static class LocalPackBuilder
             now,
             References(input));
     }
+
+    /// <summary>
+    /// The platform of the game files the pack is made from (the catalog's, else read from the executables now): a Steam
+    /// build ID is the same on every OS, so the build records it.
+    /// </summary>
+    private static OsKind? Platform(Game game) =>
+        game.Platform ?? GamePlatformDetector.Detect(game.InstallPath, null, game.MainExecutable, game.Name);
 
     /// <summary>
     /// The packs credited as references (decided 2026-11-16): the base's (an update keeps them) and the job's, each pack

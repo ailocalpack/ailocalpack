@@ -1120,6 +1120,9 @@
   <data name="Game_Caption_Generate" xml:space="preserve">
     <value>Korzysta z twojej subskrypcji Claude Code lub Codex</value>
   </data>
+  <data name="Game_Caption_NoneFits" xml:space="preserve">
+    <value>Żadne tłumaczenie nie pasuje do twojej wersji gry</value>
+  </data>
   <data name="Game_Caption_PlaySteam" xml:space="preserve">
     <value>przez Steam · z „{0}”</value>
   </data>

@@ -1,6 +1,7 @@
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Registry;
 
@@ -54,6 +55,22 @@ public sealed class RegistryIndexBuilderTests : IDisposable
 
         // Assert
         (result.Index!.PackCount, result.Problems.Single().File).Should().Be((3, "games/steam-620/ru/menus/manifest.json"));
+    }
+
+    [Fact]
+    public void Build_platform_of_the_manifest_goes_into_the_index()
+    {
+        // Arrange
+        var root = CopyRegistry();
+        var manifest = Path.Combine(root, "games/steam-620/ru/menus/manifest.json");
+        File.WriteAllText(manifest, File.ReadAllText(manifest).Replace("\"buildId\": \"1250000\",", "\"buildId\": \"1250000\", \"os\": \"macos\",", StringComparison.Ordinal));
+
+        // Act
+        var result = RegistryIndexBuilder.Build(root, Generated, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Index!.PacksFor(GameId.Steam(620), "ru").Single(p => p.Id == "menus").BuildOs.Should().BeEquivalentTo(
+            new Dictionary<string, IReadOnlyList<OsKind>> { ["1250000"] = [OsKind.MacOS] });
     }
 
     [Fact]

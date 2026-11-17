@@ -92,5 +92,6 @@ public static class GameCatalogMerge
         previous?.Engine,
         previous?.AntiCheat,
         steam.LastPlayed ?? previous?.LastPlayed,
-        IsAvailable: true);
+        IsAvailable: true,
+        Platform: previous?.Platform);
 }

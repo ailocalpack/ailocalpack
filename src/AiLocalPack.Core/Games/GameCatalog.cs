@@ -287,7 +287,8 @@ public sealed class GameCatalog
                 entry.AntiCheat,
                 entry.LastPlayed,
                 entry.Available,
-                source == GameSource.Manual ? entry.MainExecutable : null);
+                source == GameSource.Manual ? entry.MainExecutable : null,
+                Storage.OsNames.TryParse(entry.Platform, out var platform) ? platform : null);
         }
         catch (Exception e) when (e is FormatException or ArgumentException)
         {
@@ -307,7 +308,8 @@ public sealed class GameCatalog
         game.AntiCheat,
         game.LastPlayed?.ToUniversalTime(),
         game.IsAvailable,
-        game.MainExecutable);
+        game.MainExecutable,
+        game.Platform is { } platform ? Storage.OsNames.Name(platform) : null);
 
     private string? BackUpCorrupted()
     {

@@ -27,28 +27,16 @@ public sealed record DependencyPlatform(OsKind Os, string Arch)
             return false;
         }
 
-        OsKind? kind = os switch
-        {
-            "windows" => OsKind.Windows,
-            "linux" => OsKind.Linux,
-            "macos" => OsKind.MacOS,
-            _ => null,
-        };
-        if (kind is null)
+        if (!OsNames.TryParse(os, out var kind))
         {
             return false;
         }
 
-        platform = new DependencyPlatform(kind.Value, arch);
+        platform = new DependencyPlatform(kind, arch);
         return true;
     }
 
-    public static string OsName(OsKind os) => os switch
-    {
-        OsKind.Windows => "windows",
-        OsKind.Linux => "linux",
-        _ => "macos",
-    };
+    public static string OsName(OsKind os) => OsNames.Name(os);
 }
 
 /// <summary>One official release file of a dependency version, for one platform.</summary>

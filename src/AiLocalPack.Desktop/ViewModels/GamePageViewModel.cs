@@ -176,6 +176,7 @@ public sealed partial class GamePageViewModel : PageViewModel
             pack => _ = _install.InstallLocalAsync(Game, pack, play: false), AskDeleteLocal, PublishOf, ratings, _logger, requests, _statuses.OfficialOf(game));
         Packs.InstallRequested += OnInstallRequested;
         Packs.UninstallRequested += OnUninstallRequested;
+        Packs.ChecksChanged += OnPackChecksChanged;
         Packs.SetInstallState(_install.IsBusy, InstallingPackId);
         Generation = new GenerationTabViewModel(game, Language, jobs, estimates, agents, settings, packIndex, localizer, ui, dialogs, toasts, install, localPacks, ShowLocalInPacks, PublishOf, time, _logger, updateBases, UpdateCandidate, requests, fixes, picker, tools)
         {
@@ -301,9 +302,10 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     /// <summary>
     /// Never "Generate" (design §3: AI is a helper, not the page's main action; the empty Text tab and the Create with AI
-    /// tab offer it), so a game without a translation has no header action.
+    /// tab offer it), so a game without a translation has no header action; except when the registry's translations were
+    /// all checked incompatible (<see cref="GamePrimaryAction.NoneFits"/>): then creating one is what's left to do.
     /// </summary>
-    public bool HasPrimaryAction => Action.Kind is not (GamePrimaryActionKind.None or GamePrimaryActionKind.Generate);
+    public bool HasPrimaryAction => Action.Kind is not (GamePrimaryActionKind.None or GamePrimaryActionKind.Generate) || Action.NoneFits;
 
     /// <summary>
     /// "Install best pack", "Generate translation with AI", "Play", "Update to rev 4", "View progress"…; Play reads
@@ -344,8 +346,8 @@ public sealed partial class GamePageViewModel : PageViewModel
         _ => "IconSparkles",
     };
 
-    /// <summary>View progress and Resume are teal (generation), the others the accent.</summary>
-    public bool IsPrimaryGen => Action.Kind is GamePrimaryActionKind.ViewProgress or GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.FixWithAi;
+    /// <summary>View progress, Resume, Fix with AI and Create with AI are teal (generation), the others the accent.</summary>
+    public bool IsPrimaryGen => Action.Kind is GamePrimaryActionKind.ViewProgress or GamePrimaryActionKind.ResumeGeneration or GamePrimaryActionKind.FixWithAi or GamePrimaryActionKind.Generate;
 
     /// <summary>The loader icon turns while the job runs.</summary>
     public bool IsPrimarySpinning => Action.Kind == GamePrimaryActionKind.ViewProgress;
@@ -931,6 +933,23 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     private void OnPackIndexChanged(object? sender, RegistryIndexSnapshot snapshot) => _ui.Post(Refresh);
 
+    /// <summary>
+    /// The Text tab compared a pack with the game's files: when none of the language's packs fits, the header's
+    /// <c>Install translation</c> becomes <c>Create translation with AI</c> (and back when the checks change again).
+    /// </summary>
+    private void OnPackChecksChanged(object? sender, EventArgs e) => _ui.Post(() =>
+    {
+        var action = GamePrimaryActions.WithChecks(GamePrimaryActions.Resolve(Status), Packs.TargetChecks);
+        if (action == Action)
+        {
+            return;
+        }
+
+        Action = action;
+        OnPropertyChanged(string.Empty);
+        PrimaryCommand.NotifyCanExecuteChanged();
+    });
+
     private void OnSettingsChanged(object? sender, AppSettings settings) => _ui.Post(Refresh);
 
     private void OnCultureChanged(object? sender, EventArgs e)
@@ -947,6 +966,7 @@ public sealed partial class GamePageViewModel : PageViewModel
         Action = GamePrimaryActions.Resolve(Status);
         UpdateTabs();
         Packs.Update(Game, Status, Language, _statuses.OfficialOf(Game));
+        Action = GamePrimaryActions.WithChecks(Action, Packs.TargetChecks);
         Generation.Update(Game, Language, UpdateCandidate);
         Generation.Official = _statuses.OfficialOf(Game);
         ActivateTab();

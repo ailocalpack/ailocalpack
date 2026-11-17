@@ -202,12 +202,13 @@ public static class RegistryIndexBuilder
         manifest.Revision,
         manifest.Updated,
         manifest.Coverage,
-        [.. manifest.Builds.Select(b => b.BuildId).OfType<string>()],
+        [.. manifest.Builds.Select(b => b.BuildId).OfType<string>().Distinct(StringComparer.Ordinal)],
         manifest.Builds.Count,
         manifestPath,
         (manifest.Strings?.Size ?? 0) + (manifest.Patch?.Size ?? 0),
         rating?.Rating ?? RegistryRating.None,
-        rating?.Discussion);
+        rating?.Discussion,
+        RegistryPack.BuildOsOf(manifest.Builds));
 
     /// <summary>The <c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c> folders in ordinal order; files on the way are reported.</summary>
     internal static List<string> PackFolders(string root, string games, List<RegistryBuildProblem> problems)

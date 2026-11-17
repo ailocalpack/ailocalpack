@@ -6,6 +6,7 @@ using AiLocalPack.Core.Dependencies;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Registry;
 
@@ -187,7 +188,11 @@ public static class RegistryIndexSerializer
         pack.ManifestPath,
         pack.Size,
         pack.Rating == RegistryRating.None ? null : new RegistryRatingJson(pack.Rating.Likes, pack.Rating.Works, pack.Rating.DoesNotWork),
-        pack.Discussion?.AbsoluteUri);
+        pack.Discussion?.AbsoluteUri,
+        pack.BuildOs is { Count: > 0 } buildOs
+            ? new SortedDictionary<string, IReadOnlyList<string?>?>(
+                buildOs.ToDictionary(e => e.Key, e => (IReadOnlyList<string?>?)[.. e.Value.Select(os => OsNames.Name(os))]), StringComparer.Ordinal)
+            : null);
 
     private static RegistryGame ReadGame(GameId id, string field, RegistryGameJson entry, PackFormatErrors skipped)
     {
@@ -291,12 +296,13 @@ public static class RegistryIndexSerializer
             };
             var rating = Rating(json.Rating);
             var discussion = Discussion(json.Discussion);
+            var buildOs = BuildOs(json.BuildOs, buildIds);
 
             return errors.Any
                 ? null
                 : new RegistryPack(
                     id!, game, language, title!, author!, status!.Value, revision!.Value, updated!.Value, coverage!, buildIds!,
-                    buildCount!.Value, manifest!, size!.Value, rating, discussion);
+                    buildCount!.Value, manifest!, size!.Value, rating, discussion, buildOs);
         }
 
         private static bool IsManifestPath(string path) =>
@@ -421,6 +427,29 @@ public static class RegistryIndexSerializer
             }
 
             return new PackCoverage(t, n);
+        }
+
+        /// <summary>
+        /// The platforms of listed build IDs; an ID the pack doesn't list is ignored, a platform name from a newer app is
+        /// left out (a build made only on platforms this app doesn't know then matches none).
+        /// </summary>
+        private static Dictionary<string, IReadOnlyList<OsKind>>? BuildOs(IReadOnlyDictionary<string, IReadOnlyList<string?>?>? map, List<string>? buildIds)
+        {
+            if (map is null || buildIds is null)
+            {
+                return null;
+            }
+
+            var result = new Dictionary<string, IReadOnlyList<OsKind>>(StringComparer.Ordinal);
+            foreach (var (buildId, names) in map)
+            {
+                if (buildIds.Contains(buildId, StringComparer.Ordinal) && names is not null)
+                {
+                    result[buildId] = [.. names.Select(n => OsNames.TryParse(n, out var os) ? os : (OsKind?)null).OfType<OsKind>().Distinct()];
+                }
+            }
+
+            return result.Count > 0 ? result : null;
         }
 
         private List<string>? BuildIds(IReadOnlyList<string?>? list, GameId game)

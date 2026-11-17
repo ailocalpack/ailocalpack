@@ -1094,6 +1094,9 @@
   <data name="Game_Caption_Generate" xml:space="preserve">
     <value>Uses your Claude Code or Codex subscription</value>
   </data>
+  <data name="Game_Caption_NoneFits" xml:space="preserve">
+    <value>No translation fits your version of the game</value>
+  </data>
   <data name="Game_Caption_PlaySteam" xml:space="preserve">
     <value>via Steam · with «{0}»</value>
   </data>

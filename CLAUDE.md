@@ -125,7 +125,7 @@ Both live in the GitHub organization **`ailocalpack`** (not a personal account: 
 ## Game identity
 
 - Game ID = store ID (`steam:1091500`). Manually added games get a fingerprint from the hash of the main executable plus engine identity data (Unity `app.info`, RPG Maker title), not content files (`fp:<SHA-256, 64 lowercase hex>`; see _Manual game fingerprint and version_ in `docs/games.md`).
-- Version = store build ID, else a file-hash set.
+- Version = store build ID, else a file-hash set. A Steam build ID is the same on every OS while its files are not, so a pack's build records the platform it was made on (`os`, index `buildOs`) and matches the player's build only on the same platform (`Game.Platform`, from the game's executables; decided 2026-11-17, _Pack format details_ in `docs/packs-and-registry.md`).
 - A pack records hashes of the files it touches; before install the app reports compatible / probably compatible / incompatible (_Pack compatibility_ in `docs/packs-and-registry.md`).
 
 ## Install

@@ -25,7 +25,7 @@ public sealed class ReferenceFetcher(PackManifestClient manifests, PackFetcher f
         ArgumentNullException.ThrowIfNull(location);
         ArgumentNullException.ThrowIfNull(game);
         var packs = new List<ReferencePack>();
-        foreach (var listed in ReferenceSelection.Select(index, game.Id, language, game.Version?.BuildId))
+        foreach (var listed in ReferenceSelection.Select(index, game.Id, language, game.Version?.BuildId, game.Platform))
         {
             var manifest = await manifests.FetchAsync(location, listed, cancellationToken).ConfigureAwait(false);
             if (manifest.Manifest is not { } read)
@@ -36,7 +36,7 @@ public sealed class ReferenceFetcher(PackManifestClient manifests, PackFetcher f
 
             if (read.Patch is not null)
             {
-                packs.Add(new ReferencePack(read, null, ReferencePack.IsSameBuild(read, game.Version)));
+                packs.Add(new ReferencePack(read, null, ReferencePack.IsSameBuild(read, game.Version, game.Platform)));
                 continue;
             }
 
@@ -47,7 +47,7 @@ public sealed class ReferenceFetcher(PackManifestClient manifests, PackFetcher f
                 continue;
             }
 
-            packs.Add(new ReferencePack(cached.Manifest, strings, ReferencePack.IsSameBuild(cached.Manifest, game.Version)));
+            packs.Add(new ReferencePack(cached.Manifest, strings, ReferencePack.IsSameBuild(cached.Manifest, game.Version, game.Platform)));
         }
 
         return packs;

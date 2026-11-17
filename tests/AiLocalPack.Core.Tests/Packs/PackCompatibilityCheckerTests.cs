@@ -75,6 +75,43 @@ public sealed class PackCompatibilityCheckerTests : IDisposable
     private void GameFile(string path, string content) => _dir.File("game/" + path, content);
 
     [Fact]
+    public void A_build_id_listed_for_another_platform_is_compared_by_files()
+    {
+        // Arrange
+        GameFile(Map, "windows map");
+        GameFile(System, "system");
+        var pack = Pack(SteamGame, Build("100", (Map, "macos map"), (System, "system")) with { Os = OsKind.MacOS });
+        var checker = new PackCompatibilityChecker(new FileHashCache());
+
+        // Act
+        var result = checker.Check(pack, Game(SteamGame, "100") with { Platform = OsKind.Windows }, Ct);
+
+        // Assert
+        result.Should().BeEquivalentTo(new
+        {
+            Verdict = PackCompatibilityVerdict.ProbablyCompatible,
+            Reason = PackCompatibilityReason.FilesChanged,
+            ChangedFiles = new[] { Map },
+        });
+    }
+
+    [Fact]
+    public void A_build_id_listed_for_the_games_platform_is_compatible()
+    {
+        // Arrange
+        GameFile(Map, "windows map");
+        GameFile(System, "system");
+        var pack = Pack(SteamGame, Build("100", (Map, "macos map"), (System, "system")) with { Os = OsKind.MacOS });
+        var checker = new PackCompatibilityChecker(new FileHashCache());
+
+        // Act
+        var result = checker.Check(pack, Game(SteamGame, "100") with { Platform = OsKind.MacOS }, Ct);
+
+        // Assert
+        (result.Verdict, result.Reason).Should().Be((PackCompatibilityVerdict.Compatible, PackCompatibilityReason.BuildListed));
+    }
+
+    [Fact]
     public void A_listed_build_id_is_compatible_without_comparing_files()
     {
         // Arrange

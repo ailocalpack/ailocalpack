@@ -35,7 +35,8 @@ internal sealed record RegistryPackJson(
     string? Manifest,
     long? Size,
     RegistryRatingJson? Rating,
-    string? Discussion);
+    string? Discussion,
+    IReadOnlyDictionary<string, IReadOnlyList<string?>?>? BuildOs = null);
 
 internal sealed record RegistryAuthorJson(string? Github, string? Name);
 

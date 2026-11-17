@@ -260,7 +260,18 @@
             "doesNotWork": { "type": "integer", "minimum": 0 }
           }
         },
-        "discussion": { "description": "The pack's GitHub Discussion.", "type": "string", "pattern": "^https://" }
+        "discussion": { "description": "The pack's GitHub Discussion.", "type": "string", "pattern": "^https://" },
+        "buildOs": {
+          "description": "The platforms each build ID was made on, for build IDs whose every manifest build records one (a Steam build ID is the same on every OS, its files are not). A build ID not here matches on any platform. A newer app may add values.",
+          "type": "object",
+          "propertyNames": { "pattern": "^[0-9]{1,20}$" },
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^[a-z0-9]+$" }
+          }
+        }
       }
     },
     "language": {

@@ -85,6 +85,21 @@ public sealed class GameCatalogTests : IDisposable
     }
 
     [Fact]
+    public void Platform_survives_a_restart()
+    {
+        // Arrange
+        var first = CreateCatalog();
+        first.Load();
+        first.AddManual(Manual() with { Platform = OsKind.MacOS });
+
+        // Act
+        var games = CreateCatalog().Load();
+
+        // Assert
+        games.Single().Platform.Should().Be(OsKind.MacOS);
+    }
+
+    [Fact]
     public void Refresh_returns_and_raises_the_changes()
     {
         // Arrange

@@ -243,6 +243,17 @@ public sealed partial class PacksTabViewModel : ObservableObject
     /// <summary><c>Uninstall (restore originals)</c> on the installed pack.</summary>
     public event EventHandler? UninstallRequested;
 
+    /// <summary>A pack's check ended or the rows changed: <see cref="TargetChecks"/> may differ (the header follows).</summary>
+    public event EventHandler? ChecksChanged;
+
+    /// <summary>
+    /// The compatibility of each registry pack of the page's target language (<c>null</c> while unchecked or when its
+    /// manifest couldn't be read); empty while the list shows another language.
+    /// </summary>
+    public IReadOnlyList<PackCompatibility?> TargetChecks => Language == _target
+        ? [.. Rows.Select(r => r.State == PackCheckState.Checked ? r.Compatibility : null)]
+        : [];
+
     /// <summary>The language the list shows (exact tag).</summary>
     public string Language { get; private set; }
 
@@ -689,6 +700,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
         RebuildMine();
         Request?.Refresh(_game, Language, rows.Count > 0);
         OnPropertyChanged(string.Empty);
+        ChecksChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private PackRowContext Context(IReadOnlyList<RegistryPack> packs) =>
@@ -801,6 +813,7 @@ public sealed partial class PacksTabViewModel : ObservableObject
             }
 
             await CheckAsync(row);
+            ChecksChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 

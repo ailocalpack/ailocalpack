@@ -250,7 +250,7 @@ public static class LocalizationStatuses
         return
         [
             .. packs
-                .OrderByDescending(p => build is not null && p.BuildIds.Contains(build, StringComparer.Ordinal))
+                .OrderByDescending(p => p.IsMadeFor(build, game.Platform))
                 .ThenByDescending(p => p.Status == PackStatus.Verified)
                 .ThenByDescending(p => p.Rating.Likes)
                 .ThenByDescending(p => p.Rating.Works - p.Rating.DoesNotWork)

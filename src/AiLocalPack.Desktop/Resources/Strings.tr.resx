@@ -1066,6 +1066,9 @@
   <data name="Game_Caption_Generate" xml:space="preserve">
     <value>Claude Code veya Codex aboneliğinizi kullanır</value>
   </data>
+  <data name="Game_Caption_NoneFits" xml:space="preserve">
+    <value>Oyun sürümüne uyan bir çeviri yok</value>
+  </data>
   <data name="Game_Caption_PlaySteam" xml:space="preserve">
     <value>Steam üzerinden · “{0}” ile</value>
   </data>

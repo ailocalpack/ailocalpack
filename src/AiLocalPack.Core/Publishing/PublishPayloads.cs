@@ -38,14 +38,14 @@ public static class SimilarPacks
         ArgumentNullException.ThrowIfNull(index);
         ArgumentNullException.ThrowIfNull(local);
         var manifest = local.Manifest;
-        var buildIds = manifest.Builds.Select(b => b.BuildId).OfType<string>().ToList();
+        var builds = manifest.Builds.Where(b => b.BuildId is not null).ToList();
         return
         [
             .. index.PacksFor(manifest.Game, manifest.Language)
                 .Select(pack =>
                 {
                     var isBase = local.Report.Update is not null && pack.Id == manifest.Id;
-                    var otherBuild = buildIds.Count > 0 && !buildIds.Any(pack.BuildIds.Contains);
+                    var otherBuild = builds.Count > 0 && !builds.Any(b => pack.IsMadeFor(b.BuildId, b.Os));
                     var smaller = pack.Coverage.Ratio < manifest.Coverage.Ratio;
                     return new SimilarPack(pack, isBase, isBase || otherBuild || smaller);
                 })

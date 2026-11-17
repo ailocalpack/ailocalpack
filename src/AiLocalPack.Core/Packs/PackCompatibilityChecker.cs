@@ -7,7 +7,7 @@ namespace AiLocalPack.Core.Packs;
 /// Decides whether a pack fits the player's copy of a game, in this order:
 /// <list type="number">
 /// <item>pack for another game, game folder unreachable, recipe tool unknown or too old in this app → incompatible;</item>
-/// <item>the game's store build ID is listed → compatible if the files of that build are all there (no hashing),
+/// <item>the game's store build ID is listed for its platform (<see cref="PackBuild.Matches"/>) → compatible if the files of that build are all there (no hashing),
 /// else incompatible;</item>
 /// <item>otherwise the touched files are hashed (only those, through the <see cref="FileHashCache"/>) and compared with
 /// every listed build whose files are all present: one build matching exactly → compatible; else, against the closest
@@ -97,7 +97,8 @@ public sealed class PackCompatibilityChecker
         IReadOnlyList<string> MissingOf(PackBuild build) =>
             [.. build.Files.Keys.Where(missing.Contains).Order(StringComparer.Ordinal)];
 
-        if (gameBuildId is not null && pack.Builds.FirstOrDefault(b => b.BuildId == gameBuildId) is { } listed)
+        // A build made on another platform has the same Steam build ID but other files: it is compared by hashes like any.
+        if (gameBuildId is not null && pack.Builds.FirstOrDefault(b => b.Matches(gameBuildId, game.Platform)) is { } listed)
         {
             var listedMissing = MissingOf(listed);
             return listedMissing.Count == 0

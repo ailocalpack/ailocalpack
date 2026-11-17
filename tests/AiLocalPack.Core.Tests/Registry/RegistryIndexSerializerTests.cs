@@ -2,6 +2,7 @@ using AiLocalPack.Core.AntiCheat;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Registry;
 
@@ -131,6 +132,45 @@ public sealed class RegistryIndexSerializerTests
 
         // Assert
         read.PacksFor(pack.Game, "ru").Should().ContainSingle().Which.Should().BeEquivalentTo(pack);
+    }
+
+    [Fact]
+    public void Build_platforms_read_back_the_same()
+    {
+        // Arrange
+        var pack = RegistryFixtures.Pack() with { BuildOs = new Dictionary<string, IReadOnlyList<OsKind>> { ["1234567"] = [OsKind.Windows, OsKind.MacOS] } };
+
+        // Act
+        var read = RegistryIndexSerializer.Read(RegistryFixtures.IndexJson(pack)).Index!;
+
+        // Assert
+        read.PacksFor(pack.Game, "ru").Single().BuildOs.Should().BeEquivalentTo(pack.BuildOs);
+    }
+
+    [Fact]
+    public void Written_build_platforms_pass_the_schema()
+    {
+        // Arrange
+        var pack = RegistryFixtures.Pack() with { BuildOs = new Dictionary<string, IReadOnlyList<OsKind>> { ["1234567"] = [OsKind.MacOS] } };
+
+        // Act
+        var json = RegistryFixtures.IndexJson(pack);
+
+        // Assert
+        RegistryFixtures.SchemaErrors(json).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Build_platform_of_a_newer_app_matches_no_known_platform()
+    {
+        // Arrange
+        var json = WithPack(GoodPack("full").Replace("\"size\": 10", "\"size\": 10, \"buildOs\": { \"1\": [\"android\"] }", StringComparison.Ordinal));
+
+        // Act
+        var pack = RegistryIndexSerializer.Read(json).Index!.PacksFor(GameId.Steam(620), "ru")[0];
+
+        // Assert
+        (pack.IsMadeFor("1", OsKind.Windows), pack.IsMadeFor("1", null)).Should().Be((false, true));
     }
 
     [Fact]
