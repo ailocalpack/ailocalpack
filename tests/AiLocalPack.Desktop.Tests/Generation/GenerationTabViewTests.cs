@@ -40,6 +40,10 @@ public sealed class GenerationTabViewTests
     private static T Find<T>(Window window, string name) where T : Control =>
         window.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
 
+    /// <summary>The control is built and shown; a card the tab never showed isn't built at all (its template is deferred).</summary>
+    private static bool IsShown(Window window, string name) =>
+        window.GetVisualDescendants().OfType<Control>().Any(c => c.Name == name && c.IsEffectivelyVisible);
+
     [Fact]
     public Task Start_form_shows_steps_tiles_agents_and_checks() => HeadlessUi.RunAsync(() =>
     {
@@ -253,7 +257,7 @@ public sealed class GenerationTabViewTests
 
         // Assert
         (Find<Border>(window, "ReviewCard").IsEffectivelyVisible,
-            Find<Border>(window, "ProgressCard").IsVisible,
+            IsShown(window, "ProgressCard"),
             Find<ItemsControl>(window, "ReviewRows").ItemCount,
             Find<ComboBox>(window, "ReviewTone").ItemCount,
             Find<Button>(window, "ReviewContinue").IsEffectivelyEnabled,

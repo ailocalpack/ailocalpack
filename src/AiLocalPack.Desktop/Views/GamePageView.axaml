@@ -270,17 +270,23 @@
                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource TabStrip}" />
                 </Border>
 
-                <!-- Tab content -->
+                <!-- Tab content. Each tab's view is built the first time the tab shows (a ContentControl applies its
+                     template on its first measure, never while hidden) and kept afterwards: building the hidden Create
+                     with AI tab with every page made opening a game stutter. -->
                 <Panel x:Name="TabContent" Margin="24,20,24,40" IsVisible="{Binding ShowTabs}">
                     <!-- Packs (§4): list, details, language and sort -->
-                    <Panel x:Name="PacksPanel" IsVisible="{Binding IsPacksTab}">
-                        <views:PacksTabView DataContext="{Binding Packs}" />
-                    </Panel>
+                    <ContentControl x:Name="PacksPanel" Content="{Binding Packs}" IsVisible="{Binding IsPacksTab}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate x:DataType="gp:PacksTabViewModel"><views:PacksTabView /></DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
 
                     <!-- Generation (§6): start form (task 52), progress, review and result (tasks 53–55) -->
-                    <Panel x:Name="GenerationPanel" IsVisible="{Binding IsGenerationTab}">
-                        <views:GenerationTabView DataContext="{Binding Generation}" />
-                    </Panel>
+                    <ContentControl x:Name="GenerationPanel" Content="{Binding Generation}" IsVisible="{Binding IsGenerationTab}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate x:DataType="gp:GenerationTabViewModel"><views:GenerationTabView /></DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
 
                     <!-- Audio / Textures: coming soon -->
                     <StackPanel x:Name="SoonPanel" IsVisible="{Binding IsSoonTab}" MaxWidth="520" Margin="0,32,0,0"
@@ -333,9 +339,11 @@
             <Panel IsVisible="{Binding ShowTabs}">
             <Border x:Name="ComposerDock" Classes="composerDock" IsVisible="{Binding Generation.ShowComposer}">
                 <Panel MaxWidth="860" Margin="24,10,24,12">
-                    <Panel IsVisible="{Binding Generation.ShowFix}">
-                        <views:FixComposerView DataContext="{Binding Generation.Fix}" />
-                    </Panel>
+                    <ContentControl Content="{Binding Generation.Fix}" IsVisible="{Binding Generation.ShowFix}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate x:DataType="gp:FixViewModel"><views:FixComposerView /></DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
                     <Border x:Name="ComposerStub" Classes="fixComposer" IsVisible="{Binding Generation.ShowComposerStub}">
                         <TextBox x:Name="ComposerStubBox" IsEnabled="False" PlaceholderText="{Binding Generation.ComposerStubText}"
                                  AutomationProperties.Name="{Binding Generation.ComposerStubText}" />

@@ -8,7 +8,9 @@
     <!-- Design §6, "one conversation" (decided 2026-11-14): the start form; then the whole job is one thread: a slim bar
          (the steps in small and the % while it runs; the translation, Publish and Drafts once built), the start request
          and a line per finished stage, the running stage's card (banner, glossary review, progress), the result and the
-         Fix with AI conversation. The composer is docked at the bottom of the game page (GamePageView). -->
+         Fix with AI conversation. The composer is docked at the bottom of the game page (GamePageView).
+         The cards a job shows one at a time (glossary review, result, Fix with AI, progress) sit in ContentControls whose
+         template builds them the first time they show, so the tab doesn't build and style every card it hides. -->
     <StackPanel MaxWidth="860" Spacing="14" HorizontalAlignment="Stretch">
         <!-- Five-step header over the start form: Setup + the four pipeline stages -->
         <!-- Five-step header: Setup + the four pipeline stages -->
@@ -595,700 +597,724 @@
         </Border>
 
         <!-- Glossary review (§6c, task 54): the terms with editable translations, the tone, Regenerate / Cancel / Continue -->
-        <Border x:Name="ReviewCard" Classes="genCard" IsVisible="{Binding ShowReview}">
-            <StackPanel Spacing="16">
-                <StackPanel Spacing="14" DataContext="{Binding Review}" x:DataType="gp:GlossaryReviewViewModel">
-                    <DockPanel>
-                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Margin="12,0,0,0"
-                                    IsVisible="{Binding IsLoaded}">
-                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Tone}" VerticalAlignment="Center" />
-                            <ComboBox x:Name="ReviewTone" Classes="toolbar" MinWidth="200" ItemsSource="{Binding ToneOptions}"
-                                      SelectedItem="{Binding SelectedTone}" AutomationProperties.Name="{l:Loc Gen_Review_Tone}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="gp:GlossaryToneOption">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
-                        <StackPanel Spacing="4">
-                            <WrapPanel ItemSpacing="10">
-                                <TextBlock Classes="genTitle" Text="{l:Loc Gen_Review_Title}" VerticalAlignment="Center" />
-                                <TextBlock x:Name="ReviewCount" Classes="muted" Text="{Binding CountText}" VerticalAlignment="Center" IsVisible="{Binding IsLoaded}" />
-                            </WrapPanel>
-                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Subtitle}" TextWrapping="Wrap" />
-                            <TextBlock x:Name="ReviewAgentTone" Classes="faint" FontSize="12" Text="{Binding AgentTone}" TextWrapping="Wrap"
-                                       IsVisible="{Binding HasAgentTone}" />
-                        </StackPanel>
-                    </DockPanel>
+        <ContentControl Content="{Binding}" IsVisible="{Binding ShowReview}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate x:DataType="gp:GenerationTabViewModel">
+                        <Border x:Name="ReviewCard" Classes="genCard" IsVisible="{Binding ShowReview}">
+                            <StackPanel Spacing="16">
+                                <StackPanel Spacing="14" DataContext="{Binding Review}" x:DataType="gp:GlossaryReviewViewModel">
+                                    <DockPanel>
+                                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Margin="12,0,0,0"
+                                                    IsVisible="{Binding IsLoaded}">
+                                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Tone}" VerticalAlignment="Center" />
+                                            <ComboBox x:Name="ReviewTone" Classes="toolbar" MinWidth="200" ItemsSource="{Binding ToneOptions}"
+                                                      SelectedItem="{Binding SelectedTone}" AutomationProperties.Name="{l:Loc Gen_Review_Tone}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:GlossaryToneOption">
+                                                        <TextBlock Text="{Binding Name}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Spacing="4">
+                                            <WrapPanel ItemSpacing="10">
+                                                <TextBlock Classes="genTitle" Text="{l:Loc Gen_Review_Title}" VerticalAlignment="Center" />
+                                                <TextBlock x:Name="ReviewCount" Classes="muted" Text="{Binding CountText}" VerticalAlignment="Center" IsVisible="{Binding IsLoaded}" />
+                                            </WrapPanel>
+                                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Subtitle}" TextWrapping="Wrap" />
+                                            <TextBlock x:Name="ReviewAgentTone" Classes="faint" FontSize="12" Text="{Binding AgentTone}" TextWrapping="Wrap"
+                                                       IsVisible="{Binding HasAgentTone}" />
+                                        </StackPanel>
+                                    </DockPanel>
 
-                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsLoading}">
-                        <Viewbox Classes="icon spin" Width="16" Height="16">
-                            <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                            <Path Classes="icon" Data="{StaticResource IconLoader}" />
-                        </Viewbox>
-                        <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Loading}" />
-                    </StackPanel>
-                    <TextBlock x:Name="ReviewError" Classes="error" FontSize="13" TextWrapping="Wrap" Text="{Binding Error}" IsVisible="{Binding HasError}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsLoading}">
+                                        <Viewbox Classes="icon spin" Width="16" Height="16">
+                                            <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                            <Path Classes="icon" Data="{StaticResource IconLoader}" />
+                                        </Viewbox>
+                                        <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Review_Loading}" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="ReviewError" Classes="error" FontSize="13" TextWrapping="Wrap" Text="{Binding Error}" IsVisible="{Binding HasError}" />
 
-                    <StackPanel Spacing="8" IsVisible="{Binding IsLoaded}">
-                        <TextBox x:Name="ReviewSearch" Classes="search" Text="{Binding Query}" PlaceholderText="{l:Loc Gen_Review_Search}"
-                                 AutomationProperties.Name="{l:Loc Gen_Review_Search}">
-                            <TextBox.InnerLeftContent>
-                                <Viewbox Classes="icon" Width="16" Height="16" Margin="10,0,0,0">
-                                    <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
-                                </Viewbox>
-                            </TextBox.InnerLeftContent>
-                        </TextBox>
-                        <Border Classes="genBox" Padding="0">
-                            <StackPanel>
-                                <Grid ColumnDefinitions="2*,3*,2*" ColumnSpacing="12" Margin="14,10,14,6">
-                                    <TextBlock Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Term}" />
-                                    <TextBlock Grid.Column="1" Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Translation}" />
-                                    <TextBlock Grid.Column="2" Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Note}" />
-                                </Grid>
-                                <ScrollViewer MaxHeight="440">
-                                    <ItemsControl x:Name="ReviewRows" ItemsSource="{Binding Rows}" Margin="14,0,14,10">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="gp:GlossaryRowViewModel">
-                                                <Grid ColumnDefinitions="2*,3*,2*" ColumnSpacing="12" Margin="0,3">
-                                                    <TextBlock FontWeight="SemiBold" Text="{Binding Term}" TextWrapping="Wrap" VerticalAlignment="Center" />
-                                                    <StackPanel Grid.Column="1" Spacing="2">
-                                                        <TextBox Text="{Binding Translation}" Classes.invalid="{Binding IsBlank}"
-                                                                 AutomationProperties.Name="{Binding Term}" />
-                                                        <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding IsEdited}">
-                                                            <Viewbox Classes="icon" Width="11" Height="11">
-                                                                <Path Classes="icon" Data="{StaticResource IconPencil}" Stroke="{DynamicResource AppAccentBrush}" />
-                                                            </Viewbox>
-                                                            <TextBlock FontSize="11" Foreground="{DynamicResource AppAccentBrush}" Text="{l:Loc Gen_Review_Edited}" />
-                                                        </StackPanel>
-                                                    </StackPanel>
-                                                    <TextBlock Grid.Column="2" Classes="muted" FontSize="12" Text="{Binding Note}" TextWrapping="Wrap"
-                                                               VerticalAlignment="Center" />
+                                    <StackPanel Spacing="8" IsVisible="{Binding IsLoaded}">
+                                        <TextBox x:Name="ReviewSearch" Classes="search" Text="{Binding Query}" PlaceholderText="{l:Loc Gen_Review_Search}"
+                                                 AutomationProperties.Name="{l:Loc Gen_Review_Search}">
+                                            <TextBox.InnerLeftContent>
+                                                <Viewbox Classes="icon" Width="16" Height="16" Margin="10,0,0,0">
+                                                    <Path Classes="icon" Data="{StaticResource IconSearch}" Stroke="{DynamicResource AppMutedBrush}" />
+                                                </Viewbox>
+                                            </TextBox.InnerLeftContent>
+                                        </TextBox>
+                                        <Border Classes="genBox" Padding="0">
+                                            <StackPanel>
+                                                <Grid ColumnDefinitions="2*,3*,2*" ColumnSpacing="12" Margin="14,10,14,6">
+                                                    <TextBlock Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Term}" />
+                                                    <TextBlock Grid.Column="1" Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Translation}" />
+                                                    <TextBlock Grid.Column="2" Classes="faint" FontSize="11" FontWeight="SemiBold" Text="{l:Loc Gen_Review_Column_Note}" />
                                                 </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                                <TextBlock Classes="muted" FontSize="13" Margin="14,0,14,12" Text="{Binding NoRowsText}" IsVisible="{Binding HasNoRows}" />
+                                                <ScrollViewer MaxHeight="440">
+                                                    <ItemsControl x:Name="ReviewRows" ItemsSource="{Binding Rows}" Margin="14,0,14,10">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="gp:GlossaryRowViewModel">
+                                                                <Grid ColumnDefinitions="2*,3*,2*" ColumnSpacing="12" Margin="0,3">
+                                                                    <TextBlock FontWeight="SemiBold" Text="{Binding Term}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                                                    <StackPanel Grid.Column="1" Spacing="2">
+                                                                        <TextBox Text="{Binding Translation}" Classes.invalid="{Binding IsBlank}"
+                                                                                 AutomationProperties.Name="{Binding Term}" />
+                                                                        <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding IsEdited}">
+                                                                            <Viewbox Classes="icon" Width="11" Height="11">
+                                                                                <Path Classes="icon" Data="{StaticResource IconPencil}" Stroke="{DynamicResource AppAccentBrush}" />
+                                                                            </Viewbox>
+                                                                            <TextBlock FontSize="11" Foreground="{DynamicResource AppAccentBrush}" Text="{l:Loc Gen_Review_Edited}" />
+                                                                        </StackPanel>
+                                                                    </StackPanel>
+                                                                    <TextBlock Grid.Column="2" Classes="muted" FontSize="12" Text="{Binding Note}" TextWrapping="Wrap"
+                                                                               VerticalAlignment="Center" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                                <TextBlock Classes="muted" FontSize="13" Margin="14,0,14,12" Text="{Binding NoRowsText}" IsVisible="{Binding HasNoRows}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <TextBlock x:Name="ReviewActionError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
+                                           Text="{Binding ActionError}" IsVisible="{Binding HasActionError}" />
+
+                                <Border Classes="genFoot">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Button x:Name="ReviewRegenerate" Classes="ghost" Command="{Binding RegenerateCommand}" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Gen_Action_Regenerate}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel Grid.Column="2" Spacing="4" HorizontalAlignment="Right">
+                                            <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                                                <Button x:Name="ReviewCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
+                                                        Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
+                                                <Button x:Name="ReviewContinue" Classes="accent" Command="{Binding ContinueCommand}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <TextBlock Text="{l:Loc Gen_Action_ContinueTranslation}" VerticalAlignment="Center" />
+                                                        <Viewbox Classes="icon" Width="16" Height="16">
+                                                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        </Viewbox>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                            <TextBlock x:Name="ReviewBlank" Classes="muted" FontSize="12" HorizontalAlignment="Right" Text="{l:Loc Gen_Review_Blank}"
+                                                       IsVisible="{Binding Review.HasBlank, FallbackValue=False}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
                             </StackPanel>
                         </Border>
-                    </StackPanel>
-                </StackPanel>
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
 
-                <TextBlock x:Name="ReviewActionError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
-                           Text="{Binding ActionError}" IsVisible="{Binding HasActionError}" />
-
-                <Border Classes="genFoot">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Button x:Name="ReviewRegenerate" Classes="ghost" Command="{Binding RegenerateCommand}" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <Viewbox Classes="icon" Width="16" Height="16">
-                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
-                                </Viewbox>
-                                <TextBlock Text="{l:Loc Gen_Action_Regenerate}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <StackPanel Grid.Column="2" Spacing="4" HorizontalAlignment="Right">
-                            <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
-                                <Button x:Name="ReviewCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
-                                        Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
-                                <Button x:Name="ReviewContinue" Classes="accent" Command="{Binding ContinueCommand}">
-                                    <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <TextBlock Text="{l:Loc Gen_Action_ContinueTranslation}" VerticalAlignment="Center" />
-                                        <Viewbox Classes="icon" Width="16" Height="16">
-                                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+        <ContentControl Content="{Binding}" IsVisible="{Binding ShowResult}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate x:DataType="gp:GenerationTabViewModel">
+                        <Border x:Name="ResultCard" Classes="genCard" IsVisible="{Binding ShowResult}">
+                            <StackPanel Spacing="16" DataContext="{Binding Result}" x:DataType="gp:GenerationResultViewModel">
+                                <StackPanel Orientation="Horizontal" Spacing="14">
+                                    <Border Classes="genDoneIcon">
+                                        <Viewbox Classes="icon" Width="28" Height="28">
+                                            <Path Classes="icon" Data="{StaticResource IconCheckCircle}" Stroke="{DynamicResource AppOkBrush}" />
                                         </Viewbox>
+                                    </Border>
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ResultTitle" Classes="genTitle" FontSize="22" Text="{l:Loc Gen_Result_Title}" />
+                                        <TextBlock x:Name="ResultSubtitle" Classes="muted" FontSize="13" Text="{Binding Subtitle}" TextWrapping="Wrap" />
+                                        <TextBlock x:Name="ResultPackLine" Classes="faint" FontSize="12" Text="{Binding PackLine}" TextWrapping="Wrap" />
+                                        <TextBlock x:Name="ResultUpdateLine" Classes="faint" FontSize="12" Text="{Binding UpdateLine}" TextWrapping="Wrap"
+                                                   IsVisible="{Binding HasUpdateLine}" />
                                     </StackPanel>
-                                </Button>
-                            </StackPanel>
-                            <TextBlock x:Name="ReviewBlank" Classes="muted" FontSize="12" HorizontalAlignment="Right" Text="{l:Loc Gen_Review_Blank}"
-                                       IsVisible="{Binding Review.HasBlank, FallbackValue=False}" />
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
-        </Border>
-
-        <Border x:Name="ResultCard" Classes="genCard" IsVisible="{Binding ShowResult}">
-            <StackPanel Spacing="16" DataContext="{Binding Result}" x:DataType="gp:GenerationResultViewModel">
-                <StackPanel Orientation="Horizontal" Spacing="14">
-                    <Border Classes="genDoneIcon">
-                        <Viewbox Classes="icon" Width="28" Height="28">
-                            <Path Classes="icon" Data="{StaticResource IconCheckCircle}" Stroke="{DynamicResource AppOkBrush}" />
-                        </Viewbox>
-                    </Border>
-                    <StackPanel Spacing="2" VerticalAlignment="Center">
-                        <TextBlock x:Name="ResultTitle" Classes="genTitle" FontSize="22" Text="{l:Loc Gen_Result_Title}" />
-                        <TextBlock x:Name="ResultSubtitle" Classes="muted" FontSize="13" Text="{Binding Subtitle}" TextWrapping="Wrap" />
-                        <TextBlock x:Name="ResultPackLine" Classes="faint" FontSize="12" Text="{Binding PackLine}" TextWrapping="Wrap" />
-                        <TextBlock x:Name="ResultUpdateLine" Classes="faint" FontSize="12" Text="{Binding UpdateLine}" TextWrapping="Wrap"
-                                   IsVisible="{Binding HasUpdateLine}" />
-                    </StackPanel>
-                </StackPanel>
-
-                <ItemsControl x:Name="ResultTiles" ItemsSource="{Binding Tiles}" IsVisible="{Binding ShowDetails}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="10" /></ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="gp:ResultTile">
-                            <Border Classes="genTile" AutomationProperties.Name="{Binding Title}">
-                                <StackPanel Spacing="4">
-                                    <TextBlock Classes="muted" FontSize="12" Text="{Binding Title}" />
-                                    <DockPanel>
-                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,2,6,0" VerticalAlignment="Top">
-                                            <Path Classes="icon resultIcon" Classes.ok="{Binding IsOk}" Classes.warn="{Binding IsWarn}"
-                                                  Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
-                                        </Viewbox>
-                                        <TextBlock Classes="resultValue" Text="{Binding Value}" />
-                                    </DockPanel>
-                                    <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" TextWrapping="Wrap" />
                                 </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
 
-                <TextBlock x:Name="ResultInGame" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
-                           Text="{Binding InGameNote}" IsVisible="{Binding HasInGameNote}" />
+                                <ItemsControl x:Name="ResultTiles" ItemsSource="{Binding Tiles}" IsVisible="{Binding ShowDetails}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="10" /></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="gp:ResultTile">
+                                            <Border Classes="genTile" AutomationProperties.Name="{Binding Title}">
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock Classes="muted" FontSize="12" Text="{Binding Title}" />
+                                                    <DockPanel>
+                                                        <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,2,6,0" VerticalAlignment="Top">
+                                                            <Path Classes="icon resultIcon" Classes.ok="{Binding IsOk}" Classes.warn="{Binding IsWarn}"
+                                                                  Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                        </Viewbox>
+                                                        <TextBlock Classes="resultValue" Text="{Binding Value}" />
+                                                    </DockPanel>
+                                                    <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                <!-- The test run's screenshots: the original and the translation once loaded, and the player's answer -->
-                <Border x:Name="ResultShots" Classes="genBox" IsVisible="{Binding ShowShots}">
-                    <StackPanel Spacing="10">
-                        <StackPanel Spacing="2">
-                            <TextBlock FontWeight="SemiBold" Text="{Binding ShotsQuestion}" TextWrapping="Wrap" />
-                            <TextBlock Classes="faint" FontSize="12" Text="{Binding ShotsDetail}" TextWrapping="Wrap" />
-                        </StackPanel>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                            <StackPanel Spacing="4" IsVisible="{Binding HasOriginalShot}">
-                                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Result_Shots_Original}" />
-                                <Image x:Name="ResultShotOriginal" Stretch="Uniform" MaxHeight="260" HorizontalAlignment="Left"
-                                       Source="{Binding OriginalShot, Converter={x:Static views:FileBitmapConverter.Instance}}"
-                                       AutomationProperties.Name="{l:Loc Gen_Result_Shots_Original}" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Spacing="4">
-                                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Result_Shots_Translated}" />
-                                <Image x:Name="ResultShotTranslated" Stretch="Uniform" MaxHeight="260" HorizontalAlignment="Left"
-                                       Source="{Binding TranslatedShot, Converter={x:Static views:FileBitmapConverter.Instance}}"
-                                       AutomationProperties.Name="{l:Loc Gen_Result_Shots_Translated}" />
-                            </StackPanel>
-                        </Grid>
-                        <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding ShowConfirm}">
-                            <Button x:Name="ResultShotsShows" Classes="ghost sm" Command="{Binding ConfirmShowsCommand}">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <Viewbox Classes="icon" Width="14" Height="14">
-                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $parent[Button].Foreground}" />
-                                    </Viewbox>
-                                    <TextBlock Text="{l:Loc Gen_Result_Shots_Yes}" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
-                            <Button x:Name="ResultShotsMissing" Classes="ghost sm" Command="{Binding ConfirmMissingCommand}" Content="{l:Loc Gen_Result_Shots_No}" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
+                                <TextBlock x:Name="ResultInGame" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
+                                           Text="{Binding InGameNote}" IsVisible="{Binding HasInGameNote}" />
 
-                <Button x:Name="ResultWarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
-                        Content="{Binding WarningsToggleText}" IsVisible="{Binding ShowWarningsToggle}" />
-                <ItemsControl x:Name="ResultWarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="gp:GenerationWarningRow">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4">
-                                <Border Classes="genWarnTag" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Rule}" />
+                                <!-- The test run's screenshots: the original and the translation once loaded, and the player's answer -->
+                                <Border x:Name="ResultShots" Classes="genBox" IsVisible="{Binding ShowShots}">
+                                    <StackPanel Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding ShotsQuestion}" TextWrapping="Wrap" />
+                                            <TextBlock Classes="faint" FontSize="12" Text="{Binding ShotsDetail}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                            <StackPanel Spacing="4" IsVisible="{Binding HasOriginalShot}">
+                                                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Result_Shots_Original}" />
+                                                <Image x:Name="ResultShotOriginal" Stretch="Uniform" MaxHeight="260" HorizontalAlignment="Left"
+                                                       Source="{Binding OriginalShot, Converter={x:Static views:FileBitmapConverter.Instance}}"
+                                                       AutomationProperties.Name="{l:Loc Gen_Result_Shots_Original}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Gen_Result_Shots_Translated}" />
+                                                <Image x:Name="ResultShotTranslated" Stretch="Uniform" MaxHeight="260" HorizontalAlignment="Left"
+                                                       Source="{Binding TranslatedShot, Converter={x:Static views:FileBitmapConverter.Instance}}"
+                                                       AutomationProperties.Name="{l:Loc Gen_Result_Shots_Translated}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding ShowConfirm}">
+                                            <Button x:Name="ResultShotsShows" Classes="ghost sm" Command="{Binding ConfirmShowsCommand}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{l:Loc Gen_Result_Shots_Yes}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="ResultShotsMissing" Classes="ghost sm" Command="{Binding ConfirmMissingCommand}" Content="{l:Loc Gen_Result_Shots_No}" />
+                                        </StackPanel>
+                                    </StackPanel>
                                 </Border>
-                                <StackPanel Grid.Column="1" Spacing="2">
-                                    <TextBlock Classes="genKey" Text="{Binding Key}" />
-                                    <TextBlock FontSize="13" TextWrapping="Wrap">
-                                        <Run Text="{Binding Original}" Foreground="{DynamicResource AppMutedBrush}" FontStyle="Italic" />
-                                        <Run Text=" → " Foreground="{DynamicResource AppFaintBrush}" />
-                                        <Run Text="{Binding Translation}" />
-                                    </TextBlock>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
 
-                <Border Classes="genFoot">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                        <StackPanel Spacing="6" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding ShowCopyNote}">
-                                <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{DynamicResource AppMutedBrush}" />
-                                </Viewbox>
-                                <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Result_CopyNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                <Button x:Name="ResultWarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
+                                        Content="{Binding WarningsToggleText}" IsVisible="{Binding ShowWarningsToggle}" />
+                                <ItemsControl x:Name="ResultWarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="gp:GenerationWarningRow">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4">
+                                                <Border Classes="genWarnTag" VerticalAlignment="Top">
+                                                    <TextBlock Text="{Binding Rule}" />
+                                                </Border>
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock Classes="genKey" Text="{Binding Key}" />
+                                                    <TextBlock FontSize="13" TextWrapping="Wrap">
+                                                        <Run Text="{Binding Original}" Foreground="{DynamicResource AppMutedBrush}" FontStyle="Italic" />
+                                                        <Run Text=" → " Foreground="{DynamicResource AppFaintBrush}" />
+                                                        <Run Text="{Binding Translation}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Border Classes="genFoot">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <StackPanel Spacing="6" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding ShowCopyNote}">
+                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{DynamicResource AppMutedBrush}" />
+                                                </Viewbox>
+                                                <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Result_CopyNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <Button x:Name="ResultNewTranslation" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0"
+                                                    Command="{Binding NewTranslationCommand}" ToolTip.Tip="{l:Loc Gen_Result_NewTranslationTip}"
+                                                    Foreground="{DynamicResource AppMutedBrush}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconPlus}" Stroke="{DynamicResource AppMutedBrush}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{l:Loc Gen_Result_NewTranslation}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                        <WrapPanel Grid.Column="1" ItemSpacing="8" LineSpacing="6" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Button x:Name="ResultPlay" Classes.ghost="{Binding !IsPlayPrimary}" Classes.accent="{Binding IsPlayPrimary}"
+                                                    Command="{Binding PlayCommand}" AutomationProperties.Name="{Binding PlayText}">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <Viewbox Classes="icon" Width="16" Height="16">
+                                                        <Path Classes="icon" Data="{Binding PlayIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
+                                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{Binding PlayText}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="ResultShowInPacks" Classes="ghost" Command="{Binding ShowInPacksCommand}" IsVisible="{Binding ShowInPacksAction}"
+                                                    Content="{l:Loc Gen_Result_ShowInPacks}" />
+                                            <Button x:Name="ResultDiscard" Classes="ghost" Command="{Binding DiscardCommand}" IsVisible="{Binding ShowDiscard}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    </Viewbox>
+                                                    <TextBlock Text="{l:Loc Gen_Result_Discard}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                        </WrapPanel>
+                                    </Grid>
+                                </Border>
                             </StackPanel>
-                            <Button x:Name="ResultNewTranslation" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0"
-                                    Command="{Binding NewTranslationCommand}" ToolTip.Tip="{l:Loc Gen_Result_NewTranslationTip}"
-                                    Foreground="{DynamicResource AppMutedBrush}">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <Viewbox Classes="icon" Width="14" Height="14">
-                                        <Path Classes="icon" Data="{StaticResource IconPlus}" Stroke="{DynamicResource AppMutedBrush}" />
-                                    </Viewbox>
-                                    <TextBlock Text="{l:Loc Gen_Result_NewTranslation}" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                        <WrapPanel Grid.Column="1" ItemSpacing="8" LineSpacing="6" HorizontalAlignment="Right" VerticalAlignment="Center">
-                            <Button x:Name="ResultPlay" Classes.ghost="{Binding !IsPlayPrimary}" Classes.accent="{Binding IsPlayPrimary}"
-                                    Command="{Binding PlayCommand}" AutomationProperties.Name="{Binding PlayText}">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <Viewbox Classes="icon" Width="16" Height="16">
-                                        <Path Classes="icon" Data="{Binding PlayIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                              Stroke="{Binding $parent[Button].Foreground}" />
-                                    </Viewbox>
-                                    <TextBlock Text="{Binding PlayText}" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
-                            <Button x:Name="ResultShowInPacks" Classes="ghost" Command="{Binding ShowInPacksCommand}" IsVisible="{Binding ShowInPacksAction}"
-                                    Content="{l:Loc Gen_Result_ShowInPacks}" />
-                            <Button x:Name="ResultDiscard" Classes="ghost" Command="{Binding DiscardCommand}" IsVisible="{Binding ShowDiscard}">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <Viewbox Classes="icon" Width="14" Height="14">
-                                        <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
-                                    </Viewbox>
-                                    <TextBlock Text="{l:Loc Gen_Result_Discard}" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
-                        </WrapPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
-        </Border>
+                        </Border>
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
         <TextBlock x:Name="ResultError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
                    Text="{Binding ActionError}" IsVisible="{Binding ShowResultError}" />
 
         <!-- Fix with AI (task 75, design §6e): the conversation with the job's agent, after the result; its composer is docked at the bottom of the page -->
-        <StackPanel x:Name="FixCard" Spacing="14" IsVisible="{Binding ShowFix}">
-            <StackPanel Spacing="14" DataContext="{Binding Fix}" x:DataType="gp:FixViewModel">
-                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
-                    <Border Classes="fixRule" />
-                    <TextBlock x:Name="FixIntro" Grid.Column="1" Classes="fixSystem" FontSize="12" Text="{Binding Intro}" TextWrapping="Wrap" MaxWidth="600" TextAlignment="Center" />
-                    <Border Grid.Column="2" Classes="fixRule" />
-                </Grid>
-                <Button x:Name="FixEarlier" Classes="ghost sm" HorizontalAlignment="Center" Command="{Binding ShowEarlierCommand}" IsVisible="{Binding HasEarlier}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <Viewbox Classes="icon" Width="14" Height="14">
-                            <Path Classes="icon" Data="{StaticResource IconChevronUp}" Stroke="{Binding $parent[Button].Foreground}" />
-                        </Viewbox>
-                        <TextBlock Text="{Binding EarlierText}" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
-        <ItemsControl x:Name="FixThread" ItemsSource="{Binding ShownItems}" IsVisible="{Binding HasItems}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate><StackPanel Spacing="14" /></ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.DataTemplates>
-                <DataTemplate DataType="gp:FixSystemItem">
-                    <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
-                        <Border Classes="fixRule" />
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="fixSystem" Classes.bad="{Binding IsBad}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" MaxWidth="600"
-                                       VerticalAlignment="Center" />
-                            <Button x:Name="FixNotCrash" Classes="link" FontSize="12" VerticalAlignment="Center" IsVisible="{Binding HasNotCrash}"
-                                    Command="{Binding NotCrashCommand}" Content="{l:Loc Fix_NotCrash}" />
-                        </StackPanel>
-                        <Border Grid.Column="2" Classes="fixRule" />
-                    </Grid>
-                </DataTemplate>
-                <DataTemplate DataType="gp:FixPlayerItem">
-                    <Border Classes="fixPlayer">
-                        <StackPanel Spacing="8">
-                            <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="14" />
-                            <ItemsControl ItemsSource="{Binding Attachments}" IsVisible="{Binding HasAttachments}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="gp:FixAttachmentChip">
-                                        <Border Classes="fixAttach" Classes.bad="{Binding IsBad}" Padding="10,0">
-                                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                                <Viewbox Classes="icon" Width="14" Height="14">
-                                                    <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
-                                                </Viewbox>
-                                                <TextBlock FontSize="12" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
-                                                <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-                <DataTemplate DataType="gp:FixAgentItem">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" MaxWidth="780" HorizontalAlignment="Left">
-                        <Border Classes="fixAvatar">
-                            <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconBot}" /></Viewbox>
-                        </Border>
-                        <StackPanel Grid.Column="1" Spacing="10" Margin="0,5,0,0">
-                            <TextBlock Classes="faint" FontSize="12" FontWeight="Bold" Text="{Binding Who}" />
-                            <StackPanel IsVisible="{Binding HasSteps}">
-                                <ItemsControl ItemsSource="{Binding HeadSteps}">
-                                    <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="gp:FixStepRow">
-                                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2">
-                                            <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsRunning}" IsVisible="{Binding IsRunning}">
-                                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                                                <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
-                                            </Viewbox>
-                                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsRunning}">
-                                                <Path Classes="icon fixStep" Data="{StaticResource IconCheck}" />
-                                            </Viewbox>
-                                            <TextBlock Classes="muted" FontSize="13" Text="{Binding Text}" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                <ToggleButton x:Name="MoreStepsToggle" Classes="stepsToggle" HorizontalAlignment="Left" Margin="-4,2,0,0" IsVisible="{Binding FoldsSteps}"
-                                              Content="{Binding MoreStepsText}" />
-                                <ItemsControl ItemsSource="{Binding MoreSteps}" IsVisible="{Binding #MoreStepsToggle.IsChecked}">
-                                    <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="gp:FixStepRow">
-                                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2">
-                                            <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsRunning}" IsVisible="{Binding IsRunning}">
-                                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                                                <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
-                                            </Viewbox>
-                                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsRunning}">
-                                                <Path Classes="icon fixStep" Data="{StaticResource IconCheck}" />
-                                            </Viewbox>
-                                            <TextBlock Classes="muted" FontSize="13" Text="{Binding Text}" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsWorking}">
-                                <Viewbox Classes="icon spin" Width="14" Height="14">
-                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                                    <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
-                                </Viewbox>
-                                <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Working_Short}" />
-                            </StackPanel>
-                            <views:MarkdownView x:Name="FixAgentText" Markdown="{Binding Text}" TextElement.FontSize="14" IsVisible="{Binding HasText}" />
-                            <ItemsControl ItemsSource="{Binding Choices}" IsVisible="{Binding HasChoices}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="gp:FixChoice">
-                                        <Button Classes="chip" Command="{Binding Command}" Content="{Binding Text}" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <!-- Change card: a new draft -->
-                            <Border Classes="fixCard" IsVisible="{Binding HasChange}">
-                                <StackPanel Spacing="12" DataContext="{Binding Change}" x:DataType="gp:FixChangeCard">
-                                    <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Title}" VerticalAlignment="Center" />
-                                        <Border Classes="packTag" Classes.muted="{Binding PillIsMuted}" Classes.gen="{Binding PillIsNew}" Classes.bad="{Binding PillIsBad}">
-                                            <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
-                                        </Border>
+        <ContentControl Content="{Binding}" IsVisible="{Binding ShowFix}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate x:DataType="gp:GenerationTabViewModel">
+                        <StackPanel x:Name="FixCard" Spacing="14" IsVisible="{Binding ShowFix}">
+                            <StackPanel Spacing="14" DataContext="{Binding Fix}" x:DataType="gp:FixViewModel">
+                                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+                                    <Border Classes="fixRule" />
+                                    <TextBlock x:Name="FixIntro" Grid.Column="1" Classes="fixSystem" FontSize="12" Text="{Binding Intro}" TextWrapping="Wrap" MaxWidth="600" TextAlignment="Center" />
+                                    <Border Grid.Column="2" Classes="fixRule" />
+                                </Grid>
+                                <Button x:Name="FixEarlier" Classes="ghost sm" HorizontalAlignment="Center" Command="{Binding ShowEarlierCommand}" IsVisible="{Binding HasEarlier}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Viewbox Classes="icon" Width="14" Height="14">
+                                            <Path Classes="icon" Data="{StaticResource IconChevronUp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding EarlierText}" VerticalAlignment="Center" />
                                     </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Tiles}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="8" /></ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="gp:FixTile">
-                                                <Border Classes="fixTile" AutomationProperties.Name="{Binding Title}">
-                                                    <StackPanel Spacing="2">
-                                                        <TextBlock Classes="muted" FontSize="12" Text="{Binding Title}" TextWrapping="Wrap" />
-                                                        <TextBlock Classes="fixValue" FontWeight="Bold" FontSize="14" Text="{Binding Value}" TextWrapping="Wrap"
-                                                                   Classes.ok="{Binding IsOk}" Classes.bad="{Binding IsBad}" />
+                                </Button>
+                        <ItemsControl x:Name="FixThread" ItemsSource="{Binding ShownItems}" IsVisible="{Binding HasItems}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate><StackPanel Spacing="14" /></ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate DataType="gp:FixSystemItem">
+                                    <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+                                        <Border Classes="fixRule" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Classes="fixSystem" Classes.bad="{Binding IsBad}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" MaxWidth="600"
+                                                       VerticalAlignment="Center" />
+                                            <Button x:Name="FixNotCrash" Classes="link" FontSize="12" VerticalAlignment="Center" IsVisible="{Binding HasNotCrash}"
+                                                    Command="{Binding NotCrashCommand}" Content="{l:Loc Fix_NotCrash}" />
+                                        </StackPanel>
+                                        <Border Grid.Column="2" Classes="fixRule" />
+                                    </Grid>
+                                </DataTemplate>
+                                <DataTemplate DataType="gp:FixPlayerItem">
+                                    <Border Classes="fixPlayer">
+                                        <StackPanel Spacing="8">
+                                            <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="14" />
+                                            <ItemsControl ItemsSource="{Binding Attachments}" IsVisible="{Binding HasAttachments}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:FixAttachmentChip">
+                                                        <Border Classes="fixAttach" Classes.bad="{Binding IsBad}" Padding="10,0">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                                                    <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                                </Viewbox>
+                                                                <TextBlock FontSize="12" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                                <TextBlock Classes="faint" FontSize="12" Text="{Binding Detail}" IsVisible="{Binding HasDetail}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                                <DataTemplate DataType="gp:FixAgentItem">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" MaxWidth="780" HorizontalAlignment="Left">
+                                        <Border Classes="fixAvatar">
+                                            <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconBot}" /></Viewbox>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Spacing="10" Margin="0,5,0,0">
+                                            <TextBlock Classes="faint" FontSize="12" FontWeight="Bold" Text="{Binding Who}" />
+                                            <StackPanel IsVisible="{Binding HasSteps}">
+                                                <ItemsControl ItemsSource="{Binding HeadSteps}">
+                                                    <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:FixStepRow">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2">
+                                                            <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsRunning}" IsVisible="{Binding IsRunning}">
+                                                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                                <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
+                                                            </Viewbox>
+                                                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsRunning}">
+                                                                <Path Classes="icon fixStep" Data="{StaticResource IconCheck}" />
+                                                            </Viewbox>
+                                                            <TextBlock Classes="muted" FontSize="13" Text="{Binding Text}" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <ToggleButton x:Name="MoreStepsToggle" Classes="stepsToggle" HorizontalAlignment="Left" Margin="-4,2,0,0" IsVisible="{Binding FoldsSteps}"
+                                                              Content="{Binding MoreStepsText}" />
+                                                <ItemsControl ItemsSource="{Binding MoreSteps}" IsVisible="{Binding #MoreStepsToggle.IsChecked}">
+                                                    <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:FixStepRow">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2">
+                                                            <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsRunning}" IsVisible="{Binding IsRunning}">
+                                                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                                <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
+                                                            </Viewbox>
+                                                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsRunning}">
+                                                                <Path Classes="icon fixStep" Data="{StaticResource IconCheck}" />
+                                                            </Viewbox>
+                                                            <TextBlock Classes="muted" FontSize="13" Text="{Binding Text}" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsWorking}">
+                                                <Viewbox Classes="icon spin" Width="14" Height="14">
+                                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                    <Path Classes="icon fixStep running" Data="{StaticResource IconLoader}" />
+                                                </Viewbox>
+                                                <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Working_Short}" />
+                                            </StackPanel>
+                                            <views:MarkdownView x:Name="FixAgentText" Markdown="{Binding Text}" TextElement.FontSize="14" IsVisible="{Binding HasText}" />
+                                            <ItemsControl ItemsSource="{Binding Choices}" IsVisible="{Binding HasChoices}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="gp:FixChoice">
+                                                        <Button Classes="chip" Command="{Binding Command}" Content="{Binding Text}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <!-- Change card: a new draft -->
+                                            <Border Classes="fixCard" IsVisible="{Binding HasChange}">
+                                                <StackPanel Spacing="12" DataContext="{Binding Change}" x:DataType="gp:FixChangeCard">
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Title}" VerticalAlignment="Center" />
+                                                        <Border Classes="packTag" Classes.muted="{Binding PillIsMuted}" Classes.gen="{Binding PillIsNew}" Classes.bad="{Binding PillIsBad}">
+                                                            <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <ItemsControl ItemsSource="{Binding Tiles}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate><UniformGrid Rows="1" ColumnSpacing="8" /></ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="gp:FixTile">
+                                                                <Border Classes="fixTile" AutomationProperties.Name="{Binding Title}">
+                                                                    <StackPanel Spacing="2">
+                                                                        <TextBlock Classes="muted" FontSize="12" Text="{Binding Title}" TextWrapping="Wrap" />
+                                                                        <TextBlock Classes="fixValue" FontWeight="Bold" FontSize="14" Text="{Binding Value}" TextWrapping="Wrap"
+                                                                                   Classes.ok="{Binding IsOk}" Classes.bad="{Binding IsBad}" />
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <StackPanel Spacing="6" IsVisible="{Binding HasSamples}">
+                                                        <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10" Margin="10,0">
+                                                            <TextBlock Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Key}" />
+                                                            <TextBlock Grid.Column="1" Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Was}" />
+                                                            <TextBlock Grid.Column="2" Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Now}" />
+                                                        </Grid>
+                                                        <ItemsControl ItemsSource="{Binding Samples}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="gp:FixSampleRow">
+                                                                    <Border Classes="fixSample">
+                                                                        <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10">
+                                                                            <TextBlock Classes="genKey" Text="{Binding Key}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Key}" />
+                                                                            <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Before}" TextWrapping="Wrap" TextDecorations="Strikethrough" />
+                                                                            <Border Grid.Column="2" Classes="fixIns">
+                                                                                <TextBlock FontSize="13" Text="{Binding After}" TextWrapping="Wrap" />
+                                                                            </Border>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                    <WrapPanel ItemSpacing="8" LineSpacing="6">
+                                                        <Button Classes="accent" Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" AutomationProperties.Name="{Binding InstallText}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                                </Viewbox>
+                                                                <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                        <Button Classes="bare" Command="{Binding UndoCommand}" IsVisible="{Binding CanUndo}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                                </Viewbox>
+                                                                <TextBlock Text="{l:Loc Fix_Undo}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </WrapPanel>
+                                                </StackPanel>
+                                            </Border>
+                                            <!-- Plan card: a change of more than 50 strings waits for the player -->
+                                            <Border Classes="fixCard" IsVisible="{Binding HasPlan}">
+                                                <StackPanel Spacing="10" DataContext="{Binding Plan}" x:DataType="gp:FixPlanCard">
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Title}" VerticalAlignment="Center" />
+                                                        <Border Classes="packTag" Classes.muted="{Binding !IsWaiting}" Classes.warn="{Binding IsWaiting}">
+                                                            <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Plan_Intro}" TextWrapping="Wrap" />
+                                                    <ItemsControl ItemsSource="{Binding Lines}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="x:String">
+                                                                <Border Classes="fixSample" Margin="0,0,0,6">
+                                                                    <TextBlock FontSize="13" Text="{Binding}" TextWrapping="Wrap" />
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <ItemsControl ItemsSource="{Binding Samples}" IsVisible="{Binding HasSamples}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="gp:FixSampleRow">
+                                                                <Border Classes="fixSample">
+                                                                    <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10">
+                                                                        <TextBlock Classes="genKey" Text="{Binding Key}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Key}" />
+                                                                        <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Before}" TextWrapping="Wrap" TextDecorations="Strikethrough" />
+                                                                        <Border Grid.Column="2" Classes="fixIns">
+                                                                            <TextBlock FontSize="13" Text="{Binding After}" TextWrapping="Wrap" />
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <WrapPanel ItemSpacing="8" LineSpacing="6" IsVisible="{Binding IsWaiting}">
+                                                        <Button Classes="genAction" Command="{Binding ApplyCommand}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                                </Viewbox>
+                                                                <TextBlock Text="{l:Loc Fix_Plan_Apply}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                        <Button Classes="bare" Command="{Binding ChangeCommand}" Content="{l:Loc Fix_Plan_Change}" />
+                                                    </WrapPanel>
+                                                </StackPanel>
+                                            </Border>
+                                            <StackPanel Spacing="2" IsVisible="{Binding HasFailure}">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                                        <Path Classes="icon" Data="{StaticResource IconXCircle}" Stroke="{DynamicResource AppBadBrush}" />
+                                                    </Viewbox>
+                                                    <TextBlock FontSize="13" Foreground="{DynamicResource AppBadBrush}" Text="{Binding Failure}" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                                <SelectableTextBlock Classes="faint" FontSize="12" Text="{Binding FailureDetail}" TextWrapping="Wrap" IsVisible="{Binding HasFailureDetail}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                            </StackPanel>
+                        </StackPanel>
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
+
+        <!-- Progress card (§6b) -->
+        <ContentControl Content="{Binding}" IsVisible="{Binding ShowProgress}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate x:DataType="gp:GenerationTabViewModel">
+                        <Border x:Name="ProgressCard" Classes="genCard" IsVisible="{Binding ShowProgress}">
+                            <StackPanel Spacing="16">
+                                <DockPanel>
+                                    <WrapPanel DockPanel.Dock="Right" ItemSpacing="8" LineSpacing="6" VerticalAlignment="Bottom" Margin="12,0,0,4">
+                                        <Button x:Name="GenPause" Classes="ghost" Command="{Binding PauseCommand}" IsVisible="{Binding ShowPause}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconPause}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Gen_Action_Pause}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="GenResume" Classes="accent genAction" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowResume}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{l:Loc Gen_Action_Resume}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="GenRetry" Classes="accent" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowRetry}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="16" Height="16">
+                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding RetryText}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="GenCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
+                                                Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
+                                    </WrapPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="16">
+                                        <TextBlock x:Name="ProgressPercent" Classes="genPercent" Text="{Binding PercentText}" VerticalAlignment="Bottom" />
+                                        <StackPanel Spacing="2" VerticalAlignment="Bottom" Margin="0,0,0,6">
+                                            <WrapPanel ItemSpacing="10" LineSpacing="4">
+                                                <TextBlock x:Name="ProgressTitle" FontWeight="Bold" Text="{Binding ProgressTitle}" VerticalAlignment="Center" />
+                                                <Border x:Name="ProgressQuality" Classes="qualityChip">
+                                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                                        <Viewbox Classes="icon" Width="12" Height="12">
+                                                            <Path Classes="icon" Data="{Binding QualityChipIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                                                        </Viewbox>
+                                                        <TextBlock Text="{Binding QualityChip}" />
                                                     </StackPanel>
                                                 </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <StackPanel Spacing="6" IsVisible="{Binding HasSamples}">
-                                        <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10" Margin="10,0">
-                                            <TextBlock Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Key}" />
-                                            <TextBlock Grid.Column="1" Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Was}" />
-                                            <TextBlock Grid.Column="2" Classes="faint" FontSize="11" FontWeight="Bold" Text="{l:Loc Fix_Samples_Now}" />
-                                        </Grid>
-                                        <ItemsControl ItemsSource="{Binding Samples}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
+                                            </WrapPanel>
+                                            <TextBlock x:Name="ProgressDetail" Classes="muted" FontSize="13" Text="{Binding ProgressDetail}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DockPanel>
+                                <ProgressBar x:Name="ProgressBar" Classes="genProgress" Classes.paused="{Binding IsBarPaused}" Minimum="0" Maximum="100" Value="{Binding Percent}"
+                                             AutomationProperties.Name="{Binding PercentText}" />
+                                <TextBlock x:Name="ActionError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
+                                           Text="{Binding ActionError}" IsVisible="{Binding HasActionError}" />
+
+                                <!-- Just translated (Translate stage): key · original · translation, ⚠ with a validator warning -->
+                                <Border x:Name="RecentBox" Classes="genBox" IsVisible="{Binding ShowRecent}">
+                                    <StackPanel Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Ellipse Classes="genLiveDot" IsVisible="{Binding IsRunning}" VerticalAlignment="Center" />
+                                            <TextBlock Classes="capsLabel" Text="{Binding RecentTitle}" />
+                                        </StackPanel>
+                                        <ItemsControl x:Name="RecentList" ItemsSource="{Binding Recent}">
                                             <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="gp:FixSampleRow">
-                                                    <Border Classes="fixSample">
-                                                        <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10">
-                                                            <TextBlock Classes="genKey" Text="{Binding Key}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Key}" />
-                                                            <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Before}" TextWrapping="Wrap" TextDecorations="Strikethrough" />
-                                                            <Border Grid.Column="2" Classes="fixIns">
-                                                                <TextBlock FontSize="13" Text="{Binding After}" TextWrapping="Wrap" />
+                                                <DataTemplate x:DataType="gp:GenerationRecentRow">
+                                                    <Grid ColumnDefinitions="2*,3*,3*" ColumnSpacing="12" Margin="0,3">
+                                                        <TextBlock Classes="genKey" Text="{Binding Key}" VerticalAlignment="Top" ToolTip.Tip="{Binding Key}" />
+                                                        <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Original}" TextWrapping="Wrap" />
+                                                        <StackPanel Grid.Column="2" Spacing="4">
+                                                            <TextBlock FontSize="13" Text="{Binding Translation}" TextWrapping="Wrap" />
+                                                            <Border Classes="genWarnTag" HorizontalAlignment="Left" IsVisible="{Binding HasWarning}">
+                                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                                    <Viewbox Classes="icon" Width="11" Height="11"><Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" /></Viewbox>
+                                                                    <TextBlock Text="{Binding Warning}" />
+                                                                </StackPanel>
                                                             </Border>
-                                                        </Grid>
-                                                    </Border>
+                                                        </StackPanel>
+                                                    </Grid>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </StackPanel>
-                                    <WrapPanel ItemSpacing="8" LineSpacing="6">
-                                        <Button Classes="accent" Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" AutomationProperties.Name="{Binding InstallText}">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
-                                                </Viewbox>
-                                                <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Classes="bare" Command="{Binding UndoCommand}" IsVisible="{Binding CanUndo}">
-                                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                                <Viewbox Classes="icon" Width="14" Height="14">
-                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
-                                                </Viewbox>
-                                                <TextBlock Text="{l:Loc Fix_Undo}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </Button>
-                                    </WrapPanel>
-                                </StackPanel>
-                            </Border>
-                            <!-- Plan card: a change of more than 50 strings waits for the player -->
-                            <Border Classes="fixCard" IsVisible="{Binding HasPlan}">
-                                <StackPanel Spacing="10" DataContext="{Binding Plan}" x:DataType="gp:FixPlanCard">
-                                    <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Title}" VerticalAlignment="Center" />
-                                        <Border Classes="packTag" Classes.muted="{Binding !IsWaiting}" Classes.warn="{Binding IsWaiting}">
-                                            <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
-                                        </Border>
-                                    </StackPanel>
-                                    <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Fix_Plan_Intro}" TextWrapping="Wrap" />
-                                    <ItemsControl ItemsSource="{Binding Lines}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Border Classes="fixSample" Margin="0,0,0,6">
-                                                    <TextBlock FontSize="13" Text="{Binding}" TextWrapping="Wrap" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <ItemsControl ItemsSource="{Binding Samples}" IsVisible="{Binding HasSamples}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="gp:FixSampleRow">
-                                                <Border Classes="fixSample">
-                                                    <Grid ColumnDefinitions="150,*,*" ColumnSpacing="10">
-                                                        <TextBlock Classes="genKey" Text="{Binding Key}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Key}" />
-                                                        <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Before}" TextWrapping="Wrap" TextDecorations="Strikethrough" />
-                                                        <Border Grid.Column="2" Classes="fixIns">
-                                                            <TextBlock FontSize="13" Text="{Binding After}" TextWrapping="Wrap" />
-                                                        </Border>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <WrapPanel ItemSpacing="8" LineSpacing="6" IsVisible="{Binding IsWaiting}">
-                                        <Button Classes="genAction" Command="{Binding ApplyCommand}">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
-                                                </Viewbox>
-                                                <TextBlock Text="{l:Loc Fix_Plan_Apply}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Classes="bare" Command="{Binding ChangeCommand}" Content="{l:Loc Fix_Plan_Change}" />
-                                    </WrapPanel>
-                                </StackPanel>
-                            </Border>
-                            <StackPanel Spacing="2" IsVisible="{Binding HasFailure}">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <Viewbox Classes="icon" Width="14" Height="14">
-                                        <Path Classes="icon" Data="{StaticResource IconXCircle}" Stroke="{DynamicResource AppBadBrush}" />
-                                    </Viewbox>
-                                    <TextBlock FontSize="13" Foreground="{DynamicResource AppBadBrush}" Text="{Binding Failure}" TextWrapping="Wrap" />
-                                </StackPanel>
-                                <SelectableTextBlock Classes="faint" FontSize="12" Text="{Binding FailureDetail}" TextWrapping="Wrap" IsVisible="{Binding HasFailureDetail}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.DataTemplates>
-        </ItemsControl>
-            </StackPanel>
-        </StackPanel>
-
-        <!-- Progress card (§6b) -->
-        <Border x:Name="ProgressCard" Classes="genCard" IsVisible="{Binding ShowProgress}">
-            <StackPanel Spacing="16">
-                <DockPanel>
-                    <WrapPanel DockPanel.Dock="Right" ItemSpacing="8" LineSpacing="6" VerticalAlignment="Bottom" Margin="12,0,0,4">
-                        <Button x:Name="GenPause" Classes="ghost" Command="{Binding PauseCommand}" IsVisible="{Binding ShowPause}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <Viewbox Classes="icon" Width="16" Height="16">
-                                    <Path Classes="icon" Data="{StaticResource IconPause}" Stroke="{Binding $parent[Button].Foreground}" />
-                                </Viewbox>
-                                <TextBlock Text="{l:Loc Gen_Action_Pause}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="GenResume" Classes="accent genAction" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowResume}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <Viewbox Classes="icon" Width="16" Height="16">
-                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
-                                </Viewbox>
-                                <TextBlock Text="{l:Loc Gen_Action_Resume}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="GenRetry" Classes="accent" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowRetry}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <Viewbox Classes="icon" Width="16" Height="16">
-                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
-                                </Viewbox>
-                                <TextBlock Text="{Binding RetryText}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="GenCancel" Classes="link" Command="{Binding CancelCommand}" Content="{l:Loc Gen_Action_Cancel}"
-                                Foreground="{DynamicResource AppMutedBrush}" VerticalAlignment="Center" />
-                    </WrapPanel>
-                    <StackPanel Orientation="Horizontal" Spacing="16">
-                        <TextBlock x:Name="ProgressPercent" Classes="genPercent" Text="{Binding PercentText}" VerticalAlignment="Bottom" />
-                        <StackPanel Spacing="2" VerticalAlignment="Bottom" Margin="0,0,0,6">
-                            <WrapPanel ItemSpacing="10" LineSpacing="4">
-                                <TextBlock x:Name="ProgressTitle" FontWeight="Bold" Text="{Binding ProgressTitle}" VerticalAlignment="Center" />
-                                <Border x:Name="ProgressQuality" Classes="qualityChip">
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <Viewbox Classes="icon" Width="12" Height="12">
-                                            <Path Classes="icon" Data="{Binding QualityChipIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
-                                        </Viewbox>
-                                        <TextBlock Text="{Binding QualityChip}" />
-                                    </StackPanel>
                                 </Border>
-                            </WrapPanel>
-                            <TextBlock x:Name="ProgressDetail" Classes="muted" FontSize="13" Text="{Binding ProgressDetail}" TextWrapping="Wrap" />
-                        </StackPanel>
-                    </StackPanel>
-                </DockPanel>
-                <ProgressBar x:Name="ProgressBar" Classes="genProgress" Classes.paused="{Binding IsBarPaused}" Minimum="0" Maximum="100" Value="{Binding Percent}"
-                             AutomationProperties.Name="{Binding PercentText}" />
-                <TextBlock x:Name="ActionError" Foreground="{DynamicResource AppWarnBrush}" FontSize="13" TextWrapping="Wrap"
-                           Text="{Binding ActionError}" IsVisible="{Binding HasActionError}" />
 
-                <!-- Just translated (Translate stage): key · original · translation, ⚠ with a validator warning -->
-                <Border x:Name="RecentBox" Classes="genBox" IsVisible="{Binding ShowRecent}">
-                    <StackPanel Spacing="8">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Ellipse Classes="genLiveDot" IsVisible="{Binding IsRunning}" VerticalAlignment="Center" />
-                            <TextBlock Classes="capsLabel" Text="{Binding RecentTitle}" />
-                        </StackPanel>
-                        <ItemsControl x:Name="RecentList" ItemsSource="{Binding Recent}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="gp:GenerationRecentRow">
-                                    <Grid ColumnDefinitions="2*,3*,3*" ColumnSpacing="12" Margin="0,3">
-                                        <TextBlock Classes="genKey" Text="{Binding Key}" VerticalAlignment="Top" ToolTip.Tip="{Binding Key}" />
-                                        <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{Binding Original}" TextWrapping="Wrap" />
-                                        <StackPanel Grid.Column="2" Spacing="4">
-                                            <TextBlock FontSize="13" Text="{Binding Translation}" TextWrapping="Wrap" />
-                                            <Border Classes="genWarnTag" HorizontalAlignment="Left" IsVisible="{Binding HasWarning}">
-                                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                                    <Viewbox Classes="icon" Width="11" Height="11"><Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" /></Viewbox>
-                                                    <TextBlock Text="{Binding Warning}" />
-                                                </StackPanel>
-                                            </Border>
+                                <!-- Build & test: the current step with the font swap -->
+                                <Border x:Name="BuildBox" Classes="genBox" IsVisible="{Binding ShowBuild}">
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Viewbox Classes="icon spin" Width="16" Height="16" IsVisible="{Binding IsRunning}">
+                                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppGenBrush}" />
+                                            </Viewbox>
+                                            <TextBlock x:Name="BuildStep" FontWeight="SemiBold" Text="{Binding BuildStepText}" />
                                         </StackPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </Border>
-
-                <!-- Build & test: the current step with the font swap -->
-                <Border x:Name="BuildBox" Classes="genBox" IsVisible="{Binding ShowBuild}">
-                    <StackPanel Spacing="4">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Viewbox Classes="icon spin" Width="16" Height="16" IsVisible="{Binding IsRunning}">
-                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                                <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{DynamicResource AppGenBrush}" />
-                            </Viewbox>
-                            <TextBlock x:Name="BuildStep" FontWeight="SemiBold" Text="{Binding BuildStepText}" />
-                        </StackPanel>
-                        <TextBlock x:Name="BuildFonts" Classes="muted" FontSize="13" Text="{Binding BuildFontNote}" TextWrapping="Wrap"
-                                   IsVisible="{Binding HasBuildFontNote}" />
-                        <TextBlock x:Name="BuildTestRunNote" Classes="muted" FontSize="13" Text="{l:Loc Gen_Build_TestRunNote}" TextWrapping="Wrap"
-                                   IsVisible="{Binding ShowTestRunNote}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Validator and the agent's limit -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
-                    <Border Classes="genBox">
-                        <StackPanel Spacing="6">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding HasWarnings}">
-                                    <Path Classes="icon genWarnIcon" Data="{StaticResource IconAlert}" />
-                                </Viewbox>
-                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding !HasWarnings}">
-                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" />
-                                </Viewbox>
-                                <TextBlock x:Name="WarningCount" FontWeight="SemiBold" Text="{Binding WarningCountText}" />
-                            </StackPanel>
-                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Validator_Hint}" TextWrapping="Wrap" />
-                            <Button x:Name="WarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
-                                    Content="{Binding WarningsToggleText}" IsVisible="{Binding HasWarnings}" />
-                        </StackPanel>
-                    </Border>
-                    <Border Grid.Column="1" Classes="genBox">
-                        <StackPanel Spacing="6">
-                            <DockPanel>
-                                <TextBlock DockPanel.Dock="Right" x:Name="LimitValue" FontWeight="Bold" Text="{Binding LimitValue}" />
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconClock}" Stroke="{DynamicResource AppMutedBrush}" /></Viewbox>
-                                    <TextBlock x:Name="LimitTitle" FontWeight="SemiBold" Text="{Binding LimitTitle}" />
-                                </StackPanel>
-                            </DockPanel>
-                            <ProgressBar Classes="genLimit" Classes.reached="{Binding IsLimitReached}" Minimum="0" Maximum="100"
-                                         Value="{Binding LimitPercent}" IsVisible="{Binding HasLimit}" AutomationProperties.Name="{Binding LimitValue}" />
-                            <TextBlock x:Name="LimitNote" Classes="muted" FontSize="12" Text="{Binding LimitNote}" TextWrapping="Wrap" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
-                <!-- The validator's list, expanded inline -->
-                <ItemsControl x:Name="WarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="gp:GenerationWarningRow">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4">
-                                <Border Classes="genWarnTag" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Rule}" />
+                                        <TextBlock x:Name="BuildFonts" Classes="muted" FontSize="13" Text="{Binding BuildFontNote}" TextWrapping="Wrap"
+                                                   IsVisible="{Binding HasBuildFontNote}" />
+                                        <TextBlock x:Name="BuildTestRunNote" Classes="muted" FontSize="13" Text="{l:Loc Gen_Build_TestRunNote}" TextWrapping="Wrap"
+                                                   IsVisible="{Binding ShowTestRunNote}" />
+                                    </StackPanel>
                                 </Border>
-                                <StackPanel Grid.Column="1" Spacing="2">
-                                    <TextBlock Classes="genKey" Text="{Binding Key}" />
-                                    <TextBlock FontSize="13" TextWrapping="Wrap">
-                                        <Run Text="{Binding Original}" Foreground="{DynamicResource AppMutedBrush}" FontStyle="Italic" />
-                                        <Run Text=" → " Foreground="{DynamicResource AppFaintBrush}" />
-                                        <Run Text="{Binding Translation}" />
-                                    </TextBlock>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
 
-                <!-- Agent activity: the job's log, collapsed -->
-                <StackPanel Spacing="8">
-                    <Button x:Name="LogToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleLogCommand}"
-                            Foreground="{DynamicResource AppMutedBrush}">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsLogOpen}">
-                                <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{DynamicResource AppMutedBrush}" />
-                            </Viewbox>
-                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding IsLogOpen}">
-                                <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{DynamicResource AppMutedBrush}" />
-                            </Viewbox>
-                            <TextBlock Text="{l:Loc Gen_Log_Title}" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
-                    <TextBox x:Name="AgentLog" Classes="log" Text="{Binding LogText, Mode=OneWay}" IsVisible="{Binding IsLogOpen}"
-                             AutomationProperties.Name="{l:Loc Gen_Log_Title}" />
-                </StackPanel>
-            </StackPanel>
-        </Border>
+                                <!-- Validator and the agent's limit -->
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                                    <Border Classes="genBox">
+                                        <StackPanel Spacing="6">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding HasWarnings}">
+                                                    <Path Classes="icon genWarnIcon" Data="{StaticResource IconAlert}" />
+                                                </Viewbox>
+                                                <Viewbox Classes="icon" Width="16" Height="16" IsVisible="{Binding !HasWarnings}">
+                                                    <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{DynamicResource AppOkBrush}" />
+                                                </Viewbox>
+                                                <TextBlock x:Name="WarningCount" FontWeight="SemiBold" Text="{Binding WarningCountText}" />
+                                            </StackPanel>
+                                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Validator_Hint}" TextWrapping="Wrap" />
+                                            <Button x:Name="WarningsToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleWarningsCommand}"
+                                                    Content="{Binding WarningsToggleText}" IsVisible="{Binding HasWarnings}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Classes="genBox">
+                                        <StackPanel Spacing="6">
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Right" x:Name="LimitValue" FontWeight="Bold" Text="{Binding LimitValue}" />
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Viewbox Classes="icon" Width="16" Height="16"><Path Classes="icon" Data="{StaticResource IconClock}" Stroke="{DynamicResource AppMutedBrush}" /></Viewbox>
+                                                    <TextBlock x:Name="LimitTitle" FontWeight="SemiBold" Text="{Binding LimitTitle}" />
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <ProgressBar Classes="genLimit" Classes.reached="{Binding IsLimitReached}" Minimum="0" Maximum="100"
+                                                         Value="{Binding LimitPercent}" IsVisible="{Binding HasLimit}" AutomationProperties.Name="{Binding LimitValue}" />
+                                            <TextBlock x:Name="LimitNote" Classes="muted" FontSize="12" Text="{Binding LimitNote}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- The validator's list, expanded inline -->
+                                <ItemsControl x:Name="WarningList" ItemsSource="{Binding Warnings}" IsVisible="{Binding ShowWarnings}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="gp:GenerationWarningRow">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4">
+                                                <Border Classes="genWarnTag" VerticalAlignment="Top">
+                                                    <TextBlock Text="{Binding Rule}" />
+                                                </Border>
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock Classes="genKey" Text="{Binding Key}" />
+                                                    <TextBlock FontSize="13" TextWrapping="Wrap">
+                                                        <Run Text="{Binding Original}" Foreground="{DynamicResource AppMutedBrush}" FontStyle="Italic" />
+                                                        <Run Text=" → " Foreground="{DynamicResource AppFaintBrush}" />
+                                                        <Run Text="{Binding Translation}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Agent activity: the job's log, collapsed -->
+                                <StackPanel Spacing="8">
+                                    <Button x:Name="LogToggle" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0" Command="{Binding ToggleLogCommand}"
+                                            Foreground="{DynamicResource AppMutedBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding !IsLogOpen}">
+                                                <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{DynamicResource AppMutedBrush}" />
+                                            </Viewbox>
+                                            <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding IsLogOpen}">
+                                                <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{DynamicResource AppMutedBrush}" />
+                                            </Viewbox>
+                                            <TextBlock Text="{l:Loc Gen_Log_Title}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+                                    <TextBox x:Name="AgentLog" Classes="log" Text="{Binding LogText, Mode=OneWay}" IsVisible="{Binding IsLogOpen}"
+                                             AutomationProperties.Name="{l:Loc Gen_Log_Title}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
     </StackPanel>
 </UserControl>
