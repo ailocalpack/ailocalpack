@@ -69,7 +69,7 @@
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <Viewbox Classes="icon" Width="14" Height="14" IsVisible="{Binding HasIcon}">
                                             <Path Classes="icon" Data="{Binding Icon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                                  Stroke="{Binding $parent[Button].Foreground}" />
+                                                  Stroke="{Binding $self.(TextElement.Foreground)}" />
                                         </Viewbox>
                                         <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
                                     </StackPanel>

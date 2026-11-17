@@ -47,6 +47,14 @@ public sealed class ThemeContrastTests
             data.Add(theme, "AppOnWarnBrush", "AppWarnBrush", Text);
             data.Add(theme, "AppOnGenBrush", "AppGenBrush", Text);
             data.Add(theme, "AppOnOkBrush", "AppOkBrush", Graphic);
+            data.Add(theme, "ButtonForeground", "ButtonBackground", Text);
+            data.Add(theme, "ButtonForegroundPointerOver", "ButtonBackgroundPointerOver", Text);
+            data.Add(theme, "ButtonForegroundPressed", "ButtonBackgroundPressed", Text);
+            data.Add(theme, "AccentButtonForeground", "AccentButtonBackground", Text);
+            data.Add(theme, "AccentButtonForegroundPointerOver", "AccentButtonBackgroundPointerOver", Text);
+            data.Add(theme, "AccentButtonForegroundPressed", "AccentButtonBackgroundPressed", Text);
+            // Disabled controls are exempt from WCAG; still kept readable
+            data.Add(theme, "ButtonForegroundDisabled", "ButtonBackgroundDisabled", Graphic);
             data.Add(theme, "AppFocusBrush", "AppBackgroundBrush", Graphic);
             data.Add(theme, "AppFocusBrush", "AppSurfaceBrush", Graphic);
         }

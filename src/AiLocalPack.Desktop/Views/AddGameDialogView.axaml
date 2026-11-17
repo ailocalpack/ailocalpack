@@ -56,7 +56,7 @@
                 <Button x:Name="AllGamesButton" Classes="ghost" Command="{Binding AllGamesCommand}" IsVisible="{Binding IsReview}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <Viewbox Classes="icon" Width="14" Height="14">
-                            <Path Classes="icon" Data="{StaticResource IconChevronLeft}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconChevronLeft}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                         <TextBlock Text="{l:Loc AddGame_Review_AllGames}" VerticalAlignment="Center" />
                     </StackPanel>
@@ -109,7 +109,7 @@
                     <Button x:Name="BackButton" Classes="ghost" Command="{Binding BackCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc AddGame_Back}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -123,7 +123,7 @@
                     <Button x:Name="OverviewBackButton" Classes="ghost" Command="{Binding BackCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc AddGame_Back}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -133,7 +133,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{l:Loc AddGame_Overview_Start}" VerticalAlignment="Center" />
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                         </StackPanel>
                     </Button>
@@ -144,7 +144,7 @@
                     <Button x:Name="PreviousButton" Classes="ghost" Command="{Binding PreviousCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconChevronLeft}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconChevronLeft}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc AddGame_Review_Previous}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -152,7 +152,7 @@
                     <Button x:Name="SkipButton" Grid.Column="2" Classes="ghost" Command="{Binding SkipCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconSkip}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconSkip}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc AddGame_Review_Skip}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -162,7 +162,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{Binding PrimaryText}" VerticalAlignment="Center" />
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                         </StackPanel>
                     </Button>
@@ -193,7 +193,7 @@
                                         Command="{Binding ChooseFolderCommand}">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <Viewbox Classes="icon" Width="16" Height="16">
-                                            <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{Binding $parent[Button].Foreground}" />
+                                            <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                         </Viewbox>
                                         <TextBlock Text="{l:Loc AddGame_ChooseFolder}" VerticalAlignment="Center" />
                                     </StackPanel>

@@ -120,7 +120,7 @@
                         <Button Classes="accent sm" Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding InstallText}" />
                             </StackPanel>
@@ -128,7 +128,7 @@
                         <Button Classes="accent sm" Command="{Binding SignInCommand}" IsVisible="{Binding CanSignIn}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding SignInText}" />
                             </StackPanel>
@@ -136,7 +136,7 @@
                         <Button Classes="ghost sm" Command="{Binding UpdateCommand}" IsVisible="{Binding CanUpdate}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding UpdateText}" />
                             </StackPanel>
@@ -185,8 +185,8 @@
                             <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsScanning}">
                                 <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
                                 <Panel>
-                                    <Path Classes="icon" Stroke="{Binding $parent[Button].Foreground}" Data="{StaticResource IconLoader}" IsVisible="{Binding IsScanning}" />
-                                    <Path Classes="icon" Stroke="{Binding $parent[Button].Foreground}" Data="{StaticResource IconRefresh}" IsVisible="{Binding !IsScanning}" />
+                                    <Path Classes="icon" Stroke="{Binding $self.(TextElement.Foreground)}" Data="{StaticResource IconLoader}" IsVisible="{Binding IsScanning}" />
+                                    <Path Classes="icon" Stroke="{Binding $self.(TextElement.Foreground)}" Data="{StaticResource IconRefresh}" IsVisible="{Binding !IsScanning}" />
                                 </Panel>
                             </Viewbox>
                             <TextBlock Text="{Binding RescanText}" />
@@ -226,7 +226,7 @@
                         <Button Classes="bare sm" Command="{Binding OpenCommand}" IsVisible="{Binding IsAvailable}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding OpenText}" />
                             </StackPanel>
@@ -260,7 +260,7 @@
                         <Button Classes="bare sm" Command="{Binding OpenCommand}" IsVisible="{Binding IsAvailable}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding OpenText}" />
                             </StackPanel>
@@ -277,7 +277,7 @@
                         <Button Classes="bare sm" Command="{Binding Command}" AutomationProperties.Name="{Binding Label}" Margin="0,0,10,0">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Stroke="{Binding $parent[Button].Foreground}"
+                                    <Path Classes="icon" Stroke="{Binding $self.(TextElement.Foreground)}"
                                           Data="{Binding IconKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
                                 </Viewbox>
                                 <views:HighlightTextBlock Source="{Binding Label}"
@@ -353,7 +353,7 @@
                         <Button Classes="bare sm" Command="{Binding OpenCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding OpenText}" />
                             </StackPanel>
@@ -385,7 +385,7 @@
                         <Button Classes="bare sm" Command="{Binding DeleteCommand}" IsVisible="{Binding !IsRunning}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding DeleteText}" />
                             </StackPanel>
@@ -440,7 +440,7 @@
                         <Button x:Name="CheckUpdates" Classes="ghost sm" Command="{Binding CheckCommand}" IsVisible="{Binding CanCheck}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding CheckText}" />
                             </StackPanel>
@@ -449,7 +449,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon spin" Width="14" Height="14">
                                     <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding CheckingText}" />
                             </StackPanel>
@@ -457,7 +457,7 @@
                         <Button x:Name="RestartToUpdate" Classes="accent sm" Command="{Binding RestartCommand}" IsVisible="{Binding IsReady}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding RestartText}" />
                             </StackPanel>
@@ -466,7 +466,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon spin" Width="14" Height="14">
                                     <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
-                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconLoader}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding RestartingText}" />
                             </StackPanel>
@@ -507,7 +507,7 @@
                     <Button x:Name="ShowWelcomeTour" Grid.Column="1" Classes="ghost sm" VerticalAlignment="Center" Command="{Binding ShowCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconHelp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconHelp}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{Binding ShowText}" />
                         </StackPanel>
@@ -522,7 +522,7 @@
                     <Button x:Name="ThirdPartyNotices" Grid.Column="1" Classes="bare sm" VerticalAlignment="Center" Command="{Binding NoticesCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconFile}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{Binding NoticesText}" />
                         </StackPanel>
@@ -569,7 +569,7 @@
                         <Button x:Name="GitHubSignIn" Classes="accent sm" Command="{Binding SignInCommand}" IsVisible="{Binding CanSignIn}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="brand" Data="{StaticResource BrandGitHub}" Fill="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="brand" Data="{StaticResource BrandGitHub}" Fill="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding SignInText}" />
                             </StackPanel>
@@ -578,7 +578,7 @@
                         <Button x:Name="GitHubProfile" Classes="bare sm" Command="{Binding OpenProfileCommand}" IsVisible="{Binding IsSignedIn}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding ProfileText}" />
                             </StackPanel>
@@ -620,7 +620,7 @@
                                         <Button Classes="bare sm" Command="{Binding DiscussionCommand}" IsVisible="{Binding HasDiscussion}">
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Publish_Discussion}" />
                                             </StackPanel>
@@ -628,7 +628,7 @@
                                         <Button x:Name="PublishedPackPr" Classes="bare sm" Command="{Binding OpenPrCommand}" IsVisible="{Binding HasPr}">
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Settings_PublishedPack_Pr}" />
                                             </StackPanel>

@@ -31,7 +31,7 @@
             <Button x:Name="SignInButton" Classes="accent" Command="{Binding StartSignInCommand}" IsVisible="{Binding ShowSignInButton}" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Viewbox Classes="icon" Width="16" Height="16">
-                        <Path Classes="icon" Data="{StaticResource IconGitHub}" Stroke="{Binding $parent[Button].Foreground}" />
+                        <Path Classes="icon" Data="{StaticResource IconGitHub}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                     </Viewbox>
                     <TextBlock Text="{l:Loc Publish_SignIn_SignInButton}" VerticalAlignment="Center" />
                 </StackPanel>
@@ -51,7 +51,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <TextBlock Text="{l:Loc Publish_Continue}" VerticalAlignment="Center" />
                         <Viewbox Classes="icon" Width="16" Height="16">
-                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                     </StackPanel>
                 </Button>

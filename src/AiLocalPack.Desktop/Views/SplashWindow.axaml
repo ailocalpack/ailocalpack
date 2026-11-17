@@ -59,7 +59,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBlock Text="{Binding ToggleText}" VerticalAlignment="Center" />
                     <Viewbox Classes="icon" Width="14" Height="14" RenderTransform="{Binding IsDetailsOpen, Converter={x:Static views:SplashWindow.ChevronTurn}}">
-                        <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{Binding $parent[Button].Foreground}" />
+                        <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                     </Viewbox>
                 </StackPanel>
             </Button>

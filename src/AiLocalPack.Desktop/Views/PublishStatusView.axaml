@@ -63,7 +63,7 @@
                     <Button x:Name="PublishOpenPr" Classes="ghost sm" Command="{Binding OpenPrCommand}" IsVisible="{Binding ShowOpenPr}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Publish_OpenPr}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -71,7 +71,7 @@
                     <Button x:Name="PublishResubmit" Classes="accent sm" Command="{Binding ResubmitCommand}" IsVisible="{Binding ShowResubmit}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Publish_Resubmit}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -79,7 +79,7 @@
                     <Button x:Name="PublishAgain" Classes="accent sm" Command="{Binding PublishCommand}" IsVisible="{Binding ShowPublishAgain}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Publish_Again}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -87,7 +87,7 @@
                     <Button x:Name="PublishCopyLink" Classes="ghost sm" Command="{Binding CopyLinkCommand}" IsVisible="{Binding ShowCopyLink}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconCopy}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconCopy}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Publish_CopyLink}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -95,7 +95,7 @@
                     <Button x:Name="PublishDiscussion" Classes="ghost sm" Command="{Binding DiscussionCommand}" IsVisible="{Binding HasDiscussion}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Publish_Discussion}" VerticalAlignment="Center" />
                         </StackPanel>

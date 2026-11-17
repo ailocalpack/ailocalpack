@@ -51,6 +51,13 @@
             <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
+            <!-- Disabled buttons, accent ones included: a quiet fill with dimmed text, still legible -->
+            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#1c2230" />
+            <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#6c7689" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+            <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#1c2230" />
+            <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#6c7689" />
+            <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent" />
             <!-- Game page backdrop from the cover's colors (design §3): strong in dark, much fainter in light -->
             <x:Double x:Key="HeroBackdropOpacity">0.55</x:Double>
             <LinearGradientBrush x:Key="HeroFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
@@ -65,13 +72,13 @@
             <SolidColorBrush x:Key="AppSurface2Brush" Color="#eef1f6" />
             <SolidColorBrush x:Key="AppBorderBrush" Color="#170f172a" />
             <SolidColorBrush x:Key="AppTextBrush" Color="#141a26" />
-            <SolidColorBrush x:Key="AppMutedBrush" Color="#556075" />
+            <SolidColorBrush x:Key="AppMutedBrush" Color="#4a5468" />
             <SolidColorBrush x:Key="AppAccentBrush" Color="#4152e0" />
             <SolidColorBrush x:Key="AppAccentFillBrush" Color="#4152e0" />
             <SolidColorBrush x:Key="AppAccentSoftBrush" Color="#1a4152e0" />
             <SolidColorBrush x:Key="AppSurface3Brush" Color="#e2e7ef" />
             <SolidColorBrush x:Key="AppBorderStrongBrush" Color="#3d0f172a" />
-            <SolidColorBrush x:Key="AppFaintBrush" Color="#606a7e" />
+            <SolidColorBrush x:Key="AppFaintBrush" Color="#5a6478" />
             <SolidColorBrush x:Key="AppWarnBrush" Color="#875400" />
             <SolidColorBrush x:Key="AppBadBrush" Color="#b32d2d" />
             <SolidColorBrush x:Key="AppHighlightBrush" Color="#4dc48000" />
@@ -98,16 +105,22 @@
             <SolidColorBrush x:Key="AccentButtonForeground" Color="#ffffff" />
             <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#ffffff" />
             <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#ffffff" />
-            <SolidColorBrush x:Key="ButtonBackground" Color="#eef1f6" />
-            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#e2e7ef" />
-            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#e2e7ef" />
+            <SolidColorBrush x:Key="ButtonBackground" Color="#e6eaf1" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#dce2eb" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#d2d9e4" />
             <SolidColorBrush x:Key="ButtonForeground" Color="#141a26" />
             <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#141a26" />
             <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#141a26" />
             <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
-            <x:Double x:Key="HeroBackdropOpacity">0.22</x:Double>
+            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#e8ecf2" />
+            <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#7d8699" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+            <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#e8ecf2" />
+            <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#7d8699" />
+            <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent" />
+            <x:Double x:Key="HeroBackdropOpacity">0.16</x:Double>
             <LinearGradientBrush x:Key="HeroFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
                 <GradientStop Offset="0" Color="#00f4f6fa" />
                 <GradientStop Offset="1" Color="#f4f6fa" />

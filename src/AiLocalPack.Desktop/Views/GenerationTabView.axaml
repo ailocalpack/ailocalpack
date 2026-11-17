@@ -330,7 +330,7 @@
                                                 <Button Classes="accent sm" Command="{Binding Row.InstallCommand}" IsVisible="{Binding Row.CanInstall}">
                                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                                         <Viewbox Classes="icon" Width="14" Height="14">
-                                                            <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                            <Path Classes="icon" Data="{StaticResource IconDownload}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                         </Viewbox>
                                                         <TextBlock Text="{Binding Row.InstallText}" />
                                                     </StackPanel>
@@ -338,7 +338,7 @@
                                                 <Button Classes="accent sm" Command="{Binding Row.SignInCommand}" IsVisible="{Binding Row.CanSignIn}">
                                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                                         <Viewbox Classes="icon" Width="14" Height="14">
-                                                            <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                            <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                         </Viewbox>
                                                         <TextBlock Text="{Binding Row.SignInText}" />
                                                     </StackPanel>
@@ -405,7 +405,7 @@
                                     AutomationProperties.Name="{Binding StartText}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <Viewbox Classes="icon" Width="16" Height="16">
-                                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                     </Viewbox>
                                     <TextBlock Text="{Binding StartText}" VerticalAlignment="Center" />
                                 </StackPanel>
@@ -432,7 +432,7 @@
                         Command="{Binding Fix.RestoreCommand, FallbackValue={x:Null}}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <Viewbox Classes="icon" Width="14" Height="14">
-                            <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                         <TextBlock Text="{l:Loc Fix_Crash_Restore}" VerticalAlignment="Center" />
                     </StackPanel>
@@ -480,7 +480,7 @@
                                     ToolTip.Tip="{l:Loc Gen_Result_Share_Text}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <Viewbox Classes="icon" Width="14" Height="14">
-                                        <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                        <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                     </Viewbox>
                                     <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
                                 </StackPanel>
@@ -491,7 +491,7 @@
                     AutomationProperties.Name="{l:Loc Fix_Drafts}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <Viewbox Classes="icon" Width="14" Height="14">
-                        <Path Classes="icon" Data="{StaticResource IconClock}" Stroke="{Binding $parent[Button].Foreground}" />
+                        <Path Classes="icon" Data="{StaticResource IconClock}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                     </Viewbox>
                     <TextBlock Text="{l:Loc Fix_Drafts}" VerticalAlignment="Center" />
                 </StackPanel>
@@ -583,7 +583,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
                                 <Path Classes="icon" Data="{Binding BannerActionIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                      Stroke="{Binding $parent[Button].Foreground}" />
+                                      Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{Binding BannerActionText}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -689,7 +689,7 @@
                                         <Button x:Name="ReviewRegenerate" Classes="ghost" Command="{Binding RegenerateCommand}" VerticalAlignment="Center">
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Gen_Action_Regenerate}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -702,7 +702,7 @@
                                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                                         <TextBlock Text="{l:Loc Gen_Action_ContinueTranslation}" VerticalAlignment="Center" />
                                                         <Viewbox Classes="icon" Width="16" Height="16">
-                                                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                            <Path Classes="icon" Data="{StaticResource IconChevronRight}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                         </Viewbox>
                                                     </StackPanel>
                                                 </Button>
@@ -789,7 +789,7 @@
                                             <Button x:Name="ResultShotsShows" Classes="ghost sm" Command="{Binding ConfirmShowsCommand}">
                                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                                     <Viewbox Classes="icon" Width="14" Height="14">
-                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                     <TextBlock Text="{l:Loc Gen_Result_Shots_Yes}" VerticalAlignment="Center" />
                                                 </StackPanel>
@@ -847,7 +847,7 @@
                                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                                     <Viewbox Classes="icon" Width="16" Height="16">
                                                         <Path Classes="icon" Data="{Binding PlayIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                                              Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                     <TextBlock Text="{Binding PlayText}" VerticalAlignment="Center" />
                                                 </StackPanel>
@@ -857,7 +857,7 @@
                                             <Button x:Name="ResultDiscard" Classes="ghost" Command="{Binding DiscardCommand}" IsVisible="{Binding ShowDiscard}">
                                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                                     <Viewbox Classes="icon" Width="14" Height="14">
-                                                        <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                     <TextBlock Text="{l:Loc Gen_Result_Discard}" VerticalAlignment="Center" />
                                                 </StackPanel>
@@ -887,7 +887,7 @@
                                 <Button x:Name="FixEarlier" Classes="ghost sm" HorizontalAlignment="Center" Command="{Binding ShowEarlierCommand}" IsVisible="{Binding HasEarlier}">
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <Viewbox Classes="icon" Width="14" Height="14">
-                                            <Path Classes="icon" Data="{StaticResource IconChevronUp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                            <Path Classes="icon" Data="{StaticResource IconChevronUp}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                         </Viewbox>
                                         <TextBlock Text="{Binding EarlierText}" VerticalAlignment="Center" />
                                     </StackPanel>
@@ -1049,7 +1049,7 @@
                                                         <Button Classes="accent" Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" AutomationProperties.Name="{Binding InstallText}">
                                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                                 </Viewbox>
                                                                 <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
                                                             </StackPanel>
@@ -1057,7 +1057,7 @@
                                                         <Button Classes="bare" Command="{Binding UndoCommand}" IsVisible="{Binding CanUndo}">
                                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                                 </Viewbox>
                                                                 <TextBlock Text="{l:Loc Fix_Undo}" VerticalAlignment="Center" />
                                                             </StackPanel>
@@ -1106,7 +1106,7 @@
                                                         <Button Classes="genAction" Command="{Binding ApplyCommand}">
                                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                                 </Viewbox>
                                                                 <TextBlock Text="{l:Loc Fix_Plan_Apply}" VerticalAlignment="Center" />
                                                             </StackPanel>
@@ -1146,7 +1146,7 @@
                                         <Button x:Name="GenPause" Classes="ghost" Command="{Binding PauseCommand}" IsVisible="{Binding ShowPause}">
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconPause}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconPause}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Gen_Action_Pause}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -1154,7 +1154,7 @@
                                         <Button x:Name="GenResume" Classes="accent genAction" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowResume}">
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconPlay}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Gen_Action_Resume}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -1162,7 +1162,7 @@
                                         <Button x:Name="GenRetry" Classes="accent" Command="{Binding ResumeCommand}" IsVisible="{Binding ShowRetry}">
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{Binding RetryText}" VerticalAlignment="Center" />
                                             </StackPanel>

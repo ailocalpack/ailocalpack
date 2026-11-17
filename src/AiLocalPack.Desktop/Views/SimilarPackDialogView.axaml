@@ -73,7 +73,7 @@
                 <Button x:Name="PublishButton" Classes="accent" Command="{Binding PublishCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <Viewbox Classes="icon" Width="16" Height="16">
-                            <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                         <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
                     </StackPanel>

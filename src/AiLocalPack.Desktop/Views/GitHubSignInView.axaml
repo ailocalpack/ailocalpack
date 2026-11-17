@@ -22,7 +22,7 @@
                         <Button x:Name="CopyCode" Classes="ghost sm" Command="{Binding CopyCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconCopy}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconCopy}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding CopyText}" />
                             </StackPanel>
@@ -30,7 +30,7 @@
                         <Button x:Name="OpenBrowser" Classes="accent sm" Command="{Binding OpenBrowserCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{Binding OpenBrowserText}" />
                             </StackPanel>

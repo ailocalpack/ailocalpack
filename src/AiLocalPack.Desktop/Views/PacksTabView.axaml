@@ -25,7 +25,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <TextBlock Text="{l:Loc Packs_Official_OpenSteam}" VerticalAlignment="Center" />
                         <Viewbox Classes="icon" Width="14" Height="14">
-                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                     </StackPanel>
                 </Button>
@@ -44,7 +44,7 @@
                         Command="{Binding RetryRegistryCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <Viewbox Classes="icon" Width="14" Height="14">
-                            <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                         <TextBlock Text="{l:Loc Library_Registry_Retry}" VerticalAlignment="Center" />
                     </StackPanel>
@@ -301,7 +301,7 @@
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
                                                     <Path Classes="icon" Data="{Binding InstallIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                                          Stroke="{Binding $parent[Button].Foreground}" />
+                                                          Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -310,7 +310,7 @@
                                                 AutomationProperties.Name="{l:Loc Packs_Uninstall}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Packs_Uninstall}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -318,7 +318,7 @@
                                         <Button x:Name="MinePublish" Classes="ghost" Command="{Binding PublishCommand}" IsVisible="{Binding ShowPublish}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconUpload}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Gen_Result_Publish}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -326,7 +326,7 @@
                                         <Button x:Name="MineFix" Classes="genAction" Command="{Binding FixCommand}" IsVisible="{Binding CanFix}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Game_Action_FixWithAi}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -334,7 +334,7 @@
                                         <Button x:Name="MineDelete" Classes="ghost" Command="{Binding DeleteCommand}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Packs_Mine_Delete}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -455,7 +455,7 @@
                                                     <TextBlock FontSize="13" Text="{Binding RevisionCount}" VerticalAlignment="Center" />
                                                     <Viewbox Classes="icon" Width="12" Height="12">
                                                         <Path Classes="icon" Data="{Binding RevisionsToggleIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                                              Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                 </StackPanel>
                                             </Button>
@@ -477,7 +477,7 @@
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
                                                     <Path Classes="icon" Data="{Binding InstallIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                                          Stroke="{Binding $parent[Button].Foreground}" />
+                                                          Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{Binding InstallText}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -486,7 +486,7 @@
                                                 AutomationProperties.Name="{l:Loc Packs_Uninstall}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Packs_Uninstall}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -494,7 +494,7 @@
                                         <Button x:Name="TranslateMissing" Classes="ghost" Command="{Binding TranslateMissingCommand}" IsVisible="{Binding ShowTranslateMissing}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <Viewbox Classes="icon" Width="16" Height="16">
-                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                 </Viewbox>
                                                 <TextBlock Text="{l:Loc Packs_TranslateMissing}" VerticalAlignment="Center" />
                                             </StackPanel>
@@ -512,7 +512,7 @@
                                                     AutomationProperties.Name="{Binding LikeText}">
                                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                                     <Viewbox Classes="icon" Width="14" Height="14">
-                                                        <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                     <TextBlock Text="{Binding LikeText}" VerticalAlignment="Center" />
                                                 </StackPanel>
@@ -521,7 +521,7 @@
                                                     IsVisible="{Binding ShowConfirm}" AutomationProperties.Name="{l:Loc Rating_Works}">
                                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                                     <Viewbox Classes="icon" Width="14" Height="14">
-                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                     <TextBlock Text="{l:Loc Rating_Works}" VerticalAlignment="Center" />
                                                 </StackPanel>
@@ -530,7 +530,7 @@
                                                     IsVisible="{Binding ShowConfirm}" AutomationProperties.Name="{l:Loc Rating_DoesNotWork}">
                                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                                     <Viewbox Classes="icon" Width="14" Height="14">
-                                                        <Path Classes="icon" Data="{StaticResource IconX}" Stroke="{Binding $parent[Button].Foreground}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconX}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                                     </Viewbox>
                                                     <TextBlock Text="{l:Loc Rating_DoesNotWork}" VerticalAlignment="Center" />
                                                 </StackPanel>
@@ -547,7 +547,7 @@
                                     <StackPanel Orientation="Horizontal" Spacing="4">
                                         <TextBlock Text="{l:Loc Packs_Reviews}" VerticalAlignment="Center" />
                                         <Viewbox Classes="icon" Width="13" Height="13">
-                                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                         </Viewbox>
                                     </StackPanel>
                                 </Button>
@@ -564,7 +564,7 @@
             <Button x:Name="CreateOwnButton" Classes="link" FontSize="13" Command="{Binding OpenGenerationCommand}" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <Viewbox Classes="icon" Width="13" Height="13">
-                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                        <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                     </Viewbox>
                     <TextBlock Text="{l:Loc Packs_CreateOwn}" VerticalAlignment="Center" />
                 </StackPanel>
@@ -588,7 +588,7 @@
                     <Button x:Name="RequestAsk" Classes="accent" IsVisible="{Binding ShowRequestAsk}" Command="{Binding Request.AskCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Viewbox Classes="icon" Width="16" Height="16">
-                                <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconMessage}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{Binding Request.AskButtonText, FallbackValue=''}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -596,7 +596,7 @@
                     <Button x:Name="EmptyCreateWithAi" Classes="ghost gen" Command="{Binding OpenGenerationCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Viewbox Classes="icon" Width="16" Height="16">
-                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Game_Packs_Generate}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -609,7 +609,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <TextBlock Text="{l:Loc Request_OpenOnGitHub}" VerticalAlignment="Center" />
                         <Viewbox Classes="icon" Width="13" Height="13">
-                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                     </StackPanel>
                 </Button>
@@ -696,7 +696,7 @@
                     <Button x:Name="RequestOpen" Classes="ghost sm" Command="{Binding OpenCommand}" IsVisible="{Binding HasDiscussion}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Request_OpenOnGitHub}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -704,7 +704,7 @@
                     <Button x:Name="RequestCreate" Classes="ghost gen sm" Command="{Binding OpenGenerationCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14">
-                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{l:Loc Request_CreateYourself}" VerticalAlignment="Center" />
                         </StackPanel>

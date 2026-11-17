@@ -161,7 +161,7 @@
                                     <Viewbox Classes="icon" Width="18" Height="18" Classes.spin="{Binding IsPrimarySpinning}">
                                         <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
                                         <Path Classes="icon" Data="{Binding PrimaryIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                              Stroke="{Binding $parent[Button].Foreground}" />
+                                              Stroke="{Binding $self.(TextElement.Foreground)}" />
                                     </Viewbox>
                                     <TextBlock Text="{Binding PrimaryText}" VerticalAlignment="Center" />
                                 </StackPanel>
@@ -187,7 +187,7 @@
                                 Command="{Binding RateDoesNotWorkCommand}" AutomationProperties.Name="{l:Loc Rating_DoesNotWork}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconThumbsDown}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconThumbsDown}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{l:Loc Rating_DoesNotWork}" VerticalAlignment="Center" />
                             </StackPanel>
@@ -196,7 +196,7 @@
                                 Command="{Binding RateWorksCommand}" AutomationProperties.Name="{l:Loc Rating_Works}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconThumbsUp}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{l:Loc Rating_Works}" VerticalAlignment="Center" />
                             </StackPanel>
@@ -219,7 +219,7 @@
                                 Command="{Binding OpenGenerationCommand}" IsVisible="{Binding ShowBannerTranslate}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconSparkles}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{l:Loc Game_Action_TranslateNew}" VerticalAlignment="Center" />
                             </StackPanel>
@@ -231,7 +231,7 @@
                                 Command="{Binding ReapplyCommand}" IsVisible="{Binding ShowBannerReapply}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox Classes="icon" Width="14" Height="14">
-                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $parent[Button].Foreground}" />
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                 </Viewbox>
                                 <TextBlock Text="{l:Loc Game_Action_Reapply}" VerticalAlignment="Center" />
                             </StackPanel>
@@ -256,7 +256,7 @@
                                     <StackPanel Orientation="Horizontal" Spacing="4">
                                         <TextBlock Text="{l:Loc Game_Blocked_Report}" VerticalAlignment="Center" />
                                         <Viewbox Classes="icon" Width="13" Height="13">
-                                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $parent[Button].Foreground}" />
+                                            <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                                         </Viewbox>
                                     </StackPanel>
                                 </Button>
@@ -324,7 +324,7 @@
                             <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsPrimarySpinning}">
                                 <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
                                 <Path Classes="icon" Data="{Binding PrimaryIcon, Converter={x:Static views:ResourceKeyConverter.Instance}}"
-                                      Stroke="{Binding $parent[Button].Foreground}" />
+                                      Stroke="{Binding $self.(TextElement.Foreground)}" />
                             </Viewbox>
                             <TextBlock Text="{Binding PrimaryText}" VerticalAlignment="Center" />
                         </StackPanel>
@@ -356,7 +356,7 @@
                 IsVisible="False" Click="OnLatestClick" AutomationProperties.Name="{l:Loc Gen_Thread_Latest}">
             <StackPanel Orientation="Horizontal" Spacing="6">
                 <Viewbox Classes="icon" Width="14" Height="14">
-                    <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{Binding $parent[Button].Foreground}" />
+                    <Path Classes="icon" Data="{StaticResource IconChevronDown}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                 </Viewbox>
                 <TextBlock Text="{l:Loc Gen_Thread_Latest}" VerticalAlignment="Center" />
             </StackPanel>

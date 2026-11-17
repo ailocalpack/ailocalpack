@@ -15,7 +15,7 @@
                 <Button x:Name="DeleteButton" Classes="danger" Command="{Binding DeleteCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <Viewbox Classes="icon" Width="16" Height="16">
-                            <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $parent[Button].Foreground}" />
+                            <Path Classes="icon" Data="{StaticResource IconTrash}" Stroke="{Binding $self.(TextElement.Foreground)}" />
                         </Viewbox>
                         <TextBlock Text="{l:Loc Gen_Cancel_Delete}" VerticalAlignment="Center" />
                     </StackPanel>

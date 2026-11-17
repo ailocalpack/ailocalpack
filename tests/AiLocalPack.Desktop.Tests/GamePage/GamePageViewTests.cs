@@ -8,6 +8,7 @@ using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.Views;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,8 +51,29 @@ public sealed class GamePageViewTests : IDisposable
         Find<Border>(window, "TabBar").GetVisualDescendants().OfType<Button>()
             .Single(b => b.GetVisualDescendants().OfType<TextBlock>().Any(t => t.Text == label));
 
+    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
+
     private static string ButtonText(Button button) =>
         string.Join(' ', button.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text));
+
+    [Fact]
+    public Task Primary_action_icon_has_the_text_colour_in_the_light_theme() => HeadlessUi.RunAsync(() =>
+    {
+        // Arrange
+        using var services = Build(r => r.Pack(10, "ru", "lanterns"));
+        var window = OpenGame(services, 10);
+        var button = Find<Button>(window, "PrimaryAction");
+        var text = button.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == "Install translation");
+        var icon = button.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Path>().First();
+
+        // Act
+        window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Color(icon.Stroke), Color(text.Foreground)).Should().Be((Colors.White, Colors.White));
+        window.Close();
+    });
 
     [Fact]
     public Task Game_with_a_pack_shows_install_with_its_caption() => HeadlessUi.RunAsync(() =>

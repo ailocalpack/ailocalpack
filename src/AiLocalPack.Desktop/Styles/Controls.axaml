@@ -111,7 +111,7 @@
         <Setter Property="Width" Value="18" />
         <Setter Property="Height" Value="18" />
         <Setter Property="Stretch" Value="Uniform" />
-        <Setter Property="Stroke" Value="{Binding $parent[Button].Foreground}" />
+        <Setter Property="Stroke" Value="{Binding $self.(TextElement.Foreground)}" />
         <Setter Property="StrokeThickness" Value="2" />
         <Setter Property="StrokeLineCap" Value="Round" />
         <Setter Property="StrokeJoin" Value="Round" />
