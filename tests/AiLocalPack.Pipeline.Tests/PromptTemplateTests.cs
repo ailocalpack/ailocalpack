@@ -315,4 +315,50 @@ public sealed class PromptTemplateTests
         // Assert
         prompt.Should().Be(Snapshot.Text("system-fix.v2.scripts.txt", prompt));
     }
+
+    [Fact]
+    public void The_repair_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.RepairBuild(
+            "Barony",
+            new EngineKind(GameEngine.Unknown, null),
+            12_215,
+            "Test run failed: the game closed with exit code 0xC0000409 (stack buffer overrun / fail-fast) 6.5 s after start. The translated game's output stopped after \"read json file .//data/follower_wheel.json\"; the untranslated game went on with \"read json file .//data/monster_data.json\".",
+            "- `lang/en.txt`: 5,840 translations, 812,004 → 1,244,310 bytes; longest translation 1,904 bytes (original 1,020): `lang/en.txt:2501`",
+            BuildRepair.ReportCopy,
+            BuildRepair.LogCopy,
+            BuildRepair.AttemptsText("/no/such/job"),
+            BuildRepair.MaxTestRuns,
+            scripts: true);
+
+        // Act
+        var prompt = PromptTemplate.RepairBuild.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("repair-build.v1.scripts.txt", prompt));
+    }
+
+    [Fact]
+    public void The_repair_prompt_for_a_toolkit_engine_offers_the_glossary_instead_of_scripts()
+    {
+        // Arrange
+        var values = PromptValues.RepairBuild("Sample Quest", new EngineKind(GameEngine.RpgMaker, "mz"), 64, "Test run failed.", "(none)", "build-failure.json", "test-run.log", "This is the first attempt to fix this crash.", 5, scripts: false);
+
+        // Act
+        var prompt = PromptTemplate.RepairBuild.Render(values);
+
+        // Assert
+        prompt.Should().Contain("or the glossary (`put_glossary`)");
+    }
+
+    [Fact]
+    public void The_repair_system_prompt_matches_its_snapshot()
+    {
+        // Act
+        var prompt = PromptTemplate.SystemRepair.Render(PromptValues.SystemRepair("Barony", "ru", "/games/Barony"));
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-repair.v1.scripts.txt", prompt));
+    }
 }

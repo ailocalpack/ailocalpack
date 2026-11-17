@@ -14,6 +14,7 @@ namespace AiLocalPack.Pipeline;
 /// <param name="Build">What the Build stage needs; <c>null</c> = no Build handler (tests that stop before it).</param>
 /// <param name="Translate">The Translate stage's retries and chunks at once (<see cref="TranslateOptions.Default"/> when <c>null</c>).</param>
 /// <param name="Views">How the game is seen without its installed pack (Extract reads the originals); <c>null</c> = the folder as it is.</param>
+/// <param name="RepairCrashes">A crash in the Build stage's test run is handed to the agent once before the stage fails (<see cref="BuildRepair"/>).</param>
 public sealed record PipelineServices(
     Game Game,
     PipelineAgent Agent,
@@ -22,7 +23,8 @@ public sealed record PipelineServices(
     ChunkBudget? Budget = null,
     BuildServices? Build = null,
     TranslateOptions? Translate = null,
-    GameViews? Views = null);
+    GameViews? Views = null,
+    bool RepairCrashes = true);
 
 /// <summary>
 /// The stage handlers of a generation job: Setup, Extract and Glossary (task 49), Translate (task 50), Build (task 51,
@@ -43,7 +45,7 @@ public static class GenerationPipeline
                 new StudyStage(services.Agent, services.Game.Name),
                 new GlossaryStage(services.Agent, services.Game.Name),
                 new TranslateStage(services.Agent, services.Game.Name, services.Tools, services.Translate),
-                .. services.Build is { } build ? [new BuildStage(services.Game, services.Agent, services.Tools, build)] : Array.Empty<IGenerationStage>(),
+                .. services.Build is { } build ? [new BuildStage(services.Game, services.Agent, services.Tools, build, repair: services.RepairCrashes)] : Array.Empty<IGenerationStage>(),
                 .. later ?? [],
             ],
             pauseBefore);

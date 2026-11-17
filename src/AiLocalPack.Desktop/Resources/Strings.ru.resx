@@ -2608,6 +2608,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Сохранение вашего перевода</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>Переведённая игра вылетела при тестовом запуске: ИИ ищет причину и исправляет её</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>ИИ проверяет исправление в игре ({0} из {1}): окно игры откроется на минуту-две, не закрывайте его</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Шрифты: в {0} нет букв перевода, вместо них используется {1} (OFL).</value>
   </data>
@@ -2675,7 +2681,7 @@
     <value>Не удалось записать файлы: проверьте свободное место и повторите.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>Переведённая игра закрылась с ошибкой при пробном запуске. Повтор пересоберёт файлы; переводы сохранятся.</value>
+    <value>Переведённая игра закрылась с ошибкой при тестовом запуске, и ИИ не смог это исправить. Повтор даст ИИ ещё одну попытку с тем, что он уже выяснил; ваши переводы сохранятся.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Что-то пошло не так. Журнал — в подробностях.</value>

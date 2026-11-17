@@ -2558,6 +2558,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Saving your translation</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>The translated game crashed in the test run: the AI is looking for the cause and fixing it</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>The AI is checking a fix in the game ({0} of {1}): its window opens for a minute or two, don't close it</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Fonts: {0} lack letters of the translation; {1} (OFL) is used instead.</value>
   </data>
@@ -2625,7 +2631,7 @@
     <value>Files couldn't be written: check the free space, then retry.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>The translated game closed with an error during the test run. Retrying rebuilds the files; your translations are kept.</value>
+    <value>The translated game closed with an error during the test run, and the AI couldn't fix it. Retrying gives the AI another try with what it found; your translations are kept.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Something unexpected went wrong. Details have the log.</value>

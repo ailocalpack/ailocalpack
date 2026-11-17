@@ -2608,6 +2608,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Salvataggio della tua traduzione</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>Il gioco tradotto si è bloccato durante il test: l'IA sta cercando la causa e la sta correggendo</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>L'IA sta verificando una correzione nel gioco ({0} di {1}): la finestra si apre per un minuto o due, non chiuderla</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Font: a {0} mancano lettere della traduzione; al loro posto si usa {1} (OFL).</value>
   </data>
@@ -2675,7 +2681,7 @@
     <value>Impossibile scrivere i file: controlla lo spazio libero, poi riprova.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>Il gioco tradotto si è chiuso con un errore durante l'avvio di prova. Riprovando, i file vengono ricostruiti; le tue traduzioni restano.</value>
+    <value>Il gioco tradotto si è chiuso con un errore durante il test e l'IA non è riuscita a correggerlo. Riprovare dà all'IA un altro tentativo con ciò che ha scoperto; le tue traduzioni restano.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Qualcosa di imprevisto è andato storto. Il log è nei dettagli.</value>

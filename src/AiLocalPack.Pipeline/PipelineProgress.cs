@@ -34,6 +34,9 @@ public enum BuildStep
     /// <summary>Launching the translated copy for the test run.</summary>
     TestRun,
 
+    /// <summary>The translated game crashed in the test run: the agent looks for the cause and fixes it (<see cref="BuildProgress.RepairRuns"/> game runs so far).</summary>
+    Repairing,
+
     /// <summary>Saving the local pack.</summary>
     Packing,
 }
@@ -42,7 +45,8 @@ public enum BuildStep
 /// <param name="Files">Game files rebuilt so far (known from <see cref="BuildStep.Fonts"/> on).</param>
 /// <param name="SwappedFonts">The game's fonts that lack letters of the translation.</param>
 /// <param name="Replacement">The open font swapped in for them.</param>
-public sealed record BuildProgress(BuildStep Step, int Files = 0, IReadOnlyList<string>? SwappedFonts = null, string? Replacement = null);
+/// <param name="RepairRuns">While <see cref="BuildStep.Repairing"/>: the game runs the agent made so far (the latest one's number).</param>
+public sealed record BuildProgress(BuildStep Step, int Files = 0, IReadOnlyList<string>? SwappedFonts = null, string? Replacement = null, int RepairRuns = 0);
 
 /// <summary>The agent's usage summed over every run of the job.</summary>
 /// <param name="Runs">Agent runs that reported usage.</param>
@@ -145,7 +149,7 @@ public static class PipelineProgressFile
                 .ToList();
             var limit = json.Limit is { } l ? new AgentLimitInfo(Math.Clamp(l.Used, 0, 1), l.Window, l.ResetsAt) : null;
             var build = json.Build is { Step: { } step } b && Enum.TryParse<BuildStep>(step, ignoreCase: true, out var parsed)
-                ? new BuildProgress(parsed, b.Files, b.SwappedFonts, b.Replacement)
+                ? new BuildProgress(parsed, b.Files, b.SwappedFonts, b.Replacement, b.RepairRuns)
                 : null;
             return new PipelineProgress(recent, usage, agent) { Warnings = warnings, Limit = limit, Build = build };
         }
@@ -176,7 +180,7 @@ public static class PipelineProgressFile
             next.Agent is { } agent ? new AgentJson(agent.Version, agent.Model) : null,
             next.Warnings.Count == 0 ? null : [.. next.Warnings.Select(w => new WarningJson(w.Key, w.Rule, w.Original, w.Translation))],
             next.Limit is { } limit ? new LimitJson(limit.Used, limit.Window, limit.ResetsAt) : null,
-            next.Build is { } build ? new BuildJson(JsonNamingPolicy.CamelCase.ConvertName(build.Step.ToString()), build.Files, build.SwappedFonts, build.Replacement) : null);
+            next.Build is { } build ? new BuildJson(JsonNamingPolicy.CamelCase.ConvertName(build.Step.ToString()), build.Files, build.SwappedFonts, build.Replacement, build.RepairRuns) : null);
         try
         {
             AtomicFile.WriteAllBytes(files.ProgressPath, JsonSerializer.SerializeToUtf8Bytes(json, WriteOptions.GetTypeInfo(typeof(ProgressFileJson))));
@@ -207,7 +211,7 @@ internal sealed record WarningJson(string? Key, string? Rule, string? Original, 
 
 internal sealed record LimitJson(double Used, string? Window, DateTimeOffset? ResetsAt);
 
-internal sealed record BuildJson(string? Step, int Files, IReadOnlyList<string>? SwappedFonts, string? Replacement);
+internal sealed record BuildJson(string? Step, int Files, IReadOnlyList<string>? SwappedFonts, string? Replacement, int RepairRuns = 0);
 
 internal sealed record UsageJson(int Runs, long InputTokens, long OutputTokens, long CacheReadTokens, long CacheWriteTokens, decimal? CostUsd);
 

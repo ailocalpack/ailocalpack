@@ -31,8 +31,11 @@ public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, I
 /// replaced by it); the job's glossary is kept with the pack for its own updates.
 /// Strings the agent's own extractor found (task 57) are rebuilt by its own script and packed as a binary patch
 /// (<see cref="PatchBuild"/>).
+/// With <paramref name="repair"/> (a generation run; a fix with AI has its own agent run) a crashed test run is handed
+/// to the agent once (<see cref="BuildRepair"/>): when it changed something, the stage builds and tests again, and fails
+/// only when that crashes too.
 /// </summary>
-public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools, BuildServices services) : IGenerationStage
+public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools, BuildServices services, bool repair = false) : IGenerationStage
 {
     /// <summary>The recipe tools and services, for a fix's test runs built the same way.</summary>
     public (RecipeTools Tools, BuildServices Services) TestRunServices => (tools, services);
@@ -42,6 +45,51 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
     public async Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
+        var result = await BuildOnceAsync(context, cancellationToken).ConfigureAwait(false);
+        if (!repair || result is not GenerationStepResult.Failed { Kind: GenerationFailureKind.TestRun } crashed || !File.Exists(context.Files.BuildFailurePath))
+        {
+            return result;
+        }
+
+        var repaired = await new BuildRepair(game, agent, tools, services).RunAsync(context, crashed.Message, cancellationToken).ConfigureAwait(false);
+        if (repaired.Stop is { } stop)
+        {
+            return stop;
+        }
+
+        if (repaired.Problem is { } problem)
+        {
+            return crashed with { Message = $"{crashed.Message} {agent.DisplayName} couldn't look into it: {problem}" };
+        }
+
+        if (!repaired.Changed)
+        {
+            BuildRepair.AddOutcome(context, "not run again (nothing changed).");
+            return crashed with { Message = $"{crashed.Message} {agent.DisplayName} found no fix" + (repaired.Reply.Length > 0 ? $": {Short(repaired.Reply)}" : ".") };
+        }
+
+        context.Log($"Repair: {agent.DisplayName} changed {repaired.Strings} translations" + (repaired.Scripts ? " and its scripts" : "") + "; building and testing again.");
+        result = await BuildOnceAsync(context, cancellationToken).ConfigureAwait(false);
+        BuildRepair.AddOutcome(context, result switch
+        {
+            GenerationStepResult.StageDone => "passed.",
+            GenerationStepResult.Failed { Kind: GenerationFailureKind.TestRun } => "crashed again.",
+            GenerationStepResult.Failed f => $"the build failed: {f.Message}",
+            _ => "stopped.",
+        });
+        return result is GenerationStepResult.Failed { Kind: GenerationFailureKind.TestRun } again
+            ? again with { Message = $"Still crashes after {agent.DisplayName}'s fix ({Short(repaired.Reply)}). {again.Message}" }
+            : result;
+    }
+
+    private static string Short(string text)
+    {
+        var flat = text.ReplaceLineEndings(" ").Trim();
+        return flat.Length <= 300 ? flat : flat[..300] + "…";
+    }
+
+    private async Task<GenerationStepResult> BuildOnceAsync(GenerationStepContext context, CancellationToken cancellationToken)
+    {
         var job = context.Job;
         SourceStrings? source;
         StringTable? stored;

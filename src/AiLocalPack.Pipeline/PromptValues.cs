@@ -132,6 +132,34 @@ public static class PromptValues
         ["workspace"] = FixWorkspace(gamePath),
     };
 
+    public static Dictionary<string, string> SystemRepair(string gameName, string language, string? gamePath) => new(StringComparer.Ordinal)
+    {
+        ["gameName"] = gameName,
+        ["languageName"] = LanguageName(language),
+        ["languageTag"] = language,
+        ["workspace"] = FixWorkspace(gamePath),
+    };
+
+    /// <param name="failure">The crashed test run's detail.</param>
+    /// <param name="files">The rebuilt files, rendered (<see cref="BuildFailureReport.DescribeFiles"/>).</param>
+    /// <param name="attempts">Earlier repair attempts of this job, rendered (<see cref="BuildRepair.Attempts"/>).</param>
+    /// <param name="scripts">The game is read by the agent's own scripts (unknown engines).</param>
+    public static Dictionary<string, string> RepairBuild(string gameName, EngineKind engine, int strings, string failure, string files, string reportFile, string logFile, string attempts, int testRuns, bool scripts) => new(StringComparer.Ordinal)
+    {
+        ["gameName"] = gameName,
+        ["engine"] = engine.Engine == GameEngine.Unknown ? "engine unknown" : engine.DisplayName,
+        ["stringCount"] = strings.ToString("N0", CultureInfo.InvariantCulture),
+        ["failure"] = failure.Trim(),
+        ["files"] = files,
+        ["reportFile"] = reportFile,
+        ["logFile"] = logFile,
+        ["attempts"] = attempts,
+        ["testRuns"] = testRuns.ToString(CultureInfo.InvariantCulture),
+        ["scriptsStep"] = scripts
+            ? ", or your rebuild script in `scripts/` when the problem is how the files are written (check the round trip as before; the app runs your rebuild again before the next test). Whatever the scripts change beyond the strings (a text cut to a byte limit, a font with the missing letters) must be on by default and described in `scripts/README.md`: the app's rebuild run follows the README and keeps it"
+            : ", or the glossary (`put_glossary`) when a term's translation is what breaks it",
+    };
+
     /// <param name="attachments">What the player sent, rendered (<see cref="FixPrompt.Attachments"/>).</param>
     /// <param name="history">The conversation so far, rendered (<see cref="FixPrompt.History"/>).</param>
     /// <param name="scripts">The game is read by the agent's own scripts (unknown engines).</param>

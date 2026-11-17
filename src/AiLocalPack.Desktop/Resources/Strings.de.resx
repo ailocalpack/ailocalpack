@@ -2530,6 +2530,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Speichere deine Übersetzung</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>Das übersetzte Spiel ist beim Testlauf abgestürzt: Die KI sucht die Ursache und behebt sie</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>Die KI prüft eine Korrektur im Spiel ({0} von {1}): Das Spielfenster öffnet sich für ein, zwei Minuten, bitte nicht schließen</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Schriften: {0} fehlen Buchstaben der Übersetzung; stattdessen wird {1} (OFL) genutzt.</value>
   </data>
@@ -2597,7 +2603,7 @@
     <value>Dateien konnten nicht geschrieben werden: Prüfe den freien Speicher und wiederhole dann.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>Das übersetzte Spiel wurde beim Testlauf mit einem Fehler beendet. Wiederholen baut die Dateien neu; deine Übersetzungen bleiben erhalten.</value>
+    <value>Das übersetzte Spiel wurde beim Testlauf mit einem Fehler beendet, und die KI konnte es nicht beheben. Ein neuer Versuch gibt der KI eine weitere Chance mit dem, was sie herausgefunden hat; deine Übersetzungen bleiben erhalten.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Etwas Unerwartetes ist schiefgelaufen. Das Log steht in den Details.</value>

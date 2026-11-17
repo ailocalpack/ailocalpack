@@ -2608,6 +2608,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Zapisywanie tłumaczenia</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>Przetłumaczona gra zawiesiła się podczas testu: AI szuka przyczyny i ją naprawia</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>AI sprawdza poprawkę w grze ({0} z {1}): okno gry otworzy się na minutę lub dwie, nie zamykaj go</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Czcionki: {0} nie mają liter tłumaczenia; zamiast nich używana jest {1} (OFL).</value>
   </data>
@@ -2675,7 +2681,7 @@
     <value>Nie udało się zapisać plików: sprawdź wolne miejsce i ponów.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>Przetłumaczona gra zamknęła się z błędem podczas uruchomienia testowego. Ponowienie przebuduje pliki; twoje tłumaczenia zostają.</value>
+    <value>Przetłumaczona gra zamknęła się z błędem podczas testu, a AI nie udało się tego naprawić. Ponowienie da AI kolejną próbę z tym, czego się dowiedziała; twoje tłumaczenia zostaną zachowane.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Stało się coś nieoczekiwanego. Log jest w szczegółach.</value>

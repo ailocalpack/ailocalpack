@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -69,6 +70,59 @@ public static class BuildFailureReport
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
         }
+    }
+
+    /// <summary>
+    /// The report's rebuilt files as prompt lines, those holding the longest translations first (at most
+    /// <paramref name="max"/>); <c>"(none)"</c> when the report can't be read.
+    /// </summary>
+    public static string DescribeFiles(GenerationFiles job, int max = 15)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        BuildFailureJson? json;
+        try
+        {
+            json = System.IO.File.Exists(job.BuildFailurePath)
+                ? JsonSerializer.Deserialize(System.IO.File.ReadAllBytes(job.BuildFailurePath), BuildFailureJsonContext.Default.BuildFailureJson)
+                : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException)
+        {
+            json = null;
+        }
+
+        if (json?.Files is not { Count: > 0 } files)
+        {
+            return "(none)";
+        }
+
+        var lines = files
+            .OrderByDescending(f => f.Longest is { Count: > 0 } l ? l[0].TranslationBytes : 0)
+            .ThenBy(f => f.Path, StringComparer.Ordinal)
+            .Take(max)
+            .Select(f =>
+            {
+                var line = new StringBuilder($"- `{f.Path}`: ");
+                line.Append(f.Strings.ToString("N0", CultureInfo.InvariantCulture)).Append(f.Strings == 1 ? " translation" : " translations");
+                if (f.OriginalBytes is { } before && f.BuiltBytes is { } after)
+                {
+                    line.Append(CultureInfo.InvariantCulture, $", {before:N0} → {after:N0} bytes");
+                }
+                else if (f.BuiltBytes is { } added)
+                {
+                    line.Append(CultureInfo.InvariantCulture, $", added ({added:N0} bytes)");
+                }
+
+                if (f.Longest is { Count: > 0 } longest)
+                {
+                    var top = longest[0];
+                    line.Append(CultureInfo.InvariantCulture, $"; longest translation {top.TranslationBytes:N0} bytes (original {top.OriginalBytes:N0}): `{top.Key}`");
+                }
+
+                return line.ToString();
+            });
+        var text = string.Join('\n', lines);
+        return files.Count > max ? text + $"\n- and {files.Count - max} more files" : text;
     }
 
     /// <summary>Deletes the report (the stage starts again); best effort.</summary>

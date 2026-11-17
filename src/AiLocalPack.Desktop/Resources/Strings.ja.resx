@@ -2452,6 +2452,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>翻訳を保存しています</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>翻訳したゲームがテスト実行中にクラッシュしました。AI が原因を調べて修正しています</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>AI がゲームで修正を確認しています（{0}/{1}）。ゲームのウィンドウが 1〜2 分開きます。閉じないでください</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>フォント: {0} に翻訳の文字が不足しているため、代わりに {1}（OFL）を使います。</value>
   </data>
@@ -2519,7 +2525,7 @@
     <value>ファイルを書き込めませんでした。空き容量を確認してから再試行してください。</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>テスト実行中に翻訳したゲームがエラーで終了しました。再試行するとファイルを再構築します。翻訳は残ります。</value>
+    <value>翻訳したゲームがテスト実行中にエラーで終了し、AI は修正できませんでした。再試行すると、AI がわかったことを踏まえてもう一度試します。翻訳はそのまま残ります。</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>予期しない問題が発生しました。ログは詳細にあります。</value>

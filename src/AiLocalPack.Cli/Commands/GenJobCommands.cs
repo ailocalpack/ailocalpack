@@ -93,6 +93,11 @@ internal static partial class GenJobCommands
             ? (value, null)
             : (null, $"--workers takes {AppSettings.MinTranslateWorkers} to {AppSettings.MaxTranslateWorkers}, not {value}.");
 
+    private static Option<bool> NoRepairOption() => new("--no-repair")
+    {
+        Description = "When the translated game crashes in the Build stage's test run, fail at once instead of letting the agent look for the cause and fix it first.",
+    };
+
     private static Option<bool> WaitOption() => new("--wait")
     {
         Description = "When the agent's limit pauses the job, wait for its reset time and go on.",
@@ -114,7 +119,8 @@ internal static partial class GenJobCommands
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, model, quality, web, update, tool, noRefs, until, workers, wait };
+        var noRepair = NoRepairOption();
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, model, quality, web, update, tool, noRefs, until, workers, wait, noRepair };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -190,7 +196,7 @@ internal static partial class GenJobCommands
                 chosenQuality,
                 result.GetValue(web),
                 reader);
-            var plan = new StagePlan(agentId, recording, pauseBefore, chunksAtOnce);
+            var plan = new StagePlan(agentId, recording, pauseBefore, chunksAtOnce, Repair: !result.GetValue(noRepair));
             var references = result.GetValue(noRefs) ? [] : await References(context, tag, cancellationToken);
             foreach (var reference in references)
             {
@@ -253,13 +259,14 @@ internal static partial class GenJobCommands
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
+        var noRepair = NoRepairOption();
         var unsandboxed = new Option<bool>("--unsandboxed")
         {
             Description = "Let the agent's own commands (an unknown engine's scripts) run without a sandbox where its sandbox can't start (Claude Code on Windows), for this job from now on. They run with your rights and network.",
         };
         var command = new Command("resume", "Resume the game's paused or interrupted job from its stage and chunk, retry a failed stage, or approve the glossary under review.")
         {
-            game, fake, until, workers, wait, unsandboxed,
+            game, fake, until, workers, wait, unsandboxed, noRepair,
         };
         command.SetAction(async (result, cancellationToken) =>
         {
@@ -297,7 +304,7 @@ internal static partial class GenJobCommands
                 return 1;
             }
 
-            var plan = new StagePlan(recording is null ? entry.Job.Agent : FakeAgentAdapter.AgentId, recording, pauseBefore, chunksAtOnce);
+            var plan = new StagePlan(recording is null ? entry.Job.Agent : FakeAgentAdapter.AgentId, recording, pauseBefore, chunksAtOnce, Repair: !result.GetValue(noRepair));
             GenerationRun run;
             try
             {
@@ -585,7 +592,8 @@ internal static partial class GenJobCommands
     }
 
     /// <summary>The agent of a run (<paramref name="Recording"/> = the fake agent's) and where it pauses.</summary>
-    private sealed record StagePlan(string AgentId, string? Recording, GenerationStage? PauseBefore, int? Workers);
+    /// <param name="Repair">A crash in the Build stage's test run goes to the agent before the stage fails (<see cref="BuildRepair"/>).</param>
+    private sealed record StagePlan(string AgentId, string? Recording, GenerationStage? PauseBefore, int? Workers, bool Repair = true);
 
     private sealed record JobContext(
         Game Game,
@@ -604,7 +612,7 @@ internal static partial class GenJobCommands
         {
             var (agent, build) = AgentAndBuild(plan);
             var services = new PipelineServices(Game, agent, Tools, Estimator, Build: build,
-                Translate: new TranslateOptions(Workers: plan.Workers ?? Settings.TranslateWorkerCount));
+                Translate: new TranslateOptions(Workers: plan.Workers ?? Settings.TranslateWorkerCount), RepairCrashes: plan.Repair);
             return GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore);
         }
 

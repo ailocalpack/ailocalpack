@@ -60,6 +60,12 @@ public sealed partial class PromptTemplate
     /// <summary>A fix request (task 75): the player's words, what they attached, the conversation so far.</summary>
     public static PromptTemplate Fix { get; } = Load("fix", 4);
 
+    /// <summary>System prompt of the Build stage's repair run (decided 2026-11-17): the translated game crashed in the test run; the agent finds why and fixes it.</summary>
+    public static PromptTemplate SystemRepair { get; } = Load("system-repair", 1);
+
+    /// <summary>The repair run's request: what the crashed test run found (<c>build-failure.json</c>), the rebuilt files, earlier attempts.</summary>
+    public static PromptTemplate RepairBuild { get; } = Load("repair-build", 1);
+
     public string Name { get; }
 
     public int Version { get; }

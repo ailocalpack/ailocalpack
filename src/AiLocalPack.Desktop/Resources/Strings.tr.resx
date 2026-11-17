@@ -2530,6 +2530,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Çeviriniz kaydediliyor</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>Çevrilmiş oyun test çalıştırmasında çöktü: Yapay zekâ nedenini arıyor ve düzeltiyor</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>Yapay zekâ bir düzeltmeyi oyunda deniyor ({0}/{1}): oyun penceresi bir iki dakika açılacak, kapatmayın</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Yazı tipleri: {0} içinde çevirinin bazı harfleri yok; yerine {1} (OFL) kullanılıyor.</value>
   </data>
@@ -2597,7 +2603,7 @@
     <value>Dosyalar yazılamadı: boş alanı kontrol edip tekrar deneyin.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>Çevrilmiş oyun test çalıştırması sırasında bir hatayla kapandı. Yeniden denemek dosyaları yeniden oluşturur; çevirileriniz korunur.</value>
+    <value>Çevrilmiş oyun test çalıştırmasında bir hatayla kapandı ve yapay zekâ bunu düzeltemedi. Yeniden denemek, yapay zekâya bulduklarıyla bir şans daha verir; çevirileriniz korunur.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Beklenmedik bir şey ters gitti. Günlük ayrıntılarda.</value>

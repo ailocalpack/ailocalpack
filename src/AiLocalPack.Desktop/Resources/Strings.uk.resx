@@ -2608,6 +2608,12 @@
   <data name="Gen_Build_Packing" xml:space="preserve">
     <value>Зберігаємо ваш переклад</value>
   </data>
+  <data name="Gen_Build_Repairing" xml:space="preserve">
+    <value>Перекладена гра аварійно закрилася під час тестового запуску: ШІ шукає причину й виправляє її</value>
+  </data>
+  <data name="Gen_Build_RepairRun" xml:space="preserve">
+    <value>ШІ перевіряє виправлення в грі ({0} з {1}): вікно гри відкриється на хвилину-дві, не закривайте його</value>
+  </data>
   <data name="Gen_Build_FontSwap" xml:space="preserve">
     <value>Шрифти: у {0} бракує літер перекладу; натомість використовується {1} (OFL).</value>
   </data>
@@ -2675,7 +2681,7 @@
     <value>Не вдалося записати файли: перевірте вільне місце й повторіть спробу.</value>
   </data>
   <data name="Gen_Failure_TestRun" xml:space="preserve">
-    <value>Перекладена гра закрилася з помилкою під час тестового запуску. Повторна спроба перезбере файли; ваші переклади залишаться.</value>
+    <value>Перекладена гра закрилася з помилкою під час тестового запуску, і ШІ не зміг це виправити. Повтор дасть ШІ ще одну спробу з тим, що він уже з'ясував; ваші переклади збережуться.</value>
   </data>
   <data name="Gen_Failure_Unexpected" xml:space="preserve">
     <value>Сталася неочікувана помилка. Журнал — у подробицях.</value>

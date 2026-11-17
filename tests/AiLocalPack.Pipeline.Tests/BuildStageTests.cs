@@ -55,6 +55,32 @@ public sealed class BuildStageTests : IDisposable
             _store,
             runner ?? Runner));
 
+    private static TestRunResult Crash => TestRunResult.Crashed(TimeSpan.FromSeconds(4), 3, "the game closed with exit code 3");
+
+    /// <summary>A Build stage that hands a crash to <paramref name="agent"/> (the stage's repair run).</summary>
+    private Task<GenerationStepResult> RepairAsync(ScriptedAgent agent, IGameTestRunner runner) =>
+        new BuildStage(
+            Game,
+            new PipelineAgent(agent, StageHarness.Server),
+            RecipeTools.Builtin,
+            new BuildServices(new FontFixer(FontWhitelist.Bundled, new FontStore(_h.Dir.Combine("cache"), _http.CreateClient())), _store, runner),
+            repair: true).RunStepAsync(Context("job"), TestContext.Current.CancellationToken);
+
+    /// <summary>An agent that changes one stored translation (or nothing) and replies.</summary>
+    private static ScriptedAgent Repairing(bool change, string reply = "Shortened a name.") => new((run, _, _) =>
+    {
+        if (change)
+        {
+            var table = run.Files.ReadStrings()!;
+            var strings = new Dictionary<string, string>(table.Strings, StringComparer.Ordinal);
+            var key = strings.Keys.Order(StringComparer.Ordinal).First();
+            strings[key] = "RU short";
+            run.Files.WriteStrings(new StringTable("ru", strings));
+        }
+
+        return Task.FromResult<IReadOnlyList<Agents.AgentEvent>>([ScriptedAgent.Usage, new Agents.AgentDone(Agents.AgentOutcome.Succeeded, reply)]);
+    });
+
     private Task<GenerationStepResult> RunAsync(Game? game = null, IGameTestRunner? runner = null, string job = "job") =>
         Stage(game, runner).RunStepAsync(Context(job), TestContext.Current.CancellationToken);
 
@@ -256,6 +282,118 @@ public sealed class BuildStageTests : IDisposable
     }
 
     [Fact]
+    public async Task A_crash_the_agent_fixes_passes_on_the_second_build()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var runner = new FakeTestRunner(Crash, TestRunResult.Passed(TimeSpan.FromSeconds(60)));
+
+        // Act
+        var result = await RepairAsync(Repairing(change: true), runner);
+
+        // Assert
+        new { Done = result is GenerationStepResult.StageDone, Runs = runner.Requests.Count }.Should().Be(new { Done = true, Runs = 2 });
+    }
+
+    [Fact]
+    public async Task The_repair_prompt_names_the_rebuilt_files_and_the_report()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var agent = Repairing(change: false);
+
+        // Act
+        await RepairAsync(agent, new FakeTestRunner(Crash));
+
+        // Assert
+        var prompt = agent.Runs.Single().Prompt;
+        new { Files = prompt.Contains("- `data/Items.json`", StringComparison.Ordinal), Report = prompt.Contains("`build-failure.json`", StringComparison.Ordinal) }
+            .Should().Be(new { Files = true, Report = true });
+    }
+
+    [Fact]
+    public async Task The_agent_reads_the_report_in_its_working_folder()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var seen = false;
+        var agent = new ScriptedAgent((run, _, _) =>
+        {
+            seen = File.Exists(Path.Combine(run.Request!.WorkingDirectory, BuildRepair.ReportCopy));
+            return Task.FromResult<IReadOnlyList<Agents.AgentEvent>>([ScriptedAgent.Done]);
+        });
+
+        // Act
+        await RepairAsync(agent, new FakeTestRunner(Crash));
+
+        // Assert
+        seen.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task A_repair_that_changes_nothing_fails_without_building_again()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var runner = new FakeTestRunner(Crash);
+
+        // Act
+        var result = await RepairAsync(Repairing(change: false, "The game reads a file I can't change."), runner);
+
+        // Assert
+        new { Message = ((GenerationStepResult.Failed)result).Message.Contains("found no fix: The game reads a file I can't change.", StringComparison.Ordinal), Runs = runner.Requests.Count }
+            .Should().Be(new { Message = true, Runs = 1 });
+    }
+
+    [Fact]
+    public async Task A_crash_after_the_repair_fails_the_stage_with_what_the_agent_tried()
+    {
+        // Arrange
+        await TranslateAllAsync();
+
+        // Act
+        var result = await RepairAsync(Repairing(change: true), new FakeTestRunner(Crash));
+
+        // Assert
+        result.Should().BeOfType<GenerationStepResult.Failed>().Which.Message.Should().StartWith("Still crashes after Scripted agent's fix (Shortened a name.).");
+    }
+
+    [Fact]
+    public async Task Each_repair_attempt_and_its_outcome_are_kept_for_the_next_one()
+    {
+        // Arrange
+        await TranslateAllAsync();
+
+        // Act
+        await RepairAsync(Repairing(change: true), new FakeTestRunner(Crash));
+
+        // Assert
+        var attempts = File.ReadAllText(Path.Combine(_h.Folder, BuildRepair.AttemptsFile));
+        new
+        {
+            Attempt = attempts.Contains("## Attempt 1", StringComparison.Ordinal),
+            Reply = attempts.Contains("Shortened a name.", StringComparison.Ordinal),
+            Outcome = attempts.Contains("Test run after it: crashed again.", StringComparison.Ordinal),
+        }.Should().Be(new { Attempt = true, Reply = true, Outcome = true });
+    }
+
+    [Fact]
+    public async Task A_stage_without_repair_doesnt_run_the_agent_on_a_crash()
+    {
+        // Arrange
+        await TranslateAllAsync();
+        var agent = Repairing(change: true);
+        var stage = new BuildStage(Game, new PipelineAgent(agent, StageHarness.Server), RecipeTools.Builtin,
+            new BuildServices(new FontFixer(FontWhitelist.Bundled, new FontStore(_h.Dir.Combine("cache"), _http.CreateClient())), _store, new FakeTestRunner(Crash)));
+
+        // Act
+        await stage.RunStepAsync(Context("job"), TestContext.Current.CancellationToken);
+
+        // Assert
+        agent.Runs.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Nothing_translated_fails_the_stage()
     {
         // Arrange
@@ -336,14 +474,14 @@ public sealed class BuildStageTests : IDisposable
     }
 }
 
-/// <summary>Returns one result for every test run and records the requests.</summary>
-internal sealed class FakeTestRunner(TestRunResult result) : IGameTestRunner
+/// <summary>Returns the results in order (the last one for every run after) and records the requests.</summary>
+internal sealed class FakeTestRunner(params TestRunResult[] results) : IGameTestRunner
 {
     public List<TestRunRequest> Requests { get; } = [];
 
     public Task<TestRunResult> RunAsync(TestRunRequest request, CancellationToken cancellationToken)
     {
         Requests.Add(request);
-        return Task.FromResult(result);
+        return Task.FromResult(results[Math.Min(Requests.Count, results.Length) - 1]);
     }
 }

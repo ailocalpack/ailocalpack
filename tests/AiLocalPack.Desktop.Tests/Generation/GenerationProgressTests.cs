@@ -208,7 +208,7 @@ public sealed class GenerationProgressTests
         // Assert
         (tab.BannerTitle, tab.BannerText, tab.ShowBannerDetails, tab.ShowRetry).Should().Be((
             "Stage Build & test failed.",
-            "The translated game closed with an error during the test run. Retrying rebuilds the files; your translations are kept.",
+            "The translated game closed with an error during the test run, and the AI couldn't fix it. Retrying gives the AI another try with what it found; your translations are kept.",
             true,
             true));
     }
