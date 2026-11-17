@@ -81,11 +81,11 @@ public sealed class GameTestRunnerTests : IDisposable
         var result = await RunAsync(processes);
 
         // Assert
-        new { result.Outcome, Starts = processes.Started.Count }.Should().Be(new { Outcome = TestRunOutcome.Passed, Starts = 2 });
+        new { result.Outcome, Starts = processes.Started.Count }.Should().Be(new { Outcome = TestRunOutcome.Passed, Starts = 3 });
     }
 
     [Fact]
-    public async Task The_untranslated_copy_runs_first_then_the_translation()
+    public async Task The_untranslated_copy_runs_first_then_the_translation_twice()
     {
         // Arrange
         var seen = new List<string>();
@@ -95,7 +95,118 @@ public sealed class GameTestRunnerTests : IDisposable
         await RunAsync(processes);
 
         // Assert
-        seen.Should().Equal("original", "translated");
+        seen.Should().Equal("original", "translated", "translated");
+    }
+
+    [Fact]
+    public async Task A_crash_on_the_second_launch_fails_the_test_run()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning, FakeGame.Closes(-1073740791));
+
+        // Act
+        var result = await RunAsync(processes);
+
+        // Assert
+        new { result.Outcome, SecondLaunch = result.Detail!.StartsWith("on its second launch", StringComparison.Ordinal) }
+            .Should().Be(new { Outcome = TestRunOutcome.Crashed, SecondLaunch = true });
+    }
+
+    [Fact]
+    public async Task A_crash_on_the_first_launch_doesnt_start_the_game_again()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.Closes(3));
+
+        // Act
+        await RunAsync(processes);
+
+        // Assert
+        processes.Started.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task The_second_launch_sees_what_the_first_one_wrote()
+    {
+        // Arrange
+        var launches = 0;
+        var seen = new List<bool>();
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ =>
+            {
+                seen.Add(File.Exists(CopyFile("cache.json")));
+                if (++launches == 2)
+                {
+                    File.WriteAllText(CopyFile("cache.json"), "compiled");
+                }
+            },
+        };
+
+        // Act
+        await RunAsync(processes);
+
+        // Assert
+        seen.Should().Equal(false, false, true);
+    }
+
+    [Fact]
+    public async Task A_file_the_game_adds_to_the_copy_is_deleted_afterwards()
+    {
+        // Arrange
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ => _dir.File("job/game/saves/slot1.sav", "save"),
+        };
+
+        // Act
+        await RunAsync(processes);
+
+        // Assert
+        new { Save = File.Exists(CopyFile("saves/slot1.sav")), Folder = Directory.Exists(CopyFile("saves")) }
+            .Should().Be(new { Save = false, Folder = false });
+    }
+
+    [Fact]
+    public async Task A_copy_file_the_game_rewrites_is_taken_back_from_the_game_folder()
+    {
+        // Arrange
+        var game = Manual with { InstallPath = _dir.Combine("installed") };
+        _dir.File("installed/books/compiled.json", "english").File("job/game/books/compiled.json", "english");
+        var written = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        File.SetLastWriteTimeUtc(_dir.Combine("installed/books/compiled.json"), written);
+        File.SetLastWriteTimeUtc(CopyFile("books/compiled.json"), written);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ => File.WriteAllText(CopyFile("books/compiled.json"), "русский, длиннее"),
+        };
+
+        // Act
+        await RunAsync(processes, game: game);
+
+        // Assert
+        File.ReadAllText(CopyFile("books/compiled.json")).Should().Be("english");
+    }
+
+    [Fact]
+    public async Task A_rewritten_file_that_differs_in_the_game_folder_is_left_and_logged()
+    {
+        // Arrange
+        var game = Manual with { InstallPath = _dir.Combine("installed") };
+        _dir.File("installed/settings.ini", "updated by the store").File("job/game/settings.ini", "as copied");
+        var log = new List<string>();
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ => File.WriteAllText(CopyFile("settings.ini"), "written by the game"),
+        };
+
+        // Act
+        await new GameTestRunner(processes, OsKind.Linux, Short).RunAsync(
+            new TestRunRequest(game, Copy, _dir.Combine("job/build"), BuildFiles, Job, log.Add) { ShotsFolder = _dir.Combine("shots") },
+            TestContext.Current.CancellationToken);
+
+        // Assert
+        log.Should().Contain(line => line.Contains("can't be put back", StringComparison.Ordinal) && line.Contains("settings.ini", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -169,7 +280,7 @@ public sealed class GameTestRunnerTests : IDisposable
         await RunAsync(processes, baselines: baselines);
 
         // Assert
-        processes.Started.Should().ContainSingle();
+        processes.Started.Should().HaveCount(2);
     }
 
     [Fact]

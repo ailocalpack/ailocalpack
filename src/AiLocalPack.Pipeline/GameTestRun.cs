@@ -98,10 +98,14 @@ public interface IGameTestRunner
 /// skipped, and nothing is remembered.</item>
 /// <item><b>Then the translation</b>, with the rebuilt files laid over the copy (<see cref="TestRunOverlay"/>), for the
 /// same watch (longer when <see cref="TestRunRequest.AtLeast"/> asks): still running at the end = passed; closed earlier
-/// = crashed, with the last error lines and what the OS recorded about it (<see cref="CrashReports"/>). Screenshots: once
-/// loaded (<see cref="TestRunShotKind.Translated"/>) and the last one (<see cref="TestRunShotKind.Last"/>: at the end, or
-/// the last before it closed).</item>
+/// = crashed, with the last error lines and what the OS recorded about it (<see cref="CrashReports"/>). A first launch
+/// that passes is followed by a <b>second launch</b> for the same watch, on the files the first one wrote (a cache built
+/// from the translated files that only breaks the next start, as Barony's compiled books did). Screenshots: once loaded
+/// (<see cref="TestRunShotKind.Translated"/>, the first launch) and the last one (<see cref="TestRunShotKind.Last"/>: at
+/// the end, or the last before it closed).</item>
 /// </list>
+/// What the game writes into the working copy itself is undone after the original's run and after the translation's
+/// (<see cref="TestRunCopyGuard"/>), so every run starts from the copy as extracted.
 /// Skipped before starting: no program this OS runs (<see cref="GameLaunchPlanner.PlanProgram"/>, a bundle's own binary
 /// so the process can be watched), a Windows program wrapped in Steam's DRM (<see cref="SteamStub"/>), the OS refusing to
 /// start it. A Steam game gets <c>steam_appid.txt</c> next to its program and <c>SteamAppId</c> / <c>SteamGameId</c> in
@@ -163,6 +167,7 @@ public sealed class GameTestRunner(
         var logs = Path.Combine(request.JobFolder, "logs");
         Directory.CreateDirectory(logs);
         await using var log = new StreamWriter(Path.Combine(logs, "test-run.log"), append: false);
+        var guard = TestRunCopyGuard.Take(request.CopyFolder);
         try
         {
             var baseline = baselines?.Find(request.Game);
@@ -181,6 +186,7 @@ public sealed class GameTestRunner(
                 finally
                 {
                     overlay.Restore();
+                    guard.Undo(request.Game.InstallPath, request.Log);
                 }
 
                 var watch = _options.WatchFor(original.Ready);
@@ -218,14 +224,26 @@ public sealed class GameTestRunner(
             var started = _time.GetUtcNow();
             var translatedOverlay = TestRunOverlay.Apply(request.JobFolder, request.CopyFolder, request.BuildFolder, request.BuildFiles, added);
             Watch translated;
+            Watch? first = null;
             try
             {
                 await WriteAddedAsync(request, added, cancellationToken).ConfigureAwait(false);
                 translated = await WatchAsync(spec, "translated", log, limit, Path.Combine(shots, "translated.png"), Path.Combine(shots, "last.png"), cancellationToken).ConfigureAwait(false);
+                if (translated.StillRunning)
+                {
+                    // A game may write a cache from the translated files on its first launch (Barony compiles its books)
+                    // that only breaks the launches after it: start it once more on what the first launch left.
+                    request.Log($"Test run: {launch} with the translation once more, on the files its first launch wrote, for {Seconds(limit)}.");
+                    request.Starting?.Invoke(true, limit);
+                    first = translated;
+                    started = _time.GetUtcNow();
+                    translated = await WatchAsync(spec, "translated, second launch", log, limit, null, Path.Combine(shots, "last.png"), cancellationToken).ConfigureAwait(false);
+                }
             }
             finally
             {
                 translatedOverlay.Restore();
+                guard.Undo(request.Game.InstallPath, request.Log);
             }
 
             var list = new List<TestRunShot>();
@@ -234,12 +252,12 @@ public sealed class GameTestRunner(
                 list.Add(new TestRunShot(TestRunShotKind.Original, originalPicture));
             }
 
-            if (translated.ReadyShot is { } translatedPicture)
+            if ((first ?? translated).ReadyShot is { } translatedPicture)
             {
                 list.Add(new TestRunShot(TestRunShotKind.Translated, translatedPicture));
             }
 
-            if (translated.LastShot is { } lastPicture)
+            if ((translated.LastShot ?? first?.LastShot) is { } lastPicture)
             {
                 list.Add(new TestRunShot(TestRunShotKind.Last, lastPicture));
             }
@@ -248,16 +266,27 @@ public sealed class GameTestRunner(
             var originalLoads = baseline.Ready is { } originalReady ? $"the untranslated copy loads in {Seconds(originalReady)}" : "the untranslated copy never read as loaded either";
             if (translated.StillRunning)
             {
-                return new TestRunResult(TestRunOutcome.Passed, Detail: $"still running after {Seconds(translated.Ran)} ({loaded}; {originalLoads})", Ran: translated.Ran, Ready: translated.Ready, Watch: limit, Shots: list);
+                var firstLoaded = first?.Ready is { } firstReady ? $"loaded after {Seconds(firstReady)}" : loaded;
+                return new TestRunResult(
+                    TestRunOutcome.Passed,
+                    Detail: first is null
+                        ? $"still running after {Seconds(translated.Ran)} ({loaded}; {originalLoads})"
+                        : $"still running after {Seconds(first.Ran)}, and again after {Seconds(translated.Ran)} on a second launch ({firstLoaded}; {originalLoads})",
+                    Ran: translated.Ran,
+                    Ready: first?.Ready ?? translated.Ready,
+                    Watch: limit,
+                    Shots: list);
             }
 
             var crash = environment is null ? null : CrashReports.Find(environment, launch.FileName, started);
             var tail = translated.Tail.Count > 0 ? ": " + string.Join(" | ", translated.Tail) : ".";
             var code = CrashReports.ExitCodeText(translated.ExitCode);
-            request.Log($"Test run: the translated game closed after {Seconds(translated.Ran)} with exit code {code}" + (crash is null ? "." : $"; {crash.Name} has a report."));
+            var which = first is null ? "translated game" : "translated game's second launch";
+            request.Log($"Test run: the {which} closed after {Seconds(translated.Ran)} with exit code {code}" + (crash is null ? "." : $"; {crash.Name} has a report."));
+            var secondLaunch = first is null ? "" : $"on its second launch, with the files its first launch wrote (that one kept running for {Seconds(first.Ran)}), ";
             return new TestRunResult(
                 TestRunOutcome.Crashed,
-                Detail: $"the game closed with exit code {code} {Seconds(translated.Ran)} after start ({loaded}), while the untranslated copy kept running for {Seconds(baseline.Watch)} ({originalLoads}){tail}",
+                Detail: $"{secondLaunch}the game closed with exit code {code} {Seconds(translated.Ran)} after start ({loaded}), while the untranslated copy kept running for {Seconds(baseline.Watch)} ({originalLoads}){tail}",
                 Ran: translated.Ran,
                 ExitCode: translated.ExitCode,
                 Ready: translated.Ready,
@@ -329,7 +358,7 @@ public sealed class GameTestRunner(
     /// Runs the program and looks at it every <see cref="TestRunOptions.Sample"/> until it closes or the watch ends
     /// (<paramref name="limit"/>; <c>null</c> = the watch its own loading time gives, <see cref="TestRunOptions.WatchFor"/>).
     /// </summary>
-    private async Task<Watch> WatchAsync(ProcessSpec spec, string label, StreamWriter log, TimeSpan? limit, string readyShot, string? lastShot, CancellationToken cancellationToken)
+    private async Task<Watch> WatchAsync(ProcessSpec spec, string label, StreamWriter log, TimeSpan? limit, string? readyShot, string? lastShot, CancellationToken cancellationToken)
     {
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var clock = Stopwatch.StartNew();
@@ -373,7 +402,7 @@ public sealed class GameTestRunner(
             if (ready is null && now >= _options.MinReady && IsLoaded(now, firstPicture, reads))
             {
                 ready = now;
-                if (frame is { HasContent: true } && Save(frame, readyShot))
+                if (readyShot is not null && frame is { HasContent: true } && Save(frame, readyShot))
                 {
                     savedReady = readyShot;
                 }
