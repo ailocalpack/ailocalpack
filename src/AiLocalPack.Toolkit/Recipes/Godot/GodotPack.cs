@@ -24,9 +24,9 @@ public sealed class GodotPack : IDisposable
     private const int MaxEntries = 1_000_000;
     private const int MaxPathLength = 4096;
 
-    private readonly FileStream _stream;
+    private readonly Stream _stream;
 
-    private GodotPack(FileStream stream, long start, bool embedded, uint format, uint major, uint minor, uint patch, uint flags, long end, IReadOnlyList<GodotPackEntry> entries)
+    private GodotPack(Stream stream, long start, bool embedded, uint format, uint major, uint minor, uint patch, uint flags, long end, IReadOnlyList<GodotPackEntry> entries)
     {
         _stream = stream;
         Start = start;
@@ -67,9 +67,14 @@ public sealed class GodotPack : IDisposable
     /// <summary>Opens the pack at <paramref name="path"/> (a <c>.pck</c>, or an executable with one embedded).</summary>
     /// <exception cref="GodotFormatException">Not a pack, damaged, encrypted or of a format this code doesn't read.</exception>
     /// <exception cref="IOException">The file can't be read.</exception>
-    public static GodotPack Open(string path)
+    public static GodotPack Open(string path) => Open(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16));
+
+    /// <summary>Opens the pack in <paramref name="stream"/> (seekable; the pack owns it and disposes it, also when it fails).</summary>
+    /// <exception cref="GodotFormatException">Not a pack, damaged, encrypted or of a format this code doesn't read.</exception>
+    /// <exception cref="IOException">The file can't be read.</exception>
+    public static GodotPack Open(Stream stream)
     {
-        var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
+        ArgumentNullException.ThrowIfNull(stream);
         try
         {
             return Read(stream);
@@ -82,11 +87,15 @@ public sealed class GodotPack : IDisposable
     }
 
     /// <summary>Whether the file is a pack or holds one at its end (cheap: header and trailer only).</summary>
-    public static bool IsPack(string path)
+    public static bool IsPack(string path) => IsPack(() => new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+
+    /// <summary>Whether the file <paramref name="open"/> opens is a pack or holds one at its end; one that can't be opened isn't.</summary>
+    public static bool IsPack(Func<Stream> open)
     {
+        ArgumentNullException.ThrowIfNull(open);
         try
         {
-            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var stream = open();
             return FindStart(stream) is not null;
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
@@ -330,7 +339,7 @@ public sealed class GodotPack : IDisposable
         return BinaryPrimitives.ReadUInt32LittleEndian(word) == Magic ? (start, length - 12, true) : null;
     }
 
-    private static GodotPack Read(FileStream stream)
+    private static GodotPack Read(Stream stream)
     {
         if (FindStart(stream) is not var (start, end, embedded))
         {

@@ -38,9 +38,9 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
 
     public TextMarkup Markup => RpgMakerStrings.Markup;
 
-    public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
+    public RecipeExtraction Extract(IGameFiles game, CancellationToken cancellationToken = default)
     {
-        var project = FindProject(gameDir);
+        var project = FindProject(game);
         var strings = new List<ExtractedString>();
         var files = new List<string>();
         foreach (var file in project.Files)
@@ -64,11 +64,11 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
             [.. files.Order(StringComparer.Ordinal)]);
     }
 
-    public RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+    public RebuildResult Rebuild(IGameFiles game, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(translations);
         ArgumentNullException.ThrowIfNull(output);
-        var project = FindProject(gameDir);
+        var project = FindProject(game);
         var byFile = Group(translations.Keys);
         var unknown = new List<string>();
         var changed = new List<string>();
@@ -132,10 +132,10 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
             [.. unknown.Order(StringComparer.Ordinal)]);
     }
 
-    public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
+    public IReadOnlyList<string> TouchedFiles(IGameFiles game, IEnumerable<string> keys)
     {
         ArgumentNullException.ThrowIfNull(keys);
-        var project = FindProject(gameDir);
+        var project = FindProject(game);
         return [.. Group(keys).Keys
             .Select(project.Find)
             .OfType<DataFile>()
@@ -147,9 +147,9 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
     /// <summary>The canvas draws bold by itself: one face is enough.</summary>
     public bool UsesBold => false;
 
-    public IReadOnlyList<GameFont> Fonts(string gameDir)
+    public IReadOnlyList<GameFont> Fonts(IGameFiles game)
     {
-        var project = FindProject(gameDir);
+        var project = FindProject(game);
         var name = project.IsMz ? MzFontName(project, ReadText(project, project.Path(DataFolder, "System.json"))) : MvFontName(project);
         if (name is null)
         {
@@ -157,16 +157,16 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
         }
 
         var file = project.Path(FontsFolder, name);
-        return File.Exists(Path.Combine(project.GameDir, file)) ? [new GameFont(name, file)] : [];
+        return project.Game.FileExists(file) ? [new GameFont(name, file)] : [];
     }
 
-    public byte[] ReadFont(string gameDir, GameFont font)
+    public byte[] ReadFont(IGameFiles game, GameFont font)
     {
+        ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(font);
-        var path = Path.Combine(Path.GetFullPath(gameDir), font.File);
         try
         {
-            return File.ReadAllBytes(path);
+            return game.ReadAllBytes(font.File);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
@@ -176,7 +176,7 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
 
     public IReadOnlyList<string> Placeholders(string text) => RpgMakerStrings.Placeholders(text);
 
-    public FontSwapFiles Swap(string gameDir, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
+    public FontSwapFiles Swap(IGameFiles game, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
     {
         ArgumentNullException.ThrowIfNull(swaps);
         ArgumentNullException.ThrowIfNull(output);
@@ -187,7 +187,7 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
 
         // One text font per game.
         var swap = swaps[0];
-        var project = FindProject(gameDir);
+        var project = FindProject(game);
         var fileName = SwapPrefix + swap.Replacement.File(Core.Fonts.FontFace.Regular)!.FileName;
         var fontPath = project.Path(FontsFolder, fileName);
         var files = new List<string> { fontPath };
@@ -254,7 +254,7 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
     private static string? MvFontName(Project project)
     {
         var css = project.Path(FontsFolder, MvFontCss);
-        if (!File.Exists(Path.Combine(project.GameDir, css)))
+        if (!project.Game.FileExists(css))
         {
             return null;
         }
@@ -271,7 +271,7 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
     {
         try
         {
-            return File.ReadAllBytes(Path.Combine(project.GameDir, path));
+            return project.Game.ReadAllBytes(path);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
@@ -327,7 +327,7 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
         byte[] bytes;
         try
         {
-            bytes = File.ReadAllBytes(Path.Combine(project.GameDir, file.GamePath));
+            bytes = project.Game.ReadAllBytes(file.GamePath);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
@@ -346,10 +346,10 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
     }
 
     /// <summary>The project folder (holding <c>js/</c> and <c>data/</c>) and its text files.</summary>
-    private Project FindProject(string gameDir)
+    private Project FindProject(IGameFiles game)
     {
-        ArgumentException.ThrowIfNullOrEmpty(gameDir);
-        var root = Path.GetFullPath(gameDir);
+        ArgumentNullException.ThrowIfNull(game);
+        var root = game.Root;
         var detection = _engines.Detect(root);
         if (detection.Match is not { Kind.Engine: GameEngine.RpgMaker } match)
         {
@@ -361,16 +361,14 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
         // The marker is <project>/js/<core>.js.
         var parts = match.Marker.Split('/');
         var project = string.Join('/', parts[..^2]);
-        var projectDir = project.Length == 0 ? root : Path.Combine(root, project);
-        var dataDir = FindChild(projectDir, DataFolder)
+        var dataDir = game.FindDirectory(project, DataFolder)
             ?? throw new RecipeException($"{root} has no {Prefix(project)}{DataFolder} folder.");
-        var dataName = Path.GetFileName(dataDir);
+        var dataName = GameFiles.NameOf(dataDir);
         List<DataFile> files;
         try
         {
-            files = [.. Directory.EnumerateFiles(dataDir)
-                .Select(Path.GetFileName)
-                .OfType<string>()
+            files = [.. game.Files(dataDir)
+                .Select(GameFiles.NameOf)
                 .Where(RpgMakerStrings.IsTextFile)
                 .Order(StringComparer.Ordinal)
                 .Select(name => new DataFile(name, $"{DataFolder}/{name}", $"{Prefix(project)}{dataName}/{name}"))];
@@ -380,22 +378,10 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
             throw new RecipeException($"Can't list {Prefix(project)}{dataName}: {e.Message}", null, e);
         }
 
-        return new Project(root, files, Prefix(project), match.Kind.Variant == EngineVariants.RpgMakerMz);
+        return new Project(game, files, Prefix(project), match.Kind.Variant == EngineVariants.RpgMakerMz);
     }
 
     private static string Prefix(string project) => project.Length == 0 ? string.Empty : project + "/";
-
-    private static string? FindChild(string dir, string name)
-    {
-        try
-        {
-            return Directory.EnumerateDirectories(dir).FirstOrDefault(d => string.Equals(Path.GetFileName(d), name, StringComparison.OrdinalIgnoreCase));
-        }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-        {
-            return null;
-        }
-    }
 
     /// <param name="Name">File name as on disk.</param>
     /// <param name="ProjectPath">Path from the project folder, the key's file part (<c>data/Map001.json</c>).</param>
@@ -404,15 +390,15 @@ public sealed partial class RpgMakerRecipe : IRecipeTool, IGameFonts
 
     /// <param name="Prefix">The project folder relative to the game folder, with a trailing <c>/</c> (empty at the root).</param>
     /// <param name="IsMz">RPG Maker MZ (else MV).</param>
-    private sealed record Project(string GameDir, IReadOnlyList<DataFile> Files, string Prefix, bool IsMz)
+    private sealed record Project(IGameFiles Game, IReadOnlyList<DataFile> Files, string Prefix, bool IsMz)
     {
         public DataFile? Find(string projectPath) => Files.FirstOrDefault(f => f.ProjectPath == projectPath);
 
         /// <summary>A file of the project, relative to the game folder (the folder name as on disk when it exists).</summary>
         public string Path(string folder, string name)
         {
-            var dir = System.IO.Path.Combine(GameDir, Prefix, folder);
-            var actual = Directory.Exists(dir) ? folder : FindChild(System.IO.Path.Combine(GameDir, Prefix), folder) is { } found ? System.IO.Path.GetFileName(found) : folder;
+            var actual = Game.DirectoryExists(Prefix + folder) ? folder
+                : Game.FindDirectory(Prefix.TrimEnd('/'), folder) is { } found ? GameFiles.NameOf(found) : folder;
             return $"{Prefix}{actual}/{name}";
         }
     }

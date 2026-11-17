@@ -36,6 +36,9 @@ public sealed class PackInstaller
     private const string CopyBefore = "before";
     private const string TempSuffix = ".ailocalpack";
 
+    /// <summary>The install's note of the game's files and the backups to undo what the game writes since (<see cref="GameWriteGuard"/>).</summary>
+    private const string WritesFolder = "writes";
+
     private readonly AppPaths _paths;
     private readonly InstalledPackStore _store;
     private readonly AntiCheatPolicy _policy;
@@ -79,7 +82,7 @@ public sealed class PackInstaller
     internal bool RollBackOnFailure { get; set; } = true;
 
     /// <summary>A journal survived (a crash or a failed rollback): <see cref="Recover"/> has work to do. Never throws.</summary>
-    public bool HasInterruptedTransaction => File.Exists(_paths.InstallJournal) || _backups.HasInterruptedMove;
+    public bool HasInterruptedTransaction => File.Exists(_paths.InstallJournal) || _backups.HasInterruptedMove || File.Exists(_paths.TrialJournal);
 
     /// <summary>Installs the files for a game that has no pack installed (<see cref="InstallProblem.AlreadyInstalled"/> otherwise).</summary>
     /// <exception cref="GameBlockedException">The game is blocked (anti-cheat, opt-out).</exception>
@@ -172,6 +175,8 @@ public sealed class PackInstaller
                 Preflight(file.Path, InstallPaths.Resolve(root, file.Path));
             }
 
+            // What the game wrote since the install first (it may have rewritten the pack's own files): saves stay.
+            var writes = removesPack ? UndoGameWrites(game, record!) : null;
             WriteJournal(new InstallJournalFile(
                 1, OperationUninstall, PhaseApply, game.Id.ToString(), root, parts[0].Backup, null, null, [], [],
                 RemovesPack: removesPack, KeepDependencies: [.. keep.Select(KeyText)]));
@@ -181,7 +186,7 @@ public sealed class PackInstaller
                 "Uninstalled {Pack} from {Game}: {Restored} restored, {Removed} removed, {Kept} kept (changed since); dependencies removed: {Dependencies}",
                 removesPack ? $"{record!.PackId} rev {record.Revision}" : "unused dependencies", game.Id, restored.Count, deleted.Count, changed.Count,
                 string.Join(", ", removed.Select(d => $"{d.Id} {d.Version}")));
-            return new UninstallResult(removesPack ? record : null, restored, deleted, changed, null) { RemovedDependencies = removed, KeptDependencies = kept };
+            return new UninstallResult(removesPack ? record : null, restored, deleted, changed, null) { RemovedDependencies = removed, KeptDependencies = kept, GameWrites = writes };
         }
         catch (Exception e) when (IsTransactionError(e) && RollBackOnFailure)
         {
@@ -290,6 +295,7 @@ public sealed class PackInstaller
             WriteJournal(journal);
             Apply(plan, progress, cancellationToken);
             Verify(plan, progress, cancellationToken);
+            NoteGameWrites(request, old, plan.BackupFolder);
             _store.Commit(game.Id, plan.Record, plan.Dependencies);
             AfterCommit?.Invoke();
             FinishInstall(journal);
@@ -759,6 +765,84 @@ public sealed class PackInstaller
         Report(progress, InstallStage.Verifying, files.Count, files.Count);
     }
 
+    /// <summary>
+    /// Notes the game folder and the engine's data folders as the install leaves them, with backups of the small files
+    /// and the known writes (<see cref="GameWriteGuard"/>, in the transaction's backup folder): the uninstall undoes what
+    /// the game rewrites from now on. A re-apply of the same game version carries the earlier note over (what the game
+    /// wrote since the first install stays undoable). Best effort: a failure is logged and the install goes on.
+    /// </summary>
+    private void NoteGameWrites(InstallRequest request, InstalledPack? old, string backupFolder)
+    {
+        var folder = Path.Combine(backupFolder, WritesFolder);
+        var version = GameWriteGuard.GameVersionKey(request.Game.Version);
+        try
+        {
+            if (old is not null)
+            {
+                var earlier = Path.Combine(BackupFolder(request.Game.Id, old.Backup), WritesFolder);
+                if (!PathNames.Same(earlier, folder) && GameWriteGuard.Load(earlier) is { } kept && kept.Version == version)
+                {
+                    CopyTree(earlier, folder);
+                    return;
+                }
+            }
+
+            GameWriteGuard.Take(
+                folder,
+                [GameWriteRoot.Game(request.Game.InstallPath), .. request.DataFolders],
+                request.KnownWrites,
+                Generation.FileCloner.Create(),
+                line => _logger.LogInformation("{Game}: {Line}", request.Game.Id, line),
+                version);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogWarning(e, "Can't note the files of {Game} for undoing what it writes; the uninstall will only put the pack's files back", request.Game.Id);
+        }
+    }
+
+    /// <summary>
+    /// Undoes what the game wrote since the install (the note of <see cref="NoteGameWrites"/>): caches and settings back,
+    /// the player's saves kept (<see cref="GameSaves"/>), added files only when small and cache-like; the game folder left
+    /// alone when the game was updated since. <c>null</c> = no note (an install from before).
+    /// </summary>
+    private GameWriteUndo? UndoGameWrites(Game game, InstalledPack record)
+    {
+        if (GameWriteGuard.Load(Path.Combine(BackupFolder(game.Id, record.Backup), WritesFolder)) is not { } guard)
+        {
+            return null;
+        }
+
+        var updated = guard.Version is { } before && GameWriteGuard.GameVersionKey(game.Version) is { } now && before != now;
+
+        // The pack's and its dependencies' own files (written, added, generated) are the uninstall's to put back or keep.
+        IReadOnlyList<IInstalledFiles> parts = [record, .. _store.DependenciesOf(game.Id)];
+        var own = parts.SelectMany(p => p.Files.Select(f => f.Path)).ToHashSet(PathNames.Comparer);
+        var generated = parts.SelectMany(p => p.GeneratedFiles).ToList();
+        bool Keep(string key) =>
+            GameSaves.IsSave(key)
+            || own.Contains(key)
+            || generated.Any(g => g == key || (g.EndsWith('/') && key.StartsWith(g, StringComparison.Ordinal)) || (g.EndsWith("/*", StringComparison.Ordinal) && key.StartsWith(g[..^1], StringComparison.Ordinal)));
+        var undo = guard.Undo(line => _logger.LogInformation("{Game}: {Line}", game.Id, line), Keep, skipGameFolder: updated, onlyCacheLikeAdded: true);
+        if (updated)
+        {
+            _logger.LogInformation("{Game} was updated since the install: what it wrote in its own folder stays", game.Id);
+        }
+
+        return undo;
+    }
+
+    private static void CopyTree(string source, string target)
+    {
+        foreach (var file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
+        {
+            var to = Path.Combine(target, Path.GetRelativePath(source, file));
+            Directory.CreateDirectory(Path.GetDirectoryName(to)!);
+            File.Copy(file, to, overwrite: true);
+            File.SetLastWriteTimeUtc(to, File.GetLastWriteTimeUtc(file));
+        }
+    }
+
     /// <summary>After the records are saved: backups no record uses any more, the rollback copies and the journal go (best effort).</summary>
     private void FinishInstall(InstallJournalFile journal)
     {
@@ -995,6 +1079,9 @@ public sealed class PackInstaller
         // A backup move a crash left behind first (task 66): until it is finished the backups folder is still the old
         // one, so an unfinished move never stops a transaction.
         var moved = _backups.HasInterruptedMove && _backups.RecoverLocked();
+
+        // A test run a crash left over a live game folder (_Live game folder_): the game's own files back first.
+        new GameTrials(_paths, logger: _logger).RecoverLocked();
         return RecoverJournalLocked(cancellationToken) with { BackupMoveFinished = moved };
     }
 

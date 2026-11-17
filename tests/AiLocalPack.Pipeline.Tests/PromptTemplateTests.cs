@@ -153,7 +153,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.System.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("system.v1.pt-BR.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("system.v2.pt-BR.txt", prompt));
     }
 
     [Fact]
@@ -166,7 +166,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.SystemScripts.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("system-scripts.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("system-scripts.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public sealed class PromptTemplateTests
         var prompt = PromptTemplate.ExtractUnknown.Render(values);
 
         // Assert
-        prompt.Should().Be(Snapshot.Text("extract-unknown.v1.ru.txt", prompt));
+        prompt.Should().Be(Snapshot.Text("extract-unknown.v2.ru.txt", prompt));
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public sealed class PromptTemplateTests
         var act = () => PromptTemplate.System.Render(values);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("The system v1 prompt has no {{tone}} field.*");
+        act.Should().Throw<ArgumentException>().WithMessage("The system v2 prompt has no {{tone}} field.*");
     }
 
     [Fact]

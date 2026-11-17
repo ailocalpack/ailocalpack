@@ -28,7 +28,7 @@ public sealed record BuildTranslations(
 /// <param name="AgentName">Its display name, for the title.</param>
 /// <param name="Agent">Version and model as last seen, if known.</param>
 /// <param name="Tool">Recipe tool ID and its version (<c>major.minor.patch</c>).</param>
-/// <param name="Touched">Files the translations rewrite → their SHA-256 in the working copy (the game as extracted).</param>
+/// <param name="Touched">Files the translations rewrite → their SHA-256 as the game ships them (without an installed pack).</param>
 /// <param name="Fonts">Whitelisted fonts swapped in.</param>
 /// <param name="Model">The job's own model option, when the agent didn't report one.</param>
 /// <param name="Base">An update job's base pack (task 56): the pack is its next revision.</param>

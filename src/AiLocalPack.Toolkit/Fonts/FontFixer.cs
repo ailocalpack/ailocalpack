@@ -88,7 +88,11 @@ public sealed class FontFixer
     /// no font hook. A font that can't be read is listed with its problem and left alone.
     /// </summary>
     /// <exception cref="RecipeException">Not a game of the tool's engine, or a file naming the fonts can't be read.</exception>
-    public static FontCheck? Check(IRecipeTool tool, string gameDir, IEnumerable<string> translations)
+    public static FontCheck? Check(IRecipeTool tool, string gameDir, IEnumerable<string> translations) =>
+        Check(tool, GameFiles.Folder(gameDir), translations);
+
+    /// <inheritdoc cref="Check(IRecipeTool, string, IEnumerable{string})"/>
+    public static FontCheck? Check(IRecipeTool tool, IGameFiles gameDir, IEnumerable<string> translations)
     {
         ArgumentNullException.ThrowIfNull(tool);
         ArgumentNullException.ThrowIfNull(translations);
@@ -140,9 +144,21 @@ public sealed class FontFixer
     /// <param name="preferred">The pack manifest's <c>fonts</c> (tried first).</param>
     /// <param name="progress">Download of a font that isn't bundled.</param>
     /// <exception cref="RecipeException">The game's font files can't be listed, or the swap can't be written.</exception>
-    public async Task<FontFixResult> ApplyAsync(
+    public Task<FontFixResult> ApplyAsync(
         IRecipeTool tool,
         string gameDir,
+        string language,
+        IReadOnlyDictionary<string, string> translations,
+        IReadOnlyList<string> preferred,
+        IRebuildOutput output,
+        IProgress<PackFetchProgress>? progress = null,
+        CancellationToken cancellationToken = default) =>
+        ApplyAsync(tool, GameFiles.Folder(gameDir), language, translations, preferred, output, progress, cancellationToken);
+
+    /// <inheritdoc cref="ApplyAsync(IRecipeTool, string, string, IReadOnlyDictionary{string, string}, IReadOnlyList{string}, IRebuildOutput, IProgress{PackFetchProgress}?, CancellationToken)"/>
+    public async Task<FontFixResult> ApplyAsync(
+        IRecipeTool tool,
+        IGameFiles gameDir,
         string language,
         IReadOnlyDictionary<string, string> translations,
         IReadOnlyList<string> preferred,

@@ -288,7 +288,7 @@ public sealed class GenerationTabViewModelTests
         var checks = Open(services).Checks.Select(c => c.Text);
 
         // Assert
-        checks.Should().Equal("Unity (Mono) · supported by the toolkit", "3.0 GB working copy · 120.0 GB free", "Claude Code ready", "No anti-cheat detected");
+        checks.Should().Equal("Unity (Mono) · supported by the toolkit", "3.0 GB for the job's files · 120.0 GB free", "Claude Code ready", "No anti-cheat detected");
     }
 
     [Fact]
@@ -334,14 +334,14 @@ public sealed class GenerationTabViewModelTests
         using var services = Build((agents, estimates) =>
         {
             ClaudeReady(agents, estimates);
-            estimates.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(copyBytes: 3 * FakeEstimates.Gb, freeBytes: FakeEstimates.Gb));
+            estimates.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(neededBytes: 3 * FakeEstimates.Gb, freeBytes: FakeEstimates.Gb));
         });
 
         // Act
         var tab = Open(services);
 
         // Assert
-        (tab.StartBlock, tab.Checks[1].Text).Should().Be((GenerationStartBlock.NotEnoughDisk, "Not enough space: 3.1 GB needed, 1.0 GB free"));
+        (tab.StartBlock, tab.Checks[1].Text).Should().Be((GenerationStartBlock.NotEnoughDisk, "Not enough space: 3.0 GB needed, 1.0 GB free"));
     }
 
     [Fact]

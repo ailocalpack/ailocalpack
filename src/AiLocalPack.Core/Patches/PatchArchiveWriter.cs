@@ -22,7 +22,7 @@ public static class PatchArchiveWriter
     private static readonly DateTimeOffset EntryTime = new(1980, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
     /// <param name="archivePath">Where the archive goes (replaced).</param>
-    /// <param name="originalRoot">Folder holding the original files (the working copy).</param>
+    /// <param name="originalRoot">Folder holding the original files (the game folder).</param>
     /// <param name="patchedRoot">Folder holding the new files at the same relative paths (the job's build folder).</param>
     /// <param name="files">Relative, <c>/</c>-separated paths present in both.</param>
     /// <exception cref="IOException">A file can't be read or written, or a delta doesn't decode to the new file.</exception>

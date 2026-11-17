@@ -16,7 +16,7 @@ namespace AiLocalPack.Desktop.ViewModels.Settings.Storage;
 /// <summary>
 /// Settings → Storage (design §8, task 66): the summary (total, stacked bar, legend), <em>Backups</em> (size, games,
 /// folder, <c>Open</c>, <c>Change location…</c> moving them through <see cref="BackupLocation"/>; never cleared here),
-/// <em>Generation working copies</em> (one row per job folder with its size and state, <c>Delete</c> through
+/// <em>Generation jobs</em> (one row per job folder with its size and state, <c>Delete</c> through
 /// <see cref="GenerationService.DeleteJobFolderAsync"/>), <em>Cache</em> (size, <c>Clear</c> through
 /// <see cref="AppCache"/>). The section list shows the total as its hint. Sizes are measured off the UI thread when the
 /// section is built (preloaded at start-up), each time it opens, after its own actions and when a job changes.
@@ -34,7 +34,7 @@ public sealed class StorageSettingsSection : SettingsSection
     private readonly ILogger<StorageSettingsSection> _logger;
     private readonly SettingRowServices _services;
     private readonly ObservableCollection<SettingRow> _copyRows = [];
-    private readonly Dictionary<string, WorkingCopyRow> _copies = new(PathNames.Comparer);
+    private readonly Dictionary<string, JobRow> _copies = new(PathNames.Comparer);
     private readonly Lock _refreshLock = new();
     private int _version;
     private Task _latestRefresh = Task.CompletedTask;
@@ -68,13 +68,13 @@ public sealed class StorageSettingsSection : SettingsSection
         Summary = new StorageSummaryRow(_services);
         Backups = new BackupsRow(_services, r => _shell.OpenFolder(r.Folder), ChangeBackupsLocationAsync);
         Cache = new CacheRow(_services, ClearCacheAsync);
-        NoWorkingCopies = new TextSettingRow(_services, nameof(Strings.Settings_Storage_WorkingCopies_Empty));
-        _copyRows.Add(NoWorkingCopies);
+        NoJobs = new TextSettingRow(_services, nameof(Strings.Settings_Storage_Jobs_Empty));
+        _copyRows.Add(NoJobs);
         Groups =
         [
             new SettingsGroup(_services, nameof(Strings.Settings_Group_DiskSpace), [Summary]),
             new SettingsGroup(_services, nameof(Strings.Settings_Group_Backups), [Backups], _ => nameof(Strings.Settings_Storage_Backups_Note)),
-            new SettingsGroup(_services, nameof(Strings.Settings_Group_WorkingCopies), _copyRows),
+            new SettingsGroup(_services, nameof(Strings.Settings_Group_Jobs), _copyRows),
             new SettingsGroup(_services, nameof(Strings.Settings_Group_Cache), [Cache]),
         ];
 
@@ -88,10 +88,10 @@ public sealed class StorageSettingsSection : SettingsSection
 
     public CacheRow Cache { get; }
 
-    public TextSettingRow NoWorkingCopies { get; }
+    public TextSettingRow NoJobs { get; }
 
     /// <summary>One row per job folder, newest first.</summary>
-    public IReadOnlyList<WorkingCopyRow> WorkingCopies => [.. _copyRows.OfType<WorkingCopyRow>()];
+    public IReadOnlyList<JobRow> Jobs => [.. _copyRows.OfType<JobRow>()];
 
     /// <summary>The last measure; <c>null</c> until the first is in.</summary>
     public StorageUsage? Usage => _usage;
@@ -204,10 +204,10 @@ public sealed class StorageSettingsSection : SettingsSection
     }
 
     /// <summary>
-    /// <c>Delete</c> on a working copy: asks first (an open job's progress is lost; packs stay), then deletes the folder
+    /// <c>Delete</c> on a job folder: asks first (an open job's progress is lost; packs stay), then deletes the folder
     /// (an open job is cancelled first). Nothing for a job generating right now.
     /// </summary>
-    public void DeleteWorkingCopy(WorkingCopyRow row)
+    public void DeleteJob(JobRow row)
     {
         ArgumentNullException.ThrowIfNull(row);
         if (!row.CanDelete)
@@ -218,10 +218,10 @@ public sealed class StorageSettingsSection : SettingsSection
         row.Error = null;
         var size = AddGameText.FormatSize(Localizer, row.Usage.Bytes);
         _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
-            Localizer.Format(nameof(Strings.Settings_Storage_DeleteCopy_Title), row.Label),
+            Localizer.Format(nameof(Strings.Settings_Storage_DeleteJob_Title), row.Label),
             row.LosesProgress
-                ? Localizer.Format(nameof(Strings.Settings_Storage_DeleteCopy_TextOpen), size)
-                : Localizer.Format(nameof(Strings.Settings_Storage_DeleteCopy_Text), size),
+                ? Localizer.Format(nameof(Strings.Settings_Storage_DeleteJob_TextOpen), size)
+                : Localizer.Format(nameof(Strings.Settings_Storage_DeleteJob_Text), size),
             Localizer[nameof(Strings.Settings_Storage_Delete)],
             () => _ = DeleteConfirmedAsync(row)));
     }
@@ -268,8 +268,8 @@ public sealed class StorageSettingsSection : SettingsSection
         UpdateHint();
     }
 
-    /// <summary>Deletes the working copy once the player confirmed (an open job is cancelled first); the reason on the row when it failed.</summary>
-    public async Task DeleteConfirmedAsync(WorkingCopyRow row)
+    /// <summary>Deletes the job folder once the player confirmed (an open job is cancelled first); the reason on the row when it failed.</summary>
+    public async Task DeleteConfirmedAsync(JobRow row)
     {
         row.IsDeleting = true;
         var result = await _generation.DeleteJobFolderAsync(row.Folder).ConfigureAwait(false);
@@ -279,8 +279,8 @@ public sealed class StorageSettingsSection : SettingsSection
             row.Error = result.Problem switch
             {
                 null => null,
-                GenerationActionProblem.Busy => Localizer[nameof(Strings.Settings_Storage_DeleteCopy_Busy)],
-                _ => Localizer.Format(nameof(Strings.Settings_Storage_DeleteCopy_Failed), result.Detail ?? string.Empty),
+                GenerationActionProblem.Busy => Localizer[nameof(Strings.Settings_Storage_DeleteJob_Busy)],
+                _ => Localizer.Format(nameof(Strings.Settings_Storage_DeleteJob_Failed), result.Detail ?? string.Empty),
             };
         });
         await RefreshAsync().ConfigureAwait(false);
@@ -310,7 +310,7 @@ public sealed class StorageSettingsSection : SettingsSection
 
         var rows = new List<SettingRow>();
         var listed = new HashSet<string>(PathNames.Comparer);
-        foreach (var copy in usage.WorkingCopies)
+        foreach (var copy in usage.Jobs)
         {
             listed.Add(copy.Folder);
             if (_copies.TryGetValue(copy.Folder, out var row))
@@ -319,7 +319,7 @@ public sealed class StorageSettingsSection : SettingsSection
             }
             else
             {
-                row = new WorkingCopyRow(_services, copy, DeleteWorkingCopy);
+                row = new JobRow(_services, copy, DeleteJob);
                 _copies.Add(copy.Folder, row);
             }
 
@@ -334,7 +334,7 @@ public sealed class StorageSettingsSection : SettingsSection
 
         if (rows.Count == 0)
         {
-            rows.Add(NoWorkingCopies);
+            rows.Add(NoJobs);
         }
 
         if (!_copyRows.SequenceEqual(rows))
@@ -348,7 +348,7 @@ public sealed class StorageSettingsSection : SettingsSection
 
         UpdateHint();
         OnPropertyChanged(nameof(Usage));
-        OnPropertyChanged(nameof(WorkingCopies));
+        OnPropertyChanged(nameof(Jobs));
     }
 
     private void UpdateHint() => Hint = _usage is { } usage ? AddGameText.FormatSize(Localizer, usage.TotalBytes) : null;

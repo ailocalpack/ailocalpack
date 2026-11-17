@@ -70,7 +70,7 @@ public enum AgentAuthState
 /// <param name="Detail">The probe's own words when the state is unknown.</param>
 public sealed record AgentAuthStatus(AgentAuthState State, string? Account = null, string? Detail = null);
 
-/// <summary>Built-in agent tools a run may use, always inside its working folder (the generation working copy, task 46).</summary>
+/// <summary>Built-in agent tools a run may use, always inside its working folder (the job's agent folder, never the game folder).</summary>
 public enum AgentBuiltinTool
 {
     ReadFiles,

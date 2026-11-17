@@ -14,7 +14,7 @@ public sealed class TranslateJobTests : IDisposable
     private readonly TempDir _dir = new();
     private readonly GenerationJobs _jobs;
     private readonly Game _game;
-    private readonly WorkingCopies _copies;
+    private readonly GenerationJobFolders _copies;
     private readonly TaskCompletionSource<GenerationRun> _run = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     public TranslateJobTests()
@@ -22,7 +22,7 @@ public sealed class TranslateJobTests : IDisposable
         _dir.RpgMakerGame("games/sample");
         _game = StageHarness.Game with { InstallPath = _dir.Combine("games/sample") };
         var paths = AppPaths.UnderHome(_dir.Combine("home"));
-        _copies = new WorkingCopies(paths, FileCloner.Create(), new SystemDiskSpace());
+        _copies = new GenerationJobFolders(paths, new SystemDiskSpace());
         _jobs = new GenerationJobs(new GenerationJobStore(paths), new GenerationRunner());
     }
 
@@ -35,7 +35,6 @@ public sealed class TranslateJobTests : IDisposable
                 new PipelineAgent(agent, StageHarness.Server),
                 RecipeTools.Builtin,
                 new GenerationEstimator(RecipeTools.Builtin, _copies),
-                _copies,
                 new ChunkBudget(10, 100_000)),
             pauseBefore: GenerationStage.Build);
 

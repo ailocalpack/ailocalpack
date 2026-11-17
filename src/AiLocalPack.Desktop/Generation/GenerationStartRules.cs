@@ -26,7 +26,7 @@ public enum GenerationStartBlock
 
     EstimateFailed,
 
-    /// <summary>The data drive hasn't room for the working copy.</summary>
+    /// <summary>The data drive hasn't room for the job's files.</summary>
     NotEnoughDisk,
 }
 
@@ -35,7 +35,7 @@ public enum GenerationStartBlock
 /// can't read (unknown engine, switched off on this OS, no tool, or its tool failed on the game) starts with a warning,
 /// and the agent writes its own extractor (task 57).
 /// </summary>
-/// <param name="EnoughDisk">The working copy fits (only meaningful once the estimate is done).</param>
+/// <param name="EnoughDisk">The job's files fit (only meaningful once the estimate is done).</param>
 public sealed record GenerationStartInputs(
     bool GameAvailable,
     bool AgentReady,
@@ -45,7 +45,7 @@ public sealed record GenerationStartInputs(
 
 /// <summary>
 /// The start form's rule (design §6a): <c>Start generation</c> is on only when the agent is ready, the estimate is done,
-/// and there is room for the working copy; otherwise the first reason in this order is shown: starting, game
+/// and there is room for the job's files; otherwise the first reason in this order is shown: starting, game
 /// unavailable, agent, estimating, estimate failed, disk.
 /// </summary>
 public static class GenerationStartRules

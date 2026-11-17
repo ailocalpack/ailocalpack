@@ -509,7 +509,7 @@ public sealed class UnrealIoStoreTests : IDisposable
         var opened = new List<FileStream>();
 
         // Act
-        var act = () => new UnrealIoStore(Toc, Ct, partition =>
+        var act = () => new UnrealIoStore(GameFiles.Folder(Game), UnrealFixture.Paks + "/pakchunk0.utoc", Ct, partition =>
         {
             if (opened.Count > 0)
             {
@@ -534,7 +534,7 @@ public sealed class UnrealIoStoreTests : IDisposable
         var opened = new List<FileStream>();
 
         // Act
-        var act = () => new UnrealIoStore(Toc, cts.Token, partition =>
+        var act = () => new UnrealIoStore(GameFiles.Folder(Game), UnrealFixture.Paks + "/pakchunk0.utoc", cts.Token, partition =>
         {
             opened.Add(File.OpenRead(partition));
             cts.Cancel();
@@ -560,7 +560,7 @@ public sealed class UnrealIoStoreTests : IDisposable
         var opened = new List<FileStream>();
 
         // Act
-        var act = () => new UnrealIoStore(Toc, Ct, partition =>
+        var act = () => new UnrealIoStore(GameFiles.Folder(Game), UnrealFixture.Paks + "/pakchunk0.utoc", Ct, partition =>
         {
             opened.Add(File.OpenRead(partition));
             return new FStreamArchive(partition, opened[^1], new VersionContainer(EGame.GAME_UE5_0));

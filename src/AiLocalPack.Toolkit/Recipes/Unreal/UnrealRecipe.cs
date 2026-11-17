@@ -42,9 +42,9 @@ public sealed partial class UnrealRecipe : IRecipeTool
     /// <summary>Unreal's markup: rich text tags pair up (<c>&lt;Bold&gt;</c> … <c>&lt;/&gt;</c>), FText arguments and printf fields don't.</summary>
     public TextMarkup Markup => UnrealMarkup;
 
-    public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
+    public RecipeExtraction Extract(IGameFiles gameFiles, CancellationToken cancellationToken = default)
     {
-        using var game = Load(gameDir, cancellationToken);
+        using var game = Load(gameFiles, cancellationToken);
         var strings = game.Sources
             .SelectMany(s => s.Resource.Entries.Select(e => new ExtractedString(
                 Key(s.Path, e),
@@ -57,7 +57,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
         return new RecipeExtraction(Id, Version, strings, SourceFiles(game.Sources));
     }
 
-    public RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+    public RebuildResult Rebuild(IGameFiles gameFiles, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
         if (language.Any(c => !char.IsAsciiLetterOrDigit(c) && c != '-'))
@@ -67,7 +67,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
 
         ArgumentNullException.ThrowIfNull(translations);
         ArgumentNullException.ThrowIfNull(output);
-        using var game = Load(gameDir, cancellationToken);
+        using var game = Load(gameFiles, cancellationToken);
         var known = game.Sources.SelectMany(s => s.Resource.Entries.Select(e => Key(s.Path, e))).ToHashSet(StringComparer.Ordinal);
         var unknown = translations.Keys.Where(k => !known.Contains(k)).Order(StringComparer.Ordinal).ToList();
         var files = new Dictionary<string, byte[]>(StringComparer.Ordinal);
@@ -146,10 +146,10 @@ public sealed partial class UnrealRecipe : IRecipeTool
         return new RebuildResult([.. written.Order(StringComparer.Ordinal)], applied, unknown) { InGameLanguage = inGame };
     }
 
-    public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
+    public IReadOnlyList<string> TouchedFiles(IGameFiles gameFiles, IEnumerable<string> keys)
     {
         ArgumentNullException.ThrowIfNull(keys);
-        using var game = Load(gameDir, CancellationToken.None);
+        using var game = Load(gameFiles, CancellationToken.None);
         var wanted = keys.ToHashSet(StringComparer.Ordinal);
 
         // A rebuild reads the native resource, the requested culture's and the metadata: every container of the target.
@@ -166,31 +166,31 @@ public sealed partial class UnrealRecipe : IRecipeTool
     [GeneratedRegex(@"\{[^{}\r\n]+\}|</>|</?[A-Za-z_][^<>\r\n]*>|%%|%[-+0#]*\d*(?:\.\d+)?[sdif]")]
     private static partial Regex Placeholder();
 
-    private static Game Load(string gameDir, CancellationToken ct)
+    private static Game Load(IGameFiles gameFiles, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
-        ArgumentException.ThrowIfNullOrEmpty(gameDir);
-        var root = Path.GetFullPath(gameDir);
+        ArgumentNullException.ThrowIfNull(gameFiles);
+        var root = gameFiles.Root;
         var detection = new EngineDetector().Detect(root);
         if (detection.Match is not { Kind.Engine: GameEngine.Unreal } match)
         {
             throw new RecipeException("This folder isn't an unambiguous Unreal game.");
         }
 
-        var marker = Path.Combine(root, match.Marker);
-        var folder = Directory.Exists(marker) ? marker : Path.GetDirectoryName(marker)!;
-        var paksPath = Path.GetRelativePath(root, folder).Replace('\\', '/');
+        // Names are full paths under the game folder (CUE4Parse's and the containers'); every read goes through gameFiles.
+        var folder = gameFiles.DirectoryExists(match.Marker) ? match.Marker : GameFiles.ParentOf(match.Marker);
+        var paksPath = folder.Length == 0 ? "." : folder;
         var provider = new StreamedFileProvider("ailocalpack", new VersionContainer(EGame.GAME_UE4_27), StringComparer.Ordinal);
         var ioStores = new List<UnrealIoStore>();
         try
         {
-            var archives = TopFiles(folder, ".pak");
-            var tocs = TopFiles(folder, ".utoc");
-            foreach (var data in TopFiles(folder, ".ucas"))
+            var archives = TopFiles(gameFiles, folder, ".pak");
+            var tocs = TopFiles(gameFiles, folder, ".utoc");
+            foreach (var data in TopFiles(gameFiles, folder, ".ucas"))
             {
                 if (!tocs.Any(t => IsPartitionOf(data, t)))
                 {
-                    throw new RecipeException("IoStore data has no matching .utoc index.", Path.GetRelativePath(root, data).Replace('\\', '/'));
+                    throw new RecipeException("IoStore data has no matching .utoc index.", data);
                 }
             }
 
@@ -199,26 +199,26 @@ public sealed partial class UnrealRecipe : IRecipeTool
                 ct.ThrowIfCancellationRequested();
 
                 // Global metadata serves cooked packages, not raw localization: no key or package parsing is needed.
-                if (Path.GetFileName(toc).Equals("global.utoc", StringComparison.OrdinalIgnoreCase))
+                if (GameFiles.NameOf(toc).Equals("global.utoc", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                ioStores.Add(Guard(Path.GetRelativePath(root, toc), () => new UnrealIoStore(toc, ct)));
+                ioStores.Add(Guard(toc, () => new UnrealIoStore(gameFiles, toc, ct)));
             }
 
             foreach (var archive in archives)
             {
                 ct.ThrowIfCancellationRequested();
                 var before = provider.UnloadedVfs.Count;
-                Guard(Path.GetRelativePath(root, archive), () =>
+                Guard(archive, () =>
                 {
-                    provider.RegisterVfs(archive);
+                    provider.RegisterVfs(gameFiles.FullPath(archive), [gameFiles.OpenRead(archive)]);
                     return true;
                 });
                 if (provider.UnloadedVfs.Count != before + 1)
                 {
-                    throw new RecipeException("Unsupported or corrupt Unreal archive.", Path.GetRelativePath(root, archive).Replace('\\', '/'));
+                    throw new RecipeException("Unsupported or corrupt Unreal archive.", archive);
                 }
             }
 
@@ -252,7 +252,7 @@ public sealed partial class UnrealRecipe : IRecipeTool
             }
 
             var sources = ReadSources(root, paksPath, files, ioStores, ct);
-            byte? tocVersion = ioStores.Count > 0 ? ioStores.Max(s => s.Version) : tocs.Count > 0 ? TocVersion(tocs[0]) : null;
+            byte? tocVersion = ioStores.Count > 0 ? ioStores.Max(s => s.Version) : tocs.Count > 0 ? TocVersion(gameFiles, tocs[0]) : null;
             return new Game(provider, paksPath, sources, files, inIoStore, ioStores, tocVersion);
         }
         catch (Exception e)
@@ -324,16 +324,17 @@ public sealed partial class UnrealRecipe : IRecipeTool
     }
 
     /// <summary>The TOC version byte of a <c>.utoc</c> not opened as a container (a lone <c>global.utoc</c>).</summary>
-    private static byte TocVersion(string toc)
+    private static byte TocVersion(IGameFiles gameFiles, string toc)
     {
-        using var file = File.OpenRead(toc);
+        using var file = gameFiles.OpenRead(toc);
         Span<byte> header = stackalloc byte[17];
         file.ReadExactly(header);
         return header[16] is >= 3 and <= 8 ? header[16] : throw new RecipeException($"Unsupported IoStore TOC version {header[16]}.", toc);
     }
 
-    private static List<string> TopFiles(string folder, string extension) =>
-        [.. Directory.EnumerateFiles(folder).Where(f => Path.GetExtension(f).Equals(extension, StringComparison.OrdinalIgnoreCase)).Order(StringComparer.Ordinal)];
+    /// <summary>Files directly in <paramref name="folder"/> with <paramref name="extension"/>, relative to the game folder.</summary>
+    private static List<string> TopFiles(IGameFiles gameFiles, string folder, string extension) =>
+        [.. gameFiles.Files(folder).Where(f => Path.GetExtension(f).Equals(extension, StringComparison.OrdinalIgnoreCase))];
 
     /// <summary>Whether <paramref name="data"/> is <c>X.ucas</c> or a partition <c>X_sN.ucas</c> of <c>X.utoc</c>.</summary>
     private static bool IsPartitionOf(string data, string toc)

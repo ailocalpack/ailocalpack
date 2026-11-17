@@ -94,7 +94,7 @@ public sealed class StorageUsageTests : IDisposable
         var usage = StorageUsage.Measure(Paths, TestContext.Current.CancellationToken);
 
         // Assert
-        usage.WorkingCopies.Select(w => (w.Folder, w.GameFolder, w.Job?.Id, w.Bytes > 0)).Should().Equal(
+        usage.Jobs.Select(w => (w.Folder, w.GameFolder, w.Job?.Id, w.Bytes > 0)).Should().Equal(
             (newer, "steam-620", (string?)null, true),
             (older, "steam-620", "20261101-100000-aaaaaa", true));
     }
@@ -122,6 +122,6 @@ public sealed class StorageUsageTests : IDisposable
         var usage = StorageUsage.Measure(paths, TestContext.Current.CancellationToken);
 
         // Assert
-        (usage.TotalBytes, usage.BackupGames, usage.WorkingCopies.Count).Should().Be((0L, 0, 0));
+        (usage.TotalBytes, usage.BackupGames, usage.Jobs.Count).Should().Be((0L, 0, 0));
     }
 }

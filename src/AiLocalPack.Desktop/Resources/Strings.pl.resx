@@ -68,7 +68,7 @@
     <value>Miejsce na dysku</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>Kopie zapasowe, kopie robocze, pamięć podręczna</value>
+    <value>Kopie zapasowe, zadania generowania, pamięć podręczna</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>O aplikacji</value>
@@ -2332,11 +2332,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Sprawdzanie miejsca na dysku…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>Kopia robocza: {0}</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>Kopia robocza: {0}, sklonowana: nie zajmuje miejsca</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>{0} na pliki zadania</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · wolne: {1}</value>
@@ -2359,8 +2356,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>Pozwól mi przejrzeć słowniczek przed tłumaczeniem</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>Agent pracuje na kopii; pliki twojej gry pozostają nietknięte.</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>Agent tylko czyta twoją grę; próbne uruchomienie zmienia ją na chwilę i potem wszystko przywraca.</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>Zacznij tworzenie</value>
@@ -2381,7 +2378,7 @@
     <value>Nie udało się oszacować rozmiaru</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>Za mało miejsca na dysku na kopię roboczą</value>
+    <value>Za mało miejsca na dysku na pliki zadania</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>Tworzenie jest niedostępne dla tej gry.</value>
@@ -2396,7 +2393,7 @@
     <value>Nie udało się rozpocząć tworzenia: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>Tworzenie kopii roboczej</value>
+    <value>Przygotowanie</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>Wyodrębnianie tekstów</value>
@@ -2489,7 +2486,7 @@
     <value>{0} · zostało ≈ {1}</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>Kopiowanie gry: agent pracuje na kopii, twoje pliki pozostają nietknięte</value>
+    <value>Sprawdzanie folderu gry i dysku: agent czyta grę tam, gdzie jest zainstalowana</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>Wyciąganie tekstu narzędziami aplikacji</value>
@@ -2498,7 +2495,7 @@
     <value>Imiona, terminy i ton, aby cała gra brzmiała spójnie</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>Przebudowa plików gry na kopii i jednorazowe uruchomienie</value>
+    <value>Odbudowa plików gry i próba w grze, a potem przywrócenie oryginałów</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Wstrzymaj</value>
@@ -2668,8 +2665,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Narzędziom aplikacji nie udało się przetworzyć plików gry. Przyczyna jest w szczegółach.</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>Nie udało się utworzyć kopii roboczej gry. Przyczyna jest w szczegółach.</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>Folderu gry nie da się teraz do tego użyć. Powód jest w szczegółach.</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>Nie udało się zapisać plików: sprawdź wolne miejsce i ponów.</value>
@@ -2693,13 +2690,13 @@
     <value>Anulować tworzenie?</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>Ukończono {0}%. Możesz zachować postęp i kontynuować później albo usunąć kopię roboczą i zwolnić miejsce.</value>
+    <value>Gotowe w {0}%. Możesz zachować postęp i dokończyć później albo usunąć pliki zadania i zwolnić miejsce.</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>Zachowaj postęp</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>Usuń kopię roboczą</value>
+    <value>Usuń pliki zadania</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>Wstecz</value>
@@ -2708,7 +2705,7 @@
     <value>Zatrzymano. Postęp zachowany: wznów w dowolnej chwili.</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>Tworzenie anulowane, kopia robocza usunięta.</value>
+    <value>Generowanie anulowane, pliki zadania usunięte.</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>Zadanie działa w innym oknie lub poleceniu.</value>
@@ -2896,6 +2893,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>Uruchomienia testowe są wyłączone</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>Gra była uruchomiona, więc nie zrobiono próbnego uruchomienia</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>Trwała inna zmiana plików gry, więc nie zrobiono próbnego uruchomienia</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>Czcionki</value>
   </data>
@@ -2987,7 +2990,7 @@
     <value>Nowe tłumaczenie</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>Tłumaczenie zostaje w Tekst → Moje; kopia robocza zostanie usunięta i otworzy się formularz.</value>
+    <value>Tłumaczenie zostaje w Tekst → Moje; pliki zadania zostaną usunięte i otworzy się formularz.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Instalacja tworzy kopię zapasową oryginalnych plików; możesz odinstalować w każdej chwili.</value>
@@ -3008,16 +3011,16 @@
     <value>Możesz opublikować je później z Tekst → Moje.</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>Tłumaczenie i jego kopia robocza zostały usunięte.</value>
+    <value>Tłumaczenie i pliki jego zadania zostały usunięte.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>Tłumaczenie zostaje w Tekst → Moje; kopia robocza została usunięta.</value>
+    <value>Tłumaczenie zostaje w Tekst → Moje; pliki zadania zostały usunięte.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Odrzucić tłumaczenie?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>Twoje tłumaczenie „{0}” i kopia robocza zadania zostaną usunięte. Tego nie da się cofnąć.</value>
+    <value>Twoje tłumaczenie «{0}» i pliki zadania zostaną usunięte. Tego nie da się cofnąć.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>Tłumaczenie jest zainstalowane: najpierw je odinstaluj.</value>
@@ -3095,7 +3098,7 @@
     <value>Usunąć „{0}”?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>Twoje tłumaczenie i kopia robocza zadania, które je utworzyło, zostaną usunięte. Tego nie da się cofnąć.</value>
+    <value>Twoje tłumaczenie i pliki zadania, które je utworzyło, zostaną usunięte. Tego nie da się cofnąć.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>Usunięto twoje tłumaczenie „{0}”.</value>
@@ -3667,8 +3670,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>Kopie zapasowe {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>Kopie robocze {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>Zadania generowania {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>Pamięć podręczna {0}</value>
@@ -3679,8 +3682,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>Kopie zapasowe</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>Kopie robocze do tworzenia</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>Zadania generowania</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>Pamięć podręczna</value>
@@ -3751,17 +3754,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>Nie udało się przenieść kopii zapasowych; zostają tam, gdzie były: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>Kopia robocza</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>Zadanie generowania</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>Zatrzymaj tworzenie, aby usunąć</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>Brak. Kopia plików gry powstaje na początku tworzenia, więc agent nigdy nie dotyka folderu gry.</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>Brak. Zadanie trzyma tu swoje teksty, słowniczek i odbudowane pliki; grę czyta tam, gdzie jest zainstalowana.</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>Pozostałość po przerwanym starcie</value>
@@ -3793,19 +3796,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>Usuń</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>Usunąć kopię roboczą gry {0}?</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>Usunąć zadanie generowania dla {0}?</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>Zwolni {0}. Utworzone przez ciebie tłumaczenia i zainstalowane tłumaczenia zostają; gra pozostaje nietknięta.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>Zwolni {0}. Postęp wstrzymanego tłumaczenia przepadnie: nie da się go wznowić, trzeba będzie zacząć od nowa. Zainstalowane tłumaczenia zostają; gra pozostaje nietknięta.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>Dla tej gry trwa tworzenie. Najpierw je zatrzymaj.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>Nie udało się usunąć: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4496,7 +4499,7 @@
     <value>Wersja robocza {0} · gra zamknęła się po {1} s</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>Opisz {0} własnymi słowami, co jest nie tak. Pracuje na tej samej kopii gry i tworzy nową wersję roboczą; poprzednia zostaje do publikacji.</value>
+    <value>Opisz {0} własnymi słowami, co jest nie tak. Pracuje na tych samych plikach gry i tworzy nowy szkic; stary zostaje do publikacji.</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>Napisz agentowi, co poszło nie tak albo co zmienić…</value>
@@ -4787,7 +4790,7 @@
     <value>Najpierw pozwól mi sprawdzić słowniczek.</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>Przygotowanie · kopia robocza gotowa</value>
+    <value>Przygotowanie · folder gry sprawdzony</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>Wyodrębnianie · tekstów: {0}</value>

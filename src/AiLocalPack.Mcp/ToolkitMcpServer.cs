@@ -11,8 +11,8 @@ using ModelContextProtocol.Server;
 namespace AiLocalPack.Mcp;
 
 /// <summary>
-/// The toolkit as an MCP server (<c>ailocalpack mcp --root &lt;working copy&gt; --job &lt;job folder&gt;</c>, stdio):
-/// the tools of <see cref="ToolkitTools"/>, confined to one working copy of the game.
+/// The toolkit as an MCP server (<c>ailocalpack mcp --root &lt;game folder&gt; --job &lt;job folder&gt;</c>, stdio):
+/// the tools of <see cref="ToolkitTools"/>, confined to one game folder, which they only read.
 /// </summary>
 public static class ToolkitMcpServer
 {
@@ -20,8 +20,8 @@ public static class ToolkitMcpServer
 
     /// <summary>What the agent is told about the server when it connects.</summary>
     public const string Instructions =
-        "Tools of ailocalpack's toolkit for translating one game. Every path is relative to the game folder (a working copy; "
-        + "the tools can't leave it). Start with detect_engine, then extract_strings / get_strings to read the strings (originals, "
+        "Tools of ailocalpack's toolkit for translating one game. Every path is relative to the game folder (the installed game, "
+        + "read only; the tools can't leave it or change it). Start with detect_engine, then extract_strings / get_strings to read the strings (originals, "
         + "context, length limits, placeholders to keep exactly), put_translations to store translations (each is validated; "
         + "refused ones come back with the reason), put_glossary / get_glossary for names, terms and tone, get_references for how "
         + "published translations of the game put a string (when the job has any), validate_strings to "

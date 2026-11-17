@@ -1,10 +1,11 @@
+using System.Text.Json;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Generation;
 
 /// <summary>
-/// The files a generation keeps in its job folder, next to (never inside) the working copy of the game:
+/// The files a generation keeps in its job folder, (the game itself is read where it is installed, never copied):
 /// <c>strings.json</c> = the string store (a plain JSON <see cref="StringTable"/> of the translations so far, written
 /// after every change), <c>glossary.json</c> (<see cref="Glossary"/>), <c>source.json</c> (the extracted strings), <c>chunks.json</c> (the translate plan), <c>progress.json</c> (recent
 /// translations, agent usage), <c>build/</c> = the latest rebuild, laid out
@@ -60,6 +61,54 @@ public sealed class GenerationFiles
     /// its rebuild), <c>out/</c> (the game files its rebuild wrote).
     /// </summary>
     public string AgentFolder => Path.Combine(Folder, "agent");
+
+    /// <summary>
+    /// The game folder the job reads and test-runs, as Setup recorded it (<c>game.json</c>, <c>{schemaVersion: 1, folder}</c>;
+    /// _Live game folder_ in <c>docs/generation.md</c>): no copy of the game is made.
+    /// </summary>
+    public string GamePath => Path.Combine(Folder, "game.json");
+
+    /// <summary>Records the game folder (<see cref="GamePath"/>).</summary>
+    public void WriteGameFolder(string gameFolder)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
+        using var buffer = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, NewLine = "\n" }))
+        {
+            writer.WriteStartObject();
+            writer.WriteNumber("schemaVersion", 1);
+            writer.WriteString("folder", Path.GetFullPath(gameFolder));
+            writer.WriteEndObject();
+        }
+
+        buffer.WriteByte((byte)'\n');
+        AtomicFile.WriteAllBytes(GamePath, buffer.ToArray());
+    }
+
+    /// <summary>The recorded game folder, or <c>null</c> (none yet, unreadable, or written by a newer app). Never throws for disk state.</summary>
+    public string? ReadGameFolder()
+    {
+        try
+        {
+            if (!File.Exists(GamePath))
+            {
+                return null;
+            }
+
+            using var document = JsonDocument.Parse(File.ReadAllBytes(GamePath));
+            var root = document.RootElement;
+            return root.ValueKind == JsonValueKind.Object
+                && root.TryGetProperty("schemaVersion", out var version) && version.TryGetInt32(out var number) && number == 1
+                && root.TryGetProperty("folder", out var folder) && folder.ValueKind == JsonValueKind.String
+                && folder.GetString() is { Length: > 0 } path && Path.IsPathFullyQualified(path)
+                ? path
+                : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return null;
+        }
+    }
 
     /// <summary>The agent extractor's output: <c>{strings: [{key, original, file?, context?, maxLength?, placeholders?}]}</c>.</summary>
     public string AgentStringsPath => Path.Combine(AgentFolder, "strings.json");

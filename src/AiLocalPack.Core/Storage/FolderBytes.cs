@@ -2,7 +2,7 @@ namespace AiLocalPack.Core.Storage;
 
 /// <summary>
 /// Bytes a folder takes (Settings → Storage, task 66): the sum of its files' lengths, every level down. Links are never
-/// followed or counted (a working copy's recreated links point into the game), unreadable folders are skipped. Never
+/// followed or counted (a link may point into a game), unreadable folders are skipped. Never
 /// throws for disk state.
 /// </summary>
 public static class FolderBytes

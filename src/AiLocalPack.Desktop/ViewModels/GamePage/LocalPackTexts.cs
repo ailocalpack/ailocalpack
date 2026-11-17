@@ -94,6 +94,8 @@ public static class LocalPackTexts
             TestRunSkip.SteamDrm => nameof(Strings.Gen_Result_Skip_SteamDrm),
             TestRunSkip.StartFailed => nameof(Strings.Gen_Result_Skip_StartFailed),
             TestRunSkip.ClosesUntranslated => nameof(Strings.Gen_Result_Skip_ClosesUntranslated),
+            TestRunSkip.GameRunning => nameof(Strings.Gen_Result_Skip_GameRunning),
+            TestRunSkip.Busy => nameof(Strings.Gen_Result_Skip_Busy),
             _ => nameof(Strings.Gen_Result_Skip_TurnedOff),
         }];
     }

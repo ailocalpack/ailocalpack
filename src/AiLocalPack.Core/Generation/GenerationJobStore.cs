@@ -96,7 +96,7 @@ public sealed class GenerationJobLock : IDisposable
 
 /// <summary>
 /// Jobs on disk (task 47): <c>job.json</c> in each job folder <c>&lt;data&gt;/work/&lt;game folder&gt;/&lt;job id&gt;/</c>
-/// (<see cref="WorkingCopies.JobFolder"/>), written atomically after every step, next to the <see cref="GenerationFiles"/>
+/// (<see cref="GenerationJobFolders.JobFolder"/>), written atomically after every step, next to the <see cref="GenerationFiles"/>
 /// and <c>logs/job.log</c>. One open job per game. Methods block; call them off the UI thread.
 /// </summary>
 public sealed class GenerationJobStore
@@ -127,14 +127,14 @@ public sealed class GenerationJobStore
     public IReadOnlyList<GenerationJobEntry> List()
     {
         var jobs = new List<GenerationJobEntry>();
-        if (!Directory.Exists(_paths.WorkingCopies))
+        if (!Directory.Exists(_paths.GenerationJobs))
         {
             return jobs;
         }
 
         try
         {
-            foreach (var gameFolder in Directory.EnumerateDirectories(_paths.WorkingCopies).Order(StringComparer.Ordinal))
+            foreach (var gameFolder in Directory.EnumerateDirectories(_paths.GenerationJobs).Order(StringComparer.Ordinal))
             {
                 foreach (var folder in Directory.EnumerateDirectories(gameFolder).Order(StringComparer.Ordinal))
                 {
@@ -156,7 +156,7 @@ public sealed class GenerationJobStore
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            _logger.LogWarning(e, "Couldn't list the generation jobs in {Folder}", _paths.WorkingCopies);
+            _logger.LogWarning(e, "Couldn't list the generation jobs in {Folder}", _paths.GenerationJobs);
         }
 
         return jobs;
@@ -224,8 +224,8 @@ public sealed class GenerationJobStore
         }
 
         var now = _time.GetUtcNow();
-        var id = WorkingCopies.NewJobId(_time);
-        var folder = Path.Combine(_paths.WorkingCopies, Registry.RegistryLayout.GameFolder(game.Id), id);
+        var id = GenerationJobFolders.NewJobId(_time);
+        var folder = Path.Combine(_paths.GenerationJobs, Registry.RegistryLayout.GameFolder(game.Id), id);
         Directory.CreateDirectory(folder);
         var jobLock = GenerationJobLock.TryAcquire(folder)
             ?? throw new GenerationJobException(GenerationJobProblem.Busy, $"The new job folder {folder} is locked.");
@@ -387,7 +387,7 @@ public static class GenerationJobSerializer
             job.Agent,
             new GenerationOptionsJson(
                 job.Options.ReviewGlossary,
-                Name(job.Options.Scope),
+                null,
                 job.Options.Model,
                 job.Options.Base is { } b ? new GenerationBaseJson(b.PackId, b.Revision, b.Local, b.Title) : null,
                 Name(job.Options.Quality),
@@ -476,14 +476,9 @@ public static class GenerationJobSerializer
             // A kind from a newer app reads as unexpected: the message still says what happened.
             failure = new GenerationFailure(
                 failedStage,
-                TryParse<GenerationFailureKind>(f.Kind, out var kind) ? kind : GenerationFailureKind.Unexpected,
+                f.Kind == "workingCopy" ? GenerationFailureKind.GameFolder
+                    : TryParse<GenerationFailureKind>(f.Kind, out var kind) ? kind : GenerationFailureKind.Unexpected,
                 f.Message ?? "");
-        }
-
-        WorkingCopyScope? scope = null;
-        if (file.Options?.Scope is { } scopeName && TryParse<WorkingCopyScope>(scopeName, out var parsedScope))
-        {
-            scope = parsedScope;
         }
 
         // A job from before the quality modes (or a quality from a newer app) runs as Balanced.
@@ -527,7 +522,6 @@ public static class GenerationJobSerializer
             Agent = file.Agent,
             Options = new GenerationOptions(
                 file.Options?.ReviewGlossary ?? false,
-                scope,
                 file.Options?.Model,
                 baseRef,
                 quality,
@@ -585,9 +579,10 @@ internal sealed record GenerationJobFileJson(
     long ChunkMs,
     long? EstimatedMs);
 
+/// <param name="Scope">The working copy's scope of older apps (no copy is made now): never written, ignored.</param>
 internal sealed record GenerationOptionsJson(
     bool ReviewGlossary,
-    string? Scope,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] string? Scope,
     string? Model,
     GenerationBaseJson? Base = null,
     string? Quality = null,

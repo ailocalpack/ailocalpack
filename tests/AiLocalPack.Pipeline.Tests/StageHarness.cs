@@ -5,7 +5,7 @@ using AiLocalPack.Core.Background;
 
 namespace AiLocalPack.Pipeline.Tests;
 
-/// <summary>A job folder with a working copy of a fixture game, and the context of one step at a stage.</summary>
+/// <summary>A job folder whose game folder (<see cref="Copy"/>, recorded as Setup does) holds a fixture game, and the context of one step at a stage.</summary>
 internal sealed class StageHarness : IDisposable
 {
     public static readonly DateTimeOffset T0 = new(2026, 11, 8, 12, 0, 0, TimeSpan.Zero);
@@ -22,7 +22,8 @@ internal sealed class StageHarness : IDisposable
 
     public string Folder { get; }
 
-    public string Copy => WorkingCopies.CopyFolder(Folder);
+    /// <summary>The job's game folder (recorded in <c>game.json</c> by <see cref="Context"/>).</summary>
+    public string Copy => GenerationJobFolders.LegacyCopyFolder(Folder);
 
     public GenerationFiles Files => new(Folder);
 
@@ -47,6 +48,7 @@ internal sealed class StageHarness : IDisposable
             Stage = stage,
             Counters = counters ?? new GenerationCounters(),
         };
+        Files.WriteGameFolder(Copy);
         return new GenerationStepContext(new GenerationJobEntry(Folder, job), Clock);
     }
 

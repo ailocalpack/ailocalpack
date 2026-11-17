@@ -65,7 +65,7 @@
     <value>Speicher</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>Sicherungen, Arbeitskopien, Cache</value>
+    <value>Sicherungen, Aufträge der KI-Übersetzung, Cache</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>Über</value>
@@ -2257,11 +2257,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Prüfe den Speicherplatz…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>{0} Arbeitskopie</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>{0} Arbeitskopie, geklont: braucht keinen Platz</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>{0} für die Dateien des Auftrags</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · {1} frei</value>
@@ -2284,8 +2281,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>Glossar vor dem Übersetzen selbst prüfen</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>Der Agent arbeitet an einer Kopie; deine Spieldateien bleiben unberührt.</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>Der Agent liest dein Spiel nur; ein Probestart ändert es kurz und stellt danach alles wieder her.</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>Erstellung starten</value>
@@ -2306,7 +2303,7 @@
     <value>Die Größe konnte nicht geschätzt werden</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>Nicht genug Speicherplatz für die Arbeitskopie</value>
+    <value>Nicht genug Speicherplatz für die Dateien des Auftrags</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>Erstellung ist für dieses Spiel nicht verfügbar.</value>
@@ -2321,7 +2318,7 @@
     <value>Erstellung konnte nicht gestartet werden: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>Arbeitskopie anlegen</value>
+    <value>Vorbereitung</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>Texte auslesen</value>
@@ -2414,7 +2411,7 @@
     <value>{0} · ≈ {1} übrig</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>Kopiere das Spiel: Der Agent arbeitet an der Kopie, deine Dateien bleiben unberührt</value>
+    <value>Spielordner und Speicherplatz werden geprüft: Der Agent liest das Spiel dort, wo es installiert ist</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>Lese den Text mit dem Toolkit aus</value>
@@ -2423,7 +2420,7 @@
     <value>Namen, Begriffe und Tonfall, damit das ganze Spiel einheitlich klingt</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>Baue die Spieldateien auf der Kopie neu und starte sie einmal</value>
+    <value>Die Spieldateien werden neu erstellt und im Spiel ausprobiert, danach kommen die Originale zurück</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Pausieren</value>
@@ -2590,8 +2587,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Das Toolkit konnte die Spieldateien nicht verarbeiten. Der Grund steht in den Details.</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>Die Arbeitskopie des Spiels konnte nicht angelegt werden. Der Grund steht in den Details.</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>Der Spielordner kann dafür gerade nicht verwendet werden. Die Details nennen den Grund.</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>Dateien konnten nicht geschrieben werden: Prüfe den freien Speicher und wiederhole dann.</value>
@@ -2615,13 +2612,13 @@
     <value>Erstellung abbrechen?</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>{0} % sind erledigt. Du kannst den Fortschritt behalten und später weitermachen oder die Arbeitskopie löschen und Speicher freigeben.</value>
+    <value>{0} % sind erledigt. Du kannst den Fortschritt behalten und später weitermachen oder die Dateien des Auftrags löschen und Speicher freigeben.</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>Fortschritt behalten</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>Arbeitskopie löschen</value>
+    <value>Dateien des Auftrags löschen</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>Zurück</value>
@@ -2630,7 +2627,7 @@
     <value>Gestoppt. Der Fortschritt bleibt: jederzeit fortsetzbar.</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>Erstellung abgebrochen, Arbeitskopie gelöscht.</value>
+    <value>KI-Übersetzung abgebrochen, die Dateien des Auftrags gelöscht.</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>Die Erstellung läuft in einem anderen Fenster oder Befehl.</value>
@@ -2809,6 +2806,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>Testläufe sind ausgeschaltet</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>Das Spiel war geöffnet, daher wurde es nicht probeweise gestartet</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>Eine andere Änderung an den Spieldateien lief gerade, daher wurde es nicht probeweise gestartet</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>Schriften</value>
   </data>
@@ -2891,7 +2894,7 @@
     <value>Neue Übersetzung</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>Die Übersetzung bleibt unter Text → Meine; die Arbeitskopie wird gelöscht und das Formular öffnet sich.</value>
+    <value>Die Übersetzung bleibt unter Text → Meine; die Dateien des Auftrags werden gelöscht und das Formular öffnet sich.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Beim Installieren werden die Originaldateien gesichert; du kannst jederzeit deinstallieren.</value>
@@ -2912,16 +2915,16 @@
     <value>Du kannst sie später unter Text → Meine veröffentlichen.</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>Die Übersetzung und ihre Arbeitskopie wurden gelöscht.</value>
+    <value>Die Übersetzung und die Dateien ihres Auftrags wurden gelöscht.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>Die Übersetzung bleibt unter Text → Meine; die Arbeitskopie wurde gelöscht.</value>
+    <value>Die Übersetzung bleibt unter Text → Meine; die Dateien des Auftrags wurden gelöscht.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Übersetzung verwerfen?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>Deine Übersetzung „{0}“ und die Arbeitskopie werden gelöscht. Das lässt sich nicht rückgängig machen.</value>
+    <value>Deine Übersetzung «{0}» und die Dateien des Auftrags werden gelöscht. Das lässt sich nicht rückgängig machen.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>Die Übersetzung ist installiert: Deinstalliere sie zuerst.</value>
@@ -2999,7 +3002,7 @@
     <value>„{0}“ löschen?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>Deine Übersetzung und die Arbeitskopie, aus der sie entstand, werden gelöscht. Das lässt sich nicht rückgängig machen.</value>
+    <value>Deine Übersetzung und die Dateien des Auftrags, der sie erstellt hat, werden gelöscht. Das lässt sich nicht rückgängig machen.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>Deine Übersetzung „{0}“ wurde gelöscht.</value>
@@ -3568,8 +3571,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>Sicherungen {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>Arbeitskopien {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>Aufträge der KI-Übersetzung {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>Cache {0}</value>
@@ -3580,8 +3583,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>Sicherungen</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>Arbeitskopien der KI-Übersetzung</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>Aufträge der KI-Übersetzung</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>Cache</value>
@@ -3652,17 +3655,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>Die Sicherungen konnten nicht verschoben werden und bleiben, wo sie waren: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>Arbeitskopie</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>Auftrag der KI-Übersetzung</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>Zum Löschen Erstellung stoppen</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>Keine. Beim Start einer Erstellung wird eine Kopie der Spieldateien angelegt, damit der Agent den Spielordner nie anfasst.</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>Keine. Ein Auftrag speichert hier seine Texte, sein Glossar und die neu erstellten Dateien; das Spiel liest er dort, wo es installiert ist.</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>Übrig von einem unterbrochenen Start</value>
@@ -3694,19 +3697,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>Löschen</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>Arbeitskopie von {0} löschen?</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>Den Auftrag der KI-Übersetzung für {0} löschen?</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>Gibt {0} frei. Deine erstellten und installierten Übersetzungen bleiben; das Spiel bleibt unberührt.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>Gibt {0} frei. Der Fortschritt der pausierten Übersetzung geht verloren: Sie lässt sich nicht fortsetzen und würde neu beginnen. Installierte Übersetzungen bleiben; das Spiel bleibt unberührt.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>Für dieses Spiel läuft eine Erstellung. Stoppe sie zuerst.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>Löschen fehlgeschlagen: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4370,7 +4373,7 @@
     <value>Entwurf {0} · das Spiel schloss sich nach {1} s</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>Beschreibe {0} in eigenen Worten, was nicht stimmt. Es arbeitet an derselben Kopie des Spiels und erstellt einen neuen Entwurf; der alte bleibt, bis du veröffentlichst.</value>
+    <value>Beschreibe {0} in eigenen Worten, was nicht stimmt. Es arbeitet an denselben Spieldateien und erstellt einen neuen Entwurf; der alte bleibt, bis du veröffentlichst.</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>Sag dem Agenten, was schiefging oder was er ändern soll…</value>
@@ -4661,7 +4664,7 @@
     <value>Lass mich zuerst das Glossar prüfen.</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>Vorbereitung · Arbeitskopie bereit</value>
+    <value>Vorbereitung · Spielordner geprüft</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>Auslesen · Texte: {0}</value>

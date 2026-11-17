@@ -269,7 +269,7 @@ public interface IFixRunner
 /// <summary>
 /// Fixes with AI (task 75, design §6e): the player's request about a completed job's translation goes to the job's
 /// agent (same agent, quality's model and sandbox; for an unknown engine also its scripts workspace) with the
-/// <see cref="PromptTemplate.SystemFix"/> and <see cref="PromptTemplate.Fix"/> prompts, on the job's working copy.
+/// <see cref="PromptTemplate.SystemFix"/> and <see cref="PromptTemplate.Fix"/> prompts, on the job's files and the game folder (_Live game folder_).
 /// The job's strings, glossary and agent scripts are copied to <c>fix/before/</c> first. Afterwards: nothing changed →
 /// the reply (maybe a question with choices); more than <see cref="FixRules.PlanThreshold"/> strings changed → the
 /// change is moved to <c>fix/pending/</c> and the job put back, as a plan the player applies (<see cref="ApplyPlanAsync"/>)
@@ -325,7 +325,8 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
         }
 
         var scripts = source.Tool == AgentScriptTool.ToolId;
-        var shared = SharedAttachments.Share(request.Attachments, scripts ? context.Files.AgentFolder : context.CopyFolder, context.Log);
+        // The agent's working folder is the job's agent/ (never the game folder), where it can read the screenshots.
+        var shared = SharedAttachments.Share(request.Attachments, context.Files.AgentFolder, context.Log);
         var values = PromptValues.Fix(
             game.Name,
             source.Engine,
@@ -335,7 +336,7 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
             FixPrompt.Attachments(shared.Attachments, Context(pack, source, context.Files)),
             FixPrompt.History([.. state.Turns.Where(t => t.Id < player.Id)]),
             scripts);
-        var system = new AgentSystemPrompt(PromptTemplate.SystemFix, PromptValues.SystemFix(game.Name, entry.Job.Language, scripts ? context.CopyFolder : null));
+        var system = new AgentSystemPrompt(PromptTemplate.SystemFix, PromptValues.SystemFix(game.Name, entry.Job.Language, scripts ? context.GameFolder : null));
         var extras = new AgentRunExtras(system, e =>
         {
             if (e is AgentToolCall call && FixSteps.Of(call.Name) is var code && code != FixSteps.TestRunTool)
@@ -351,7 +352,7 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
         // Reading files is how the agent looks at screenshots: the player's and the test runs'.
         var tools = testRuns is not null || request.Attachments.Any(a => a.Kind == FixAttachmentKind.Screenshot) ? new HashSet<AgentBuiltinTool> { AgentBuiltinTool.ReadFiles } : null;
         var host = testRuns is { } services
-            ? new FixTestRuns(game, services.Tools, services.Services, context, source, scripts ? context.Files.AgentFolder : context.CopyFolder, (number, max) =>
+            ? new FixTestRuns(game, services.Tools, services.Services, context, source, context.Files.AgentFolder, (number, max) =>
             {
                 lock (steps)
                 {
@@ -810,7 +811,7 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
 
 /// <summary>
 /// Screenshots copied into the agent's working folder for one fix run (<c>.fix-attachments/</c>: the job's <c>agent/</c>
-/// workspace, else the working copy): the agent's file tools reach only that folder (Claude Code's <c>--restricted</c>),
+/// workspace, else its agent folder): the agent's file tools reach only that folder (Claude Code's <c>--restricted</c>),
 /// so a path in <c>fix/attachments/</c> can't be read. Removed when the run ends, before the rebuild and the test run.
 /// </summary>
 internal sealed class SharedAttachments

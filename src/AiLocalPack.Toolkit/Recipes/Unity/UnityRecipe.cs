@@ -16,11 +16,11 @@ public sealed class UnityRecipe : IRecipeTool
 
     public TextMarkup Markup => UnityText.Markup;
 
-    public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
+    public RecipeExtraction Extract(IGameFiles gameFiles, CancellationToken cancellationToken = default)
     {
         var strings = new List<ExtractedString>();
         var files = new List<string>();
-        Visit(gameDir, cancellationToken, (path, _, texts) =>
+        Visit(gameFiles, cancellationToken, (path, _, texts) =>
         {
             if (texts.Count > 0)
             {
@@ -37,14 +37,14 @@ public sealed class UnityRecipe : IRecipeTool
         return new RecipeExtraction(Id, Version, [.. strings.OrderBy(s => s.Key, StringComparer.Ordinal)], [.. files.Order(StringComparer.Ordinal)]);
     }
 
-    public RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+    public RebuildResult Rebuild(IGameFiles gameFiles, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(translations);
         ArgumentNullException.ThrowIfNull(output);
         var unknown = translations.Keys.ToHashSet(StringComparer.Ordinal);
         var changed = new List<string>();
         var applied = 0;
-        Visit(gameDir, cancellationToken, (path, asset, texts) =>
+        Visit(gameFiles, cancellationToken, (path, asset, texts) =>
         {
             var dirty = false;
             foreach (var text in texts)
@@ -70,12 +70,12 @@ public sealed class UnityRecipe : IRecipeTool
         return new RebuildResult(changed, applied, [.. unknown.Order(StringComparer.Ordinal)]);
     }
 
-    public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
+    public IReadOnlyList<string> TouchedFiles(IGameFiles gameFiles, IEnumerable<string> keys)
     {
         ArgumentNullException.ThrowIfNull(keys);
         var wanted = keys.ToHashSet(StringComparer.Ordinal);
         var files = new List<string>();
-        Visit(gameDir, CancellationToken.None, (path, _, texts) =>
+        Visit(gameFiles, CancellationToken.None, (path, _, texts) =>
         {
             if (texts.Any(t => wanted.Contains(t.Key)))
             {
@@ -85,10 +85,10 @@ public sealed class UnityRecipe : IRecipeTool
         return files;
     }
 
-    private static void Visit(string gameDir, CancellationToken ct, Action<string, UnityAsset, List<UnityString>> visit)
+    private static void Visit(IGameFiles gameFiles, CancellationToken ct, Action<string, UnityAsset, List<UnityString>> visit)
     {
-        ArgumentException.ThrowIfNullOrEmpty(gameDir);
-        var root = Path.GetFullPath(gameDir);
+        ArgumentNullException.ThrowIfNull(gameFiles);
+        var root = gameFiles.Root;
         if (new EngineDetector().Detect(root).Kind.Engine != GameEngine.Unity)
         {
             throw new RecipeException($"Not a Unity game: {root}");
@@ -97,14 +97,12 @@ public sealed class UnityRecipe : IRecipeTool
         try
         {
             // Recursive discovery also covers macOS bundles; links are never followed.
-            var options = new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = FileAttributes.ReparsePoint, IgnoreInaccessible = false };
-            foreach (var full in Directory.EnumerateFiles(root, "*", options).Where(IsAssets).Order(StringComparer.Ordinal))
+            foreach (var path in gameFiles.Files(string.Empty, recursive: true).Where(IsAssets))
             {
                 ct.ThrowIfCancellationRequested();
-                var path = Path.GetRelativePath(root, full).Replace('\\', '/');
                 try
                 {
-                    using var asset = new UnityAsset(full);
+                    using var asset = new UnityAsset(gameFiles, path);
                     visit(path, asset, asset.Strings(path, ct));
                 }
                 catch (Exception e) when (e is not OperationCanceledException and not RecipeException and not OutOfMemoryException)
@@ -121,7 +119,7 @@ public sealed class UnityRecipe : IRecipeTool
 
     private static bool IsAssets(string path)
     {
-        var name = Path.GetFileName(path);
+        var name = GameFiles.NameOf(path);
         return name.EndsWith(".assets", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".bundle", StringComparison.OrdinalIgnoreCase)
             || name.EndsWith(".unity3d", StringComparison.OrdinalIgnoreCase) || name == "mainData"
             || name.StartsWith("level", StringComparison.Ordinal) && name.AsSpan(5).Length > 0 && name.AsSpan(5).IndexOfAnyExceptInRange('0', '9') < 0;
@@ -139,14 +137,16 @@ internal sealed class UnityAsset : IDisposable
     private readonly List<UnityAsset> _children = [];
     private readonly bool _ownsManager = true;
 
-    public UnityAsset(string path)
+    /// <param name="relative">The assets file, relative to the game folder.</param>
+    public UnityAsset(IGameFiles game, string relative)
     {
         // Our own stream: AssetsTools leaves the one it opens itself unclosed when the file fails to parse, and Windows
-        // then can't delete or replace the file until the GC runs.
-        FileStream? stream = null;
+        // then can't delete or replace the file until the GC runs. The full path only names it.
+        Stream? stream = null;
+        var path = game.FullPath(relative);
         try
         {
-            stream = File.OpenRead(path);
+            stream = game.OpenRead(relative);
             Span<byte> signature = stackalloc byte[8];
             var bundle = stream.Read(signature) == signature.Length && signature.SequenceEqual("UnityFS\0"u8);
             stream.Position = 0;
@@ -158,7 +158,8 @@ internal sealed class UnityAsset : IDisposable
             }
 
             _instance = _manager.LoadAssetsFile(stream, path, false, null);
-            var managed = Path.Combine(Path.GetDirectoryName(path)!, "Managed");
+            // Assemblies are code, never a pack's files: read from the game folder itself.
+            var managed = game.FullPath(GameFiles.Combine(GameFiles.ParentOf(relative), "Managed"));
             if (!_instance.file.Metadata.TypeTreeEnabled && Directory.Exists(managed) && Directory.EnumerateFiles(managed, "*.dll").Any())
             {
                 using var types = typeof(UnityAsset).Assembly.GetManifestResourceStream("AiLocalPack.Toolkit.Recipes.Unity.Files.classdata.tpk")!;

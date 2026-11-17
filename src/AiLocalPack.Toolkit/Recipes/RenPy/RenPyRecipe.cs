@@ -54,9 +54,9 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
 
     public TextMarkup Markup => RenPyTranslation.Markup;
 
-    public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
+    public RecipeExtraction Extract(IGameFiles files, CancellationToken cancellationToken = default)
     {
-        var game = Load(gameDir, cancellationToken);
+        var game = Load(files, cancellationToken);
         var strings = new List<ExtractedString>();
         foreach (var dialogue in game.Dialogues.Values)
         {
@@ -80,12 +80,12 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
     }
 
     public RebuildResult Rebuild(
-        string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+        IGameFiles gameFiles, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
         ArgumentNullException.ThrowIfNull(translations);
         ArgumentNullException.ThrowIfNull(output);
-        var game = Load(gameDir, cancellationToken);
+        var game = Load(gameFiles, cancellationToken);
         var name = RenPyTranslation.LanguageName(language);
         var blocks = new SortedDictionary<string, StringBuilder>(StringComparer.Ordinal);
         var strings = new StringBuilder();
@@ -161,10 +161,10 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
         };
     }
 
-    public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
+    public IReadOnlyList<string> TouchedFiles(IGameFiles files, IEnumerable<string> keys)
     {
         ArgumentNullException.ThrowIfNull(keys);
-        var game = Load(gameDir, CancellationToken.None);
+        var game = Load(files, CancellationToken.None);
         var sources = new SortedSet<string>(StringComparer.Ordinal);
         foreach (var key in keys)
         {
@@ -184,29 +184,27 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
     /// <summary>Ren'Py picks bold faces by file (<c>config.font_replacement_map</c>), so swaps bring the bold face too.</summary>
     public bool UsesBold => true;
 
-    public IReadOnlyList<GameFont> Fonts(string gameDir)
+    public IReadOnlyList<GameFont> Fonts(IGameFiles files)
     {
-        var (root, gamePath, projectPath) = FindGameFolder(gameDir);
-        var gameFolder = Path.Combine(root, gamePath);
+        var (gamePath, projectPath) = FindGameFolder(files);
         var fonts = new SortedDictionary<string, GameFont>(StringComparer.Ordinal);
 
         // Ren'Py's search order: loose files of game/, its archives, then renpy/common.
-        foreach (var file in List(() => Directory.EnumerateFiles(gameFolder, "*", SearchOption.AllDirectories), gamePath))
+        foreach (var file in List(() => files.Files(gamePath, recursive: true), gamePath))
         {
-            var entry = Path.GetRelativePath(gameFolder, file).Replace('\\', '/');
+            var entry = file[(gamePath.Length + 1)..];
             if (IsFont(entry) && !IsSkipped(entry))
             {
-                fonts.TryAdd(entry, new GameFont(entry, $"{gamePath}/{entry}"));
+                fonts.TryAdd(entry, new GameFont(entry, file));
             }
         }
 
-        foreach (var archivePath in List(() => Directory.EnumerateFiles(gameFolder, "*.rpa"), gamePath))
+        foreach (var relative in Archives(files, gamePath))
         {
-            var relative = $"{gamePath}/{Path.GetFileName(archivePath)}";
             RenPyArchive archive;
             try
             {
-                archive = RenPyArchive.Open(archivePath);
+                archive = OpenArchive(files, relative);
             }
             catch (Exception e) when (e is IOException or UnauthorizedAccessException or RenPyFormatException)
             {
@@ -219,16 +217,15 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
             }
         }
 
-        var common = Path.Combine(root, projectPath, "renpy", "common");
-        if (Directory.Exists(common))
+        var commonPath = GameFiles.Combine(projectPath, "renpy/common");
+        if (files.DirectoryExists(commonPath))
         {
-            var commonPath = (projectPath.Length == 0 ? string.Empty : projectPath + "/") + "renpy/common";
-            foreach (var file in List(() => Directory.EnumerateFiles(common), commonPath))
+            foreach (var file in List(() => files.Files(commonPath), commonPath))
             {
-                var name = Path.GetFileName(file);
+                var name = GameFiles.NameOf(file);
                 if (IsFont(name))
                 {
-                    fonts.TryAdd(name, new GameFont(name, $"{commonPath}/{name}"));
+                    fonts.TryAdd(name, new GameFont(name, file));
                 }
             }
         }
@@ -236,18 +233,18 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
         return [.. fonts.Values];
     }
 
-    public byte[] ReadFont(string gameDir, GameFont font)
+    public byte[] ReadFont(IGameFiles files, GameFont font)
     {
+        ArgumentNullException.ThrowIfNull(files);
         ArgumentNullException.ThrowIfNull(font);
-        var path = Path.Combine(Path.GetFullPath(gameDir), font.File);
         return font.Entry is { } entry
-            ? Guard(font.File, () => RenPyArchive.Open(path).Read(entry))
-            : Guard(font.File, () => File.ReadAllBytes(path));
+            ? Guard(font.File, () => OpenArchive(files, font.File).Read(entry))
+            : Guard(font.File, () => files.ReadAllBytes(font.File));
     }
 
     public IReadOnlyList<string> Placeholders(string text) => RenPyTranslation.Placeholders(text);
 
-    public FontSwapFiles Swap(string gameDir, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
+    public FontSwapFiles Swap(IGameFiles gameFiles, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
         ArgumentNullException.ThrowIfNull(swaps);
@@ -257,7 +254,7 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
             return new FontSwapFiles([], []);
         }
 
-        var (_, gamePath, _) = FindGameFolder(gameDir);
+        var (gamePath, _) = FindGameFolder(gameFiles);
         var name = RenPyTranslation.LanguageName(language);
         var folder = $"tl/{name}/{FontsName}";
         var files = new List<string>();
@@ -360,21 +357,19 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
     }
 
     /// <summary>Every script of the game in Ren'Py's load order, read into dialogue blocks and strings by key.</summary>
-    private Game Load(string gameDir, CancellationToken cancellationToken)
+    private Game Load(IGameFiles files, CancellationToken cancellationToken)
     {
-        var (root, gamePath, _) = FindGameFolder(gameDir);
-        var gameFolder = Path.Combine(root, gamePath);
+        var (gamePath, _) = FindGameFolder(files);
         var scripts = new SortedDictionary<string, Func<byte[]>>(StringComparer.Ordinal);
         var sources = new Dictionary<string, string>(StringComparer.Ordinal);
 
         // Archives first: a loose file of the same name wins, as in Ren'Py.
-        foreach (var archivePath in List(() => Directory.EnumerateFiles(gameFolder, "*.rpa"), gamePath))
+        foreach (var relative in Archives(files, gamePath))
         {
-            var relative = $"{gamePath}/{Path.GetFileName(archivePath)}";
             RenPyArchive archive;
             try
             {
-                archive = RenPyArchive.Open(archivePath);
+                archive = OpenArchive(files, relative);
             }
             catch (Exception e) when (e is IOException or UnauthorizedAccessException or RenPyFormatException)
             {
@@ -389,22 +384,21 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
             }
         }
 
-        foreach (var file in List(() => Directory.EnumerateFiles(gameFolder, "*.rpyc", SearchOption.AllDirectories), gamePath))
+        foreach (var relative in List(() => files.Files(gamePath, recursive: true), gamePath))
         {
-            var entry = Path.GetRelativePath(gameFolder, file).Replace('\\', '/');
+            var entry = relative[(gamePath.Length + 1)..];
             if (!IsScript(entry))
             {
                 continue;
             }
 
-            var relative = $"{gamePath}/{entry}";
-            scripts[Script(entry)] = () => Guard(relative, () => File.ReadAllBytes(file));
+            scripts[Script(entry)] = () => Guard(relative, () => files.ReadAllBytes(relative));
             sources[Script(entry)] = relative;
         }
 
         if (scripts.Count == 0)
         {
-            throw new RecipeException($"{gameFolder} has no compiled scripts (.rpyc). Launch the game once so Ren'Py compiles them, then try again.");
+            throw new RecipeException($"{files.FullPath(gamePath)} has no compiled scripts (.rpyc). Launch the game once so Ren'Py compiles them, then try again.");
         }
 
         var taken = new HashSet<string>(StringComparer.Ordinal);
@@ -485,11 +479,17 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
 
     private static string Stem(string script) => script[..^".rpy".Length];
 
-    /// <summary>The folder holding <c>renpy/</c> and <c>game/</c> (from the engine marker) and <c>game/</c> relative to the game folder.</summary>
-    private (string Root, string GamePath, string ProjectPath) FindGameFolder(string gameDir)
+    /// <summary>The archives (<c>*.rpa</c>) directly in <c>game/</c>, relative to the game folder.</summary>
+    private static List<string> Archives(IGameFiles files, string gamePath) =>
+        [.. List(() => files.Files(gamePath), gamePath).Where(f => f.EndsWith(".rpa", StringComparison.OrdinalIgnoreCase))];
+
+    private static RenPyArchive OpenArchive(IGameFiles files, string relative) => RenPyArchive.Open(() => files.OpenRead(relative));
+
+    /// <summary>The <c>game/</c> folder and the folder holding <c>renpy/</c> and <c>game/</c> (from the engine marker), relative to the game folder.</summary>
+    private (string GamePath, string ProjectPath) FindGameFolder(IGameFiles files)
     {
-        ArgumentException.ThrowIfNullOrEmpty(gameDir);
-        var root = Path.GetFullPath(gameDir);
+        ArgumentNullException.ThrowIfNull(files);
+        var root = files.Root;
         var detection = _engines.Detect(root);
         if (detection.Match is not { Kind.Engine: GameEngine.RenPy } match)
         {
@@ -502,22 +502,8 @@ public sealed class RenPyRecipe : IRecipeTool, IGameFonts
         var parts = match.Marker.Split('/');
         var renpy = Array.FindLastIndex(parts, p => p.Equals("renpy", StringComparison.OrdinalIgnoreCase));
         var project = string.Join('/', parts[..Math.Max(renpy, 0)]);
-        var projectDir = project.Length == 0 ? root : Path.Combine(root, project);
-        var game = FindChild(projectDir, "game") ?? throw new RecipeException($"{root} has no game folder.");
-        var gamePath = (project.Length == 0 ? string.Empty : project + "/") + Path.GetFileName(game);
-        return (root, gamePath, project);
-    }
-
-    private static string? FindChild(string dir, string name)
-    {
-        try
-        {
-            return Directory.EnumerateDirectories(dir).FirstOrDefault(d => string.Equals(Path.GetFileName(d), name, StringComparison.OrdinalIgnoreCase));
-        }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-        {
-            return null;
-        }
+        var game = files.FindDirectory(project, "game") ?? throw new RecipeException($"{root} has no game folder.");
+        return (game, project);
     }
 
     /// <param name="GamePath">The <c>game</c> folder relative to the game folder (<c>game</c>, or inside a macOS bundle).</param>

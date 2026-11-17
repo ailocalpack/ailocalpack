@@ -9,10 +9,10 @@ namespace AiLocalPack.Toolkit.Tests.Generation;
 public sealed class GenerationEstimatorTests : IDisposable
 {
     private readonly TempDir _dir = new();
-    private readonly WorkingCopies _copies;
+    private readonly GenerationJobFolders _copies;
 
     public GenerationEstimatorTests() =>
-        _copies = new WorkingCopies(AppPaths.UnderHome(_dir.Combine("home")), new NoClones(), new FreeSpace());
+        _copies = new GenerationJobFolders(AppPaths.UnderHome(_dir.Combine("home")), new FreeSpace());
 
     public void Dispose() => _dir.Dispose();
 
@@ -37,7 +37,6 @@ public sealed class GenerationEstimatorTests : IDisposable
         {
             Source = TextSizeSource.Toolkit,
             Work = new { Basis = EstimateBasis.Toolkit, Text = TextSize.Of(extraction.Strings.Select(s => s.Original)) },
-            Copy = new { Scope = WorkingCopyScope.WithoutMedia },
         });
     }
 
@@ -65,7 +64,7 @@ public sealed class GenerationEstimatorTests : IDisposable
     }
 
     [Fact]
-    public void The_reserve_is_the_size_of_the_files_the_strings_come_from()
+    public void The_disk_needs_only_the_size_of_the_files_the_strings_come_from_and_no_copy()
     {
         // Arrange
         _dir.RpgMakerGame("game");
@@ -76,7 +75,7 @@ public sealed class GenerationEstimatorTests : IDisposable
         var estimate = Estimator().Estimate(Game, cancellationToken: Ct);
 
         // Assert
-        estimate.Should().BeEquivalentTo(new { ReserveBytes = size, Space = new { NeededBytes = estimate.Copy.TotalBytes + size + WorkingCopies.Margin } });
+        estimate.Should().BeEquivalentTo(new { ReserveBytes = size, Space = new { NeededBytes = size + GenerationJobFolders.Margin } });
     }
 
     [Fact]
@@ -93,7 +92,6 @@ public sealed class GenerationEstimatorTests : IDisposable
         {
             Source = TextSizeSource.UnknownEngine,
             Work = new { Basis = EstimateBasis.FileSizes, Text = new { Characters = 1000L } },
-            Copy = new { Scope = WorkingCopyScope.AllFiles, SkippedFiles = 0 },
         });
     }
 
@@ -148,12 +146,7 @@ public sealed class GenerationEstimatorTests : IDisposable
         var act = () => estimator.Estimate(Game, cancellationToken: Ct);
 
         // Assert
-        act.Should().Throw<WorkingCopyException>().Which.Problem.Should().Be(WorkingCopyProblem.GameMissing);
-    }
-
-    private sealed class NoClones : IFileCloner
-    {
-        public bool TryClone(string source, string destination) => false;
+        act.Should().Throw<DirectoryNotFoundException>();
     }
 
     private sealed class FreeSpace : IDiskSpace
@@ -177,7 +170,6 @@ public sealed class GenerationEstimatorTests : IDisposable
             Source = TextSizeSource.AgentChosen,
             Tool = (IRecipeTool?)null,
             Work = new { Basis = EstimateBasis.FileSizes },
-            Copy = new { Scope = WorkingCopyScope.AllFiles },
         });
     }
 

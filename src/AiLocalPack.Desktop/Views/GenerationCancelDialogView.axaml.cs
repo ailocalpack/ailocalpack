@@ -9,7 +9,7 @@ public sealed partial class GenerationCancelDialogView : UserControl
 {
     public GenerationCancelDialogView() => InitializeComponent();
 
-    // Keeping the progress is the safe choice, so it has the focus: Enter never deletes the working copy by accident.
+    // Keeping the progress is the safe choice, so it has the focus: Enter never deletes the job's files by accident.
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);

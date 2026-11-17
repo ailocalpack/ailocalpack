@@ -10,7 +10,7 @@ namespace AiLocalPack.Desktop.Tests.Generation;
 
 /// <summary>
 /// The start form's estimate as the test sets it. By default every game is a Unity game the toolkit reads: 1,200 strings,
-/// a 3 GB working copy with 120 GB free. Every call is counted.
+/// 3 GB of job files with 120 GB free. Every call is counted.
 /// </summary>
 internal sealed class FakeEstimates : IGenerationEstimates
 {
@@ -32,23 +32,19 @@ internal sealed class FakeEstimates : IGenerationEstimates
         long words = 9_000,
         TextSizeSource source = TextSizeSource.Toolkit,
         EngineKind? engine = null,
-        long copyBytes = 3 * Gb,
+        long neededBytes = 3 * Gb,
         long? freeBytes = 120 * Gb,
-        bool canClone = false,
         string? toolkitError = null)
     {
         var basis = source == TextSizeSource.Toolkit ? EstimateBasis.Toolkit : EstimateBasis.FileSizes;
         var work = GenerationEstimateModel.Estimate(new TextSize(strings, words, words * 6), basis);
-        var plan = new WorkingCopyPlan("/games/x", WorkingCopyScope.WithoutMedia, [], [], copyBytes, 0, 0);
-        var needed = (canClone ? 0 : copyBytes) + WorkingCopies.Margin;
         return new GenerationSizeEstimate(
             engine ?? new EngineKind(GameEngine.Unity, "mono"),
             source,
             null,
             toolkitError,
             work,
-            plan,
-            new WorkingCopySpace(needed, freeBytes, canClone),
+            new JobSpace(neededBytes, freeBytes),
             0);
     }
 

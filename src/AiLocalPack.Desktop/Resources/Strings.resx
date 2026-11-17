@@ -78,7 +78,7 @@
     <comment>Settings section.</comment>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>Backups, working copies, cache</value>
+    <value>Backups, generation jobs, cache</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>About</value>
@@ -2285,11 +2285,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Checking the disk space…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>{0} working copy</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>{0} working copy, cloned: takes no space</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>{0} for the job's files</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · {1} free</value>
@@ -2312,8 +2309,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>Let me review the glossary before translating</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>The agent works on a copy; your game files are not touched.</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>The agent only reads your game; a test run changes it for a moment and puts everything back.</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>Start generation</value>
@@ -2334,7 +2331,7 @@
     <value>The size couldn't be estimated</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>Not enough disk space for the working copy</value>
+    <value>Not enough disk space for the job's files</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>Generation is unavailable for this game.</value>
@@ -2349,7 +2346,7 @@
     <value>Couldn't start the generation: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>Making the working copy</value>
+    <value>Getting ready</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>Extracting strings</value>
@@ -2442,7 +2439,7 @@
     <value>{0} · ≈ {1} left</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>Copying the game: the agent works on the copy, your files stay untouched</value>
+    <value>Checking the game folder and the disk: the agent reads the game where it is installed</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>Pulling out the text with the toolkit</value>
@@ -2451,7 +2448,7 @@
     <value>Names, terms and tone, so the whole game reads the same</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>Rebuilding the game files on the copy and launching it once</value>
+    <value>Rebuilding the game files and trying them in the game, then putting the originals back</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Pause</value>
@@ -2618,8 +2615,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>The toolkit couldn't process the game files. Details have the reason.</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>The working copy of the game couldn't be made. Details have the reason.</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>The game folder can't be used for this right now. Details have the reason.</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>Files couldn't be written: check the free space, then retry.</value>
@@ -2643,13 +2640,13 @@
     <value>Cancel the generation?</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>{0}% is done. You can keep the progress and continue later, or delete the working copy and free the disk.</value>
+    <value>{0}% is done. You can keep the progress and continue later, or delete the job's files and free the disk.</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>Keep progress</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>Delete working copy</value>
+    <value>Delete the job's files</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>Back</value>
@@ -2658,7 +2655,7 @@
     <value>Stopped. Progress is kept: resume any time.</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>Generation cancelled, the working copy deleted.</value>
+    <value>Generation cancelled, the job's files deleted.</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>The job is running in another window or command.</value>
@@ -2837,6 +2834,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>Test runs are turned off</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>The game was open, so it wasn't test-run</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>Another change of game files was running, so it wasn't test-run</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>Fonts</value>
   </data>
@@ -2919,7 +2922,7 @@
     <value>New translation</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>The translation stays in Text → Mine; the working copy is deleted and the form opens.</value>
+    <value>The translation stays in Text → Mine; the job's files are deleted and the form opens.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Installing backs up the original files; you can uninstall any time.</value>
@@ -2940,16 +2943,16 @@
     <value>You can publish it later from Text → Mine.</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>The translation and its working copy were deleted.</value>
+    <value>The translation and its job's files were deleted.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>The translation stays in Text → Mine; the working copy was deleted.</value>
+    <value>The translation stays in Text → Mine; the job's files were deleted.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Discard the translation?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>Your translation «{0}» and the job's working copy are deleted. This can't be undone.</value>
+    <value>Your translation «{0}» and the job's files are deleted. This can't be undone.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>The translation is installed: uninstall it first.</value>
@@ -3027,7 +3030,7 @@
     <value>Delete «{0}»?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>Your translation and the working copy of the job that made it are deleted. This can't be undone.</value>
+    <value>Your translation and the files of the job that made it are deleted. This can't be undone.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>Deleted your translation «{0}».</value>
@@ -3596,8 +3599,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>Backups {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>Working copies {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>Generation jobs {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>Cache {0}</value>
@@ -3608,8 +3611,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>Backups</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>Generation working copies</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>Generation jobs</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>Cache</value>
@@ -3680,17 +3683,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>The backups couldn't be moved and stay where they were: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>Working copy</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>Generation job</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>Stop generation to delete</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>None. A copy of the game files is made when generation starts, so the agent never touches the game folder.</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>None. A job keeps its strings, glossary and rebuilt files here; it reads the game where it is installed.</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>Left by an interrupted start</value>
@@ -3722,19 +3725,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>Delete the working copy of {0}?</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>Delete the generation job of {0}?</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>Frees {0}. Translations you made and installed translations stay; the game isn't touched.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>Frees {0}. The paused translation's progress is lost: it can't be resumed and would start over. Installed translations stay; the game isn't touched.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>Generation is running for this game. Stop it first.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>Couldn't delete it: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4408,7 +4411,7 @@
     <value>Draft {0} · the game closed after {1} s</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>Tell {0} what's wrong, in your own words. It works on the same copy of the game and makes a new draft; the old draft stays until you publish.</value>
+    <value>Tell {0} what's wrong, in your own words. It works on the same game files and makes a new draft; the old draft stays until you publish.</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>Tell the agent what went wrong or what to change…</value>
@@ -4699,7 +4702,7 @@
     <value>Let me review the glossary first.</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>Setup · working copy ready</value>
+    <value>Setup · game folder checked</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>Extract · strings: {0}</value>

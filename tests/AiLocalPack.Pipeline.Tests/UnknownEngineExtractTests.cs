@@ -75,7 +75,7 @@ public sealed class UnknownEngineExtractTests : IDisposable
     }
 
     [Fact]
-    public async Task The_agent_is_told_where_the_game_copy_is_and_never_to_change_it()
+    public async Task The_agent_is_told_where_the_game_is_and_never_to_change_it()
     {
         // Arrange
         var agent = Extracting();
@@ -85,11 +85,11 @@ public sealed class UnknownEngineExtractTests : IDisposable
 
         // Assert
         var request = agent.Runs.Single().Request!;
-        (request.Prompt.Contains(_h.Copy, StringComparison.Ordinal), request.SystemPrompt!.Contains("never change it", StringComparison.Ordinal)).Should().Be((true, true));
+        (request.Prompt.Contains(_h.Copy, StringComparison.Ordinal), request.SystemPrompt!.Contains("never change, move or delete anything there", StringComparison.Ordinal)).Should().Be((true, true));
     }
 
     [Fact]
-    public async Task The_toolkit_server_still_reads_the_working_copy()
+    public async Task The_toolkit_server_reads_the_game_folder()
     {
         // Arrange
         var agent = Extracting();

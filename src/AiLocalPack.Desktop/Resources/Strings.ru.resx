@@ -68,7 +68,7 @@
     <value>Хранилище</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>Резервные копии, рабочие копии, кэш</value>
+    <value>Резервные копии, задачи генерации, кэш</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>О программе</value>
@@ -2332,11 +2332,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Проверяем место на диске…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>Рабочая копия {0}</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>Рабочая копия {0}, клон: места не занимает</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>{0} на файлы задачи</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · свободно {1}</value>
@@ -2359,8 +2356,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>Дать мне проверить глоссарий перед переводом</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>Агент работает с копией; файлы игры не меняются.</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>Агент только читает игру; пробный запуск ненадолго меняет её и потом всё возвращает.</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>Начать генерацию</value>
@@ -2381,7 +2378,7 @@
     <value>Не удалось оценить объём</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>Не хватает места для рабочей копии</value>
+    <value>Не хватает места на диске для файлов задачи</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>Для этой игры генерация недоступна.</value>
@@ -2396,7 +2393,7 @@
     <value>Не удалось начать генерацию: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>Создаём рабочую копию</value>
+    <value>Подготовка</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>Извлекаем строки</value>
@@ -2489,7 +2486,7 @@
     <value>{0} · осталось ≈ {1}</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>Копирование игры: агент работает с копией, ваши файлы не трогаются</value>
+    <value>Проверяем папку игры и место на диске: агент читает игру там, где она установлена</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>Извлечение текста встроенными инструментами</value>
@@ -2498,7 +2495,7 @@
     <value>Имена, термины и тон, чтобы вся игра звучала одинаково</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>Пересборка файлов на копии и пробный запуск</value>
+    <value>Пересобираем файлы игры и пробуем их в игре, потом возвращаем оригиналы</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Пауза</value>
@@ -2668,8 +2665,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Встроенные инструменты не смогли обработать файлы игры. Причина — в подробностях.</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>Не удалось сделать рабочую копию игры. Причина — в подробностях.</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>Папку игры сейчас нельзя для этого использовать. Причина в подробностях.</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>Не удалось записать файлы: проверьте свободное место и повторите.</value>
@@ -2693,13 +2690,13 @@
     <value>Отменить генерацию?</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>Готово {0}%. Можно сохранить прогресс и продолжить позже или удалить рабочую копию и освободить место.</value>
+    <value>Готово {0}%. Можно сохранить прогресс и продолжить позже или удалить файлы задачи и освободить место.</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>Сохранить прогресс</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>Удалить рабочую копию</value>
+    <value>Удалить файлы задачи</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>Назад</value>
@@ -2708,7 +2705,7 @@
     <value>Остановлено. Прогресс сохранён: продолжите в любой момент.</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>Генерация отменена, рабочая копия удалена.</value>
+    <value>Генерация отменена, файлы задачи удалены.</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>Работа уже идёт в другом окне или команде.</value>
@@ -2896,6 +2893,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>Пробные запуски выключены</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>Игра была запущена, поэтому пробного запуска не было</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>Шло другое изменение файлов игры, поэтому пробного запуска не было</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>Шрифты</value>
   </data>
@@ -2987,7 +2990,7 @@
     <value>Новый перевод</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>Перевод остаётся в «Текст → Мои»; рабочая копия удаляется, открывается форма запуска.</value>
+    <value>Перевод останется в «Текст → Мои»; файлы задачи удалятся, и откроется форма.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Установка сохраняет оригинальные файлы; удалить перевод можно в любой момент.</value>
@@ -3008,16 +3011,16 @@
     <value>Опубликовать можно позже в «Текст → Мои».</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>Перевод и его рабочая копия удалены.</value>
+    <value>Перевод и файлы его задачи удалены.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>Перевод остался в «Текст → Мои»; рабочая копия удалена.</value>
+    <value>Перевод остался в «Текст → Мои»; файлы задачи удалены.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Удалить перевод?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>Ваш перевод «{0}» и рабочая копия задания будут удалены. Это нельзя отменить.</value>
+    <value>Ваш перевод «{0}» и файлы задачи будут удалены. Это нельзя отменить.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>Перевод установлен: сначала удалите его из игры.</value>
@@ -3095,7 +3098,7 @@
     <value>Удалить «{0}»?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>Ваш перевод и рабочая копия задания, которое его сделало, будут удалены. Это нельзя отменить.</value>
+    <value>Ваш перевод и файлы задачи, которая его сделала, будут удалены. Это нельзя отменить.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>Ваш перевод «{0}» удалён.</value>
@@ -3667,8 +3670,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>Резервные копии {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>Рабочие копии {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>Задачи генерации {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>Кэш {0}</value>
@@ -3679,8 +3682,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>Резервные копии</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>Рабочие копии генерации</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>Задачи генерации</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>Кэш</value>
@@ -3751,17 +3754,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>Не удалось перенести резервные копии, они остались на месте: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>Рабочая копия</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>Задача генерации</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>Остановите генерацию, чтобы удалить</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>Нет. Копия файлов игры создаётся при запуске генерации, чтобы агент не трогал папку игры.</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>Нет. Задача хранит здесь свои строки, глоссарий и пересобранные файлы, а игру читает там, где она установлена.</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>Осталась от прерванного запуска</value>
@@ -3793,19 +3796,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>Удалить</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>Удалить рабочую копию {0}?</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>Удалить задачу генерации для {0}?</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>Освободится {0}. Созданные и установленные переводы останутся; игра не затрагивается.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>Освободится {0}. Прогресс приостановленного перевода будет потерян: продолжить его не получится, только начать заново. Установленные переводы останутся; игра не затрагивается.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>Для этой игры идёт генерация. Сначала остановите её.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>Не удалось удалить: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4496,7 +4499,7 @@
     <value>Черновик {0} · игра закрылась через {1} с</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>Опишите {0} своими словами, что не так. Он работает с той же копией игры и делает новый черновик; старый остаётся, пока вы не опубликуете.</value>
+    <value>Опишите {0} своими словами, что не так. Он работает с теми же файлами игры и делает новый черновик; старый остаётся, пока вы не опубликуете.</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>Напишите агенту, что пошло не так или что изменить…</value>
@@ -4787,7 +4790,7 @@
     <value>Сначала дай мне проверить глоссарий.</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>Подготовка · рабочая копия готова</value>
+    <value>Подготовка · папка игры проверена</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>Извлечение · строк: {0}</value>

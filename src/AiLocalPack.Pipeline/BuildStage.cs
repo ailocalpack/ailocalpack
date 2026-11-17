@@ -11,16 +11,22 @@ namespace AiLocalPack.Pipeline;
 
 /// <summary>What the Build stage needs besides the toolkit: the font swap, where local packs go and the test run.</summary>
 /// <param name="Environment">This machine (where a fix's test run finds the game's log); <c>null</c> = no log is looked for.</param>
-public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, IGameTestRunner TestRunner, OsEnvironment? Environment = null);
+/// <param name="Views">How the game is seen without its installed pack (the rebuild reads the originals); <c>null</c> = the folder as it is (tests).</param>
+public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, IGameTestRunner TestRunner, OsEnvironment? Environment = null, GameViews? Views = null)
+{
+    /// <summary>The game in <paramref name="gameFolder"/> without its installed pack (<see cref="Views"/>).</summary>
+    public IGameFiles Read(string gameFolder) => Views?.WithoutPack(gameFolder) ?? GameFiles.Folder(gameFolder);
+}
 
 /// <summary>
 /// Stage Build (task 51), one step, no agent: the stored translations are checked again (<see cref="LocalPackBuilder.Collect"/>;
-/// none accepted fails the stage), the recipe tool rebuilds the changed game files from the working copy into the job's
+/// none accepted fails the stage), the recipe tool rebuilds the changed game files from the game's own (the game folder
+/// without its installed pack, <see cref="BuildServices.Read"/>; _Live game folder_) into the job's
 /// <c>build/</c> folder (emptied first), with the font swap when the game's fonts lack the translation's letters
 /// (<see cref="FontFixer"/>; a font that can't be downloaded fails the stage, to retry); the test run tries the
-/// translated copy (<see cref="IGameTestRunner"/>; a crash fails the stage, a skip is recorded); then the local pack is
+/// translation on the game folder (<see cref="IGameTestRunner"/>; a crash fails the stage, a skip is recorded); then the local pack is
 /// saved (<see cref="LocalPackStore"/>: the job's earlier pack replaced, else a new ID) and checked as registry CI would
-/// (<see cref="PackValidator"/>). An overlay a crash left in the working copy is undone first, so the step is safe to repeat.
+/// (<see cref="PackValidator"/>). An overlay a crash left in the game folder is undone first, so the step is safe to repeat.
 /// An update job's pack (task 56) is the next revision of its base pack, saved under the base's ID (a local base is
 /// replaced by it); the job's glossary is kept with the pack for its own updates.
 /// Strings the agent's own extractor found (task 57) are rebuilt by its own script and packed as a binary patch
@@ -40,9 +46,11 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         SourceStrings? source;
         StringTable? stored;
         UpdateBase? updateBase;
+        string gameFolder;
         try
         {
-            TestRunOverlay.Recover(context.Folder, context.CopyFolder);
+            gameFolder = context.GameFolder;
+            TestRunOverlay.Recover(context.Folder, gameFolder);
             source = SourceStringsFile.Read(context.Files);
             stored = context.Files.ReadStrings();
             updateBase = job.Options.Base is null ? null : context.Files.ReadBase()
@@ -54,7 +62,7 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            return Fail(context, GenerationFailureKind.Disk, $"The working copy can't be put back after an earlier test run: {e.Message}");
+            return Fail(context, GenerationFailureKind.Disk, $"The game's files can't be put back after an earlier test run: {e.Message}");
         }
 
         if (source is null)
@@ -107,11 +115,12 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
 
             var output = new DirectoryRebuildOutput(build);
             Step(context, new BuildProgress(BuildStep.Rebuilding));
-            rebuilt = tool.Rebuild(context.CopyFolder, job.Language, collected.Translations, output, cancellationToken);
+            var original = services.Read(gameFolder);
+            rebuilt = tool.Rebuild(original, job.Language, collected.Translations, output, cancellationToken);
             Step(context, new BuildProgress(BuildStep.Fonts, rebuilt.ChangedFiles.Count));
             // A reference in a language of the same script names the fonts that worked for this game (decided 2026-11-16).
-            fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, job.Language, collected.Translations, context.Files.ReadReferences().FontsFor(job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
-            touched = Hashes(context.CopyFolder, tool.TouchedFiles(context.CopyFolder, collected.Translations.Keys));
+            fonts = await services.Fonts.ApplyAsync(tool, original, job.Language, collected.Translations, context.Files.ReadReferences().FontsFor(job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
+            touched = Hashes(original, tool.TouchedFiles(original, collected.Translations.Keys));
         }
         catch (RecipeException e)
         {
@@ -139,11 +148,11 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
         TestRunResult testRun;
         try
         {
-            testRun = await services.TestRunner.RunAsync(new TestRunRequest(game, context.CopyFolder, build, files, context.Folder, context.Log), cancellationToken).ConfigureAwait(false);
+            testRun = await services.TestRunner.RunAsync(new TestRunRequest(game, gameFolder, build, files, context.Folder, context.Log), cancellationToken).ConfigureAwait(false);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            return Fail(context, GenerationFailureKind.Disk, $"The test run couldn't lay the rebuilt files over the working copy: {e.Message}");
+            return Fail(context, GenerationFailureKind.Disk, $"The test run couldn't lay the rebuilt files over the game's: {e.Message}");
         }
 
         context.Log($"Test run {testRun.Outcome.ToString().ToLowerInvariant()}" + (testRun.Skip is { } skip ? $" ({skip})" : "") + (testRun.Detail is { } detail ? $": {detail}" : "."));
@@ -233,12 +242,13 @@ public sealed class BuildStage(Game game, PipelineAgent agent, RecipeTools tools
     }
 
     /// <exception cref="IOException">A touched file can't be read.</exception>
-    private static Dictionary<string, string> Hashes(string copy, IReadOnlyList<string> files)
+    /// <summary>The SHA-256 of each file as the game ships it (the manifest's build hashes).</summary>
+    private static Dictionary<string, string> Hashes(IGameFiles game, IReadOnlyList<string> files)
     {
         var hashes = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var file in files)
         {
-            using var stream = File.OpenRead(Path.Combine(copy, file.Replace('/', Path.DirectorySeparatorChar)));
+            using var stream = game.OpenRead(file);
             hashes[file] = Convert.ToHexStringLower(SHA256.HashData(stream));
         }
 

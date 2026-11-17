@@ -47,7 +47,7 @@ public sealed class StorageSettingsSectionTests : IDisposable
     /// <summary>A job folder of the Sample game with a working copy of <paramref name="bytes"/> and its job in <paramref name="status"/>.</summary>
     private string Job(GenerationJobStatus status, int bytes = 2048, string id = "20261101-100000-aaaaaa")
     {
-        var folder = Path.Combine(Paths.WorkingCopies, "steam-620", id);
+        var folder = Path.Combine(Paths.GenerationJobs, "steam-620", id);
         File(Path.Combine(folder, "game", "data.bin"), bytes);
         GenerationJobStore.Write(folder, new GenerationJob
         {
@@ -79,8 +79,8 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Assert
-        (section.Summary.Label, section.Summary.BackupsLegend, section.Summary.WorkingCopiesLegend, section.Summary.CacheLegend, section.Hint)
-            .Should().Be(("4 MB used", "Backups 1 MB", "Working copies 2 MB", "Cache 1 MB", "4 MB"));
+        (section.Summary.Label, section.Summary.BackupsLegend, section.Summary.JobsLegend, section.Summary.CacheLegend, section.Hint)
+            .Should().Be(("4 MB used", "Backups 1 MB", "Generation jobs 2 MB", "Cache 1 MB", "4 MB"));
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Assert
-        (section.Summary.BackupsShare, section.Summary.WorkingCopiesShare, section.Summary.CacheShare).Should().Be((0.75, 0d, 0.25));
+        (section.Summary.BackupsShare, section.Summary.JobsShare, section.Summary.CacheShare).Should().Be((0.75, 0d, 0.25));
     }
 
     [Fact]
@@ -206,7 +206,7 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Assert
-        section.WorkingCopies.Select(r => (r.Label, r.Help, r.LosesProgress)).Should().Equal(("Sample", "2 KB · Generation paused", true));
+        section.Jobs.Select(r => (r.Label, r.Help, r.LosesProgress)).Should().Equal(("Sample", "2 KB · Generation paused", true));
     }
 
     [Fact]
@@ -218,7 +218,7 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Assert
-        section.Groups[2].Rows.Should().Equal(section.NoWorkingCopies);
+        section.Groups[2].Rows.Should().Equal(section.NoJobs);
     }
 
     [Fact]
@@ -227,10 +227,10 @@ public sealed class StorageSettingsSectionTests : IDisposable
         // Arrange
         Job(GenerationJobStatus.Running);
         var section = await SectionAsync();
-        var row = section.WorkingCopies.Single();
+        var row = section.Jobs.Single();
 
         // Act
-        section.DeleteWorkingCopy(row);
+        section.DeleteJob(row);
 
         // Assert
         (row.CanDelete, row.DeleteCommand.CanExecute(null), Get<IDialogService>().Current).Should().Be((false, false, (DialogViewModel?)null));
@@ -244,7 +244,7 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Act
-        section.DeleteWorkingCopy(section.WorkingCopies.Single());
+        section.DeleteJob(section.Jobs.Single());
 
         // Assert
         Confirmation().Message.Should().Contain("progress is lost");
@@ -258,7 +258,7 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Act
-        section.DeleteWorkingCopy(section.WorkingCopies.Single());
+        section.DeleteJob(section.Jobs.Single());
 
         // Assert
         Confirmation().Message.Should().NotContain("progress");
@@ -272,10 +272,10 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Act
-        await section.DeleteConfirmedAsync(section.WorkingCopies.Single());
+        await section.DeleteConfirmedAsync(section.Jobs.Single());
 
         // Assert
-        (Directory.Exists(folder), Get<GenerationService>().FindOpen(GameId.Steam(620)), section.WorkingCopies.Count).Should().Be((false, (GenerationJob?)null, 0));
+        (Directory.Exists(folder), Get<GenerationService>().FindOpen(GameId.Steam(620)), section.Jobs.Count).Should().Be((false, (GenerationJob?)null, 0));
     }
 
     [Fact]
@@ -286,10 +286,10 @@ public sealed class StorageSettingsSectionTests : IDisposable
         var section = await SectionAsync();
 
         // Act
-        await section.DeleteConfirmedAsync(section.WorkingCopies.Single());
+        await section.DeleteConfirmedAsync(section.Jobs.Single());
 
         // Assert
-        (Directory.Exists(folder), section.WorkingCopies.Count).Should().Be((false, 0));
+        (Directory.Exists(folder), section.Jobs.Count).Should().Be((false, 0));
     }
 
     [Fact]

@@ -5,7 +5,7 @@ namespace AiLocalPack.Core.Generation;
 
 /// <summary>
 /// Copy-on-write clones of files (a clone shares the source's blocks until one of them changes, so it takes no disk
-/// space and no time). Behind an interface so working copies are tested with and without it.
+/// space and no time). Behind an interface so backups are tested with and without it (a test run's write guard clones where it can).
 /// </summary>
 public interface IFileCloner
 {
@@ -94,7 +94,7 @@ public sealed class FileCloner : IFileCloner
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            // Nothing was cloned; a stray empty file is removed with the working copy.
+            // Nothing was cloned; a stray empty file is removed with the backups it was made for.
         }
     }
 

@@ -13,8 +13,11 @@ using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Resources;
 using AiLocalPack.Desktop.ViewModels.GamePage;
+using AiLocalPack.Pipeline;
 using AiLocalPack.Toolkit.Dependencies;
+using AiLocalPack.Toolkit.Engines;
 using AiLocalPack.Toolkit.Fonts;
+using AiLocalPack.Toolkit.Generation;
 using AiLocalPack.Toolkit.Recipes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -55,6 +58,8 @@ public sealed class PackInstallService
     private readonly Lock _lock = new();
     private InstallOperation? _current;
 
+    private readonly OsEnvironment? _environment;
+
     public PackInstallService(
         PackIndex packIndex,
         PackFetcher fetcher,
@@ -71,8 +76,10 @@ public sealed class PackInstallService
         AppPaths paths,
         Localizer localizer,
         TimeProvider time,
-        ILogger<PackInstallService>? logger = null)
+        ILogger<PackInstallService>? logger = null,
+        OsEnvironment? environment = null)
     {
+        _environment = environment;
         _packIndex = packIndex;
         _fetcher = fetcher;
         _cache = cache;
@@ -487,6 +494,12 @@ public sealed class PackInstallService
                 Dependencies = dependencies,
                 Local = local,
                 Title = local ? manifest.Title : null,
+
+                // What the game writes from now on is undone by the uninstall (_Live game folder_): its engine's folders too.
+                DataFolders = _environment is null
+                    ? []
+                    : GameDataFolders.For(game.InstallPath, EngineKind.TryParse(game.Engine, out var engine) ? engine.Engine : GameEngine.Unknown, game.Name, _environment),
+                KnownWrites = new TestRunBaselines(_paths.TestRuns).Writes(game.Id),
             };
             run.Step(InstallStep.BackUp);
             var result = reapply

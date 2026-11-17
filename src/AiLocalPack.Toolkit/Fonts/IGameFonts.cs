@@ -16,11 +16,11 @@ public interface IGameFonts
 
     /// <summary>The font files the game's text is drawn with (no duplicates), in a stable order.</summary>
     /// <exception cref="RecipeException">Not a game of this engine, or a file naming the fonts can't be read.</exception>
-    IReadOnlyList<GameFont> Fonts(string gameDir);
+    IReadOnlyList<GameFont> Fonts(IGameFiles game);
 
     /// <summary>The bytes of <paramref name="font"/>.</summary>
     /// <exception cref="RecipeException">The file can't be read.</exception>
-    byte[] ReadFont(string gameDir, GameFont font);
+    byte[] ReadFont(IGameFiles game, GameFont font);
 
     /// <summary>Markup in a translation that is never drawn (escape codes, text tags), so needs no glyphs.</summary>
     IReadOnlyList<string> Placeholders(string text);
@@ -31,7 +31,29 @@ public interface IGameFonts
     /// rebuild already wrote is edited in its rebuilt form, <see cref="IRebuildOutput.Read"/>).
     /// </summary>
     /// <exception cref="RecipeException">A file to edit can't be read, parsed or written.</exception>
-    FontSwapFiles Swap(string gameDir, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output);
+    FontSwapFiles Swap(IGameFiles game, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output);
+}
+
+/// <summary>The <see cref="IGameFonts"/> methods on a game folder as it is on disk.</summary>
+public static class GameFontFolders
+{
+    public static IReadOnlyList<GameFont> Fonts(this IGameFonts fonts, string gameDir)
+    {
+        ArgumentNullException.ThrowIfNull(fonts);
+        return fonts.Fonts(GameFiles.Folder(gameDir));
+    }
+
+    public static byte[] ReadFont(this IGameFonts fonts, string gameDir, GameFont font)
+    {
+        ArgumentNullException.ThrowIfNull(fonts);
+        return fonts.ReadFont(GameFiles.Folder(gameDir), font);
+    }
+
+    public static FontSwapFiles Swap(this IGameFonts fonts, string gameDir, string language, IReadOnlyList<FontSwap> swaps, IRebuildOutput output)
+    {
+        ArgumentNullException.ThrowIfNull(fonts);
+        return fonts.Swap(GameFiles.Folder(gameDir), language, swaps, output);
+    }
 }
 
 /// <summary>A font file a game draws text with.</summary>

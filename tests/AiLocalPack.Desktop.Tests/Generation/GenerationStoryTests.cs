@@ -45,7 +45,7 @@ public sealed class GenerationStoryTests
         // Assert
         Texts(story).Should().Equal(
             "> Create a Balanced translation into Русский with Claude Code. Let me review the glossary first.",
-            "- Setup · working copy ready",
+            "- Setup · game folder checked",
             "- Extract · strings: 1,842",
             "- Glossary · reviewed by you");
     }
@@ -101,7 +101,7 @@ public sealed class GenerationStoryTests
         // Assert
         Texts(story).Should().Equal(
             "> Create a Balanced translation into Русский with Claude Code.",
-            "- Setup · working copy ready",
+            "- Setup · game folder checked",
             "- Extract · strings: 64",
             "- Glossary · ready",
             "- Translate · chunks: 3");

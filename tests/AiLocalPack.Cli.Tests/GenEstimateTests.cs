@@ -28,7 +28,7 @@ public sealed class GenEstimateTests : IDisposable
             args);
 
     [Fact]
-    public async Task Estimate_prints_strings_copy_disk_time_and_limits()
+    public async Task Estimate_prints_strings_disk_time_and_limits()
     {
         // Arrange
         // (an RPG Maker MZ game in the Steam fixture)
@@ -39,7 +39,7 @@ public sealed class GenEstimateTests : IDisposable
         // Assert
         result.Should().BeEquivalentTo(new { ExitCode = 0, StdErr = "" });
         result.StdOut.Split("\n").Select(l => l.Split(':')[0]).Should().StartWith(
-            ["Sample Quest (steam", "strings", "copy", "disk", "agent time", "subscription", "tokens"]);
+            ["Sample Quest (steam", "strings", "disk", "agent time", "subscription", "tokens"]);
     }
 
     [Fact]
@@ -71,7 +71,6 @@ public sealed class GenEstimateTests : IDisposable
             Game = (string?)json["game"],
             Source = (string?)json["source"],
             Tool = (string?)json["tool"],
-            Scope = (string?)json["copy"]!["scope"],
             HasStrings = (int)json["strings"]! > 0,
             HasTime = (long)json["estimate"]!["timeHighSeconds"]! > 0,
             HasFree = json["disk"]!["freeBytes"] is not null,
@@ -80,7 +79,6 @@ public sealed class GenEstimateTests : IDisposable
             Game = "steam:620",
             Source = "toolkit",
             Tool = "rpgmaker",
-            Scope = "without-media",
             HasStrings = true,
             HasTime = true,
             HasFree = true,
@@ -88,7 +86,7 @@ public sealed class GenEstimateTests : IDisposable
     }
 
     [Fact]
-    public async Task Estimate_with_the_agents_own_code_guesses_from_every_file()
+    public async Task Estimate_with_the_agents_own_code_guesses_from_file_sizes()
     {
         // Arrange
         // (an RPG Maker MZ game in the Steam fixture)
@@ -98,8 +96,7 @@ public sealed class GenEstimateTests : IDisposable
 
         // Assert
         var json = JsonNode.Parse(result.StdOut)!;
-        new { Source = (string?)json["source"], Scope = (string?)json["copy"]!["scope"] }
-            .Should().BeEquivalentTo(new { Source = "agent-chosen", Scope = "all-files" });
+        ((string?)json["source"]).Should().Be("agent-chosen");
     }
 
     [Fact]
@@ -130,20 +127,5 @@ public sealed class GenEstimateTests : IDisposable
             ExitCode = 1,
             StdErr = "steam:999 is not in the game catalog: install it in Steam or add its folder in the app, then run 'games list'.\n",
         });
-    }
-
-    [Fact]
-    public async Task Copy_makes_the_working_copy_in_the_job_folder()
-    {
-        // Arrange
-        // (an RPG Maker MZ game in the Steam fixture)
-
-        // Act
-        var result = await RunAsync("gen", "copy", "steam:620", "--job", "job1");
-
-        // Assert
-        var copy = Path.Combine(Home, "data", "work", "steam-620", "job1", "game");
-        new { result.ExitCode, Copied = File.Exists(Path.Combine(copy, "data", "System.json")) }
-            .Should().BeEquivalentTo(new { ExitCode = 0, Copied = true });
     }
 }

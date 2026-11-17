@@ -62,7 +62,7 @@
     <value>ストレージ</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>バックアップ、作業コピー、キャッシュ</value>
+    <value>バックアップ、生成ジョブ、キャッシュ</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>バージョン情報</value>
@@ -2182,11 +2182,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>ディスクの空き容量を確認しています…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>作業コピー {0}</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>作業コピー {0}、クローン: 容量を使いません</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>ジョブのファイル用に {0}</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · 空き {1}</value>
@@ -2209,8 +2206,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>翻訳の前に用語集を確認する</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>エージェントはコピー上で作業します。ゲームファイルには手を加えません。</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>エージェントはゲームを読むだけです。試し起動のときだけ一時的に変更し、終わればすべて元に戻します。</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>生成を開始</value>
@@ -2231,7 +2228,7 @@
     <value>規模を見積もれませんでした</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>作業コピー用のディスク容量が足りません</value>
+    <value>ジョブのファイル用のディスク容量が足りません</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>このゲームでは生成を利用できません。</value>
@@ -2246,7 +2243,7 @@
     <value>生成を開始できませんでした: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>作業コピーを作成中</value>
+    <value>準備中</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>文字列を抽出中</value>
@@ -2339,7 +2336,7 @@
     <value>{0} · 残り約 {1}</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>ゲームをコピー中: エージェントはコピー上で作業し、元のファイルには手を加えません</value>
+    <value>ゲームフォルダーとディスクを確認中：エージェントはインストール先のゲームをそのまま読みます</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>ツールキットでテキストを取り出しています</value>
@@ -2348,7 +2345,7 @@
     <value>ゲーム全体で表現をそろえるための名前、用語、口調</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>コピー上でゲームファイルを再構築し、一度起動します</value>
+    <value>ゲームファイルを再構築してゲームで試し、そのあと元のファイルに戻します</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>一時停止</value>
@@ -2512,8 +2509,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>ツールキットがゲームファイルを処理できませんでした。理由は詳細にあります。</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>ゲームの作業コピーを作成できませんでした。理由は詳細にあります。</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>今はこの処理にゲームフォルダーを使えません。理由は詳細にあります。</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>ファイルを書き込めませんでした。空き容量を確認してから再試行してください。</value>
@@ -2537,13 +2534,13 @@
     <value>生成をキャンセルしますか？</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>{0}% 完了しています。進行状況を残してあとで続けるか、作業コピーを削除してディスクを空けることができます。</value>
+    <value>{0}% 完了しています。進行状況を残してあとで続けるか、ジョブのファイルを削除してディスクを空けることができます。</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>進行状況を残す</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>作業コピーを削除</value>
+    <value>ジョブのファイルを削除</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>戻る</value>
@@ -2552,7 +2549,7 @@
     <value>停止しました。進行状況は残っているので、いつでも再開できます。</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>生成をキャンセルし、作業コピーを削除しました。</value>
+    <value>生成を取り消し、ジョブのファイルを削除しました。</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>ジョブは別のウィンドウまたはコマンドで実行中です。</value>
@@ -2722,6 +2719,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>テスト実行はオフです</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>ゲームが起動中だったため、試し起動はしませんでした</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>ゲームファイルへの別の変更が進行中だったため、試し起動はしませんでした</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>フォント</value>
   </data>
@@ -2795,7 +2798,7 @@
     <value>新しい翻訳</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>翻訳は「テキスト → 自分の翻訳」に残ります。作業コピーは削除され、フォームが開きます。</value>
+    <value>翻訳は「テキスト → 自分の翻訳」に残ります。ジョブのファイルは削除され、フォームが開きます。</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>インストール時に元のファイルをバックアップします。いつでもアンインストールできます。</value>
@@ -2816,16 +2819,16 @@
     <value>あとで「テキスト → 自分の翻訳」から公開できます。</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>翻訳とその作業コピーを削除しました。</value>
+    <value>翻訳とそのジョブのファイルを削除しました。</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>翻訳は「テキスト → 自分の翻訳」に残り、作業コピーは削除しました。</value>
+    <value>翻訳は「テキスト → 自分の翻訳」に残ります。ジョブのファイルは削除しました。</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>翻訳を破棄しますか？</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>自分の翻訳「{0}」とジョブの作業コピーが削除されます。元に戻せません。</value>
+    <value>翻訳「{0}」とジョブのファイルを削除します。元に戻せません。</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>翻訳がインストールされています。先にアンインストールしてください。</value>
@@ -2903,7 +2906,7 @@
     <value>「{0}」を削除しますか？</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>自分の翻訳と、それを作成したジョブの作業コピーが削除されます。元に戻せません。</value>
+    <value>翻訳と、それを作ったジョブのファイルを削除します。元に戻せません。</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>自分の翻訳「{0}」を削除しました。</value>
@@ -3469,8 +3472,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>バックアップ {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>作業コピー {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>生成ジョブ {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>キャッシュ {0}</value>
@@ -3481,8 +3484,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>バックアップ</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>生成の作業コピー</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>生成ジョブ</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>キャッシュ</value>
@@ -3553,17 +3556,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>バックアップを移動できず、元の場所に残しました: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>作業コピー</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>生成ジョブ</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>削除するには生成を停止してください</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>ありません。生成を開始するとゲームファイルのコピーが作られるため、エージェントがゲームフォルダーに触れることはありません。</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>ありません。ジョブはここに文字列、用語集、再構築したファイルを保存し、ゲームはインストール先でそのまま読みます。</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>中断された開始処理の残り</value>
@@ -3595,19 +3598,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>{0} の作業コピーを削除しますか？</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>{0} の生成ジョブを削除しますか？</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>{0} を解放します。作成した翻訳とインストール済みの翻訳は残り、ゲームには手を加えません。</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>{0} を解放します。一時停止中の翻訳の進行状況は失われ、再開できず最初からやり直しになります。インストール済みの翻訳は残り、ゲームには手を加えません。</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>このゲームの生成を実行中です。先に停止してください。</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>削除できませんでした: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4244,7 +4247,7 @@
     <value>下書き {0} · ゲームが {1} 秒で終了しました</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>どこがおかしいかを {0} に自分の言葉で伝えてください。同じゲームのコピーで作業し、新しい下書きを作ります。古い下書きは公開するまで残ります。</value>
+    <value>どこがおかしいかを {0} に自分の言葉で伝えてください。同じゲームファイルで作業し、新しい下書きを作ります。古い下書きは公開するまで残ります。</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>何が起きたか、何を変えてほしいかをエージェントに伝えてください…</value>
@@ -4535,7 +4538,7 @@
     <value>先に用語集を確認させて。</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>準備 · 作業用コピー完了</value>
+    <value>準備 · ゲームフォルダーを確認済み</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>抽出 · テキスト数: {0}</value>

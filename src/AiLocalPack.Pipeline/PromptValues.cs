@@ -88,7 +88,7 @@ public static class PromptValues
         return values;
     }
 
-    /// <param name="gamePath">The working copy, which the agent reads but never writes (task 57).</param>
+    /// <param name="gamePath">The game folder, which the agent reads but never writes (task 57, _Live game folder_).</param>
     public static Dictionary<string, string> SystemScripts(string gameName, string language, string gamePath)
     {
         var values = System(gameName, language);
@@ -121,8 +121,8 @@ public static class PromptValues
 
     /// <summary>The fix system prompt's paragraph on where the agent works: the toolkit's tools, or its own scripts' workspace (unknown engines).</summary>
     public static string FixWorkspace(string? gamePath) => gamePath is null
-        ? "Your working folder is a copy of the game's files. Work only through the tools of the `ailocalpack` server: `search` and `get_strings` find strings with their translations, `put_translations` stores fixed translations, `get_glossary` and `put_glossary` read and change the glossary. Never try to change the game's files: the app rebuilds them from the translations."
-        : $"The toolkit can't read this game's files, so earlier you wrote the extract and rebuild scripts in `scripts/` of your workspace (your working folder; `scripts/README.md` says how they run). A copy of the game is at `{gamePath}`: read it, never change it. Your commands run in a sandbox that can write only inside the workspace and has no network. Strings and their translations are reached with the `ailocalpack` tools (`search`, `get_strings`, `put_translations`, `get_glossary`, `put_glossary`).";
+        ? "You work on the game as the player has it installed. Work only through the tools of the `ailocalpack` server: `search` and `get_strings` find strings with their translations, `put_translations` stores fixed translations, `get_glossary` and `put_glossary` read and change the glossary. Never try to change the game's files: the app rebuilds them from the translations."
+        : $"The toolkit can't read this game's files, so earlier you wrote the extract and rebuild scripts in `scripts/` of your workspace (your working folder; `scripts/README.md` says how they run). The game is installed at `{gamePath}`: only read it, never change, move or delete anything there; copy a file into your workspace to work on it. Your commands run in a sandbox that can write only inside the workspace and has no network. Strings and their translations are reached with the `ailocalpack` tools (`search`, `get_strings`, `put_translations`, `get_glossary`, `put_glossary`).";
 
     public static Dictionary<string, string> SystemFix(string gameName, string language, string? gamePath) => new(StringComparer.Ordinal)
     {

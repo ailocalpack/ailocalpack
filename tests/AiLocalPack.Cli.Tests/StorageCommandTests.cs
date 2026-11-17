@@ -17,7 +17,7 @@ public sealed class StorageCommandTests : IDisposable
     private void Backup() => _dir.File("home/data/backups/steam-620/20261101-120000-abcdefgh/files/data.json", new byte[100]);
 
     [Fact]
-    public async Task Show_json_lists_backups_working_copies_and_cache()
+    public async Task Show_json_lists_backups_generation_jobs_and_cache()
     {
         // Arrange
         Backup();
@@ -29,8 +29,8 @@ public sealed class StorageCommandTests : IDisposable
 
         // Assert
         var json = JsonNode.Parse(result.StdOut)!;
-        (json["backups"]!["bytes"]!.GetValue<long>(), json["backups"]!["games"]!.GetValue<int>(), json["workingCopies"]![0]!["state"]!.GetValue<string>(),
-            json["workingCopies"]![0]!["bytes"]!.GetValue<long>(), json["cacheBytes"]!.GetValue<long>(), json["totalBytes"]!.GetValue<long>())
+        (json["backups"]!["bytes"]!.GetValue<long>(), json["backups"]!["games"]!.GetValue<int>(), json["jobs"]![0]!["state"]!.GetValue<string>(),
+            json["jobs"]![0]!["bytes"]!.GetValue<long>(), json["cacheBytes"]!.GetValue<long>(), json["totalBytes"]!.GetValue<long>())
             .Should().Be((100L, 1, "no-job", 30L, 7L, 137L));
     }
 

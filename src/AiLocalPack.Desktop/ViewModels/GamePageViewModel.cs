@@ -697,7 +697,7 @@ public sealed partial class GamePageViewModel : PageViewModel
     /// <summary>A local pack's publish state and <c>Publish</c> (task 61) for the result strip and Mine.</summary>
     private PackPublishViewModel PublishOf(LocalPack pack) => new(_publish, () => Game, pack, _localizer);
 
-    /// <summary>Mine's <c>Delete</c>: asks, then deletes the local pack and the working copy of the job that made it.</summary>
+    /// <summary>Mine's <c>Delete</c>: asks, then deletes the local pack and the files of the job that made it.</summary>
     private void AskDeleteLocal(LocalPack pack) =>
         _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
             _localizer.Format(nameof(Strings.Packs_Mine_Delete_Title), pack.Manifest.Title),

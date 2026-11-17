@@ -15,8 +15,8 @@ public enum GenerationCancelChoice
     /// <summary>Stops the job (paused by the player); it can be resumed later.</summary>
     KeepProgress,
 
-    /// <summary>Cancels the job and deletes its folder with the working copy.</summary>
-    DeleteWorkingCopy,
+    /// <summary>Cancels the job and deletes its folder.</summary>
+    DeleteJob,
 }
 
 /// <summary>The cancel dialog's question: how far the job is, and what to do with the choice.</summary>
@@ -41,7 +41,7 @@ public sealed partial class GenerationCancelDialogViewModel(GenerationCancelRequ
     private void Keep() => Choose(GenerationCancelChoice.KeepProgress);
 
     [RelayCommand]
-    private void Delete() => Choose(GenerationCancelChoice.DeleteWorkingCopy);
+    private void Delete() => Choose(GenerationCancelChoice.DeleteJob);
 
     [RelayCommand]
     private void Back() => Choose(GenerationCancelChoice.Back);

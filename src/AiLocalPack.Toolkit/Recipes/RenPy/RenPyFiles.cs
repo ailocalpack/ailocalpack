@@ -17,12 +17,12 @@ internal sealed class RenPyArchive
 {
     private const int HeaderLength = 64;
 
-    private readonly string _path;
+    private readonly Func<Stream> _open;
     private readonly Dictionary<string, List<(long Offset, long Length, byte[] Prefix)>> _index;
 
-    private RenPyArchive(string path, Dictionary<string, List<(long, long, byte[])>> index)
+    private RenPyArchive(Func<Stream> open, Dictionary<string, List<(long, long, byte[])>> index)
     {
-        _path = path;
+        _open = open;
         _index = index;
     }
 
@@ -31,9 +31,15 @@ internal sealed class RenPyArchive
 
     /// <exception cref="RenPyFormatException">Not an archive this toolkit reads.</exception>
     /// <exception cref="IOException">The file can't be read.</exception>
-    public static RenPyArchive Open(string path)
+    public static RenPyArchive Open(string path) => Open(() => new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+    /// <param name="open">Opens the archive file (a seekable stream), once now and once per <see cref="Read"/>.</param>
+    /// <exception cref="RenPyFormatException">Not an archive this toolkit reads.</exception>
+    /// <exception cref="IOException">The file can't be read.</exception>
+    public static RenPyArchive Open(Func<Stream> open)
     {
-        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        ArgumentNullException.ThrowIfNull(open);
+        using var stream = open();
         var header = new byte[HeaderLength];
         var read = stream.ReadAtLeast(header, header.Length, throwOnEndOfStream: false);
         var line = Encoding.ASCII.GetString(header, 0, read);
@@ -101,14 +107,14 @@ internal sealed class RenPyArchive
             index[Name(latin)] = list;
         }
 
-        return new RenPyArchive(path, index);
+        return new RenPyArchive(open, index);
     }
 
     /// <summary>The bytes of an entry (as Ren'Py reads it: prefix, then the stored bytes after it).</summary>
     /// <exception cref="RenPyFormatException">The entry lies outside the archive.</exception>
     public byte[] Read(string name)
     {
-        using var stream = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var stream = _open();
         using var result = new MemoryStream();
         foreach (var (offset, length, prefix) in _index[name])
         {

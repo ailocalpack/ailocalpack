@@ -24,7 +24,7 @@ public sealed record AgentRunExtras(AgentSystemPrompt? System = null, Action<Age
 /// A run in the agent's own workspace (task 57, a game the toolkit can't read): the job's <c>agent/</c> folder as the
 /// working folder, reading files, editing them and running commands there (each adapter's sandbox keeps writes inside
 /// it and has no network), the <see cref="PromptTemplate.SystemScripts"/> system prompt; the toolkit server still reads
-/// the working copy.
+/// the game folder (read only).
 /// </summary>
 public sealed record AgentWorkspace(string Folder)
 {
@@ -34,7 +34,7 @@ public sealed record AgentWorkspace(string Folder)
 
 /// <summary>
 /// Runs the job's agent for a stage: finds the program and checks its sign-in first (a signed-out Codex retries for half
-/// a minute before saying so), then runs it headless in the working copy with the toolkit server as its only tools
+/// a minute before saying so), then runs it headless in the job's agent folder with the toolkit server as its only tools
 /// (no built-in file, edit or shell tools), the <see cref="PromptTemplate.System"/> prompt appended and the job's model.
 /// Every event goes to <c>logs/agent-&lt;stage&gt;.jsonl</c> (<see cref="AgentEventJson"/>) and a readable line of each
 /// message, tool call, tool error and the usage to the job log; the usage is also summed into <c>progress.json</c>
@@ -66,11 +66,21 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         ArgumentNullException.ThrowIfNull(prompt);
         ArgumentNullException.ThrowIfNull(values);
         var task = prompt.Render(values);
+        string gameFolder;
+        try
+        {
+            gameFolder = context.GameFolder;
+        }
+        catch (GenerationFileException e)
+        {
+            return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, e.Message));
+        }
+
         var systemTemplate = extras?.System?.Template ?? (workspace is null ? PromptTemplate.System : PromptTemplate.SystemScripts);
         var system = extras?.System is { } own ? own.Template.Render(own.Values)
             : workspace is null
             ? PromptTemplate.System.Render(PromptValues.System(gameName, context.Job.Language))
-            : PromptTemplate.SystemScripts.Render(PromptValues.SystemScripts(gameName, context.Job.Language, context.CopyFolder));
+            : PromptTemplate.SystemScripts.Render(PromptValues.SystemScripts(gameName, context.Job.Language, gameFolder));
         string? brief;
         try
         {
@@ -107,23 +117,23 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
                 GenerationFailureKind.SignedOut, $"{adapter.DisplayName} isn't signed in: sign in in Settings → AI agents."));
         }
 
-        if (workspace is not null)
+        // Never the game folder: the agent works in the job's agent/ folder (only its own commands write there, for an
+        // unknown engine) and reads the game through the toolkit server (_Live game folder_).
+        var workingFolder = workspace?.Folder ?? context.Files.AgentFolder;
+        try
         {
-            try
-            {
-                Directory.CreateDirectory(workspace.Folder);
-            }
-            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-            {
-                return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's workspace {workspace.Folder} can't be made: {e.Message}"));
-            }
+            Directory.CreateDirectory(workingFolder);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's working folder {workingFolder} can't be made: {e.Message}"));
         }
 
-        var request = new AgentRunRequest(task, workspace?.Folder ?? context.CopyFolder)
+        var request = new AgentRunRequest(task, workingFolder)
         {
             SystemPrompt = system,
             BuiltinTools = Tools(workspace, extraTools),
-            McpServers = [server.For(context.CopyFolder, context.Folder, context.Job.Language, context.Job.Options.Reader, extras?.TestRuns)],
+            McpServers = [server.For(gameFolder, context.Folder, context.Job.Language, context.Job.Options.Reader, extras?.TestRuns)],
             Model = choice.Model,
             Effort = choice.Effort,
             AllowUnsandboxed = workspace is not null && context.Job.Options.Unsandboxed,

@@ -66,24 +66,25 @@ public sealed class AgentScriptTool : IRecipeTool
     /// <summary>Whether the extractor wrote its file.</summary>
     public bool Exists => File.Exists(_stringsPath);
 
-    public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
+    public RecipeExtraction Extract(IGameFiles game, CancellationToken cancellationToken = default)
     {
         var extraction = Read();
         _markup = MarkupOf(extraction.Strings);
         return extraction;
     }
 
-    public RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default) =>
+    public RebuildResult Rebuild(IGameFiles game, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default) =>
         throw new RecipeException("Strings the agent extracted are rebuilt by the agent's own rebuild script in the Build stage, not by the toolkit.");
 
-    public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
+    public IReadOnlyList<string> TouchedFiles(IGameFiles game, IEnumerable<string> keys)
     {
+        ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(keys);
         Read();
         return [.. keys
             .Select(k => _fileOfKey.GetValueOrDefault(k))
             .OfType<string>()
-            .Where(file => File.Exists(Path.Combine(gameDir, file.Replace('/', Path.DirectorySeparatorChar))))
+            .Where(game.FileExists)
             .Distinct(StringComparer.Ordinal)
             .Order(StringComparer.Ordinal)];
     }

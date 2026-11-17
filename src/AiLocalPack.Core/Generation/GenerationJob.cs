@@ -6,7 +6,7 @@ namespace AiLocalPack.Core.Generation;
 /// <summary>The stages of a generation, in order (task 47). Their handlers come with tasks 49–51.</summary>
 public enum GenerationStage
 {
-    /// <summary>The working copy of the game (task 46).</summary>
+    /// <summary>The game folder is checked and recorded (_Live game folder_; a full copy of the game before).</summary>
     Setup,
 
     /// <summary>The strings, through the toolkit or the agent (task 49).</summary>
@@ -86,13 +86,16 @@ public enum GenerationFailureKind
     /// <summary>The toolkit couldn't read or rebuild the game.</summary>
     Toolkit,
 
-    /// <summary>The working copy couldn't be made (disk full, game missing).</summary>
-    WorkingCopy,
+    /// <summary>
+    /// The game folder can't be used for this now: missing, or a translation installed there that the agent's own code
+    /// would read (_Live game folder_). Read from jobs of older apps as <c>workingCopy</c> (their copy couldn't be made).
+    /// </summary>
+    GameFolder,
 
     /// <summary>A job file couldn't be read or written.</summary>
     Disk,
 
-    /// <summary>The translated game closed soon after its test run started, while the untranslated copy kept running (task 51).</summary>
+    /// <summary>The translated game closed soon after its test run started, while the untranslated game kept running (task 51).</summary>
     TestRun,
 
     /// <summary>Anything else (a bug).</summary>
@@ -132,7 +135,6 @@ public enum GenerationQuality
 
 /// <summary>What the player chose on the start form.</summary>
 /// <param name="ReviewGlossary">Wait for the player after the glossary (task 54).</param>
-/// <param name="Scope">Which game files the working copy holds; <c>null</c> = the default for the engine.</param>
 /// <param name="Model">The agent's model, when the player picked one.</param>
 /// <param name="Base">An update job's base pack (task 56): only the strings it lacks or that changed are translated, and the result is its next revision.</param>
 /// <param name="Quality">How carefully to translate; picks the model of the stages after Extract unless <paramref name="Model"/> is given.</param>
@@ -152,7 +154,6 @@ public enum GenerationQuality
 /// </param>
 public sealed record GenerationOptions(
     bool ReviewGlossary = false,
-    WorkingCopyScope? Scope = null,
     string? Model = null,
     GenerationBase? Base = null,
     GenerationQuality Quality = GenerationQuality.Balanced,
@@ -176,7 +177,7 @@ public sealed record GenerationOptions(
 /// </summary>
 public sealed record GenerationJob
 {
-    /// <summary><see cref="WorkingCopies.NewJobId"/>; the job folder's name.</summary>
+    /// <summary><see cref="GenerationJobFolders.NewJobId"/>; the job folder's name.</summary>
     public required string Id { get; init; }
 
     public required GameId Game { get; init; }

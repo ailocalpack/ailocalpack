@@ -105,7 +105,6 @@ internal static partial class GenJobCommands
         var fake = FakeAgentOption();
         var language = new Option<string?>("--lang") { Description = "Target language tag (default: the app's setting, else the OS language)." };
         var review = new Option<bool>("--review-glossary") { Description = "Wait for the player's review after the glossary." };
-        var allFiles = new Option<bool>("--all-files") { Description = "Copy every file into the working copy." };
         var model = new Option<string?>("--model") { Description = "The agent's model for every stage (default: the quality's model)." };
         var quality = new Option<string?>("--quality") { Description = "How carefully to translate: quick, balanced (default) or thorough (studies the whole game first)." };
         var web = new Option<bool>("--web") { Description = "Thorough only: let the Study stage look the game up on the web." };
@@ -115,7 +114,7 @@ internal static partial class GenJobCommands
         var until = UntilOption();
         var workers = WorkersOption();
         var wait = WaitOption();
-        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, allFiles, model, quality, web, update, tool, noRefs, until, workers, wait };
+        var command = new Command("run", "Start a generation job for a game and follow it.") { game, agentOption, fake, language, review, model, quality, web, update, tool, noRefs, until, workers, wait };
         command.SetAction(async (result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -186,7 +185,6 @@ internal static partial class GenJobCommands
 
             var options = new GenerationOptions(
                 result.GetValue(review),
-                result.GetValue(allFiles) ? WorkingCopyScope.AllFiles : null,
                 result.GetValue(model),
                 updateBase?.Reference(installed!.Local),
                 chosenQuality,
@@ -202,7 +200,7 @@ internal static partial class GenJobCommands
             GenerationRun run;
             try
             {
-                var estimate = context.Estimator.Estimate(context.Game.InstallPath, Engine(context.Game), options.Scope, cancellationToken, updateBase?.Strings, options.Reader);
+                var estimate = context.Estimator.Estimate(context.Game.InstallPath, Engine(context.Game), cancellationToken, updateBase?.Strings, options.Reader);
                 if (estimate.Update is { } diff)
                 {
                     output.WriteLine($"Update of {updateBase!.Manifest.Id} rev {updateBase.Manifest.Revision}: {diff.Added.Count} new strings, {diff.Changed.Count} changed, {diff.Removed.Count} removed, {diff.Unchanged.Count} kept.");
@@ -221,7 +219,7 @@ internal static partial class GenJobCommands
                     updateBase,
                     references);
             }
-            catch (Exception e) when (e is GameBlockedException or GenerationJobException or WorkingCopyException or IOException)
+            catch (Exception e) when (e is GameBlockedException or GenerationJobException or IOException)
             {
                 error.WriteLine(e.Message);
                 return 1;
@@ -360,7 +358,7 @@ internal static partial class GenJobCommands
     private static Command BuildCancel(OsEnvironment env)
     {
         var game = GameArgument();
-        var delete = new Option<bool>("--delete") { Description = "Also delete the job folder with its working copy." };
+        var delete = new Option<bool>("--delete") { Description = "Also delete the job folder." };
         var command = new Command("cancel", "Cancel the game's open generation job (not while it runs).") { game, delete };
         command.SetAction(result =>
         {
@@ -385,7 +383,7 @@ internal static partial class GenJobCommands
                 var job = new GenerationJobs(store, new GenerationRunner()).Cancel(entry.Folder);
                 if (result.GetValue(delete))
                 {
-                    new WorkingCopies(paths, FileCloner.Create(), new SystemDiskSpace()).Delete(entry.Folder);
+                    new GenerationJobFolders(paths, new SystemDiskSpace()).Delete(entry.Folder);
                     output.WriteLine($"Job {job.Id} cancelled; its folder was deleted.");
                 }
                 else
@@ -573,14 +571,12 @@ internal static partial class GenJobCommands
         var store = new GenerationJobStore(paths);
         store.Recover();
         var tools = RecipeTools.Create(env);
-        var copies = new WorkingCopies(paths, FileCloner.Create(), new SystemDiskSpace());
         return new JobContext(
             game,
             new Core.Settings.SettingsStore(paths, Microsoft.Extensions.Logging.Abstractions.NullLogger<Core.Settings.SettingsStore>.Instance, TimeProvider.System).Load(),
             new GenerationJobs(store, new GenerationRunner()),
-            new GenerationEstimator(tools, copies),
+            new GenerationEstimator(tools, new GenerationJobFolders(paths, new SystemDiskSpace())),
             tools,
-            copies,
             AntiCheatPolicy.Bundled,
             DevCommand.SavedIndex(env, paths),
             env,
@@ -597,7 +593,6 @@ internal static partial class GenJobCommands
         GenerationJobs Jobs,
         GenerationEstimator Estimator,
         RecipeTools Tools,
-        WorkingCopies Copies,
         AntiCheatPolicy Policy,
         RegistryIndex? Index,
         OsEnvironment Env,
@@ -608,7 +603,7 @@ internal static partial class GenJobCommands
         public GenerationStages Stages(StagePlan plan)
         {
             var (agent, build) = AgentAndBuild(plan);
-            var services = new PipelineServices(Game, agent, Tools, Estimator, Copies, Build: build,
+            var services = new PipelineServices(Game, agent, Tools, Estimator, Build: build,
                 Translate: new TranslateOptions(Workers: plan.Workers ?? Settings.TranslateWorkerCount));
             return GenerationPipeline.Create(services, pauseBefore: plan.PauseBefore);
         }
@@ -633,7 +628,7 @@ internal static partial class GenJobCommands
 #pragma warning restore IL3000
             var cli = AppLaunch.ForCurrentProcess(Env, Environment.ProcessPath, entryAssembly)
                 ?? throw new IOException("The CLI's own path is unknown, so the agent can't start its toolkit server.");
-            var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, GameTestRunner.ForMachine(new ProcessRunner(), Env, AppPaths.Resolve(Env)), Env);
+            var build = new BuildServices(RecipeCommands.CreateFixer(Env), LocalPacks, GameTestRunner.ForMachine(new ProcessRunner(), Env, Paths), Env, new GameViews(Paths));
             return (new PipelineAgent(adapter, ToolkitServerProgram.Cli(cli, Env)), build);
         }
     }

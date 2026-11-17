@@ -14,9 +14,8 @@ namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
 /// <c>gen estimate &lt;game&gt; [--all-files] [--quality quick|balanced|thorough] [--json]</c>: what generating a pack for a
-/// game would take (strings, words, working copy size, free space, agent time and share of the subscription's limits at
+/// game would take (strings, words, the disk the job's files need, agent time and share of the subscription's limits at
 /// that quality).
-/// <c>gen copy &lt;game&gt; [--all-files] [--job &lt;id&gt;]</c>: makes the working copy a job would use and prints where.
 /// </summary>
 internal static class GenCommand
 {
@@ -27,10 +26,9 @@ internal static class GenCommand
 
     public static Command Build(OsEnvironment env)
     {
-        var command = new Command("gen", "Generation: a new pack made by an AI agent on a copy of the game.")
+        var command = new Command("gen", "Generation: a new pack made by an AI agent, reading the game where it is installed.")
         {
             BuildEstimate(env),
-            BuildCopy(env),
         };
         foreach (var job in GenJobCommands.Build(env))
         {
@@ -43,13 +41,12 @@ internal static class GenCommand
     private static Command BuildEstimate(OsEnvironment env)
     {
         var game = GameArgument();
-        var allFiles = AllFilesOption();
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
         var quality = new Option<string?>("--quality") { Description = "Estimate at this quality: quick, balanced (default) or thorough." };
         var tool = GenJobCommands.ToolOption();
-        var command = new Command("estimate", "Estimate a generation: strings and words to translate, working copy size, free space, agent time and subscription limits.")
+        var command = new Command("estimate", "Estimate a generation: strings and words to translate, the disk the job's files need, agent time and subscription limits.")
         {
-            game, allFiles, quality, tool, json,
+            game, quality, tool, json,
         };
         command.SetAction((result, cancellationToken) =>
         {
@@ -70,10 +67,10 @@ internal static class GenCommand
             GenerationSizeEstimate estimate;
             try
             {
-                estimate = Estimator(env, paths).Estimate(found.InstallPath, Engine(found), Scope(result.GetValue(allFiles)), cancellationToken, reader: reader);
+                estimate = Estimator(env, paths).Estimate(found.InstallPath, Engine(found), cancellationToken, reader: reader);
                 estimate = estimate with { Work = estimate.Work.At(chosen) };
             }
-            catch (WorkingCopyException e)
+            catch (DirectoryNotFoundException e)
             {
                 error.WriteLine(e.Message);
                 return Task.FromResult(1);
@@ -94,66 +91,11 @@ internal static class GenCommand
         return command;
     }
 
-    private static Command BuildCopy(OsEnvironment env)
-    {
-        var game = GameArgument();
-        var allFiles = AllFilesOption();
-        var job = new Option<string>("--job") { Description = "Job ID (default: a new one)." };
-        var command = new Command("copy", "Make the working copy of a game that a generation job works on, and print its folder.")
-        {
-            game, allFiles, job,
-        };
-        command.SetAction((result, cancellationToken) =>
-        {
-            var error = result.InvocationConfiguration.Error;
-            if (Find(env, result.GetValue(game)!, error) is not var (paths, found))
-            {
-                return Task.FromResult(1);
-            }
-
-            var copies = Copies(paths);
-            try
-            {
-                var estimate = Estimator(env, paths).Estimate(found.InstallPath, Engine(found), Scope(result.GetValue(allFiles)), cancellationToken);
-                var jobFolder = copies.JobFolder(found.Id, result.GetValue(job) ?? WorkingCopies.NewJobId(TimeProvider.System));
-                var copy = copies.Create(estimate.Copy, jobFolder, estimate.ReserveBytes, cancellationToken: cancellationToken);
-                var output = result.InvocationConfiguration.Output;
-                output.WriteLine($"Copied {Files(copy.Files)} of {found.Name} into {copy.Folder}: {Size(copy.ClonedBytes)} cloned, {Size(copy.CopiedBytes)} copied.");
-                foreach (var link in copy.SkippedLinks)
-                {
-                    output.WriteLine($"  link not recreated: {link}");
-                }
-            }
-            catch (WorkingCopyException e)
-            {
-                error.WriteLine(e.Message);
-                return Task.FromResult(1);
-            }
-            catch (ArgumentException e)
-            {
-                error.WriteLine(e.Message);
-                return Task.FromResult(1);
-            }
-
-            return Task.FromResult(0);
-        });
-        return command;
-    }
-
     private static Argument<string> GameArgument() => new("game") { Description = "The game (steam:<app id> or fp:<fingerprint>), as listed by 'games list'." };
-
-    private static Option<bool> AllFilesOption() => new("--all-files")
-    {
-        Description = "Copy every file; by default movies and audio are left out when the toolkit reads the engine.",
-    };
-
-    private static WorkingCopyScope? Scope(bool allFiles) => allFiles ? WorkingCopyScope.AllFiles : null;
 
     private static EngineKind? Engine(Game game) => EngineKind.TryParse(game.Engine, out var kind) ? kind : null;
 
-    private static WorkingCopies Copies(AppPaths paths) => new(paths, FileCloner.Create(), new SystemDiskSpace());
-
-    private static GenerationEstimator Estimator(OsEnvironment env, AppPaths paths) => new(RecipeTools.Create(env), Copies(paths));
+    private static GenerationEstimator Estimator(OsEnvironment env, AppPaths paths) => new(RecipeTools.Create(env), new GenerationJobFolders(paths, new SystemDiskSpace()));
 
     private static (AppPaths, Game)? Find(OsEnvironment env, string text, TextWriter error)
     {
@@ -185,14 +127,10 @@ internal static class GenCommand
         var text = work.Text;
         output.WriteLine($"{game.Name} ({game.Id}), {estimate.Engine.DisplayName}: {SourceText(estimate)}");
         output.WriteLine(Invariant($"strings: {text.Strings:N0} ({text.Words:N0} words, {text.Characters:N0} characters)"));
-        var copy = estimate.Copy;
-        var left = copy.SkippedFiles > 0 ? $"; movies and audio left out: {Files(copy.SkippedFiles)}, {Size(copy.SkippedBytes)}" : "";
-        output.WriteLine($"copy: {Size(copy.TotalBytes)} in {Files(copy.FileCount)}{left}");
         var space = estimate.Space;
-        var cloned = space.CanClone ? " (cloned on this disk: the copy takes no space)" : "";
         output.WriteLine(space.FreeBytes is { } free
-            ? $"disk: needs {Size(space.NeededBytes)}{cloned}, {Size(free)} free: {(space.IsEnough ? "enough" : "NOT ENOUGH")}"
-            : $"disk: needs {Size(space.NeededBytes)}{cloned}, free space unknown");
+            ? $"disk: the job's files need {Size(space.NeededBytes)}, {Size(free)} free: {(space.IsEnough ? "enough" : "NOT ENOUGH")}"
+            : $"disk: the job's files need {Size(space.NeededBytes)}, free space unknown");
         output.WriteLine($"agent time: {Duration(work.TimeLow)} to {Duration(work.TimeHigh)} ({work.Quality.ToString().ToLowerInvariant()})");
         output.WriteLine(Invariant($"subscription: {work.LimitWindowsLow:0.#} to {work.LimitWindowsHigh:0.#} five-hour limit windows of an entry-level plan (about {work.LimitDaysLow:0.#} to {work.LimitDaysHigh:0.#} days)"));
         output.WriteLine(Invariant($"tokens: ~{work.InputTokens:N0} in, ~{work.OutputTokens:N0} out, {work.Chunks:N0} chunks of {GenerationEstimateModel.StringsPerChunk}"));
@@ -222,13 +160,7 @@ internal static class GenCommand
             work.Text.Strings,
             work.Text.Words,
             work.Text.Characters,
-            new GenCopyJson(
-                estimate.Copy.Scope == WorkingCopyScope.AllFiles ? "all-files" : "without-media",
-                estimate.Copy.FileCount,
-                estimate.Copy.TotalBytes,
-                estimate.Copy.SkippedFiles,
-                estimate.Copy.SkippedBytes),
-            new GenDiskJson(estimate.Space.NeededBytes, estimate.Space.FreeBytes, estimate.Space.CanClone, estimate.Space.IsEnough, estimate.ReserveBytes),
+            new GenDiskJson(estimate.Space.NeededBytes, estimate.Space.FreeBytes, estimate.Space.IsEnough, estimate.ReserveBytes),
             new GenWorkJson(
                 work.Chunks,
                 work.InputTokens,
@@ -279,13 +211,10 @@ internal sealed record GenEstimateJson(
     int Strings,
     long Words,
     long Characters,
-    GenCopyJson Copy,
     GenDiskJson Disk,
     GenWorkJson Estimate);
 
-internal sealed record GenCopyJson(string Scope, int Files, long Bytes, int SkippedFiles, long SkippedBytes);
-
-internal sealed record GenDiskJson(long NeededBytes, long? FreeBytes, bool CanClone, bool Enough, long ReserveBytes);
+internal sealed record GenDiskJson(long NeededBytes, long? FreeBytes, bool Enough, long ReserveBytes);
 
 internal sealed record GenWorkJson(
     int Chunks,

@@ -2,7 +2,7 @@ namespace AiLocalPack.Core.Storage;
 
 /// <summary>
 /// Where the app keeps its files. Three roots per OS: <see cref="Config"/> (settings, small, may roam),
-/// <see cref="Data"/> (logs, backups, working copies: large, machine-local) and <see cref="Cache"/> (safe to delete).
+/// <see cref="Data"/> (logs, backups, generation jobs: large, machine-local) and <see cref="Cache"/> (safe to delete).
 /// Resolve with <see cref="Resolve"/>; nothing is created on disk here.
 /// </summary>
 public sealed record AppPaths
@@ -61,6 +61,15 @@ public sealed record AppPaths
     /// <summary>Held while an install, re-apply or uninstall runs, so only one runs at a time across app and CLI.</summary>
     public string InstallLock => Path.Combine(Data, "install.lock");
 
+    /// <summary>
+    /// The test run in progress on a live game folder (<see cref="Install.GameTrials"/>): one left behind by a crash is
+    /// undone on the next start.
+    /// </summary>
+    public string TrialJournal => Path.Combine(Data, "trial-journal.json");
+
+    /// <summary>A trial's own folder: what it laid over the game, the snapshot and backups of the game's files (<c>&lt;id&gt;/</c>).</summary>
+    public string Trials => Path.Combine(Data, "trials");
+
     /// <summary>The Activity panel's events: decisions waiting for the player and the feed (<see cref="Activity.ActivityStore"/>).</summary>
     public string ActivityFile => Path.Combine(Data, "activity.json");
 
@@ -82,11 +91,11 @@ public sealed record AppPaths
     /// <summary>The player's translation requests and the claims of their jobs (task 74).</summary>
     public string TranslationRequestsFile => Path.Combine(Data, "translation-requests.json");
 
-    /// <summary>Copies of game files the agent works on during generation.</summary>
-    public string WorkingCopies => Path.Combine(Data, "work");
+    /// <summary>The folders of generation jobs (their files; the game itself is read where it is installed).</summary>
+    public string GenerationJobs => Path.Combine(Data, "work");
 
     /// <summary>
-    /// How each game's untranslated working copy behaves in a test run (its loading time and screenshot, once per game
+    /// How each untranslated game behaves in a test run (its loading time and screenshot, once per game
     /// version; <c>Pipeline.TestRunBaselines</c>): <c>&lt;game folder&gt;.json</c> + <c>.png</c>.
     /// </summary>
     public string TestRuns => Path.Combine(Data, "test-runs");

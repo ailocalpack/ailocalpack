@@ -83,7 +83,7 @@ public sealed class ToolkitServerLaunchTests
         var (_, error) = ToolkitServerLaunch.Parse(args, RecipeTools.Builtin);
 
         // Assert
-        error.Should().Be("--root <working copy> and --job <job folder> are required.");
+        error.Should().Be("--root <game folder> and --job <job folder> are required.");
     }
 
     [Fact]

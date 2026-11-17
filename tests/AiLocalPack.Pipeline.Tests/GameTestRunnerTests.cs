@@ -1,11 +1,13 @@
 using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Core.Install;
+using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Pipeline.Tests;
 
-/// <summary>The test run: the untranslated copy measured first, then the translation watched; outcomes, the rebuilt files laid over the copy and taken off again.</summary>
+/// <summary>The test run: the untranslated game measured first, then the translation watched; outcomes, the rebuilt files laid over the copy and taken off again.</summary>
 public sealed class GameTestRunnerTests : IDisposable
 {
     private static readonly TestRunOptions Short = new()
@@ -190,24 +192,40 @@ public sealed class GameTestRunnerTests : IDisposable
     }
 
     [Fact]
-    public async Task A_rewritten_file_that_differs_in_the_game_folder_is_left_and_logged()
+    public async Task A_small_file_the_game_rewrites_is_put_back()
     {
         // Arrange
-        var game = Manual with { InstallPath = _dir.Combine("installed") };
-        _dir.File("installed/settings.ini", "updated by the store").File("job/game/settings.ini", "as copied");
-        var log = new List<string>();
+        _dir.File("job/game/settings.ini", "as shipped");
         var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning)
         {
             OnStart = _ => File.WriteAllText(CopyFile("settings.ini"), "written by the game"),
         };
 
         // Act
+        await RunAsync(processes);
+
+        // Assert
+        File.ReadAllText(CopyFile("settings.ini")).Should().Be("as shipped");
+    }
+
+    [Fact]
+    public async Task A_large_file_the_game_rewrites_without_a_backup_is_left_and_logged()
+    {
+        // Arrange
+        _dir.File("job/game/world.dat", new byte[GameWriteGuard.MaxSmallFile + 1]);
+        var log = new List<string>();
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning)
+        {
+            OnStart = _ => File.WriteAllText(CopyFile("world.dat"), "written by the game"),
+        };
+
+        // Act
         await new GameTestRunner(processes, OsKind.Linux, Short).RunAsync(
-            new TestRunRequest(game, Copy, _dir.Combine("job/build"), BuildFiles, Job, log.Add) { ShotsFolder = _dir.Combine("shots") },
+            new TestRunRequest(Manual, Copy, _dir.Combine("job/build"), BuildFiles, Job, log.Add) { ShotsFolder = _dir.Combine("shots") },
             TestContext.Current.CancellationToken);
 
         // Assert
-        log.Should().Contain(line => line.Contains("can't be put back", StringComparison.Ordinal) && line.Contains("settings.ini", StringComparison.Ordinal));
+        log.Should().Contain(line => line.Contains("had no backup", StringComparison.Ordinal) && line.Contains("world.dat", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -544,6 +562,24 @@ public sealed class GameTestRunnerTests : IDisposable
     }
 
     [Fact]
+    public async Task A_game_the_player_has_open_is_not_test_run()
+    {
+        // Arrange
+        Directory.CreateDirectory(Copy);
+        var processes = new FakeGameProcesses(FakeGame.KeepsRunning, FakeGame.KeepsRunning);
+        var running = new RunningGames(new RunningProcess(42, PathNames.RealPath(CopyFile("Game.sh"))));
+        var host = OperatingSystem.IsWindows() ? OsKind.Windows : OperatingSystem.IsMacOS() ? OsKind.MacOS : OsKind.Linux; // the process paths are this machine's
+
+        // Act
+        var result = await new GameTestRunner(processes, host, Short, processes: running).RunAsync(
+            new TestRunRequest(Manual, Copy, _dir.Combine("job/build"), BuildFiles, Job, _ => { }) { ShotsFolder = _dir.Combine("shots") },
+            TestContext.Current.CancellationToken);
+
+        // Assert
+        new { result.Skip, Starts = processes.Started.Count }.Should().Be(new { Skip = (TestRunSkip?)TestRunSkip.GameRunning, Starts = 0 });
+    }
+
+    [Fact]
     public async Task Test_runs_turned_off_are_skipped()
     {
         // Arrange
@@ -630,4 +666,10 @@ public sealed class GameTestRunnerTests : IDisposable
             return new GameFrame(64, 64, pixels);
         }
     }
+}
+
+/// <summary>A process list with the given processes running.</summary>
+internal sealed class RunningGames(params RunningProcess[] processes) : IProcessList
+{
+    public IReadOnlyList<RunningProcess> Snapshot() => processes;
 }

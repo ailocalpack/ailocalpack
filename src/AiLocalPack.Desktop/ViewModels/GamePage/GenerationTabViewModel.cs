@@ -777,7 +777,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     /// <summary>Resume, Resume now, Retry stage (and Continue to translation, after the review's saves): the job goes on (<see cref="GenerationService.ResumeAsync"/>).</summary>
     public IAsyncRelayCommand ResumeCommand { get; }
 
-    /// <summary>Opens the cancel dialog (Keep progress / Delete working copy / Back).</summary>
+    /// <summary>Opens the cancel dialog (Keep progress / Delete the job's files / Back).</summary>
     public IRelayCommand CancelCommand { get; }
 
     /// <summary>The job's log, the failure's reason and message (and Retry stage when it failed).</summary>
@@ -1217,12 +1217,11 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             {
                 estimate = await _estimates.EstimateAsync(_game, unusable ? null : baseLoad?.Base?.Strings, IsUpdateMode ? null : _reader, _closed.Token);
                 _logger.LogInformation(
-                    "Generation estimate for {Game}: {Strings} strings ({Source}{Update}), copy {Bytes} bytes, needs {Needed} of {Free} free",
+                    "Generation estimate for {Game}: {Strings} strings ({Source}{Update}), the job's files need {Needed} of {Free} free",
                     _game.Id,
                     estimate.Work.Text.Strings,
                     estimate.Source,
                     estimate.Update is { } d ? $", update: {d.Added.Count} new, {d.Changed.Count} changed, {d.Removed.Count} removed" : "",
-                    estimate.Copy.TotalBytes,
                     estimate.Space.NeededBytes,
                     estimate.Space.FreeBytes);
             }
@@ -1473,7 +1472,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     private bool _installBusy;
 
-    /// <summary><c>Discard</c>: asks, then deletes the local pack and the job's working copy; the start form comes back.</summary>
+    /// <summary><c>Discard</c>: asks, then deletes the local pack and the job's files; the start form comes back.</summary>
     private void AskDiscard(LocalPack pack) =>
         _dialogs.Show<ConfirmDialogViewModel>(new ConfirmRequest(
             _localizer[nameof(Strings.Gen_Result_Discard_Title)],
@@ -1481,7 +1480,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             _localizer[nameof(Strings.Gen_Result_Discard)],
             () => _ = DiscardAsync(pack)));
 
-    /// <summary>Deletes the result's pack and working copy (after the player confirmed).</summary>
+    /// <summary>Deletes the result's pack and job files (after the player confirmed).</summary>
     public async Task DiscardAsync(LocalPack pack)
     {
         ArgumentNullException.ThrowIfNull(pack);
@@ -1499,7 +1498,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         });
     }
 
-    /// <summary><c>New translation</c>: the pack stays in Packs → Mine, the working copy goes, the start form comes back.</summary>
+    /// <summary><c>New translation</c>: the pack stays in Packs → Mine, the job's files go, the start form comes back.</summary>
     public async Task NewTranslationAsync()
     {
         ActionError = string.Empty;
@@ -1583,7 +1582,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _dialogs.Show<GenerationCancelDialogViewModel>(new GenerationCancelRequest(Percent, OnCancelChosen));
     }
 
-    /// <summary>Keep progress pauses a running job (a stopped one stays as it is); Delete working copy cancels and deletes the folder.</summary>
+    /// <summary>Keep progress pauses a running job (a stopped one stays as it is); Delete the job's files cancels and deletes the folder.</summary>
     private void OnCancelChosen(GenerationCancelChoice choice)
     {
         switch (choice)
@@ -1596,7 +1595,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
                 _toasts.Show(new ToastViewModel(ToastTone.Info, _localizer[nameof(Strings.Gen_Toast_Kept)], []));
                 break;
-            case GenerationCancelChoice.DeleteWorkingCopy:
+            case GenerationCancelChoice.DeleteJob:
                 _ = DeleteJobAsync();
                 break;
         }
@@ -1887,7 +1886,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         };
     }
 
-    /// <summary>"3.2 GB working copy · 120 GB free", "cloned: takes no space", or "Not enough space…".</summary>
+    /// <summary>"80 MB for the job's files · 120 GB free", or "Not enough space…".</summary>
     private GenerationCheckViewModel DiskCheck()
     {
         if (_estimate is not { } e)
@@ -1895,7 +1894,6 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             return new(IsEstimateFailed ? GenerationCheckState.Bad : GenerationCheckState.Pending, _localizer[nameof(Strings.Gen_Check_Disk_Pending)]);
         }
 
-        var copy = AddGameText.FormatSize(_localizer, e.Copy.TotalBytes);
         if (!e.Space.IsEnough)
         {
             return new(GenerationCheckState.Bad, _localizer.Format(
@@ -1904,9 +1902,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
                 AddGameText.FormatSize(_localizer, e.Space.FreeBytes ?? 0)));
         }
 
-        var text = e.Space.CanClone
-            ? _localizer.Format(nameof(Strings.Gen_Check_Disk_Clone), copy)
-            : _localizer.Format(nameof(Strings.Gen_Check_Disk_Copy), copy);
+        var text = _localizer.Format(nameof(Strings.Gen_Check_Disk_Job), AddGameText.FormatSize(_localizer, e.Space.NeededBytes));
         if (e.Space.FreeBytes is { } free)
         {
             text = _localizer.Format(nameof(Strings.Gen_Check_Disk_Free), text, AddGameText.FormatSize(_localizer, free));

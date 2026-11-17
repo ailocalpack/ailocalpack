@@ -208,7 +208,7 @@ public sealed partial class GenerationResultViewModel : ObservableObject
 
     public bool CanPlay => !_busy;
 
-    /// <summary><c>Discard</c> (the pack and its working copy) before the pack was tried and while it isn't installed.</summary>
+    /// <summary><c>Discard</c> (the pack and its job's files) before the pack was tried and while it isn't installed.</summary>
     public bool ShowDiscard => !IsTried && !IsInstalled;
 
     /// <summary><c>Show in Packs</c> once the pack is installed or tried.</summary>

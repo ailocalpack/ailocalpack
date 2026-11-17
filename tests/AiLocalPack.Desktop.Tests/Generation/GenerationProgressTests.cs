@@ -501,7 +501,7 @@ public sealed class GenerationProgressTests
 
         // Assert
         (services.GetRequiredService<IDialogService>().Current as GenerationCancelDialogViewModel)?.Message
-            .Should().Be("41% is done. You can keep the progress and continue later, or delete the working copy and free the disk.");
+            .Should().Be("41% is done. You can keep the progress and continue later, or delete the job's files and free the disk.");
     }
 
     [Fact]
@@ -536,7 +536,7 @@ public sealed class GenerationProgressTests
 
         // Assert
         var toasts = services.GetRequiredService<ToastService>();
-        await WaitUntil(() => toasts.Items.Any(t => t.Text == "Generation cancelled, the working copy deleted."));
+        await WaitUntil(() => toasts.Items.Any(t => t.Text == "Generation cancelled, the job's files deleted."));
         (tab.ShowForm, Directory.Exists(folder), services.GetRequiredService<GenerationService>().FindOpen(GameId.Steam(10))).Should().Be((true, false, (GenerationJob?)null));
     }
 

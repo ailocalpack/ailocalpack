@@ -22,11 +22,16 @@ internal sealed class UnrealIoStore : IDisposable
     /// <summary>The TOC version (3–8).</summary>
     public byte Version { get; }
 
-    public UnrealIoStore(string path, CancellationToken ct, Func<string, FArchive>? openPartition = null)
+    /// <param name="relative">The <c>.utoc</c>, relative to the game folder; containers are named by their full path under <see cref="IGameFiles.Root"/>.</param>
+    /// <param name="openPartition">Opens a data partition by that name (tests); else read through <paramref name="gameFiles"/>.</param>
+    public UnrealIoStore(IGameFiles gameFiles, string relative, CancellationToken ct, Func<string, FArchive>? openPartition = null)
     {
+        ArgumentNullException.ThrowIfNull(gameFiles);
         ct.ThrowIfCancellationRequested();
+        var path = gameFiles.FullPath(relative);
+        string Relative(string full) => Path.GetRelativePath(gameFiles.Root, full).Replace('\\', '/');
         byte[] snapshot;
-        using (var file = File.OpenRead(path))
+        using (var file = gameFiles.OpenRead(relative))
         {
             var length = file.Length;
             if (length is < 144 or > 128L << 20)
@@ -97,9 +102,9 @@ internal sealed class UnrealIoStore : IDisposable
         foreach (var partition in Containers.Skip(1))
         {
             ct.ThrowIfCancellationRequested();
-            if (!File.Exists(partition))
+            if (!gameFiles.FileExists(Relative(partition)))
             {
-                throw new RecipeException("Missing IoStore data partition.", partition);
+                throw new RecipeException("Missing IoStore data partition.", Relative(partition));
             }
         }
 
@@ -118,7 +123,7 @@ internal sealed class UnrealIoStore : IDisposable
             {
                 ct.ThrowIfCancellationRequested();
                 var archive = openPartition is null
-                    ? new FStreamArchive(partition, File.Open(partition, FileMode.Open, FileAccess.Read, FileShare.Read), versions)
+                    ? new FStreamArchive(partition, gameFiles.OpenRead(Relative(partition)), versions)
                     : openPartition(partition);
                 opened.Add(archive);
                 return archive;

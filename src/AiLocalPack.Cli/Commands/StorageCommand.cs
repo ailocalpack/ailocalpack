@@ -8,7 +8,7 @@ namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
 /// <c>storage</c> (task 66, what Settings → Storage shows). <c>storage show [--json]</c>: the backups (folder, size,
-/// games), each generation working copy (job, state, size) and the cache. <c>storage move-backups &lt;folder&gt;</c>:
+/// games), each generation job (state, size) and the cache. <c>storage move-backups &lt;folder&gt;</c>:
 /// moves the backups into an <c>ailocalpack-backups</c> folder inside it as one transaction (exit 1 when refused or
 /// failed: nothing moved). <c>storage clear-cache</c>: deletes the downloads in the cache (exit 1 while an install runs).
 /// </summary>
@@ -16,7 +16,7 @@ internal static class StorageCommand
 {
     public static Command Build(OsEnvironment env)
     {
-        return new Command("storage", "Disk the app uses: backups, generation working copies, cache.")
+        return new Command("storage", "Disk the app uses: backups, generation jobs, cache.")
         {
             BuildShow(env),
             BuildMoveBackups(env),
@@ -27,7 +27,7 @@ internal static class StorageCommand
     private static Command BuildShow(OsEnvironment env)
     {
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
-        var show = new Command("show", "Show the size of the backups, each generation working copy and the cache.") { json };
+        var show = new Command("show", "Show the size of the backups, each generation job and the cache.") { json };
         show.SetAction((result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
@@ -37,7 +37,7 @@ internal static class StorageCommand
                 output.WriteLine(JsonSerializer.Serialize(
                     new StorageJson(
                         new BackupsJson(usage.BackupsFolder, usage.BackupBytes, usage.BackupGames),
-                        [.. usage.WorkingCopies.Select(w => new WorkingCopyJson(w.Folder, w.Job?.Game.ToString(), w.Job?.GameName, w.JobId, State(w), w.Bytes))],
+                        [.. usage.Jobs.Select(w => new JobFolderJson(w.Folder, w.Job?.Game.ToString(), w.Job?.GameName, w.JobId, State(w), w.Bytes))],
                         usage.CacheBytes,
                         usage.TotalBytes),
                     StorageJsonContext.Default.StorageJson));
@@ -45,8 +45,8 @@ internal static class StorageCommand
             }
 
             output.WriteLine($"backups: {GenCommand.Size(usage.BackupBytes)} for {usage.BackupGames} game(s) in {usage.BackupsFolder}");
-            output.WriteLine($"working copies: {GenCommand.Size(usage.WorkingCopyBytes)}");
-            foreach (var copy in usage.WorkingCopies)
+            output.WriteLine($"generation jobs: {GenCommand.Size(usage.JobBytes)}");
+            foreach (var copy in usage.Jobs)
             {
                 output.WriteLine($"  {copy.Job?.GameName ?? copy.GameFolder} ({copy.JobId}, {State(copy)}): {GenCommand.Size(copy.Bytes)}  {copy.Folder}");
             }
@@ -107,7 +107,7 @@ internal static class StorageCommand
         return clear;
     }
 
-    private static string State(WorkingCopyUsage copy) => copy.Job is { } job ? JsonNamingPolicy.KebabCaseLower.ConvertName(job.Status.ToString()) : "no-job";
+    private static string State(JobFolderUsage copy) => copy.Job is { } job ? JsonNamingPolicy.KebabCaseLower.ConvertName(job.Status.ToString()) : "no-job";
 
     private static string Problem(BackupMoveProblem problem) => problem switch
     {
@@ -124,11 +124,11 @@ internal static class StorageCommand
     };
 }
 
-internal sealed record StorageJson(BackupsJson Backups, IReadOnlyList<WorkingCopyJson> WorkingCopies, long CacheBytes, long TotalBytes);
+internal sealed record StorageJson(BackupsJson Backups, IReadOnlyList<JobFolderJson> Jobs, long CacheBytes, long TotalBytes);
 
 internal sealed record BackupsJson(string Folder, long Bytes, int Games);
 
-internal sealed record WorkingCopyJson(string Folder, string? Game, string? GameName, string Job, string State, long Bytes);
+internal sealed record JobFolderJson(string Folder, string? Game, string? GameName, string Job, string State, long Bytes);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true, NewLine = "\n")]
 [JsonSerializable(typeof(StorageJson))]

@@ -38,8 +38,11 @@ public sealed class BackupLocationTests : IDisposable
     private static string FilesUnder(string folder) =>
         Directory.Exists(folder) ? string.Join(", ", Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories).Select(f => Path.GetRelativePath(folder, f).Replace('\\', '/')).Order(StringComparer.Ordinal)) : string.Empty;
 
+    /// <summary>The backed-up originals (the install's note of the game's own writes, <c>writes/</c>, left out).</summary>
     private static int CountFiles(string folder) =>
-        Directory.Exists(folder) ? Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories).Count() : 0;
+        Directory.Exists(folder)
+            ? Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories).Count(f => !f.Split(Path.DirectorySeparatorChar).Contains("writes"))
+            : 0;
 
     [Fact]
     public void Root_is_the_default_folder_until_the_backups_are_moved()
@@ -121,7 +124,7 @@ public sealed class BackupLocationTests : IDisposable
         Location().Move(_elsewhere.Path, progress, Ct);
 
         // Assert
-        progress.Reports.Should().HaveCount(3).And.EndWith(new BackupMoveProgress(progress.Reports[^1].BytesTotal, progress.Reports[^1].BytesTotal));
+        progress.Reports.Should().HaveCount(Directory.EnumerateFiles(Target, "*", SearchOption.AllDirectories).Count() + 1).And.EndWith(new BackupMoveProgress(progress.Reports[^1].BytesTotal, progress.Reports[^1].BytesTotal));
     }
 
     [Fact]

@@ -28,6 +28,16 @@ public sealed record InstallRequest(Game Game, string Language, string PackId, i
     /// </summary>
     public IReadOnlyList<InstallDependency> Dependencies { get; init; } = [];
 
+    /// <summary>
+    /// The engine's folders outside the game folder where the game writes when it runs (<c>GameDataFolders</c> of the
+    /// toolkit): watched with the game folder from the install on, so the uninstall undoes what the game rewrote there
+    /// since (<see cref="GameWriteGuard"/>, saves kept).
+    /// </summary>
+    public IReadOnlyList<GameWriteRoot> DataFolders { get; init; } = [];
+
+    /// <summary>Keys of files the game is known to write (its test runs found them, <see cref="GameWriteGuard.Key"/>): backed up at the install whatever their size.</summary>
+    public IReadOnlyList<string> KnownWrites { get; init; } = [];
+
     /// <summary>A pack generated on this machine (task 55), not one from the registry: recorded with <see cref="Title"/>.</summary>
     public bool Local { get; init; }
 
@@ -208,6 +218,12 @@ public sealed record UninstallResult(
 
     /// <summary>Dependencies removed with it: no other pack uses them.</summary>
     public IReadOnlyList<InstalledDependency> RemovedDependencies { get; init; } = [];
+
+    /// <summary>
+    /// What the game wrote since the install that the uninstall undid (caches built from the translation, settings; saves
+    /// kept), and what it couldn't put back; <c>null</c> = nothing was noted at the install (an older install).
+    /// </summary>
+    public GameWriteUndo? GameWrites { get; init; }
 
     /// <summary>Dependencies left installed: another pack uses them, or the next pack of a replacement will.</summary>
     public IReadOnlyList<InstalledDependency> KeptDependencies { get; init; } = [];

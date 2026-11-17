@@ -313,7 +313,7 @@
                 <StackPanel Spacing="10" VerticalAlignment="Center">
                     <views:HighlightTextBlock x:Name="StorageTotal" Classes="rowLabel" Source="{Binding Label}"
                                               Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
-                    <views:StackedBar Height="12" First="{Binding BackupsShare}" Second="{Binding WorkingCopiesShare}" Third="{Binding CacheShare}"
+                    <views:StackedBar Height="12" First="{Binding BackupsShare}" Second="{Binding JobsShare}" Third="{Binding CacheShare}"
                                       FirstBrush="{DynamicResource AppAccentFillBrush}" SecondBrush="{DynamicResource AppGenBrush}" ThirdBrush="{DynamicResource AppWarnBrush}"
                                       Track="{DynamicResource AppBorderBrush}" IsVisible="{Binding IsMeasured}" />
                     <WrapPanel IsVisible="{Binding IsMeasured}">
@@ -323,7 +323,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
                             <Border Width="10" Height="10" CornerRadius="3" Background="{DynamicResource AppGenBrush}" />
-                            <TextBlock Classes="rowHelp" Text="{Binding WorkingCopiesLegend}" />
+                            <TextBlock Classes="rowHelp" Text="{Binding JobsLegend}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
                             <Border Width="10" Height="10" CornerRadius="3" Background="{DynamicResource AppWarnBrush}" />
@@ -363,7 +363,7 @@
                 </Grid>
             </Border>
         </DataTemplate>
-        <DataTemplate DataType="st:WorkingCopyRow">
+        <DataTemplate DataType="st:JobRow">
             <Border Classes="settingRow">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
                     <Border Classes="rowPic" Classes.warn="{Binding LosesProgress}">

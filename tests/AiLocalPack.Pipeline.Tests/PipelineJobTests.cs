@@ -14,14 +14,14 @@ public sealed class PipelineJobTests : IDisposable
     private readonly TempDir _dir = new();
     private readonly GenerationJobs _jobs;
     private readonly Game _game;
-    private readonly WorkingCopies _copies;
+    private readonly GenerationJobFolders _copies;
 
     public PipelineJobTests()
     {
         _dir.RpgMakerGame("games/sample");
         _game = StageHarness.Game with { InstallPath = _dir.Combine("games/sample") };
         var paths = AppPaths.UnderHome(_dir.Combine("home"));
-        _copies = new WorkingCopies(paths, FileCloner.Create(), new SystemDiskSpace());
+        _copies = new GenerationJobFolders(paths, new SystemDiskSpace());
         _jobs = new GenerationJobs(new GenerationJobStore(paths), new GenerationRunner());
     }
 
@@ -33,8 +33,7 @@ public sealed class PipelineJobTests : IDisposable
             _game,
             new PipelineAgent(Adapter(recording), StageHarness.Server),
             RecipeTools.Builtin,
-            new GenerationEstimator(RecipeTools.Builtin, _copies),
-            _copies);
+            new GenerationEstimator(RecipeTools.Builtin, _copies));
         var run = _jobs.Start(
             _game,
             AntiCheatPolicy.Bundled,

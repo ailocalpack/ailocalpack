@@ -1,4 +1,4 @@
-The toolkit can't read the texts of the video game "{{gameName}}" ({{engine}}). Write your own extractor and rebuilder for its files. The copy of the game is at `{{gamePath}}` ({{fileCount}} files).
+The toolkit can't read the texts of the video game "{{gameName}}" ({{engine}}). Write your own extractor and rebuilder for its files. The game is installed at `{{gamePath}}` ({{fileCount}} files; read only: copy a file into your workspace to work on it).
 
 Steps:
 1. Explore the game files: `detect_engine`, `list_files`, `read_file_snippet` and shell commands. Find where the texts the player sees are kept: dialogue, menus, item and skill descriptions, interface. Leave out what the player never sees (internal IDs, file names, code, debug texts).

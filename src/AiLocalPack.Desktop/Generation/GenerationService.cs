@@ -115,7 +115,7 @@ public sealed class GenerationService : IDisposable
     private readonly PackIndex _packIndex;
     private readonly IGenerationStagesFactory _stages;
     private readonly GameCatalog _catalog;
-    private readonly WorkingCopies _copies;
+    private readonly GenerationJobFolders _jobFolders;
     private readonly LocalPacks _localPacks;
     private readonly TimeProvider _time;
     private readonly ILogger<GenerationService> _logger;
@@ -135,7 +135,7 @@ public sealed class GenerationService : IDisposable
         PackIndex packIndex,
         IGenerationStagesFactory stages,
         GameCatalog catalog,
-        WorkingCopies copies,
+        GenerationJobFolders jobFolders,
         LocalPacks localPacks,
         TimeProvider time,
         ILogger<GenerationService> logger,
@@ -148,7 +148,7 @@ public sealed class GenerationService : IDisposable
         _packIndex = packIndex;
         _stages = stages;
         _catalog = catalog;
-        _copies = copies;
+        _jobFolders = jobFolders;
         _localPacks = localPacks;
         _time = time;
         _logger = logger;
@@ -203,7 +203,7 @@ public sealed class GenerationService : IDisposable
 
     /// <summary>
     /// Deletes a local pack (Discard on the result, Delete in Packs → Mine) and the completed job folder that made it
-    /// (its working copy). Refused while the pack is installed. Never throws.
+    ///. Refused while the pack is installed. Never throws.
     /// </summary>
     public async Task<GenerationActionResult> DeleteLocalPackAsync(LocalPack pack)
     {
@@ -220,7 +220,7 @@ public sealed class GenerationService : IDisposable
 
                 foreach (var entry in _jobs.Store.List().Where(e => e.Job.Game == game && e.Job.Id == pack.Report.Job && !e.Job.IsOpen))
                 {
-                    _copies.Delete(entry.Folder);
+                    _jobFolders.Delete(entry.Folder);
                     _logger.LogInformation("Generation job folder {Folder} deleted with its local pack", entry.Folder);
                 }
 
@@ -243,7 +243,7 @@ public sealed class GenerationService : IDisposable
     }
 
     /// <summary>
-    /// "New translation" on the result: the job folder (its working copy) is deleted, the local pack stays in Packs →
+    /// "New translation" on the result: the job folder is deleted, the local pack stays in Packs →
     /// Mine, and the tab shows the start form again. Never throws.
     /// </summary>
     public async Task<GenerationActionResult> CloseResultAsync(GameId game)
@@ -256,7 +256,7 @@ public sealed class GenerationService : IDisposable
 
         try
         {
-            await Task.Run(() => _copies.Delete(result.Folder)).ConfigureAwait(false);
+            await Task.Run(() => _jobFolders.Delete(result.Folder)).ConfigureAwait(false);
             _logger.LogInformation("Generation job folder {Folder} deleted; the local pack {Pack} stays", result.Folder, result.Pack.Manifest.Id);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
@@ -270,7 +270,7 @@ public sealed class GenerationService : IDisposable
     }
 
     /// <summary>
-    /// Deletes a job folder with its working copy (Settings → Storage, task 66). An open job is cancelled first (refused
+    /// Deletes a job folder (Settings → Storage, task 66). An open job is cancelled first (refused
     /// while it runs here: <see cref="GenerationActionProblem.Busy"/>); the folder of the game's result goes as "New
     /// translation" does (the local pack stays); any other folder (a finished or broken job) is deleted. Never throws.
     /// </summary>
@@ -299,7 +299,7 @@ public sealed class GenerationService : IDisposable
 
         try
         {
-            await Task.Run(() => _copies.Delete(folder)).ConfigureAwait(false);
+            await Task.Run(() => _jobFolders.Delete(folder)).ConfigureAwait(false);
             _logger.LogInformation("Generation job folder {Folder} deleted from Settings → Storage", folder);
             return new GenerationActionResult(null);
         }
@@ -456,7 +456,7 @@ public sealed class GenerationService : IDisposable
 
     /// <summary>
     /// Cancels the game's job (a running one is stopped first) and, with <paramref name="deleteFolder"/>, deletes its
-    /// folder with the working copy. Never throws.
+    /// folder. Never throws.
     /// </summary>
     public async Task<GenerationActionResult> CancelAsync(GameId game, bool deleteFolder)
     {
@@ -512,7 +512,7 @@ public sealed class GenerationService : IDisposable
 
         try
         {
-            await Task.Run(() => _copies.Delete(folder)).ConfigureAwait(false);
+            await Task.Run(() => _jobFolders.Delete(folder)).ConfigureAwait(false);
             _logger.LogInformation("Generation job folder {Folder} deleted", folder);
             return new GenerationActionResult(job);
         }

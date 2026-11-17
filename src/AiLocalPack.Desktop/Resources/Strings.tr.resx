@@ -65,7 +65,7 @@
     <value>Depolama</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>Yedekler, çalışma kopyaları, önbellek</value>
+    <value>Yedekler, üretim işleri, önbellek</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>Hakkında</value>
@@ -2257,11 +2257,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Disk alanı kontrol ediliyor…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>Çalışma kopyası: {0}</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>Çalışma kopyası: {0}, klonlandı: yer kaplamaz</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>İşin dosyaları için {0}</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · {1} boş</value>
@@ -2284,8 +2281,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>Çeviriden önce sözlüğü gözden geçireyim</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>Ajan bir kopya üzerinde çalışır; oyun dosyalarınıza dokunulmaz.</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>Ajan oyununu yalnızca okur; deneme çalıştırması onu kısa süre değiştirir ve sonra her şeyi geri koyar.</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>Oluşturmayı başlat</value>
@@ -2306,7 +2303,7 @@
     <value>Boyut tahmin edilemedi</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>Çalışma kopyası için yeterli disk alanı yok</value>
+    <value>İşin dosyaları için yeterli disk alanı yok</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>Bu oyun için oluşturma kullanılamıyor.</value>
@@ -2321,7 +2318,7 @@
     <value>Oluşturma başlatılamadı: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>Çalışma kopyası hazırlanıyor</value>
+    <value>Hazırlanıyor</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>Satırlar çıkarılıyor</value>
@@ -2414,7 +2411,7 @@
     <value>{0} · ≈ {1} kaldı</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>Oyun kopyalanıyor: ajan kopya üzerinde çalışır, dosyalarınıza dokunulmaz</value>
+    <value>Oyun klasörü ve disk denetleniyor: ajan oyunu kurulu olduğu yerde okur</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>Metin araç setiyle çıkarılıyor</value>
@@ -2423,7 +2420,7 @@
     <value>Adlar, terimler ve üslup; böylece oyunun tamamı tutarlı okunur</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>Oyun dosyaları kopya üzerinde yeniden oluşturuluyor ve oyun bir kez başlatılıyor</value>
+    <value>Oyun dosyaları yeniden oluşturulup oyunda deneniyor, sonra orijinaller geri konuyor</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Duraklat</value>
@@ -2590,8 +2587,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Araç seti oyun dosyalarını işleyemedi. Nedeni ayrıntılarda.</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>Oyunun çalışma kopyası oluşturulamadı. Nedeni ayrıntılarda.</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>Oyun klasörü şu an bunun için kullanılamıyor. Nedeni ayrıntılarda.</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>Dosyalar yazılamadı: boş alanı kontrol edip tekrar deneyin.</value>
@@ -2615,13 +2612,13 @@
     <value>Oluşturma iptal edilsin mi?</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>%{0} tamamlandı. İlerlemeyi koruyup daha sonra devam edebilir ya da çalışma kopyasını silip diskte yer açabilirsiniz.</value>
+    <value>%{0} tamamlandı. İlerlemeyi koruyup sonra devam edebilir ya da işin dosyalarını silip diskte yer açabilirsin.</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>İlerlemeyi koru</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>Çalışma kopyasını sil</value>
+    <value>İşin dosyalarını sil</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>Geri</value>
@@ -2630,7 +2627,7 @@
     <value>Durduruldu. İlerleme korundu: istediğiniz zaman sürdürün.</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>Oluşturma iptal edildi, çalışma kopyası silindi.</value>
+    <value>Üretim iptal edildi, işin dosyaları silindi.</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>Görev başka bir pencerede veya komutta çalışıyor.</value>
@@ -2809,6 +2806,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>Test çalıştırmaları kapalı</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>Oyun açıktı, bu yüzden deneme çalıştırması yapılmadı</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>Oyun dosyalarında başka bir değişiklik sürüyordu, bu yüzden deneme çalıştırması yapılmadı</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>Yazı tipleri</value>
   </data>
@@ -2891,7 +2894,7 @@
     <value>Yeni çeviri</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>Çeviri Metin → Benimkiler bölümünde kalır; çalışma kopyası silinir ve form açılır.</value>
+    <value>Çeviri Metin → Benimkiler bölümünde kalır; işin dosyaları silinir ve form açılır.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>Yükleme orijinal dosyaları yedekler; istediğiniz zaman kaldırabilirsiniz.</value>
@@ -2912,16 +2915,16 @@
     <value>Daha sonra Metin → Benimkiler bölümünden yayımlayabilirsiniz.</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>Çeviri ve çalışma kopyası silindi.</value>
+    <value>Çeviri ve işinin dosyaları silindi.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>Çeviri Metin → Benimkiler bölümünde kalıyor; çalışma kopyası silindi.</value>
+    <value>Çeviri Metin → Benimkiler bölümünde kalıyor; işin dosyaları silindi.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Çeviri silinsin mi?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>“{0}” çeviriniz ve görevin çalışma kopyası silinir. Bu işlem geri alınamaz.</value>
+    <value>«{0}» çevirin ve işin dosyaları silinecek. Bu geri alınamaz.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>Çeviri yüklü: önce kaldırın.</value>
@@ -2999,7 +3002,7 @@
     <value>“{0}” silinsin mi?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>Çeviriniz ve onu oluşturan görevin çalışma kopyası silinir. Bu işlem geri alınamaz.</value>
+    <value>Çevirin ve onu yapan işin dosyaları silinecek. Bu geri alınamaz.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>Çeviriniz silindi: “{0}”.</value>
@@ -3568,8 +3571,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>Yedekler {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>Çalışma kopyaları {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>Üretim işleri {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>Önbellek {0}</value>
@@ -3580,8 +3583,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>Yedekler</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>Oluşturma çalışma kopyaları</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>Üretim işleri</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>Önbellek</value>
@@ -3652,17 +3655,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>Yedekler taşınamadı ve yerinde kaldı: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>Çalışma kopyası</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>Üretim işi</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>Silmek için oluşturmayı durdurun</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>Yok. Oluşturma başladığında oyun dosyalarının bir kopyası alınır, böylece ajan oyun klasörüne hiç dokunmaz.</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>Yok. Bir iş metinlerini, sözlüğünü ve yeniden oluşturulan dosyaları burada tutar; oyunu kurulu olduğu yerde okur.</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>Yarıda kalan bir başlatmadan kaldı</value>
@@ -3694,19 +3697,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>Sil</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>“{0}” için çalışma kopyası silinsin mi?</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>{0} için üretim işi silinsin mi?</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>{0} yer açılır. Yaptığınız çeviriler ve yüklü çeviriler kalır; oyuna dokunulmaz.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>{0} yer açılır. Duraklatılan çevirinin ilerlemesi kaybolur: sürdürülemez ve baştan başlaması gerekir. Yüklü çeviriler kalır; oyuna dokunulmaz.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>Bu oyun için oluşturma sürüyor. Önce durdurun.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>Silinemedi: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4370,7 +4373,7 @@
     <value>Taslak {0} · oyun {1} sn sonra kapandı</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>Neyin yanlış olduğunu {0} aracına kendi sözlerinle anlat. Oyunun aynı kopyası üzerinde çalışır ve yeni bir taslak yapar; eski taslak yayımlayana kadar kalır.</value>
+    <value>{0}'e neyin yanlış olduğunu kendi sözlerinle anlat. Aynı oyun dosyalarıyla çalışır ve yeni bir taslak yapar; eskisi sen yayımlayana kadar kalır.</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>Ajana neyin ters gittiğini ya da neyi değiştireceğini yaz…</value>
@@ -4661,7 +4664,7 @@
     <value>Önce sözlüğü gözden geçirmeme izin ver.</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>Hazırlık · çalışma kopyası hazır</value>
+    <value>Hazırlık · oyun klasörü denetlendi</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>Çıkarma · metin: {0}</value>

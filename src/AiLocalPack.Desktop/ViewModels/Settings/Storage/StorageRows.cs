@@ -25,13 +25,13 @@ public sealed class StorageSummaryRow(SettingRowServices services) : SettingRow(
     /// <summary>Shares of the bar (star widths; all 0 when nothing is used, which hides the segments).</summary>
     public double BackupsShare => Share(_usage?.BackupBytes);
 
-    public double WorkingCopiesShare => Share(_usage?.WorkingCopyBytes);
+    public double JobsShare => Share(_usage?.JobBytes);
 
     public double CacheShare => Share(_usage?.CacheBytes);
 
     public string BackupsLegend => Legend(nameof(Strings.Settings_Storage_Legend_Backups), _usage?.BackupBytes);
 
-    public string WorkingCopiesLegend => Legend(nameof(Strings.Settings_Storage_Legend_WorkingCopies), _usage?.WorkingCopyBytes);
+    public string JobsLegend => Legend(nameof(Strings.Settings_Storage_Legend_Jobs), _usage?.JobBytes);
 
     public string CacheLegend => Legend(nameof(Strings.Settings_Storage_Legend_Cache), _usage?.CacheBytes);
 
@@ -59,10 +59,10 @@ public sealed class StorageSummaryRow(SettingRowServices services) : SettingRow(
         OnPropertyChanged(nameof(IsMeasured));
         OnPropertyChanged(nameof(Label));
         OnPropertyChanged(nameof(BackupsShare));
-        OnPropertyChanged(nameof(WorkingCopiesShare));
+        OnPropertyChanged(nameof(JobsShare));
         OnPropertyChanged(nameof(CacheShare));
         OnPropertyChanged(nameof(BackupsLegend));
-        OnPropertyChanged(nameof(WorkingCopiesLegend));
+        OnPropertyChanged(nameof(JobsLegend));
         OnPropertyChanged(nameof(CacheLegend));
     }
 }
@@ -186,14 +186,14 @@ public sealed record BackupMoveProgressState(long Done, long Total);
 /// One generation job folder: the game, its size and the job's state, <c>Delete</c> (confirmation; an open job's
 /// progress is lost). A job generating right now can't be deleted: "Stop generation to delete" instead of the button.
 /// </summary>
-public sealed class WorkingCopyRow : SettingRow
+public sealed class JobRow : SettingRow
 {
-    private WorkingCopyUsage _usage;
+    private JobFolderUsage _usage;
     private bool _isDeleting;
     private string? _error;
 
-    public WorkingCopyRow(SettingRowServices services, WorkingCopyUsage usage, Action<WorkingCopyRow> delete)
-        : base(services, nameof(Strings.Settings_Storage_WorkingCopy_Label), null)
+    public JobRow(SettingRowServices services, JobFolderUsage usage, Action<JobRow> delete)
+        : base(services, nameof(Strings.Settings_Storage_Job_Label), null)
     {
         ArgumentNullException.ThrowIfNull(usage);
         ArgumentNullException.ThrowIfNull(delete);
@@ -201,7 +201,7 @@ public sealed class WorkingCopyRow : SettingRow
         DeleteCommand = new RelayCommand(() => delete(this), () => CanDelete);
     }
 
-    public WorkingCopyUsage Usage => _usage;
+    public JobFolderUsage Usage => _usage;
 
     public string Folder => _usage.Folder;
 
@@ -232,7 +232,7 @@ public sealed class WorkingCopyRow : SettingRow
 
     public override string Label => Job?.GameName ?? _usage.GameFolder;
 
-    public override string? Help => Localizer.Format(nameof(Strings.Settings_Storage_WorkingCopy_Help), AddGameText.FormatSize(Localizer, _usage.Bytes), State);
+    public override string? Help => Localizer.Format(nameof(Strings.Settings_Storage_Job_Help), AddGameText.FormatSize(Localizer, _usage.Bytes), State);
 
     /// <summary>The job's state in words ("Paused", "Generating now", "Finished").</summary>
     public string State => Job switch
@@ -265,11 +265,11 @@ public sealed class WorkingCopyRow : SettingRow
 
     public string DeleteText => Localizer[nameof(Strings.Settings_Storage_Delete)];
 
-    public string RunningText => Localizer[nameof(Strings.Settings_Storage_WorkingCopy_StopToDelete)];
+    public string RunningText => Localizer[nameof(Strings.Settings_Storage_Job_StopToDelete)];
 
     public override IEnumerable<string> SearchTexts => [.. base.SearchTexts, Label];
 
-    public void Update(WorkingCopyUsage usage)
+    public void Update(JobFolderUsage usage)
     {
         ArgumentNullException.ThrowIfNull(usage);
         if (usage == _usage)

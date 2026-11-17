@@ -9,7 +9,7 @@ using ModelContextProtocol;
 namespace AiLocalPack.Mcp;
 
 /// <summary>How the server is started (<c>ailocalpack mcp --root … --job … [--lang …] [--tool …]</c>).</summary>
-/// <param name="Root">The working copy of the game (the only folder file tools see).</param>
+/// <param name="Root">The game folder (the only folder file tools see; read only).</param>
 /// <param name="JobFolder">Where the string store, glossary and rebuild go (<see cref="GenerationFiles"/>); not inside <paramref name="Root"/>.</param>
 /// <param name="Language">The translation's language tag; <c>null</c> = the stored strings' language (writes are refused while neither is known).</param>
 /// <param name="Tools">The machine's recipe tools (<see cref="RecipeTools.Create"/>).</param>
@@ -20,11 +20,17 @@ public sealed record ToolkitServerOptions(string Root, string JobFolder, string?
 
     /// <summary>How many game runs the agent may ask for with <c>test_run</c> (<c>--test-runs</c>); <c>null</c> = the tool isn't offered.</summary>
     public int? TestRuns { get; init; }
+
+    /// <summary>
+    /// The game as the tools read it: <see cref="Root"/> without the pack installed there (<see cref="GameViews"/>,
+    /// _Live game folder_), so the strings and the files' text are the game's own; <c>null</c> = the folder as it is.
+    /// </summary>
+    public IGameFiles? Game { get; init; }
 }
 
 /// <summary>
-/// State shared by the tool calls of one server: the working copy, the job files and the extraction (cached for the
-/// session: the copy doesn't change under the toolkit; <c>refresh</c> reads it again). Calls run one at a time.
+/// State shared by the tool calls of one server: the game folder, the job files and the extraction (cached for the
+/// session: the toolkit doesn't change the game; <c>refresh</c> reads it again). Calls run one at a time.
 /// </summary>
 public sealed class ToolkitSession
 {
@@ -38,7 +44,7 @@ public sealed class ToolkitSession
     {
         ArgumentNullException.ThrowIfNull(options);
         this.options = options;
-        Copy = new WorkingCopy(options.Root);
+        Copy = new GameRoot(options.Root);
         if (!Directory.Exists(Copy.Root))
         {
             throw new ArgumentException($"Folder not found: {Copy.Root}", nameof(options));
@@ -58,7 +64,12 @@ public sealed class ToolkitSession
         }
     }
 
-    public WorkingCopy Copy { get; }
+    public GameRoot Copy { get; }
+
+    /// <summary>The game as the tools read it (<see cref="ToolkitServerOptions.Game"/>, else the folder as it is).</summary>
+    public IGameFiles Game => game ??= options.Game ?? GameFiles.Folder(Copy.Root);
+
+    private IGameFiles? game;
 
     public GenerationFiles Files { get; }
 
@@ -76,7 +87,7 @@ public sealed class ToolkitSession
     /// <summary>
     /// The strings the agent's own extractor wrote into its workspace (<see cref="AgentScriptTool"/>, task 57) once that
     /// file is there: the job went the agent's way, for an engine the toolkit can't read or one whose tool failed on this
-    /// game. Otherwise the recipe tool for the copy's engine.
+    /// game. Otherwise the recipe tool for the game's engine.
     /// </summary>
     /// <exception cref="McpException">Unknown engine, an engine switched off on this OS, or one without a tool, and no agent extraction.</exception>
     public (IRecipeTool Tool, EngineKind Kind) Tool()
@@ -93,7 +104,7 @@ public sealed class ToolkitSession
             : throw new McpException(reader.Problem + WriteYourOwn);
     }
 
-    /// <summary>What reads the copy: the job's choice (<see cref="ToolkitServerOptions.Reader"/>), else the detected engine's tool.</summary>
+    /// <summary>What reads the game: the job's choice (<see cref="ToolkitServerOptions.Reader"/>), else the detected engine's tool.</summary>
     public GameReader Reader() => GameReader.Resolve(Tools, Detect().Kind, options.Reader);
 
     private const string WriteYourOwn = " Write your own extractor: it must write strings.json in your workspace.";
@@ -106,7 +117,7 @@ public sealed class ToolkitSession
     /// <summary>The strings the agent's extractor wrote (<c>agent/strings.json</c> of the job folder).</summary>
     public AgentScriptTool AgentTool() => agentTool ??= new AgentScriptTool(Files.AgentStringsPath);
 
-    /// <summary>The copy's strings (cached).</summary>
+    /// <summary>The game's strings (cached).</summary>
     /// <exception cref="McpException">No tool for the engine, or the game files can't be read.</exception>
     public Extracted Extract(bool refresh = false, CancellationToken cancellationToken = default)
     {
@@ -125,7 +136,7 @@ public sealed class ToolkitSession
 
         try
         {
-            var result = tool.Extract(Copy.Root, cancellationToken);
+            var result = tool.Extract(Game, cancellationToken);
             return extraction = new Extracted(tool, kind, result, result.Strings.ToDictionary(s => s.Key, StringComparer.Ordinal));
         }
         catch (RecipeException e)

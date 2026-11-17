@@ -5,7 +5,7 @@ using Avalonia.Media;
 namespace AiLocalPack.Desktop.Views;
 
 /// <summary>
-/// A rounded bar split into three coloured segments by their shares (Settings → Storage: backups, working copies,
+/// A rounded bar split into three coloured segments by their shares (Settings → Storage: backups, generation jobs,
 /// cache), 2 px apart, on a track. Shares are fractions of the whole; a zero share draws nothing.
 /// </summary>
 public sealed class StackedBar : Control

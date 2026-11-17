@@ -152,7 +152,7 @@ public sealed class AppPathsTests
         paths.SettingsFile.Should().Be(Path.Combine(home, "config", "settings.json"));
         paths.Logs.Should().Be(Path.Combine(home, "data", "logs"));
         paths.Backups.Should().Be(Path.Combine(home, "data", "backups"));
-        paths.WorkingCopies.Should().Be(Path.Combine(home, "data", "work"));
+        paths.GenerationJobs.Should().Be(Path.Combine(home, "data", "work"));
     }
 
     [Fact]

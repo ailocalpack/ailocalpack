@@ -259,12 +259,12 @@ internal static class Composition
         services.AddSingleton<TranslationRequests>();
     }
 
-    /// <summary>Generation jobs: estimate, working copies, the pipeline's stages (tasks 46–52).</summary>
+    /// <summary>Generation jobs: estimate, job folders, the pipeline's stages (tasks 46–52).</summary>
     private static void AddGeneration(IServiceCollection services)
     {
         services.AddSingleton<GenerationJobStore>();
-        services.AddSingleton(sp => new WorkingCopies(sp.GetRequiredService<AppPaths>(), FileCloner.Create(), new SystemDiskSpace()));
-        services.AddSingleton(sp => new GenerationEstimator(sp.GetRequiredService<RecipeTools>(), sp.GetRequiredService<WorkingCopies>(), sp.GetRequiredService<EngineDetector>()));
+        services.AddSingleton(sp => new GenerationJobFolders(sp.GetRequiredService<AppPaths>(), new SystemDiskSpace()));
+        services.AddSingleton(sp => new GenerationEstimator(sp.GetRequiredService<RecipeTools>(), sp.GetRequiredService<GenerationJobFolders>(), sp.GetRequiredService<EngineDetector>()));
         services.AddSingleton<IGenerationEstimates, GenerationEstimates>();
         services.AddSingleton<IUpdateBases, UpdateBases>();
         services.AddSingleton(sp => new ReferenceFetcher(sp.GetRequiredService<PackManifestClient>(), sp.GetRequiredService<PackFetcher>(), sp.GetRequiredService<ILogger<ReferenceFetcher>>()));
@@ -275,7 +275,10 @@ internal static class Composition
             sp.GetRequiredService<OsEnvironment>().Os,
             probe: GameProbes.For(sp.GetRequiredService<OsEnvironment>().Os),
             baselines: sp.GetRequiredService<TestRunBaselines>(),
-            environment: sp.GetRequiredService<OsEnvironment>()));
+            environment: sp.GetRequiredService<OsEnvironment>(),
+            processes: sp.GetRequiredService<IProcessList>(),
+            trials: new GameTrials(sp.GetRequiredService<AppPaths>(), FileCloner.Create(), sp.GetRequiredService<ILogger<GameTrials>>())));
+        services.AddSingleton(sp => new GameViews(sp.GetRequiredService<AppPaths>()));
         services.AddSingleton<PipelineStagesFactory>();
         services.AddSingleton<IGenerationStagesFactory>(sp => sp.GetRequiredService<PipelineStagesFactory>());
         services.AddSingleton<IFixRunnerFactory>(sp => sp.GetRequiredService<PipelineStagesFactory>());

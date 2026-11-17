@@ -15,7 +15,7 @@ namespace AiLocalPack.Mcp;
 /// <summary>
 /// The tools the agent calls. Results are small and paged (<c>offset</c> + <c>limit</c> in, <c>total</c> +
 /// <c>nextOffset</c> out, <c>null</c> = last page), string pages also stop at <see cref="MaxPageCharacters"/>, so a
-/// result fits the agent's context. User mistakes (a path outside the copy, an unknown key) come back as tool errors
+/// result fits the agent's context. User mistakes (a path outside the game folder, an unknown key) come back as tool errors
 /// whose text the agent reads.
 /// </summary>
 [McpServerToolType]
@@ -108,7 +108,8 @@ public sealed class ToolkitTools(ToolkitSession session)
 
             try
             {
-                using var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                // Through the game view: a file an installed pack replaced reads as the game's own.
+                using var stream = Open(file);
                 return LooksBinary(stream)
                     ? Hex(session.Copy.Relative(file), stream, byteOffset, byteCount)
                     : Lines(session.Copy.Relative(file), stream, startLine, lineCount);
@@ -470,7 +471,7 @@ public sealed class ToolkitTools(ToolkitSession session)
                     Directory.Delete(output, recursive: true);
                 }
 
-                result = tool.Rebuild(session.Copy.Root, table.Language, table.Strings, new DirectoryRebuildOutput(output), cancellationToken);
+                result = tool.Rebuild(session.Game, table.Language, table.Strings, new DirectoryRebuildOutput(output), cancellationToken);
             }
             catch (RecipeException e)
             {
@@ -588,7 +589,7 @@ public sealed class ToolkitTools(ToolkitSession session)
                     return (Sorted(entries), true);
                 }
 
-                var link = WorkingCopy.IsLink(child);
+                var link = GameRoot.IsLink(child);
                 var isFolder = !link && child is DirectoryInfo;
                 if (isFolder && recursive)
                 {
@@ -614,7 +615,10 @@ public sealed class ToolkitTools(ToolkitSession session)
         return entries;
     }
 
-    private static bool LooksBinary(FileStream stream)
+    /// <summary>The file at <paramref name="full"/> (resolved inside the game folder) through the game view.</summary>
+    private Stream Open(string full) => session.Game.OpenRead(session.Copy.Relative(full));
+
+    private static bool LooksBinary(Stream stream)
     {
         var buffer = new byte[8_000];
         var read = stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream: false);
@@ -622,7 +626,7 @@ public sealed class ToolkitTools(ToolkitSession session)
         return Array.IndexOf(buffer, (byte)0, 0, read) >= 0;
     }
 
-    private static SnippetResult Lines(string path, FileStream stream, int startLine, int lineCount)
+    private static SnippetResult Lines(string path, Stream stream, int startLine, int lineCount)
     {
         var first = Math.Max(1, startLine);
         var wanted = Math.Clamp(lineCount, 1, MaxSnippetLines);
@@ -656,7 +660,7 @@ public sealed class ToolkitTools(ToolkitSession session)
         return new SnippetResult(path, stream.Length, "text", text.ToString(), countAll ? number : null, next, null);
     }
 
-    private static SnippetResult Hex(string path, FileStream stream, long byteOffset, int byteCount)
+    private static SnippetResult Hex(string path, Stream stream, long byteOffset, int byteCount)
     {
         var start = Math.Clamp(byteOffset, 0, stream.Length);
         var buffer = new byte[(int)Math.Min(Math.Clamp(byteCount, 1, MaxHexBytes), stream.Length - start)];

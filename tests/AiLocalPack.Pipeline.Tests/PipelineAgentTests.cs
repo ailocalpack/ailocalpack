@@ -4,7 +4,7 @@ using AiLocalPack.Core.Generation;
 
 namespace AiLocalPack.Pipeline.Tests;
 
-/// <summary>What a stage's agent run is given (task 49): only the toolkit server, the working copy, prompts, model.</summary>
+/// <summary>What a stage's agent run is given (task 49): only the toolkit server on the game folder, the job's agent folder to work in, prompts, model.</summary>
 public sealed class PipelineAgentTests : IDisposable
 {
     private readonly StageHarness _h = new();
@@ -24,7 +24,7 @@ public sealed class PipelineAgentTests : IDisposable
     }
 
     [Fact]
-    public async Task The_agent_works_in_the_copy_with_only_the_toolkit_server()
+    public async Task The_agent_works_in_its_job_folder_with_only_the_toolkit_server_on_the_game()
     {
         // Arrange
         var expected = StageHarness.Server.For(_h.Copy, _h.Folder, "ru");
@@ -35,7 +35,7 @@ public sealed class PipelineAgentTests : IDisposable
         // Assert
         new { request.WorkingDirectory, Servers = request.McpServers, Tools = request.BuiltinTools }.Should().BeEquivalentTo(new
         {
-            WorkingDirectory = _h.Copy,
+            WorkingDirectory = _h.Files.AgentFolder,
             Servers = new[] { expected },
             Tools = new HashSet<AgentBuiltinTool>(),
         });

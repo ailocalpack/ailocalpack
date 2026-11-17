@@ -25,7 +25,7 @@ public static class ToolkitServerLaunch
         return args.Count > 0 && args[0] == Argument;
     }
 
-    /// <summary>The command line an agent runs to start the server for one working copy.</summary>
+    /// <summary>The command line an agent runs to start the server for one game folder.</summary>
     public static (string Executable, IReadOnlyList<string> Arguments) Command(AppLaunch app, string root, string jobFolder, string? language)
     {
         ArgumentNullException.ThrowIfNull(app);
@@ -66,7 +66,7 @@ public static class ToolkitServerLaunch
 
         if (string.IsNullOrWhiteSpace(root) || string.IsNullOrWhiteSpace(job))
         {
-            return (null, "--root <working copy> and --job <job folder> are required.");
+            return (null, "--root <game folder> and --job <job folder> are required.");
         }
 
         if (tool is not null && tool != GenerationOptions.AgentReader && tools.Find(tool) is null)
@@ -77,6 +77,17 @@ public static class ToolkitServerLaunch
         return language is not null && !GameLanguages.Tags.Contains(language, StringComparer.Ordinal)
             ? (null, $"'{language}' is not a supported language tag (e.g. en, ru, pt-BR).")
             : (new ToolkitServerOptions(root, job, language, tools) { Reader = tool, TestRuns = testRuns }, null);
+    }
+
+    /// <summary>
+    /// <paramref name="options"/> reading the game without the pack installed in its folder (the install records of the
+    /// app home <paramref name="env"/> names), so the agent sees the game's own text (_Live game folder_).
+    /// </summary>
+    public static ToolkitServerOptions WithoutInstalledPack(ToolkitServerOptions options, OsEnvironment env)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(env);
+        return options with { Game = new GameViews(AppPaths.Resolve(env)).WithoutPack(options.Root) };
     }
 
     /// <summary>Serves until standard input closes; a refusal to start goes to <paramref name="error"/> with exit code 1.</summary>
@@ -123,6 +134,6 @@ public static class ToolkitServerLaunch
             e.Cancel = true;
             stop.Cancel();
         };
-        return RunAsync(options, error, stop.Token).GetAwaiter().GetResult();
+        return RunAsync(WithoutInstalledPack(options, env), error, stop.Token).GetAwaiter().GetResult();
     }
 }

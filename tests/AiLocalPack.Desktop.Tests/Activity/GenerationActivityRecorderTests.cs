@@ -62,7 +62,7 @@ public sealed class GenerationActivityRecorderTests
         // Assert
         var task = services.GetRequiredService<ActivityStore>().Tasks.Single();
         (task.Kind, task.Title, task.Step, task.Pause is not null, task.Cancel is null)
-            .Should().Be((ActivityTaskKind.Generation, "Generating · Русский", "Making the working copy", true, true));
+            .Should().Be((ActivityTaskKind.Generation, "Generating · Русский", "Getting ready", true, true));
     }
 
     [Fact]

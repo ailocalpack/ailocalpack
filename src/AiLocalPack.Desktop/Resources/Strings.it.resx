@@ -68,7 +68,7 @@
     <value>Spazio</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>Backup, copie di lavoro, cache</value>
+    <value>Backup, lavori di generazione, cache</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>Informazioni</value>
@@ -2332,11 +2332,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>Controllo dello spazio su disco…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>Copia di lavoro di {0}</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>Copia di lavoro di {0}, clonata: non occupa spazio</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>{0} per i file del lavoro</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · {1} liberi</value>
@@ -2359,8 +2356,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>Fammi controllare il glossario prima di tradurre</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>L'agente lavora su una copia; i file del tuo gioco non vengono toccati.</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>L'agente legge soltanto il tuo gioco; una prova lo modifica per un momento e poi rimette tutto a posto.</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>Avvia generazione</value>
@@ -2381,7 +2378,7 @@
     <value>Impossibile stimare le dimensioni</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>Spazio su disco insufficiente per la copia di lavoro</value>
+    <value>Spazio su disco insufficiente per i file del lavoro</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>La generazione non è disponibile per questo gioco.</value>
@@ -2396,7 +2393,7 @@
     <value>Impossibile avviare la generazione: {0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>Creazione della copia di lavoro</value>
+    <value>Preparazione</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>Estrazione delle stringhe</value>
@@ -2489,7 +2486,7 @@
     <value>{0} · ≈ {1} rimanenti</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>Copia del gioco: l'agente lavora sulla copia, i tuoi file restano intatti</value>
+    <value>Controllo della cartella del gioco e del disco: l'agente legge il gioco dove è installato</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>Estrazione del testo con il toolkit</value>
@@ -2498,7 +2495,7 @@
     <value>Nomi, termini e tono, perché tutto il gioco sia coerente</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>Ricostruzione dei file del gioco sulla copia e un avvio di prova</value>
+    <value>Ricostruzione dei file del gioco e prova nel gioco, poi vengono rimessi gli originali</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>Pausa</value>
@@ -2668,8 +2665,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>Il toolkit non è riuscito a elaborare i file del gioco. Il motivo è nei dettagli.</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>Non è stato possibile creare la copia di lavoro del gioco. Il motivo è nei dettagli.</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>Al momento la cartella del gioco non può essere usata per questo. I dettagli indicano il motivo.</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>Impossibile scrivere i file: controlla lo spazio libero, poi riprova.</value>
@@ -2693,13 +2690,13 @@
     <value>Annullare la generazione?</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>Completato il {0}%. Puoi tenere i progressi e continuare più tardi, oppure eliminare la copia di lavoro e liberare spazio.</value>
+    <value>È stato fatto il {0}%. Puoi tenere i progressi e continuare più tardi, oppure eliminare i file del lavoro e liberare il disco.</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>Tieni i progressi</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>Elimina copia di lavoro</value>
+    <value>Elimina i file del lavoro</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>Indietro</value>
@@ -2708,7 +2705,7 @@
     <value>Interrotta. I progressi restano: riprendi quando vuoi.</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>Generazione annullata, copia di lavoro eliminata.</value>
+    <value>Generazione annullata, file del lavoro eliminati.</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>La generazione è in corso in un'altra finestra o comando.</value>
@@ -2896,6 +2893,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>Gli avvii di prova sono disattivati</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>Il gioco era aperto, quindi non è stato avviato per la prova</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>Era in corso un'altra modifica dei file del gioco, quindi non è stato avviato per la prova</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>Font</value>
   </data>
@@ -2987,7 +2990,7 @@
     <value>Nuova traduzione</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>La traduzione resta in Testo → Le mie; la copia di lavoro viene eliminata e si apre il modulo.</value>
+    <value>La traduzione resta in Testo → Mie; i file del lavoro vengono eliminati e si apre il modulo.</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>L'installazione fa un backup dei file originali; puoi disinstallare in qualsiasi momento.</value>
@@ -3008,16 +3011,16 @@
     <value>Puoi pubblicarla più tardi da Testo → Le mie.</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>La traduzione e la sua copia di lavoro sono state eliminate.</value>
+    <value>La traduzione e i file del suo lavoro sono stati eliminati.</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>La traduzione resta in Testo → Le mie; la copia di lavoro è stata eliminata.</value>
+    <value>La traduzione resta in Testo → Mie; i file del lavoro sono stati eliminati.</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>Scartare la traduzione?</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>La tua traduzione «{0}» e la copia di lavoro della generazione vengono eliminate. L'operazione non si può annullare.</value>
+    <value>La tua traduzione «{0}» e i file del lavoro vengono eliminati. Non si può annullare.</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>La traduzione è installata: prima disinstallala.</value>
@@ -3095,7 +3098,7 @@
     <value>Eliminare «{0}»?</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>La tua traduzione e la copia di lavoro della generazione che l'ha creata vengono eliminate. L'operazione non si può annullare.</value>
+    <value>La tua traduzione e i file del lavoro che l’ha creata vengono eliminati. Non si può annullare.</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>Eliminata la tua traduzione «{0}».</value>
@@ -3667,8 +3670,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>Backup {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>Copie di lavoro {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>Lavori di generazione {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>Cache {0}</value>
@@ -3679,8 +3682,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>Backup</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>Copie di lavoro della generazione</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>Lavori di generazione</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>Cache</value>
@@ -3751,17 +3754,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>Non è stato possibile spostare i backup, che restano dov'erano: {0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>Copia di lavoro</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>Lavoro di generazione</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>Ferma la generazione per eliminarla</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>Nessuna. Una copia dei file del gioco viene creata all'avvio della generazione, così l'agente non tocca mai la cartella del gioco.</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>Nessuno. Un lavoro tiene qui i suoi testi, il glossario e i file ricostruiti; legge il gioco dove è installato.</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>Rimasta da un avvio interrotto</value>
@@ -3793,19 +3796,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>Elimina</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>Eliminare la copia di lavoro di {0}?</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>Eliminare il lavoro di generazione di {0}?</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>Libera {0}. Le traduzioni che hai creato e quelle installate restano; il gioco non viene toccato.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>Libera {0}. I progressi della traduzione in pausa vanno persi: non si potrà riprendere e ripartirebbe da zero. Le traduzioni installate restano; il gioco non viene toccato.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>Per questo gioco è in corso una generazione. Prima fermala.</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>Impossibile eliminarla: {0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4496,7 +4499,7 @@
     <value>Bozza {0} · il gioco si è chiuso dopo {1} s</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>Spiega a {0} con parole tue cosa non va. Lavora sulla stessa copia del gioco e crea una nuova bozza; la vecchia resta finché non pubblichi.</value>
+    <value>Spiega a {0} con parole tue cosa non va. Lavora sugli stessi file del gioco e crea una nuova bozza; quella vecchia resta finché non pubblichi.</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>Di' all'agente cosa non va o cosa cambiare…</value>
@@ -4787,7 +4790,7 @@
     <value>Fammi prima controllare il glossario.</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>Preparazione · copia di lavoro pronta</value>
+    <value>Preparazione · cartella del gioco controllata</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>Estrazione · testi: {0}</value>

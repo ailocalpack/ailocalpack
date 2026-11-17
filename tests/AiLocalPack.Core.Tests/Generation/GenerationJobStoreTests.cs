@@ -33,7 +33,7 @@ public sealed class GenerationJobStoreTests : IDisposable
         GameName = "Sample Quest «Ёж»",
         Language = "ru",
         Agent = "claude",
-        Options = new GenerationOptions(true, WorkingCopyScope.AllFiles, "opus"),
+        Options = new GenerationOptions(true, "opus"),
         Stage = GenerationStage.Translate,
         Status = GenerationJobStatus.Paused,
         PauseReason = GenerationPauseReason.Limit,
@@ -182,7 +182,7 @@ public sealed class GenerationJobStoreTests : IDisposable
 
         // Assert
         act.Should().Throw<IOException>();
-        Directory.EnumerateDirectories(Path.Combine(_paths.WorkingCopies, "steam-620")).Should().BeEmpty();
+        Directory.EnumerateDirectories(Path.Combine(_paths.GenerationJobs, "steam-620")).Should().BeEmpty();
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public sealed class GenerationJobStoreTests : IDisposable
             Parent = Path.GetDirectoryName(entry.Folder),
             GenerationJobStore.Read(entry.Folder).Status,
             GenerationJobStore.Read(entry.Folder).Stage,
-        }.Should().Be(new { Parent = (string?)Path.Combine(_paths.WorkingCopies, "steam-620"), Status = GenerationJobStatus.Running, Stage = GenerationStage.Setup });
+        }.Should().Be(new { Parent = (string?)Path.Combine(_paths.GenerationJobs, "steam-620"), Status = GenerationJobStatus.Running, Stage = GenerationStage.Setup });
     }
 
     [Fact]

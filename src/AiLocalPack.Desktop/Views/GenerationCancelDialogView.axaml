@@ -5,7 +5,7 @@
              x:Class="AiLocalPack.Desktop.Views.GenerationCancelDialogView"
              x:DataType="g:GenerationCancelDialogViewModel"
              Width="520">
-    <!-- Design §6b: Cancel asks; Keep progress stops the job (resume later), Delete working copy frees the disk. -->
+    <!-- Design §6b: Cancel asks; Keep progress stops the job (resume later), Delete the job's files frees the disk. -->
     <Border Classes="dialog">
         <StackPanel Margin="24,22,24,20" Spacing="12">
             <TextBlock x:Name="CancelTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" TextWrapping="Wrap" />

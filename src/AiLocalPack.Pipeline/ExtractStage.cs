@@ -7,7 +7,8 @@ using AiLocalPack.Toolkit.Recipes.Agent;
 namespace AiLocalPack.Pipeline;
 
 /// <summary>
-/// Stage Extract (task 49): the toolkit's recipe tool reads the working copy's strings into <c>source.json</c>
+/// Stage Extract (task 49): the toolkit's recipe tool reads the game's strings into <c>source.json</c>, from the game
+/// folder itself without a pack installed there (<see cref="GameViews"/>; _Live game folder_)
 /// (<see cref="SourceStringsFile"/>), cuts them into the Translate stage's chunks (<c>chunks.json</c>,
 /// <see cref="ChunkPlanner"/>) and sets the job's counters (strings, chunks, translations already stored). No agent
 /// runs for an engine the toolkit reads: its extraction is complete by construction, and the Glossary stage's agent
@@ -16,7 +17,7 @@ namespace AiLocalPack.Pipeline;
 /// (<see cref="GenerationOptions.Reader"/>: any engine's tool, or the agent's own code), else the detected engine's tool.
 /// An unknown engine, one switched off on this OS or without a tool (task 57), one whose tool fails to read the game
 /// (an encrypted archive, a format change, a tool the player picked for another engine), or the agent's code chosen
-/// by the player: the agent explores the copy and writes
+/// by the player: the agent explores the game folder (read only) and writes
 /// its own extractor and rebuilder in its workspace (<c>agent/</c>, <see cref="AgentWorkspace"/>, prompt
 /// <see cref="PromptTemplate.ExtractUnknown"/>), runs the extractor into <c>agent/strings.json</c> and checks the round
 /// trip; the app reads that file (<see cref="AgentScriptTool"/>: refused strings fail the stage, Agent kind, to retry)
@@ -27,14 +28,16 @@ namespace AiLocalPack.Pipeline;
 /// </summary>
 /// <param name="agent">Writes the extractor of a game the toolkit can't read; <c>null</c> = such a game fails the stage.</param>
 /// <param name="gameName">The game's name, for the agent's prompt.</param>
-public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, PipelineAgent? agent = null, string gameName = "") : IGenerationStage
+/// <param name="views">How the game is seen without its installed pack; <c>null</c> = the folder as it is (tests).</param>
+public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, PipelineAgent? agent = null, string gameName = "", GameViews? views = null) : IGenerationStage
 {
     public GenerationStage Stage => GenerationStage.Extract;
 
     public async Task<GenerationStepResult> RunStepAsync(GenerationStepContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var reader = GameReader.Resolve(tools, new EngineDetector().Detect(context.CopyFolder).Kind, context.Job.Options.Reader);
+        var gameFolder = context.GameFolder;
+        var reader = GameReader.Resolve(tools, new EngineDetector().Detect(gameFolder).Kind, context.Job.Options.Reader);
         var kind = reader.Kind;
         RecipeExtraction extraction;
         var problem = reader.Problem ?? string.Empty;
@@ -43,7 +46,7 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
         {
             try
             {
-                extraction = tool.Extract(context.CopyFolder, cancellationToken);
+                extraction = tool.Extract(views?.WithoutPack(gameFolder) ?? GameFiles.Folder(gameFolder), cancellationToken);
                 return extraction.Strings.Count == 0
                     ? new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, $"The toolkit found no text to translate in this {kind.DisplayName} game.")
                     : Store(context, kind, tool, extraction);
@@ -62,12 +65,18 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
             return new GenerationStepResult.Failed(GenerationFailureKind.Toolkit, problem);
         }
 
+        if (views?.HasPack(gameFolder) == true)
+        {
+            // The agent's code reads the game folder as it is: it would take the installed translation for the game's text.
+            return Fail(context, GenerationFailureKind.GameFolder, problem + " The agent would write its own extractor, but a translation is installed in the game folder and its code would read that instead of the game's own text: uninstall the translation, then resume.");
+        }
+
         context.Log(problem + " The agent writes its own extractor.");
         var files = context.Files;
         var run = await agent.RunAsync(
             context,
             PromptTemplate.ExtractUnknown,
-            PromptValues.ExtractUnknown(gameName, context.Job.Language, kind, context.CopyFolder, CountFiles(context.CopyFolder), toolkitError, reader.Source == TextSizeSource.AgentChosen),
+            PromptValues.ExtractUnknown(gameName, context.Job.Language, kind, gameFolder, CountFiles(gameFolder), toolkitError, reader.Source == TextSizeSource.AgentChosen),
             gameName,
             cancellationToken,
             new AgentWorkspace(files.AgentFolder)).ConfigureAwait(false);
@@ -79,7 +88,7 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
         var agentTool = new AgentScriptTool(files.AgentStringsPath);
         try
         {
-            extraction = agentTool.Extract(context.CopyFolder, cancellationToken);
+            extraction = agentTool.Extract(GameFiles.Folder(gameFolder), cancellationToken);
         }
         catch (RecipeException e)
         {
@@ -154,7 +163,7 @@ public sealed class ExtractStage(RecipeTools tools, ChunkBudget? budget = null, 
         return new GenerationStepResult.Failed(kind, message);
     }
 
-    /// <summary>The working copy's files, for the agent's prompt (best effort).</summary>
+    /// <summary>The game folder's files, for the agent's prompt (best effort).</summary>
     private static int CountFiles(string folder)
     {
         try

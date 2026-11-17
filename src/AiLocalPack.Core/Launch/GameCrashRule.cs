@@ -3,7 +3,7 @@ namespace AiLocalPack.Core.Launch;
 /// <summary>
 /// When a game session with an AI translation installed reads as a crash (task 75, design §6e): the game closed before
 /// it could have been played: within <see cref="Threshold"/> of starting, or within the test run's watch of that game
-/// (its untranslated copy's loading time × 1.5 + 20 s) when that is longer, so a game that loads for a minute and dies
+/// (its untranslated game's loading time × 1.5 + 20 s) when that is longer, so a game that loads for a minute and dies
 /// right after still counts. Nobody plays a game for less than that on purpose. Pure.
 /// </summary>
 public static class GameCrashRule

@@ -120,7 +120,7 @@ internal sealed class FixTestRuns(
         var started = DateTimeOffset.UtcNow;
         context.Log($"Fix: test run {_runs} of {MaxRuns} for the agent" + (ask.Seconds is { } s ? $" (at least {s} s)" : "") + ".");
         var result = await services.TestRunner.RunAsync(
-            new TestRunRequest(game, context.CopyFolder, BuildFolder, prepared.Files, context.Folder, context.Log)
+            new TestRunRequest(game, context.GameFolder, BuildFolder, prepared.Files, context.Folder, context.Log)
             {
                 AtLeast = ask.Seconds is { } seconds ? TimeSpan.FromSeconds(seconds) : null,
                 ShotsFolder = shots,
@@ -150,7 +150,7 @@ internal sealed class FixTestRuns(
                     MaxRuns - _runs));
             }
 
-            if (PatchBuild.Changed(files.AgentOutputFolder, context.CopyFolder, out var problem) is not { } changed)
+            if (PatchBuild.Changed(files.AgentOutputFolder, context.GameFolder, out var problem) is not { } changed)
             {
                 return ([], new TestRunAnswer("failed", problem!, MaxRuns - _runs));
             }
@@ -177,8 +177,9 @@ internal sealed class FixTestRuns(
         }
 
         var output = new DirectoryRebuildOutput(BuildFolder);
-        var rebuilt = tool.Rebuild(context.CopyFolder, context.Job.Language, accepted.Translations, output, cancellationToken);
-        var fonts = await services.Fonts.ApplyAsync(tool, context.CopyFolder, context.Job.Language, accepted.Translations, context.Files.ReadReferences().FontsFor(context.Job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var original = services.Read(context.GameFolder);
+        var rebuilt = tool.Rebuild(original, context.Job.Language, accepted.Translations, output, cancellationToken);
+        var fonts = await services.Fonts.ApplyAsync(tool, original, context.Job.Language, accepted.Translations, context.Files.ReadReferences().FontsFor(context.Job.Language), output, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (fonts.Failure is { } failure)
         {
             return ([], new TestRunAnswer("failed", $"The font the translation needs couldn't be downloaded ({failure.Problem}).", MaxRuns - _runs));
@@ -212,7 +213,7 @@ internal sealed class FixTestRuns(
         if (services.Environment is { } environment && result.Outcome != TestRunOutcome.Skipped)
         {
             var engine = EngineKind.TryParse(game.Engine, out var kind) ? kind.Engine : source.Engine.Engine;
-            log = GameLogs.Find(context.CopyFolder, engine, environment, started);
+            log = GameLogs.Find(context.GameFolder, engine, environment, started);
         }
 
         var outcome = result.Outcome switch

@@ -6,7 +6,7 @@ using AiLocalPack.Toolkit.Recipes;
 namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
-/// <c>mcp --root &lt;working copy&gt; --job &lt;job folder&gt; [--lang &lt;tag&gt;]</c>: the toolkit as an MCP server over
+/// <c>mcp --root &lt;game folder&gt; --job &lt;job folder&gt; [--lang &lt;tag&gt;]</c>: the toolkit as an MCP server over
 /// standard input / output, for an agent (<see cref="ToolkitMcpServer"/>). Standard output carries only the protocol;
 /// a refusal to start goes to standard error with exit code 1. The desktop app serves the same in its hidden mode
 /// (<see cref="ToolkitServerLaunch.Argument"/>), which is what agents start; this command is for development and checks.
@@ -15,10 +15,10 @@ internal static class McpCommand
 {
     public static Command Build(OsEnvironment env)
     {
-        var root = new Option<string>("--root") { Description = "Working copy of the game: the only folder the tools see.", Required = true };
-        var job = new Option<string>("--job") { Description = "Job folder for the string store, glossary and rebuild (outside the working copy).", Required = true };
+        var root = new Option<string>("--root") { Description = "The game folder: the only folder the tools see, which they only read.", Required = true };
+        var job = new Option<string>("--job") { Description = "Job folder for the string store, glossary and rebuild (outside the game folder).", Required = true };
         var lang = new Option<string?>("--lang") { Description = "Language tag of the translation (default: the stored strings' language)." };
-        var command = new Command("mcp", "Serve the toolkit to an agent as an MCP server (stdio), confined to one working copy of a game.")
+        var command = new Command("mcp", "Serve the toolkit to an agent as an MCP server (stdio), confined to one game folder, which it only reads.")
         {
             root, job, lang,
         };
@@ -38,7 +38,7 @@ internal static class McpCommand
                 return 1;
             }
 
-            return await ToolkitServerLaunch.RunAsync(options, error, cancellationToken);
+            return await ToolkitServerLaunch.RunAsync(ToolkitServerLaunch.WithoutInstalledPack(options, env), error, cancellationToken);
         });
         return command;
     }

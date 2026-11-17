@@ -3,6 +3,7 @@ using System.Globalization;
 using AiLocalPack.Agents.Processes;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Toolkit.Engines;
@@ -62,11 +63,11 @@ public sealed record TestRunOptions(bool Enabled = true)
     }
 }
 
-/// <summary>What to try: the game, its working copy (untouched) and the rebuilt files laid over it for the run.</summary>
+/// <summary>What to try: the game, its folder (the live game: _Live game folder_) and the rebuilt files laid over it for the run, undone after it.</summary>
 /// <param name="BuildFolder">The rebuild, laid out like the game folder.</param>
 /// <param name="BuildFiles">Its files (relative, '/'-separated).</param>
 /// <param name="JobFolder">The job folder: <c>test-run/</c> keeps what the run moved aside, <c>logs/test-run.log</c> the game's output.</param>
-public sealed record TestRunRequest(Game Game, string CopyFolder, string BuildFolder, IReadOnlyList<string> BuildFiles, string JobFolder, Action<string> Log)
+public sealed record TestRunRequest(Game Game, string GameFolder, string BuildFolder, IReadOnlyList<string> BuildFiles, string JobFolder, Action<string> Log)
 {
     /// <summary>Watch the translated game at least this long (the agent asked; never past <see cref="TestRunOptions.MaxWatch"/>).</summary>
     public TimeSpan? AtLeast { get; init; }
@@ -74,29 +75,28 @@ public sealed record TestRunRequest(Game Game, string CopyFolder, string BuildFo
     /// <summary>Where the screenshots go; <c>null</c> = <c>test-shots/&lt;UTC time&gt;/</c> in the job folder.</summary>
     public string? ShotsFolder { get; init; }
 
-    /// <summary>Told when a run starts: the untranslated copy (<c>false</c>) or the translation (<c>true</c>), and how long it is watched at most.</summary>
+    /// <summary>Told when a run starts: the untranslated game (<c>false</c>) or the translation (<c>true</c>), and how long it is watched at most.</summary>
     public Action<bool, TimeSpan>? Starting { get; init; }
 }
 
 /// <summary>Tries the translated game (task 51, reworked); behind an interface so stages are tested without games.</summary>
 public interface IGameTestRunner
 {
-    /// <summary>The working copy is as before when it returns.</summary>
-    /// <exception cref="IOException">The rebuilt files can't be laid over the copy, or the copy can't be put back.</exception>
+    /// <summary>The game folder is as before when it returns (else a crash's trial is undone on the next start).</summary>
+    /// <exception cref="IOException">The trial can't be started, or the rebuilt files can't be laid over the game.</exception>
     Task<TestRunResult> RunAsync(TestRunRequest request, CancellationToken cancellationToken);
 }
 
 /// <summary>
 /// The test run: tries the translated game long enough to see it loaded.
 /// <list type="number">
-/// <item><b>The original first</b> (once per game version, <see cref="TestRunBaselines"/>): the untranslated working copy
+/// <item><b>The original first</b> (once per game version, <see cref="TestRunBaselines"/>): the untranslated game
 /// runs until it has loaded, which is a picture on its window (<see cref="GameFrame.HasContent"/>) while it reads less
 /// than <see cref="TestRunOptions.QuietBytes"/> from disk in <see cref="TestRunOptions.QuietSpan"/>
 /// (<see cref="IGameProbe"/>); its screenshot then is the comparison. It is watched for
 /// <see cref="TestRunOptions.WatchFor"/> its loading time (× 1.5 + 20 s, 30 s – 3 min). When it closes by itself within
-/// that, the game can't be tried from a copy here (it needs its store, or the movies and audio left out of the copy):
-/// skipped, and nothing is remembered.</item>
-/// <item><b>Then the translation</b>, with the rebuilt files laid over the copy (<see cref="TestRunOverlay"/>), for the
+/// that, the game can't be tried when this app starts it (it needs its store running): skipped, and nothing is remembered.</item>
+/// <item><b>Then the translation</b>, with the rebuilt files laid over the game (<see cref="GameTrial.Lay"/>), for the
 /// same watch (longer when <see cref="TestRunRequest.AtLeast"/> asks): still running at the end = passed; closed earlier
 /// = crashed, with the last error lines and what the OS recorded about it (<see cref="CrashReports"/>). A first launch
 /// that passes is followed by a <b>second launch</b> for the same watch, on the files the first one wrote (a cache built
@@ -104,15 +104,16 @@ public interface IGameTestRunner
 /// (<see cref="TestRunShotKind.Translated"/>, the first launch) and the last one (<see cref="TestRunShotKind.Last"/>: at
 /// the end, or the last before it closed).</item>
 /// </list>
-/// What the game writes into the working copy itself is undone after the original's run and after the translation's
-/// (<see cref="TestRunCopyGuard"/>: from the copy's own versions saved in the job folder, the files a game writes
-/// remembered with its baseline so later runs and jobs save them first), so every run starts from the copy as extracted.
+/// Everything runs as one trial on the live game folder (<see cref="GameTrials"/>, _Live game folder_): the install lock
+/// and a journal (a crash is undone on the next start; the lock held elsewhere skips the run, <see cref="TestRunSkip.Busy"/>),
+/// and a write guard over the game folder and the engine's data folders (<see cref="GameDataFolders"/>,
+/// <see cref="GameWriteGuard"/>; the files a game writes remembered with its baseline so later runs back them up first),
+/// so every run starts from the game as it was. A game the player has open is skipped (<see cref="TestRunSkip.GameRunning"/>).
 /// Skipped before starting: no program this OS runs (<see cref="GameLaunchPlanner.PlanProgram"/>, a bundle's own binary
 /// so the process can be watched), a Windows program wrapped in Steam's DRM (<see cref="SteamStub"/>), the OS refusing to
 /// start it. A Steam game gets <c>steam_appid.txt</c> next to its program and <c>SteamAppId</c> / <c>SteamGameId</c> in
-/// its environment, so the Steam API doesn't restart the game through Steam (which would start the installed game instead
-/// of the copy). Standard output and error go to <c>logs/test-run.log</c>. The game may write its settings and saves where
-/// the installed game does.
+/// its environment, so the Steam API doesn't restart the game through Steam (the run couldn't watch it then); the file is
+/// taken off with the build. Standard output and error go to <c>logs/test-run.log</c>.
 /// </summary>
 public sealed class GameTestRunner(
     IProcessRunner runner,
@@ -121,7 +122,9 @@ public sealed class GameTestRunner(
     IGameProbe? probe = null,
     TestRunBaselines? baselines = null,
     OsEnvironment? environment = null,
-    TimeProvider? time = null) : IGameTestRunner
+    TimeProvider? time = null,
+    IProcessList? processes = null,
+    GameTrials? trials = null) : IGameTestRunner
 {
     private const int TailLines = 10;
     private const int MaxLogLines = 5_000;
@@ -133,7 +136,7 @@ public sealed class GameTestRunner(
     {
         ArgumentNullException.ThrowIfNull(environment);
         ArgumentNullException.ThrowIfNull(paths);
-        return new GameTestRunner(runner, environment.Os, probe: GameProbes.For(environment.Os), baselines: new TestRunBaselines(paths.TestRuns), environment: environment);
+        return new GameTestRunner(runner, environment.Os, probe: GameProbes.For(environment.Os), baselines: new TestRunBaselines(paths.TestRuns), environment: environment, processes: new SystemProcessList(), trials: new GameTrials(paths, FileCloner.Create()));
     }
     private readonly IGameProbe _probe = probe ?? NoGameProbe.Instance;
     private readonly TimeProvider _time = time ?? TimeProvider.System;
@@ -146,7 +149,13 @@ public sealed class GameTestRunner(
             return TestRunResult.Skipped(TestRunSkip.TurnedOff, "Test runs are turned off.");
         }
 
-        var plan = Plan(request.Game, request.CopyFolder, os);
+        // The run changes the live game folder (and undoes it after): never under a session the player has open.
+        if (processes is not null && GameProcessMatcher.Find(processes.Snapshot(), PathNames.RealPath(request.GameFolder), os).Count > 0)
+        {
+            return TestRunResult.Skipped(TestRunSkip.GameRunning, "The game is running, and a test run changes its folder: close the game, then build again to try the translation.");
+        }
+
+        var plan = Plan(request.Game, request.GameFolder, os);
         if (plan.Skip is { } skip)
         {
             return skip;
@@ -156,8 +165,8 @@ public sealed class GameTestRunner(
         var added = new List<string>();
         if (request.Game.Id.SteamAppId is not null)
         {
-            var appIdFile = Path.GetRelativePath(request.CopyFolder, Path.Combine(launch.WorkingDirectory, "steam_appid.txt")).Replace('\\', '/');
-            if (!appIdFile.StartsWith("..", StringComparison.Ordinal) && !File.Exists(Path.Combine(request.CopyFolder, appIdFile)))
+            var appIdFile = Path.GetRelativePath(request.GameFolder, Path.Combine(launch.WorkingDirectory, "steam_appid.txt")).Replace('\\', '/');
+            if (!appIdFile.StartsWith("..", StringComparison.Ordinal) && !File.Exists(Path.Combine(request.GameFolder, appIdFile)))
             {
                 added.Add(appIdFile);
             }
@@ -168,16 +177,29 @@ public sealed class GameTestRunner(
         var logs = Path.Combine(request.JobFolder, "logs");
         Directory.CreateDirectory(logs);
         await using var log = new StreamWriter(Path.Combine(logs, "test-run.log"), append: false);
-        var guard = TestRunCopyGuard.Take(request.CopyFolder, WorkingCopies.SavedOriginalsFolder(request.JobFolder), baselines?.Writes(request.Game.Id) ?? []);
+
+        // A trial on the live game (_Live game folder_): the install lock and a journal, the game's writes noted and
+        // backed up (the game folder and the engine's data folders), all undone after each run and when it ends.
+        var dataRoots = environment is null
+            ? []
+            : GameDataFolders.For(request.GameFolder, new EngineDetector().Detect(request.GameFolder).Kind.Engine, request.Game.Name, environment);
+        var trial = (trials ?? new GameTrials(AppPaths.UnderHome(Path.Combine(request.JobFolder, "trial-home"))))
+            .TryOpen(request.GameFolder, dataRoots, baselines?.Writes(request.Game.Id) ?? [], request.Log);
+        if (trial is null)
+        {
+            return TestRunResult.Skipped(TestRunSkip.Busy, "Another change of game files (an install, an uninstall or another test run) was running: build again to try the translation.");
+        }
+
+        using var opened = trial;
         try
         {
             var baseline = baselines?.Find(request.Game);
             if (baseline is null)
             {
-                request.Log($"Test run: {launch}: measuring how the untranslated copy loads (up to {Seconds(_options.MaxWatch)}).");
+                request.Log($"Test run: {launch}: measuring how the untranslated game loads (up to {Seconds(_options.MaxWatch)}).");
                 request.Starting?.Invoke(false, _options.MaxWatch);
                 var originalShot = baselines?.ScreenshotPath(request.Game.Id) ?? Path.Combine(shots, "original.png");
-                var overlay = TestRunOverlay.Apply(request.JobFolder, request.CopyFolder, request.BuildFolder, [], added);
+                trial.Lay(request.BuildFolder, [], added);
                 Watch original;
                 try
                 {
@@ -186,8 +208,7 @@ public sealed class GameTestRunner(
                 }
                 finally
                 {
-                    overlay.Restore();
-                    Undo(guard, request);
+                    Undo(trial, request);
                 }
 
                 var watch = _options.WatchFor(original.Ready);
@@ -202,8 +223,8 @@ public sealed class GameTestRunner(
                     original.StillRunning ? null : original.ExitCode,
                     original.ReadyShot);
                 request.Log(survived
-                    ? $"Test run: the untranslated copy loads in {(original.Ready is { } r ? Seconds(r) : "an unknown time")}; the translation is watched for {Seconds(watch)}."
-                    : $"Test run: the untranslated copy closed by itself after {Seconds(original.Ran)} with exit code {original.ExitCode}.");
+                    ? $"Test run: the untranslated game loads in {(original.Ready is { } r ? Seconds(r) : "an unknown time")}; the translation is watched for {Seconds(watch)}."
+                    : $"Test run: the untranslated game closed by itself after {Seconds(original.Ran)} with exit code {original.ExitCode}.");
                 if (survived)
                 {
                     baselines?.Save(request.Game.Id, baseline);
@@ -214,7 +235,7 @@ public sealed class GameTestRunner(
             {
                 return TestRunResult.Skipped(
                     TestRunSkip.ClosesUntranslated,
-                    $"the untranslated copy closes by itself (after {Seconds(baseline.Ran)}, exit code {baseline.ExitCode}): the game doesn't run from a copy here (it may need its store, or the movies and audio the copy leaves out)",
+                    $"the untranslated game closes by itself (after {Seconds(baseline.Ran)}, exit code {baseline.ExitCode}): the game doesn't run when this app starts it (it may need its store running)",
                     baseline.Ran,
                     baseline.ExitCode);
             }
@@ -223,7 +244,7 @@ public sealed class GameTestRunner(
             request.Log($"Test run: {launch} with the translation for {Seconds(limit)}.");
             request.Starting?.Invoke(true, limit);
             var started = _time.GetUtcNow();
-            var translatedOverlay = TestRunOverlay.Apply(request.JobFolder, request.CopyFolder, request.BuildFolder, request.BuildFiles, added);
+            trial.Lay(request.BuildFolder, request.BuildFiles, added);
             Watch translated;
             Watch? first = null;
             try
@@ -243,8 +264,7 @@ public sealed class GameTestRunner(
             }
             finally
             {
-                translatedOverlay.Restore();
-                Undo(guard, request);
+                Undo(trial, request);
             }
 
             var list = new List<TestRunShot>();
@@ -264,7 +284,7 @@ public sealed class GameTestRunner(
             }
 
             var loaded = translated.Ready is { } ready ? $"loaded after {Seconds(ready)}" : "never read as loaded";
-            var originalLoads = baseline.Ready is { } originalReady ? $"the untranslated copy loads in {Seconds(originalReady)}" : "the untranslated copy never read as loaded either";
+            var originalLoads = baseline.Ready is { } originalReady ? $"the untranslated game loads in {Seconds(originalReady)}" : "the untranslated game never read as loaded either";
             if (translated.StillRunning)
             {
                 var firstLoaded = first?.Ready is { } firstReady ? $"loaded after {Seconds(firstReady)}" : loaded;
@@ -287,7 +307,7 @@ public sealed class GameTestRunner(
             var secondLaunch = first is null ? "" : $"on its second launch, with the files its first launch wrote (that one kept running for {Seconds(first.Ran)}), ";
             return new TestRunResult(
                 TestRunOutcome.Crashed,
-                Detail: $"{secondLaunch}the game closed with exit code {code} {Seconds(translated.Ran)} after start ({loaded}), while the untranslated copy kept running for {Seconds(baseline.Watch)} ({originalLoads}){tail}",
+                Detail: $"{secondLaunch}the game closed with exit code {code} {Seconds(translated.Ran)} after start ({loaded}), while the untranslated game kept running for {Seconds(baseline.Watch)} ({originalLoads}){tail}",
                 Ran: translated.Ran,
                 ExitCode: translated.ExitCode,
                 Ready: translated.Ready,
@@ -301,10 +321,10 @@ public sealed class GameTestRunner(
         }
     }
 
-    /// <summary>Undoes what the game wrote into the copy and remembers which of the copy's files it writes.</summary>
-    private void Undo(TestRunCopyGuard guard, TestRunRequest request)
+    /// <summary>Takes the laid files off the game, undoes what it wrote, and remembers which files it writes.</summary>
+    private void Undo(GameTrial trial, TestRunRequest request)
     {
-        var undo = guard.Undo(request.Game.InstallPath, request.Log);
+        var undo = trial.Undo();
         if (undo.Written.Count > 0)
         {
             baselines?.AddWrites(request.Game.Id, [.. undo.Written]);
@@ -315,11 +335,11 @@ public sealed class GameTestRunner(
     {
         foreach (var file in added)
         {
-            await File.WriteAllTextAsync(Path.Combine(request.CopyFolder, file), request.Game.Id.SteamAppId!.Value.ToString(CultureInfo.InvariantCulture), cancellationToken).ConfigureAwait(false);
+            await File.WriteAllTextAsync(Path.Combine(request.GameFolder, file), request.Game.Id.SteamAppId!.Value.ToString(CultureInfo.InvariantCulture), cancellationToken).ConfigureAwait(false);
         }
     }
 
-    /// <summary>The program to start in the working copy, or why there is none.</summary>
+    /// <summary>The program to start in the game folder, or why there is none.</summary>
     internal static (ProcessLaunch? Launch, TestRunResult? Skip) Plan(Game game, string copyFolder, OsKind os)
     {
         var main = new EngineDetector().Detect(copyFolder).Match?.MainExecutable ?? game.MainExecutable;
@@ -335,7 +355,7 @@ public sealed class GameTestRunner(
             case CannotLaunch { Problem: LaunchProblem.WindowsOnly or LaunchProblem.LinuxOnly or LaunchProblem.MacOnly } cannot:
                 return (null, TestRunResult.Skipped(TestRunSkip.OtherPlatform, $"{cannot.Executable} is a {Platform(cannot.Problem)} program, which doesn't run on {OsName(os)}."));
             default:
-                return (null, TestRunResult.Skipped(TestRunSkip.NoExecutable, "No program in the working copy this app knows how to start."));
+                return (null, TestRunResult.Skipped(TestRunSkip.NoExecutable, "No program in the game folder this app knows how to start."));
         }
     }
 
@@ -514,119 +534,4 @@ public sealed class GameTestRunner(
     internal static string Seconds(TimeSpan time) => string.Create(CultureInfo.InvariantCulture, $"{time.TotalSeconds:0.#} s");
 
     private sealed record Watch(bool StillRunning, TimeSpan Ran, int ExitCode, IReadOnlyList<string> Tail, TimeSpan? Ready, string? ReadyShot, string? LastShot);
-}
-
-/// <summary>
-/// The rebuilt files laid over the working copy for a test run, undone afterwards so the copy stays the game as it was
-/// (a stage run again extracts and rebuilds from it). In the job folder's <c>test-run/</c>: <c>added.txt</c> (files the
-/// run adds, listed before they are written) and <c>originals/</c> (the copy's files the rebuild replaces, moved aside).
-/// <see cref="Recover"/> undoes what a crash left; every step is safe to repeat.
-/// </summary>
-public sealed class TestRunOverlay
-{
-    private readonly string _folder;
-    private readonly string _copy;
-
-    private TestRunOverlay(string jobFolder, string copyFolder)
-    {
-        _folder = Path.Combine(jobFolder, "test-run");
-        _copy = copyFolder;
-    }
-
-    /// <param name="extra">Files the run writes itself besides the rebuild (<c>steam_appid.txt</c>), removed afterwards.</param>
-    /// <exception cref="IOException">A file can't be moved or copied (what was done is undone first).</exception>
-    public static TestRunOverlay Apply(string jobFolder, string copyFolder, string buildFolder, IReadOnlyList<string> buildFiles, IReadOnlyList<string> extra)
-    {
-        ArgumentNullException.ThrowIfNull(buildFiles);
-        ArgumentNullException.ThrowIfNull(extra);
-        var overlay = new TestRunOverlay(jobFolder, copyFolder);
-        overlay.Restore();
-        try
-        {
-            var added = buildFiles.Where(f => !File.Exists(overlay.CopyPath(f))).Concat(extra).ToList();
-            Directory.CreateDirectory(overlay._folder);
-            AtomicFile.WriteAllBytes(overlay.AddedList, System.Text.Encoding.UTF8.GetBytes(string.Join('\n', added)));
-            foreach (var file in buildFiles)
-            {
-                var target = overlay.CopyPath(file);
-                if (File.Exists(target))
-                {
-                    var original = overlay.OriginalPath(file);
-                    Directory.CreateDirectory(Path.GetDirectoryName(original)!);
-                    File.Move(target, original, overwrite: true);
-                }
-
-                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-                File.Copy(Path.Combine(buildFolder, file.Replace('/', Path.DirectorySeparatorChar)), target, overwrite: true);
-            }
-        }
-        catch
-        {
-            overlay.Restore();
-            throw;
-        }
-
-        return overlay;
-    }
-
-    /// <summary>Undoes an overlay a crash or a killed app left in the job folder (nothing when there is none).</summary>
-    /// <exception cref="IOException">A file can't be moved back.</exception>
-    public static void Recover(string jobFolder, string copyFolder) => new TestRunOverlay(jobFolder, copyFolder).Restore();
-
-    private string AddedList => Path.Combine(_folder, "added.txt");
-
-    private string Originals => Path.Combine(_folder, "originals");
-
-    /// <summary>The copy's own files back in place; the rebuilt ones they replaced are gone, the added ones stay.</summary>
-    public void RestoreOriginals()
-    {
-        if (!Directory.Exists(Originals))
-        {
-            return;
-        }
-
-        foreach (var original in Directory.EnumerateFiles(Originals, "*", SearchOption.AllDirectories))
-        {
-            var target = Path.Combine(_copy, Path.GetRelativePath(Originals, original));
-            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-            File.Move(original, target, overwrite: true);
-        }
-
-        Directory.Delete(Originals, recursive: true);
-    }
-
-    /// <summary>The copy as before the overlay: originals back, added files deleted, <c>test-run/</c> removed.</summary>
-    public void Restore()
-    {
-        if (!Directory.Exists(_folder))
-        {
-            return;
-        }
-
-        RestoreOriginals();
-        if (File.Exists(AddedList))
-        {
-            foreach (var file in File.ReadAllText(AddedList).Split('\n', StringSplitOptions.RemoveEmptyEntries))
-            {
-                File.Delete(CopyPath(file));
-            }
-        }
-
-        Directory.Delete(_folder, recursive: true);
-    }
-
-    private string CopyPath(string relative) => Inside(_copy, relative);
-
-    private string OriginalPath(string relative) => Inside(Originals, relative);
-
-    private static string Inside(string root, string relative)
-    {
-        var full = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
-        if (!full.StartsWith(Path.TrimEndingDirectorySeparator(Path.GetFullPath(root)) + Path.DirectorySeparatorChar, StringComparison.Ordinal))
-        {
-            throw new IOException($"'{relative}' is outside the working copy.");
-        }
-
-        return full;
-    }
 }

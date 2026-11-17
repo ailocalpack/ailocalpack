@@ -47,9 +47,9 @@ public sealed partial class GodotRecipe : IRecipeTool
     /// <summary>Godot's markup: BBCode tags pair up (<c>[b]</c> … <c>[/b]</c>), format fields don't.</summary>
     public TextMarkup Markup => GodotMarkup;
 
-    public RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default)
+    public RecipeExtraction Extract(IGameFiles gameFiles, CancellationToken cancellationToken = default)
     {
-        using var game = Load(gameDir, cancellationToken);
+        using var game = Load(gameFiles, cancellationToken);
         var strings = game.Texts.Values
             .Select(t => new ExtractedString(t.Key, t.Original, t.Context, null, Placeholders(t.Original)))
             .OrderBy(s => s.Key, StringComparer.Ordinal)
@@ -58,12 +58,12 @@ public sealed partial class GodotRecipe : IRecipeTool
     }
 
     public RebuildResult Rebuild(
-        string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+        IGameFiles gameFiles, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
         ArgumentNullException.ThrowIfNull(translations);
         ArgumentNullException.ThrowIfNull(output);
-        using var game = Load(gameDir, cancellationToken);
+        using var game = Load(gameFiles, cancellationToken);
         var unknown = translations.Keys.Where(k => !game.Texts.ContainsKey(k)).Order(StringComparer.Ordinal).ToList();
         var chosen = game.Texts.Values
             .Where(t => translations.TryGetValue(t.Key, out var value) && value is { Length: > 0 } && value != t.Original)
@@ -124,10 +124,10 @@ public sealed partial class GodotRecipe : IRecipeTool
         return new RebuildResult([game.PackPath], chosen.Count, unknown) { InGameLanguage = inGame };
     }
 
-    public IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys)
+    public IReadOnlyList<string> TouchedFiles(IGameFiles gameFiles, IEnumerable<string> keys)
     {
         ArgumentNullException.ThrowIfNull(keys);
-        using var game = Load(gameDir, CancellationToken.None);
+        using var game = Load(gameFiles, CancellationToken.None);
         return keys.Any(game.Texts.ContainsKey) ? [game.PackPath] : [];
     }
 
@@ -146,15 +146,14 @@ public sealed partial class GodotRecipe : IRecipeTool
     [GeneratedRegex(@"\[/?[A-Za-z_][A-Za-z0-9_]*(?:[= ][^\[\]\n]*)?\]|\{[A-Za-z0-9_]*\}|%%|%[-+0#]*\d*(?:\.\d+)?[sdifcxXov]")]
     private static partial Regex Placeholder();
 
-    private Game Load(string gameDir, CancellationToken cancellationToken)
+    private Game Load(IGameFiles files, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(gameDir);
-        var root = Path.GetFullPath(gameDir);
-        var packPath = FindPack(root);
+        ArgumentNullException.ThrowIfNull(files);
+        var packPath = FindPack(files);
         GodotPack pack;
         try
         {
-            pack = GodotPack.Open(Path.Combine(root, packPath));
+            pack = GodotPack.Open(files.OpenRead(packPath));
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or GodotFormatException)
         {
@@ -343,8 +342,9 @@ public sealed partial class GodotRecipe : IRecipeTool
     }
 
     /// <summary>The main pack, relative to the game folder: the engine marker, or the pack named like the main executable next to it.</summary>
-    private string FindPack(string root)
+    private string FindPack(IGameFiles files)
     {
+        var root = files.Root;
         var detection = _engines.Detect(root);
         if (detection.Match is not { Kind.Engine: GameEngine.Godot } match)
         {
@@ -364,7 +364,7 @@ public sealed partial class GodotRecipe : IRecipeTool
         var folder = marker.Contains('/', StringComparison.Ordinal) ? marker[..marker.LastIndexOf('/')] : string.Empty;
         var bundled = name.EndsWith(".app", StringComparison.OrdinalIgnoreCase) ? $"{executable.TrimEnd('/')}/Contents/Resources/{stem}.pck" : null;
         var sibling = (folder.Length == 0 ? string.Empty : folder + "/") + stem + ".pck";
-        return new[] { bundled, sibling }.FirstOrDefault(p => p is not null && GodotPack.IsPack(Path.Combine(root, p))) ?? marker;
+        return new[] { bundled, sibling }.FirstOrDefault(p => p is not null && files.FileExists(p) && GodotPack.IsPack(() => files.OpenRead(p))) ?? marker;
     }
 
     private static T Guard<T>(string file, Func<T> action)

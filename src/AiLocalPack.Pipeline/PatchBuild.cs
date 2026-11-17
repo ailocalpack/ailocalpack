@@ -22,7 +22,7 @@ namespace AiLocalPack.Pipeline;
 /// a file equal to the game's is left out; none changed fails the stage.</item>
 /// <item>The changed files go into the job's <c>build/</c>, the test run tries them as for a recipe pack (no font
 /// swap: the toolkit can't read the engine's fonts).</item>
-/// <item><see cref="PatchArchiveWriter"/> makes the archive from the working copy's originals (every delta decoded again
+/// <item><see cref="PatchArchiveWriter"/> makes the archive from the game folder's originals (every delta decoded again
 /// and checked), the manifest gets <c>patch</c> (URL = <see cref="LocalPackStore.PatchUrl"/>) and the one build with
 /// the originals' hashes; the string table is kept in the pack too (keys + translations, no original texts).</item>
 /// </list>
@@ -40,6 +40,13 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
     {
         var job = context.Job;
         var files = context.Files;
+        var gameFolder = context.GameFolder;
+        if (services.Views?.HasPack(gameFolder) == true)
+        {
+            // The patch is made against the game folder's files: they must be the game's own, not a translation's.
+            return BuildStage.Fail(context, GenerationFailureKind.GameFolder, "A translation is installed in the game folder; the binary patch is made against the game's own files: uninstall the translation, then resume.");
+        }
+
         BuildStage.Step(context, new BuildProgress(BuildStep.Checking));
         var collected = LocalPackBuilder.Collect(source, stored, SourceMarkup.Of(AiLocalPack.Toolkit.Recipes.RecipeTools.Builtin, source));
         foreach (var (key, issue) in collected.Refused)
@@ -66,7 +73,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         var run = await agent.RunAsync(
             context,
             PromptTemplate.RebuildUnknown,
-            PromptValues.RebuildUnknown(game.Name, job.Language, context.CopyFolder, collected.Translations.Count),
+            PromptValues.RebuildUnknown(game.Name, job.Language, gameFolder, collected.Translations.Count),
             game.Name,
             cancellationToken,
             new AgentWorkspace(files.AgentFolder)).ConfigureAwait(false);
@@ -78,7 +85,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         IReadOnlyList<string> changed;
         try
         {
-            if (Changed(files.AgentOutputFolder, context.CopyFolder, out var problem) is not { } found)
+            if (Changed(files.AgentOutputFolder, gameFolder, out var problem) is not { } found)
             {
                 return BuildStage.Fail(context, GenerationFailureKind.Agent, problem!);
             }
@@ -104,11 +111,11 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         TestRunResult testRun;
         try
         {
-            testRun = await services.TestRunner.RunAsync(new TestRunRequest(game, context.CopyFolder, files.BuildFolder, changed, context.Folder, context.Log), cancellationToken).ConfigureAwait(false);
+            testRun = await services.TestRunner.RunAsync(new TestRunRequest(game, gameFolder, files.BuildFolder, changed, context.Folder, context.Log), cancellationToken).ConfigureAwait(false);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            return BuildStage.Fail(context, GenerationFailureKind.Disk, $"The test run couldn't lay the rebuilt files over the working copy: {e.Message}");
+            return BuildStage.Fail(context, GenerationFailureKind.Disk, $"The test run couldn't lay the rebuilt files over the game's: {e.Message}");
         }
 
         context.Log($"Test run {testRun.Outcome.ToString().ToLowerInvariant()}" + (testRun.Skip is { } skip ? $" ({skip})" : "") + (testRun.Detail is { } detail ? $": {detail}" : "."));
@@ -134,7 +141,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         PatchArchive archive;
         try
         {
-            archive = PatchArchiveWriter.Write(temp, context.CopyFolder, context.Files.BuildFolder, changed, cancellationToken: cancellationToken);
+            archive = PatchArchiveWriter.Write(temp, context.GameFolder, context.Files.BuildFolder, changed, cancellationToken: cancellationToken);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {

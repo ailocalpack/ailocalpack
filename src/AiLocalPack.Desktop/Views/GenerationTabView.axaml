@@ -396,7 +396,7 @@
                             <Viewbox Classes="icon" Width="14" Height="14">
                                 <Path Classes="icon" Data="{StaticResource IconShield}" Stroke="{DynamicResource AppOkBrush}" />
                             </Viewbox>
-                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_CopyNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_GameNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
                         </StackPanel>
                         <StackPanel Grid.Column="1" Spacing="4" HorizontalAlignment="Right">
                             <Button x:Name="StartGeneration" Classes="accent" HorizontalAlignment="Right" Command="{Binding StartCommand}"

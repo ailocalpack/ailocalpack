@@ -33,10 +33,16 @@ public sealed class GenerationStepContext(GenerationJobEntry entry, TimeProvider
     /// <summary>The job folder.</summary>
     public string Folder => entry.Folder;
 
-    /// <summary>The working copy (the agent's and the MCP server's root).</summary>
-    public string CopyFolder => WorkingCopies.CopyFolder(entry.Folder);
-
     public GenerationFiles Files { get; } = new(entry.Folder);
+
+    /// <summary>
+    /// The game folder the job reads and test-runs (the MCP server's root), as Setup recorded it
+    /// (<see cref="GenerationFiles.GamePath"/>); a job set up before that (a full working copy, task 46) keeps its copy.
+    /// </summary>
+    /// <exception cref="GenerationFileException">Setup hasn't recorded the game folder.</exception>
+    public string GameFolder => Files.ReadGameFolder()
+        ?? (GenerationJobFolders.LegacyCopyFolder(entry.Folder) is var copy && Directory.Exists(copy) ? copy : null)
+        ?? throw new GenerationFileException(Files.GamePath, "the job's game folder isn't recorded: run the job from its Setup stage again");
 
     public TimeProvider Time => time;
 

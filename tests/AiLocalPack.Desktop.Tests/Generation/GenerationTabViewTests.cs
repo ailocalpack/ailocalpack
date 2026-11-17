@@ -218,7 +218,7 @@ public sealed class GenerationTabViewTests
 
         // Assert
         (Find<Border>(window, "GenBanner").IsEffectivelyVisible, Find<Button>(window, "GenPause").IsEffectivelyVisible, Find<TextBlock>(window, "ProgressTitle").Text)
-            .Should().Be((false, true, "Making the working copy"));
+            .Should().Be((false, true, "Getting ready"));
         window.Close();
     });
 

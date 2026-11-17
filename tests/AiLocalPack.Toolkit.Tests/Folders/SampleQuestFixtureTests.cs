@@ -1,4 +1,5 @@
 using AiLocalPack.Toolkit.Folders;
+using AiLocalPack.Toolkit.Recipes;
 using AiLocalPack.Toolkit.Recipes.RpgMaker;
 
 namespace AiLocalPack.Toolkit.Tests.Folders;

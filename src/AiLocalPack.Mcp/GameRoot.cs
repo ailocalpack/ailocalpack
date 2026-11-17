@@ -4,13 +4,13 @@ using ModelContextProtocol;
 namespace AiLocalPack.Mcp;
 
 /// <summary>
-/// The working copy of the game the server is confined to. Every path a tool takes is relative to it, <c>/</c>- or
+/// The game folder the server is confined to (read only). Every path a tool takes is relative to it, <c>/</c>- or
 /// <c>\</c>-separated; absolute paths, drive or UNC names and any <c>..</c> part are refused, and so is a path that
-/// passes through a symlink (or junction) leading out of the copy or nowhere.
+/// passes through a symlink (or junction) leading out of the game folder or nowhere.
 /// </summary>
-public sealed class WorkingCopy
+public sealed class GameRoot
 {
-    public WorkingCopy(string root)
+    public GameRoot(string root)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(root);
         Root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(root));
@@ -23,8 +23,8 @@ public sealed class WorkingCopy
     /// <summary>The folder with symlinks on the way resolved.</summary>
     public string RealRoot { get; }
 
-    /// <summary>The absolute path of <paramref name="relative"/> inside the copy (<c>null</c>, empty or <c>.</c> = the copy itself).</summary>
-    /// <exception cref="PathOutsideRootException">The path is absolute, has a <c>..</c> part, or leads out of the copy through a link.</exception>
+    /// <summary>The absolute path of <paramref name="relative"/> inside the game folder (<c>null</c>, empty or <c>.</c> = the game folder itself).</summary>
+    /// <exception cref="PathOutsideRootException">The path is absolute, has a <c>..</c> part, or leads out of the game folder through a link.</exception>
     public string Resolve(string? relative)
     {
         var text = relative?.Trim() ?? "";
@@ -59,14 +59,14 @@ public sealed class WorkingCopy
         return current;
     }
 
-    /// <summary><paramref name="full"/> relative to the copy, <c>/</c>-separated (<c>.</c> for the copy itself).</summary>
+    /// <summary><paramref name="full"/> relative to the game folder, <c>/</c>-separated (<c>.</c> for the game folder itself).</summary>
     public string Relative(string full)
     {
         var relative = Path.GetRelativePath(Root, full).Replace('\\', '/');
         return relative.Length == 0 ? "." : relative;
     }
 
-    /// <summary>An entry found while listing the copy is a link (never followed by the tools).</summary>
+    /// <summary>An entry found while listing the game folder is a link (never followed by the tools).</summary>
     public static bool IsLink(FileSystemInfo info)
     {
         ArgumentNullException.ThrowIfNull(info);
@@ -105,7 +105,7 @@ public sealed class WorkingCopy
     }
 }
 
-/// <summary>A tool was given a path outside the working copy; the agent sees the message.</summary>
+/// <summary>A tool was given a path outside the game folder; the agent sees the message.</summary>
 public sealed class PathOutsideRootException : McpException
 {
     public PathOutsideRootException(string path, string reason)

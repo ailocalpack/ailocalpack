@@ -28,7 +28,7 @@ public interface IRecipeTool
 
     /// <summary>Every translatable string of the game, keys in ordinal order.</summary>
     /// <exception cref="RecipeException">Not a game of this engine, or a file can't be read or parsed.</exception>
-    RecipeExtraction Extract(string gameDir, CancellationToken cancellationToken = default);
+    RecipeExtraction Extract(IGameFiles game, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Writes each game file that the translations change (or add) to <paramref name="output"/> (by its path relative
@@ -37,14 +37,46 @@ public interface IRecipeTool
     /// </summary>
     /// <param name="language">The translations' language tag (the string table's); engines with their own translation system install under it.</param>
     /// <exception cref="RecipeException">Not a game of this engine, or a file can't be read, parsed or written.</exception>
-    RebuildResult Rebuild(string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default);
+    RebuildResult Rebuild(IGameFiles game, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// The game files (relative, <c>/</c>-separated) holding <paramref name="keys"/>: what a pack with these keys
     /// rewrites, so the files whose hashes its manifest lists. Keys of files that don't exist are left out.
     /// </summary>
     /// <exception cref="RecipeException">Not a game of this engine.</exception>
-    IReadOnlyList<string> TouchedFiles(string gameDir, IEnumerable<string> keys);
+    IReadOnlyList<string> TouchedFiles(IGameFiles game, IEnumerable<string> keys);
+}
+
+/// <summary>The <see cref="IRecipeTool"/> methods on a game folder as it is on disk (<see cref="GameFiles.Folder"/>).</summary>
+public static class RecipeToolFolders
+{
+    /// <inheritdoc cref="IRecipeTool.Extract"/>
+    public static RecipeExtraction Extract(this IRecipeTool tool, string gameDir, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(tool);
+        return tool.Extract(Folder(gameDir), cancellationToken);
+    }
+
+    /// <inheritdoc cref="IRecipeTool.Rebuild"/>
+    public static RebuildResult Rebuild(
+        this IRecipeTool tool, string gameDir, string language, IReadOnlyDictionary<string, string> translations, IRebuildOutput output, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(tool);
+        return tool.Rebuild(Folder(gameDir), language, translations, output, cancellationToken);
+    }
+
+    /// <inheritdoc cref="IRecipeTool.TouchedFiles"/>
+    public static IReadOnlyList<string> TouchedFiles(this IRecipeTool tool, string gameDir, IEnumerable<string> keys)
+    {
+        ArgumentNullException.ThrowIfNull(tool);
+        return tool.TouchedFiles(Folder(gameDir), keys);
+    }
+
+    private static IGameFiles Folder(string gameDir)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(gameDir);
+        return GameFiles.Folder(gameDir);
+    }
 }
 
 /// <summary>One translatable string.</summary>

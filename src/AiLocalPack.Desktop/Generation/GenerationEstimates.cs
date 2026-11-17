@@ -11,7 +11,7 @@ public interface IGenerationEstimates
 {
     /// <param name="updateBase">An update's base string table (task 56): only the strings it lacks or that changed count.</param>
     /// <param name="reader">What reads the game (<see cref="GenerationOptions.Reader"/>); <c>null</c> = the detected engine's tool.</param>
-    /// <exception cref="WorkingCopyException">The game folder is missing or can't be listed.</exception>
+    /// <exception cref="DirectoryNotFoundException">The game folder is missing.</exception>
     /// <exception cref="OperationCanceledException">The form was closed.</exception>
     Task<GenerationSizeEstimate> EstimateAsync(Game game, StringTable? updateBase, string? reader, CancellationToken cancellationToken);
 }

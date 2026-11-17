@@ -62,7 +62,7 @@
     <value>存储</value>
   </data>
   <data name="Settings_Storage_Description" xml:space="preserve">
-    <value>备份、工作副本、缓存</value>
+    <value>备份、生成任务、缓存</value>
   </data>
   <data name="Settings_About_Title" xml:space="preserve">
     <value>关于</value>
@@ -2182,11 +2182,8 @@
   <data name="Gen_Check_Disk_Pending" xml:space="preserve">
     <value>正在检查磁盘空间…</value>
   </data>
-  <data name="Gen_Check_Disk_Copy" xml:space="preserve">
-    <value>工作副本 {0}</value>
-  </data>
-  <data name="Gen_Check_Disk_Clone" xml:space="preserve">
-    <value>工作副本 {0}，克隆方式：不占空间</value>
+  <data name="Gen_Check_Disk_Job" xml:space="preserve">
+    <value>任务文件需 {0}</value>
   </data>
   <data name="Gen_Check_Disk_Free" xml:space="preserve">
     <value>{0} · 可用 {1}</value>
@@ -2209,8 +2206,8 @@
   <data name="Gen_ReviewGlossary" xml:space="preserve">
     <value>翻译前让我审阅术语表</value>
   </data>
-  <data name="Gen_CopyNote" xml:space="preserve">
-    <value>智能体在副本上工作；你的游戏文件不会被改动。</value>
+  <data name="Gen_GameNote" xml:space="preserve">
+    <value>代理只读取你的游戏；试运行会短暂改动它，结束后全部还原。</value>
   </data>
   <data name="Gen_Start" xml:space="preserve">
     <value>开始制作</value>
@@ -2231,7 +2228,7 @@
     <value>无法估算规模</value>
   </data>
   <data name="Gen_Start_NotEnoughDisk" xml:space="preserve">
-    <value>磁盘空间不足以存放工作副本</value>
+    <value>磁盘空间不足以存放任务文件</value>
   </data>
   <data name="Gen_StartError_Blocked" xml:space="preserve">
     <value>这款游戏无法使用 AI 制作。</value>
@@ -2246,7 +2243,7 @@
     <value>无法开始制作：{0}</value>
   </data>
   <data name="Gen_Stage_Setup" xml:space="preserve">
-    <value>正在创建工作副本</value>
+    <value>准备中</value>
   </data>
   <data name="Gen_Stage_Extract" xml:space="preserve">
     <value>正在提取文本</value>
@@ -2339,7 +2336,7 @@
     <value>{0} · 剩余约 {1}</value>
   </data>
   <data name="Gen_Progress_Sub_Setup" xml:space="preserve">
-    <value>正在复制游戏：智能体在副本上工作，你的文件不会被改动</value>
+    <value>正在检查游戏文件夹和磁盘：代理直接读取安装位置的游戏</value>
   </data>
   <data name="Gen_Progress_Sub_Extract" xml:space="preserve">
     <value>正在用工具包提取文本</value>
@@ -2348,7 +2345,7 @@
     <value>统一人名、术语和语气，让整个游戏读起来一致</value>
   </data>
   <data name="Gen_Progress_Sub_Build" xml:space="preserve">
-    <value>在副本上重建游戏文件并启动一次</value>
+    <value>正在重新生成游戏文件并在游戏中试用，然后恢复原始文件</value>
   </data>
   <data name="Gen_Action_Pause" xml:space="preserve">
     <value>暂停</value>
@@ -2512,8 +2509,8 @@
   <data name="Gen_Failure_Toolkit" xml:space="preserve">
     <value>工具包无法处理游戏文件。原因见详情。</value>
   </data>
-  <data name="Gen_Failure_WorkingCopy" xml:space="preserve">
-    <value>无法创建游戏的工作副本。原因见详情。</value>
+  <data name="Gen_Failure_GameFolder" xml:space="preserve">
+    <value>游戏文件夹目前无法用于此操作。原因见详细信息。</value>
   </data>
   <data name="Gen_Failure_Disk" xml:space="preserve">
     <value>无法写入文件：请检查可用空间，然后重试。</value>
@@ -2537,13 +2534,13 @@
     <value>要取消制作吗？</value>
   </data>
   <data name="Gen_Cancel_Text" xml:space="preserve">
-    <value>已完成 {0}%。你可以保留进度以后继续，也可以删除工作副本以释放磁盘空间。</value>
+    <value>已完成 {0}%。你可以保留进度稍后继续，或删除任务文件以释放磁盘空间。</value>
   </data>
   <data name="Gen_Cancel_Keep" xml:space="preserve">
     <value>保留进度</value>
   </data>
   <data name="Gen_Cancel_Delete" xml:space="preserve">
-    <value>删除工作副本</value>
+    <value>删除任务文件</value>
   </data>
   <data name="Gen_Cancel_Back" xml:space="preserve">
     <value>返回</value>
@@ -2552,7 +2549,7 @@
     <value>已停止。进度已保留：随时可以继续。</value>
   </data>
   <data name="Gen_Toast_Deleted" xml:space="preserve">
-    <value>制作已取消，工作副本已删除。</value>
+    <value>已取消生成，任务文件已删除。</value>
   </data>
   <data name="Gen_ActionError_Busy" xml:space="preserve">
     <value>任务正在另一个窗口或命令中运行。</value>
@@ -2722,6 +2719,12 @@
   <data name="Gen_Result_Skip_TurnedOff" xml:space="preserve">
     <value>测试运行已关闭</value>
   </data>
+  <data name="Gen_Result_Skip_GameRunning" xml:space="preserve">
+    <value>游戏正在运行，因此没有试运行</value>
+  </data>
+  <data name="Gen_Result_Skip_Busy" xml:space="preserve">
+    <value>另一项游戏文件更改正在进行，因此没有试运行</value>
+  </data>
   <data name="Gen_Result_Tile_Fonts" xml:space="preserve">
     <value>字体</value>
   </data>
@@ -2795,7 +2798,7 @@
     <value>新翻译</value>
   </data>
   <data name="Gen_Result_NewTranslationTip" xml:space="preserve">
-    <value>翻译保留在 文本 → 我的；工作副本将被删除，并打开制作表单。</value>
+    <value>翻译保留在“文本 → 我的”中；任务文件会被删除，并打开表单。</value>
   </data>
   <data name="Gen_Result_CopyNote" xml:space="preserve">
     <value>安装时会备份原始文件；你可以随时卸载。</value>
@@ -2816,16 +2819,16 @@
     <value>你可以稍后在 文本 → 我的 中发布。</value>
   </data>
   <data name="Gen_Result_Toast_Discarded" xml:space="preserve">
-    <value>翻译及其工作副本已删除。</value>
+    <value>翻译及其任务文件已删除。</value>
   </data>
   <data name="Gen_Result_Toast_Closed" xml:space="preserve">
-    <value>翻译保留在 文本 → 我的；工作副本已删除。</value>
+    <value>翻译保留在“文本 → 我的”中；任务文件已删除。</value>
   </data>
   <data name="Gen_Result_Discard_Title" xml:space="preserve">
     <value>要丢弃此翻译吗？</value>
   </data>
   <data name="Gen_Result_Discard_Text" xml:space="preserve">
-    <value>你的翻译“{0}”和任务的工作副本将被删除。此操作无法撤销。</value>
+    <value>你的翻译“{0}”和任务文件将被删除。此操作无法撤销。</value>
   </data>
   <data name="Gen_Result_Error_Installed" xml:space="preserve">
     <value>此翻译已安装：请先卸载。</value>
@@ -2903,7 +2906,7 @@
     <value>要删除“{0}”吗？</value>
   </data>
   <data name="Packs_Mine_Delete_Text" xml:space="preserve">
-    <value>你的翻译以及制作它的任务的工作副本将被删除。此操作无法撤销。</value>
+    <value>你的翻译及生成它的任务文件将被删除。此操作无法撤销。</value>
   </data>
   <data name="Packs_Mine_Toast_Deleted" xml:space="preserve">
     <value>已删除你的翻译“{0}”。</value>
@@ -3469,8 +3472,8 @@
   <data name="Settings_Storage_Legend_Backups" xml:space="preserve">
     <value>备份 {0}</value>
   </data>
-  <data name="Settings_Storage_Legend_WorkingCopies" xml:space="preserve">
-    <value>工作副本 {0}</value>
+  <data name="Settings_Storage_Legend_Jobs" xml:space="preserve">
+    <value>生成任务 {0}</value>
   </data>
   <data name="Settings_Storage_Legend_Cache" xml:space="preserve">
     <value>缓存 {0}</value>
@@ -3481,8 +3484,8 @@
   <data name="Settings_Group_Backups" xml:space="preserve">
     <value>备份</value>
   </data>
-  <data name="Settings_Group_WorkingCopies" xml:space="preserve">
-    <value>AI 制作的工作副本</value>
+  <data name="Settings_Group_Jobs" xml:space="preserve">
+    <value>生成任务</value>
   </data>
   <data name="Settings_Group_Cache" xml:space="preserve">
     <value>缓存</value>
@@ -3553,17 +3556,17 @@
   <data name="Settings_Storage_Move_Failed" xml:space="preserve">
     <value>无法移动备份，备份保留在原处：{0}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Label" xml:space="preserve">
-    <value>工作副本</value>
+  <data name="Settings_Storage_Job_Label" xml:space="preserve">
+    <value>生成任务</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_Help" xml:space="preserve">
+  <data name="Settings_Storage_Job_Help" xml:space="preserve">
     <value>{0} · {1}</value>
   </data>
-  <data name="Settings_Storage_WorkingCopy_StopToDelete" xml:space="preserve">
+  <data name="Settings_Storage_Job_StopToDelete" xml:space="preserve">
     <value>停止制作后才能删除</value>
   </data>
-  <data name="Settings_Storage_WorkingCopies_Empty" xml:space="preserve">
-    <value>无。开始制作时会复制一份游戏文件，因此智能体从不接触游戏文件夹。</value>
+  <data name="Settings_Storage_Jobs_Empty" xml:space="preserve">
+    <value>无。任务会在这里保存字符串、术语表和重新生成的文件；游戏则直接从安装位置读取。</value>
   </data>
   <data name="Settings_Storage_State_NoJob" xml:space="preserve">
     <value>中断的启动遗留</value>
@@ -3595,19 +3598,19 @@
   <data name="Settings_Storage_Delete" xml:space="preserve">
     <value>删除</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Title" xml:space="preserve">
-    <value>要删除 {0} 的工作副本吗？</value>
+  <data name="Settings_Storage_DeleteJob_Title" xml:space="preserve">
+    <value>删除 {0} 的生成任务？</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Text" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Text" xml:space="preserve">
     <value>将释放 {0}。你制作的翻译和已安装的翻译都会保留；游戏不受影响。</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_TextOpen" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_TextOpen" xml:space="preserve">
     <value>将释放 {0}。已暂停的翻译进度将丢失：无法继续，只能从头开始。已安装的翻译会保留；游戏不受影响。</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Busy" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Busy" xml:space="preserve">
     <value>这款游戏正在制作翻译。请先停止。</value>
   </data>
-  <data name="Settings_Storage_DeleteCopy_Failed" xml:space="preserve">
+  <data name="Settings_Storage_DeleteJob_Failed" xml:space="preserve">
     <value>无法删除：{0}</value>
   </data>
   <data name="Settings_Storage_Cache_Label" xml:space="preserve">
@@ -4244,7 +4247,7 @@
     <value>草稿 {0} · 游戏在 {1} 秒后关闭</value>
   </data>
   <data name="Fix_Intro" xml:space="preserve">
-    <value>用你自己的话告诉 {0} 哪里有问题。它在同一份游戏副本上工作并生成新的草稿；旧草稿会保留到你发布为止。</value>
+    <value>用你自己的话告诉 {0} 哪里不对。它基于同一套游戏文件工作并生成新草稿；旧草稿会保留到你发布为止。</value>
   </data>
   <data name="Fix_Placeholder" xml:space="preserve">
     <value>告诉代理哪里出了问题或要改什么…</value>
@@ -4535,7 +4538,7 @@
     <value>先让我审阅术语表。</value>
   </data>
   <data name="Gen_Story_Setup" xml:space="preserve">
-    <value>准备 · 工作副本已就绪</value>
+    <value>准备 · 已检查游戏文件夹</value>
   </data>
   <data name="Gen_Story_Extract" xml:space="preserve">
     <value>提取 · 文本数：{0}</value>

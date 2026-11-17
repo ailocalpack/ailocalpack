@@ -8,8 +8,8 @@ using AiLocalPack.Core.Storage;
 namespace AiLocalPack.Pipeline;
 
 /// <summary>
-/// How the untranslated game behaves when the test run starts it from its working copy, measured once per game version:
-/// how long it takes to load (<see cref="Ready"/>), how long a translated run is then watched, whether the copy kept
+/// How the untranslated game behaves when the test run starts it from its folder, measured once per game version:
+/// how long it takes to load (<see cref="Ready"/>), how long a translated run is then watched, whether it kept
 /// running all that time, and its screenshot once loaded.
 /// </summary>
 /// <param name="Version">The game version it was measured on (<see cref="TestRunBaselines.VersionKey"/>).</param>
@@ -143,7 +143,7 @@ public sealed class TestRunBaselines(string folder)
 
     /// <summary>
     /// The files of the game's folder its test runs changed or deleted (relative, '/'-separated; any version): the next
-    /// runs save the working copy's own versions of them first (<see cref="TestRunCopyGuard"/>). Empty when none are known.
+    /// runs back them up first (<see cref="Core.Install.GameWriteGuard"/>). Empty when none are known.
     /// </summary>
     public IReadOnlyList<string> Writes(GameId game)
     {
