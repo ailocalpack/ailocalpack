@@ -170,6 +170,19 @@ public sealed class PromptTemplateTests
     }
 
     [Fact]
+    public void The_installed_translation_system_prompt_matches_its_snapshot()
+    {
+        // Arrange
+        var values = PromptValues.SystemInstalled(53, 1);
+
+        // Act
+        var prompt = PromptTemplate.SystemInstalled.Render(values);
+
+        // Assert
+        prompt.Should().Be(Snapshot.Text("system-installed.v1.txt", prompt));
+    }
+
+    [Fact]
     public void The_unknown_engine_extract_prompt_matches_its_snapshot()
     {
         // Arrange

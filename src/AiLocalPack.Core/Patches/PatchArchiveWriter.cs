@@ -29,7 +29,21 @@ public static class PatchArchiveWriter
     /// <exception cref="UnauthorizedAccessException">A file can't be read or written.</exception>
     public static PatchArchive Write(string archivePath, string originalRoot, string patchedRoot, IEnumerable<string> files, VcdiffEncoderOptions? options = null, CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrEmpty(originalRoot);
+        return Write(archivePath, file => File.OpenRead(Local(originalRoot, file)), patchedRoot, files, options, cancellationToken);
+    }
+
+    /// <param name="archivePath">Where the archive goes (replaced).</param>
+    /// <param name="openOriginal">Opens the original of a file (relative path) as a readable, seekable stream: the game's
+    /// own file, also when a translation is installed over it (its backup).</param>
+    /// <param name="patchedRoot">Folder holding the new files at the same relative paths (the job's build folder).</param>
+    /// <param name="files">Relative, <c>/</c>-separated paths present in both.</param>
+    /// <exception cref="IOException">A file can't be read or written, or a delta doesn't decode to the new file.</exception>
+    /// <exception cref="UnauthorizedAccessException">A file can't be read or written.</exception>
+    public static PatchArchive Write(string archivePath, Func<string, Stream> openOriginal, string patchedRoot, IEnumerable<string> files, VcdiffEncoderOptions? options = null, CancellationToken cancellationToken = default)
+    {
         ArgumentException.ThrowIfNullOrEmpty(archivePath);
+        ArgumentNullException.ThrowIfNull(openOriginal);
         ArgumentNullException.ThrowIfNull(files);
         var ordered = files.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
         var originals = new SortedDictionary<string, string>(StringComparer.Ordinal);
@@ -46,12 +60,18 @@ public static class PatchArchiveWriter
                     foreach (var file in ordered)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        var original = Local(originalRoot, file);
                         var target = Local(patchedRoot, file);
-                        originals[file] = HashFile(original);
+                        using var original = openOriginal(Checked(file));
+                        originals[file] = Convert.ToHexStringLower(SHA256.HashData(original));
                         patched[file] = HashFile(target);
                         using var delta = new MemoryStream();
-                        VcdiffEncoder.EncodeFile(original, target, delta, options, cancellationToken);
+                        original.Position = 0;
+                        using (var targetStream = new FileStream(target, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16))
+                        {
+                            VcdiffEncoder.Encode(original, targetStream, delta, options, cancellationToken);
+                        }
+
+                        original.Position = 0;
                         Check(file, original, delta, patched[file]);
                         var entry = zip.CreateEntry(file + ".vcdiff", CompressionLevel.Optimal);
                         entry.LastWriteTime = EntryTime;
@@ -81,10 +101,9 @@ public static class PatchArchiveWriter
     }
 
     /// <summary>Decodes the delta again and compares the result with the new file's hash.</summary>
-    private static void Check(string file, string original, MemoryStream delta, string expected)
+    private static void Check(string file, Stream source, MemoryStream delta, string expected)
     {
         delta.Position = 0;
-        using var source = File.OpenRead(original);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         using (var sink = new HashingStream(hash))
         {
@@ -104,15 +123,10 @@ public static class PatchArchiveWriter
         }
     }
 
-    private static string Local(string root, string file)
-    {
-        if (!Packs.PackFormat.IsRelativePath(file))
-        {
-            throw new IOException($"'{file}' is not a relative path inside the game folder.");
-        }
+    private static string Local(string root, string file) => Path.Combine(root, Checked(file).Replace('/', Path.DirectorySeparatorChar));
 
-        return Path.Combine(root, file.Replace('/', Path.DirectorySeparatorChar));
-    }
+    private static string Checked(string file) =>
+        Packs.PackFormat.IsRelativePath(file) ? file : throw new IOException($"'{file}' is not a relative path inside the game folder.");
 
     private static string HashFile(string path)
     {

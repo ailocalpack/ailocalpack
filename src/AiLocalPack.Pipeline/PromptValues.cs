@@ -96,6 +96,14 @@ public static class PromptValues
         return values;
     }
 
+    /// <param name="replaced">Game files the installed translation replaced.</param>
+    /// <param name="added">Files it added.</param>
+    public static Dictionary<string, string> SystemInstalled(int replaced, int added) => new(StringComparer.Ordinal)
+    {
+        ["replacedCount"] = replaced.ToString("N0", CultureInfo.InvariantCulture),
+        ["addedCount"] = added.ToString("N0", CultureInfo.InvariantCulture),
+    };
+
     /// <param name="toolkitError">The toolkit's own reader failed on the game with this message (the engine is known).</param>
     /// <param name="chosen">The player chose the agent's own code over the toolkit (<see cref="Core.Generation.GenerationOptions.AgentReader"/>).</param>
     public static Dictionary<string, string> ExtractUnknown(string gameName, string language, EngineKind engine, string gamePath, int files, string? toolkitError = null, bool chosen = false) => new(StringComparer.Ordinal)

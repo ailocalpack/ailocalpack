@@ -17,6 +17,9 @@ public sealed class GameViews(AppPaths paths)
     /// <summary>A pack is installed in <paramref name="gameFolder"/> and still has its files there.</summary>
     public bool HasPack(string gameFolder) => !Installed(gameFolder).IsEmpty;
 
+    /// <summary>The originals of the pack installed in <paramref name="gameFolder"/> (<see cref="InstalledOriginals.None"/> without one). Never throws for disk state.</summary>
+    public InstalledOriginals Originals(string gameFolder) => Installed(gameFolder);
+
     /// <summary><paramref name="gameFolder"/> without <paramref name="originals"/>' pack (the folder as it is when there is none).</summary>
     public static IGameFiles Of(string gameFolder, InstalledOriginals originals)
     {

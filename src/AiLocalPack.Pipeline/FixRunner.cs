@@ -369,7 +369,7 @@ public sealed class FixRunner(Game game, PipelineAgent agent, IGenerationStage b
         try
         {
             run = await agent.RunAsync(context, PromptTemplate.Fix, values, game.Name, cancellationToken,
-                workspace: scripts ? new AgentWorkspace(context.Files.AgentFolder) : null, logTag: "Fix", extraTools: tools, extras: extras).ConfigureAwait(false);
+                workspace: scripts ? new AgentWorkspace(context.Files.AgentFolder, testRuns?.Services.Originals(context.GameFolder)) : null, logTag: "Fix", extraTools: tools, extras: extras).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {

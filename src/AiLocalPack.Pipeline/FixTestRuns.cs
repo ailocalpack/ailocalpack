@@ -192,7 +192,7 @@ internal sealed class FixTestRuns(
                     "translations.json in your workspace now holds the stored translations; run your rebuild script (it writes out/), then call test_run again. This call didn't count."));
             }
 
-            if (PatchBuild.Changed(files.AgentOutputFolder, context.GameFolder, out var problem) is not { } changed)
+            if (PatchBuild.Changed(files.AgentOutputFolder, services.Read(context.GameFolder), out var problem) is not { } changed)
             {
                 return ([], Answer("failed", problem!));
             }

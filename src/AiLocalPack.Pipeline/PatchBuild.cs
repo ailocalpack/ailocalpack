@@ -5,6 +5,7 @@ using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Storage;
+using AiLocalPack.Toolkit.Recipes;
 
 namespace AiLocalPack.Pipeline;
 
@@ -19,10 +20,12 @@ namespace AiLocalPack.Pipeline;
 /// round trip.</item>
 /// <item>The app takes the files in <c>out/</c>: each must be a regular file at the path of an existing game file
 /// (a patch can only change files the game has; a link, a new file or a path outside fails the stage, Agent kind);
-/// a file equal to the game's is left out; none changed fails the stage.</item>
+/// a file equal to the game's is left out; none changed fails the stage. "The game's" is always its own file: a
+/// translation installed in the folder (a draft tried before a fix) stays, the files it replaced read from the install's
+/// backup (<see cref="BuildServices.Originals"/>), and the agent gets their list in <c>installed.json</c>.</item>
 /// <item>The changed files go into the job's <c>build/</c>, the test run tries them as for a recipe pack (no font
 /// swap: the toolkit can't read the engine's fonts).</item>
-/// <item><see cref="PatchArchiveWriter"/> makes the archive from the game folder's originals (every delta decoded again
+/// <item><see cref="PatchArchiveWriter"/> makes the archive from the game's originals (every delta decoded again
 /// and checked), the manifest gets <c>patch</c> (URL = <see cref="LocalPackStore.PatchUrl"/>) and the one build with
 /// the originals' hashes; the string table is kept in the pack too (keys + translations, no original texts).</item>
 /// </list>
@@ -41,12 +44,10 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         var job = context.Job;
         var files = context.Files;
         var gameFolder = context.GameFolder;
-        if (services.Views?.HasPack(gameFolder) == true)
-        {
-            // The patch is made against the game folder's files: they must be the game's own, not a translation's.
-            return BuildStage.Fail(context, GenerationFailureKind.GameFolder, "A translation is installed in the game folder; the binary patch is made against the game's own files: uninstall the translation, then resume.");
-        }
-
+        // A translation installed in the game folder (the job's own draft, tried in game before a fix) stays: the patch is
+        // made against the game's own files, the ones it replaced read from the install's backup; the agent is told where.
+        var installed = services.Originals(gameFolder);
+        var original = GameViews.Of(gameFolder, installed);
         BuildStage.Step(context, new BuildProgress(BuildStep.Checking));
         var collected = LocalPackBuilder.Collect(source, stored, SourceMarkup.Of(AiLocalPack.Toolkit.Recipes.RecipeTools.Builtin, source));
         foreach (var (key, issue) in collected.Refused)
@@ -76,7 +77,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
             PromptValues.RebuildUnknown(game.Name, job.Language, gameFolder, collected.Translations.Count),
             game.Name,
             cancellationToken,
-            new AgentWorkspace(files.AgentFolder)).ConfigureAwait(false);
+            new AgentWorkspace(files.AgentFolder, installed)).ConfigureAwait(false);
         if (run.Stop is { } stop)
         {
             return stop;
@@ -85,7 +86,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         IReadOnlyList<string> changed;
         try
         {
-            if (Changed(files.AgentOutputFolder, gameFolder, out var problem) is not { } found)
+            if (Changed(files.AgentOutputFolder, original, out var problem) is not { } found)
             {
                 return BuildStage.Fail(context, GenerationFailureKind.Agent, problem!);
             }
@@ -121,15 +122,15 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         context.Log($"Test run {testRun.Outcome.ToString().ToLowerInvariant()}" + (testRun.Skip is { } skip ? $" ({skip})" : "") + (testRun.Detail is { } detail ? $": {detail}" : "."));
         if (testRun.Outcome == TestRunOutcome.Crashed)
         {
-            return BuildStage.Crashed(context, testRun, changed, file => GameSize(gameFolder, file), source, collected.Translations);
+            return BuildStage.Crashed(context, testRun, changed, file => GameSize(original, file), source, collected.Translations);
         }
 
         BuildStage.Step(context, testStep with { Step = BuildStep.Packing });
-        return Save(context, source, collected, changed, testRun, cancellationToken);
+        return Save(context, original, source, collected, changed, testRun, cancellationToken);
     }
 
     private GenerationStepResult Save(
-        GenerationStepContext context, SourceStrings source, BuildTranslations collected, IReadOnlyList<string> changed, TestRunResult testRun, CancellationToken cancellationToken)
+        GenerationStepContext context, IGameFiles original, SourceStrings source, BuildTranslations collected, IReadOnlyList<string> changed, TestRunResult testRun, CancellationToken cancellationToken)
     {
         var job = context.Job;
         var store = services.LocalPacks;
@@ -141,7 +142,7 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         PatchArchive archive;
         try
         {
-            archive = PatchArchiveWriter.Write(temp, context.GameFolder, context.Files.BuildFolder, changed, cancellationToken: cancellationToken);
+            archive = PatchArchiveWriter.Write(temp, original.OpenRead, context.Files.BuildFolder, changed, cancellationToken: cancellationToken);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -211,11 +212,12 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
     }
 
     /// <summary>
-    /// The files in <paramref name="output"/> that differ from the copy's (ordinal order), or <c>null</c> with the
-    /// problem: a link, a file the game doesn't have, nothing written or nothing changed.
+    /// The files in <paramref name="output"/> that differ from the game's own (ordinal order; <paramref name="game"/> is the
+    /// game without its installed translation, so a file the translation already holds still counts), or <c>null</c> with
+    /// the problem: a link, a file the game doesn't have, nothing written or nothing changed.
     /// </summary>
     /// <exception cref="IOException">A file can't be read.</exception>
-    internal static IReadOnlyList<string>? Changed(string output, string copy, out string? problem)
+    internal static IReadOnlyList<string>? Changed(string output, IGameFiles game, out string? problem)
     {
         problem = null;
         if (!Directory.Exists(output))
@@ -241,14 +243,13 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
                 continue;
             }
 
-            var original = Local(copy, relative);
-            if (!File.Exists(original) || new FileInfo(original).LinkTarget is not null)
+            if (!game.FileExists(relative) || new FileInfo(Local(game.Root, relative)).LinkTarget is not null)
             {
                 problem = $"The agent's rebuild wrote out/{relative}, which isn't a file of the game: a binary patch can only change the game's own files.";
                 return null;
             }
 
-            if (!SameContent(entry.FullName, original))
+            if (!SameContent(entry.FullName, game, relative))
             {
                 changed.Add(relative);
             }
@@ -264,17 +265,16 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         return changed;
     }
 
-    private static bool SameContent(string a, string b)
+    private static bool SameContent(string a, IGameFiles game, string relative)
     {
         var infoA = new FileInfo(a);
-        var infoB = new FileInfo(b);
-        if (infoA.Length != infoB.Length)
+        if (infoA.Length != game.Length(relative))
         {
             return false;
         }
 
         using var streamA = infoA.OpenRead();
-        using var streamB = infoB.OpenRead();
+        using var streamB = game.OpenRead(relative);
         var bufferA = new byte[1 << 16];
         var bufferB = new byte[1 << 16];
         int read;
@@ -290,11 +290,17 @@ internal sealed class PatchBuild(Game game, PipelineAgent agent, BuildServices s
         return true;
     }
 
-    /// <summary>The game folder's size of a file; <c>null</c> = none.</summary>
-    private static long? GameSize(string gameFolder, string file)
+    /// <summary>The game's own size of a file; <c>null</c> = none.</summary>
+    private static long? GameSize(IGameFiles game, string file)
     {
-        var path = Local(gameFolder, file);
-        return File.Exists(path) ? new FileInfo(path).Length : null;
+        try
+        {
+            return game.FileExists(file) ? game.Length(file) : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
     }
 
     internal static string Local(string root, string relative) => Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar));

@@ -112,7 +112,7 @@ public sealed class BuildRepair(Game game, PipelineAgent agent, RecipeTools tool
         try
         {
             run = await agent.RunAsync(context, PromptTemplate.RepairBuild, values, game.Name, cancellationToken,
-                workspace: scripts ? new AgentWorkspace(working) : null,
+                workspace: scripts ? new AgentWorkspace(working, services.Originals(context.GameFolder)) : null,
                 logTag: "Repair",
                 extraTools: new HashSet<AgentBuiltinTool> { AgentBuiltinTool.ReadFiles },
                 extras: extras).ConfigureAwait(false);

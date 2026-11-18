@@ -24,10 +24,42 @@ public sealed record AgentRunExtras(AgentSystemPrompt? System = null, Action<Age
 /// A run in the agent's own workspace (task 57, a game the toolkit can't read): the job's <c>agent/</c> folder as the
 /// working folder, reading files, editing them and running commands there (each adapter's sandbox keeps writes inside
 /// it and has no network), the <see cref="PromptTemplate.SystemScripts"/> system prompt; the toolkit server still reads
-/// the game folder (read only).
+/// the game folder (read only). With a translation installed in the game folder (<paramref name="Installed"/>, a draft
+/// tried before a fix) the workspace gets <c>installed.json</c> (<see cref="InstalledFile"/>: where the game's own
+/// versions of the files it replaced are, which files it added) and the system prompt <see cref="PromptTemplate.SystemInstalled"/>,
+/// so the agent's scripts read the game's text, not the translation; without one a stale <c>installed.json</c> is deleted.
 /// </summary>
-public sealed record AgentWorkspace(string Folder)
+public sealed record AgentWorkspace(string Folder, InstalledOriginals? Installed = null)
 {
+    /// <summary>The file in the workspace naming an installed translation's files.</summary>
+    public const string InstalledFile = "installed.json";
+
+    private static readonly System.Text.Json.JsonSerializerOptions InstalledJson = new()
+    {
+        WriteIndented = true,
+        NewLine = "\n",
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
+    /// <summary>Writes (or deletes) <see cref="InstalledFile"/> for <see cref="Installed"/>.</summary>
+    /// <exception cref="IOException">The file can't be written or deleted.</exception>
+    /// <exception cref="UnauthorizedAccessException">The file can't be written or deleted.</exception>
+    internal void WriteInstalled(string gameFolder)
+    {
+        var path = Path.Combine(Folder, InstalledFile);
+        if (Installed is not { IsEmpty: false } installed)
+        {
+            File.Delete(path);
+            return;
+        }
+
+        var originals = new SortedDictionary<string, string>(installed.Restored.ToDictionary(), StringComparer.Ordinal);
+        var bytes = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(
+            new { gameFolder, originals, added = installed.Added.Order(StringComparer.Ordinal).ToList() },
+            InstalledJson);
+        Core.Storage.AtomicFile.WriteAllBytes(path, bytes);
+    }
+
     public static IReadOnlySet<AgentBuiltinTool> Tools { get; } =
         new HashSet<AgentBuiltinTool> { AgentBuiltinTool.ReadFiles, AgentBuiltinTool.EditFiles, AgentBuiltinTool.RunCommands };
 }
@@ -129,6 +161,23 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
             return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's working folder {workingFolder} can't be made: {e.Message}"));
         }
 
+        if (workspace is not null)
+        {
+            try
+            {
+                workspace.WriteInstalled(gameFolder);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                return Stop(context, logTag, new GenerationStepResult.Failed(GenerationFailureKind.Disk, $"The agent's workspace can't be prepared: {e.Message}"));
+            }
+
+            if (workspace.Installed is { IsEmpty: false } installed)
+            {
+                system += "\n\n" + PromptTemplate.SystemInstalled.Render(PromptValues.SystemInstalled(installed.Restored.Count, installed.Added.Count));
+            }
+        }
+
         var request = new AgentRunRequest(task, workingFolder)
         {
             SystemPrompt = system,
@@ -141,6 +190,7 @@ public sealed class PipelineAgent(IAgentAdapter adapter, ToolkitServerProgram se
         Log(context, logTag, $"Agent {adapter.Id} {installation.Version ?? "(version unknown)"} ({installation.Source}), prompt {prompt.Label} + {systemTemplate.Label}"
             + (brief is null ? "" : $" + {PromptTemplate.SystemBrief.Label}")
             + (references is null ? "" : $" + {PromptTemplate.SystemReferences.Label} ({references.Packs.Count} packs)")
+            + (workspace?.Installed is { IsEmpty: false } shown ? $" + {PromptTemplate.SystemInstalled.Label} ({shown.Restored.Count} files replaced, {shown.Added.Count} added by the installed translation)" : "")
             + (workspace is null ? "" : $", in its workspace {workspace.Folder} with file and command tools")
             + (request.AllowUnsandboxed ? " (without a sandbox where it can't start, as the player allowed)" : "")
             + (extraTools is { Count: > 0 } ? $", with {string.Join(", ", extraTools.Order())}" : "")

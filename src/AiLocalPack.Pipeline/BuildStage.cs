@@ -16,6 +16,9 @@ public sealed record BuildServices(FontFixer Fonts, LocalPackStore LocalPacks, I
 {
     /// <summary>The game in <paramref name="gameFolder"/> without its installed pack (<see cref="Views"/>).</summary>
     public IGameFiles Read(string gameFolder) => Views?.WithoutPack(gameFolder) ?? GameFiles.Folder(gameFolder);
+
+    /// <summary>The originals of the pack installed in <paramref name="gameFolder"/> (<see cref="Views"/>; none without them).</summary>
+    public InstalledOriginals Originals(string gameFolder) => Views?.Originals(gameFolder) ?? InstalledOriginals.None;
 }
 
 /// <summary>

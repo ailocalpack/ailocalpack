@@ -1,8 +1,10 @@
+using System.Security.Cryptography;
 using System.Text.Json;
 using AiLocalPack.Agents;
 using AiLocalPack.Core.Fonts;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
+using AiLocalPack.Core.Install;
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Patches;
 using AiLocalPack.Core.Storage;
@@ -19,13 +21,15 @@ public sealed class PatchBuildTests : IDisposable
 
     private readonly StageHarness _h = new();
     private readonly FakeHttpHandler _http = new();
+    private readonly AppPaths _paths;
     private readonly LocalPackStore _store;
     private readonly FakeTestRunner _runner = new(TestRunResult.Skipped(TestRunSkip.OtherPlatform, "LanternTale.exe is a Windows program"));
 
     public PatchBuildTests()
     {
         CustomFormatFixture.Create(_h.Copy);
-        _store = new LocalPackStore(AppPaths.UnderHome(_h.Dir.Combine("home")));
+        _paths = AppPaths.UnderHome(_h.Dir.Combine("home"));
+        _store = new LocalPackStore(_paths);
     }
 
     public void Dispose()
@@ -70,8 +74,34 @@ public sealed class PatchBuildTests : IDisposable
             Game,
             new PipelineAgent(agent, StageHarness.Server),
             RecipeTools.Builtin,
-            new BuildServices(new FontFixer(FontWhitelist.Bundled, new FontStore(_h.Dir.Combine("cache"), _http.CreateClient())), _store, _runner))
+            new BuildServices(new FontFixer(FontWhitelist.Bundled, new FontStore(_h.Dir.Combine("cache"), _http.CreateClient())), _store, _runner, Views: new GameViews(_paths)))
             .RunStepAsync(_h.Context(GenerationStage.Build, counters: new GenerationCounters(14, 12, 1, 1)), TestContext.Current.CancellationToken);
+
+    /// <summary>
+    /// A draft of the translation installed in the game folder, as the player tries it before a fix: data/text.ltx and
+    /// data/names.ltx replaced (their originals in the install's backup), data/ru.ltx added.
+    /// </summary>
+    private void InstallDraft()
+    {
+        var record = new InstalledPack(Game.Id, "ru", "scripted", 1, DateTimeOffset.UnixEpoch, _h.Copy, "draft-1", [], []) { Local = true };
+        var files = new List<InstalledFile>();
+        foreach (var (file, text) in new[] { ("data/text.ltx", "Черновик"), ("data/names.ltx", "Имя") })
+        {
+            var game = Path.Combine(_h.Copy, file);
+            var backup = PackInstaller.BackupFile(_paths, record, file);
+            Directory.CreateDirectory(Path.GetDirectoryName(backup)!);
+            File.Copy(game, backup);
+            var items = CustomFormatFixture.Decode(File.ReadAllBytes(game)).Select(t => (t.Id, t.Kind, text + " " + t.Text));
+            File.WriteAllBytes(game, CustomFormatFixture.Encode(items));
+            files.Add(new InstalledFile(file, Sha(backup), Sha(game)));
+        }
+
+        File.WriteAllText(Path.Combine(_h.Copy, "data", "ru.ltx"), "added by the draft");
+        files.Add(new InstalledFile("data/ru.ltx", null, Sha(Path.Combine(_h.Copy, "data", "ru.ltx"))));
+        new InstalledPackStore(_paths).Put(record with { Files = files });
+    }
+
+    private static string Sha(string path) => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)));
 
     [Fact]
     public async Task The_pack_is_a_binary_patch_without_a_recipe()
@@ -298,6 +328,94 @@ public sealed class PatchBuildTests : IDisposable
 
         // Assert
         File.ReadAllBytes(Path.Combine(_h.Copy, "data", "text.ltx")).Should().Equal(before);
+    }
+
+    [Fact]
+    public async Task A_draft_installed_in_the_game_folder_does_not_stop_the_build()
+    {
+        // Arrange
+        await ArrangeTranslatedAsync();
+        InstallDraft();
+
+        // Act
+        var result = await BuildAsync(Rebuilding());
+
+        // Assert
+        result.Should().BeOfType<GenerationStepResult.StageDone>();
+    }
+
+    [Fact]
+    public async Task With_a_draft_installed_the_patch_is_made_against_the_games_own_file()
+    {
+        // Arrange
+        await ArrangeTranslatedAsync();
+        var own = Sha(Path.Combine(_h.Copy, "data", "text.ltx"));
+        InstallDraft();
+
+        // Act
+        await BuildAsync(Rebuilding());
+
+        // Assert
+        _store.List().Single().Manifest.Builds.Single().Files["data/text.ltx"].Should().Be(own);
+    }
+
+    [Fact]
+    public async Task With_a_draft_installed_a_file_the_draft_already_holds_is_still_patched()
+    {
+        // Arrange
+        await ArrangeTranslatedAsync();
+        InstallDraft();
+        var agent = Rebuilding(workspace => File.Copy(Path.Combine(_h.Copy, "data", "names.ltx"), Path.Combine(workspace, "out", "data", "names.ltx")));
+
+        // Act
+        await BuildAsync(agent);
+
+        // Assert
+        _store.List().Single().Manifest.Patch!.Files.Keys.Should().Equal("data/names.ltx", "data/text.ltx");
+    }
+
+    [Fact]
+    public async Task With_a_draft_installed_the_agent_learns_where_the_games_own_files_are()
+    {
+        // Arrange
+        await ArrangeTranslatedAsync();
+        InstallDraft();
+        var agent = Rebuilding();
+
+        // Act
+        await BuildAsync(agent);
+
+        // Assert
+        using var json = JsonDocument.Parse(File.ReadAllText(Path.Combine(_h.Files.AgentFolder, AgentWorkspace.InstalledFile)));
+        var originals = json.RootElement.GetProperty("originals");
+        new
+        {
+            Replaced = originals.EnumerateObject().Select(p => p.Name).ToList(),
+            Text = File.ReadAllBytes(originals.GetProperty("data/text.ltx").GetString()!).SequenceEqual(File.ReadAllBytes(Path.Combine(_paths.Backups, "steam-620", "draft-1", "files", "data", "text.ltx"))),
+            Added = json.RootElement.GetProperty("added").EnumerateArray().Select(e => e.GetString()).ToList(),
+            Told = agent.Runs.Single().Request!.SystemPrompt!.Contains("installed.json", StringComparison.Ordinal),
+        }.Should().BeEquivalentTo(new
+        {
+            Replaced = new[] { "data/names.ltx", "data/text.ltx" },
+            Text = true,
+            Added = new[] { "data/ru.ltx" },
+            Told = true,
+        });
+    }
+
+    [Fact]
+    public async Task Without_an_installed_translation_a_stale_installed_list_is_removed()
+    {
+        // Arrange
+        await ArrangeTranslatedAsync();
+        Directory.CreateDirectory(_h.Files.AgentFolder);
+        File.WriteAllText(Path.Combine(_h.Files.AgentFolder, AgentWorkspace.InstalledFile), "{}");
+
+        // Act
+        await BuildAsync(Rebuilding());
+
+        // Assert
+        File.Exists(Path.Combine(_h.Files.AgentFolder, AgentWorkspace.InstalledFile)).Should().BeFalse();
     }
 
     [Fact]

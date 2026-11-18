@@ -48,6 +48,12 @@ public sealed partial class PromptTemplate
     /// <summary>The system prompt of a run that writes and runs its own scripts in its workspace (task 57).</summary>
     public static PromptTemplate SystemScripts { get; } = Load("system-scripts", 2);
 
+    /// <summary>
+    /// Appended to the system prompt of a run in the agent's own workspace while a translation is installed in the game
+    /// folder (decided 2026-11-18): where the game's own versions of the files it replaced are (<c>installed.json</c>).
+    /// </summary>
+    public static PromptTemplate SystemInstalled { get; } = Load("system-installed", 1);
+
     /// <summary>Extract stage for a game the toolkit can't read: the agent writes and checks its extractor and rebuilder (task 57).</summary>
     public static PromptTemplate ExtractUnknown { get; } = Load("extract-unknown", 2);
 
