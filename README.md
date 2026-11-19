@@ -12,9 +12,13 @@
   <a href="#download"><b>Download</b></a> ·
   <a href="#how-to-use-it">How to use it</a> ·
   <a href="#faq">FAQ</a> ·
-  <a href="https://github.com/ailocalpack/registry">Translations</a> ·
+  <a href="https://github.com/ailocalpack/registry/blob/master/GAMES.md">Translations</a> ·
   <a href="#privacy">Privacy</a> ·
   <a href="#code-signing-policy">Code signing policy</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/ailocalpack/registry/blob/master/GAMES.md"><img src="https://img.shields.io/badge/%F0%9F%8E%AE%20Games%20with%20translations-see%20the%20list%20%E2%86%92-5566f0?style=for-the-badge" alt="Games with translations: see the list"></a>
 </p>
 
 <p align="center"><img src="assets/screenshots/library.png" width="860" alt="The AI Local Pack library: your Steam games with their covers, engines and whether a translation exists for your language"></p>
@@ -131,7 +135,7 @@ Rate it in the app (*Doesn't work* with a short comment), or fix it with AI and 
 First uninstall the translations you no longer want (each game's page). Then: Windows: *Settings → Apps*, AI Local Pack → *Uninstall*. macOS: move *AI Local Pack* from *Applications* to the Trash. Linux: delete the AppImage.
 
 **Where do the translations come from?**
-From players like you: they live in the public [translation registry](https://github.com/ailocalpack/registry) on GitHub. There is no server of our own: just the app, GitHub and your own AI subscription.
+From players like you: they live in the public [translation registry](https://github.com/ailocalpack/registry) on GitHub. Which games have one and in which languages: [the list](https://github.com/ailocalpack/registry/blob/master/GAMES.md). There is no server of our own: just the app, GitHub and your own AI subscription.
 
 ## Status
 
