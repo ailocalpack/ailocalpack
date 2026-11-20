@@ -44,6 +44,9 @@ public sealed class FixWithAiTests
 
     private static Task Until(Func<bool> condition) => Wait.UntilAsync(condition);
 
+    private static FixSystemItem? NotCrashLine(GamePageViewModel page) =>
+        page.Generation.Fix?.Items.ToArray().OfType<FixSystemItem>().SingleOrDefault(i => i.HasNotCrash);
+
     private static FakeFixRunners Fixes(InstallBed bed) => bed.Services.GetRequiredService<FakeFixRunners>();
 
     /// <summary>Install &amp; play, then the game closes at once (a crash).</summary>
@@ -127,7 +130,9 @@ public sealed class FixWithAiTests
         // Arrange
         var (bed, page, _) = await CrashedAsync();
         using var _bed = bed;
-        var line = page.Generation.Fix!.Items.OfType<FixSystemItem>().Single(i => i.HasNotCrash);
+        // The conversation may still be reading its items on another thread: wait for the line on a copy (CopyTo, no enumerator).
+        await Until(() => NotCrashLine(page) is not null);
+        var line = NotCrashLine(page)!;
 
         // Act
         line.NotCrashCommand!.Execute(null);
@@ -165,7 +170,7 @@ public sealed class FixWithAiTests
         fix.NotCrashCommand.Execute(null);
 
         // Assert
-        await Until(() => fix.Items.OfType<FixSystemItem>().Any(i => i.Text == "You played Draft 1"));
+        await Until(() => fix.Items.ToArray().OfType<FixSystemItem>().Any(i => i.Text == "You played Draft 1"));
         (fix.Text, fix.Attachments.Count, fix.ShowCrashBanner).Should().Be((string.Empty, 0, false));
     }
 
@@ -181,8 +186,8 @@ public sealed class FixWithAiTests
         await fix.SendCommand.ExecuteAsync(null);
 
         // Assert
-        await Until(() => fix.Items.OfType<FixAgentItem>().Any(a => a.Text == "Done."));
-        (fix.Items.OfType<FixPlayerItem>().Single().Text, fix.Text, Fixes(bed).Requests.Single().Attachments.Count)
+        await Until(() => fix.Items.ToArray().OfType<FixAgentItem>().Any(a => a.Text == "Done."));
+        (fix.Items.ToArray().OfType<FixPlayerItem>().Single().Text, fix.Text, Fixes(bed).Requests.Single().Attachments.Count)
             .Should().Be(("The game crashes right after the first loading screen.", string.Empty, 2));
     }
 
@@ -215,7 +220,7 @@ public sealed class FixWithAiTests
         _ = fix.SendCommand.ExecuteAsync(null);
 
         // Assert
-        await Until(() => fix.IsRunning && fix.Items.OfType<FixAgentItem>().Any(a => a.IsWorking && a.Steps.Any(s => s.Text == "Looked through the strings")));
+        await Until(() => fix.IsRunning && fix.Items.ToArray().OfType<FixAgentItem>().Any(a => a.IsWorking && a.Steps.Any(s => s.Text == "Looked through the strings")));
         (fix.StopCommand.CanExecute(null), fix.ShowSend).Should().Be((true, false));
         fix.StopCommand.Execute(null);
         await Until(() => !fix.IsRunning);
@@ -240,8 +245,8 @@ public sealed class FixWithAiTests
         await fix.SendCommand.ExecuteAsync(null);
 
         // Assert
-        await Until(() => fix.Items.OfType<FixAgentItem>().Any(a => a.Change is not null));
-        var card = fix.Items.OfType<FixAgentItem>().Single(a => a.Change is not null).Change!;
+        await Until(() => fix.Items.ToArray().OfType<FixAgentItem>().Any(a => a.Change is not null));
+        var card = fix.Items.ToArray().OfType<FixAgentItem>().Single(a => a.Change is not null).Change!;
         (card.Title, card.InstallText, card.CanInstall, card.Samples.Single().After).Should().Be(("Draft 2 is ready", "Install & play Draft 2", true, "Огонь и лёд"));
     }
 
@@ -255,8 +260,8 @@ public sealed class FixWithAiTests
             Plan: new FixPlan(60, 2, false, []));
         var fix = page.Generation.Fix!;
         await fix.SendCommand.ExecuteAsync(null);
-        await Until(() => fix.Items.OfType<FixAgentItem>().Any(a => a.Plan is not null));
-        var plan = fix.Items.OfType<FixAgentItem>().Single(a => a.Plan is not null).Plan!;
+        await Until(() => fix.Items.ToArray().OfType<FixAgentItem>().Any(a => a.Plan is not null));
+        var plan = fix.Items.ToArray().OfType<FixAgentItem>().Single(a => a.Plan is not null).Plan!;
 
         // Act
         plan.ApplyCommand.Execute(null);
