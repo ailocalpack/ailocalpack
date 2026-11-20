@@ -10,6 +10,7 @@ internal sealed record PackManifestJson(
     int? SchemaVersion,
     string? Id,
     string? Game,
+    string? GameName,
     string? Language,
     string? Title,
     IReadOnlyList<PackAuthorJson?>? Authors,

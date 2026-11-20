@@ -130,6 +130,32 @@ public sealed class LocalPackBuilderTests
     }
 
     [Fact]
+    public void The_manifest_names_the_game()
+    {
+        // Arrange
+        var game = SteamGame with { Name = "  Hollow Fields " };
+
+        // Act
+        var manifest = LocalPackBuilder.Manifest(Input(game));
+
+        // Assert
+        manifest.GameName.Should().Be("Hollow Fields");
+    }
+
+    [Fact]
+    public void A_long_game_name_is_cut_to_the_manifests_limit()
+    {
+        // Arrange
+        var name = new string('a', PackManifestSerializer.MaxGameNameLength - 1) + "😀";
+
+        // Act
+        var cut = LocalPackBuilder.GameName(name);
+
+        // Assert
+        cut.Should().Be(new string('a', PackManifestSerializer.MaxGameNameLength - 1));
+    }
+
+    [Fact]
     public void The_manifest_build_records_the_games_platform()
     {
         // Arrange

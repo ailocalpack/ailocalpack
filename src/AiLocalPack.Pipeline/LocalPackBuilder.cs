@@ -193,7 +193,26 @@ public static class LocalPackBuilder
             input.Coverage,
             created,
             now,
-            References(input));
+            References(input),
+            GameName(input.Game.Name));
+    }
+
+    /// <summary>The game's name for the manifest: trimmed, cut to <see cref="PackManifestSerializer.MaxGameNameLength"/>; <c>null</c> when blank.</summary>
+    public static string? GameName(string? name)
+    {
+        var trimmed = name?.Trim();
+        if (string.IsNullOrEmpty(trimmed) || trimmed.Length <= PackManifestSerializer.MaxGameNameLength)
+        {
+            return string.IsNullOrEmpty(trimmed) ? null : trimmed;
+        }
+
+        var length = PackManifestSerializer.MaxGameNameLength;
+        if (char.IsHighSurrogate(trimmed[length - 1]))
+        {
+            length--; // never half of a character
+        }
+
+        return trimmed[..length].TrimEnd();
     }
 
     /// <summary>

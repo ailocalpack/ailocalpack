@@ -20,6 +20,11 @@
       "type": "string",
       "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64}|gog:[1-9][0-9]{0,19}|(epic|ea):[A-Za-z0-9]([A-Za-z0-9._-]{0,62}[A-Za-z0-9])?)$"
     },
+    "gameName": {
+      "description": "The game's name as the author's store or folder gave it: shown by the registry's game list and site where no store answers for the ID (Epic Games, EA app, manual games).",
+      "$ref": "#/$defs/text",
+      "maxLength": 128
+    },
     "language": {
       "description": "Target language, a BCP 47 tag from the languages Steam supports.",
       "enum": ["ar", "bg", "cs", "da", "de", "el", "en", "es-ES", "es-419", "fi", "fr", "hu", "id", "it", "ja", "ko", "nb", "nl", "pl", "pt-BR", "pt-PT", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant"]

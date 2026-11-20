@@ -16,6 +16,7 @@ public sealed class PackManifestSerializerTests
     /// <summary>Invalid sample → the error it must produce, and whether the JSON Schema can see it too.</summary>
     public static TheoryData<string, string, string, bool> InvalidCases => new()
     {
+        { "blank-game-name", "gameName", "is empty", true },
         { "bad-build-os", "builds[0].os", "'android' is not a platform", true },
         { "bad-file-hash", "builds[0].files[\"www/data/System.json\"]", "is not a SHA-256 hash", true },
         { "bad-game-id", "game", "'steam:0620' is not a game ID", true },
@@ -212,6 +213,45 @@ public sealed class PackManifestSerializerTests
 
         // Assert
         json.Should().NotContain("references");
+    }
+
+    [Fact]
+    public void Reads_the_game_name()
+    {
+        // Arrange
+        var json = PackFixtures.ReadValid("recipe-epic");
+
+        // Act
+        var manifest = PackManifestSerializer.Read(json).Value!;
+
+        // Assert
+        manifest.GameName.Should().Be("Hollow Fields");
+    }
+
+    [Fact]
+    public void The_game_name_is_written_back()
+    {
+        // Arrange
+        var manifest = PackManifestSerializer.Read(PackFixtures.ReadValid("recipe-epic")).Value!;
+
+        // Act
+        var json = PackManifestSerializer.Write(manifest);
+
+        // Assert
+        PackManifestSerializer.Read(json).Value!.GameName.Should().Be("Hollow Fields");
+    }
+
+    [Fact]
+    public void A_manifest_without_a_game_name_writes_none()
+    {
+        // Arrange
+        var manifest = PackManifestSerializer.Read(PackFixtures.ReadValid("recipe-steam")).Value!;
+
+        // Act
+        var json = PackManifestSerializer.Write(manifest);
+
+        // Assert
+        json.Should().NotContain("gameName");
     }
 
     [Fact]

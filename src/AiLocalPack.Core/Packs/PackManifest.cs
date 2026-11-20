@@ -21,6 +21,8 @@ namespace AiLocalPack.Core.Packs;
 /// <param name="Fonts">Whitelisted open fonts swapped in at install.</param>
 /// <param name="References">Packs of the same game (other languages, or the same one) the generation used as
 /// reference (decided 2026-11-16, _Reference packs_ in <c>docs/generation.md</c>): credited, CC BY-SA 4.0; <c>null</c> = none.</param>
+/// <param name="GameName">The game's name as the author's store or folder gave it (decided 2026-11-20): the registry's
+/// game list and site show it where no store answers for the ID (Epic Games, EA app, manual games); <c>null</c> = unknown.</param>
 public sealed record PackManifest(
     string Id,
     GameId Game,
@@ -39,7 +41,8 @@ public sealed record PackManifest(
     PackCoverage Coverage,
     DateTimeOffset Created,
     DateTimeOffset Updated,
-    IReadOnlyList<PackReference>? References = null)
+    IReadOnlyList<PackReference>? References = null,
+    string? GameName = null)
 {
     public const int CurrentSchemaVersion = 1;
 

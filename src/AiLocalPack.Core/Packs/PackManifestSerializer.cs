@@ -22,6 +22,9 @@ public sealed record PackReadResult<T>(T? Value, IReadOnlyList<PackFormatError> 
 public static class PackManifestSerializer
 {
     public const int MaxTitleLength = 80;
+
+    /// <summary>The longest <see cref="PackManifest.GameName"/>.</summary>
+    public const int MaxGameNameLength = 128;
     public const int MaxNameLength = 80;
     public const int MaxNotesLength = 2000;
     public const int MaxVersionLength = 64;
@@ -70,6 +73,7 @@ public static class PackManifestSerializer
             PackManifest.CurrentSchemaVersion,
             manifest.Id,
             manifest.Game.ToString(),
+            manifest.GameName,
             manifest.Language,
             manifest.Title,
             [.. manifest.Authors.Select(a => new PackAuthorJson(a.GitHub, a.Name))],
@@ -111,6 +115,7 @@ public static class PackManifestSerializer
         {
             var id = Slug("id", file.Id);
             var game = GameIdOf(file.Game);
+            var gameName = Text("gameName", file.GameName, MaxGameNameLength, required: false);
             var language = Language("language", file.Language);
             var title = Text("title", file.Title, MaxTitleLength, required: true);
             var authors = Authors(file.Authors);
@@ -130,7 +135,7 @@ public static class PackManifestSerializer
                 ? null
                 : new PackManifest(
                     id!, game!, language!, title!, authors, revisions, status!.Value, agent, builds, recipe, strings, patch,
-                    dependencies, fonts, coverage!, created, updated, references);
+                    dependencies, fonts, coverage!, created, updated, references, gameName);
         }
 
         private string? Slug(string field, string? value, bool required = true)
