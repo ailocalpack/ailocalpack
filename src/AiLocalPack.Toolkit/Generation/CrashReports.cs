@@ -63,7 +63,8 @@ public static class CrashReports
         var version = parts.Skip(1).FirstOrDefault(p => p.StartsWith("version:", StringComparison.OrdinalIgnoreCase))?["version:".Length..].Trim();
         var code = Value("Exception code:") is { Length: > 0 } c ? Hex(c) : null;
         var offset = Value("Fault offset:") is { Length: > 0 } o ? Hex(o) : null;
-        var inGame = string.Equals(name, Path.GetFileName(program), StringComparison.OrdinalIgnoreCase);
+        // A Windows event's program path, read on any OS: Path.GetFileName splits on '\' only on Windows.
+        var inGame = string.Equals(name, program[(program.LastIndexOfAny(['/', '\\']) + 1)..], StringComparison.OrdinalIgnoreCase);
         return new CrashFault(name, version, code, offset, inGame);
     }
 
