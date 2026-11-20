@@ -106,7 +106,7 @@ internal static partial class GenJobCommands
     private static Command BuildRun(OsEnvironment env)
     {
         var game = GameArgument();
-        var agentOption = new Option<string?>("--agent") { Description = $"The agent ({string.Join(", ", AgentAdapters.Ids)}; default: the app's default agent, else claude)." };
+        var agentOption = new Option<string?>("--agent") { Description = $"The agent ({string.Join(", ", AgentAdapters.Ids)}, or one of your models' llm-… IDs; default: the app's default agent, else claude)." };
         var fake = FakeAgentOption();
         var language = new Option<string?>("--lang") { Description = "Target language tag (default: the app's setting, else the OS language)." };
         var review = new Option<bool>("--review-glossary") { Description = "Wait for the player's review after the glossary." };
@@ -183,9 +183,9 @@ internal static partial class GenJobCommands
                 return 1;
             }
 
-            if (recording is null && !AgentAdapters.Ids.Contains(agentId))
+            if (recording is null && !AgentCommand.IsKnown(context.Env, agentId))
             {
-                error.WriteLine($"'{agentId}' is not an agent: use {string.Join(" or ", AgentAdapters.Ids)}.");
+                error.WriteLine($"'{agentId}' is not an agent: use {string.Join(" or ", AgentAdapters.Ids)}, or a model's llm-… ID from Settings → AI agents → Your models.");
                 return 1;
             }
 
@@ -298,7 +298,7 @@ internal static partial class GenJobCommands
                 return 1;
             }
 
-            if (recording is null && !AgentAdapters.Ids.Contains(entry.Job.Agent))
+            if (recording is null && !AgentCommand.IsKnown(context.Env, entry.Job.Agent))
             {
                 error.WriteLine($"The job's agent '{entry.Job.Agent}' is unknown to this version.");
                 return 1;

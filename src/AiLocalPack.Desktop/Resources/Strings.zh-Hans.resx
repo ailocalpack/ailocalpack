@@ -50,7 +50,7 @@
     <value>AI 智能体</value>
   </data>
   <data name="Settings_Agents_Description" xml:space="preserve">
-    <value>用于 AI 制作翻译的 Claude Code 和 Codex</value>
+    <value>用于借助 AI 创建翻译的 Claude Code、Codex 和你自己的模型</value>
   </data>
   <data name="Settings_GitHub_Title" xml:space="preserve">
     <value>GitHub</value>
@@ -1886,16 +1886,13 @@
     <value>退出</value>
   </data>
   <data name="Settings_Agents_Lead" xml:space="preserve">
-    <value>智能体仅用于用 AI 制作新翻译；安装翻译从不需要智能体。它们使用你自己的订阅：本项目不为任何 AI 付费。</value>
+    <value>代理只在用 AI 创建新翻译时使用，安装翻译从不需要。它们使用你自己的订阅、API 密钥或本机上的模型运行：项目不为任何 AI 付费。</value>
   </data>
   <data name="Settings_Group_Agents" xml:space="preserve">
     <value>智能体</value>
   </data>
   <data name="Settings_Group_DefaultAgent" xml:space="preserve">
     <value>默认</value>
-  </data>
-  <data name="Settings_Group_Later" xml:space="preserve">
-    <value>以后推出</value>
   </data>
   <data name="Settings_Agent_Label" xml:space="preserve">
     <value>AI 智能体</value>
@@ -2055,15 +2052,6 @@
   </data>
   <data name="Settings_Number_Increase" xml:space="preserve">
     <value>增加</value>
-  </data>
-  <data name="Settings_OwnKey_Label" xml:space="preserve">
-    <value>自己的 API 密钥或本地模型</value>
-  </data>
-  <data name="Settings_OwnKey_Help" xml:space="preserve">
-    <value>适用于没有 Claude 或 ChatGPT 订阅的玩家。</value>
-  </data>
-  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
-    <value>api 密钥 key 本地 模型 local model ollama</value>
   </data>
   <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
     <value>{0} 已退出登录</value>
@@ -4821,5 +4809,218 @@
   </data>
   <data name="Settings_Agents_Hint_Update" xml:space="preserve">
     <value>更新</value>
+  </data>
+  <data name="Settings_Group_Models" xml:space="preserve">
+    <value>你的模型</value>
+  </data>
+  <data name="Settings_Llm_Label" xml:space="preserve">
+    <value>你的模型</value>
+  </data>
+  <data name="Settings_Llm_Keywords" xml:space="preserve">
+    <value>自己的模型, 本地模型, LLM, API 密钥, Ollama, LM Studio, OpenRouter, OpenAI, 服务器</value>
+  </data>
+  <data name="Settings_Llm_Note" xml:space="preserve">
+    <value>任何提供 OpenAI API 的服务器：本机上的模型（Ollama、LM Studio）或使用你的 API 密钥的云端模型。它需要支持工具调用。你的模型只能通过工具包读取游戏：无法为未知引擎编写读取器，也无法联网搜索。</value>
+  </data>
+  <data name="Settings_Llm_Empty_Title" xml:space="preserve">
+    <value>还没有模型</value>
+  </data>
+  <data name="Settings_Llm_Empty_Text" xml:space="preserve">
+    <value>用 Ollama 或 LM Studio 在本机运行模型，或使用 OpenRouter、OpenAI 等服务的 API 密钥。</value>
+  </data>
+  <data name="Settings_Llm_Add" xml:space="preserve">
+    <value>添加模型</value>
+  </data>
+  <data name="Settings_Llm_Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Settings_Llm_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Settings_Llm_Remove_Title" xml:space="preserve">
+    <value>移除 {0}？</value>
+  </data>
+  <data name="Settings_Llm_Remove_Text" xml:space="preserve">
+    <value>该模型会从列表中移除，其 API 密钥会从系统钥匙串中删除。用它完成的翻译和服务器上的模型不受影响。</value>
+  </data>
+  <data name="Settings_Llm_Status_Checking" xml:space="preserve">
+    <value>正在检查…</value>
+  </data>
+  <data name="Settings_Llm_Status_Ready" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="Settings_Llm_Status_Unreachable" xml:space="preserve">
+    <value>无法连接</value>
+  </data>
+  <data name="Settings_Llm_Status_Key" xml:space="preserve">
+    <value>API 密钥有问题</value>
+  </data>
+  <data name="Settings_Llm_Status_ModelMissing" xml:space="preserve">
+    <value>列表中没有该模型</value>
+  </data>
+  <data name="Settings_Llm_Status_Failed" xml:space="preserve">
+    <value>服务器错误</value>
+  </data>
+  <data name="Settings_Llm_Local" xml:space="preserve">
+    <value>在本机运行</value>
+  </data>
+  <data name="Settings_Llm_Remote" xml:space="preserve">
+    <value>文本会发送到 {0}</value>
+  </data>
+  <data name="Settings_Llm_Help_StartOllama" xml:space="preserve">
+    <value>请启动 Ollama，然后重新检查。</value>
+  </data>
+  <data name="Settings_Llm_Help_StartLmStudio" xml:space="preserve">
+    <value>请启动 LM Studio 的本地服务器（Developer → Start server），然后重新检查。</value>
+  </data>
+  <data name="Settings_Llm_Help_Unreachable" xml:space="preserve">
+    <value>{0} 没有响应：请检查地址和网络连接。</value>
+  </data>
+  <data name="Settings_Llm_Help_Key" xml:space="preserve">
+    <value>服务器拒绝了 API 密钥，或尚未保存密钥。请编辑该模型并输入密钥。</value>
+  </data>
+  <data name="Settings_Llm_Help_ModelMissing" xml:space="preserve">
+    <value>服务器未列出 {0}。请在服务器上下载它，或选择其他模型。</value>
+  </data>
+  <data name="Llm_Provider_Custom" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="Llm_Dialog_AddTitle" xml:space="preserve">
+    <value>添加模型</value>
+  </data>
+  <data name="Llm_Dialog_EditTitle" xml:space="preserve">
+    <value>编辑模型</value>
+  </data>
+  <data name="Llm_Dialog_Intro" xml:space="preserve">
+    <value>AI Local Pack 通过 OpenAI API 与模型通信。翻译需要支持工具调用的模型，例如 Qwen 3、Llama 3.1 或 GPT。</value>
+  </data>
+  <data name="Llm_Dialog_Where" xml:space="preserve">
+    <value>运行位置</value>
+  </data>
+  <data name="Llm_Dialog_Url" xml:space="preserve">
+    <value>服务器地址</value>
+  </data>
+  <data name="Llm_Dialog_Url_Missing" xml:space="preserve">
+    <value>请输入服务器地址。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Invalid" xml:space="preserve">
+    <value>请输入以 http:// 或 https:// 开头的完整地址，例如 http://localhost:11434/v1。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Ollama" xml:space="preserve">
+    <value>Ollama 运行后会监听此地址。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_LmStudio" xml:space="preserve">
+    <value>请在 LM Studio 中启动本地服务器（Developer → Start server）。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Cloud" xml:space="preserve">
+    <value>该服务的 API 地址。仅在使用代理时修改。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Custom" xml:space="preserve">
+    <value>任何提供 OpenAI API 的服务器：填写到 /v1 为止的地址（vLLM、llama.cpp、DeepSeek、Groq、Mistral…）。</value>
+  </data>
+  <data name="Llm_Dialog_Key" xml:space="preserve">
+    <value>API 密钥</value>
+  </data>
+  <data name="Llm_Dialog_KeyOptional" xml:space="preserve">
+    <value>API 密钥（可选）</value>
+  </data>
+  <data name="Llm_Dialog_Key_Saved" xml:space="preserve">
+    <value>已保存在钥匙串中：输入新密钥即可替换</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hint" xml:space="preserve">
+    <value>保存在系统钥匙串中，绝不写入设置文件。</value>
+  </data>
+  <data name="Llm_Dialog_Key_Get" xml:space="preserve">
+    <value>获取密钥</value>
+  </data>
+  <data name="Llm_Dialog_Key_Show" xml:space="preserve">
+    <value>显示密钥</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hide" xml:space="preserve">
+    <value>隐藏密钥</value>
+  </data>
+  <data name="Llm_Dialog_Key_Remove" xml:space="preserve">
+    <value>移除已保存的密钥</value>
+  </data>
+  <data name="Llm_Dialog_Key_SaveFailed" xml:space="preserve">
+    <value>系统钥匙串未能保存密钥。请将其解锁（在 Linux 上请启动密钥环）后重试。</value>
+  </data>
+  <data name="Llm_Dialog_Model" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="Llm_Dialog_Model_Hint" xml:space="preserve">
+    <value>模型在服务器上的 ID。可加载列表进行选择。</value>
+  </data>
+  <data name="Llm_Dialog_Model_Missing" xml:space="preserve">
+    <value>请输入或选择一个模型。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Load" xml:space="preserve">
+    <value>加载列表</value>
+  </data>
+  <data name="Llm_Dialog_Models_None" xml:space="preserve">
+    <value>服务器没有列出模型：请输入模型 ID。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Unreachable" xml:space="preserve">
+    <value>列表未能加载：服务器没有响应。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Failed" xml:space="preserve">
+    <value>列表未能加载。你仍可手动输入模型 ID。</value>
+  </data>
+  <data name="Llm_Dialog_Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="Llm_Dialog_Name_Missing" xml:space="preserve">
+    <value>请为模型命名。</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Local" xml:space="preserve">
+    <value>游戏文本不会离开本机。</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Remote" xml:space="preserve">
+    <value>游戏文本会发送到 {0}。</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Unknown" xml:space="preserve">
+    <value>输入地址后即可看到文本的去向。</value>
+  </data>
+  <data name="Llm_Dialog_Check" xml:space="preserve">
+    <value>检查连接</value>
+  </data>
+  <data name="Llm_Dialog_Check_Hint" xml:space="preserve">
+    <value>发送一次简短请求，确认模型能回复并调用工具。</value>
+  </data>
+  <data name="Llm_Dialog_Check_Busy" xml:space="preserve">
+    <value>正在询问模型…</value>
+  </data>
+  <data name="Llm_Dialog_Check_Ok" xml:space="preserve">
+    <value>已连接：模型能调用工具，可以翻译。</value>
+  </data>
+  <data name="Llm_Dialog_Check_NoTools" xml:space="preserve">
+    <value>已连接，但模型没有调用工具就作答了。翻译需要工具调用：请选择支持它的模型。</value>
+  </data>
+  <data name="Llm_Dialog_Check_ModelMissing" xml:space="preserve">
+    <value>服务器上没有模型 {0}。</value>
+  </data>
+  <data name="Llm_Dialog_Check_Unreachable" xml:space="preserve">
+    <value>{0} 没有响应。</value>
+  </data>
+  <data name="Llm_Dialog_Check_KeyRefused" xml:space="preserve">
+    <value>服务器拒绝了 API 密钥。</value>
+  </data>
+  <data name="Llm_Dialog_Check_Failed" xml:space="preserve">
+    <value>服务器返回错误：{0}</value>
+  </data>
+  <data name="Llm_Dialog_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Gen_AddModel_Title" xml:space="preserve">
+    <value>你自己的模型</value>
+  </data>
+  <data name="Gen_AddModel_Text" xml:space="preserve">
+    <value>Ollama、LM Studio 或 API 密钥</value>
+  </data>
+  <data name="Gen_Start_ModelNeedsToolkit" xml:space="preserve">
+    <value>{0} 无法为这款游戏编写自己的读取器。请选择 Claude Code 或 Codex，或工具包中的读取器。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Other" xml:space="preserve">
+    <value>服务器上有 {0} 个模型</value>
   </data>
 </root>

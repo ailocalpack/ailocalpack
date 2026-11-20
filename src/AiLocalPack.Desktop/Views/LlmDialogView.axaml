@@ -1,0 +1,191 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ag="using:AiLocalPack.Desktop.Agents"
+             xmlns:views="using:AiLocalPack.Desktop.Views"
+             xmlns:l="using:AiLocalPack.Desktop.Localization"
+             x:Class="AiLocalPack.Desktop.Views.LlmDialogView"
+             x:DataType="ag:LlmDialogViewModel"
+             Width="600">
+    <!-- Add model / Edit model (Settings → AI agents → Your models; the start form's add tile): where it runs, address, key,
+         model, name, where the text goes, Check connection. Labels above fields, errors under them, helper text in muted. -->
+    <Border Classes="dialog">
+        <!-- The buttons stay in view; the fields scroll when the window is short. -->
+        <DockPanel MaxHeight="{Binding $parent[TopLevel].Bounds.Height, Converter={x:Static views:DialogHeightConverter.Instance}}">
+            <StackPanel x:Name="LlmButtons" DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="24,12,20,20">
+                <Button x:Name="CancelButton" Classes="ghost" Command="{Binding CancelCommand}" Content="{l:Loc Publish_Cancel}" />
+                <Button x:Name="SaveButton" Classes="accent" Command="{Binding SaveCommand}" IsDefault="True" Content="{l:Loc Llm_Dialog_Save}" />
+            </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="24,20,20,4" Spacing="16">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="LlmTitle" Classes="dialogTitle" FontSize="18" Text="{Binding Title}" />
+                        <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Llm_Dialog_Intro}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button x:Name="CloseButton" Grid.Column="1" Classes="icon" Command="{Binding CancelCommand}" VerticalAlignment="Top"
+                            ToolTip.Tip="{l:Loc Publish_Close}" AutomationProperties.Name="{l:Loc Publish_Close}">
+                        <Path Data="{StaticResource IconX}" />
+                    </Button>
+                </Grid>
+
+                <!-- Where it runs -->
+                <StackPanel Spacing="8">
+                    <TextBlock Classes="capsLabel" Text="{l:Loc Llm_Dialog_Where}" />
+                    <ItemsControl x:Name="LlmProviders" ItemsSource="{Binding Providers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><UniformGrid Columns="5" ColumnSpacing="8" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="ag:LlmProviderOption">
+                                <Button Classes="providerTile" Classes.on="{Binding IsSelected}"
+                                        Command="{Binding $parent[views:LlmDialogView].((ag:LlmDialogViewModel)DataContext).PickProviderCommand}"
+                                        CommandParameter="{Binding}" AutomationProperties.Name="{Binding Name}">
+                                    <StackPanel Spacing="6" HorizontalAlignment="Center">
+                                        <views:AgentLogo DataContext="{Binding Info}" IsSmall="True" HorizontalAlignment="Center" />
+                                        <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Address -->
+                <StackPanel Spacing="6">
+                    <TextBlock Classes="fieldLabel" Text="{l:Loc Llm_Dialog_Url}" />
+                    <TextBox x:Name="LlmUrl" Classes="mono" Text="{Binding BaseUrl}" LostFocus="OnUrlLostFocus"
+                             PlaceholderText="https://example.com/v1" AutomationProperties.Name="{l:Loc Llm_Dialog_Url}" />
+                    <TextBlock x:Name="LlmUrlError" Classes="error" Text="{Binding UrlError}" IsVisible="{Binding HasUrlError}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="12" Text="{Binding UrlHint}" IsVisible="{Binding !HasUrlError}" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- API key -->
+                <StackPanel Spacing="6">
+                    <DockPanel>
+                        <HyperlinkButton DockPanel.Dock="Right" Classes="inline" FontSize="12" NavigateUri="{Binding KeysUrl}" IsVisible="{Binding HasKeysUrl}">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{l:Loc Llm_Dialog_Key_Get}" />
+                                <Viewbox Classes="icon" Width="12" Height="12">
+                                    <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                                </Viewbox>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <TextBlock Classes="fieldLabel" Text="{Binding KeyLabel}" />
+                    </DockPanel>
+                    <TextBox x:Name="LlmKey" Classes="mono" Text="{Binding ApiKey}" PasswordChar="•" RevealPassword="{Binding IsKeyVisible}"
+                             PlaceholderText="{Binding KeyPlaceholder}" AutomationProperties.Name="{Binding KeyLabel}">
+                        <TextBox.InnerLeftContent>
+                            <Viewbox Classes="icon" Width="14" Height="14" Margin="10,0,0,0">
+                                <Path Classes="icon" Data="{StaticResource IconKey}" Stroke="{DynamicResource AppMutedBrush}" />
+                            </Viewbox>
+                        </TextBox.InnerLeftContent>
+                        <TextBox.InnerRightContent>
+                            <Button x:Name="LlmKeyToggle" Classes="icon" Width="26" Height="26" Padding="5" Command="{Binding ToggleKeyCommand}" Margin="0,0,4,0"
+                                    ToolTip.Tip="{Binding KeyToggleName}" AutomationProperties.Name="{Binding KeyToggleName}">
+                                <Panel>
+                                    <Path Data="{StaticResource IconEye}" IsVisible="{Binding !IsKeyVisible}" />
+                                    <Path Data="{StaticResource IconEyeOff}" IsVisible="{Binding IsKeyVisible}" />
+                                </Panel>
+                            </Button>
+                        </TextBox.InnerRightContent>
+                    </TextBox>
+                    <TextBlock x:Name="LlmKeyError" Classes="error" Text="{Binding KeyError}" IsVisible="{Binding KeyError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Viewbox Classes="icon" Width="12" Height="12" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconLock}" Stroke="{DynamicResource AppFaintBrush}" />
+                        </Viewbox>
+                        <TextBlock Classes="muted" FontSize="12" Text="{Binding KeyHint}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                        <Button x:Name="LlmRemoveKey" Classes="link" FontSize="12" Padding="0" Command="{Binding RemoveKeyCommand}" IsVisible="{Binding CanRemoveKey}"
+                                Content="{l:Loc Llm_Dialog_Key_Remove}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Model -->
+                <StackPanel Spacing="6">
+                    <DockPanel>
+                        <Button x:Name="LlmLoadModels" DockPanel.Dock="Right" Classes="bare sm" Command="{Binding LoadModelsCommand}" Padding="6,2">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="13" Height="13" Classes.spin="{Binding IsLoadingModels}">
+                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                                </Viewbox>
+                                <TextBlock Text="{l:Loc Llm_Dialog_Models_Load}" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                        <TextBlock Classes="fieldLabel" Text="{l:Loc Llm_Dialog_Model}" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <TextBox x:Name="LlmModel" Text="{Binding Model}" PlaceholderText="qwen3:30b" AutomationProperties.Name="{l:Loc Llm_Dialog_Model}">
+                        <TextBox.InnerRightContent>
+                            <Button x:Name="LlmModelList" Classes="icon" Width="26" Height="26" Padding="5" Margin="0,0,4,0" IsEnabled="{Binding HasModels}"
+                                    ToolTip.Tip="{l:Loc Llm_Dialog_Model}" AutomationProperties.Name="{l:Loc Llm_Dialog_Model}">
+                                <Path Data="{StaticResource IconChevronDown}" />
+                                <Button.Flyout>
+                                    <Flyout Placement="BottomEdgeAlignedRight">
+                                        <ListBox x:Name="LlmModelChoices" ItemsSource="{Binding Models}" MaxHeight="260" MinWidth="320"
+                                                 SelectionChanged="OnModelPicked" AutomationProperties.Name="{l:Loc Llm_Dialog_Model}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String"><TextBlock Text="{Binding}" /></DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </TextBox.InnerRightContent>
+                    </TextBox>
+                    <TextBlock Classes="error" Text="{Binding ModelError}" IsVisible="{Binding HasModelError}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="LlmModelsText" Classes="muted" FontSize="12" Classes.warnText="{Binding ModelsFailed}" Text="{Binding ModelsText}"
+                               IsVisible="{Binding HasModelsText}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" FontSize="12" Text="{l:Loc Llm_Dialog_Model_Hint}" IsVisible="{Binding !HasModelsText}" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- Name -->
+                <StackPanel Spacing="6">
+                    <TextBlock Classes="fieldLabel" Text="{l:Loc Llm_Dialog_Name}" />
+                    <TextBox x:Name="LlmName" Text="{Binding Name}" MaxLength="{Binding MaxNameLength}" AutomationProperties.Name="{l:Loc Llm_Dialog_Name}" />
+                    <TextBlock Classes="error" Text="{Binding NameError}" IsVisible="{Binding HasNameError}" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- Where the text goes + the connection check -->
+                <Border Classes="compatBox">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Viewbox Classes="icon" Width="14" Height="14" VerticalAlignment="Center">
+                                <Panel>
+                                    <Path Classes="icon" Data="{StaticResource IconLaptop}" Stroke="{DynamicResource AppOkBrush}" IsVisible="{Binding IsLocal}" />
+                                    <Path Classes="icon" Data="{StaticResource IconCloud}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding !IsLocal}" />
+                                </Panel>
+                            </Viewbox>
+                            <TextBlock x:Name="LlmPrivacy" FontSize="13" Text="{Binding PrivacyText}" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="500" />
+                        </StackPanel>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Button x:Name="LlmCheck" Classes="ghost sm" Command="{Binding CheckCommand}" VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Viewbox Classes="icon" Width="14" Height="14">
+                                        <Path Classes="icon" Data="{StaticResource IconZap}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{l:Loc Llm_Dialog_Check}" />
+                                </StackPanel>
+                            </Button>
+                            <StackPanel x:Name="LlmCheckResult" Grid.Column="1" Classes="genStatus" Classes.ok="{Binding IsCheckOk}" Classes.bad="{Binding IsCheckBad}"
+                                        Classes.warn="{Binding IsCheckWarn}" Orientation="Horizontal" Spacing="8" IsVisible="{Binding HasCheck}" VerticalAlignment="Center">
+                                <Viewbox Classes="icon" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Classes.spin="{Binding IsChecking}">
+                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                    <Panel>
+                                        <Path Classes="icon" Data="{StaticResource IconCheck}" IsVisible="{Binding IsCheckOk}" />
+                                        <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding IsCheckWarn}" />
+                                        <Path Classes="icon" Data="{StaticResource IconX}" IsVisible="{Binding IsCheckBad}" />
+                                        <Path Classes="icon" Data="{StaticResource IconLoader}" IsVisible="{Binding IsChecking}" />
+                                    </Panel>
+                                </Viewbox>
+                                <TextBlock Text="{Binding CheckText}" TextWrapping="Wrap" MaxWidth="340" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" Classes="muted" FontSize="12" Text="{l:Loc Llm_Dialog_Check_Hint}" IsVisible="{Binding !HasCheck}"
+                                       TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

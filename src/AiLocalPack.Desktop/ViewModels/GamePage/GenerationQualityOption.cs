@@ -51,6 +51,12 @@ public static class GenerationQualityTexts
     public static string Model(GenerationQuality quality, string? agentId, Localizer localizer)
     {
         ArgumentNullException.ThrowIfNull(localizer);
+        if (Agents.AgentInfo.KnownLlm(agentId) is { } llm)
+        {
+            // The player's own model: the same model at every quality (the quality changes the Study stage only).
+            return llm.Model;
+        }
+
         var choice = AgentModels.For(agentId ?? string.Empty, quality);
         if (choice.Model is { Length: > 0 } model)
         {

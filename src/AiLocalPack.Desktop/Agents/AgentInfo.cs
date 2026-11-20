@@ -1,5 +1,6 @@
 using AiLocalPack.Agents.Claude;
 using AiLocalPack.Agents.Codex;
+using AiLocalPack.Core.Llm;
 using AiLocalPack.Desktop.Resources;
 using Avalonia.Media;
 
@@ -58,9 +59,56 @@ public sealed record AgentInfo(
         nameof(Strings.Settings_Agent_SignInHelp_Codex),
         "IconTerminal"); // OpenAI's guidelines don't allow its mark here (removed from Simple Icons in 16.0.0)
 
+    /// <summary>
+    /// One of the player's own models: its name, the server preset as vendor, the preset's mark (Ollama, LM Studio,
+    /// OpenRouter from Simple Icons; OpenAI's guidelines don't allow its mark → a neutral sparkles icon; any other server
+    /// a server icon).
+    /// </summary>
+    public static AgentInfo ForLlm(LlmConnection connection)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+        var provider = LlmProviders.Of(connection.Provider);
+        var (from, to, logo) = provider.Id switch
+        {
+            "ollama" => ("#2B2D31", "#0B0C0E", "BrandOllama"),
+            "lmstudio" => ("#5B5BD6", "#3E3EB0", "BrandLmStudio"),
+            "openrouter" => ("#6366F1", "#4338CA", "BrandOpenRouter"),
+            "openai" => ("#3B3F4A", "#16181D", "IconSparkles"),
+            _ => ("#0F766E", "#115E59", "IconServer"),
+        };
+        return new AgentInfo(
+            connection.Id,
+            connection.Name,
+            provider.Name.Length > 0 ? provider.Name : connection.Host,
+            connection.Name.Length >= 2 ? connection.Name[..2] : "AI",
+            Color.Parse(from),
+            Color.Parse(to),
+            nameof(Strings.Settings_Agent_InstallHelp_Codex),
+            nameof(Strings.Settings_Agent_SignInHelp_Codex),
+            logo);
+    }
+
+    // The player's models by ID, as the settings named them (IDs are random, so graphs in tests never clash; a removed
+    // model stays known, so its jobs keep their name).
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, LlmConnection> KnownLlms = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Makes <see cref="Of"/> name the player's models (the app calls it with the settings at start and on every change).</summary>
+    public static void Remember(IEnumerable<LlmConnection> connections)
+    {
+        ArgumentNullException.ThrowIfNull(connections);
+        foreach (var connection in connections)
+        {
+            KnownLlms[connection.Id] = connection;
+        }
+    }
+
+    /// <summary>The player's model of <paramref name="id"/> as last named by the settings, or <c>null</c>.</summary>
+    public static LlmConnection? KnownLlm(string? id) => id is not null && KnownLlms.TryGetValue(id, out var llm) ? llm : null;
+
     /// <summary>The agent's info; an agent the app doesn't describe gets its ID as its name.</summary>
     public static AgentInfo Of(string id) => id switch
     {
+        _ when KnownLlms.TryGetValue(id, out var llm) => ForLlm(llm),
         ClaudeCodeAdapter.AgentId => Claude,
         CodexAdapter.AgentId => Codex,
         _ => new AgentInfo(id, id, id, id.Length >= 2 ? id[..2] : id, Color.Parse("#3B3F4A"), Color.Parse("#6B7280"), nameof(Strings.Settings_Agent_InstallHelp_Codex), nameof(Strings.Settings_Agent_SignInHelp_Codex)),

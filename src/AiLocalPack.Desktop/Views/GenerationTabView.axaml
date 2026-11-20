@@ -299,12 +299,69 @@
                 <!-- Agent cards: radio choice with the inline fix -->
                 <StackPanel Spacing="8">
                     <TextBlock Classes="capsLabel" Text="{l:Loc Gen_Agents_Label}" />
-                    <ItemsControl x:Name="AgentCards" ItemsSource="{Binding Agents}" AutomationProperties.Name="{l:Loc Gen_Agents_Label}">
+                    <ItemsControl x:Name="AgentCards" ItemsSource="{Binding AgentTiles}" AutomationProperties.Name="{l:Loc Gen_Agents_Label}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate><UniformGrid Columns="2" ColumnSpacing="10" RowSpacing="10" /></ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="gp:GenerationAgentCard">
+                        <ItemsControl.DataTemplates>
+                            <!-- One of the player's own models: same card, its server's mark, "model · host" and where the text goes. -->
+                            <DataTemplate DataType="gp:GenerationModelCard">
+                                <Border Classes="genAgent" Classes.on="{Binding IsSelected}" Tapped="OnAgentCardTapped">
+                                    <StackPanel Spacing="6">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                            <RadioButton GroupName="GenerationAgent" FontWeight="Bold" Content="{Binding Name}"
+                                                         IsChecked="{Binding IsSelected, Mode=OneWay}" Command="{Binding SelectCommand}"
+                                                         AutomationProperties.Name="{Binding Name}" VerticalAlignment="Center" />
+                                            <views:AgentLogo Grid.Column="1" DataContext="{Binding Info}" IsSmall="True" VerticalAlignment="Center" />
+                                        </Grid>
+                                        <WrapPanel ItemSpacing="10" LineSpacing="6">
+                                            <StackPanel Classes="genStatus" Classes.ok="{Binding Row.IsStatusOk}" Classes.bad="{Binding Row.IsStatusWarn}"
+                                                        Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" ToolTip.Tip="{Binding Row.Help}">
+                                                <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding Row.IsStatusBusy}">
+                                                    <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                                    <Panel>
+                                                        <Path Classes="icon" Data="{StaticResource IconCheck}" IsVisible="{Binding Row.IsStatusOk}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconX}" IsVisible="{Binding Row.IsStatusWarn}" />
+                                                        <Path Classes="icon" Data="{StaticResource IconLoader}" IsVisible="{Binding Row.IsStatusBusy}" />
+                                                    </Panel>
+                                                </Viewbox>
+                                                <TextBlock Text="{Binding Row.StatusText}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <TextBlock Classes="faint mono" FontSize="12" Text="{Binding Row.SourceText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                            <Button Classes="ghost sm" Command="{Binding Row.CheckAgainCommand}" IsVisible="{Binding Row.CanCheckAgain}" Content="{Binding Row.CheckAgainText}" />
+                                            <Button Classes="bare sm" Command="{Binding Row.EditCommand}" IsVisible="{Binding Row.CanCheckAgain}" Content="{Binding Row.EditText}" />
+                                        </WrapPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Viewbox Classes="icon" Width="12" Height="12" VerticalAlignment="Center">
+                                                <Panel>
+                                                    <Path Classes="icon" Data="{StaticResource IconLaptop}" Stroke="{DynamicResource AppFaintBrush}" IsVisible="{Binding Row.IsLocal}" />
+                                                    <Path Classes="icon" Data="{StaticResource IconCloud}" Stroke="{DynamicResource AppFaintBrush}" IsVisible="{Binding !Row.IsLocal}" />
+                                                </Panel>
+                                            </Viewbox>
+                                            <TextBlock Classes="faint" FontSize="12" Text="{Binding Row.PrivacyText}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                            <!-- Before the first model: what it is and where to add one. -->
+                            <DataTemplate DataType="gp:GenerationAddModelTile">
+                                <Button x:Name="AddModelTile" Classes="genAddModel" Command="{Binding AddCommand}"
+                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                        AutomationProperties.Name="{l:Loc Gen_AddModel_Title}">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <Border Classes="rowPic" VerticalAlignment="Top">
+                                            <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Path Classes="icon" Data="{StaticResource IconPlus}" Stroke="{DynamicResource AppAccentBrush}" />
+                                            </Viewbox>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                            <TextBlock FontWeight="Bold" Text="{l:Loc Gen_AddModel_Title}" />
+                                            <TextBlock Classes="faint" FontSize="12" Text="{l:Loc Gen_AddModel_Text}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                            <DataTemplate DataType="gp:GenerationAgentCard">
                                 <Border Classes="genAgent" Classes.on="{Binding IsSelected}" Tapped="OnAgentCardTapped">
                                     <StackPanel Spacing="6">
                                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
@@ -353,7 +410,7 @@
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
+                        </ItemsControl.DataTemplates>
                     </ItemsControl>
                 </StackPanel>
 

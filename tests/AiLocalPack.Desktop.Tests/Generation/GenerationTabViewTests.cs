@@ -60,7 +60,7 @@ public sealed class GenerationTabViewTests
             Find<ItemsControl>(window, "AgentCards").ItemCount,
             Find<ItemsControl>(window, "GenerationChecks").ItemCount,
             Find<Button>(window, "StartGeneration").IsEffectivelyEnabled)
-            .Should().Be((5, "1,200", 2, 4, true));
+            .Should().Be((5, "1,200", 3, 4, true)); // two agents + "Your own model"
         window.Close();
         return Task.CompletedTask;
     });

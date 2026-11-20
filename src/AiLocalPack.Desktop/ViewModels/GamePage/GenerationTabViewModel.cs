@@ -279,11 +279,15 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         _showInPacks = showInPacks;
         _time = time;
         _logger = logger;
-        Agents = [.. agents.Agents.Select(row => new GenerationAgentCard(row, localizer, Pick))];
-        foreach (var card in Agents)
+        foreach (var card in agents.Agents.Select(row => new GenerationAgentCard(row, localizer, Pick)))
         {
             card.StateChanged += OnAgentStateChanged;
+            Agents.Add(card);
         }
+
+        _addModelTile = new GenerationAddModelTile(new RelayCommand(AddModel));
+        SyncModelCards();
+        agents.ModelsChanged += OnModelsChanged;
 
         StartCommand = new AsyncRelayCommand(StartAsync, () => CanStart);
         RetryEstimateCommand = new RelayCommand(Estimate, () => EstimateState == EstimateState.Failed);
@@ -515,7 +519,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     public string QualityModelLine => GenerationQualityTexts.ModelLine(Quality, SelectedAgent?.AgentId, _localizer);
 
     /// <summary>The web lookup checkbox: Thorough only.</summary>
-    public bool ShowWebLookup => Quality == GenerationQuality.Thorough;
+    public bool ShowWebLookup => Quality == GenerationQuality.Thorough && SelectedAgent?.CanSearchWeb != false;
 
     /// <summary><c>Compare modes</c>: the dialog with every quality side by side.</summary>
     public IRelayCommand CompareQualitiesCommand { get; }
@@ -622,9 +626,64 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
     // ---------- Agents ----------
 
-    public IReadOnlyList<GenerationAgentCard> Agents { get; }
+    /// <summary>The agents, then the player's own models.</summary>
+    public System.Collections.ObjectModel.ObservableCollection<GenerationAgentChoice> Agents { get; } = [];
 
-    public GenerationAgentCard? SelectedAgent => Agents.FirstOrDefault(a => a.IsSelected);
+    /// <summary>The grid's tiles: <see cref="Agents"/>, and the add-a-model tile while the player has none.</summary>
+    public System.Collections.ObjectModel.ObservableCollection<object> AgentTiles { get; } = [];
+
+    public GenerationAgentChoice? SelectedAgent => Agents.FirstOrDefault(a => a.IsSelected);
+
+    private readonly GenerationAddModelTile _addModelTile;
+
+    /// <summary>Cards follow Settings → AI agents → <em>Your models</em>: added, removed (a removed selected one gives way to the default).</summary>
+    private void SyncModelCards()
+    {
+        var models = _agents.Models;
+        foreach (var gone in Agents.OfType<GenerationModelCard>().Where(c => !models.Contains(c.Row)).ToList())
+        {
+            gone.StateChanged -= OnAgentStateChanged;
+            gone.Close();
+            Agents.Remove(gone);
+        }
+
+        foreach (var row in models.Where(r => !Agents.OfType<GenerationModelCard>().Any(c => c.Row == r)))
+        {
+            var card = new GenerationModelCard(row, Pick);
+            card.StateChanged += OnAgentStateChanged;
+            Agents.Add(card);
+        }
+
+        AgentTiles.Clear();
+        foreach (var agent in Agents)
+        {
+            AgentTiles.Add(agent);
+        }
+
+        if (models.Count == 0)
+        {
+            AgentTiles.Add(_addModelTile);
+        }
+
+        // In the constructor the form picks its agent later, once everything it reads is there.
+        if (SelectedAgent is null && QualityOptions is not null)
+        {
+            _agentPicked = false;
+            SelectDefaultAgent();
+        }
+    }
+
+    private void OnModelsChanged(object? sender, EventArgs e) => _ui.Post(SyncModelCards);
+
+    /// <summary>The add tile: <em>Add model</em>, and the new model chosen once saved.</summary>
+    private void AddModel() => _agents.AddModel(saved => _ui.Post(() =>
+    {
+        SyncModelCards();
+        if (Agents.FirstOrDefault(a => a.AgentId == saved.Id) is { } card)
+        {
+            Pick(card);
+        }
+    }));
 
     // ---------- Checks ----------
 
@@ -669,7 +728,9 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         SelectedAgent?.IsReady == true,
         EstimateState,
         _estimate?.Space.IsEnough == true,
-        _starting));
+        _starting,
+        NeedsScripts: !IsUpdateMode && Reader == GenerationOptions.AgentReader,
+        AgentWritesScripts: SelectedAgent?.CanWriteScripts != false));
 
     public bool CanStart => StartBlock is null;
 
@@ -682,6 +743,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
         GenerationStartBlock.Estimating => _localizer[nameof(Strings.Gen_Start_Estimating)],
         GenerationStartBlock.EstimateFailed => _localizer[nameof(Strings.Gen_Start_EstimateFailed)],
         GenerationStartBlock.NotEnoughDisk => _localizer[nameof(Strings.Gen_Start_NotEnoughDisk)],
+        GenerationStartBlock.AgentCantWriteReader => _localizer.Format(nameof(Strings.Gen_Start_ModelNeedsToolkit), SelectedAgent?.Name),
         _ => string.Empty,
     };
 
@@ -1061,6 +1123,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             _fixes.Changed -= OnFixChanged;
         }
 
+        _agents.ModelsChanged -= OnModelsChanged;
         foreach (var card in Agents)
         {
             card.StateChanged -= OnAgentStateChanged;
@@ -1282,7 +1345,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
             ReviewGlossary,
             Base: updateBase is null ? null : _base!.Reference,
             Quality: Quality,
-            WebLookup: Quality == GenerationQuality.Thorough && WebLookup,
+            WebLookup: Quality == GenerationQuality.Thorough && WebLookup && agent.CanSearchWeb,
             Reader: IsUpdateMode ? null : _reader);
         var take = ShowRequest && TakeRequest ? Request?.Discussion : null;
         var references = UseReferences && _referencesLanguage == Language ? _referencePacks : null;
@@ -1712,13 +1775,13 @@ public sealed partial class GenerationTabViewModel : ObservableObject
     }
 
     /// <summary>The player chose an agent: it stays chosen whatever the agents' states do.</summary>
-    private void Pick(GenerationAgentCard card)
+    private void Pick(GenerationAgentChoice card)
     {
         _agentPicked = true;
         Select(card);
     }
 
-    private void Select(GenerationAgentCard? card)
+    private void Select(GenerationAgentChoice? card)
     {
         foreach (var agent in Agents)
         {
@@ -1727,6 +1790,7 @@ public sealed partial class GenerationTabViewModel : ObservableObject
 
         OnPropertyChanged(nameof(SelectedAgent));
         OnPropertyChanged(nameof(QualityModelLine));
+        OnPropertyChanged(nameof(ShowWebLookup));
         SyncQualityOptions();
         RaiseStart();
     }

@@ -194,6 +194,10 @@ internal static class Composition
             return AgentInstaller.Create(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<OsEnvironment>(), http, sp.GetRequiredService<ILogger<AgentInstaller>>());
         });
         services.AddSingleton<IAgentHost, AgentHost>();
+
+        // The player's own models: keys in the OS keychain (the same store as the GitHub token), one HTTP client for all runs.
+        services.AddSingleton<ISecretStore>(sp => SecretStores.Create(sp.GetRequiredService<OsEnvironment>()));
+        services.AddSingleton<ILlmHost, LlmHost>();
         services.AddSingleton<AgentUpdates>();
     }
 

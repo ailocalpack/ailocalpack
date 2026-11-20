@@ -56,7 +56,7 @@
     <value>ИИ-агенты</value>
   </data>
   <data name="Settings_Agents_Description" xml:space="preserve">
-    <value>Claude Code и Codex для создания переводов</value>
+    <value>Claude Code, Codex и свои модели для создания переводов</value>
   </data>
   <data name="Settings_GitHub_Title" xml:space="preserve">
     <value>GitHub</value>
@@ -2030,16 +2030,13 @@
     <value>Выйти</value>
   </data>
   <data name="Settings_Agents_Lead" xml:space="preserve">
-    <value>Агенты нужны только для создания новых переводов; для установки они не требуются. Они работают по вашей собственной подписке: проект не платит за ИИ.</value>
+    <value>Агенты нужны только для создания новых переводов; для установки они не требуются. Они работают по вашей подписке, вашему API-ключу или на модели на вашем компьютере: проект не платит за ИИ.</value>
   </data>
   <data name="Settings_Group_Agents" xml:space="preserve">
     <value>Агенты</value>
   </data>
   <data name="Settings_Group_DefaultAgent" xml:space="preserve">
     <value>По умолчанию</value>
-  </data>
-  <data name="Settings_Group_Later" xml:space="preserve">
-    <value>Позже</value>
   </data>
   <data name="Settings_Agent_Label" xml:space="preserve">
     <value>ИИ-агент</value>
@@ -2199,15 +2196,6 @@
   </data>
   <data name="Settings_Number_Increase" xml:space="preserve">
     <value>Увеличить</value>
-  </data>
-  <data name="Settings_OwnKey_Label" xml:space="preserve">
-    <value>Свой API-ключ или локальная модель</value>
-  </data>
-  <data name="Settings_OwnKey_Help" xml:space="preserve">
-    <value>Для тех, у кого нет подписки Claude или ChatGPT.</value>
-  </data>
-  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
-    <value>api ключ локальная модель ollama</value>
   </data>
   <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
     <value>{0}: выполнен выход</value>
@@ -5079,5 +5067,224 @@
   </data>
   <data name="Settings_Agents_Hint_Update" xml:space="preserve">
     <value>обновление</value>
+  </data>
+  <data name="Settings_Group_Models" xml:space="preserve">
+    <value>Свои модели</value>
+  </data>
+  <data name="Settings_Llm_Label" xml:space="preserve">
+    <value>Своя модель</value>
+  </data>
+  <data name="Settings_Llm_Keywords" xml:space="preserve">
+    <value>своя модель, локальная модель, LLM, API-ключ, Ollama, LM Studio, OpenRouter, OpenAI, сервер</value>
+  </data>
+  <data name="Settings_Llm_Note" xml:space="preserve">
+    <value>Любой сервер с OpenAI API: модель на этом компьютере (Ollama, LM Studio) или в облаке по вашему API-ключу. Модель должна уметь вызывать инструменты. Свои модели читают игры только через toolkit: они не пишут собственный ридер для неизвестного движка и не ищут в интернете.</value>
+  </data>
+  <data name="Settings_Llm_Empty_Title" xml:space="preserve">
+    <value>Моделей пока нет</value>
+  </data>
+  <data name="Settings_Llm_Empty_Text" xml:space="preserve">
+    <value>Запустите модель на этом компьютере в Ollama или LM Studio или используйте свой API-ключ OpenRouter, OpenAI или другого сервиса.</value>
+  </data>
+  <data name="Settings_Llm_Add" xml:space="preserve">
+    <value>Добавить модель</value>
+  </data>
+  <data name="Settings_Llm_Edit" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="Settings_Llm_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Settings_Llm_Remove_Title" xml:space="preserve">
+    <value>Удалить {0}?</value>
+  </data>
+  <data name="Settings_Llm_Remove_Text" xml:space="preserve">
+    <value>Модель исчезнет из списка, а её API-ключ будет удалён из системной связки ключей. Переводы, сделанные ею, и сама модель на сервере не пострадают.</value>
+  </data>
+  <data name="Settings_Llm_Status_Checking" xml:space="preserve">
+    <value>Проверка…</value>
+  </data>
+  <data name="Settings_Llm_Status_Ready" xml:space="preserve">
+    <value>Готова</value>
+  </data>
+  <data name="Settings_Llm_Status_Unreachable" xml:space="preserve">
+    <value>Не отвечает</value>
+  </data>
+  <data name="Settings_Llm_Status_Key" xml:space="preserve">
+    <value>Проблема с ключом</value>
+  </data>
+  <data name="Settings_Llm_Status_ModelMissing" xml:space="preserve">
+    <value>Модели нет в списке</value>
+  </data>
+  <data name="Settings_Llm_Status_Failed" xml:space="preserve">
+    <value>Ошибка сервера</value>
+  </data>
+  <data name="Settings_Llm_Local" xml:space="preserve">
+    <value>Работает на этом компьютере</value>
+  </data>
+  <data name="Settings_Llm_Remote" xml:space="preserve">
+    <value>Текст отправляется на {0}</value>
+  </data>
+  <data name="Settings_Llm_Help_StartOllama" xml:space="preserve">
+    <value>Запустите Ollama и проверьте снова.</value>
+  </data>
+  <data name="Settings_Llm_Help_StartLmStudio" xml:space="preserve">
+    <value>Запустите локальный сервер LM Studio (Developer → Start server) и проверьте снова.</value>
+  </data>
+  <data name="Settings_Llm_Help_Unreachable" xml:space="preserve">
+    <value>По адресу {0} никто не отвечает: проверьте адрес и подключение.</value>
+  </data>
+  <data name="Settings_Llm_Help_Key" xml:space="preserve">
+    <value>Сервер отклонил API-ключ, или ключ не сохранён. Измените модель, чтобы ввести его.</value>
+  </data>
+  <data name="Settings_Llm_Help_ModelMissing" xml:space="preserve">
+    <value>На сервере нет модели {0}. Скачайте её на сервере или выберите другую.</value>
+  </data>
+  <data name="Llm_Provider_Custom" xml:space="preserve">
+    <value>Другой</value>
+  </data>
+  <data name="Llm_Dialog_AddTitle" xml:space="preserve">
+    <value>Добавить модель</value>
+  </data>
+  <data name="Llm_Dialog_EditTitle" xml:space="preserve">
+    <value>Изменить модель</value>
+  </data>
+  <data name="Llm_Dialog_Intro" xml:space="preserve">
+    <value>AI Local Pack общается с моделью через OpenAI API. Для перевода нужна модель, которая умеет вызывать инструменты: Qwen 3, Llama 3.1, GPT и подобные.</value>
+  </data>
+  <data name="Llm_Dialog_Where" xml:space="preserve">
+    <value>Где работает</value>
+  </data>
+  <data name="Llm_Dialog_Url" xml:space="preserve">
+    <value>Адрес сервера</value>
+  </data>
+  <data name="Llm_Dialog_Url_Missing" xml:space="preserve">
+    <value>Введите адрес сервера.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Invalid" xml:space="preserve">
+    <value>Введите полный адрес, начиная с http:// или https://, например http://localhost:11434/v1.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Ollama" xml:space="preserve">
+    <value>Ollama слушает этот адрес, когда запущена.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_LmStudio" xml:space="preserve">
+    <value>Запустите локальный сервер в LM Studio (Developer → Start server).</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Cloud" xml:space="preserve">
+    <value>Адрес API сервиса. Меняйте его, только если используете прокси.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Custom" xml:space="preserve">
+    <value>Любой сервер с OpenAI API: адрес до /v1 включительно (vLLM, llama.cpp, DeepSeek, Groq, Mistral…).</value>
+  </data>
+  <data name="Llm_Dialog_Key" xml:space="preserve">
+    <value>API-ключ</value>
+  </data>
+  <data name="Llm_Dialog_KeyOptional" xml:space="preserve">
+    <value>API-ключ (необязательно)</value>
+  </data>
+  <data name="Llm_Dialog_Key_Saved" xml:space="preserve">
+    <value>Сохранён в связке ключей: введите новый, чтобы заменить</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hint" xml:space="preserve">
+    <value>Хранится в системной связке ключей, а не в файле настроек.</value>
+  </data>
+  <data name="Llm_Dialog_Key_Get" xml:space="preserve">
+    <value>Получить ключ</value>
+  </data>
+  <data name="Llm_Dialog_Key_Show" xml:space="preserve">
+    <value>Показать ключ</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hide" xml:space="preserve">
+    <value>Скрыть ключ</value>
+  </data>
+  <data name="Llm_Dialog_Key_Remove" xml:space="preserve">
+    <value>Удалить сохранённый ключ</value>
+  </data>
+  <data name="Llm_Dialog_Key_SaveFailed" xml:space="preserve">
+    <value>Системная связка ключей не сохранила ключ. Разблокируйте её (в Linux запустите хранилище ключей) и попробуйте снова.</value>
+  </data>
+  <data name="Llm_Dialog_Model" xml:space="preserve">
+    <value>Модель</value>
+  </data>
+  <data name="Llm_Dialog_Model_Hint" xml:space="preserve">
+    <value>Идентификатор модели на сервере. Загрузите список, чтобы выбрать.</value>
+  </data>
+  <data name="Llm_Dialog_Model_Missing" xml:space="preserve">
+    <value>Введите или выберите модель.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Load" xml:space="preserve">
+    <value>Загрузить список</value>
+  </data>
+  <data name="Llm_Dialog_Models_None" xml:space="preserve">
+    <value>Сервер не перечисляет модели: введите идентификатор вручную.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Unreachable" xml:space="preserve">
+    <value>Список не загрузился: сервер не отвечает.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Failed" xml:space="preserve">
+    <value>Список не загрузился. Идентификатор модели можно ввести вручную.</value>
+  </data>
+  <data name="Llm_Dialog_Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Llm_Dialog_Name_Missing" xml:space="preserve">
+    <value>Дайте модели название.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Local" xml:space="preserve">
+    <value>Текст игры не покидает этот компьютер.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Remote" xml:space="preserve">
+    <value>Текст игры отправляется на {0}.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Unknown" xml:space="preserve">
+    <value>Введите адрес, чтобы увидеть, куда уходит текст.</value>
+  </data>
+  <data name="Llm_Dialog_Check" xml:space="preserve">
+    <value>Проверить подключение</value>
+  </data>
+  <data name="Llm_Dialog_Check_Hint" xml:space="preserve">
+    <value>Отправит один короткий запрос: ответит ли модель и вызовет ли инструмент.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Busy" xml:space="preserve">
+    <value>Спрашиваем модель…</value>
+  </data>
+  <data name="Llm_Dialog_Check_Ok" xml:space="preserve">
+    <value>Подключено: модель вызывает инструменты и может переводить.</value>
+  </data>
+  <data name="Llm_Dialog_Check_NoTools" xml:space="preserve">
+    <value>Подключено, но модель ответила, не вызвав инструмент. Для перевода нужен вызов инструментов: выберите модель, которая его поддерживает.</value>
+  </data>
+  <data name="Llm_Dialog_Check_ModelMissing" xml:space="preserve">
+    <value>На сервере нет модели {0}.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Unreachable" xml:space="preserve">
+    <value>По адресу {0} никто не отвечает.</value>
+  </data>
+  <data name="Llm_Dialog_Check_KeyRefused" xml:space="preserve">
+    <value>Сервер отклонил API-ключ.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Failed" xml:space="preserve">
+    <value>Сервер ответил ошибкой: {0}</value>
+  </data>
+  <data name="Llm_Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Gen_AddModel_Title" xml:space="preserve">
+    <value>Своя модель</value>
+  </data>
+  <data name="Gen_AddModel_Text" xml:space="preserve">
+    <value>Ollama, LM Studio или API-ключ</value>
+  </data>
+  <data name="Gen_Start_ModelNeedsToolkit" xml:space="preserve">
+    <value>{0} не умеет писать собственный ридер для этой игры. Выберите Claude Code или Codex либо ридер из toolkit.</value>
+  </data>
+  <data name="Llm_Dialog_Models_One" xml:space="preserve">
+    <value>{0} модель на сервере</value>
+  </data>
+  <data name="Llm_Dialog_Models_Few" xml:space="preserve">
+    <value>{0} модели на сервере</value>
+  </data>
+  <data name="Llm_Dialog_Models_Many" xml:space="preserve">
+    <value>{0} моделей на сервере</value>
   </data>
 </root>

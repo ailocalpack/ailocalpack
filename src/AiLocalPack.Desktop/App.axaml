@@ -4,6 +4,7 @@
              xmlns:views="using:AiLocalPack.Desktop.Views"
              xmlns:add="using:AiLocalPack.Desktop.ViewModels.AddGame"
              xmlns:dialogs="using:AiLocalPack.Desktop.Dialogs"
+             xmlns:agents="using:AiLocalPack.Desktop.Agents"
              xmlns:install="using:AiLocalPack.Desktop.Install"
              xmlns:gen="using:AiLocalPack.Desktop.Generation"
              xmlns:pub="using:AiLocalPack.Desktop.Publishing"
@@ -48,6 +49,7 @@
         <DataTemplate DataType="gen:GenerationCancelDialogViewModel"><views:GenerationCancelDialogView /></DataTemplate>
         <DataTemplate DataType="gen:GenerationDetailsDialogViewModel"><views:GenerationDetailsDialogView /></DataTemplate>
         <DataTemplate DataType="gen:GenerationQualityDialogViewModel"><views:GenerationQualityDialogView /></DataTemplate>
+        <DataTemplate DataType="agents:LlmDialogViewModel"><views:LlmDialogView /></DataTemplate>
         <DataTemplate DataType="pub:PublishSignInDialogViewModel"><views:PublishSignInDialogView /></DataTemplate>
         <DataTemplate DataType="pub:SimilarPackDialogViewModel"><views:SimilarPackDialogView /></DataTemplate>
         <DataTemplate DataType="rate:RatingSignInDialogViewModel"><views:RatingSignInDialogView /></DataTemplate>

@@ -360,7 +360,7 @@ public sealed class GenJobTests : IDisposable
         var result = await RunAsync("gen", "run", "steam:620", "--agent", agent, "--lang", "ru");
 
         // Assert
-        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "'gpt' is not an agent: use claude or codex.\n" });
+        new { result.ExitCode, result.StdErr }.Should().Be(new { ExitCode = 1, StdErr = "'gpt' is not an agent: use claude or codex, or a model's llm-… ID from Settings → AI agents → Your models.\n" });
     }
 
     [Fact]

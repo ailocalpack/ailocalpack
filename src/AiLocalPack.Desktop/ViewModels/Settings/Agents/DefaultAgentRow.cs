@@ -4,38 +4,78 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AiLocalPack.Desktop.ViewModels.Settings.Agents;
 
-/// <summary>One agent in the <em>Default agent</em> segmented control: selectable only while it is ready.</summary>
-public sealed class AgentChoice(AgentRow agent) : ObservableObject
+/// <summary>One agent or model in the <em>Default agent</em> choice: selectable only while it is ready.</summary>
+public sealed class AgentChoice(string agentId, Func<string> label, Func<bool> isReady) : ObservableObject
 {
-    public AgentRow Agent { get; } = agent;
+    public AgentChoice(AgentRow agent)
+        : this(agent.AgentId, () => agent.Label, () => agent.IsReady)
+    {
+    }
 
-    public string Display => Agent.Label;
+    public AgentChoice(LlmRow model)
+        : this(model.AgentId, () => model.Label, () => model.IsReady)
+    {
+    }
 
-    public bool IsEnabled => Agent.IsReady;
+    public string AgentId { get; } = agentId;
 
-    internal void Refresh() => OnPropertyChanged(nameof(IsEnabled));
+    public string Display => label();
+
+    public bool IsEnabled => isReady();
+
+    internal void Refresh()
+    {
+        OnPropertyChanged(nameof(IsEnabled));
+        OnPropertyChanged(nameof(Display));
+    }
 
     public override string ToString() => Display;
 }
 
 /// <summary>
-/// <em>Default agent</em>: a segmented control of the agents, only ready ones selectable, preselected in the generation
-/// form. The choice is <see cref="AppSettings.DefaultAgent"/>; while that agent isn't ready the first ready one is used
+/// <em>Default agent</em>: the agents and the player's own models, only ready ones selectable, preselected in the
+/// generation form: a segmented control while there are at most <see cref="MaxSegments"/>, else a dropdown. The choice is <see cref="AppSettings.DefaultAgent"/>; while that agent isn't ready the first ready one is used
 /// (<see cref="Resolve"/>). No ready agent → "Install and sign in to an agent first" instead of the control.
 /// </summary>
 public sealed class DefaultAgentRow : SettingRow
 {
     private AgentChoice? _selected;
 
+    public const int MaxSegments = 3;
+
+    private readonly IReadOnlyList<AgentRow> _agents;
+
     public DefaultAgentRow(SettingRowServices services, IReadOnlyList<AgentRow> agents)
         : base(services, nameof(Strings.Settings_DefaultAgent_Label), nameof(Strings.Settings_DefaultAgent_Keywords))
     {
         ArgumentNullException.ThrowIfNull(agents);
-        Choices = [.. agents.Select(a => new AgentChoice(a))];
-        Sync();
+        _agents = agents;
+        SetModels([]);
     }
 
-    public IReadOnlyList<AgentChoice> Choices { get; }
+    public System.Collections.ObjectModel.ObservableCollection<AgentChoice> Choices { get; } = [];
+
+    /// <summary>Few choices: the segmented control; more: the dropdown.</summary>
+    public bool IsSegmented => Choices.Count <= MaxSegments;
+
+    public bool ShowSegments => HasReadyAgent && IsSegmented;
+
+    public bool ShowDropdown => HasReadyAgent && !IsSegmented;
+
+    /// <summary>The choices are the agents, then <paramref name="models"/> (UI thread).</summary>
+    public void SetModels(IEnumerable<LlmRow> models)
+    {
+        ArgumentNullException.ThrowIfNull(models);
+        _selected = null;
+        Choices.Clear();
+        foreach (var choice in _agents.Select(a => new AgentChoice(a)).Concat(models.Select(m => new AgentChoice(m))))
+        {
+            Choices.Add(choice);
+        }
+
+        OnPropertyChanged(nameof(IsSegmented));
+        Sync();
+    }
 
     public bool HasReadyAgent => Choices.Any(c => c.IsEnabled);
 
@@ -53,9 +93,9 @@ public sealed class DefaultAgentRow : SettingRow
                 return;
             }
 
-            if (!string.Equals(Settings.DefaultAgent, value.Agent.AgentId, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(Settings.DefaultAgent, value.AgentId, StringComparison.OrdinalIgnoreCase))
             {
-                Save(s => s with { DefaultAgent = value.Agent.AgentId });
+                Save(s => s with { DefaultAgent = value.AgentId });
             }
         }
     }
@@ -76,9 +116,11 @@ public sealed class DefaultAgentRow : SettingRow
             choice.Refresh();
         }
 
-        var id = Resolve(Settings.DefaultAgent, Choices.Where(c => c.IsEnabled).Select(c => c.Agent.AgentId));
-        SetProperty(ref _selected, Choices.FirstOrDefault(c => c.Agent.AgentId == id), nameof(SelectedChoice));
+        var id = Resolve(Settings.DefaultAgent, Choices.Where(c => c.IsEnabled).Select(c => c.AgentId));
+        SetProperty(ref _selected, Choices.FirstOrDefault(c => c.AgentId == id), nameof(SelectedChoice));
         OnPropertyChanged(nameof(HasReadyAgent));
+        OnPropertyChanged(nameof(ShowSegments));
+        OnPropertyChanged(nameof(ShowDropdown));
     }
 
     protected override string? HelpKey(AppSettings settings) => nameof(Strings.Settings_DefaultAgent_Help);

@@ -53,7 +53,7 @@ internal static partial class GenJobCommands
                 return 1;
             }
 
-            if (recording is null && !dropping && !AgentAdapters.Ids.Contains(entry.Job.Agent))
+            if (recording is null && !dropping && !AgentCommand.IsKnown(context.Env, entry.Job.Agent))
             {
                 error.WriteLine($"The job's agent '{entry.Job.Agent}' is unknown to this version.");
                 return 1;

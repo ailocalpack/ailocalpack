@@ -15,37 +15,28 @@ namespace AiLocalPack.Desktop.ViewModels.GamePage;
 /// <em>Not installed</em> → <c>Install</c> (download progress inline, <c>Cancel</c>); <em>Not signed in</em> →
 /// <c>Sign in</c> ("Finish signing in in your browser…", <c>Cancel</c>); <em>Ready</em> with the source and version.
 /// </summary>
-public sealed partial class GenerationAgentCard : ObservableObject
+public sealed partial class GenerationAgentCard : GenerationAgentChoice
 {
     private readonly Localizer _localizer;
 
-    [ObservableProperty]
-    private bool _isSelected;
-
-    public GenerationAgentCard(AgentRow row, Localizer localizer, Action<GenerationAgentCard> select)
+    public GenerationAgentCard(AgentRow row, Localizer localizer, Action<GenerationAgentChoice> select)
+        : base(select)
     {
         ArgumentNullException.ThrowIfNull(row);
-        ArgumentNullException.ThrowIfNull(select);
         Row = row;
         _localizer = localizer;
-        SelectCommand = new RelayCommand(() => select(this));
         row.PropertyChanged += OnRowChanged;
     }
 
-    /// <summary>Raised when the agent's state changed (the form recomputes its checks and the start rule).</summary>
-    public event EventHandler? StateChanged;
-
     public AgentRow Row { get; }
 
-    public AgentInfo Info => Row.Info;
+    public override AgentInfo Info => Row.Info;
 
-    public string AgentId => Row.AgentId;
+    public override string AgentId => Row.AgentId;
 
-    public string Name => Row.Info.Name;
+    public override string Name => Row.Info.Name;
 
-    public IRelayCommand SelectCommand { get; }
-
-    public bool IsReady => Row.IsReady;
+    public override bool IsReady => Row.IsReady;
 
     /// <summary>"Ready", "Not installed", "Not signed in", "Downloading the official build · 40%", "Finish signing in in your browser…".</summary>
     public string StatusText => Row.State switch
@@ -64,7 +55,7 @@ public sealed partial class GenerationAgentCard : ObservableObject
     public bool IsStatusBad => Row.State is AgentRowState.NotInstalled or AgentRowState.NotSignedIn or AgentRowState.SessionExpired
         or AgentRowState.TooOld or AgentRowState.SignInUnknown;
 
-    public bool IsStatusBusy => AgentRowStates.IsBusy(Row.State);
+    public override bool IsStatusBusy => AgentRowStates.IsBusy(Row.State);
 
     /// <summary>"on PATH · v2.1.319" / "installed by AI Local Pack · v2.1.311", for a ready agent.</summary>
     public string SourceText
@@ -92,7 +83,7 @@ public sealed partial class GenerationAgentCard : ObservableObject
 
     public int Percent => Row.Percent;
 
-    internal void RefreshTexts()
+    internal override void RefreshTexts()
     {
         foreach (var name in (string[])[nameof(StatusText), nameof(SourceText), nameof(HasSource), nameof(Hint), nameof(HasHint)])
         {
@@ -100,7 +91,7 @@ public sealed partial class GenerationAgentCard : ObservableObject
         }
     }
 
-    internal void Close() => Row.PropertyChanged -= OnRowChanged;
+    internal override void Close() => Row.PropertyChanged -= OnRowChanged;
 
     private void OnRowChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -112,7 +103,110 @@ public sealed partial class GenerationAgentCard : ObservableObject
 
         if (e.PropertyName == nameof(AgentRow.State))
         {
-            StateChanged?.Invoke(this, EventArgs.Empty);
+            RaiseStateChanged();
         }
     }
+}
+
+/// <summary>
+/// A choice of the start form's agent grid: an agent CLI (<see cref="GenerationAgentCard"/>) or one of the player's own
+/// models (<see cref="GenerationModelCard"/>).
+/// </summary>
+public abstract partial class GenerationAgentChoice : ObservableObject
+{
+    [ObservableProperty]
+    private bool _isSelected;
+
+    protected GenerationAgentChoice(Action<GenerationAgentChoice> select)
+    {
+        ArgumentNullException.ThrowIfNull(select);
+        SelectCommand = new RelayCommand(() => select(this));
+    }
+
+    /// <summary>Raised when the agent's state changed (the form recomputes its checks and the start rule).</summary>
+    public event EventHandler? StateChanged;
+
+    public abstract AgentInfo Info { get; }
+
+    public abstract string AgentId { get; }
+
+    public abstract string Name { get; }
+
+    public abstract bool IsReady { get; }
+
+    public abstract bool IsStatusBusy { get; }
+
+    /// <summary>It can write its own reader for a game the toolkit doesn't read (file and command tools in a sandbox).</summary>
+    public virtual bool CanWriteScripts => true;
+
+    /// <summary>It can search the web (a Thorough job's Study stage).</summary>
+    public virtual bool CanSearchWeb => true;
+
+    public IRelayCommand SelectCommand { get; }
+
+    internal abstract void RefreshTexts();
+
+    internal abstract void Close();
+
+    protected void RaiseStateChanged() => StateChanged?.Invoke(this, EventArgs.Empty);
+}
+
+/// <summary>
+/// One of the player's own models on the start form: its mark, name, status ("Ready" / "Server not reachable" / "API key
+/// problem"…), "model · host" and where the text goes; <c>Check again</c> and <c>Edit</c> for a problem. It shows the
+/// same <see cref="LlmRow"/> as Settings → AI agents.
+/// </summary>
+public sealed class GenerationModelCard : GenerationAgentChoice
+{
+    public GenerationModelCard(LlmRow row, Action<GenerationAgentChoice> select)
+        : base(select)
+    {
+        ArgumentNullException.ThrowIfNull(row);
+        Row = row;
+        row.PropertyChanged += OnRowChanged;
+    }
+
+    public LlmRow Row { get; }
+
+    public override AgentInfo Info => Row.Info;
+
+    public override string AgentId => Row.AgentId;
+
+    public override string Name => Row.Label;
+
+    public override bool IsReady => Row.IsReady;
+
+    public override bool IsStatusBusy => Row.IsStatusBusy;
+
+    public override bool CanWriteScripts => false;
+
+    public override bool CanSearchWeb => false;
+
+    internal override void RefreshTexts()
+    {
+    }
+
+    internal override void Close() => Row.PropertyChanged -= OnRowChanged;
+
+    private void OnRowChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LlmRow.Label) or nameof(LlmRow.Info))
+        {
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Info));
+        }
+
+        if (e.PropertyName == nameof(LlmRow.State))
+        {
+            OnPropertyChanged(nameof(IsReady));
+            OnPropertyChanged(nameof(IsStatusBusy));
+            RaiseStateChanged();
+        }
+    }
+}
+
+/// <summary>The start form's last tile before the player has a model: "Your own model · Ollama, LM Studio or an API key" + <c>Add</c>.</summary>
+public sealed class GenerationAddModelTile(IRelayCommand add)
+{
+    public IRelayCommand AddCommand { get; } = add;
 }

@@ -44,6 +44,7 @@ internal static class AgentCommand
         };
     }
 
+    // Install, sign-in and sign-out are for agent CLIs only; probe also takes one of the player's models (llm-…).
     private static string KnownAgents => string.Join(", ", AgentAdapters.Ids);
 
     private static Command BuildProbe(OsEnvironment env)
@@ -241,9 +242,17 @@ internal static class AgentCommand
         return run;
     }
 
-    /// <summary>The adapter of <paramref name="id"/>, looking in the app's own folder last.</summary>
+    /// <summary>
+    /// The adapter of <paramref name="id"/>, looking in the app's own folder last; an <c>llm-…</c> ID is one of the player's
+    /// own models from Settings → AI agents (its key from the keychain).
+    /// </summary>
     internal static IAgentAdapter? Adapter(OsEnvironment env, string id)
     {
+        if (Core.Llm.LlmConnections.IsLlmId(id))
+        {
+            return Agents.Llm.LlmAgents.Create(Settings(env), id, Core.Secrets.SecretStores.Create(env), Agents.Llm.LlmAgents.CreateHttpClient());
+        }
+
         if (!AgentAdapters.Ids.Contains(id.ToLowerInvariant()))
         {
             return null;
@@ -252,6 +261,14 @@ internal static class AgentCommand
         var managed = ManagedFolder(env, id);
         return AgentAdapters.Create(id, new ProcessRunner(), env, managed);
     }
+
+    /// <summary>Whether <paramref name="id"/> is an agent this CLI can run: Claude Code, Codex, or one of the player's models.</summary>
+    internal static bool IsKnown(OsEnvironment env, string id) =>
+        AgentAdapters.Ids.Contains(id.ToLowerInvariant())
+        || (Core.Llm.LlmConnections.IsLlmId(id) && Core.Llm.LlmConnections.Find(Settings(env).Llms, id) is not null);
+
+    private static Core.Settings.AppSettings Settings(OsEnvironment env) =>
+        new Core.Settings.SettingsStore(AppPaths.Resolve(env), Microsoft.Extensions.Logging.Abstractions.NullLogger<Core.Settings.SettingsStore>.Instance, TimeProvider.System).Load();
 
     private static string? ManagedFolder(OsEnvironment env, string id)
     {

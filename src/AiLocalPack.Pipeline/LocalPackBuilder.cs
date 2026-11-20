@@ -78,7 +78,9 @@ public static class LocalPackBuilder
     public static string ManifestAgentId(string agentId)
     {
         ArgumentException.ThrowIfNullOrEmpty(agentId);
-        return agentId == "claude" ? "claude-code" : agentId;
+        return agentId == "claude" ? "claude-code"
+            : Core.Llm.LlmConnections.IsLlmId(agentId) ? Core.Llm.LlmConnections.ManifestAgentId
+            : agentId;
     }
 
     /// <summary>The pack ID a new local pack starts from (<see cref="LocalPackStore.FreeId"/> makes it unique).</summary>

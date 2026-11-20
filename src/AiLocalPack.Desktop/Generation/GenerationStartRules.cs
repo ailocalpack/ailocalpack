@@ -28,6 +28,9 @@ public enum GenerationStartBlock
 
     /// <summary>The data drive hasn't room for the job's files.</summary>
     NotEnoughDisk,
+
+    /// <summary>The game needs the AI's own reader, and the chosen agent (one of the player's own models) can't write one.</summary>
+    AgentCantWriteReader,
 }
 
 /// <summary>
@@ -41,7 +44,9 @@ public sealed record GenerationStartInputs(
     bool AgentReady,
     EstimateState Estimate,
     bool EnoughDisk,
-    bool Starting = false);
+    bool Starting = false,
+    bool NeedsScripts = false,
+    bool AgentWritesScripts = true);
 
 /// <summary>
 /// The start form's rule (design §6a): <c>Start generation</c> is on only when the agent is ready, the estimate is done,
@@ -74,6 +79,7 @@ public static class GenerationStartRules
             EstimateState.Estimating => GenerationStartBlock.Estimating,
             EstimateState.Failed => GenerationStartBlock.EstimateFailed,
             _ when !inputs.EnoughDisk => GenerationStartBlock.NotEnoughDisk,
+            _ when inputs.NeedsScripts && !inputs.AgentWritesScripts => GenerationStartBlock.AgentCantWriteReader,
             _ => null,
         };
     }

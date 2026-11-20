@@ -519,7 +519,7 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         var row = Section().DefaultAgent;
 
         // Assert
-        (row.SelectedChoice?.Agent.AgentId, row.Choices.Select(c => c.IsEnabled)).Should().BeEquivalentTo(("codex", new[] { false, true }));
+        (row.SelectedChoice?.AgentId, row.Choices.Select(c => c.IsEnabled)).Should().BeEquivalentTo(("codex", new[] { false, true }));
     }
 
     [Fact]
@@ -548,7 +548,7 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         row.SelectedChoice = row.Choices[0];
 
         // Assert
-        (row.SelectedChoice?.Agent.AgentId, Store.Current.DefaultAgent).Should().Be(("codex", (string?)null));
+        (row.SelectedChoice?.AgentId, Store.Current.DefaultAgent).Should().Be(("codex", (string?)null));
     }
 
     [Theory]

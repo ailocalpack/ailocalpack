@@ -275,4 +275,17 @@ public sealed class LocalPackBuilderTests
         // Assert
         read.Errors.Should().BeEmpty();
     }
+
+    [Theory]
+    [InlineData("claude", "claude-code")]
+    [InlineData("codex", "codex")]
+    [InlineData("llm-0a1b2c3d", "openai-compatible")]
+    public void The_manifest_names_the_agent_by_its_registry_id(string agent, string expected)
+    {
+        // Act
+        var id = LocalPackBuilder.ManifestAgentId(agent);
+
+        // Assert
+        id.Should().Be(expected);
+    }
 }

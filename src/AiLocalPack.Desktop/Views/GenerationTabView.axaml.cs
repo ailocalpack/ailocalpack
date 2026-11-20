@@ -14,7 +14,7 @@ public sealed partial class GenerationTabView : UserControl
     /// <summary>A tap anywhere on an agent card chooses it, not only on its radio button (its own buttons keep their action).</summary>
     private void OnAgentCardTapped(object? sender, TappedEventArgs e)
     {
-        if (sender is Control { DataContext: GenerationAgentCard card } && (e.Source as Visual)?.FindAncestorOfType<Button>(includeSelf: true) is null)
+        if (sender is Control { DataContext: GenerationAgentChoice card } && (e.Source as Visual)?.FindAncestorOfType<Button>(includeSelf: true) is null)
         {
             card.SelectCommand.Execute(null);
         }

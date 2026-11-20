@@ -56,7 +56,7 @@
     <value>Agentes de IA</value>
   </data>
   <data name="Settings_Agents_Description" xml:space="preserve">
-    <value>Claude Code y Codex para crear traducciones con IA</value>
+    <value>Claude Code, Codex y tus propios modelos para crear traducciones con IA</value>
   </data>
   <data name="Settings_GitHub_Title" xml:space="preserve">
     <value>GitHub</value>
@@ -2030,16 +2030,13 @@
     <value>Salir</value>
   </data>
   <data name="Settings_Agents_Lead" xml:space="preserve">
-    <value>Los agentes solo se usan para crear traducciones nuevas con IA; instalar traducciones nunca los necesita. Funcionan con tu propia suscripción: el proyecto no paga ninguna IA.</value>
+    <value>Los agentes solo se usan para crear traducciones nuevas con IA; instalar traducciones nunca los necesita. Funcionan con tu suscripción, tu clave API o un modelo en tu equipo: el proyecto no paga ninguna IA.</value>
   </data>
   <data name="Settings_Group_Agents" xml:space="preserve">
     <value>Agentes</value>
   </data>
   <data name="Settings_Group_DefaultAgent" xml:space="preserve">
     <value>Predeterminado</value>
-  </data>
-  <data name="Settings_Group_Later" xml:space="preserve">
-    <value>Más adelante</value>
   </data>
   <data name="Settings_Agent_Label" xml:space="preserve">
     <value>Agente de IA</value>
@@ -2199,15 +2196,6 @@
   </data>
   <data name="Settings_Number_Increase" xml:space="preserve">
     <value>Aumentar</value>
-  </data>
-  <data name="Settings_OwnKey_Label" xml:space="preserve">
-    <value>Clave de API propia o modelo local</value>
-  </data>
-  <data name="Settings_OwnKey_Help" xml:space="preserve">
-    <value>Para jugadores sin suscripción a Claude o ChatGPT.</value>
-  </data>
-  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
-    <value>clave api modelo local ollama api key</value>
   </data>
   <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
     <value>{0} cerró la sesión</value>
@@ -5079,5 +5067,224 @@
   </data>
   <data name="Settings_Agents_Hint_Update" xml:space="preserve">
     <value>actualización</value>
+  </data>
+  <data name="Settings_Group_Models" xml:space="preserve">
+    <value>Tus modelos</value>
+  </data>
+  <data name="Settings_Llm_Label" xml:space="preserve">
+    <value>Tu modelo</value>
+  </data>
+  <data name="Settings_Llm_Keywords" xml:space="preserve">
+    <value>modelo propio, modelo local, LLM, clave API, Ollama, LM Studio, OpenRouter, OpenAI, servidor</value>
+  </data>
+  <data name="Settings_Llm_Note" xml:space="preserve">
+    <value>Cualquier servidor con la API de OpenAI: un modelo en este equipo (Ollama, LM Studio) o en la nube con tu clave API. Debe poder llamar a herramientas. Tus modelos leen los juegos solo con el kit de herramientas: no pueden escribir un lector para un motor desconocido ni buscar en la web.</value>
+  </data>
+  <data name="Settings_Llm_Empty_Title" xml:space="preserve">
+    <value>Aún no hay modelos</value>
+  </data>
+  <data name="Settings_Llm_Empty_Text" xml:space="preserve">
+    <value>Ejecuta un modelo en este equipo con Ollama o LM Studio, o usa tu clave API de OpenRouter, OpenAI u otro servicio.</value>
+  </data>
+  <data name="Settings_Llm_Add" xml:space="preserve">
+    <value>Añadir modelo</value>
+  </data>
+  <data name="Settings_Llm_Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="Settings_Llm_Remove" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="Settings_Llm_Remove_Title" xml:space="preserve">
+    <value>¿Quitar {0}?</value>
+  </data>
+  <data name="Settings_Llm_Remove_Text" xml:space="preserve">
+    <value>El modelo sale de esta lista y su clave API se borra del llavero del sistema. Las traducciones hechas con él y el modelo en su servidor no cambian.</value>
+  </data>
+  <data name="Settings_Llm_Status_Checking" xml:space="preserve">
+    <value>Comprobando…</value>
+  </data>
+  <data name="Settings_Llm_Status_Ready" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="Settings_Llm_Status_Unreachable" xml:space="preserve">
+    <value>Sin respuesta</value>
+  </data>
+  <data name="Settings_Llm_Status_Key" xml:space="preserve">
+    <value>Problema con la clave API</value>
+  </data>
+  <data name="Settings_Llm_Status_ModelMissing" xml:space="preserve">
+    <value>Modelo no listado</value>
+  </data>
+  <data name="Settings_Llm_Status_Failed" xml:space="preserve">
+    <value>Error del servidor</value>
+  </data>
+  <data name="Settings_Llm_Local" xml:space="preserve">
+    <value>Se ejecuta en este equipo</value>
+  </data>
+  <data name="Settings_Llm_Remote" xml:space="preserve">
+    <value>El texto se envía a {0}</value>
+  </data>
+  <data name="Settings_Llm_Help_StartOllama" xml:space="preserve">
+    <value>Abre Ollama y vuelve a comprobar.</value>
+  </data>
+  <data name="Settings_Llm_Help_StartLmStudio" xml:space="preserve">
+    <value>Inicia el servidor local de LM Studio (Developer → Start server) y vuelve a comprobar.</value>
+  </data>
+  <data name="Settings_Llm_Help_Unreachable" xml:space="preserve">
+    <value>Nada responde en {0}: revisa la dirección y tu conexión.</value>
+  </data>
+  <data name="Settings_Llm_Help_Key" xml:space="preserve">
+    <value>El servidor rechazó la clave API o no hay ninguna guardada. Edita el modelo para introducirla.</value>
+  </data>
+  <data name="Settings_Llm_Help_ModelMissing" xml:space="preserve">
+    <value>El servidor no lista {0}. Descárgalo en el servidor o elige otro modelo.</value>
+  </data>
+  <data name="Llm_Provider_Custom" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="Llm_Dialog_AddTitle" xml:space="preserve">
+    <value>Añadir un modelo</value>
+  </data>
+  <data name="Llm_Dialog_EditTitle" xml:space="preserve">
+    <value>Editar modelo</value>
+  </data>
+  <data name="Llm_Dialog_Intro" xml:space="preserve">
+    <value>AI Local Pack se comunica con el modelo mediante la API de OpenAI. Para traducir hace falta un modelo que llame a herramientas, como Qwen 3, Llama 3.1 o GPT.</value>
+  </data>
+  <data name="Llm_Dialog_Where" xml:space="preserve">
+    <value>Dónde se ejecuta</value>
+  </data>
+  <data name="Llm_Dialog_Url" xml:space="preserve">
+    <value>Dirección del servidor</value>
+  </data>
+  <data name="Llm_Dialog_Url_Missing" xml:space="preserve">
+    <value>Introduce la dirección del servidor.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Invalid" xml:space="preserve">
+    <value>Introduce una dirección completa que empiece por http:// o https://, p. ej. http://localhost:11434/v1.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Ollama" xml:space="preserve">
+    <value>Ollama escucha aquí cuando está en marcha.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_LmStudio" xml:space="preserve">
+    <value>Inicia el servidor local en LM Studio (Developer → Start server).</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Cloud" xml:space="preserve">
+    <value>La dirección de la API del servicio. Cámbiala solo para un proxy.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Custom" xml:space="preserve">
+    <value>Cualquier servidor con la API de OpenAI: la dirección hasta /v1 (vLLM, llama.cpp, DeepSeek, Groq, Mistral…).</value>
+  </data>
+  <data name="Llm_Dialog_Key" xml:space="preserve">
+    <value>Clave API</value>
+  </data>
+  <data name="Llm_Dialog_KeyOptional" xml:space="preserve">
+    <value>Clave API (opcional)</value>
+  </data>
+  <data name="Llm_Dialog_Key_Saved" xml:space="preserve">
+    <value>Guardada en el llavero: escribe para reemplazarla</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hint" xml:space="preserve">
+    <value>Se guarda en el llavero del sistema, nunca en el archivo de ajustes.</value>
+  </data>
+  <data name="Llm_Dialog_Key_Get" xml:space="preserve">
+    <value>Obtener una clave</value>
+  </data>
+  <data name="Llm_Dialog_Key_Show" xml:space="preserve">
+    <value>Mostrar clave</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hide" xml:space="preserve">
+    <value>Ocultar clave</value>
+  </data>
+  <data name="Llm_Dialog_Key_Remove" xml:space="preserve">
+    <value>Quitar la clave guardada</value>
+  </data>
+  <data name="Llm_Dialog_Key_SaveFailed" xml:space="preserve">
+    <value>El llavero del sistema no guardó la clave. Desbloquéalo (en Linux, inicia un anillo de claves) y vuelve a intentarlo.</value>
+  </data>
+  <data name="Llm_Dialog_Model" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="Llm_Dialog_Model_Hint" xml:space="preserve">
+    <value>El ID del modelo en el servidor. Carga la lista para elegir uno.</value>
+  </data>
+  <data name="Llm_Dialog_Model_Missing" xml:space="preserve">
+    <value>Escribe o elige un modelo.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Load" xml:space="preserve">
+    <value>Cargar lista</value>
+  </data>
+  <data name="Llm_Dialog_Models_None" xml:space="preserve">
+    <value>El servidor no lista modelos: escribe el ID del modelo.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Unreachable" xml:space="preserve">
+    <value>La lista no se cargó: el servidor no responde.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Failed" xml:space="preserve">
+    <value>La lista no se cargó. Aun así puedes escribir el ID del modelo.</value>
+  </data>
+  <data name="Llm_Dialog_Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Llm_Dialog_Name_Missing" xml:space="preserve">
+    <value>Ponle un nombre al modelo.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Local" xml:space="preserve">
+    <value>El texto de tu juego no sale de este equipo.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Remote" xml:space="preserve">
+    <value>El texto de tu juego se envía a {0}.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Unknown" xml:space="preserve">
+    <value>Introduce la dirección para ver adónde va el texto.</value>
+  </data>
+  <data name="Llm_Dialog_Check" xml:space="preserve">
+    <value>Comprobar conexión</value>
+  </data>
+  <data name="Llm_Dialog_Check_Hint" xml:space="preserve">
+    <value>Envía una petición breve para ver si el modelo responde y llama a herramientas.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Busy" xml:space="preserve">
+    <value>Preguntando al modelo…</value>
+  </data>
+  <data name="Llm_Dialog_Check_Ok" xml:space="preserve">
+    <value>Conectado: el modelo llama a herramientas y puede traducir.</value>
+  </data>
+  <data name="Llm_Dialog_Check_NoTools" xml:space="preserve">
+    <value>Conectado, pero el modelo respondió sin llamar a una herramienta. Para traducir hace falta llamar a herramientas: elige un modelo que lo admita.</value>
+  </data>
+  <data name="Llm_Dialog_Check_ModelMissing" xml:space="preserve">
+    <value>El servidor no tiene el modelo {0}.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Unreachable" xml:space="preserve">
+    <value>Nada responde en {0}.</value>
+  </data>
+  <data name="Llm_Dialog_Check_KeyRefused" xml:space="preserve">
+    <value>El servidor rechazó la clave API.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Failed" xml:space="preserve">
+    <value>El servidor respondió con un error: {0}</value>
+  </data>
+  <data name="Llm_Dialog_Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Gen_AddModel_Title" xml:space="preserve">
+    <value>Tu propio modelo</value>
+  </data>
+  <data name="Gen_AddModel_Text" xml:space="preserve">
+    <value>Ollama, LM Studio o una clave API</value>
+  </data>
+  <data name="Gen_Start_ModelNeedsToolkit" xml:space="preserve">
+    <value>{0} no puede escribir su propio lector para este juego. Elige Claude Code o Codex, o un lector del kit de herramientas.</value>
+  </data>
+  <data name="Llm_Dialog_Models_One" xml:space="preserve">
+    <value>{0} modelo en el servidor</value>
+  </data>
+  <data name="Llm_Dialog_Models_Many" xml:space="preserve">
+    <value>{0} de modelos en el servidor</value>
+  </data>
+  <data name="Llm_Dialog_Models_Other" xml:space="preserve">
+    <value>{0} modelos en el servidor</value>
   </data>
 </root>

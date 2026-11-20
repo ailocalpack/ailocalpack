@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Description>Adapters that drive external AI agents (Claude Code, Codex).</Description>
+        <Description>Adapters that drive external AI agents (Claude Code, Codex) and the player's own OpenAI-compatible models.</Description>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +12,7 @@
     <ItemGroup>
         <ProjectReference Include="..\AiLocalPack.Core\AiLocalPack.Core.csproj" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="ModelContextProtocol.Core" />
     </ItemGroup>
 
     <ItemGroup>

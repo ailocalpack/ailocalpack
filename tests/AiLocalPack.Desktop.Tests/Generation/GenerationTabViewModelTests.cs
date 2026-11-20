@@ -3,6 +3,7 @@ using AiLocalPack.Agents.Install;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Generation;
 using AiLocalPack.Core.Library;
+using AiLocalPack.Core.Llm;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Library;
@@ -133,7 +134,7 @@ public sealed class GenerationTabViewModelTests
         using var services = Build(ClaudeReady);
 
         // Act
-        var card = Open(services).Agents.Single(a => a.AgentId == "claude");
+        var card = Open(services).Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "claude");
 
         // Assert
         (card.StatusText, card.IsStatusOk, card.SourceText).Should().Be(("Ready", true, "your copy · v2.1.319"));
@@ -146,7 +147,7 @@ public sealed class GenerationTabViewModelTests
         using var services = Build((agents, _) => agents.Probes["claude"] = FakeAgentHost.SignedIn("claude", AgentSource.Managed, "2.1.311"));
 
         // Act
-        var card = Open(services).Agents.Single(a => a.AgentId == "claude");
+        var card = Open(services).Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "claude");
 
         // Assert
         card.SourceText.Should().Be("installed by AI Local Pack · v2.1.311");
@@ -159,7 +160,7 @@ public sealed class GenerationTabViewModelTests
         using var services = Build();
 
         // Act
-        var card = Open(services).Agents.Single(a => a.AgentId == "codex");
+        var card = Open(services).Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "codex");
 
         // Assert
         (card.StatusText, card.IsStatusBad, card.Row.CanInstall).Should().Be(("Not installed", true, true));
@@ -172,7 +173,7 @@ public sealed class GenerationTabViewModelTests
         using var services = Build((agents, _) => agents.Probes["claude"] = FakeAgentHost.SignedOut("claude"));
 
         // Act
-        var card = Open(services).Agents.Single(a => a.AgentId == "claude");
+        var card = Open(services).Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "claude");
 
         // Assert
         (card.StatusText, card.Row.CanSignIn).Should().Be(("Not signed in", true));
@@ -188,7 +189,7 @@ public sealed class GenerationTabViewModelTests
             progress?.Report(new AgentInstallProgress(AgentInstallStage.Downloading, 40, 100));
             return finish.Task;
         });
-        var card = Open(services).Agents.Single(a => a.AgentId == "claude");
+        var card = Open(services).Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "claude");
 
         // Act
         var install = card.Row.InstallCommand.ExecuteAsync(null);
@@ -209,7 +210,7 @@ public sealed class GenerationTabViewModelTests
             agents.Probes["claude"] = FakeAgentHost.SignedOut("claude");
             agents.SignIn = (_, _) => finish.Task;
         });
-        var card = Open(services).Agents.Single(a => a.AgentId == "claude");
+        var card = Open(services).Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "claude");
 
         // Act
         var signIn = card.Row.SignInCommand.ExecuteAsync(null);
@@ -259,7 +260,7 @@ public sealed class GenerationTabViewModelTests
         var tab = Open(services);
 
         // Act
-        tab.Agents.Single(a => a.AgentId == "codex").SelectCommand.Execute(null);
+        tab.Agents.OfType<GenerationAgentCard>().Single(a => a.AgentId == "codex").SelectCommand.Execute(null);
 
         // Assert
         (tab.StartBlock, tab.StartBlockText).Should().Be((GenerationStartBlock.AgentNotReady, "Codex isn't ready yet"));
@@ -489,5 +490,104 @@ public sealed class GenerationTabViewModelTests
 
         // Assert
         (page.Action.Kind, page.HasPrimaryAction).Should().Be((GamePrimaryActionKind.Generate, false));
+    }
+}
+
+/// <summary>The player's own models on the start form.</summary>
+public sealed class GenerationModelCardTests
+{
+    private static readonly LlmConnection Qwen = new("llm-0a1b2c3d", "Qwen 3", "ollama", "http://localhost:11434/v1", "qwen3:30b");
+
+    private static ServiceProvider Build(Action<FakeEstimates>? estimate = null, bool withModel = true)
+    {
+        var services = TestServices.Build(steam: s => s.AddGame(10, "Alpha"));
+        services.GetRequiredService<SettingsStore>().Update(s => withModel ? s.WithLlm(Qwen) with { GameLanguage = "ru" } : s with { GameLanguage = "ru" });
+        estimate?.Invoke(services.GetRequiredService<FakeEstimates>());
+        return services;
+    }
+
+    private static GenerationTabViewModel Open(ServiceProvider services) =>
+        services.GetRequiredService<IPageFactory>().Create<GamePageViewModel>(
+            services.GetRequiredService<GameLibrary>().Catalog.Games.Single(g => g.Id == GameId.Steam(10)), GamePageTab.Generation).Generation;
+
+    [Fact]
+    public void A_model_is_a_card_after_the_agents()
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        tab.AgentTiles.Select(t => t is GenerationAgentChoice c ? c.AgentId : t.GetType().Name).Should().Equal("claude", "codex", "llm-0a1b2c3d");
+    }
+
+    [Fact]
+    public void Without_models_the_last_tile_offers_to_add_one()
+    {
+        // Arrange
+        using var services = Build(withModel: false);
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        tab.AgentTiles.Last().Should().BeOfType<GenerationAddModelTile>();
+    }
+
+    [Fact]
+    public void The_only_ready_choice_is_preselected_and_can_start()
+    {
+        // Arrange
+        using var services = Build();
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        (tab.SelectedAgent?.AgentId, tab.StartBlock, tab.QualityModelLine).Should().Be(("llm-0a1b2c3d", (GenerationStartBlock?)null, "Translates with qwen3:30b"));
+    }
+
+    [Fact]
+    public void A_game_that_needs_the_ai_s_own_reader_cannot_start_with_a_model()
+    {
+        // Arrange
+        using var services = Build(e => e.Estimate = (_, _) => Task.FromResult(FakeEstimates.Of(source: TextSizeSource.UnknownEngine, engine: EngineKind.Unknown)));
+
+        // Act
+        var tab = Open(services);
+
+        // Assert
+        (tab.StartBlock, tab.StartBlockText).Should().Be((GenerationStartBlock.AgentCantWriteReader,
+            "Qwen 3 can't write its own reader for this game. Pick Claude Code or Codex, or a toolkit reader."));
+    }
+
+    [Fact]
+    public void A_thorough_job_with_a_model_offers_no_web_lookup()
+    {
+        // Arrange
+        using var services = Build();
+        var tab = Open(services);
+
+        // Act
+        tab.Quality = GenerationQuality.Thorough;
+
+        // Assert
+        tab.ShowWebLookup.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Starting_with_a_model_makes_its_job()
+    {
+        // Arrange
+        using var services = Build();
+        var tab = Open(services);
+
+        // Act
+        await tab.StartCommand.ExecuteAsync(null);
+
+        // Assert
+        tab.Job?.Agent.Should().Be("llm-0a1b2c3d");
     }
 }

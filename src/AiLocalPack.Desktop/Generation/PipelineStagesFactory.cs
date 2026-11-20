@@ -16,7 +16,7 @@ namespace AiLocalPack.Desktop.Generation;
 
 /// <summary>
 /// The real stages (<see cref="GenerationPipeline"/>): the job's agent (the player's copy, else the app's), which starts
-/// the toolkit server as this app in its hidden mode (<see cref="ToolkitServerProgram.DesktopApp"/>), and the Build
+/// the toolkit server as this app in its hidden mode; one of the player's own models runs through <see cref="Agents.ILlmHost"/> (<see cref="ToolkitServerProgram.DesktopApp"/>), and the Build
 /// stage's font swap, local pack store and test run; the Translate stage runs as many chunks at once as Settings → AI
 /// agents says (<see cref="AppSettings.TranslateWorkers"/>, read when the job starts or resumes).
 /// </summary>
@@ -30,7 +30,8 @@ public sealed class PipelineStagesFactory(
     LocalPackStore localPacks,
     SettingsStore settings,
     IGameTestRunner testRunner,
-    GameViews views) : IGenerationStagesFactory, IFixRunnerFactory
+    GameViews views,
+    Agents.ILlmHost llms) : IGenerationStagesFactory, IFixRunnerFactory
 {
     public GenerationStages Create(Game game, GenerationJobEntry entry)
     {
@@ -53,7 +54,9 @@ public sealed class PipelineStagesFactory(
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(entry);
         var agentId = entry.Job.Agent;
-        var adapter = AgentAdapters.Create(agentId, runner, environment, installer.ManagedDirectory(agentId))
+        var adapter = (Core.Llm.LlmConnections.IsLlmId(agentId)
+                ? llms.CreateAdapter(agentId) ?? throw new InvalidOperationException($"The model \"{agentId}\" was removed in Settings → AI agents: add it again to go on.")
+                : AgentAdapters.Create(agentId, runner, environment, installer.ManagedDirectory(agentId)))
             ?? throw new InvalidOperationException($"The agent \"{agentId}\" is unknown to this version.");
         var app = AppLaunch.ForCurrentProcess(environment, Environment.ProcessPath, System.Reflection.Assembly.GetEntryAssembly()?.Location)
             ?? throw new InvalidOperationException("The app's own path is unknown, so the agent can't start its toolkit server.");

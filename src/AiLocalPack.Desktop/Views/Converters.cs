@@ -70,6 +70,18 @@ public sealed class UpperCaseConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+/// <summary>The tallest a dialog may be in a window of the given height: the window less a margin above and below.</summary>
+public sealed class DialogHeightConverter : IValueConverter
+{
+    public static DialogHeightConverter Instance { get; } = new();
+
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is double height && height > 0 ? Math.Max(320, height - 96) : double.PositiveInfinity;
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 /// <summary>
 /// The keyboard focus ring's corners: the focused control's own <c>CornerRadius</c> (a templated control, a
 /// border, a content presenter) grown by the ring's offset, so the ring follows a rounded button instead of

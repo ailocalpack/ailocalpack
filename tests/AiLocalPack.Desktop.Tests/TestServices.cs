@@ -4,6 +4,7 @@ using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Launch;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
+using AiLocalPack.Core.Secrets;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Core.Background;
@@ -109,6 +110,11 @@ internal static class TestServices
             // Agents are never the player's: none installed unless the test says so, nothing downloaded or started.
             services.AddSingleton<FakeAgentHost>();
             services.AddSingleton<IAgentHost>(sp => sp.GetRequiredService<FakeAgentHost>());
+
+            // The player's own models never reach a server or the keychain.
+            services.AddSingleton<FakeLlmHost>();
+            services.AddSingleton<ILlmHost>(sp => sp.GetRequiredService<FakeLlmHost>());
+            services.AddSingleton<ISecretStore>(new FakeSecretStore());
 
             // GitHub is never the player's: no network, no keychain; signed out unless the test says so.
             services.AddSingleton<FakeGitHubHost>();

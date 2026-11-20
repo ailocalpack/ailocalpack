@@ -148,11 +148,112 @@
                 </Grid>
             </Border>
         </DataTemplate>
+        <!-- Settings → AI agents → Your models: one row per model (the server's mark, status, "model · host", where the text goes) -->
+        <DataTemplate DataType="ag:LlmRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <views:AgentLogo DataContext="{Binding Info}" VerticalAlignment="Top" />
+                    <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <WrapPanel>
+                            <views:HighlightTextBlock Classes="rowLabel" Source="{Binding Label}" Margin="0,0,10,0" VerticalAlignment="Center"
+                                                      Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                            <Border x:Name="LlmStatus" Classes="agentStatus" Classes.ok="{Binding IsStatusOk}" Classes.warn="{Binding IsStatusWarn}"
+                                    Classes.accent="{Binding IsStatusBusy}" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                    <Viewbox Classes="icon" Width="12" Height="12" Classes.spin="{Binding IsStatusBusy}">
+                                        <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                        <Panel>
+                                            <Path Classes="icon" Data="{StaticResource IconCheckCircle}" IsVisible="{Binding IsStatusOk}" />
+                                            <Path Classes="icon" Data="{StaticResource IconAlert}" IsVisible="{Binding IsStatusWarn}" />
+                                            <Path Classes="icon" Data="{StaticResource IconLoader}" IsVisible="{Binding IsStatusBusy}" />
+                                        </Panel>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+                        <TextBlock Classes="rowHelp mono" Text="{Binding SourceText}" TextTrimming="CharacterEllipsis" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="12" Height="12" VerticalAlignment="Center">
+                                <Panel>
+                                    <Path Classes="icon" Data="{StaticResource IconLaptop}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding IsLocal}" />
+                                    <Path Classes="icon" Data="{StaticResource IconCloud}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding !IsLocal}" />
+                                </Panel>
+                            </Viewbox>
+                            <TextBlock Classes="rowHelp" Text="{Binding PrivacyText}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock x:Name="LlmHelp" Classes="rowHelp" Text="{Binding Help}" TextWrapping="Wrap" IsVisible="{Binding HasHelp}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Button Classes="ghost sm" Command="{Binding CheckAgainCommand}" IsVisible="{Binding CanCheckAgain}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconRefresh}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding CheckAgainText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="LlmEdit" Classes="ghost sm" Command="{Binding EditCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Viewbox Classes="icon" Width="14" Height="14">
+                                    <Path Classes="icon" Data="{StaticResource IconPencil}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding EditText}" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="LlmRemove" Classes="bare sm" Command="{Binding RemoveCommand}" Content="{Binding RemoveText}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="ag:LlmEmptyRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Classes="icon" Data="{StaticResource IconServer}" Stroke="{DynamicResource AppMutedBrush}" />
+                        </Viewbox>
+                    </Border>
+                    <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <Button x:Name="LlmAddFirst" Grid.Column="2" Classes="accent sm" Command="{Binding AddCommand}" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconPlus}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding AddText}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="ag:LlmAddRow">
+            <Border Classes="settingRow" Padding="10,6">
+                <Button x:Name="LlmAdd" Classes="bare sm" Command="{Binding AddCommand}" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Viewbox Classes="icon" Width="14" Height="14">
+                            <Path Classes="icon" Data="{StaticResource IconPlus}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                        </Viewbox>
+                        <TextBlock Text="{Binding Label}" />
+                    </StackPanel>
+                </Button>
+            </Border>
+        </DataTemplate>
         <DataTemplate DataType="ag:DefaultAgentRow">
             <Border Classes="settingRow">
                 <Grid ColumnDefinitions="*,Auto">
                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
-                    <ListBox Grid.Column="1" Classes="segmented" VerticalAlignment="Center" IsVisible="{Binding HasReadyAgent}"
+                    <ComboBox x:Name="DefaultAgentDropdown" Grid.Column="1" VerticalAlignment="Center" MinWidth="200" IsVisible="{Binding ShowDropdown}"
+                              ItemsSource="{Binding Choices}" SelectedItem="{Binding SelectedChoice}" AutomationProperties.Name="{Binding Label}">
+                        <ComboBox.Styles>
+                            <Style Selector="ComboBoxItem" x:DataType="ag:AgentChoice">
+                                <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                            </Style>
+                        </ComboBox.Styles>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="ag:AgentChoice"><TextBlock Text="{Binding Display}" /></DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ListBox Grid.Column="1" Classes="segmented" VerticalAlignment="Center" IsVisible="{Binding ShowSegments}"
                              ItemsSource="{Binding Choices}" SelectedItem="{Binding SelectedChoice}"
                              AutomationProperties.Name="{Binding Label}">
                         <ListBox.Styles>

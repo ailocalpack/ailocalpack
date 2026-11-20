@@ -58,6 +58,10 @@ namespace AiLocalPack.Core.Settings;
 /// <see cref="TranslateWorkerCount"/> (clamped to <see cref="MinTranslateWorkers"/>–<see cref="MaxTranslateWorkers"/>);
 /// a job takes the value when it starts or resumes.
 /// </param>
+/// <param name="LlmConnections">
+/// The player's own models (Settings → AI agents → <em>Your models</em>): OpenAI-compatible servers used in place of an
+/// agent CLI, in the order added. API keys are never here, only in the OS keychain. <c>null</c> = none.
+/// </param>
 public sealed record AppSettings(
     int SchemaVersion = AppSettings.CurrentSchemaVersion,
     string? UiLanguage = null,
@@ -76,7 +80,8 @@ public sealed record AppSettings(
     bool PublishLicenseAccepted = false,
     bool WelcomeTourShown = false,
     int TranslateWorkers = AppSettings.DefaultTranslateWorkers,
-    IReadOnlyList<string>? DisabledStores = null)
+    IReadOnlyList<string>? DisabledStores = null,
+    IReadOnlyList<Llm.LlmConnection>? LlmConnections = null)
 {
     public const int CurrentSchemaVersion = 1;
 
@@ -95,6 +100,39 @@ public sealed record AppSettings(
     /// <summary>The player's changes to the Steam library list, for <see cref="Steam.SteamLibraryScanner.Scan(Steam.SteamLibraryChoices)"/>.</summary>
     [System.Text.Json.Serialization.JsonIgnore]
     public Steam.SteamLibraryChoices SteamLibraries => new(SteamLibraryFolders ?? [], IgnoredSteamLibraries ?? []);
+
+    /// <summary>The player's own models (<see cref="LlmConnections"/>), never <c>null</c>.</summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public IReadOnlyList<Llm.LlmConnection> Llms => LlmConnections ?? [];
+
+    /// <summary>A copy with <paramref name="connection"/> added, or replacing the one with its ID (same place).</summary>
+    public AppSettings WithLlm(Llm.LlmConnection connection)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+        var list = Llms.ToList();
+        var at = list.FindIndex(c => string.Equals(c.Id, connection.Id, StringComparison.OrdinalIgnoreCase));
+        if (at >= 0)
+        {
+            list[at] = connection;
+        }
+        else
+        {
+            list.Add(connection);
+        }
+
+        return this with { LlmConnections = list };
+    }
+
+    /// <summary>A copy without the model <paramref name="id"/>; the default agent falls back when it was that one.</summary>
+    public AppSettings WithoutLlm(string id)
+    {
+        var list = Llms.Where(c => !string.Equals(c.Id, id, StringComparison.OrdinalIgnoreCase)).ToList();
+        return this with
+        {
+            LlmConnections = list.Count == 0 ? null : list,
+            DefaultAgent = string.Equals(DefaultAgent, id, StringComparison.OrdinalIgnoreCase) ? null : DefaultAgent,
+        };
+    }
 
     /// <summary>Whether the player left <paramref name="source"/> on (<see cref="DisabledStores"/>).</summary>
     public bool IsStoreEnabled(Games.GameSource source) =>

@@ -50,7 +50,7 @@
     <value>AI エージェント</value>
   </data>
   <data name="Settings_Agents_Description" xml:space="preserve">
-    <value>AI で翻訳を作成するための Claude Code と Codex</value>
+    <value>AI で翻訳を作るための Claude Code、Codex、自分のモデル</value>
   </data>
   <data name="Settings_GitHub_Title" xml:space="preserve">
     <value>GitHub</value>
@@ -1886,16 +1886,13 @@
     <value>終了</value>
   </data>
   <data name="Settings_Agents_Lead" xml:space="preserve">
-    <value>エージェントは AI で新しい翻訳を作成するときだけ使い、翻訳のインストールには不要です。ご自身のサブスクリプションで動作し、プロジェクトが AI の費用を負担することはありません。</value>
+    <value>エージェントは AI で新しい翻訳を作るときだけ使い、翻訳のインストールには不要です。あなたのサブスクリプション、API キー、またはコンピューター上のモデルで動作し、プロジェクトは AI の費用を払いません。</value>
   </data>
   <data name="Settings_Group_Agents" xml:space="preserve">
     <value>エージェント</value>
   </data>
   <data name="Settings_Group_DefaultAgent" xml:space="preserve">
     <value>既定</value>
-  </data>
-  <data name="Settings_Group_Later" xml:space="preserve">
-    <value>今後</value>
   </data>
   <data name="Settings_Agent_Label" xml:space="preserve">
     <value>AI エージェント</value>
@@ -2055,15 +2052,6 @@
   </data>
   <data name="Settings_Number_Increase" xml:space="preserve">
     <value>増やす</value>
-  </data>
-  <data name="Settings_OwnKey_Label" xml:space="preserve">
-    <value>独自の API キーまたはローカルモデル</value>
-  </data>
-  <data name="Settings_OwnKey_Help" xml:space="preserve">
-    <value>Claude や ChatGPT のサブスクリプションがないプレイヤー向けです。</value>
-  </data>
-  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
-    <value>API キー ローカルモデル ollama api key local model</value>
   </data>
   <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
     <value>{0} からサインアウトされました</value>
@@ -4821,5 +4809,218 @@
   </data>
   <data name="Settings_Agents_Hint_Update" xml:space="preserve">
     <value>アップデート</value>
+  </data>
+  <data name="Settings_Group_Models" xml:space="preserve">
+    <value>自分のモデル</value>
+  </data>
+  <data name="Settings_Llm_Label" xml:space="preserve">
+    <value>自分のモデル</value>
+  </data>
+  <data name="Settings_Llm_Keywords" xml:space="preserve">
+    <value>自分のモデル, ローカルモデル, LLM, APIキー, Ollama, LM Studio, OpenRouter, OpenAI, サーバー</value>
+  </data>
+  <data name="Settings_Llm_Note" xml:space="preserve">
+    <value>OpenAI API に対応した任意のサーバー：このコンピューター上のモデル（Ollama、LM Studio）や、API キーを使うクラウドのモデル。ツール呼び出しへの対応が必要です。自分のモデルはツールキット経由でのみゲームを読み取り、未知のエンジン用のリーダーを書いたり、ウェブを検索したりはできません。</value>
+  </data>
+  <data name="Settings_Llm_Empty_Title" xml:space="preserve">
+    <value>モデルはまだありません</value>
+  </data>
+  <data name="Settings_Llm_Empty_Text" xml:space="preserve">
+    <value>Ollama や LM Studio でこのコンピューター上にモデルを動かすか、OpenRouter、OpenAI などのサービスの API キーを使います。</value>
+  </data>
+  <data name="Settings_Llm_Add" xml:space="preserve">
+    <value>モデルを追加</value>
+  </data>
+  <data name="Settings_Llm_Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+  <data name="Settings_Llm_Remove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Settings_Llm_Remove_Title" xml:space="preserve">
+    <value>{0} を削除しますか？</value>
+  </data>
+  <data name="Settings_Llm_Remove_Text" xml:space="preserve">
+    <value>モデルはこの一覧から外れ、API キーはシステムのキーチェーンから削除されます。このモデルで作った翻訳とサーバー上のモデルはそのままです。</value>
+  </data>
+  <data name="Settings_Llm_Status_Checking" xml:space="preserve">
+    <value>確認中…</value>
+  </data>
+  <data name="Settings_Llm_Status_Ready" xml:space="preserve">
+    <value>準備完了</value>
+  </data>
+  <data name="Settings_Llm_Status_Unreachable" xml:space="preserve">
+    <value>接続できません</value>
+  </data>
+  <data name="Settings_Llm_Status_Key" xml:space="preserve">
+    <value>API キーの問題</value>
+  </data>
+  <data name="Settings_Llm_Status_ModelMissing" xml:space="preserve">
+    <value>モデルが一覧にない</value>
+  </data>
+  <data name="Settings_Llm_Status_Failed" xml:space="preserve">
+    <value>サーバーエラー</value>
+  </data>
+  <data name="Settings_Llm_Local" xml:space="preserve">
+    <value>このコンピューターで動作</value>
+  </data>
+  <data name="Settings_Llm_Remote" xml:space="preserve">
+    <value>テキストは {0} に送信されます</value>
+  </data>
+  <data name="Settings_Llm_Help_StartOllama" xml:space="preserve">
+    <value>Ollama を起動してから、もう一度確認してください。</value>
+  </data>
+  <data name="Settings_Llm_Help_StartLmStudio" xml:space="preserve">
+    <value>LM Studio のローカルサーバーを起動（Developer → Start server）してから、もう一度確認してください。</value>
+  </data>
+  <data name="Settings_Llm_Help_Unreachable" xml:space="preserve">
+    <value>{0} から応答がありません。アドレスと接続を確認してください。</value>
+  </data>
+  <data name="Settings_Llm_Help_Key" xml:space="preserve">
+    <value>サーバーが API キーを拒否したか、キーが保存されていません。モデルを編集して入力してください。</value>
+  </data>
+  <data name="Settings_Llm_Help_ModelMissing" xml:space="preserve">
+    <value>サーバーの一覧に {0} がありません。サーバーでダウンロードするか、別のモデルを選んでください。</value>
+  </data>
+  <data name="Llm_Provider_Custom" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="Llm_Dialog_AddTitle" xml:space="preserve">
+    <value>モデルを追加</value>
+  </data>
+  <data name="Llm_Dialog_EditTitle" xml:space="preserve">
+    <value>モデルを編集</value>
+  </data>
+  <data name="Llm_Dialog_Intro" xml:space="preserve">
+    <value>AI Local Pack は OpenAI API でモデルとやり取りします。翻訳には、Qwen 3、Llama 3.1、GPT などのツール呼び出しに対応したモデルが必要です。</value>
+  </data>
+  <data name="Llm_Dialog_Where" xml:space="preserve">
+    <value>実行場所</value>
+  </data>
+  <data name="Llm_Dialog_Url" xml:space="preserve">
+    <value>サーバーのアドレス</value>
+  </data>
+  <data name="Llm_Dialog_Url_Missing" xml:space="preserve">
+    <value>サーバーのアドレスを入力してください。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Invalid" xml:space="preserve">
+    <value>http:// または https:// で始まる完全なアドレスを入力してください（例：http://localhost:11434/v1）。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Ollama" xml:space="preserve">
+    <value>Ollama は起動するとこのアドレスで待ち受けます。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_LmStudio" xml:space="preserve">
+    <value>LM Studio でローカルサーバーを起動してください（Developer → Start server）。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Cloud" xml:space="preserve">
+    <value>サービスの API アドレスです。プロキシを使う場合のみ変更してください。</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Custom" xml:space="preserve">
+    <value>OpenAI API に対応した任意のサーバー：/v1 までのアドレス（vLLM、llama.cpp、DeepSeek、Groq、Mistral…）。</value>
+  </data>
+  <data name="Llm_Dialog_Key" xml:space="preserve">
+    <value>API キー</value>
+  </data>
+  <data name="Llm_Dialog_KeyOptional" xml:space="preserve">
+    <value>API キー（任意）</value>
+  </data>
+  <data name="Llm_Dialog_Key_Saved" xml:space="preserve">
+    <value>キーチェーンに保存済み：入力すると置き換えます</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hint" xml:space="preserve">
+    <value>システムのキーチェーンに保存され、設定ファイルには書かれません。</value>
+  </data>
+  <data name="Llm_Dialog_Key_Get" xml:space="preserve">
+    <value>キーを取得</value>
+  </data>
+  <data name="Llm_Dialog_Key_Show" xml:space="preserve">
+    <value>キーを表示</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hide" xml:space="preserve">
+    <value>キーを隠す</value>
+  </data>
+  <data name="Llm_Dialog_Key_Remove" xml:space="preserve">
+    <value>保存済みのキーを削除</value>
+  </data>
+  <data name="Llm_Dialog_Key_SaveFailed" xml:space="preserve">
+    <value>システムのキーチェーンにキーを保存できませんでした。ロックを解除して（Linux ではキーリングを起動して）もう一度お試しください。</value>
+  </data>
+  <data name="Llm_Dialog_Model" xml:space="preserve">
+    <value>モデル</value>
+  </data>
+  <data name="Llm_Dialog_Model_Hint" xml:space="preserve">
+    <value>サーバー上のモデル ID です。一覧を読み込んで選べます。</value>
+  </data>
+  <data name="Llm_Dialog_Model_Missing" xml:space="preserve">
+    <value>モデルを入力するか選んでください。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Load" xml:space="preserve">
+    <value>一覧を読み込む</value>
+  </data>
+  <data name="Llm_Dialog_Models_None" xml:space="preserve">
+    <value>サーバーにモデル一覧がありません。モデル ID を入力してください。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Unreachable" xml:space="preserve">
+    <value>一覧を読み込めませんでした：サーバーが応答しません。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Failed" xml:space="preserve">
+    <value>一覧を読み込めませんでした。モデル ID を直接入力することはできます。</value>
+  </data>
+  <data name="Llm_Dialog_Name" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="Llm_Dialog_Name_Missing" xml:space="preserve">
+    <value>モデルに名前を付けてください。</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Local" xml:space="preserve">
+    <value>ゲームのテキストはこのコンピューターの外に出ません。</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Remote" xml:space="preserve">
+    <value>ゲームのテキストは {0} に送信されます。</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Unknown" xml:space="preserve">
+    <value>アドレスを入力すると、テキストの送信先がわかります。</value>
+  </data>
+  <data name="Llm_Dialog_Check" xml:space="preserve">
+    <value>接続を確認</value>
+  </data>
+  <data name="Llm_Dialog_Check_Hint" xml:space="preserve">
+    <value>短いリクエストを 1 回送り、モデルが応答してツールを呼び出せるかを確認します。</value>
+  </data>
+  <data name="Llm_Dialog_Check_Busy" xml:space="preserve">
+    <value>モデルに問い合わせ中…</value>
+  </data>
+  <data name="Llm_Dialog_Check_Ok" xml:space="preserve">
+    <value>接続しました：モデルはツールを呼び出せるので翻訳できます。</value>
+  </data>
+  <data name="Llm_Dialog_Check_NoTools" xml:space="preserve">
+    <value>接続しましたが、モデルはツールを呼び出さずに答えました。翻訳にはツール呼び出しが必要です。対応したモデルを選んでください。</value>
+  </data>
+  <data name="Llm_Dialog_Check_ModelMissing" xml:space="preserve">
+    <value>サーバーにモデル {0} がありません。</value>
+  </data>
+  <data name="Llm_Dialog_Check_Unreachable" xml:space="preserve">
+    <value>{0} から応答がありません。</value>
+  </data>
+  <data name="Llm_Dialog_Check_KeyRefused" xml:space="preserve">
+    <value>サーバーが API キーを拒否しました。</value>
+  </data>
+  <data name="Llm_Dialog_Check_Failed" xml:space="preserve">
+    <value>サーバーがエラーを返しました：{0}</value>
+  </data>
+  <data name="Llm_Dialog_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Gen_AddModel_Title" xml:space="preserve">
+    <value>自分のモデル</value>
+  </data>
+  <data name="Gen_AddModel_Text" xml:space="preserve">
+    <value>Ollama、LM Studio、または API キー</value>
+  </data>
+  <data name="Gen_Start_ModelNeedsToolkit" xml:space="preserve">
+    <value>{0} はこのゲーム用のリーダーを自分で書けません。Claude Code か Codex、またはツールキットのリーダーを選んでください。</value>
+  </data>
+  <data name="Llm_Dialog_Models_Other" xml:space="preserve">
+    <value>サーバー上のモデル：{0} 件</value>
   </data>
 </root>

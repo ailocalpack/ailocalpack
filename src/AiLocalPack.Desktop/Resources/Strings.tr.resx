@@ -53,7 +53,7 @@
     <value>YZ ajanları</value>
   </data>
   <data name="Settings_Agents_Description" xml:space="preserve">
-    <value>Yapay zekâ ile çeviri oluşturmak için Claude Code ve Codex</value>
+    <value>Yapay zekâyla çeviri oluşturmak için Claude Code, Codex ve kendi modelleriniz</value>
   </data>
   <data name="Settings_GitHub_Title" xml:space="preserve">
     <value>GitHub</value>
@@ -1958,16 +1958,13 @@
     <value>Çık</value>
   </data>
   <data name="Settings_Agents_Lead" xml:space="preserve">
-    <value>Ajanlar yalnızca YZ ile yeni çeviriler oluşturmak için kullanılır; çeviri yüklemek için hiçbir zaman gerekmez. Kendi aboneliğinizle çalışırlar: proje hiçbir YZ kullanımı için ödeme yapmaz.</value>
+    <value>Ajanlar yalnızca yapay zekâyla yeni çeviri oluşturmak için kullanılır; çeviri kurmak hiç gerektirmez. Kendi aboneliğiniz, API anahtarınız ya da bilgisayarınızdaki bir modelle çalışırlar: proje yapay zekâ için ödeme yapmaz.</value>
   </data>
   <data name="Settings_Group_Agents" xml:space="preserve">
     <value>Ajanlar</value>
   </data>
   <data name="Settings_Group_DefaultAgent" xml:space="preserve">
     <value>Varsayılan</value>
-  </data>
-  <data name="Settings_Group_Later" xml:space="preserve">
-    <value>Daha sonra</value>
   </data>
   <data name="Settings_Agent_Label" xml:space="preserve">
     <value>YZ ajanı</value>
@@ -2127,15 +2124,6 @@
   </data>
   <data name="Settings_Number_Increase" xml:space="preserve">
     <value>Artır</value>
-  </data>
-  <data name="Settings_OwnKey_Label" xml:space="preserve">
-    <value>Kendi API anahtarı veya yerel model</value>
-  </data>
-  <data name="Settings_OwnKey_Help" xml:space="preserve">
-    <value>Claude veya ChatGPT aboneliği olmayan oyuncular için.</value>
-  </data>
-  <data name="Settings_OwnKey_Keywords" xml:space="preserve">
-    <value>api anahtarı yerel model ollama key local</value>
   </data>
   <data name="Settings_Alert_AgentExpired_Title" xml:space="preserve">
     <value>{0}: oturum kapandı</value>
@@ -4950,5 +4938,221 @@
   </data>
   <data name="Settings_Agents_Hint_Update" xml:space="preserve">
     <value>güncelleme</value>
+  </data>
+  <data name="Settings_Group_Models" xml:space="preserve">
+    <value>Kendi modelleriniz</value>
+  </data>
+  <data name="Settings_Llm_Label" xml:space="preserve">
+    <value>Kendi modeliniz</value>
+  </data>
+  <data name="Settings_Llm_Keywords" xml:space="preserve">
+    <value>kendi model, yerel model, LLM, API anahtarı, Ollama, LM Studio, OpenRouter, OpenAI, sunucu</value>
+  </data>
+  <data name="Settings_Llm_Note" xml:space="preserve">
+    <value>OpenAI API’si olan herhangi bir sunucu: bu bilgisayardaki bir model (Ollama, LM Studio) ya da API anahtarınızla buluttaki bir model. Araç çağırabilmesi gerekir. Kendi modelleriniz oyunları yalnızca araç takımıyla okur: bilinmeyen bir motor için okuyucu yazamaz, web’de arama yapamaz.</value>
+  </data>
+  <data name="Settings_Llm_Empty_Title" xml:space="preserve">
+    <value>Henüz model yok</value>
+  </data>
+  <data name="Settings_Llm_Empty_Text" xml:space="preserve">
+    <value>Bu bilgisayarda Ollama ya da LM Studio ile bir model çalıştırın veya OpenRouter, OpenAI ya da başka bir hizmetin API anahtarını kullanın.</value>
+  </data>
+  <data name="Settings_Llm_Add" xml:space="preserve">
+    <value>Model ekle</value>
+  </data>
+  <data name="Settings_Llm_Edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="Settings_Llm_Remove" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="Settings_Llm_Remove_Title" xml:space="preserve">
+    <value>{0} kaldırılsın mı?</value>
+  </data>
+  <data name="Settings_Llm_Remove_Text" xml:space="preserve">
+    <value>Model bu listeden çıkar ve API anahtarı sistem anahtar zincirinden silinir. Onunla yapılan çeviriler ve sunucudaki model olduğu gibi kalır.</value>
+  </data>
+  <data name="Settings_Llm_Status_Checking" xml:space="preserve">
+    <value>Denetleniyor…</value>
+  </data>
+  <data name="Settings_Llm_Status_Ready" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="Settings_Llm_Status_Unreachable" xml:space="preserve">
+    <value>Erişilemiyor</value>
+  </data>
+  <data name="Settings_Llm_Status_Key" xml:space="preserve">
+    <value>API anahtarı sorunu</value>
+  </data>
+  <data name="Settings_Llm_Status_ModelMissing" xml:space="preserve">
+    <value>Model listede yok</value>
+  </data>
+  <data name="Settings_Llm_Status_Failed" xml:space="preserve">
+    <value>Sunucu hatası</value>
+  </data>
+  <data name="Settings_Llm_Local" xml:space="preserve">
+    <value>Bu bilgisayarda çalışır</value>
+  </data>
+  <data name="Settings_Llm_Remote" xml:space="preserve">
+    <value>Metin {0} adresine gönderilir</value>
+  </data>
+  <data name="Settings_Llm_Help_StartOllama" xml:space="preserve">
+    <value>Ollama’yı başlatın, sonra yeniden denetleyin.</value>
+  </data>
+  <data name="Settings_Llm_Help_StartLmStudio" xml:space="preserve">
+    <value>LM Studio’nun yerel sunucusunu başlatın (Developer → Start server), sonra yeniden denetleyin.</value>
+  </data>
+  <data name="Settings_Llm_Help_Unreachable" xml:space="preserve">
+    <value>{0} adresinde yanıt yok: adresi ve bağlantınızı denetleyin.</value>
+  </data>
+  <data name="Settings_Llm_Help_Key" xml:space="preserve">
+    <value>Sunucu API anahtarını reddetti ya da kayıtlı anahtar yok. Girmek için modeli düzenleyin.</value>
+  </data>
+  <data name="Settings_Llm_Help_ModelMissing" xml:space="preserve">
+    <value>Sunucu {0} modelini listelemiyor. Sunucuya indirin ya da başka bir model seçin.</value>
+  </data>
+  <data name="Llm_Provider_Custom" xml:space="preserve">
+    <value>Diğer</value>
+  </data>
+  <data name="Llm_Dialog_AddTitle" xml:space="preserve">
+    <value>Model ekle</value>
+  </data>
+  <data name="Llm_Dialog_EditTitle" xml:space="preserve">
+    <value>Modeli düzenle</value>
+  </data>
+  <data name="Llm_Dialog_Intro" xml:space="preserve">
+    <value>AI Local Pack modelle OpenAI API’si üzerinden konuşur. Çeviri için Qwen 3, Llama 3.1 ya da GPT gibi araç çağırabilen bir model gerekir.</value>
+  </data>
+  <data name="Llm_Dialog_Where" xml:space="preserve">
+    <value>Nerede çalışır</value>
+  </data>
+  <data name="Llm_Dialog_Url" xml:space="preserve">
+    <value>Sunucu adresi</value>
+  </data>
+  <data name="Llm_Dialog_Url_Missing" xml:space="preserve">
+    <value>Sunucunun adresini girin.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Invalid" xml:space="preserve">
+    <value>http:// ya da https:// ile başlayan tam bir adres girin, örn. http://localhost:11434/v1.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Ollama" xml:space="preserve">
+    <value>Ollama çalışırken bu adresi dinler.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_LmStudio" xml:space="preserve">
+    <value>LM Studio’da yerel sunucuyu başlatın (Developer → Start server).</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Cloud" xml:space="preserve">
+    <value>Hizmetin API adresi. Yalnızca bir proxy için değiştirin.</value>
+  </data>
+  <data name="Llm_Dialog_Url_Hint_Custom" xml:space="preserve">
+    <value>OpenAI API’si olan herhangi bir sunucu: /v1’e kadar adres (vLLM, llama.cpp, DeepSeek, Groq, Mistral…).</value>
+  </data>
+  <data name="Llm_Dialog_Key" xml:space="preserve">
+    <value>API anahtarı</value>
+  </data>
+  <data name="Llm_Dialog_KeyOptional" xml:space="preserve">
+    <value>API anahtarı (isteğe bağlı)</value>
+  </data>
+  <data name="Llm_Dialog_Key_Saved" xml:space="preserve">
+    <value>Anahtar zincirinde kayıtlı: değiştirmek için yazın</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hint" xml:space="preserve">
+    <value>Sistem anahtar zincirinde tutulur, ayar dosyasına asla yazılmaz.</value>
+  </data>
+  <data name="Llm_Dialog_Key_Get" xml:space="preserve">
+    <value>Anahtar al</value>
+  </data>
+  <data name="Llm_Dialog_Key_Show" xml:space="preserve">
+    <value>Anahtarı göster</value>
+  </data>
+  <data name="Llm_Dialog_Key_Hide" xml:space="preserve">
+    <value>Anahtarı gizle</value>
+  </data>
+  <data name="Llm_Dialog_Key_Remove" xml:space="preserve">
+    <value>Kayıtlı anahtarı kaldır</value>
+  </data>
+  <data name="Llm_Dialog_Key_SaveFailed" xml:space="preserve">
+    <value>Sistem anahtar zinciri anahtarı kaydetmedi. Kilidini açın (Linux’ta bir anahtarlık başlatın) ve yeniden deneyin.</value>
+  </data>
+  <data name="Llm_Dialog_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Llm_Dialog_Model_Hint" xml:space="preserve">
+    <value>Modelin sunucudaki kimliği. Seçmek için listeyi yükleyin.</value>
+  </data>
+  <data name="Llm_Dialog_Model_Missing" xml:space="preserve">
+    <value>Bir model yazın ya da seçin.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Load" xml:space="preserve">
+    <value>Listeyi yükle</value>
+  </data>
+  <data name="Llm_Dialog_Models_None" xml:space="preserve">
+    <value>Sunucu model listelemiyor: modelin kimliğini yazın.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Unreachable" xml:space="preserve">
+    <value>Liste yüklenmedi: sunucu yanıt vermiyor.</value>
+  </data>
+  <data name="Llm_Dialog_Models_Failed" xml:space="preserve">
+    <value>Liste yüklenmedi. Modelin kimliğini yine de yazabilirsiniz.</value>
+  </data>
+  <data name="Llm_Dialog_Name" xml:space="preserve">
+    <value>Ad</value>
+  </data>
+  <data name="Llm_Dialog_Name_Missing" xml:space="preserve">
+    <value>Modele bir ad verin.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Local" xml:space="preserve">
+    <value>Oyununuzun metni bu bilgisayarda kalır.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Remote" xml:space="preserve">
+    <value>Oyununuzun metni {0} adresine gönderilir.</value>
+  </data>
+  <data name="Llm_Dialog_Privacy_Unknown" xml:space="preserve">
+    <value>Metnin nereye gittiğini görmek için adresi girin.</value>
+  </data>
+  <data name="Llm_Dialog_Check" xml:space="preserve">
+    <value>Bağlantıyı denetle</value>
+  </data>
+  <data name="Llm_Dialog_Check_Hint" xml:space="preserve">
+    <value>Modelin yanıt verip araç çağırdığını görmek için kısa bir istek gönderir.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Busy" xml:space="preserve">
+    <value>Modele soruluyor…</value>
+  </data>
+  <data name="Llm_Dialog_Check_Ok" xml:space="preserve">
+    <value>Bağlandı: model araç çağırıyor ve çeviri yapabilir.</value>
+  </data>
+  <data name="Llm_Dialog_Check_NoTools" xml:space="preserve">
+    <value>Bağlandı, ancak model araç çağırmadan yanıt verdi. Çeviri için araç çağırma gerekir: bunu destekleyen bir model seçin.</value>
+  </data>
+  <data name="Llm_Dialog_Check_ModelMissing" xml:space="preserve">
+    <value>Sunucuda {0} modeli yok.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Unreachable" xml:space="preserve">
+    <value>{0} adresinde yanıt yok.</value>
+  </data>
+  <data name="Llm_Dialog_Check_KeyRefused" xml:space="preserve">
+    <value>Sunucu API anahtarını reddetti.</value>
+  </data>
+  <data name="Llm_Dialog_Check_Failed" xml:space="preserve">
+    <value>Sunucu bir hatayla yanıt verdi: {0}</value>
+  </data>
+  <data name="Llm_Dialog_Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Gen_AddModel_Title" xml:space="preserve">
+    <value>Kendi modeliniz</value>
+  </data>
+  <data name="Gen_AddModel_Text" xml:space="preserve">
+    <value>Ollama, LM Studio ya da bir API anahtarı</value>
+  </data>
+  <data name="Gen_Start_ModelNeedsToolkit" xml:space="preserve">
+    <value>{0} bu oyun için kendi okuyucusunu yazamaz. Claude Code ya da Codex’i veya araç takımından bir okuyucu seçin.</value>
+  </data>
+  <data name="Llm_Dialog_Models_One" xml:space="preserve">
+    <value>Sunucuda {0} model</value>
+  </data>
+  <data name="Llm_Dialog_Models_Other" xml:space="preserve">
+    <value>Sunucuda {0} model</value>
   </data>
 </root>

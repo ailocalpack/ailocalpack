@@ -1832,6 +1832,57 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
         <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
     </Style>
+    <!-- Add model dialog: a label above each field, the preset tiles (logo + name; accent outline when chosen). -->
+    <Style Selector="TextBlock.fieldLabel">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="TextBlock.warnText">
+        <Setter Property="Foreground" Value="{DynamicResource AppWarnBrush}" />
+    </Style>
+    <Style Selector="Button.providerTile">
+        <Setter Property="Padding" Value="6,10" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Button.providerTile:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppSurface2Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.providerTile.on /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+    </Style>
+    <!-- The start form's "Your own model" tile: a dashed outline that reads as "add", accent on hover. -->
+    <Style Selector="Button.genAddModel">
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Rectangle Classes="dashed" RadiusX="12" RadiusY="12" StrokeThickness="1.5" StrokeDashArray="4,3"
+                               Stroke="{DynamicResource AppBorderStrongBrush}" />
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}"
+                                      Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="Button.genAddModel:pointerover /template/ Rectangle.dashed">
+        <Setter Property="Stroke" Value="{DynamicResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="Button.genAddModel:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource AppAccentSoftBrush}" />
+    </Style>
     <Style Selector="TextBlock.faint">
         <Setter Property="Foreground" Value="{DynamicResource AppFaintBrush}" />
     </Style>
