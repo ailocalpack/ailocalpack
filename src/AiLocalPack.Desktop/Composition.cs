@@ -194,6 +194,7 @@ internal static class Composition
             return AgentInstaller.Create(sp.GetRequiredService<AppPaths>(), sp.GetRequiredService<OsEnvironment>(), http, sp.GetRequiredService<ILogger<AgentInstaller>>());
         });
         services.AddSingleton<IAgentHost, AgentHost>();
+        services.AddSingleton<AgentUpdates>();
     }
 
     private static ProductInfoHeaderValue UserAgent => new("ailocalpack", typeof(Composition).Assembly.GetName().Version?.ToString(3) ?? "0.0.0");

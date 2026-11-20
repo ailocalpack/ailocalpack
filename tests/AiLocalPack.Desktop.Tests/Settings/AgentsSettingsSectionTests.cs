@@ -1,5 +1,6 @@
 using AiLocalPack.Agents;
 using AiLocalPack.Agents.Install;
+using AiLocalPack.Core.Activity;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.ViewModels.Settings.Agents;
@@ -403,6 +404,54 @@ public sealed class AgentsSettingsSectionTests : IDisposable
         // Assert
         (row.State, row.StatusText).Should().Be((AgentRowState.Updating, "Updating to 2.1.319 · 25%"));
         finish.SetResult(Installed("claude", "2.1.319"));
+    }
+
+    [Fact]
+    public void An_update_waits_while_a_generation_runs()
+    {
+        // Arrange
+        Host.Probes["claude"] = FakeAgentHost.SignedIn("claude", AgentSource.Managed, "2.1.311");
+        Host.Releases["claude"] = FakeAgentHost.Release("claude", "2.1.319");
+        _services.GetRequiredService<ActivityStore>().SetTask(new ActivityTask("job", ActivityTaskKind.Generation, null, null, "Generating", null, 0.4, DateTimeOffset.UnixEpoch));
+        var row = Row("claude");
+
+        // Act
+        row.UpdateCommand.Execute(null);
+
+        // Assert
+        (row.State, row.Error, Host.Calls.Contains("install claude")).Should().Be((
+            AgentRowState.Ready,
+            "A translation is using the agents right now. Pause it or wait until it finishes, then update Claude Code.",
+            false));
+    }
+
+    [Fact]
+    public void An_update_of_the_apps_copy_hints_the_section()
+    {
+        // Arrange
+        Host.Probes["claude"] = FakeAgentHost.SignedIn("claude", AgentSource.Managed, "2.1.311");
+        Host.Releases["claude"] = FakeAgentHost.Release("claude", "2.1.319");
+
+        // Act
+        var section = Section();
+
+        // Assert
+        (section.Hint, section.HasHint).Should().Be(("update", true));
+    }
+
+    [Fact]
+    public async Task An_update_found_in_the_background_shows_on_the_row()
+    {
+        // Arrange
+        Host.Probes["claude"] = FakeAgentHost.SignedIn("claude", AgentSource.Managed, "2.1.311");
+        var row = Row("claude");
+        Host.Releases["claude"] = FakeAgentHost.Release("claude", "2.1.319");
+
+        // Act
+        await _services.GetRequiredService<AgentUpdates>().CheckAsync(TestContext.Current.CancellationToken);
+
+        // Assert
+        (row.CanUpdate, row.UpdateText).Should().Be((true, "Update to 2.1.319"));
     }
 
     [Fact]

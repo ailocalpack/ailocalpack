@@ -17,6 +17,13 @@ public static class ActivityTexts
             return localizer.Format(nameof(Strings.Activity_Event_AppUpdateReady), activity.Version ?? string.Empty);
         }
 
+        if (activity.Kind == ActivityEventKind.AgentUpdateAvailable)
+        {
+            // "Claude Code 2.1.330 is available".
+            var agent = activity.Agent is { } id ? Agents.AgentInfo.Of(id).Name : string.Empty;
+            return localizer.Format(nameof(Strings.Activity_Event_AgentUpdateAvailable), agent, activity.Version ?? string.Empty);
+        }
+
         if (activity.Kind is ActivityEventKind.RequestTaken or ActivityEventKind.RequestDone)
         {
             // "alice is translating Neon Courier for you" / "Your request is done: «Неоновый курьер»".
@@ -71,6 +78,7 @@ public static class ActivityTexts
             ActivityEventKind.PackNotApplied => localizer[nameof(Strings.Activity_Detail_NotApplied)],
             ActivityEventKind.PackMerged => localizer[nameof(Strings.Activity_Detail_PackMerged)],
             ActivityEventKind.AppUpdateReady => localizer[nameof(Strings.Activity_Detail_AppUpdateReady)],
+            ActivityEventKind.AgentUpdateAvailable => localizer[nameof(Strings.Activity_Detail_AgentUpdateAvailable)],
             ActivityEventKind.RequestTaken => localizer[nameof(Strings.Activity_Detail_RequestTaken)],
             ActivityEventKind.RequestDone => localizer.Format(nameof(Strings.Activity_Detail_RequestDone), activity.Detail ?? string.Empty),
             ActivityEventKind.TranslationCrashed => localizer.Format(nameof(Strings.Activity_Detail_TranslationCrashed), activity.PackTitle ?? string.Empty, activity.Detail ?? "?"),

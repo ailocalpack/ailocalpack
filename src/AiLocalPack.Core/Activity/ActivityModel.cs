@@ -99,6 +99,13 @@ public enum ActivityEventKind
     /// <see cref="ActivityEvent.Detail"/> = the seconds it ran, <see cref="ActivityEvent.PackTitle"/> = the pack's title.
     /// </summary>
     TranslationCrashed,
+
+    /// <summary>
+    /// A newer release of an agent the app installed itself (Claude Code, Codex) is out: <c>Update</c> while it still is;
+    /// <see cref="ActivityEvent.Agent"/> names the agent, <see cref="ActivityEvent.Version"/> the new version. Once per
+    /// agent and version. An agent the player installed is never offered (they update it the way they installed it).
+    /// </summary>
+    AgentUpdateAvailable,
 }
 
 /// <summary>An event's tone; always shown as icon + text, never color only.</summary>
@@ -151,8 +158,14 @@ public sealed record ActivityEvent
     /// <summary>A page on GitHub it is about (the pull request); https only.</summary>
     public Uri? Link { get; init; }
 
-    /// <summary>The app version an app update event is about (<see cref="ActivityEventKind.AppUpdateReady"/>).</summary>
+    /// <summary>
+    /// The version an update event is about: the app's (<see cref="ActivityEventKind.AppUpdateReady"/>) or an agent's
+    /// (<see cref="ActivityEventKind.AgentUpdateAvailable"/>).
+    /// </summary>
     public string? Version { get; init; }
+
+    /// <summary>The agent's ID an agent event is about (<c>claude</c>, <c>codex</c>; <see cref="ActivityEventKind.AgentUpdateAvailable"/>).</summary>
+    public string? Agent { get; init; }
 
     /// <summary>When a paused generation goes on by itself (<see cref="ActivityEventKind.GenerationPaused"/>).</summary>
     public DateTimeOffset? Until { get; init; }

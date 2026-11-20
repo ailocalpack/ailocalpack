@@ -22,6 +22,7 @@ namespace AiLocalPack.Desktop.ViewModels.Settings.Agents;
 public sealed class AgentRow : SettingRow
 {
     private readonly IAgentHost _host;
+    private readonly AgentUpdates _updates;
     private readonly IUiDispatcher _ui;
     private AgentRowState _state = AgentRowState.Checking;
     private AgentInstallation? _installation;
@@ -35,13 +36,15 @@ public sealed class AgentRow : SettingRow
     private Task? _check;
     private int _generation;
 
-    public AgentRow(SettingRowServices services, IAgentHost host, IUiDispatcher ui, AgentInfo info)
+    public AgentRow(SettingRowServices services, IAgentHost host, AgentUpdates updates, IUiDispatcher ui, AgentInfo info)
         : base(services, nameof(Strings.Settings_Agent_Label), nameof(Strings.Settings_Agent_Keywords))
     {
         ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(updates);
         ArgumentNullException.ThrowIfNull(ui);
         ArgumentNullException.ThrowIfNull(info);
         _host = host;
+        _updates = updates;
         _ui = ui;
         Info = info;
         InstallCommand = new AsyncRelayCommand(InstallAsync, () => State == AgentRowState.NotInstalled);
@@ -256,12 +259,31 @@ public sealed class AgentRow : SettingRow
         await CheckReleaseAsync(generation);
     }
 
-    /// <summary>The release an install would get: its size before installing, a newer version of the app's copy as <c>Update to X</c>.</summary>
+    /// <summary>
+    /// The update <see cref="AgentUpdates"/> holds for this agent, shown as <c>Update to X</c> when it is about the app's
+    /// copy as this row found it (a background check found it, or another row's check dropped it). UI thread.
+    /// </summary>
+    public void ApplyOffer()
+    {
+        if (_installation is not { Source: AgentSource.Managed } installation || AgentRowStates.IsBusy(State))
+        {
+            return;
+        }
+
+        var offer = _updates.OfferFor(AgentId);
+        SetUpdate(offer is not null && offer.Installed == installation.Version ? offer.Available : null);
+    }
+
+    /// <summary>
+    /// The release an install would get: its size before installing, a newer version of the app's copy as <c>Update to
+    /// X</c> (also told to <see cref="AgentUpdates"/>, which puts it in Activity).
+    /// </summary>
     private async Task CheckReleaseAsync(int generation)
     {
         if (_installation is { Source: not AgentSource.Managed })
         {
             SetUpdate(null);
+            _updates.Report(AgentId, _installation, null);
             return;
         }
 
@@ -283,6 +305,7 @@ public sealed class AgentRow : SettingRow
 
         _releaseSize = release.Size;
         SetUpdate(_installation is { } installed && AgentVersions.IsNewer(release.Version, installed.Version) ? release.Version : null);
+        _updates.Report(AgentId, _installation, release.Version);
         OnPropertyChanged(nameof(Help));
     }
 
@@ -303,10 +326,19 @@ public sealed class AgentRow : SettingRow
         SetState(state);
     }
 
-    /// <summary><c>Install</c> or <c>Update to X</c>: the official build into the app's folder, then a fresh check.</summary>
+    /// <summary>
+    /// <c>Install</c> or <c>Update to X</c>: the official build into the app's folder, then a fresh check. An update waits
+    /// while a generation or a fix runs (<see cref="AgentUpdates.IsBusy"/>): it says so and changes nothing.
+    /// </summary>
     private async Task InstallAsync()
     {
         var updating = _installation is not null;
+        if (updating && _updates.IsBusy)
+        {
+            Error = Localizer.Format(nameof(Strings.Settings_Agent_Error_UpdateBusy), Info.Name);
+            return;
+        }
+
         var generation = ++_generation;
         using var cancel = new CancellationTokenSource();
         _cancel = cancel;

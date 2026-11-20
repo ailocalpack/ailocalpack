@@ -4936,4 +4936,19 @@
   <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
     <value>{1} ile · oyunun dili: {0}</value>
   </data>
+  <data name="Activity_Event_AgentUpdateAvailable" xml:space="preserve">
+    <value>{0} {1} kullanılabilir</value>
+  </data>
+  <data name="Activity_Detail_AgentUpdateAvailable" xml:space="preserve">
+    <value>AI Local Pack’in çeviriler için kurduğu kopyanın yeni sürümü. Güncelleme yaklaşık bir dakika sürer.</value>
+  </data>
+  <data name="Activity_Action_UpdateAgent" xml:space="preserve">
+    <value>Güncelle</value>
+  </data>
+  <data name="Settings_Agent_Error_UpdateBusy" xml:space="preserve">
+    <value>Şu anda bir çeviri ajanları kullanıyor. Duraklatın ya da bitmesini bekleyin, ardından {0} uygulamasını güncelleyin.</value>
+  </data>
+  <data name="Settings_Agents_Hint_Update" xml:space="preserve">
+    <value>güncelleme</value>
+  </data>
 </root>

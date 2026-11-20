@@ -3,6 +3,7 @@ using System.ComponentModel;
 using AiLocalPack.Core.Activity;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Install;
+using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Covers;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Generation;
@@ -19,6 +20,7 @@ using AiLocalPack.Desktop.Updates;
 using AiLocalPack.Desktop.ViewModels;
 using AiLocalPack.Desktop.ViewModels.GamePage;
 using AiLocalPack.Desktop.ViewModels.Settings;
+using AiLocalPack.Desktop.ViewModels.Settings.Agents;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -48,6 +50,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
     private readonly LocalPacks _localPacks;
     private readonly AppUpdater _updates;
     private readonly AppUpdateRestart _restart;
+    private readonly AgentUpdates _agentUpdates;
+    private readonly AgentsSettingsSection _agents;
     private readonly ToastService _toasts;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
@@ -72,6 +76,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         LocalPacks localPacks,
         AppUpdater updates,
         AppUpdateRestart restart,
+        AgentUpdates agentUpdates,
+        AgentsSettingsSection agents,
         ToastService toasts,
         StartupProgress startup,
         Localizer localizer,
@@ -93,6 +99,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         _localPacks = localPacks;
         _updates = updates;
         _restart = restart;
+        _agentUpdates = agentUpdates;
+        _agents = agents;
         _toasts = toasts;
         _localizer = localizer;
         _ui = ui;
@@ -102,6 +110,8 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         _packIndex.Changed += (_, _) => QueueRefresh(events: true);
         // Restart now shows only while the update it names waits.
         _updates.Changed += (_, _) => QueueRefresh(events: true);
+        // Update shows only while the agent's update the event names is still waiting.
+        _agentUpdates.Changed += (_, _) => QueueRefresh(events: true);
         _localizer.CultureChanged += (_, _) => Refresh(events: true);
         Startup.PropertyChanged += OnStartupChanged;
         Refresh(events: true);
@@ -322,6 +332,7 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         row.Time = ActivityTexts.Time(activity.Time, _time.LocalTimeZone, _localizer);
         row.IsUnread = kind == ActivityRowKind.Event && !activity.IsRead;
         row.Actions = activity.Kind == ActivityEventKind.AppUpdateReady ? AppUpdateActions(activity)
+            : activity.Kind == ActivityEventKind.AgentUpdateAvailable ? AgentUpdateActions(activity)
             : game is null ? []
             : Actions(activity, game, later, kind == ActivityRowKind.Decision);
         LoadCover(row);
@@ -457,6 +468,34 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         ];
     }
 
+    /// <summary>
+    /// <c>Update</c> while the agent's update the event names still waits: opens Settings → AI agents, where the row shows
+    /// the download, and starts it there.
+    /// </summary>
+    private List<ActivityActionViewModel> AgentUpdateActions(ActivityEvent activity)
+    {
+        if (activity.Agent is not { } agent || _agentUpdates.OfferFor(agent)?.Available != activity.Version)
+        {
+            return [];
+        }
+
+        return
+        [
+            new(_localizer[nameof(Strings.Activity_Action_UpdateAgent)], "IconDownload", true, new RelayCommand(() =>
+            {
+                _store.MarkRead(activity.Id);
+                OpenAgents();
+                _agents.Update(agent);
+            })),
+        ];
+    }
+
+    private void OpenAgents()
+    {
+        CloseRequested?.Invoke(this, EventArgs.Empty);
+        _navigation.NavigateTo(_pages.Create<SettingsViewModel>(SettingsSectionId.Agents));
+    }
+
     /// <summary>The local pack whose report records the event's PR (task 62), else <c>null</c>.</summary>
     private Core.Packs.LocalPack? PublishedPack(ActivityEvent activity) =>
         activity.Game is { } game && activity.PullRequest is { } number
@@ -512,6 +551,12 @@ public sealed partial class ActivityPanelViewModel : ObservableObject
         {
             CloseRequested?.Invoke(this, EventArgs.Empty);
             _navigation.NavigateTo(_pages.Create<SettingsViewModel>(SettingsSectionId.About));
+            return;
+        }
+
+        if (activity.Kind == ActivityEventKind.AgentUpdateAvailable)
+        {
+            OpenAgents();
             return;
         }
 

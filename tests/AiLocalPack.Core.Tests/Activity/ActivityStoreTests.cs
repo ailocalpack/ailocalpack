@@ -244,6 +244,19 @@ public sealed class ActivityStoreTests : IDisposable
     }
 
     [Fact]
+    public void An_agent_updates_agent_and_version_round_trip()
+    {
+        // Arrange
+        Store().Add(ActivityEvent.Create(ActivityEventKind.AgentUpdateAvailable, Noon) with { Id = "agent", Agent = "codex", Version = "0.170.1", Key = "agent-update:codex:0.170.1" });
+
+        // Act
+        var read = Store().Feed.Single();
+
+        // Assert
+        (read.Kind, read.Agent, read.Version, read.IsDecision).Should().Be((ActivityEventKind.AgentUpdateAvailable, "codex", "0.170.1", false));
+    }
+
+    [Fact]
     public void An_app_updates_version_round_trips_without_a_game()
     {
         // Arrange

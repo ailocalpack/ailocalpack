@@ -5,6 +5,7 @@ using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Generation;
@@ -49,6 +50,7 @@ public sealed class AppStartup
     private readonly InstalledPackMonitor _monitor;
     private readonly GenerationService _jobs;
     private readonly AppUpdater _updates;
+    private readonly AgentUpdates _agentUpdates;
     private readonly Localizer _localizer;
     private readonly IUiDispatcher _ui;
     private readonly ILogger<AppStartup> _logger;
@@ -75,6 +77,7 @@ public sealed class AppStartup
         InstalledPackMonitor monitor,
         GenerationService jobs,
         AppUpdater updates,
+        AgentUpdates agentUpdates,
         Localizer localizer,
         IUiDispatcher ui,
         TimeProvider time,
@@ -89,6 +92,7 @@ public sealed class AppStartup
         _monitor = monitor;
         _jobs = jobs;
         _updates = updates;
+        _agentUpdates = agentUpdates;
         _localizer = localizer;
         _ui = ui;
         _logger = logger;
@@ -164,6 +168,9 @@ public sealed class AppStartup
             TaskContinuationOptions.None,
             TaskScheduler.Default);
         StartUpdateCheck();
+
+        // The agents the app installed: checked now by Settings → AI agents (preloaded), then every few hours.
+        _agentUpdates.StartSchedule();
     }
 
     /// <summary>

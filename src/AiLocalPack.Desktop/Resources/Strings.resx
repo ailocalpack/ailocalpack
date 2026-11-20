@@ -4974,4 +4974,23 @@
   <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
     <value>via {1} · in {0}, the game’s own</value>
   </data>
+  <data name="Activity_Event_AgentUpdateAvailable" xml:space="preserve">
+    <value>{0} {1} is available</value>
+    <comment>{0} = agent name (Claude Code, Codex), {1} = version.</comment>
+  </data>
+  <data name="Activity_Detail_AgentUpdateAvailable" xml:space="preserve">
+    <value>A new version of the copy AI Local Pack installed for translations. Updating takes about a minute.</value>
+  </data>
+  <data name="Activity_Action_UpdateAgent" xml:space="preserve">
+    <value>Update</value>
+    <comment>Activity button: updates the agent the app installed.</comment>
+  </data>
+  <data name="Settings_Agent_Error_UpdateBusy" xml:space="preserve">
+    <value>A translation is using the agents right now. Pause it or wait until it finishes, then update {0}.</value>
+    <comment>{0} = agent name. Shown when the player updates an agent while a generation or a fix runs.</comment>
+  </data>
+  <data name="Settings_Agents_Hint_Update" xml:space="preserve">
+    <value>update</value>
+    <comment>Hint next to AI agents in the settings list while the app&apos;s copy of an agent has an update.</comment>
+  </data>
 </root>

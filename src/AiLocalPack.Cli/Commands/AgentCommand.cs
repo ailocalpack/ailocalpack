@@ -22,7 +22,8 @@ namespace AiLocalPack.Cli.Commands;
 /// <c>--fake</c> replays a recording through the CLI itself (hidden <c>agent replay &lt;recording&gt;</c>, the
 /// <see cref="FakeAgentReplay"/> program). Task 43: <c>agent install &lt;agent&gt; [--version &lt;v&gt;] [--force]</c> installs the
 /// official build into the app's folder (or updates it; nothing to do when the player's own copy is found, unless
-/// <c>--force</c>), <c>agent uninstall &lt;agent&gt;</c> removes the app's copy, <c>agent login &lt;agent&gt;</c> runs the
+/// <c>--force</c>), <c>agent update &lt;agent&gt; [--check]</c> updates the app's copy to the vendor's current release
+/// (<c>--check</c> only tells whether there is one), <c>agent uninstall &lt;agent&gt;</c> removes the app's copy, <c>agent login &lt;agent&gt;</c> runs the
 /// agent's own browser sign-in and waits for it, <c>agent logout &lt;agent&gt;</c> signs out. Every command finds the
 /// agent on <c>PATH</c>, in the installers' folders, then in the app's own folder.
 /// </summary>
@@ -35,6 +36,7 @@ internal static class AgentCommand
             BuildProbe(env),
             BuildRun(env),
             BuildInstall(env),
+            BuildUpdate(env),
             BuildUninstall(env),
             BuildLogin(env),
             BuildLogout(env),
@@ -282,25 +284,8 @@ internal static class AgentCommand
 
             using var http = AgentInstaller.CreateHttpClient();
             var installer = AgentInstaller.Create(AppPaths.Resolve(env), env, http);
-            var reported = -1L;
-            var progress = new SyncProgress<AgentInstallProgress>(p =>
-            {
-                if (p.Stage == AgentInstallStage.Downloading && p.Total > 0)
-                {
-                    var tenth = p.Done * 10 / p.Total;
-                    if (tenth != reported)
-                    {
-                        reported = tenth;
-                        output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"downloading {p.Done / 1048576.0:0.0} of {p.Total / 1048576.0:0.0} MB"));
-                    }
-                }
-                else if (p.Stage == AgentInstallStage.Unpacking)
-                {
-                    output.WriteLine("unpacking");
-                }
-            });
             output.WriteLine($"{adapter.DisplayName}: looking for the release for {installer.Platform?.ToString() ?? "this CPU"}…");
-            var outcome = await installer.InstallAsync(id, result.GetValue(version), progress, cancellationToken);
+            var outcome = await installer.InstallAsync(id, result.GetValue(version), DownloadProgress(output), cancellationToken);
             if (!outcome.Succeeded)
             {
                 error.WriteLine($"{adapter.DisplayName} wasn't installed: {outcome.Detail}" + (outcome.MayPass ? " Try again later; a partial download resumes." : string.Empty));
@@ -321,6 +306,92 @@ internal static class AgentCommand
             return 0;
         });
         return install;
+    }
+
+    /// <summary>
+    /// <c>agent update &lt;agent&gt; [--check]</c>: the app's own copy to the vendor's current release, as the desktop app's
+    /// <c>Update to X</c> does (exit 0 = updated or up to date; 1 = no app copy, no release found, or the install failed).
+    /// A copy the player installed is theirs to update.
+    /// </summary>
+    private static Command BuildUpdate(OsEnvironment env)
+    {
+        var agent = new Argument<string>("agent") { Description = $"The agent ({KnownAgents})." };
+        var check = new Option<bool>("--check") { Description = "Only tell whether a newer release is out; install nothing." };
+        var update = new Command("update", "Update the app's own copy of an agent to the vendor's current release.") { agent, check };
+        update.SetAction(async (result, cancellationToken) =>
+        {
+            var output = result.InvocationConfiguration.Output;
+            var error = result.InvocationConfiguration.Error;
+            var id = result.GetValue(agent)!.ToLowerInvariant();
+            if (Adapter(env, id) is not { } adapter)
+            {
+                error.WriteLine($"Unknown agent \"{id}\": known agents are {KnownAgents}.");
+                return 1;
+            }
+
+            using var http = AgentInstaller.CreateHttpClient();
+            var installer = AgentInstaller.Create(AppPaths.Resolve(env), env, http);
+            if (installer.Find(id) is not { } current)
+            {
+                error.WriteLine($"The app has no copy of {adapter.DisplayName} installed: `ailocalpack agent install {id}` installs it. A copy you installed yourself is updated the way you installed it.");
+                return 1;
+            }
+
+            var lookup = await installer.FindReleaseAsync(id, cancellationToken: cancellationToken);
+            if (lookup.Release is not { } release)
+            {
+                error.WriteLine($"{adapter.DisplayName}: no release found to compare with {current.Version}: {lookup.Detail}");
+                return 1;
+            }
+
+            if (!AgentRelease.IsNewer(release.Version, current.Version))
+            {
+                output.WriteLine($"{adapter.DisplayName} {current.Version} (installed by the app) is up to date.");
+                return 0;
+            }
+
+            if (result.GetValue(check))
+            {
+                output.WriteLine($"{adapter.DisplayName} {release.Version} is out; the app's copy is {current.Version}. `ailocalpack agent update {id}` installs it.");
+                return 0;
+            }
+
+            output.WriteLine($"{adapter.DisplayName}: updating the app's copy from {current.Version} to {release.Version}…");
+            var outcome = await installer.InstallAsync(id, release.Version, DownloadProgress(output), cancellationToken);
+            if (!outcome.Succeeded)
+            {
+                error.WriteLine($"{adapter.DisplayName} wasn't updated: {outcome.Detail}" + (outcome.MayPass ? " Try again later; a partial download resumes." : string.Empty));
+                return 1;
+            }
+
+            var installed = outcome.Installed!;
+            output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"Updated {adapter.DisplayName} from {current.Version} to {installed.Version} in {installed.Folder}: downloaded {outcome.Downloaded} bytes, {outcome.Release!.Verification}, SHA-256 checked."));
+            output.WriteLine($"program: {installed.Executable}");
+            return 0;
+        });
+        return update;
+    }
+
+    /// <summary>Download progress as lines, one per 10 %, then "unpacking".</summary>
+    private static SyncProgress<AgentInstallProgress> DownloadProgress(TextWriter output)
+    {
+        var reported = -1L;
+        return new SyncProgress<AgentInstallProgress>(p =>
+        {
+            if (p.Stage == AgentInstallStage.Downloading && p.Total > 0)
+            {
+                var tenth = p.Done * 10 / p.Total;
+                if (tenth != reported)
+                {
+                    reported = tenth;
+                    output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"downloading {p.Done / 1048576.0:0.0} of {p.Total / 1048576.0:0.0} MB"));
+                }
+            }
+            else if (p.Stage == AgentInstallStage.Unpacking)
+            {
+                output.WriteLine("unpacking");
+            }
+        });
     }
 
     private static Command BuildUninstall(OsEnvironment env)

@@ -17,15 +17,19 @@ namespace AiLocalPack.Desktop.ViewModels.Settings.Agents;
 /// </summary>
 public sealed class AgentsSettingsSection : SettingsSection
 {
+    private readonly AgentUpdates _updates;
     private readonly ILogger<AgentsSettingsSection> _logger;
 
-    public AgentsSettingsSection(IAgentHost host, SettingsStore store, Localizer localizer, IUiDispatcher ui, ILogger<AgentsSettingsSection> logger)
+    public AgentsSettingsSection(IAgentHost host, AgentUpdates updates, SettingsStore store, Localizer localizer, IUiDispatcher ui, ILogger<AgentsSettingsSection> logger)
         : base(SettingsSectionId.Agents, "IconBot", nameof(Strings.Settings_Agents_Title), nameof(Strings.Settings_Agents_Description), localizer)
     {
         ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(updates);
+        ArgumentNullException.ThrowIfNull(ui);
+        _updates = updates;
         _logger = logger;
         var services = new SettingRowServices(store, localizer, logger);
-        Agents = [.. host.AgentIds.Select(id => new AgentRow(services, host, ui, AgentInfo.Of(id)))];
+        Agents = [.. host.AgentIds.Select(id => new AgentRow(services, host, updates, ui, AgentInfo.Of(id)))];
         DefaultAgent = new DefaultAgentRow(services, Agents);
         TranslateWorkers = new NumberSettingRow(
             services,
@@ -54,6 +58,8 @@ public sealed class AgentsSettingsSection : SettingsSection
             agent.StateChanged += (_, _) => Sync();
         }
 
+        // A background check (every few hours) found an update or one went: the rows and the list's hint follow.
+        updates.Changed += (_, _) => ui.Post(OnUpdatesChanged);
         Sync();
         _ = CheckAllAsync();
     }
@@ -93,6 +99,29 @@ public sealed class AgentsSettingsSection : SettingsSection
         Sync();
     }
 
+    /// <summary>Finds the agent's row and runs its <c>Update to X</c> (Activity's <c>Update</c>); nothing when it can't update now.</summary>
+    public void Update(string agentId)
+    {
+        if (Agents.FirstOrDefault(a => string.Equals(a.AgentId, agentId, StringComparison.OrdinalIgnoreCase)) is { } row && row.UpdateCommand.CanExecute(null))
+        {
+            row.UpdateCommand.Execute(null);
+        }
+    }
+
+    private void OnUpdatesChanged()
+    {
+        foreach (var agent in Agents)
+        {
+            agent.ApplyOffer();
+        }
+
+        UpdateHint();
+    }
+
+    /// <summary>"update" in the section list while the app's copy of an agent has one.</summary>
+    private void UpdateHint() =>
+        Hint = _updates.Offers.Count > 0 ? Localizer[nameof(Strings.Settings_Agents_Hint_Update)] : null;
+
     /// <summary>One alert per expired session (<c>Sign in</c>), the badge, and the default agent (UI thread).</summary>
     private void Sync()
     {
@@ -108,6 +137,7 @@ public sealed class AgentsSettingsSection : SettingsSection
 
         BadgeCount = Alerts.Count;
         BadgeIsError = false;
+        UpdateHint();
         DefaultAgent.Sync();
     }
 }

@@ -77,6 +77,16 @@ public sealed record AgentRelease(
 {
     /// <summary>The downloaded file's name.</summary>
     public string FileName => Url.Segments[^1];
+
+    /// <summary>
+    /// Whether <paramref name="candidate"/> is a later version than <paramref name="installed"/> (<c>major.minor.patch</c>;
+    /// pre-release parts ignored). An unreadable candidate is never newer; an unreadable installed version is older than any.
+    /// </summary>
+    public static bool IsNewer(string? candidate, string? installed) =>
+        Parse(candidate) is { } c && (Parse(installed) is not { } i || c > i);
+
+    private static System.Version? Parse(string? version) =>
+        version is not null && System.Version.TryParse(version.Split('-', '+')[0], out var parsed) ? parsed : null;
 }
 
 /// <summary>Why an agent couldn't be found or installed.</summary>

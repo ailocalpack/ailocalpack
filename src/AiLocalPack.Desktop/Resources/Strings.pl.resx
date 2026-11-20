@@ -5065,4 +5065,19 @@
   <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
     <value>przez {1} · język gry: {0}</value>
   </data>
+  <data name="Activity_Event_AgentUpdateAvailable" xml:space="preserve">
+    <value>Dostępny jest {0} {1}</value>
+  </data>
+  <data name="Activity_Detail_AgentUpdateAvailable" xml:space="preserve">
+    <value>Nowa wersja kopii, którą AI Local Pack zainstalował do tłumaczeń. Aktualizacja trwa około minuty.</value>
+  </data>
+  <data name="Activity_Action_UpdateAgent" xml:space="preserve">
+    <value>Aktualizuj</value>
+  </data>
+  <data name="Settings_Agent_Error_UpdateBusy" xml:space="preserve">
+    <value>Tłumaczenie właśnie korzysta z agentów. Wstrzymaj je lub poczekaj, aż się skończy, a potem zaktualizuj {0}.</value>
+  </data>
+  <data name="Settings_Agents_Hint_Update" xml:space="preserve">
+    <value>aktualizacja</value>
+  </data>
 </root>

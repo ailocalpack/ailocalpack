@@ -99,9 +99,5 @@ public static class AgentVersions
         agentId != ClaudeCodeAdapter.AgentId || version is null || ClaudeCodeCommandLine.IsSupported(version);
 
     /// <summary>Whether <paramref name="candidate"/> is a later version than <paramref name="installed"/> (pre-release parts ignored).</summary>
-    public static bool IsNewer(string? candidate, string? installed) =>
-        Parse(candidate) is { } c && (Parse(installed) is not { } i || c > i);
-
-    private static Version? Parse(string? version) =>
-        version is not null && Version.TryParse(version.Split('-', '+')[0], out var parsed) ? parsed : null;
+    public static bool IsNewer(string? candidate, string? installed) => AgentRelease.IsNewer(candidate, installed);
 }

@@ -366,7 +366,8 @@ public sealed class ActivityStore
         e.Until?.ToUniversalTime(),
         e.PullRequest,
         e.Link?.AbsoluteUri,
-        e.Version);
+        e.Version,
+        e.Agent);
 
     private static ActivityEvent? FromJson(ActivityEventJson? json)
     {
@@ -405,6 +406,7 @@ public sealed class ActivityStore
             PullRequest = json.PullRequest is > 0 ? json.PullRequest : null,
             Link = Uri.TryCreate(json.Link, UriKind.Absolute, out var link) && link.Scheme == Uri.UriSchemeHttps ? link : null,
             Version = json.Version,
+            Agent = json.Agent,
         };
     }
 }

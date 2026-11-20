@@ -1,13 +1,16 @@
+using AiLocalPack.Agents;
 using AiLocalPack.Core.Activity;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Activity;
+using AiLocalPack.Desktop.Agents;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Install;
 using AiLocalPack.Desktop.Navigation;
 using AiLocalPack.Desktop.Registry;
 using AiLocalPack.Desktop.Tests.Install;
 using AiLocalPack.Desktop.Services;
+using AiLocalPack.Desktop.Tests.Settings;
 using AiLocalPack.Desktop.Tests.Updates;
 using AiLocalPack.Desktop.Updates;
 using AiLocalPack.Desktop.ViewModels;
@@ -452,5 +455,57 @@ public sealed class ActivityPanelViewModelTests
         // Assert
         services.GetRequiredService<INavigationService>().Current.Should().BeOfType<SettingsViewModel>()
             .Which.SelectedSection.Id.Should().Be(SettingsSectionId.About);
+    }
+
+    /// <summary>The app's copy of Claude Code is 2.1.311 and 2.1.319 is out (found when the panel's Settings section checks it).</summary>
+    private static ActivityPanelViewModel PanelWithAgentUpdate(IServiceProvider services)
+    {
+        var host = services.GetRequiredService<FakeAgentHost>();
+        host.Probes["claude"] = FakeAgentHost.SignedIn("claude", AgentSource.Managed, "2.1.311");
+        host.Releases["claude"] = FakeAgentHost.Release("claude", "2.1.319");
+        return Panel(services);
+    }
+
+    [Fact]
+    public void Agent_update_row_names_the_agent_and_offers_update()
+    {
+        // Arrange
+        using var services = Services();
+
+        // Act
+        var panel = PanelWithAgentUpdate(services);
+
+        // Assert
+        var row = panel.Days.Single().Rows.Single();
+        (row.Title, row.Actions.Select(a => a.Text).Single()).Should().Be(("Claude Code 2.1.319 is available", "Update"));
+    }
+
+    [Fact]
+    public void Agent_update_already_applied_has_no_update()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = Panel(services);
+
+        // Act
+        Store(services).Add(ActivityEvent.Create(ActivityEventKind.AgentUpdateAvailable, Now) with { Id = "old", Agent = "claude", Version = "2.1.300" });
+
+        // Assert
+        panel.Days.Single().Rows.Single().Actions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Agent_update_action_updates_the_agent_in_settings()
+    {
+        // Arrange
+        using var services = Services();
+        var panel = PanelWithAgentUpdate(services);
+
+        // Act
+        panel.Days.Single().Rows.Single().Actions.Single().Command.Execute(null);
+
+        // Assert
+        ((services.GetRequiredService<INavigationService>().Current as SettingsViewModel)?.SelectedSection.Id, services.GetRequiredService<FakeAgentHost>().Calls.Contains("install claude"))
+            .Should().Be(((SettingsSectionId?)SettingsSectionId.Agents, true));
     }
 }

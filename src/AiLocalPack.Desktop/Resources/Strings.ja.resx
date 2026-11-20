@@ -4807,4 +4807,19 @@
   <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
     <value>{1} 経由 · ゲームの言語：{0}</value>
   </data>
+  <data name="Activity_Event_AgentUpdateAvailable" xml:space="preserve">
+    <value>{0} {1} が利用可能です</value>
+  </data>
+  <data name="Activity_Detail_AgentUpdateAvailable" xml:space="preserve">
+    <value>AI Local Pack が翻訳用にインストールしたコピーの新しいバージョンです。更新は 1 分ほどで終わります。</value>
+  </data>
+  <data name="Activity_Action_UpdateAgent" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Settings_Agent_Error_UpdateBusy" xml:space="preserve">
+    <value>現在、翻訳がエージェントを使用しています。一時停止するか完了を待ってから {0} を更新してください。</value>
+  </data>
+  <data name="Settings_Agents_Hint_Update" xml:space="preserve">
+    <value>アップデート</value>
+  </data>
 </root>
