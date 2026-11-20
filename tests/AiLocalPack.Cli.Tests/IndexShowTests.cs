@@ -137,7 +137,7 @@ public sealed class IndexShowTests : IDisposable
         var result = await RunAsync(Registry, "--game", "620");
 
         // Assert
-        (result.ExitCode, result.StdErr.Trim()).Should().Be((1, "'620' is not a game ID (steam:<app id> or fp:<64 lowercase hex>)."));
+        (result.ExitCode, result.StdErr.Trim()).Should().Be((1, "'620' is not a game ID (steam:<app id>, fp:<64 lowercase hex>, epic:<AppName>, gog:<product id> or ea:<content id>)."));
     }
 
     [Fact]

@@ -147,10 +147,11 @@ public static class LocalPackBuilder
     public static PackManifest Manifest(LocalPackInput input)
     {
         ArgumentNullException.ThrowIfNull(input);
-        string? buildId = null;
-        if (input.Game.Id.SteamAppId is not null)
+        // A store game's pack names the build it was made on (Steam's is required); a manual game is matched by files.
+        var buildId = input.Game.Id.IsStore && GameVersion.IsBuildId(input.Game.Version?.BuildId, input.Game.Id.Kind) ? input.Game.Version!.BuildId : null;
+        if (input.Game.Id.SteamAppId is not null && buildId is null)
         {
-            buildId = input.Game.Version?.BuildId is { Length: > 0 } id ? id : throw new ArgumentException("A Steam game's pack needs the game's build ID.", nameof(input));
+            throw new ArgumentException("A Steam game's pack needs the game's build ID.", nameof(input));
         }
 
         var utc = input.Now.ToUniversalTime();

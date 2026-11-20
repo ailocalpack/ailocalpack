@@ -50,7 +50,7 @@
     <value>Библиотеки</value>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Папки Steam и игры, добавленные вручную</value>
+    <value>Магазины игр и игры, добавленные вручную</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>ИИ-агенты</value>
@@ -761,13 +761,13 @@
     <value>Папка игры и установленный перевод остаются на диске. Папку можно добавить снова позже.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games, GOG, EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>Пока добавляйте их игры как папки.</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, магазин, galaxy</value>
+    <value>epic, gog, ea, origin, магазин, galaxy, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>Скоро</value>
@@ -1122,9 +1122,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>Ни один перевод не подходит к вашей версии игры</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>через Steam · с «{0}»</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>с «{0}»</value>
@@ -4900,9 +4897,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Открыть в Steam</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>через Steam · язык игры «{0}»</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>язык игры «{0}»</value>
   </data>
@@ -4974,5 +4968,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>Запустил игру для проверки ({0} из {1}); окно игры откроется на минуту-две, не закрывайте его</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>магазин, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>Показывать игры {0} в библиотеке</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>Выключен: его игры скрыты из библиотеки</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>Установленные переводы остаются. Включите, чтобы игры вернулись.</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>Ищем игры…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>Ждёт проверки</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>Читает {0} · проверено в {1}</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0}: не удалось прочитать игры</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} Пока это не исправится, его игры остаются в библиотеке как недоступные.</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>Не найдены на этом компьютере</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher и Heroic не установлены</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy и Heroic не установлены</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app не установлен</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>Когда он будет установлен, его игры появятся здесь сами.</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>Игры из магазина не из списка или установленные без его приложения можно добавить ниже как папку.</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>Игры Battle.net сетевые и используют античит; файлы игр из приложения Xbox заблокированы Windows.</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>Не поддерживается</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>Папка с играми недоступна</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>Попробовать снова</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>через {1} · с «{0}»</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>через {1} · язык игры «{0}»</value>
   </data>
 </root>

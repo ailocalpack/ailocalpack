@@ -135,7 +135,8 @@ public sealed class RatingCollector(RegistryDiscussionClient client)
                 manifest.Title,
                 manifest.Revision,
                 [.. manifest.Authors.Select(a => a.GitHub)],
-                manifest.Game.Kind == Games.GameIdKind.Steam ? builds : null));
+                // A store game's reports count for its listed builds; a manual game (and a store pack listing no build) is matched by files.
+                manifest.Game.IsStore && builds.Count > 0 ? builds : null));
         }
 
         return packs;

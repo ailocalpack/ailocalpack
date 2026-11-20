@@ -16,9 +16,9 @@
       "$ref": "#/$defs/slug"
     },
     "game": {
-      "description": "Game identity: steam:<app id> or fp:<SHA-256 fingerprint>.",
+      "description": "Game identity: steam:<app id>, fp:<SHA-256 fingerprint>, or another store's ID (epic:<AppName>, gog:<product id>, ea:<content id>).",
       "type": "string",
-      "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})$"
+      "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64}|gog:[1-9][0-9]{0,19}|(epic|ea):[A-Za-z0-9]([A-Za-z0-9._-]{0,62}[A-Za-z0-9])?)$"
     },
     "language": {
       "description": "Target language, a BCP 47 tag from the languages Steam supports.",
@@ -77,7 +77,7 @@
         "type": "object",
         "required": ["files"],
         "properties": {
-          "buildId": { "type": "string", "pattern": "^[0-9]{1,20}$" },
+          "buildId": { "type": "string", "pattern": "^[!-.0-~]{1,128}$" },
           "files": { "$ref": "#/$defs/fileHashes" },
           "os": {
             "description": "The platform of the game files the pack was made from. A Steam build ID is the same on every OS while its files are not, so the build matches the player's only on the same platform; without it, on any. A build ID may be listed once per platform.",

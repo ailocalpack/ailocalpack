@@ -172,14 +172,16 @@
         <!-- Settings → Libraries -->
         <DataTemplate DataType="lib:SteamSummaryRow">
             <Border Classes="settingRow">
-                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="14">
                     <Border Classes="rowPic">
                         <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Path Classes="brand" Data="{StaticResource BrandSteam}" />
                         </Viewbox>
                     </Border>
                     <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
-                    <Button x:Name="RescanButton" Grid.Column="2" Classes="ghost sm" VerticalAlignment="Center"
+                    <ToggleSwitch x:Name="StoreSwitch" Grid.Column="3" Classes="bare" VerticalAlignment="Center"
+                                  IsChecked="{Binding IsEnabled}" AutomationProperties.Name="{Binding SwitchName}" />
+                    <Button x:Name="RescanButton" Grid.Column="2" Classes="ghost sm" VerticalAlignment="Center" IsVisible="{Binding IsEnabled}"
                             Command="{Binding RescanCommand}" AutomationProperties.Name="{Binding RescanText}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsScanning}">
@@ -233,6 +235,82 @@
                         </Button>
                         <Button Classes="bare sm" Command="{Binding RemoveCommand}" IsVisible="{Binding CanRemove}" Content="{Binding RemoveText}" />
                     </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:StoreSummaryRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic" Classes.warn="{Binding HasProblem}">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Classes="brand" Data="{Binding BrandKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                        </Viewbox>
+                    </Border>
+                    <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
+                    <Button x:Name="StoreRescanButton" Grid.Column="2" Classes="ghost sm" VerticalAlignment="Center" IsVisible="{Binding IsEnabled}"
+                            Command="{Binding RescanCommand}" AutomationProperties.Name="{Binding RescanText}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14" Classes.spin="{Binding IsScanning}">
+                                <Viewbox.RenderTransform><RotateTransform /></Viewbox.RenderTransform>
+                                <Panel>
+                                    <Path Classes="icon" Stroke="{Binding $self.(TextElement.Foreground)}" Data="{StaticResource IconLoader}" IsVisible="{Binding IsScanning}" />
+                                    <Path Classes="icon" Stroke="{Binding $self.(TextElement.Foreground)}" Data="{StaticResource IconRefresh}" IsVisible="{Binding !IsScanning}" />
+                                </Panel>
+                            </Viewbox>
+                            <TextBlock Text="{Binding RescanText}" />
+                        </StackPanel>
+                    </Button>
+                    <ToggleSwitch x:Name="StoreSwitch" Grid.Column="3" Classes="bare" VerticalAlignment="Center"
+                                  IsChecked="{Binding IsEnabled}" AutomationProperties.Name="{Binding SwitchName}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:StoreFolderRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Classes="rowPic" Classes.warn="{Binding !IsAvailable}">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Panel>
+                                <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppMutedBrush}" IsVisible="{Binding IsAvailable}" />
+                                <Path Classes="icon" Data="{StaticResource IconFolder}" Stroke="{DynamicResource AppWarnBrush}" IsVisible="{Binding !IsAvailable}" />
+                            </Panel>
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="3" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <views:HighlightTextBlock x:Name="StoreFolderPath" Classes="mono" Classes.struck="{Binding !IsAvailable}" Source="{Binding Label}" TextWrapping="Wrap"
+                                                  Highlight="{Binding $parent[views:SettingsView].((vm:SettingsViewModel)DataContext).Query}" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Border Classes="fact warn" IsVisible="{Binding !IsAvailable}">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <Viewbox Classes="icon" Width="12" Height="12">
+                                        <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding NotAvailableText}" />
+                                </StackPanel>
+                            </Border>
+                            <TextBlock Classes="rowHelp" Text="{Binding Help}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Button Grid.Column="2" Classes="bare sm" VerticalAlignment="Center" Command="{Binding OpenCommand}" IsVisible="{Binding IsAvailable}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Viewbox Classes="icon" Width="14" Height="14">
+                                <Path Classes="icon" Data="{StaticResource IconExternal}" Stroke="{Binding $self.(TextElement.Foreground)}" />
+                            </Viewbox>
+                            <TextBlock Text="{Binding OpenText}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="lib:StoreAbsentRow">
+            <Border Classes="settingRow">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" Opacity="0.8">
+                    <Border Classes="rowPic">
+                        <Viewbox Classes="icon" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Classes="brand" Data="{Binding BrandKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
+                        </Viewbox>
+                    </Border>
+                    <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource RowLabel}" />
                 </Grid>
             </Border>
         </DataTemplate>
@@ -725,6 +803,12 @@
                         <TextBlock x:Name="ComingSoon" Classes="muted" Text="{l:Loc Settings_ComingSoon}" TextWrapping="Wrap" />
                     </Border>
                     <ItemsControl ItemsSource="{Binding SelectedSection.Groups}">
+                        <ItemsControl.Styles>
+                            <!-- A hidden group (a store not on this computer) takes no room, not even the spacing. -->
+                            <Style Selector="ContentPresenter" x:DataType="s:SettingsGroup">
+                                <Setter Property="IsVisible" Value="{Binding IsVisible}" />
+                            </Style>
+                        </ItemsControl.Styles>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate><StackPanel Spacing="24" /></ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>

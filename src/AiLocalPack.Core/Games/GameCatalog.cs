@@ -91,13 +91,20 @@ public sealed class GameCatalog
         return Apply(games => GameCatalogMerge.Merge(games, scan, _directoryExists));
     }
 
+    /// <summary>Merges a refresh of every store (see <see cref="GameCatalogMerge.Merge(IEnumerable{Game}, StoreScans, Func{string, bool})"/>), saves, and returns what changed.</summary>
+    public IReadOnlyList<GameChange> Refresh(StoreScans scans)
+    {
+        ArgumentNullException.ThrowIfNull(scans);
+        return Apply(games => GameCatalogMerge.Merge(games, scans, _directoryExists));
+    }
+
     /// <summary>Adds a game the player picked by hand. Throws if it is not a manual game or its ID is already in the catalog.</summary>
     public GameAdded AddManual(Game game)
     {
         ArgumentNullException.ThrowIfNull(game);
         if (game.Source != GameSource.Manual)
         {
-            throw new ArgumentException("Only manual games are added by hand; Steam games come from the scan.", nameof(game));
+            throw new ArgumentException("Only manual games are added by hand; store games come from the scans.", nameof(game));
         }
 
         var added = new GameAdded(game);
@@ -121,7 +128,7 @@ public sealed class GameCatalog
 
             return game.Source == GameSource.Manual
                 ? ([.. games.Where(g => g != game)], [new GameRemoved(game)])
-                : throw new InvalidOperationException($"{id} is a Steam game; it leaves the catalog when uninstalled in Steam.");
+                : throw new InvalidOperationException($"{id} is a {GameSources.Name(game.Source)} game; it leaves the catalog when uninstalled in its store.");
         });
         return changes.Count > 0;
     }
@@ -261,9 +268,8 @@ public sealed class GameCatalog
                 || !GameId.TryParse(entry.Id, out var id)
                 || string.IsNullOrWhiteSpace(entry.Name)
                 || string.IsNullOrWhiteSpace(entry.InstallPath)
-                || !Enum.TryParse<GameSource>(entry.Source, ignoreCase: true, out var source)
-                || !Enum.IsDefined(source)
-                || (source == GameSource.Steam) != (id.Kind == GameIdKind.Steam))
+                || !GameSources.TryParse(entry.Source?.ToLowerInvariant(), out var source)
+                || GameSources.KindOf(source) != id.Kind)
             {
                 throw new FormatException("missing or invalid id, name, source or install path");
             }
@@ -287,8 +293,9 @@ public sealed class GameCatalog
                 entry.AntiCheat,
                 entry.LastPlayed,
                 entry.Available,
-                source == GameSource.Manual ? entry.MainExecutable : null,
-                Storage.OsNames.TryParse(entry.Platform, out var platform) ? platform : null);
+                source == GameSource.Steam ? null : entry.MainExecutable,
+                Storage.OsNames.TryParse(entry.Platform, out var platform) ? platform : null,
+                source is GameSource.Steam or GameSource.Manual ? null : entry.App);
         }
         catch (Exception e) when (e is FormatException or ArgumentException)
         {
@@ -300,7 +307,7 @@ public sealed class GameCatalog
     private static GameEntryJson ToJson(Game game) => new(
         game.Id.ToString(),
         game.Name,
-        game.Source.ToString().ToLowerInvariant(),
+        GameSources.Name(game.Source),
         game.InstallPath,
         game.LibraryPath,
         game.Version is null ? null : new GameVersionJson(game.Version.BuildId, game.Version.FileHashes),
@@ -309,7 +316,8 @@ public sealed class GameCatalog
         game.LastPlayed?.ToUniversalTime(),
         game.IsAvailable,
         game.MainExecutable,
-        game.Platform is { } platform ? Storage.OsNames.Name(platform) : null);
+        game.Platform is { } platform ? Storage.OsNames.Name(platform) : null,
+        game.App);
 
     private string? BackUpCorrupted()
     {

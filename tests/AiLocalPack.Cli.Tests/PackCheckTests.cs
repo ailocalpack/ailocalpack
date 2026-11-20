@@ -177,7 +177,7 @@ public sealed class PackCheckTests : IDisposable
         result.Should().BeEquivalentTo(new
         {
             ExitCode = 1,
-            StdErr = "'620' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).\n",
+            StdErr = "'620' is not a game ID (steam:<app id>, fp:<64 lowercase hex>, epic:<AppName>, gog:<product id> or ea:<content id>).\n",
         });
     }
 }

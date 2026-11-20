@@ -91,7 +91,7 @@ internal static class GenCommand
         return command;
     }
 
-    private static Argument<string> GameArgument() => new("game") { Description = "The game (steam:<app id> or fp:<fingerprint>), as listed by 'games list'." };
+    private static Argument<string> GameArgument() => new("game") { Description = "The game (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>), as listed by 'games list'." };
 
     private static EngineKind? Engine(Game game) => EngineKind.TryParse(game.Engine, out var kind) ? kind : null;
 
@@ -101,7 +101,7 @@ internal static class GenCommand
     {
         if (!GameId.TryParse(text, out var id))
         {
-            error.WriteLine($"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+            error.WriteLine($"'{text}' is not a game ID ({GameId.Forms}).");
             return null;
         }
 

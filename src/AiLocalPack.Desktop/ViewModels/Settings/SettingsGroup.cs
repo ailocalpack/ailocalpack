@@ -36,7 +36,14 @@ public sealed class SettingsGroup : ObservableObject, ISearchableGroup
 
     public IReadOnlyList<SettingRow> Rows { get; }
 
+    /// <summary>Shown on the page (a store's card only while the store is on this computer); a hidden group isn't searched either.</summary>
+    public bool IsVisible
+    {
+        get;
+        set => SetProperty(ref field, value);
+    } = true;
+
     IEnumerable<string> ISearchableGroup.SearchTexts => [Title, _localizer.English(_titleKey)];
 
-    IEnumerable<ISearchableRow> ISearchableGroup.Rows => Rows;
+    IEnumerable<ISearchableRow> ISearchableGroup.Rows => IsVisible ? Rows : [];
 }

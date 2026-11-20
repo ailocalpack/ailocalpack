@@ -69,9 +69,12 @@ public static class RequestDiscussionText
     public static string Body(RequestKey key, string gameName)
     {
         ArgumentNullException.ThrowIfNull(key);
-        var store = key.Game.Kind == GameIdKind.Steam
-            ? $" ([Steam](https://store.steampowered.com/app/{key.Game.Value}/))"
-            : " (a game added by its folder: only the same files match)";
+        var store = key.Game.Kind switch
+        {
+            GameIdKind.Steam => $" ([Steam](https://store.steampowered.com/app/{key.Game.Value}/))",
+            GameIdKind.Fingerprint => " (a game added by its folder: only the same files match)",
+            _ => $" ({GameSources.EnglishName(GameSources.SourceOf(key.Game.Kind))})",
+        };
         return $"""
             {RequestDiscussionMarker.Format(key)}
             Players ask for a translation of **{gameName.Trim()}**{store} into **{LanguageNames.English(key.Language)}** (`{key.Language}`).

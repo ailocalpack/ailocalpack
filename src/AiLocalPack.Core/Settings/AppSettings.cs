@@ -29,6 +29,10 @@ namespace AiLocalPack.Core.Settings;
 /// <param name="IgnoredSteamLibraries">
 /// Library folders Steam lists that the player removed (a gone SD card); the scan leaves them out until added again.
 /// </param>
+/// <param name="DisabledStores">
+/// Stores the player switched off in Settings → Libraries (<c>GameSources.Name</c>: <c>steam</c>, <c>epic</c>, <c>gog</c>,
+/// <c>ea</c>): not scanned, their games out of the library (folders and installed packs untouched). <c>null</c> = none.
+/// </param>
 /// <param name="DefaultAgent">
 /// The agent preselected in the generation form (Settings → AI agents), an agent ID (<c>claude</c>, <c>codex</c>);
 /// <c>null</c> or an agent that isn't ready = the first ready one.
@@ -71,7 +75,8 @@ public sealed record AppSettings(
     IReadOnlyList<string>? SignedInAgents = null,
     bool PublishLicenseAccepted = false,
     bool WelcomeTourShown = false,
-    int TranslateWorkers = AppSettings.DefaultTranslateWorkers)
+    int TranslateWorkers = AppSettings.DefaultTranslateWorkers,
+    IReadOnlyList<string>? DisabledStores = null)
 {
     public const int CurrentSchemaVersion = 1;
 
@@ -90,4 +95,21 @@ public sealed record AppSettings(
     /// <summary>The player's changes to the Steam library list, for <see cref="Steam.SteamLibraryScanner.Scan(Steam.SteamLibraryChoices)"/>.</summary>
     [System.Text.Json.Serialization.JsonIgnore]
     public Steam.SteamLibraryChoices SteamLibraries => new(SteamLibraryFolders ?? [], IgnoredSteamLibraries ?? []);
+
+    /// <summary>Whether the player left <paramref name="source"/> on (<see cref="DisabledStores"/>).</summary>
+    public bool IsStoreEnabled(Games.GameSource source) =>
+        DisabledStores is not { } off || !off.Contains(Games.GameSources.Name(source), StringComparer.Ordinal);
+
+    /// <summary>A copy with <paramref name="source"/> switched on or off.</summary>
+    public AppSettings WithStore(Games.GameSource source, bool enabled)
+    {
+        var name = Games.GameSources.Name(source);
+        var off = (DisabledStores ?? []).Where(s => s != name).ToList();
+        if (!enabled)
+        {
+            off.Add(name);
+        }
+
+        return this with { DisabledStores = off.Count == 0 ? null : off };
+    }
 }

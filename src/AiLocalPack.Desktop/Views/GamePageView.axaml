@@ -90,10 +90,10 @@
                                 </Border>
                                 <Border Classes="factChip">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding IsSteam}">
-                                            <Path Classes="brand" Data="{StaticResource BrandSteam}" />
+                                        <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding HasStoreBrand}">
+                                            <Path Classes="brand" Data="{Binding StoreBrandKey, Converter={x:Static views:ResourceKeyConverter.Instance}}" />
                                         </Viewbox>
-                                        <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding !IsSteam}">
+                                        <Viewbox Classes="icon" Width="13" Height="13" IsVisible="{Binding !HasStoreBrand}">
                                             <Path Classes="icon" Data="{StaticResource IconHardDrive}" />
                                         </Viewbox>
                                         <TextBlock Text="{Binding StoreText}" VerticalAlignment="Center" />

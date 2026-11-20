@@ -70,12 +70,36 @@ public static class GameLaunchPlanner
             return new CannotLaunch(LaunchProblem.GameUnavailable);
         }
 
-        if (game.Id.SteamAppId is { } appId)
+        if (StoreUrl(game) is { } url)
         {
-            return new OpenUrlLaunch(new Uri("steam://rungameid/" + appId.ToString(CultureInfo.InvariantCulture)));
+            return new OpenUrlLaunch(url);
         }
 
         return PlanProgram(game.InstallPath, os, candidates);
+    }
+
+    /// <summary>
+    /// The URL a store starts the game with (task 83): Steam's <c>steam://rungameid/</c>, the Epic Games Launcher's
+    /// <c>com.epicgames.launcher://apps/&lt;AppName&gt;?action=launch</c>, Heroic's <c>heroic://launch?appName=…&amp;runner=…</c>.
+    /// <c>null</c> = the game's own executable starts it (manual, GOG and EA app games: GOG's are DRM-free and the EA app
+    /// starts with its games).
+    /// </summary>
+    public static Uri? StoreUrl(Game game)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        if (game.Id.SteamAppId is { } appId)
+        {
+            return new Uri("steam://rungameid/" + appId.ToString(CultureInfo.InvariantCulture));
+        }
+
+        var value = Uri.EscapeDataString(game.Id.Value);
+        return (game.Id.Kind, game.App) switch
+        {
+            (GameIdKind.Epic, StoreApps.EpicLauncher) => new Uri($"com.epicgames.launcher://apps/{value}?action=launch&silent=true"),
+            (GameIdKind.Epic, StoreApps.Heroic) => new Uri($"heroic://launch?appName={value}&runner=legendary"),
+            (GameIdKind.Gog, StoreApps.Heroic) => new Uri($"heroic://launch?appName={value}&runner=gog"),
+            _ => null,
+        };
     }
 
     /// <summary>

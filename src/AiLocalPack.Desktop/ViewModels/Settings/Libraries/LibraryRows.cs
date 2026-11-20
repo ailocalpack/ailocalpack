@@ -13,12 +13,33 @@ public sealed class SteamSummaryRow : SettingRow
 {
     private SteamSummaryState _state = SteamSummaryState.NotScanned;
 
+    private readonly Func<Task> _rescan;
+
     public SteamSummaryRow(SettingRowServices services, Func<Task> rescan)
         : base(services, nameof(Strings.Settings_Steam_Label), nameof(Strings.Settings_Steam_Keywords))
     {
         ArgumentNullException.ThrowIfNull(rescan);
-        RescanCommand = new AsyncRelayCommand(rescan, () => !IsScanning);
+        _rescan = rescan;
+        RescanCommand = new AsyncRelayCommand(rescan, () => !IsScanning && IsEnabled);
     }
+
+    /// <summary>The switch (task 83): on shows Steam's games in the library. Setting it saves and rescans.</summary>
+    public bool IsEnabled
+    {
+        get => Settings.IsStoreEnabled(GameSource.Steam);
+        set
+        {
+            if (value == IsEnabled)
+            {
+                return;
+            }
+
+            Save(s => s.WithStore(GameSource.Steam, value));
+            _ = _rescan();
+        }
+    }
+
+    public string SwitchName => Localizer.Format(nameof(Strings.Settings_Store_Show), Localizer[nameof(Strings.Settings_Steam_Label)]);
 
     public IAsyncRelayCommand RescanCommand { get; }
 
@@ -28,6 +49,7 @@ public sealed class SteamSummaryRow : SettingRow
 
     public override string Label => _state switch
     {
+        _ when !IsEnabled => Localizer[nameof(Strings.Settings_Store_Off)],
         { IsScanning: true } => Localizer[nameof(Strings.Settings_Steam_Scanning)],
         { ScannedAt: null } => Localizer[nameof(Strings.Settings_Steam_Label)],
         { Folders: 0 } => Localizer[nameof(Strings.Settings_Steam_NotFound)],
@@ -39,6 +61,7 @@ public sealed class SteamSummaryRow : SettingRow
 
     public override string? Help => _state switch
     {
+        _ when !IsEnabled => Localizer[nameof(Strings.Settings_Store_OffHelp)],
         { IsScanning: true } => Localizer[nameof(Strings.Settings_Steam_ScanningHelp)],
         { ScannedAt: null } => Localizer[nameof(Strings.Settings_Steam_NotScanned)],
         { Folders: 0 } => Localizer[nameof(Strings.Settings_Steam_NotFoundHelp)],
@@ -64,6 +87,15 @@ public sealed class SteamSummaryRow : SettingRow
     {
         base.OnCultureChanged();
         OnPropertyChanged(nameof(RescanText));
+        OnPropertyChanged(nameof(SwitchName));
+    }
+
+    protected override void OnSettingsChanged(Core.Settings.AppSettings settings)
+    {
+        base.OnSettingsChanged(settings);
+        OnPropertyChanged(nameof(IsEnabled));
+        OnPropertyChanged(nameof(Label));
+        RescanCommand.NotifyCanExecuteChanged();
     }
 
     private void RaiseTexts()
@@ -302,11 +334,14 @@ public sealed class TextSettingRow(SettingRowServices services, string textKey) 
     public override string? Help => null;
 }
 
-/// <summary>A feature that comes later (other stores): label, explanation, a "Coming soon" pill.</summary>
-public sealed class ComingSoonSettingRow(SettingRowServices services, string labelKey, string helpKey, string? keywordsKey)
+/// <summary>
+/// A feature that comes later (more stores): label, explanation, a "Coming soon" pill; with <paramref name="pillKey"/>
+/// another pill ("Not supported").
+/// </summary>
+public sealed class ComingSoonSettingRow(SettingRowServices services, string labelKey, string helpKey, string? keywordsKey, string? pillKey = null)
     : SettingRow(services, labelKey, keywordsKey)
 {
-    public string PillText => Localizer[nameof(Strings.Settings_ComingSoonPill)];
+    public string PillText => Localizer[pillKey ?? nameof(Strings.Settings_ComingSoonPill)];
 
     protected override string? HelpKey(Core.Settings.AppSettings settings) => helpKey;
 

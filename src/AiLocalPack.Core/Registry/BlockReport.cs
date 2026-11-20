@@ -31,7 +31,7 @@ public static class BlockReport
         var text = new StringBuilder()
             .Append("**Game:** ").Append(game.Name).Append('\n')
             .Append("**Game ID:** `").Append(game.Id).Append("`\n")
-            .Append("**Store:** ").Append(game.Source == GameSource.Steam ? "Steam" : "added manually").Append('\n');
+            .Append("**Store:** ").Append(GameSources.EnglishName(game.Source)).Append('\n');
         if (block.Reason == LocalizationBlock.OptOut)
         {
             text.Append("**Blocked because:** the registry's opt-out flag (the studio asked not to distribute fan translations)\n");

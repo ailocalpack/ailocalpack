@@ -50,7 +50,7 @@
     <value>Бібліотеки</value>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Папки Steam та ігри, додані вручну</value>
+    <value>Магазини ігор та ігри, додані вручну</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>Агенти ШІ</value>
@@ -761,13 +761,13 @@
     <value>Папка гри та встановлений переклад залишаться на диску. Папку можна буде додати знову пізніше.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games, GOG, EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>А поки що додавайте їхні ігри як папки.</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, магазин, galaxy</value>
+    <value>epic, gog, ea, origin, магазин, galaxy, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>Незабаром</value>
@@ -1122,9 +1122,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>Жоден переклад не підходить до вашої версії гри</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>через Steam · з «{0}»</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>з «{0}»</value>
@@ -4900,9 +4897,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Відкрити в Steam</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>через Steam · мова гри «{0}»</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>мова гри «{0}»</value>
   </data>
@@ -4974,5 +4968,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>Запустив гру для перевірки ({0} з {1}); вікно гри відкриється на хвилину-дві, не закривайте його</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>магазин, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>Показувати ігри {0} у бібліотеці</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>Вимкнено: його ігри приховані з бібліотеки</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>Встановлені переклади залишаються. Увімкніть, щоб ігри повернулися.</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>Шукаємо ігри…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>Чекає на перевірку</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>Читає {0} · перевірено о {1}</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0}: не вдалося прочитати ігри</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} Поки це не виправиться, його ігри лишаються в бібліотеці як недоступні.</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>Не знайдені на цьому комп’ютері</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher і Heroic не встановлені</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy і Heroic не встановлені</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app не встановлено</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>Коли його встановлять, ігри з’являться тут самі.</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>Ігри з магазину не зі списку або встановлені без його застосунку можна додати нижче як теку.</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>Ігри Battle.net мережеві й використовують античит; файли ігор із застосунку Xbox блокує Windows.</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>Не підтримується</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>Тека з іграми недоступна</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>Спробувати ще раз</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>через {1} · з «{0}»</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>через {1} · мова гри «{0}»</value>
   </data>
 </root>

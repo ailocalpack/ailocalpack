@@ -241,7 +241,7 @@ public static class PackManifestSerializer
 
             if (!GameId.TryParse(text, out var id))
             {
-                errors.Add("game", $"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                errors.Add("game", $"'{text}' is not a game ID ({GameId.Forms}).");
                 return null;
             }
 
@@ -441,9 +441,11 @@ public static class PackManifestSerializer
                 var buildId = entry.BuildId;
                 if (buildId is not null)
                 {
-                    if (buildId.Length is 0 or > 20 || !buildId.All(char.IsAsciiDigit))
+                    if (!GameVersion.IsBuildId(buildId, game?.Kind))
                     {
-                        errors.Add($"{field}.buildId", $"'{buildId}' is not a build ID (digits).");
+                        errors.Add($"{field}.buildId", game?.Kind == GameIdKind.Steam
+                            ? $"'{buildId}' is not a build ID (digits)."
+                            : $"'{buildId}' is not a build ID (1–{GameVersion.MaxBuildIdLength} printable characters, no spaces or '/').");
                         buildId = null;
                     }
                     else if (game?.Kind == GameIdKind.Fingerprint)

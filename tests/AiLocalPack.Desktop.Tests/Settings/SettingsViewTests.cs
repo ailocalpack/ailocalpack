@@ -270,7 +270,7 @@ public sealed class SettingsViewTests
 
         // Assert
         window.GetVisualDescendants().OfType<HighlightTextBlock>().Select(t => t.Source)
-            .Should().Contain([card, "Add Steam library folder", "Add game folder", "Epic Games, GOG, EA app"]);
+            .Should().Contain([card, "Add Steam library folder", "Add game folder", "Ubisoft Connect, itch.io, Amazon Games, Humble app"]);
         window.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text)
             .Should().Contain(["A Steam library isn't available", "Not available"]);
         window.GetVisualDescendants().OfType<HighlightTextBlock>().Where(t => t.Name == "FolderPath")

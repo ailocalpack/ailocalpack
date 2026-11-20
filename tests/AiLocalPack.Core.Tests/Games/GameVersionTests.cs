@@ -117,4 +117,35 @@ public sealed class GameVersionTests
         // Assert
         act.Should().Throw<ArgumentException>();
     }
+
+    [Theory]
+    [InlineData("16826371", GameIdKind.Steam, true)]
+    [InlineData("1.0.2", GameIdKind.Steam, false)]
+    [InlineData("++Fortnite+Release-31.10-CL-36874825-Windows", GameIdKind.Epic, true)]
+    [InlineData("1.0 beta", GameIdKind.Epic, false)]
+    [InlineData("1.0/2", GameIdKind.Ea, false)]
+    [InlineData("", GameIdKind.Gog, false)]
+    [InlineData("56789", null, true)]
+    public void A_build_id_is_digits_for_steam_and_printable_text_for_other_stores(string buildId, GameIdKind? kind, bool expected)
+    {
+        // Arrange
+        // Act
+        var valid = GameVersion.IsBuildId(buildId, kind);
+
+        // Assert
+        valid.Should().Be(expected);
+    }
+
+    [Fact]
+    public void A_build_id_longer_than_the_limit_is_refused()
+    {
+        // Arrange
+        var long129 = new string('a', GameVersion.MaxBuildIdLength + 1);
+
+        // Act
+        var valid = GameVersion.IsBuildId(long129, GameIdKind.Epic);
+
+        // Assert
+        valid.Should().BeFalse();
+    }
 }

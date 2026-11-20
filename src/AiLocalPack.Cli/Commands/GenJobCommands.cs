@@ -335,7 +335,7 @@ internal static partial class GenJobCommands
             {
                 if (!GameId.TryParse(text, out var id))
                 {
-                    error.WriteLine($"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                    error.WriteLine($"'{text}' is not a game ID ({GameId.Forms}).");
                     return 1;
                 }
 
@@ -373,7 +373,7 @@ internal static partial class GenJobCommands
             var error = result.InvocationConfiguration.Error;
             if (!GameId.TryParse(result.GetValue(game)!, out var id))
             {
-                error.WriteLine($"'{result.GetValue(game)}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                error.WriteLine($"'{result.GetValue(game)}' is not a game ID ({GameId.Forms}).");
                 return 1;
             }
 
@@ -550,7 +550,7 @@ internal static partial class GenJobCommands
         ? string.Create(CultureInfo.InvariantCulture, $"{Math.Max(1, Math.Round(time.TotalMinutes)):0} min")
         : string.Create(CultureInfo.InvariantCulture, $"{time.TotalHours:0.#} h");
 
-    private static Argument<string> GameArgument() => new("game") { Description = "The game (steam:<app id> or fp:<fingerprint>), as listed by 'games list'." };
+    private static Argument<string> GameArgument() => new("game") { Description = "The game (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>), as listed by 'games list'." };
 
     private static EngineKind? Engine(Game game) => EngineKind.TryParse(game.Engine, out var kind) ? kind : null;
 
@@ -558,7 +558,7 @@ internal static partial class GenJobCommands
     {
         if (!GameId.TryParse(text, out var id))
         {
-            error.WriteLine($"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+            error.WriteLine($"'{text}' is not a game ID ({GameId.Forms}).");
             return null;
         }
 

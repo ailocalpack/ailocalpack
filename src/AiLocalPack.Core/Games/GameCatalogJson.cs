@@ -17,7 +17,8 @@ internal sealed record GameEntryJson(
     DateTimeOffset? LastPlayed,
     bool Available = true,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? MainExecutable = null,
-    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Platform = null);
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Platform = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? App = null);
 
 /// <summary>Exactly one of <see cref="BuildId"/> and <see cref="Files"/> is set.</summary>
 internal sealed record GameVersionJson(

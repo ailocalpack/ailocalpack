@@ -9,9 +9,9 @@
     "schemaVersion": { "const": 1 },
     "generated": { "description": "When the index was built (RFC 3339 with offset).", "$ref": "#/$defs/date" },
     "games": {
-      "description": "Game ID (steam:<app id> or fp:<SHA-256 fingerprint>) → its packs and flags.",
+      "description": "Game ID (steam:<app id>, fp:<SHA-256 fingerprint>, or another store's ID (epic:<AppName>, gog:<product id>, ea:<content id>)) → its packs and flags.",
       "type": "object",
-      "propertyNames": { "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64})$" },
+      "propertyNames": { "pattern": "^(steam:[1-9][0-9]{0,9}|fp:[0-9a-f]{64}|gog:[1-9][0-9]{0,19}|(epic|ea):[A-Za-z0-9]([A-Za-z0-9._-]{0,62}[A-Za-z0-9])?)$" },
       "additionalProperties": { "$ref": "#/$defs/game" }
     },
     "dependencies": {
@@ -241,7 +241,7 @@
           "description": "Store build IDs the pack supports (empty for a manually added game, matched by file hashes).",
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^[0-9]{1,20}$" }
+          "items": { "type": "string", "pattern": "^[!-.0-~]{1,128}$" }
         },
         "buildCount": { "description": "How many game builds the manifest lists.", "type": "integer", "minimum": 1 },
         "manifest": {
@@ -264,7 +264,7 @@
         "buildOs": {
           "description": "The platforms each build ID was made on, for build IDs whose every manifest build records one (a Steam build ID is the same on every OS, its files are not). A build ID not here matches on any platform. A newer app may add values.",
           "type": "object",
-          "propertyNames": { "pattern": "^[0-9]{1,20}$" },
+          "propertyNames": { "pattern": "^[!-.0-~]{1,128}$" },
           "additionalProperties": {
             "type": "array",
             "minItems": 1,

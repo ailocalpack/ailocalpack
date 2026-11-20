@@ -57,7 +57,7 @@
     <comment>Settings section.</comment>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Steam folders and manually added games</value>
+    <value>Game stores and manually added games</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>AI agents</value>
@@ -753,13 +753,13 @@
     <value>The game folder and any installed translation stay on disk. You can add the folder again later.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games, GOG, EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>Until then, add their games as folders.</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, store, galaxy</value>
+    <value>epic, gog, ea, origin, store, galaxy, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>Coming soon</value>
@@ -1096,9 +1096,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>No translation fits your version of the game</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>via Steam · with «{0}»</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>with «{0}»</value>
@@ -4809,9 +4806,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Open in Steam</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>via Steam · in {0}, the game’s own</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>in {0}, the game’s own</value>
   </data>
@@ -4883,5 +4877,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>Ran the game to check it ({0} of {1}); its window opens for a minute or two, don't close it</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>store, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>Show {0} games in the library</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>Turned off: its games are hidden from the library</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>Installed translations stay. Switch it on to bring the games back.</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>Looking for games…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>Waiting to be checked</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>Reads {0} · scanned at {1}</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0}: games couldn’t be read</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} Its games stay in the library as unavailable until this works.</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>Not found on this computer</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher and Heroic aren’t installed</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy and Heroic aren’t installed</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app isn’t installed</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>Its games appear here by themselves once it is installed.</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>Games from a store not listed, or installed without its app, can be added as a folder below.</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>Battle.net games are online and use anti-cheat; Windows locks the files of Xbox app games.</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>Not supported</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>A game folder isn’t available</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>via {1} · with «{0}»</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>via {1} · in {0}, the game’s own</value>
   </data>
 </root>

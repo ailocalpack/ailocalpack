@@ -1,6 +1,7 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
+using AiLocalPack.Core.Stores;
 using AiLocalPack.Toolkit.AntiCheat;
 using AiLocalPack.Toolkit.Engines;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,8 @@ namespace AiLocalPack.Desktop.Library;
 
 /// <summary>
 /// Keeps the game catalog in step with the disk: a refresh scans Steam (with the library folders the player added or
-/// removed in settings), merges the result into <see cref="GameCatalog"/>, then detects engines and anti-cheats of new
+/// removed in settings) and every other store (<see cref="IGameStore"/>, task 83) the player left on, merges the result
+/// into <see cref="GameCatalog"/>, then detects engines and anti-cheats of new
 /// or updated games (every game when the anti-cheat rules changed, <see cref="AntiCheatRules"/>; a new pack list with
 /// other rules starts a refresh). One refresh runs at a time; games appear (catalog <see cref="GameCatalog.Changed"/>) as soon as
 /// the Steam scan is merged, detection details follow.
@@ -23,6 +25,7 @@ public sealed class GameLibrary
     private readonly SettingsStore _settings;
     private readonly TimeProvider _time;
     private readonly ILogger<GameLibrary> _logger;
+    private readonly IReadOnlyList<IGameStore> _stores;
     private readonly Lock _lock = new();
     private Task? _running;
     private Task? _queued;
@@ -38,7 +41,8 @@ public sealed class GameLibrary
         AntiCheatRules? rules,
         SettingsStore settings,
         TimeProvider time,
-        ILogger<GameLibrary> logger)
+        ILogger<GameLibrary> logger,
+        IEnumerable<IGameStore>? stores = null)
     {
         Catalog = catalog;
         _scanner = scanner;
@@ -48,6 +52,7 @@ public sealed class GameLibrary
         _settings = settings;
         _time = time;
         _logger = logger;
+        _stores = [.. (stores ?? []).Where(s => s.IsSupportedOnThisOs)];
         if (rules is not null)
         {
             rules.RulesChanged += (_, _) => _ = RefreshAsync();
@@ -58,6 +63,18 @@ public sealed class GameLibrary
 
     /// <summary>The last finished Steam scan this session (libraries and their availability); <c>null</c> before the first.</summary>
     public SteamScan? LastScan { get; private set; }
+
+    /// <summary>The stores beside Steam this OS supports, in the order Settings → Libraries lists them.</summary>
+    public IReadOnlyList<GameSource> OtherStores => [.. _stores.Select(s => s.Source)];
+
+    /// <summary>
+    /// The last finished scan of each other store this session (only stores the player left on); a store missing here
+    /// wasn't scanned yet (or is off).
+    /// </summary>
+    public IReadOnlyDictionary<GameSource, StoreScan> LastStoreScans { get; private set; } = new Dictionary<GameSource, StoreScan>();
+
+    /// <summary>The store being scanned right now, while <see cref="IsScanning"/>; <c>null</c> otherwise or during Steam.</summary>
+    public GameSource? ScanningStore { get; private set; }
 
     /// <summary>When <see cref="LastScan"/> finished.</summary>
     public DateTimeOffset? LastScanAt { get; private set; }
@@ -128,13 +145,28 @@ public sealed class GameLibrary
         StateChanged?.Invoke(this, EventArgs.Empty);
         try
         {
-            var scan = _scanner.Scan(_settings.Current.SteamLibraries);
-            var changes = Catalog.Refresh(scan);
+            var settings = _settings.Current;
+            var steamOn = settings.IsStoreEnabled(GameSource.Steam);
+            var scan = steamOn ? _scanner.Scan(settings.SteamLibraries) : SteamScan.Empty;
+            var stores = new Dictionary<GameSource, StoreScan>();
+            foreach (var store in _stores.Where(s => settings.IsStoreEnabled(s.Source)))
+            {
+                ScanningStore = store.Source;
+                StateChanged?.Invoke(this, EventArgs.Empty);
+                stores[store.Source] = ScanStore(store);
+            }
+
+            ScanningStore = null;
+            var disabled = GameSources.Stores.Where(s => !settings.IsStoreEnabled(s)).ToHashSet();
+            var changes = Catalog.Refresh(new StoreScans(steamOn ? scan : null, [.. stores.Values], disabled));
             LastScan = scan;
+            LastStoreScans = stores;
             LastScanAt = _time.GetUtcNow();
             _logger.LogInformation(
-                "Steam scan: {Libraries} libraries, {Games} games, {Changes} catalog changes",
-                scan.Libraries.Count, scan.Games.Count, changes.Count);
+                "Store scan: Steam {Libraries} libraries, {Games} games; {Stores}; {Changes} catalog changes",
+                scan.Libraries.Count, scan.Games.Count,
+                string.Join(", ", stores.Values.Select(s => $"{GameSources.Name(s.Source)} {(s.Found ? s.Games.Count + " games" : "not found")}")),
+                changes.Count);
             Progressed?.Invoke(this, new GameLibraryScanned(scan, changes));
             var stamp = _antiCheats.Policy.RulesStamp;
             var recheck = _rules is not null && !_rules.IsChecked(stamp);
@@ -159,9 +191,24 @@ public sealed class GameLibrary
             {
                 IsScanning = false;
                 HasScanned = true;
+                ScanningStore = null;
             }
 
             StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>One store's scan; a store that throws (it shouldn't) becomes a problem of that store, the others go on.</summary>
+    private StoreScan ScanStore(IGameStore store)
+    {
+        try
+        {
+            return store.Scan();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Scanning {Store} failed", GameSources.Name(store.Source));
+            return new StoreScan(store.Source, true, null, [], e.Message);
         }
     }
 }

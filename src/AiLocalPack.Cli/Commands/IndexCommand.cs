@@ -31,7 +31,7 @@ internal static class IndexCommand
 
     public static Command Build(OsEnvironment env)
     {
-        var game = new Option<string?>("--game") { Description = "Only this game (steam:<app id> or fp:<fingerprint>)." };
+        var game = new Option<string?>("--game") { Description = "Only this game (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>)." };
         var lang = new Option<string?>("--lang") { Description = "Only packs into this language (ru, pt-BR, zh-Hans…)." };
         var json = new Option<bool>("--json") { Description = "Print JSON instead of a table." };
         var show = new Command(
@@ -47,7 +47,7 @@ internal static class IndexCommand
             GameId? gameFilter = null;
             if (result.GetValue(game) is { } gameText && !GameId.TryParse(gameText, out gameFilter))
             {
-                await error.WriteLineAsync($"'{gameText}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                await error.WriteLineAsync($"'{gameText}' is not a game ID ({GameId.Forms}).");
                 return 1;
             }
 

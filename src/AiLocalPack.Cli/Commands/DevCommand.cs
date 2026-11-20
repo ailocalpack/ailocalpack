@@ -25,7 +25,7 @@ namespace AiLocalPack.Cli.Commands;
 /// Developer commands for checking the install transaction by hand (task 27): <c>dev apply-files &lt;game&gt; &lt;dir&gt;</c>
 /// installs the files of a folder (laid out like the game folder) as a pack, <c>dev uninstall &lt;game&gt;</c> undoes it.
 /// <c>--dependency id@version</c> installs whitelisted dependencies with them (task 32). Both first finish a transaction a crash left behind. Exit code 1 = refused or failed (files restored).
-/// <c>dev fixture rpgmaker|renpy|godot|unity|unreal|custom &lt;dir&gt;</c> write synthetic games (tasks 28, 30, 35, 57).
+/// <c>dev fixture rpgmaker|renpy|godot|unity|unreal|custom|stores &lt;dir&gt;</c> write synthetic games (tasks 28, 30, 35, 57) and store records (task 83).
 /// </summary>
 internal static class DevCommand
 {
@@ -41,7 +41,7 @@ internal static class DevCommand
 
     private static Command BuildApply(OsEnvironment env)
     {
-        var gameArgument = new Argument<string>("game") { Description = "The game (steam:<app id> or fp:<fingerprint>), as listed by 'games list'." };
+        var gameArgument = new Argument<string>("game") { Description = "The game (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>), as listed by 'games list'." };
         var dirArgument = new Argument<string>("dir") { Description = "A folder laid out like the game folder: each file in it replaces (or adds) the same path in the game." };
         var pack = new Option<string>("--pack") { Description = "Pack ID to record.", DefaultValueFactory = _ => "dev" };
         var lang = new Option<string>("--lang") { Description = "Language to record.", DefaultValueFactory = _ => "en" };
@@ -341,12 +341,27 @@ internal static class DevCommand
             result.InvocationConfiguration.Output.WriteLine($"Wrote a synthetic game in a made-up format into {dir} ({files.Count} files).");
             return 0;
         });
-        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot, unity, unreal, custom };
+        var storesDir = new Argument<string>("dir") { Description = "Folder to write the store records in (missing or empty)." };
+        var stores = new Command("stores", "Write synthetic Epic Games, GOG, Heroic and EA app records (task 83); read them with AILOCALPACK_STORES_ROOT=<dir>.") { storesDir };
+        stores.SetAction(result =>
+        {
+            var dir = Path.GetFullPath(result.GetValue(storesDir)!);
+            if (File.Exists(dir) || (Directory.Exists(dir) && Directory.EnumerateFileSystemEntries(dir).Any()))
+            {
+                result.InvocationConfiguration.Error.WriteLine($"{dir} already exists and isn't an empty folder.");
+                return 1;
+            }
+
+            new Core.Stores.StoreFixture(dir).Sample();
+            result.InvocationConfiguration.Output.WriteLine($"Wrote synthetic store records into {dir}. Read them with {Core.Stores.StoreLocations.RootVariable}={dir}.");
+            return 0;
+        });
+        return new Command("fixture", "Write synthetic games for manual checks.") { rpgMaker, renPy, godot, unity, unreal, custom, stores };
     }
 
     private static Command BuildUninstall(OsEnvironment env)
     {
-        var gameArgument = new Argument<string>("game") { Description = "The game (steam:<app id> or fp:<fingerprint>)." };
+        var gameArgument = new Argument<string>("game") { Description = "The game (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>)." };
         var uninstall = new Command("uninstall", "Uninstall the game's pack: originals restored, added files removed, backup deleted.") { gameArgument };
         uninstall.SetAction((result, cancellationToken) =>
         {
@@ -387,7 +402,7 @@ internal static class DevCommand
     {
         if (!GameId.TryParse(gameText, out var gameId))
         {
-            error.WriteLine($"'{gameText}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+            error.WriteLine($"'{gameText}' is not a game ID ({GameId.Forms}).");
             return null;
         }
 

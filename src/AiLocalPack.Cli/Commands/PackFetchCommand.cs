@@ -26,7 +26,7 @@ internal static class PackFetchCommand
     public static Command Build(OsEnvironment env)
     {
         var packArgument = new Argument<string>("pack") { Description = "The pack ID (full), or <game id>/<language>/<pack id> (steam:620/ru/full)." };
-        var game = new Option<string?>("--game") { Description = "The pack's game (steam:<app id> or fp:<fingerprint>), when the ID is used by several." };
+        var game = new Option<string?>("--game") { Description = "The pack's game (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>), when the ID is used by several." };
         var lang = new Option<string?>("--lang") { Description = "The pack's language (ru, pt-BR…), when the ID is used by several." };
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
         var fetch = new Command(
@@ -153,7 +153,7 @@ internal static class PackFetchCommand
         GameId? game = null;
         if (gameText is not null && !GameId.TryParse(gameText, out game))
         {
-            error = $"'{gameText}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).";
+            error = $"'{gameText}' is not a game ID ({GameId.Forms}).";
             return false;
         }
 

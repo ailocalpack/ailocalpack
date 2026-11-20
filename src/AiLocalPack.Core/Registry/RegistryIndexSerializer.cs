@@ -86,7 +86,7 @@ public static class RegistryIndexSerializer
             var field = PackFormat.Key("games", key);
             if (!GameId.TryParse(key, out var id))
             {
-                skipped.Add(field, $"'{key}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                skipped.Add(field, $"'{key}' is not a game ID ({GameId.Forms}).");
                 continue;
             }
 
@@ -469,9 +469,9 @@ public static class RegistryIndexSerializer
             var ids = new List<string>();
             foreach (var buildId in list)
             {
-                if (buildId is not { Length: > 0 and <= 20 } || !buildId.All(char.IsAsciiDigit))
+                if (!GameVersion.IsBuildId(buildId, game.Kind))
                 {
-                    Wrong("buildIds", $"'{buildId}' is not a build ID (digits).");
+                    Wrong("buildIds", $"'{buildId}' is not a build ID.");
                     return null;
                 }
 

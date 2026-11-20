@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Settings;
+using AiLocalPack.Core.Stores;
 using AiLocalPack.Desktop.Dialogs;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Navigation;
@@ -390,7 +391,7 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
         var section = Section();
 
         // Assert
-        section.Groups[1].Rows.Should().Equal(section.NoManualGames, section.AddGameFolder);
+        section.Groups.Single(g => g.Rows.Contains(section.AddGameFolder)).Rows.Should().Equal(section.NoManualGames, section.AddGameFolder);
         section.NoManualGames.Label.Should().StartWith("No manually added games.");
     }
 
@@ -456,15 +457,16 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
     }
 
     [Fact]
-    public void Other_stores_are_coming_soon()
+    public void Stores_that_come_later_or_arent_supported_are_listed_last()
     {
         // Arrange
         // Act
         var section = Section();
 
         // Assert
-        section.Groups[2].Rows.Should().ContainSingle().Which.Should().BeOfType<ComingSoonSettingRow>()
-            .Which.Label.Should().Be("Epic Games, GOG, EA app");
+        section.Groups[^1].Rows.OfType<ComingSoonSettingRow>().Select(r => (r.Label, r.PillText)).Should().Equal(
+            ("Ubisoft Connect, itch.io, Amazon Games, Humble app", "Coming soon"),
+            ("Battle.net, Xbox app", "Not supported"));
     }
 
     [Fact]
@@ -501,5 +503,91 @@ public sealed class LibrariesSettingsSectionTests : IDisposable
         // Assert
         library.VisibleCards.Select(c => c.Name).Should().Equal("Alpha");
         Get<GameCatalog>().Games.Should().HaveCount(2);
+    }
+
+    /// <summary>A graph without Steam whose other stores are what <paramref name="stores"/> writes (scanned once).</summary>
+    private LibrariesSettingsSection SectionWithStores(Action<StoreFixture> stores)
+    {
+        _services = TestServices.Build();
+        stores(new StoreFixture(Get<TempDir>().Combine("stores")));
+        Get<GameLibrary>().Refresh();
+        return _services.GetRequiredService<LibrariesSettingsSection>();
+    }
+
+    private static StoreCard Card(LibrariesSettingsSection section, GameSource source) => section.StoreCards.Single(c => c.Source == source);
+
+    [Fact]
+    public void A_store_found_on_this_computer_gets_a_card_with_its_folders()
+    {
+        // Arrange
+        string folder = "";
+
+        // Act
+        var section = SectionWithStores(f =>
+        {
+            folder = f.EpicGame("Fennel", "Lanternkeepers");
+            f.HeroicEpicGame("Juniper", "Clockwork Orchard");
+        });
+
+        // Assert
+        var card = Card(section, GameSource.Epic);
+        (card.Group!.IsVisible, card.Summary.Label).Should().Be((true, "Epic Games Launcher, Heroic · 2 games"));
+        card.Rows.OfType<StoreFolderRow>().Select(r => (r.Path, r.Help)).Should().Contain((Path.GetDirectoryName(folder)!, "1 game · Epic Games Launcher"));
+    }
+
+    [Fact]
+    public void A_store_that_isnt_here_is_listed_as_not_found_without_a_card()
+    {
+        // Arrange
+        // Act
+        var section = SectionWithStores(f => f.EpicGame("Fennel", "Lanternkeepers"));
+
+        // Assert
+        Card(section, GameSource.Gog).Group!.IsVisible.Should().BeFalse();
+        section.AbsentStores.Select(r => r.Label).Should().Contain("GOG Galaxy and Heroic aren’t installed");
+    }
+
+    [Fact]
+    public async Task Switching_a_store_off_hides_its_games_and_says_so()
+    {
+        // Arrange
+        var section = SectionWithStores(f => f.GogGame("1207658924", "Saltmarsh Tales"));
+        var card = Card(section, GameSource.Gog);
+
+        // Act
+        card.Summary.IsEnabled = false;
+        await Get<GameLibrary>().RefreshAsync();
+
+        // Assert
+        (Get<GameCatalog>().Games.Count, card.Summary.Label, Get<SettingsStore>().Current.DisabledStores)
+            .Should().BeEquivalentTo((0, "Turned off: its games are hidden from the library", new[] { "gog" }));
+    }
+
+    [Fact]
+    public void A_store_folder_that_isnt_there_is_an_alert_and_a_badge()
+    {
+        // Arrange
+        // Act
+        var section = SectionWithStores(f => f.EpicGame("Fennel", "Lanternkeepers", createFolder: false));
+
+        // Assert
+        section.Alerts.Select(a => a.Title).Should().Equal("A game folder isn’t available");
+        section.BadgeCount.Should().Be(1);
+    }
+
+    [Fact]
+    public void A_store_whose_list_cant_be_read_is_an_error_alert()
+    {
+        // Arrange
+        // Act
+        var section = SectionWithStores(f =>
+        {
+            Directory.CreateDirectory(Path.Combine(f.Root, "heroic", "gog_store"));
+            File.WriteAllText(Path.Combine(f.Root, "heroic", "gog_store", "installed.json"), "{ broken");
+        });
+
+        // Assert
+        section.Alerts.Should().ContainSingle().Which.Should().Match<SettingsAlert>(a => a.IsError && a.Title == "GOG: games couldn’t be read");
+        section.BadgeIsError.Should().BeTrue();
     }
 }

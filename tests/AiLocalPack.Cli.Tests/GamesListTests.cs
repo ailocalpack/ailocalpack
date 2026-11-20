@@ -53,7 +53,12 @@ public sealed class GamesListTests : IDisposable
                 ["available"] = true,
                 ["steamLanguage"] = null,
                 ["languages"] = null,
+                ["app"] = null,
             }),
+            ["stores"] = new JsonArray(
+                new JsonObject { ["source"] = "epic", ["found"] = false, ["readFrom"] = null, ["games"] = 0, ["problem"] = null },
+                new JsonObject { ["source"] = "gog", ["found"] = false, ["readFrom"] = null, ["games"] = 0, ["problem"] = null },
+                new JsonObject { ["source"] = "ea", ["found"] = false, ["readFrom"] = null, ["games"] = 0, ["problem"] = null }),
         };
 
         // Act
@@ -184,5 +189,28 @@ public sealed class GamesListTests : IDisposable
 
         // Assert
         result.StdOut.Should().ContainAll("ANTI-CHEAT", "BattlEye");
+    }
+
+    [Fact]
+    public async Task Json_lists_games_of_other_stores_with_their_source_and_app()
+    {
+        // Arrange
+        var stores = new Core.Stores.StoreFixture(_dir.Combine("stores"));
+        stores.EpicGame("Fennel", "Lanternkeepers", version: "++Fennel+Release-1.2");
+
+        // Act
+        var result = await CliRunner.RunAsync(
+            new Dictionary<string, string>
+            {
+                ["AILOCALPACK_STEAM_ROOT"] = _steam.Root,
+                ["AILOCALPACK_HOME"] = _dir.Combine("home"),
+                ["AILOCALPACK_STORES_ROOT"] = stores.Root,
+            },
+            "games", "list", "--json");
+
+        // Assert
+        var game = Games(result).Single()!;
+        (game["id"]!.GetValue<string>(), game["source"]!.GetValue<string>(), game["buildId"]!.GetValue<string>(), game["app"]!.GetValue<string>())
+            .Should().Be(("epic:Fennel", "epic", "++Fennel+Release-1.2", "epic-launcher"));
     }
 }

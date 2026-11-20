@@ -44,7 +44,7 @@
     <value>ライブラリ</value>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Steam フォルダーと手動で追加したゲーム</value>
+    <value>ゲームストアと手動で追加したゲーム</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>AI エージェント</value>
@@ -689,13 +689,13 @@
     <value>ゲームフォルダーとインストール済みの翻訳はディスクに残ります。フォルダーはあとで再び追加できます。</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games、GOG、EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>それまでは、それらのゲームをフォルダーとして追加してください。</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, ストア, galaxy, store</value>
+    <value>epic, gog, ea, origin, ストア, galaxy, store, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>近日対応</value>
@@ -1014,9 +1014,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>お使いのゲームのバージョンに合う翻訳はありません</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>Steam 経由 · 「{0}」を使用</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>「{0}」を使用</value>
@@ -4642,9 +4639,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Steam で開く</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>Steam 経由 · ゲームの言語：{0}</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>ゲームの言語：{0}</value>
   </data>
@@ -4716,5 +4710,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>確認のためにゲームを起動しました（{0}/{1}）。ゲームのウィンドウが1〜2分開きます。閉じないでください</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>ストア, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>{0} のゲームをライブラリに表示</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>オフ：このストアのゲームはライブラリに表示されません</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>インストール済みの翻訳はそのままです。オンにするとゲームが戻ります。</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>ゲームを探しています…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>確認待ち</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>{0} を読み取り · {1} に確認</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0}：ゲームを読み取れませんでした</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} 解決するまで、このストアのゲームは利用不可としてライブラリに残ります。</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>このコンピューターに見つかりません</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher と Heroic はインストールされていません</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy と Heroic はインストールされていません</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app はインストールされていません</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>インストールすると、ゲームが自動的にここに表示されます。</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>一覧にないストアのゲームや、アプリなしでインストールしたゲームは、下でフォルダーとして追加できます。</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>Battle.net のゲームはオンラインでアンチチートを使います。Xbox アプリのゲームのファイルは Windows がロックしています。</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>非対応</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>ゲームフォルダーにアクセスできません</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>もう一度試す</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>{1} 経由 · 「{0}」を使用</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>{1} 経由 · ゲームの言語：{0}</value>
   </data>
 </root>

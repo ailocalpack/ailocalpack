@@ -170,7 +170,7 @@ public static class RegistryOptOuts
             var text = file.Games![i]?.Game;
             if (!GameId.TryParse(text, out var game))
             {
-                errors.Add($"games[{i}].game", $"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                errors.Add($"games[{i}].game", $"'{text}' is not a game ID ({GameId.Forms}).");
             }
             else if (!games.Add(game))
             {

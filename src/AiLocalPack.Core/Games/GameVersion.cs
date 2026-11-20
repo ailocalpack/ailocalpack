@@ -19,6 +19,21 @@ public sealed class GameVersion : IEquatable<GameVersion>
     /// <summary>Relative path ('/' separators, ordinal order) → SHA-256 hex, or <c>null</c> for a build-ID version.</summary>
     public IReadOnlyDictionary<string, string>? FileHashes { get; }
 
+    /// <summary>Longest build ID a pack or the index may name.</summary>
+    public const int MaxBuildIdLength = 128;
+
+    /// <summary>
+    /// Whether <paramref name="buildId"/> is a build ID packs and the registry index may name for a game of
+    /// <paramref name="kind"/> (task 83): Steam's are 1–20 digits; another store's versions are 1–<see cref="MaxBuildIdLength"/>
+    /// printable ASCII characters without spaces or '/' (<c>buildId/os</c> keys stay unambiguous), e.g. Epic's
+    /// <c>++Fortnite+Release-31.10-CL-36874825-Windows</c>; <c>null</c> kind = any of these.
+    /// </summary>
+    public static bool IsBuildId([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] string? buildId, GameIdKind? kind) =>
+        buildId is { Length: > 0 }
+        && (kind == GameIdKind.Steam
+            ? buildId.Length <= 20 && buildId.All(char.IsAsciiDigit)
+            : buildId.Length <= MaxBuildIdLength && buildId.All(c => c is > ' ' and <= '~' and not '/'));
+
     public static GameVersion FromBuildId(string buildId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(buildId);

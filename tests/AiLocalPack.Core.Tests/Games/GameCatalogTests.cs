@@ -85,6 +85,44 @@ public sealed class GameCatalogTests : IDisposable
     }
 
     [Fact]
+    public void A_store_game_survives_a_restart_with_its_app_and_main_executable()
+    {
+        // Arrange
+        var first = CreateCatalog();
+        first.Load();
+        var epic = new Core.Stores.StoreGame(GameId.Parse("epic:Fennel"), "Lanternkeepers", _dir.Combine("Epic/Lanternkeepers"), _dir.Combine("Epic"),
+            "++Fennel+Release-1.2", "Binaries/Game.exe", StoreApps.Heroic);
+        first.Refresh(new StoreScans(null, [new Core.Stores.StoreScan(GameSource.Epic, true, "x", [epic])], new HashSet<GameSource>()));
+
+        // Act
+        var games = CreateCatalog().Load();
+
+        // Assert
+        games.Single().Should().Be(first.Games.Single()).And.Match<Game>(g => g.App == StoreApps.Heroic && g.MainExecutable == "Binaries/Game.exe");
+    }
+
+    [Fact]
+    public void A_store_entry_with_another_kind_of_id_is_skipped()
+    {
+        // Arrange
+        WriteCatalogFile("""
+            {
+              "schemaVersion": 1,
+              "games": [
+                { "id": "gog:42", "name": "Wrong source", "source": "epic", "installPath": "/x" },
+                { "id": "gog:43", "name": "Saltmarsh", "source": "gog", "installPath": "/x", "app": "galaxy" }
+              ]
+            }
+            """);
+
+        // Act
+        var games = CreateCatalog().Load();
+
+        // Assert
+        games.Select(g => (g.Id.ToString(), g.Source, g.App)).Should().Equal(("gog:43", GameSource.Gog, "galaxy"));
+    }
+
+    [Fact]
     public void Platform_survives_a_restart()
     {
         // Arrange

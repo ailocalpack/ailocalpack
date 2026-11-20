@@ -41,6 +41,7 @@ public sealed class PackManifestSerializerTests
         { "revision-gap", "revisions[1].revision", "is 3, expected 2", false },
         { "revision-mismatch", "revision", "is 3, but the last entry of revisions is 2", false },
         { "revision-not-a-number", "revision", "has the wrong type", true },
+        { "steam-build-with-text-id", "builds[0].buildId", "'1.0.2' is not a build ID (digits)", false },
         { "steam-build-without-id", "builds[1].buildId", "a Steam game build needs its build ID", false },
         { "unknown-language", "language", "'russian' is not a supported language", true },
         { "updated-before-created", "updated", "is earlier than created", false },

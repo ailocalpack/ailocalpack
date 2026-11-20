@@ -36,7 +36,7 @@ internal static class PackCommand
         var manifestArgument = new Argument<string>("manifest") { Description = "The pack's manifest.json, or the pack folder holding it." };
         var gameOption = new Option<string>("--game")
         {
-            Description = "The game to check against (steam:<app id> or fp:<fingerprint>), as listed by 'games list'.",
+            Description = "The game to check against (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>), as listed by 'games list'.",
             Required = true,
         };
         var json = new Option<bool>("--json") { Description = "Print JSON instead of text." };
@@ -52,7 +52,7 @@ internal static class PackCommand
             var gameText = result.GetValue(gameOption)!;
             if (!GameId.TryParse(gameText, out var gameId))
             {
-                error.WriteLine($"'{gameText}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                error.WriteLine($"'{gameText}' is not a game ID ({GameId.Forms}).");
                 return Task.FromResult(1);
             }
 
@@ -90,7 +90,7 @@ internal static class PackCommand
 
     private static Command BuildLocal(OsEnvironment env)
     {
-        var game = new Argument<string?>("game") { Description = "Only this game's packs (steam:<app id> or fp:<fingerprint>).", Arity = ArgumentArity.ZeroOrOne };
+        var game = new Argument<string?>("game") { Description = "Only this game's packs (steam:<app id>, fp:<fingerprint>, epic:<AppName>, gog:<id> or ea:<id>).", Arity = ArgumentArity.ZeroOrOne };
         var local = new Command("local", "List the packs generated on this machine (Local), with their folder, coverage, test run, fonts and warnings.") { game };
         local.SetAction(result =>
         {
@@ -100,7 +100,7 @@ internal static class PackCommand
             {
                 if (!GameId.TryParse(text, out var id))
                 {
-                    result.InvocationConfiguration.Error.WriteLine($"'{text}' is not a game ID (steam:<app id> or fp:<64 lowercase hex>).");
+                    result.InvocationConfiguration.Error.WriteLine($"'{text}' is not a game ID ({GameId.Forms}).");
                     return 1;
                 }
 

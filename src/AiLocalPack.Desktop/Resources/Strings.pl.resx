@@ -50,7 +50,7 @@
     <value>Biblioteki</value>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Foldery Steam i gry dodane ręcznie</value>
+    <value>Sklepy z grami i gry dodane ręcznie</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>Agenci AI</value>
@@ -761,13 +761,13 @@
     <value>Folder gry i zainstalowane tłumaczenie zostaną na dysku. Folder możesz później dodać ponownie.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games, GOG, EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>Do tego czasu dodawaj ich gry jako foldery.</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, sklep, galaxy</value>
+    <value>epic, gog, ea, origin, sklep, galaxy, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>Wkrótce</value>
@@ -1122,9 +1122,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>Żadne tłumaczenie nie pasuje do twojej wersji gry</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>przez Steam · z „{0}”</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>z „{0}”</value>
@@ -4900,9 +4897,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Otwórz w Steam</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>przez Steam · język gry: {0}</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>język gry: {0}</value>
   </data>
@@ -4974,5 +4968,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>Uruchomiono grę do sprawdzenia ({0} z {1}); jej okno otworzy się na minutę lub dwie, nie zamykaj go</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>sklep, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>Pokazuj gry z {0} w bibliotece</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>Wyłączony: jego gry są ukryte w bibliotece</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>Zainstalowane tłumaczenia zostają. Włącz go, aby gry wróciły.</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>Szukanie gier…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>Czeka na sprawdzenie</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>Czyta {0} · sprawdzono o {1}</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0}: nie udało się odczytać gier</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} Do tego czasu jego gry zostają w bibliotece jako niedostępne.</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>Nie znaleziono na tym komputerze</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher i Heroic nie są zainstalowane</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy i Heroic nie są zainstalowane</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app nie jest zainstalowana</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>Po instalacji jego gry pojawią się tu same.</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>Gry ze sklepu spoza listy albo zainstalowane bez jego aplikacji możesz dodać poniżej jako folder.</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>Gry z Battle.net działają online i używają anty-cheata; pliki gier z aplikacji Xbox blokuje Windows.</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>Nieobsługiwane</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>Folder z grami jest niedostępny</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>Spróbuj ponownie</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>przez {1} · z „{0}”</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>przez {1} · język gry: {0}</value>
   </data>
 </root>

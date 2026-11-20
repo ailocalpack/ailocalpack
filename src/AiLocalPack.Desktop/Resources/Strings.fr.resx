@@ -50,7 +50,7 @@
     <value>Bibliothèques</value>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Dossiers Steam et jeux ajoutés à la main</value>
+    <value>Boutiques de jeux et jeux ajoutés à la main</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>Agents IA</value>
@@ -761,13 +761,13 @@
     <value>Le dossier du jeu et la traduction installée restent sur le disque. Vous pourrez rajouter le dossier plus tard.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games, GOG, EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>En attendant, ajoutez leurs jeux comme dossiers.</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, boutique, store, galaxy</value>
+    <value>epic, gog, ea, origin, boutique, store, galaxy, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>Bientôt</value>
@@ -1122,9 +1122,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>Aucune traduction ne convient à ta version du jeu</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>via Steam · avec « {0} »</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>avec « {0} »</value>
@@ -4900,9 +4897,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Ouvrir dans Steam</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>via Steam · langue du jeu : {0}</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>langue du jeu : {0}</value>
   </data>
@@ -4974,5 +4968,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>Jeu lancé pour vérifier ({0} sur {1}) ; sa fenêtre s'ouvre une ou deux minutes, ne la fermez pas</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>boutique, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>Afficher les jeux {0} dans la bibliothèque</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>Désactivé : ses jeux sont masqués dans la bibliothèque</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>Les traductions installées restent. Activez-le pour faire revenir les jeux.</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>Recherche des jeux…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>En attente de vérification</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>Lit {0} · analysé à {1}</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0} : impossible de lire les jeux</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} Ses jeux restent dans la bibliothèque comme indisponibles d’ici là.</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>Introuvables sur cet ordinateur</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher et Heroic ne sont pas installés</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy et Heroic ne sont pas installés</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app n’est pas installée</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>Une fois installé, ses jeux apparaîtront ici d’eux-mêmes.</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>Les jeux d’une boutique absente de la liste, ou installés sans son application, peuvent être ajoutés comme dossier ci-dessous.</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>Les jeux Battle.net sont en ligne et utilisent un anti-triche ; Windows verrouille les fichiers des jeux de l’application Xbox.</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>Non pris en charge</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>Un dossier de jeux est indisponible</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>Réessayer</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>via {1} · avec « {0} »</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>via {1} · langue du jeu : {0}</value>
   </data>
 </root>

@@ -211,4 +211,36 @@ public sealed class GameLaunchPlannerTests
         // Assert
         plan.Should().Be(new CannotLaunch(LaunchProblem.NoExecutable));
     }
+
+    [Theory]
+    [InlineData("epic:Fennel", StoreApps.EpicLauncher, "com.epicgames.launcher://apps/Fennel?action=launch&silent=true")]
+    [InlineData("epic:Fennel", StoreApps.Heroic, "heroic://launch?appName=Fennel&runner=legendary")]
+    [InlineData("gog:1207658924", StoreApps.Heroic, "heroic://launch?appName=1207658924&runner=gog")]
+    public void A_store_game_starts_through_the_app_that_installed_it(string id, string app, string url)
+    {
+        // Arrange
+        var game = Manual() with { Id = GameId.Parse(id), Source = GameSources.SourceOf(GameId.Parse(id).Kind), App = app };
+
+        // Act
+        var plan = GameLaunchPlanner.Plan(game, OsKind.Windows, []);
+
+        // Assert
+        plan.Should().Be(new OpenUrlLaunch(new Uri(url)));
+    }
+
+    [Theory]
+    [InlineData("gog:1207658924", StoreApps.GogGalaxy)]
+    [InlineData("ea:1035052", StoreApps.EaApp)]
+    [InlineData("epic:Sorrel", StoreApps.Legendary)]
+    public void Gog_ea_and_legendary_games_start_from_their_executable(string id, string app)
+    {
+        // Arrange
+        var game = Manual() with { Id = GameId.Parse(id), Source = GameSources.SourceOf(GameId.Parse(id).Kind), App = app };
+
+        // Act
+        var plan = GameLaunchPlanner.Plan(game, OsKind.Windows, [Exe("Game.exe", ExecutableFormat.WindowsPe)]);
+
+        // Assert
+        plan.Should().BeOfType<ProcessLaunch>().Which.FileName.Should().Be(At("Game.exe"));
+    }
 }

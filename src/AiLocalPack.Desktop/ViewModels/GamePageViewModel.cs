@@ -276,10 +276,18 @@ public sealed partial class GamePageViewModel : PageViewModel
 
     public bool HasEngineBrand => EngineBrandKey is not null;
 
-    /// <summary>"Steam" or "Added manually".</summary>
-    public string StoreText => _localizer[Game.Source == GameSource.Steam ? nameof(Strings.Game_Chip_Steam) : nameof(Strings.Game_Chip_Manual)];
+    /// <summary>"Steam", "Epic Games", "GOG", "EA app" or "Added manually".</summary>
+    public string StoreText => _localizer[Game.Source switch
+    {
+        GameSource.Steam => nameof(Strings.Game_Chip_Steam),
+        GameSource.Manual => nameof(Strings.Game_Chip_Manual),
+        var source => Settings.Libraries.StoreTexts.NameKey(source),
+    }];
 
-    public bool IsSteam => Game.Source == GameSource.Steam;
+    /// <summary>The store's mark on the store chip; <c>null</c> for a manual game (a drive icon).</summary>
+    public string? StoreBrandKey => Game.Source == GameSource.Manual ? null : Settings.Libraries.StoreTexts.BrandKey(Game.Source);
+
+    public bool HasStoreBrand => StoreBrandKey is not null;
 
     /// <summary>"build 14 882 031" (Steam build ID, digits grouped) or "files hash 1a2b3c4d"; empty when unknown.</summary>
     public string VersionText => Game.Version switch

@@ -14,6 +14,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
+using AiLocalPack.Core.Stores;
 using AiLocalPack.Core.Storage;
 using AiLocalPack.Desktop.Activity;
 using AiLocalPack.Core.Background;
@@ -293,6 +294,10 @@ internal static class Composition
         services.AddSingleton<GameCatalog>();
         services.AddSingleton(sp => new SteamLocator(sp.GetRequiredService<OsEnvironment>()));
         services.AddSingleton(sp => new SteamLibraryScanner(sp.GetRequiredService<SteamLocator>(), sp.GetService<ILogger<SteamLibraryScanner>>()));
+        services.AddSingleton(sp => new StoreLocations(sp.GetRequiredService<OsEnvironment>()));
+        services.AddSingleton<IGameStore, EpicStore>();
+        services.AddSingleton<IGameStore, GogStore>();
+        services.AddSingleton<IGameStore, EaAppStore>();
         services.AddSingleton(sp => new EngineDetector(sp.GetService<ILogger<EngineDetector>>()));
         services.AddSingleton(sp => AntiCheatPolicy.Bundled);
         services.AddSingleton<AntiCheatRules>();

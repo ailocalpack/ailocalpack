@@ -1,3 +1,4 @@
+using AiLocalPack.Desktop.ViewModels.Settings.Libraries;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Library;
 using AiLocalPack.Core.Packs;
@@ -51,11 +52,13 @@ public static class PrimaryActionTexts
             { Kind: GamePrimaryActionKind.Generate, NoneFits: true } => localizer[nameof(Strings.Game_Caption_NoneFits)],
             { Kind: GamePrimaryActionKind.Generate } => localizer[nameof(Strings.Game_Caption_Generate)],
             { Kind: GamePrimaryActionKind.Play, Official: { } official } => localizer.Format(
-                game.Source == GameSource.Steam ? nameof(Strings.Game_Caption_PlayOfficialSteam) : nameof(Strings.Game_Caption_PlayOfficial),
-                Core.Languages.LanguageNames.Native(official.Tag)),
+                StoreTexts.ViaKey(game) is null ? nameof(Strings.Game_Caption_PlayOfficial) : nameof(Strings.Game_Caption_PlayOfficialVia),
+                Core.Languages.LanguageNames.Native(official.Tag),
+                Via(game, localizer)),
             { Kind: GamePrimaryActionKind.Play } => localizer.Format(
-                game.Source == GameSource.Steam ? nameof(Strings.Game_Caption_PlaySteam) : nameof(Strings.Game_Caption_Play),
-                action.Pack?.Title ?? action.Installed?.Title ?? action.Installed?.PackId ?? action.Result?.Title),
+                StoreTexts.ViaKey(game) is null ? nameof(Strings.Game_Caption_Play) : nameof(Strings.Game_Caption_PlayVia),
+                action.Pack?.Title ?? action.Installed?.Title ?? action.Installed?.PackId ?? action.Result?.Title,
+                Via(game, localizer)),
             { Kind: GamePrimaryActionKind.UpdatePack, Installed: { } installed } => localizer.Format(nameof(Strings.Game_Caption_Update), installed.Revision),
             { Kind: GamePrimaryActionKind.TranslateNewStrings } => localizer[nameof(Strings.Game_Caption_TranslateNew)],
             { Kind: GamePrimaryActionKind.Reapply, Installed: { } installed } => localizer.Format(
@@ -106,4 +109,7 @@ public static class PrimaryActionTexts
             _ => localizer.Format(nameof(Strings.Game_Caption_Generating), percent),
         };
     }
+
+    /// <summary>The store or app a game starts through ("Steam", "Heroic"); empty when it starts by itself.</summary>
+    private static string Via(Game game, Localizer localizer) => StoreTexts.ViaKey(game) is { } key ? localizer[key] : string.Empty;
 }

@@ -50,7 +50,7 @@
     <value>Librerie</value>
   </data>
   <data name="Settings_Libraries_Description" xml:space="preserve">
-    <value>Cartelle di Steam e giochi aggiunti a mano</value>
+    <value>Negozi di giochi e giochi aggiunti a mano</value>
   </data>
   <data name="Settings_Agents_Title" xml:space="preserve">
     <value>Agenti IA</value>
@@ -761,13 +761,13 @@
     <value>La cartella del gioco e l'eventuale traduzione installata restano sul disco. Puoi aggiungere di nuovo la cartella in seguito.</value>
   </data>
   <data name="Settings_OtherStores_Label" xml:space="preserve">
-    <value>Epic Games, GOG, EA app</value>
+    <value>Ubisoft Connect, itch.io, Amazon Games, Humble app</value>
   </data>
   <data name="Settings_OtherStores_Help" xml:space="preserve">
     <value>Nel frattempo, aggiungi i loro giochi come cartelle.</value>
   </data>
   <data name="Settings_OtherStores_Keywords" xml:space="preserve">
-    <value>epic, gog, ea, origin, store, negozio, galaxy</value>
+    <value>epic, gog, ea, origin, store, negozio, galaxy, ubisoft, uplay, itch, amazon, humble, battle.net, xbox</value>
   </data>
   <data name="Settings_ComingSoonPill" xml:space="preserve">
     <value>In arrivo</value>
@@ -1122,9 +1122,6 @@
   </data>
   <data name="Game_Caption_NoneFits" xml:space="preserve">
     <value>Nessuna traduzione è adatta alla tua versione del gioco</value>
-  </data>
-  <data name="Game_Caption_PlaySteam" xml:space="preserve">
-    <value>tramite Steam · con «{0}»</value>
   </data>
   <data name="Game_Caption_Play" xml:space="preserve">
     <value>con «{0}»</value>
@@ -4900,9 +4897,6 @@
   <data name="Packs_Official_OpenSteam" xml:space="preserve">
     <value>Apri in Steam</value>
   </data>
-  <data name="Game_Caption_PlayOfficialSteam" xml:space="preserve">
-    <value>tramite Steam · lingua del gioco: {0}</value>
-  </data>
   <data name="Game_Caption_PlayOfficial" xml:space="preserve">
     <value>lingua del gioco: {0}</value>
   </data>
@@ -4974,5 +4968,101 @@
   </data>
   <data name="Fix_Step_TestRun" xml:space="preserve">
     <value>Ho avviato il gioco per verificarlo ({0} di {1}); la sua finestra si apre per un paio di minuti, non chiuderla</value>
+  </data>
+  <data name="Settings_Group_Epic" xml:space="preserve">
+    <value>Epic Games</value>
+  </data>
+  <data name="Settings_Group_Gog" xml:space="preserve">
+    <value>GOG</value>
+  </data>
+  <data name="Settings_Group_Ea" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_StoreApp_EpicLauncher" xml:space="preserve">
+    <value>Epic Games Launcher</value>
+  </data>
+  <data name="Settings_StoreApp_Heroic" xml:space="preserve">
+    <value>Heroic</value>
+  </data>
+  <data name="Settings_StoreApp_Legendary" xml:space="preserve">
+    <value>Legendary</value>
+  </data>
+  <data name="Settings_StoreApp_Galaxy" xml:space="preserve">
+    <value>GOG Galaxy</value>
+  </data>
+  <data name="Settings_StoreApp_EaApp" xml:space="preserve">
+    <value>EA app</value>
+  </data>
+  <data name="Settings_Unsupported_Label" xml:space="preserve">
+    <value>Battle.net, Xbox app</value>
+  </data>
+  <data name="Settings_Store_Summary" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_StoreFolder_Help" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Settings_Stores_Keywords" xml:space="preserve">
+    <value>negozio, epic, gog, ea, origin, galaxy, heroic, legendary, launcher</value>
+  </data>
+  <data name="Settings_Store_Show" xml:space="preserve">
+    <value>Mostra i giochi di {0} nella libreria</value>
+  </data>
+  <data name="Settings_Store_Off" xml:space="preserve">
+    <value>Disattivato: i suoi giochi sono nascosti nella libreria</value>
+  </data>
+  <data name="Settings_Store_OffHelp" xml:space="preserve">
+    <value>Le traduzioni installate restano. Attivalo per riavere i giochi.</value>
+  </data>
+  <data name="Settings_Store_Scanning" xml:space="preserve">
+    <value>Ricerca dei giochi…</value>
+  </data>
+  <data name="Settings_Store_Waiting" xml:space="preserve">
+    <value>In attesa di controllo</value>
+  </data>
+  <data name="Settings_Store_Reads" xml:space="preserve">
+    <value>Legge {0} · scansionato alle {1}</value>
+  </data>
+  <data name="Settings_Store_Problem_Title" xml:space="preserve">
+    <value>{0}: impossibile leggere i giochi</value>
+  </data>
+  <data name="Settings_Store_Problem_Text" xml:space="preserve">
+    <value>{0} I suoi giochi restano nella libreria come non disponibili finché non funziona.</value>
+  </data>
+  <data name="Settings_Group_NotFound" xml:space="preserve">
+    <value>Non trovati su questo computer</value>
+  </data>
+  <data name="Settings_Store_NotFound_Epic" xml:space="preserve">
+    <value>Epic Games Launcher e Heroic non sono installati</value>
+  </data>
+  <data name="Settings_Store_NotFound_Gog" xml:space="preserve">
+    <value>GOG Galaxy e Heroic non sono installati</value>
+  </data>
+  <data name="Settings_Store_NotFound_Ea" xml:space="preserve">
+    <value>EA app non è installata</value>
+  </data>
+  <data name="Settings_Store_NotFound_Help" xml:space="preserve">
+    <value>Una volta installato, i suoi giochi compariranno qui da soli.</value>
+  </data>
+  <data name="Settings_Store_NotFound_Note" xml:space="preserve">
+    <value>I giochi di un negozio non elencato, o installati senza la sua app, si possono aggiungere come cartella qui sotto.</value>
+  </data>
+  <data name="Settings_Unsupported_Help" xml:space="preserve">
+    <value>I giochi di Battle.net sono online e usano un anti-cheat; Windows blocca i file dei giochi dell’app Xbox.</value>
+  </data>
+  <data name="Settings_NotSupportedPill" xml:space="preserve">
+    <value>Non supportato</value>
+  </data>
+  <data name="Settings_Alert_StoreFolderUnavailable_Title" xml:space="preserve">
+    <value>Una cartella di giochi non è disponibile</value>
+  </data>
+  <data name="Settings_TryAgain" xml:space="preserve">
+    <value>Riprova</value>
+  </data>
+  <data name="Game_Caption_PlayVia" xml:space="preserve">
+    <value>tramite {1} · con «{0}»</value>
+  </data>
+  <data name="Game_Caption_PlayOfficialVia" xml:space="preserve">
+    <value>tramite {1} · lingua del gioco: {0}</value>
   </data>
 </root>

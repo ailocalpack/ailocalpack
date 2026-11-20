@@ -67,6 +67,9 @@ internal static class TestServices
             name => name switch
             {
                 SteamLocator.RootVariable => steamRoot,
+
+                // Other stores read only <home>/stores (empty unless a test writes a fixture there), never this machine's.
+                Core.Stores.StoreLocations.RootVariable => home.Combine("stores"),
                 RegistryLocation.IndexUrlVariable => registry ?? home.Combine("no-registry"),
 
                 // Every toolkit engine on, whatever the OS the tests run on (RPG Maker is off on macOS).

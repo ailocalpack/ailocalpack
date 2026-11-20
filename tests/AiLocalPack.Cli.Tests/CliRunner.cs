@@ -40,6 +40,9 @@ internal static class CliRunner
 
         start.Environment["AILOCALPACK_TOOLKIT_ALL_ENGINES"] = "1";
 
+        // Stores beside Steam are read from a folder that doesn't exist (a test may name its own), never from this machine.
+        start.Environment["AILOCALPACK_STORES_ROOT"] = Path.Combine(Path.GetTempPath(), "ailocalpack-tests", "no-stores");
+
         foreach (var (name, value) in environment)
         {
             start.Environment[name] = value;
