@@ -23,15 +23,22 @@ public abstract record PublishTarget
 /// <summary>A registry pack of the same game + language as the pack being published, for the "similar pack" choice.</summary>
 /// <param name="IsBase">The local pack is an update (task 56) of this pack.</param>
 /// <param name="RevisionRecommended">A new revision of it is the better choice (see <see cref="SimilarPacks.Find"/>).</param>
-public sealed record SimilarPack(RegistryPack Pack, bool IsBase, bool RevisionRecommended);
+/// <param name="Loss">
+/// The platforms a new revision of it would take away from its players, as far as the index tells (task 87): a patch
+/// pack keeps only its own platform; a strings + recipe pack is expected to keep the others
+/// (<see cref="PackPlatforms.CarriedOver"/>; the publish client checks it with the string tables).
+/// </param>
+public sealed record SimilarPack(RegistryPack Pack, bool IsBase, bool RevisionRecommended, PlatformLoss? Loss = null);
 
 /// <summary>Registry packs a local pack could be a new revision of (the duplicate check before publishing).</summary>
 public static class SimilarPacks
 {
     /// <summary>
     /// The index's packs of the local pack's game + language, the one it was made from first, then by 👍 and ID. A new
-    /// revision is recommended (decided) when the local pack is an update of it, when it doesn't support the player's
-    /// Steam build (made for an older or other one), or when it translates a smaller share of the strings.
+    /// revision is recommended (decided) when the local pack is an update of it, when it lists none of the local pack's
+    /// build IDs (made for an older or other build; the same build ID made on another platform doesn't count, task 87),
+    /// or when it supports the local pack's platform and translates a smaller share of the strings; never when it would
+    /// take a platform away from the pack's players (<see cref="SimilarPack.Loss"/>).
     /// </summary>
     public static IReadOnlyList<SimilarPack> Find(RegistryIndex index, LocalPack local)
     {
@@ -39,20 +46,38 @@ public static class SimilarPacks
         ArgumentNullException.ThrowIfNull(local);
         var manifest = local.Manifest;
         var builds = manifest.Builds.Where(b => b.BuildId is not null).ToList();
+        var localPlatforms = PackPlatforms.Of(manifest);
         return
         [
             .. index.PacksFor(manifest.Game, manifest.Language)
                 .Select(pack =>
                 {
+                    var platforms = PackPlatforms.Of(pack);
                     var isBase = local.Report.Update is not null && pack.Id == manifest.Id;
-                    var otherBuild = builds.Count > 0 && !builds.Any(b => pack.IsMadeFor(b.BuildId, b.Os));
-                    var smaller = pack.Coverage.Ratio < manifest.Coverage.Ratio;
-                    return new SimilarPack(pack, isBase, isBase || otherBuild || smaller);
+                    var otherBuild = builds.Count > 0 && !builds.Any(b => pack.BuildIds.Contains(b.BuildId!, StringComparer.Ordinal));
+                    var samePlatform = platforms is null || platforms.Any(localPlatforms.Contains);
+                    var smaller = samePlatform && pack.Coverage.Ratio < manifest.Coverage.Ratio;
+                    var loss = platforms is null
+                        ? null
+                        : PackPlatforms.Lost(pack.Revision, platforms, manifest.Patch is null ? [.. PackPlatforms.All.Where(os => localPlatforms.Contains(os) || platforms.Contains(os))] : localPlatforms);
+                    return new SimilarPack(pack, isBase, loss is null && (isBase || otherBuild || smaller), loss);
                 })
                 .OrderByDescending(s => s.IsBase)
                 .ThenByDescending(s => s.Pack.Rating.Likes)
                 .ThenBy(s => s.Pack.Id, StringComparer.Ordinal),
         ];
+    }
+
+    /// <summary>
+    /// <paramref name="similar"/> with the loss the publish client found (<see cref="PublishResult.Failed.Loss"/>) when it
+    /// was about the same pack: then the dialog warns and doesn't recommend the revision.
+    /// </summary>
+    public static SimilarPack WithLoss(SimilarPack similar, string? lostPackId, PlatformLoss? loss)
+    {
+        ArgumentNullException.ThrowIfNull(similar);
+        return loss is null || lostPackId != similar.Pack.Id || similar.Loss is not null
+            ? similar
+            : similar with { RevisionRecommended = false, Loss = loss };
     }
 }
 
@@ -84,7 +109,8 @@ public sealed record PublishPayload(
 /// and revision. A <b>new pack</b> starts at revision 1 by the player (other authors the local pack credits, e.g. the
 /// base of an update, stay credited after the player). A <b>new revision</b> keeps the existing pack's ID, title,
 /// created date, authors (the original author first) and history, adds the player as an author when new (revision
-/// credit) and one revision by the player.
+/// credit) and one revision by the player; it keeps the existing revision's builds of the platforms the local pack
+/// wasn't made on where the string table still fits them (<see cref="PackPlatforms.CarriedOver"/>, task 87).
 /// </summary>
 public static class PublishPayloads
 {
@@ -129,7 +155,16 @@ public static class PublishPayloads
         return WithPatchUrl(manifest, registry);
     }
 
-    public static PackManifest Revision(PackManifest local, PackManifest existing, PackAuthor player, DateTimeOffset now, RegistryRepo registry)
+    /// <param name="localStrings">The local pack's string table, for keeping the existing revision's other platforms.</param>
+    /// <param name="existingStrings">The existing revision's string table (see <see cref="PackPlatforms.CarriedOver"/>).</param>
+    public static PackManifest Revision(
+        PackManifest local,
+        PackManifest existing,
+        PackAuthor player,
+        DateTimeOffset now,
+        RegistryRepo registry,
+        StringTable? localStrings = null,
+        StringTable? existingStrings = null)
     {
         ArgumentNullException.ThrowIfNull(local);
         ArgumentNullException.ThrowIfNull(existing);
@@ -150,6 +185,7 @@ public static class PublishPayloads
             Id = existing.Id,
             Title = existing.Title,
             Authors = authors,
+            Builds = [.. local.Builds, .. PackPlatforms.CarriedOver(local, existing, localStrings, existingStrings)],
             Revisions = [.. existing.Revisions, new PackRevision(existing.Revision + 1, date, player.GitHub, LocalNotes(local))],
             Status = PackStatus.Alpha,
             Created = existing.Created,

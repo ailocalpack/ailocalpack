@@ -47,6 +47,34 @@ public sealed class PackPublishTests : IDisposable
 
     private string Home => _dir.Combine("home");
 
+    /// <summary>
+    /// Task 87: the fake registry's pack <c>full</c> rev 1 made on Windows (its string table isn't in the registry, so
+    /// nothing is carried over) and a local pack <c>mac</c> of the same build made on macOS.
+    /// </summary>
+    private void WindowsPackAndMacLocal()
+    {
+        var local = new LocalPackStore(AppPaths.UnderHome(Home));
+        var pack = local.Find(GameId.Steam(620), "ru", "claude-code")!;
+        var mac = pack.Manifest with
+        {
+            Id = "mac",
+            Builds = [new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('a', 64) }, OsKind.MacOS)],
+        };
+        local.Save(mac, new StringTable("ru", new Dictionary<string, string> { ["a"] = "Зелье" }), pack.Report);
+        var existing = pack.Manifest with
+        {
+            Id = "full",
+            Title = "Full translation",
+            Authors = [new PackAuthor("alice")],
+            Revisions = [new PackRevision(1, T0.AddDays(-5), "alice")],
+            Builds = [new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('c', 64) }, OsKind.Windows)],
+        };
+        _github.Api.Commit("ailocalpack/registry", "master", new Dictionary<string, string?>
+        {
+            ["games/steam-620/ru/full/manifest.json"] = PackManifestSerializer.Write(existing),
+        });
+    }
+
     private Task<CliResult> RunAsync(params string[] args) =>
         CliRunner.RunAsync(
             new Dictionary<string, string>
@@ -121,5 +149,47 @@ public sealed class PackPublishTests : IDisposable
         // Assert
         result.ExitCode.Should().Be(1);
         result.StdErr.Should().Contain("No local pack 'steam:620/ru/nothing'; 'ailocalpack pack local' lists them.");
+    }
+
+    [Fact]
+    public async Task A_revision_taking_a_platform_away_is_refused()
+    {
+        // Arrange
+        await RunAsync("github", "login", "--no-browser");
+        WindowsPackAndMacLocal();
+
+        // Act
+        var result = await RunAsync("pack", "publish", "steam:620/ru/mac", "--revision-of", "full");
+
+        // Assert
+        result.ExitCode.Should().Be(1);
+        result.StdErr.Should().Contain("rev 1 supports Windows; this revision would support only macOS: Windows players would lose a compatible translation.")
+            .And.Contain("--drop-platforms publishes the revision anyway");
+    }
+
+    [Fact]
+    public async Task A_revision_taking_a_platform_away_is_sent_with_drop_platforms()
+    {
+        // Arrange
+        await RunAsync("github", "login", "--no-browser");
+        WindowsPackAndMacLocal();
+
+        // Act
+        var result = await RunAsync("pack", "publish", "steam:620/ru/mac", "--revision-of", "full", "--drop-platforms");
+
+        // Assert
+        result.ExitCode.Should().Be(0, result.StdErr);
+        result.StdOut.Should().Contain("Opened PR #1 for full rev 2");
+    }
+
+    [Fact]
+    public async Task Drop_platforms_needs_a_revision()
+    {
+        // Act
+        var result = await RunAsync("pack", "publish", "steam:620/ru/claude-code", "--new", "--drop-platforms");
+
+        // Assert
+        result.ExitCode.Should().Be(1);
+        result.StdErr.Should().Contain("--drop-platforms goes with --revision-of <id>.");
     }
 }

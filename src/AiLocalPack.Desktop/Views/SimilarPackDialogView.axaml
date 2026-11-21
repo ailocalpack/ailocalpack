@@ -57,6 +57,14 @@
                             </Border>
                         </WrapPanel>
                         <TextBlock Classes="muted" FontSize="13" Margin="28,0,0,0" Text="{Binding RevisionText}" TextWrapping="Wrap" />
+                        <Border x:Name="PlatformWarning" Classes="notice warn" Margin="28,4,0,0" IsVisible="{Binding HasPlatformWarning}">
+                            <DockPanel>
+                                <Viewbox DockPanel.Dock="Left" Classes="icon" Width="16" Height="16" Margin="0,1,10,0" VerticalAlignment="Top">
+                                    <Path Classes="icon" Data="{StaticResource IconAlert}" Stroke="{DynamicResource AppWarnBrush}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding PlatformWarning}" TextWrapping="Wrap" />
+                            </DockPanel>
+                        </Border>
                     </StackPanel>
                 </Border>
                 <Border x:Name="SeparateCard" Classes="genAgent" Classes.on="{Binding IsSeparateChosen}" Tapped="OnSeparateTapped">

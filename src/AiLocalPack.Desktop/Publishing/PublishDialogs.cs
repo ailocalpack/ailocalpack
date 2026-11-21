@@ -39,11 +39,14 @@ public static class PublishRules
     /// <summary><c>Continue</c> is on once GitHub confirmed the sign-in and the box is ticked.</summary>
     public static bool CanContinue(bool signedIn, bool licenseAccepted) => Missing(signedIn, licenseAccepted) == PublishSignInMissing.None;
 
-    /// <summary>The similar-pack dialog's preselected choice: the new revision when it is recommended, else a separate pack.</summary>
+    /// <summary>
+    /// The similar-pack dialog's preselected choice: the new revision when it is recommended (never when it takes platforms
+    /// away, <see cref="SimilarPack.Loss"/>), else a separate pack.
+    /// </summary>
     public static PublishTarget DefaultTarget(SimilarPack similar)
     {
         ArgumentNullException.ThrowIfNull(similar);
-        return similar.RevisionRecommended ? new PublishTarget.RevisionOf(similar.Pack.Id) : new PublishTarget.NewPack();
+        return similar.RevisionRecommended && similar.Loss is null ? new PublishTarget.RevisionOf(similar.Pack.Id) : new PublishTarget.NewPack();
     }
 }
 
@@ -173,7 +176,8 @@ public sealed record SimilarPackRequest(LocalPack Pack, SimilarPack Similar, Act
 /// "A pack for Русский already exists" (design §7): the registry pack (author, revision, status, 👍, coverage, the build
 /// it was made for) and two radio cards: <i>New revision of «…» (rev N+1)</i>, marked <i>Recommended</i> by
 /// <see cref="SimilarPacks.Find"/>'s rule, and <i>A separate pack</i>. The recommended one is preselected
-/// (<see cref="PublishRules.DefaultTarget"/>). <c>Cancel</c> / <c>Publish</c>.
+/// (<see cref="PublishRules.DefaultTarget"/>). A revision that would take platforms away from the pack's players warns on
+/// its card and is never preselected (task 87); <c>Publish</c> on it sends it anyway. <c>Cancel</c> / <c>Publish</c>.
 /// </summary>
 public sealed partial class SimilarPackDialogViewModel : DialogViewModel
 {
@@ -240,6 +244,12 @@ public sealed partial class SimilarPackDialogViewModel : DialogViewModel
     public bool IsBase => _request.Similar.IsBase;
 
     public bool IsRecommended => _request.Similar.RevisionRecommended;
+
+    /// <summary>A new revision would take platforms away from the pack's players (task 87): the revision card warns.</summary>
+    public bool HasPlatformWarning => _request.Similar.Loss is not null;
+
+    /// <summary>"Rev 3 supports Windows; your revision would support only macOS: Windows players would lose a compatible translation."</summary>
+    public string PlatformWarning => _request.Similar.Loss is { } loss ? PublishTexts.Platforms(loss, _localizer) : string.Empty;
 
     /// <summary>"New revision of «Неон» (rev 4)".</summary>
     public string RevisionTitle => _localizer.Format(nameof(Strings.Publish_Similar_RevisionTitle), Existing.Title, NextRevision.ToString(CultureInfo.InvariantCulture));

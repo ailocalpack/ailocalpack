@@ -3145,6 +3145,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>公開の方法</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>リビジョン {0} は {1} に対応しています。あなたのリビジョンは {2} のみに対応します: {3} のプレイヤーは対応する翻訳を失います。</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} 別の翻訳として公開するか、もう一度新しいリビジョンを選んでそのまま公開してください。</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>このリビジョンは公開済みのものより対応プラットフォームが少なくなっています（{0}）。レジストリの CI はメンテナーに判断を任せます（メンテナーはマージできます）。他のプレイヤーの翻訳を残すには、別の翻訳として公開してください。</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>もう一度公開</value>
   </data>

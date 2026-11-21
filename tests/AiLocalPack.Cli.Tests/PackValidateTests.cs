@@ -27,6 +27,60 @@ public sealed class PackValidateTests : IDisposable
         File.WriteAllText(path, File.ReadAllText(path).Replace(from, to, StringComparison.Ordinal));
     }
 
+    /// <summary>The sample pack at <paramref name="root"/>/games/steam-620/ru/full with both builds made on <paramref name="os"/> (task 87).</summary>
+    private string CopyPackOn(string root, string os)
+    {
+        var folder = CopyPack($"{root}/{PackPath}");
+        var manifest = Path.Combine(folder, "manifest.json");
+        File.WriteAllText(manifest, File.ReadAllText(manifest)
+            .Replace("\"buildId\": \"1234567\",", $"\"buildId\": \"1234567\", \"os\": \"{os}\",", StringComparison.Ordinal)
+            .Replace("\"buildId\": \"1250000\",", $"\"buildId\": \"1250000\", \"os\": \"{os}\",", StringComparison.Ordinal));
+        return folder;
+    }
+
+    [Fact]
+    public async Task A_revision_dropping_a_platform_of_the_merged_one_fails()
+    {
+        // Arrange
+        CopyPackOn("base", "windows");
+        var folder = CopyPackOn("pr", "macos");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--github", "--base", _dir.Combine("base"));
+
+        // Assert
+        result.ExitCode.Should().Be(1);
+        result.StdOut.Should().Contain("title=platforms::rev 2 supports Windows; this revision would support only macOS: Windows players would lose a compatible translation.");
+    }
+
+    [Fact]
+    public async Task A_revision_keeping_the_merged_platforms_passes()
+    {
+        // Arrange
+        CopyPackOn("base", "windows");
+        var folder = CopyPackOn("pr", "windows");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--base", _dir.Combine("base"));
+
+        // Assert
+        result.ExitCode.Should().Be(0, result.StdOut);
+    }
+
+    [Fact]
+    public async Task A_new_pack_has_no_merged_revision_to_compare()
+    {
+        // Arrange
+        Directory.CreateDirectory(_dir.Combine("base"));
+        var folder = CopyPackOn("pr", "macos");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--base", _dir.Combine("base"));
+
+        // Assert
+        result.ExitCode.Should().Be(0, result.StdOut);
+    }
+
     [Fact]
     public async Task Valid_pack_passes()
     {

@@ -3145,6 +3145,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>发布方式</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>第 {0} 版支持 {1}；你的修订版只支持 {2}：{3} 玩家将失去可用的翻译。</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} 请将你的翻译作为单独的翻译发布，或再次选择新修订版以仍然发布它。</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>此修订版支持的平台比已发布的少（{0}）。注册表 CI 会交给维护者处理，维护者仍可合并；若要保留其他玩家的翻译，请将你的翻译单独发布。</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>重新发布</value>
   </data>

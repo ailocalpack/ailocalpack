@@ -85,4 +85,17 @@ public sealed class PublishRulesTests
         // Assert
         target.Should().BeOfType<PublishTarget.NewPack>();
     }
+
+    [Fact]
+    public void A_revision_that_takes_a_platform_away_is_not_preselected()
+    {
+        // Arrange
+        var similar = Similar(recommended: true) with { Loss = new PlatformLoss(3, [Core.Storage.OsKind.Windows], [Core.Storage.OsKind.MacOS], [Core.Storage.OsKind.Windows]) };
+
+        // Act
+        var target = PublishRules.DefaultTarget(similar);
+
+        // Assert
+        target.Should().BeOfType<PublishTarget.NewPack>();
+    }
 }

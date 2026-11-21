@@ -28,7 +28,18 @@ public enum PublishStep
 /// <c>Fix and resubmit</c> (task 62): with an open PR the branch is still rebuilt as one commit on the registry's head
 /// (force-pushed; the PR stays), so nothing but the pack's folder is in it and CI checks it from scratch.
 /// </param>
-public sealed record PublishRequest(LocalPack Pack, PublishTarget Target, RegistryRepo Registry, RegistryIndex? Index = null, string? GameName = null, bool Fresh = false);
+/// <param name="DropPlatforms">
+/// A new revision is sent even when it supports fewer platforms than the existing one (task 87: the player saw the
+/// warning, CLI <c>--drop-platforms</c>); else it stops with <see cref="PublishProblem.PlatformsLost"/>.
+/// </param>
+public sealed record PublishRequest(
+    LocalPack Pack,
+    PublishTarget Target,
+    RegistryRepo Registry,
+    RegistryIndex? Index = null,
+    string? GameName = null,
+    bool Fresh = false,
+    bool DropPlatforms = false);
 
 /// <summary>How <see cref="PackPublisher.PublishAsync"/> ended.</summary>
 public abstract record PublishResult
@@ -47,7 +58,14 @@ public abstract record PublishResult
     /// <param name="Message">One plain sentence or two for the player.</param>
     /// <param name="RetryAt">For <see cref="PublishProblem.RateLimited"/>: when GitHub accepts requests again, if it said.</param>
     /// <param name="Problems">For <see cref="PublishProblem.Invalid"/>: what the registry's checks refuse.</param>
-    public sealed record Failed(PublishStep? Step, PublishProblem Problem, string Message, DateTimeOffset? RetryAt = null, IReadOnlyList<PackProblem>? Problems = null) : PublishResult;
+    /// <param name="Loss">For <see cref="PublishProblem.PlatformsLost"/>: the platforms the revision would take away.</param>
+    public sealed record Failed(
+        PublishStep? Step,
+        PublishProblem Problem,
+        string Message,
+        DateTimeOffset? RetryAt = null,
+        IReadOnlyList<PackProblem>? Problems = null,
+        PlatformLoss? Loss = null) : PublishResult;
 }
 
 /// <summary>
@@ -313,7 +331,18 @@ public sealed class PackPublisher
                 }
 
                 existing = value;
-                manifest = PublishPayloads.Revision(local, value, player, now, request.Registry);
+                var localStrings = await ReadLocalStringsAsync(request.Pack, cancellationToken).ConfigureAwait(false);
+                var existingStrings = await ReadRegistryStringsAsync(api, request.Registry, $"{languageFolder}/{revision.PackId}", value, baseSha, cancellationToken).ConfigureAwait(false);
+                manifest = PublishPayloads.Revision(local, value, player, now, request.Registry, localStrings, existingStrings);
+                if (PackPlatforms.Lost(value, manifest) is { } loss && !request.DropPlatforms)
+                {
+                    return (null, new PublishResult.Failed(
+                        null,
+                        PublishProblem.PlatformsLost,
+                        $"«{value.Title}» {loss.Describe()} Publish it as a separate pack instead.",
+                        Loss: loss));
+                }
+
                 break;
             default:
                 manifest = PublishPayloads.NewPack(local, player, PublishPayloads.FreeId(local.Id, taken), now, request.Registry);
@@ -328,6 +357,39 @@ public sealed class PackPublisher
 
         var archiveName = manifest.Patch is null ? null : LocalPackStore.PatchArchiveName(manifest.Game, manifest.Language, manifest.Id, manifest.Revision);
         return (new PublishPayload(manifest, existing, files, archiveName), null);
+    }
+
+    /// <summary>The local pack's string table, or <c>null</c> when it has none or it can't be read (then nothing is carried over).</summary>
+    private static async Task<StringTable?> ReadLocalStringsAsync(LocalPack pack, CancellationToken cancellationToken)
+    {
+        if (pack.Manifest.Strings is not { } strings)
+        {
+            return null;
+        }
+
+        var bytes = await File.ReadAllBytesAsync(Path.Combine(pack.Folder, strings.Path.Replace('/', Path.DirectorySeparatorChar)), cancellationToken).ConfigureAwait(false);
+        return StringTableSerializer.Read(bytes).Value;
+    }
+
+    /// <summary>
+    /// The existing revision's string table at the registry's head (its stored size and SHA-256 checked), or <c>null</c>
+    /// when it has none, isn't there or doesn't match: then its other platforms aren't carried over (task 87).
+    /// </summary>
+    private async Task<StringTable?> ReadRegistryStringsAsync(GitHubRestClient api, RegistryRepo registry, string packFolder, PackManifest existing, string baseSha, CancellationToken cancellationToken)
+    {
+        if (existing.Strings is not { } strings
+            || await api.TryGetRawAsync($"repos/{registry.FullName}/contents/{packFolder}/{strings.Path}?ref={baseSha}", cancellationToken).ConfigureAwait(false) is not { } bytes)
+        {
+            return null;
+        }
+
+        if (bytes.LongLength != strings.Size || !string.Equals(Convert.ToHexStringLower(SHA256.HashData(bytes)), strings.Sha256, StringComparison.Ordinal))
+        {
+            _logger.LogWarning("The registry's string table of {Folder} doesn't match its manifest; its other platforms aren't kept", packFolder);
+            return null;
+        }
+
+        return StringTableSerializer.Read(bytes).Value;
     }
 
     /// <summary>The registry's checks on the folder as it will be committed (staged in the cache, laid out like the registry).</summary>

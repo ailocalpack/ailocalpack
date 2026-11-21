@@ -5,6 +5,7 @@ using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Publishing;
 using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Secrets;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Publishing;
 
@@ -507,6 +508,71 @@ public sealed class PackPublisherTests : IDisposable
         // Assert
         _bed.Api.Files(Fork, "pack/steam-620/ru/full/rev-2")!.Keys.Where(k => k.StartsWith("games/", StringComparison.Ordinal))
             .Should().BeEquivalentTo("games/steam-620/ru/full/manifest.json", "games/steam-620/ru/full/strings/strings.json.gz");
+    }
+
+    [Fact]
+    public async Task A_revision_made_on_another_platform_keeps_the_registry_revisions_build()
+    {
+        // Arrange
+        var windows = new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('c', 64) }, OsKind.Windows);
+        _bed.AddRegistryPackFor([windows], "a");
+        var pack = _bed.SaveLocal(PublishBed.LocalManifestOn(OsKind.MacOS));
+
+        // Act
+        await _bed.PublishAsync(pack, new PublishTarget.RevisionOf("full"));
+
+        // Assert
+        _bed.CommittedManifest(Fork, "pack/steam-620/ru/full/rev-2", "games/steam-620/ru/full").Builds
+            .Select(b => (b.BuildId, b.Os)).Should().Equal(("1000", OsKind.MacOS), ("1000", OsKind.Windows));
+    }
+
+    [Fact]
+    public async Task A_revision_that_takes_a_platform_away_is_refused()
+    {
+        // Arrange
+        _bed.AddRegistryPackFor([new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('c', 64) }, OsKind.Windows)], "a", "gone");
+        var pack = _bed.SaveLocal(PublishBed.LocalManifestOn(OsKind.MacOS));
+
+        // Act
+        var result = await _bed.PublishAsync(pack, new PublishTarget.RevisionOf("full"));
+
+        // Assert
+        result.Should().BeOfType<PublishResult.Failed>().Which.Should().BeEquivalentTo(new
+        {
+            Step = PublishStep.Commit,
+            Problem = PublishProblem.PlatformsLost,
+            Message = "«Full translation» rev 1 supports Windows; this revision would support only macOS: Windows players would lose a compatible translation. Publish it as a separate pack instead.",
+            Loss = new PlatformLoss(1, [OsKind.Windows], [OsKind.MacOS], [OsKind.Windows]),
+        }, o => o.ExcludingMissingMembers());
+    }
+
+    [Fact]
+    public async Task A_refused_revision_sends_nothing()
+    {
+        // Arrange
+        _bed.AddRegistryPackFor([new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('c', 64) }, OsKind.Windows)], "a", "gone");
+        var pack = _bed.SaveLocal(PublishBed.LocalManifestOn(OsKind.MacOS));
+
+        // Act
+        await _bed.PublishAsync(pack, new PublishTarget.RevisionOf("full"));
+
+        // Assert
+        _bed.Api.PullRequests.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task A_revision_that_takes_a_platform_away_is_sent_when_the_player_agreed()
+    {
+        // Arrange
+        _bed.AddRegistryPackFor([new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('c', 64) }, OsKind.Windows)], "a", "gone");
+        var pack = _bed.SaveLocal(PublishBed.LocalManifestOn(OsKind.MacOS));
+        var request = new PublishRequest(pack, new PublishTarget.RevisionOf("full"), RegistryRepo.Default, DropPlatforms: true);
+
+        // Act
+        var result = await _bed.Publisher().PublishAsync(request, null, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Should().BeOfType<PublishResult.Published>().Which.Manifest.Builds.Select(b => b.Os).Should().Equal(OsKind.MacOS);
     }
 
     [Fact]

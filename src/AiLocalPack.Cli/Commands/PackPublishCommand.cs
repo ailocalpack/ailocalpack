@@ -11,11 +11,12 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace AiLocalPack.Cli.Commands;
 
 /// <summary>
-/// <c>pack publish &lt;local pack&gt; [--registry &lt;owner/repo&gt;] [--new | --revision-of &lt;id&gt;]</c> (task 60):
+/// <c>pack publish &lt;local pack&gt; [--registry &lt;owner/repo&gt;] [--new | --revision-of &lt;id&gt; [--drop-platforms]]</c> (task 60):
 /// sends a local pack (its folder as <c>pack local</c> prints it, or <c>&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c>) to the
 /// registry as a pull request from the player's fork, signed in with <c>github login</c>. When the registry index lists
 /// packs of the same game + language and neither <c>--new</c> nor <c>--revision-of</c> is given, it lists them (with
-/// the recommended one) and stops: exit 1. Publishing the same pack again pushes to the open PR (a fix). Exit 0 =
+/// the recommended one) and stops: exit 1. A revision supporting fewer platforms than the registry's (task 87) is
+/// refused unless <c>--drop-platforms</c> is given. Publishing the same pack again pushes to the open PR (a fix). Exit 0 =
 /// PR opened or updated; 1 = not published (the reason on stderr).
 /// </summary>
 internal static class PackPublishCommand
@@ -26,11 +27,12 @@ internal static class PackPublishCommand
         var registry = new Option<string>("--registry") { Description = $"The registry repository to open the PR in (default {RegistryRepo.Variable}, else {RegistryRepo.Default}); a test registry for trying it out." };
         var asNew = new Option<bool>("--new") { Description = "Publish as a separate pack even when the registry has packs for this game and language." };
         var revisionOf = new Option<string?>("--revision-of") { Description = "Publish as the next revision of this registry pack (same game and language); its author stays the author, you are credited." };
+        var dropPlatforms = new Option<bool>("--drop-platforms") { Description = "With --revision-of: publish it even when it supports fewer platforms (Windows, macOS, Linux) than the registry's revision; registry CI then leaves it to a maintainer." };
         var publish = new Command(
             "publish",
             "Publish a local pack to the registry as a GitHub pull request from your fork (sign in first with 'github login'). Publishing it again pushes to the same PR.")
         {
-            packArgument, registry, asNew, revisionOf,
+            packArgument, registry, asNew, revisionOf, dropPlatforms,
         };
         publish.SetAction(async (result, cancellationToken) =>
         {
@@ -46,6 +48,12 @@ internal static class PackPublishCommand
             if (result.GetValue(asNew) && result.GetValue(revisionOf) is not null)
             {
                 await error.WriteLineAsync("Give --new or --revision-of, not both.");
+                return 1;
+            }
+
+            if (result.GetValue(dropPlatforms) && result.GetValue(revisionOf) is null)
+            {
+                await error.WriteLineAsync("--drop-platforms goes with --revision-of <id>.");
                 return 1;
             }
 
@@ -82,6 +90,10 @@ internal static class PackPublishCommand
                     var p = s.Pack;
                     await error.WriteLineAsync(string.Create(CultureInfo.InvariantCulture,
                         $"  {p.Id}: «{p.Title}» by {p.Author.GitHub}, rev {p.Revision}, {PackManifestSerializer.StatusText(p.Status)}, {p.Coverage.Translated} of {p.Coverage.Total} strings, builds {(p.BuildIds.Count == 0 ? "-" : string.Join(", ", p.BuildIds))}, {p.Rating.Likes} likes{(s.IsBase ? " (your pack is an update of it)" : "")}{(s.RevisionRecommended ? " — recommended: --revision-of " + p.Id : "")}"));
+                    if (s.Loss is { } loss)
+                    {
+                        await error.WriteLineAsync($"    a new revision of it: {loss.Describe()}");
+                    }
                 }
 
                 return 1;
@@ -92,7 +104,7 @@ internal static class PackPublishCommand
             var session = GitHubCommand.CreateSession(env, http);
             var publisher = new PackPublisher(session, http, store, paths);
             var steps = new Progress(output, repo);
-            var published = await publisher.PublishAsync(new PublishRequest(pack, target, repo, index, GameName(paths, manifest.Game)), steps, cancellationToken);
+            var published = await publisher.PublishAsync(new PublishRequest(pack, target, repo, index, GameName(paths, manifest.Game), DropPlatforms: result.GetValue(dropPlatforms)), steps, cancellationToken);
             switch (published)
             {
                 case PublishResult.Published done:
@@ -111,6 +123,11 @@ internal static class PackPublishCommand
                     foreach (var problem in failed.Problems ?? [])
                     {
                         await error.WriteLineAsync($"  {problem}");
+                    }
+
+                    if (failed.Problem == PublishProblem.PlatformsLost)
+                    {
+                        await error.WriteLineAsync("  --new publishes it as a separate pack; --drop-platforms publishes the revision anyway (registry CI then leaves it to a maintainer).");
                     }
 
                     return 1;

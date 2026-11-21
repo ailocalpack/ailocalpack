@@ -3337,6 +3337,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>Як опублікувати</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>Ревізія {0} працює на {1}; ваша ревізія працюватиме лише на {2}: гравці на {3} втратять сумісний переклад.</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} Опублікуйте свій переклад окремо або знову виберіть нову ревізію, щоб усе одно її опублікувати.</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>Ця ревізія підтримує менше платформ, ніж опублікована ({0}). CI реєстру залишає її мейнтейнеру — він ще може її прийняти; щоб інші гравці зберегли переклад, опублікуйте свій окремо.</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>Опублікувати знову</value>
   </data>

@@ -250,6 +250,12 @@ public enum CiFailureKind
     /// <summary>The pack validator refused a file of the pack (a field of the manifest, the string table…).</summary>
     Pack,
 
+    /// <summary>
+    /// The revision supports fewer platforms than the merged one (task 87, <c>pack validate --base</c>, titled
+    /// <see cref="Packs.PackPlatforms.ProblemField"/>): only a maintainer merges it.
+    /// </summary>
+    Platforms,
+
     /// <summary>A check about the registry itself (index build, schemas, the CLI): not the pack's fault as far as the app can tell.</summary>
     Registry,
 
@@ -274,7 +280,7 @@ public static class CiFailures
     /// The failure annotations that say something (not "Process completed with exit code N"), classified by the first
     /// one: the scope title → <see cref="CiFailureKind.Scope"/>; on the pack's folder (<paramref name="packFolder"/>,
     /// <c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c>) titled <c>status</c> → <see cref="CiFailureKind.Status"/>,
-    /// <c>patch</c> → <see cref="CiFailureKind.Patch"/>, else <see cref="CiFailureKind.Pack"/>; anything else →
+    /// <c>patch</c> → <see cref="CiFailureKind.Patch"/>, <c>platforms</c> → <see cref="CiFailureKind.Platforms"/>, else <see cref="CiFailureKind.Pack"/>; anything else →
     /// <see cref="CiFailureKind.Registry"/>; none → <see cref="CiFailureKind.Unknown"/>.
     /// </summary>
     public static CiFailure Explain(IReadOnlyList<CiAnnotation> annotations, string packFolder)
@@ -298,6 +304,7 @@ public static class CiFailures
             {
                 "status" => CiFailureKind.Status,
                 "patch" => CiFailureKind.Patch,
+                Packs.PackPlatforms.ProblemField => CiFailureKind.Platforms,
                 _ => CiFailureKind.Pack,
             },
             _ => CiFailureKind.Registry,

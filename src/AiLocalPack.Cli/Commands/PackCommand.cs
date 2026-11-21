@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Registry;
 using AiLocalPack.Core.Settings;
 using AiLocalPack.Core.Steam;
 using AiLocalPack.Core.Storage;
@@ -218,20 +219,31 @@ internal static class PackCommand
             Arity = ArgumentArity.OneOrMore,
         };
         var github = new Option<bool>("--github") { Description = "Also print problems as GitHub Actions annotations (::error file=...)." };
+        var baseRoot = new Option<string?>("--base")
+        {
+            Description = "The registry as merged (a checkout of the base commit): a pack that is there too (games/<game>/<language>/<pack id>) is a new revision, refused when it supports fewer platforms (Windows, macOS, Linux) than the merged one.",
+        };
         var validate = new Command(
             "validate",
             "Check pack folders as registry CI does: manifest, string table, size and hash, folder layout, no executable files, size limits. Exit code 1 = a pack is invalid.")
         {
-            folders, github,
+            folders, github, baseRoot,
         };
         validate.SetAction((result, cancellationToken) =>
         {
             var output = result.InvocationConfiguration.Output;
             var annotate = result.GetValue(github);
+            var merged = result.GetValue(baseRoot);
             var allValid = true;
             foreach (var folder in result.GetValue(folders)!)
             {
                 var validation = PackValidator.Validate(folder, cancellationToken);
+                if (merged is not null && validation.Manifest is { } revision && MergedManifest(merged, revision) is { } previous
+                    && PackPlatforms.Problem(previous, revision) is { } lost)
+                {
+                    validation = validation with { Problems = [.. validation.Problems, lost] };
+                }
+
                 allValid &= validation.IsValid;
                 var name = folder.Replace('\\', '/').TrimEnd('/');
                 if (validation.IsValid)
@@ -259,6 +271,21 @@ internal static class PackCommand
             return Task.FromResult(allValid ? 0 : 1);
         });
         return validate;
+    }
+
+    /// <summary>The merged revision of a pack: the manifest in its registry folder (<c>games/&lt;game&gt;/&lt;language&gt;/&lt;id&gt;</c>) under <paramref name="root"/>, when readable.</summary>
+    private static PackManifest? MergedManifest(string root, PackManifest revision)
+    {
+        var folder = $"{RegistryLayout.GamesFolder}/{RegistryLayout.GameFolder(revision.Game)}/{revision.Language}/{revision.Id}";
+        var file = Path.Combine(root, folder.Replace('/', Path.DirectorySeparatorChar), RegistryLayout.ManifestFileName);
+        try
+        {
+            return File.Exists(file) ? PackManifestSerializer.Read(File.ReadAllText(file)).Value : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
     }
 
     internal static PackManifest? ReadManifest(string path, TextWriter error)

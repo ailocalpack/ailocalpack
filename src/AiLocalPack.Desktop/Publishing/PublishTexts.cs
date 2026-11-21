@@ -1,4 +1,5 @@
 using System.Globalization;
+using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Resources;
@@ -54,6 +55,7 @@ public static class PublishTexts
             PublishProblem.OptedOut => localizer[nameof(Strings.Publish_Error_OptedOut)],
             PublishProblem.TargetGone => localizer[nameof(Strings.Publish_Error_TargetGone)],
             PublishProblem.ForkNotReady => localizer[nameof(Strings.Publish_Error_ForkNotReady)],
+            PublishProblem.PlatformsLost when failed.Loss is { } loss => localizer.Format(nameof(Strings.Publish_Error_PlatformsLost), Platforms(loss, localizer)),
             _ => localizer.Format(nameof(Strings.Publish_Error_Unexpected), doing),
         };
     }
@@ -73,9 +75,23 @@ public static class PublishTexts
             CiFailureKind.Status => localizer.Format(nameof(Strings.Publish_Ci_Status), problem),
             CiFailureKind.Patch => localizer.Format(nameof(Strings.Publish_Ci_Patch), problem),
             CiFailureKind.Pack => localizer.Format(nameof(Strings.Publish_Ci_Pack), problem),
+            CiFailureKind.Platforms => localizer.Format(nameof(Strings.Publish_Ci_Platforms), problem),
             CiFailureKind.Registry => localizer.Format(nameof(Strings.Publish_Ci_Registry), problem),
             _ => localizer[nameof(Strings.Publish_Ci_Unknown)],
         };
+    }
+
+    /// <summary>"Rev 3 supports Windows; your revision would support only macOS: Windows players would lose a compatible translation."</summary>
+    public static string Platforms(PlatformLoss loss, Localizer localizer)
+    {
+        ArgumentNullException.ThrowIfNull(loss);
+        ArgumentNullException.ThrowIfNull(localizer);
+        return localizer.Format(
+            nameof(Strings.Publish_Similar_PlatformsLost),
+            loss.Revision.ToString(CultureInfo.InvariantCulture),
+            PlatformLoss.Names(loss.Existing),
+            PlatformLoss.Names(loss.Kept),
+            PlatformLoss.Names(loss.Lost));
     }
 
     /// <summary>"rev 4 of «Неон»" for a new revision, "«Курьер 2087»" for a new pack.</summary>

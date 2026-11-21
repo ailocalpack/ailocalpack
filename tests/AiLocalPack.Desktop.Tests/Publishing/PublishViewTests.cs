@@ -72,6 +72,28 @@ public sealed class PublishViewTests
         window.Close();
     });
 
+    [Fact]
+    public Task A_revision_taking_a_platform_away_warns_on_its_card() => HeadlessUi.RunAsync(async () =>
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        var pack = bed.LocalPack(tried: Tried);
+        var window = Open(bed, GamePageTab.Generation);
+        var existing = new Core.Registry.RegistryPack("neon", InstallBed.Alpha, "ru", "neon", new Core.Packs.PackAuthor("alice"), Core.Packs.PackStatus.Alpha, 1,
+            Tried, new Core.Packs.PackCoverage(5, 10), ["1000"], 1, "games/steam-10/ru/neon/manifest.json", 100, Core.Registry.RegistryRating.None);
+        var loss = new Core.Packs.PlatformLoss(1, [Core.Storage.OsKind.Windows], [Core.Storage.OsKind.MacOS], [Core.Storage.OsKind.Windows]);
+
+        // Act
+        bed.Services.GetRequiredService<Dialogs.IDialogService>().Show<SimilarPackDialogViewModel>(
+            new SimilarPackRequest(pack, new SimilarPack(existing, IsBase: false, RevisionRecommended: false, loss), _ => { }));
+        Dispatcher.UIThread.RunJobs();
+
+        // Assert
+        (Find<Border>(window, "PlatformWarning").IsEffectivelyVisible, Find<RadioButton>(window, "SeparateChoice").IsChecked)
+            .Should().Be((true, true));
+        window.Close();
+    });
+
     private static async Task RejectedAsync(InstallBed bed)
     {
         bed.LocalPack(tried: Tried);

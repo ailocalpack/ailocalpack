@@ -121,6 +121,32 @@ internal sealed class PublishBed : IDisposable
         return manifest;
     }
 
+    /// <summary>
+    /// A registry pack <c>full</c> by alice (rev 1) made for <paramref name="builds"/>, with a real string table of
+    /// <paramref name="keys"/> (task 87: what a revision carries over is decided from it).
+    /// </summary>
+    public PackManifest AddRegistryPackFor(IReadOnlyList<PackBuild> builds, params string[] keys)
+    {
+        using var stream = new MemoryStream();
+        StringTableSerializer.Write(new StringTable("ru", keys.ToDictionary(k => k, k => "перевод " + k, StringComparer.Ordinal)), stream);
+        var table = stream.ToArray();
+        var manifest = AddRegistryPack() with
+        {
+            Builds = builds,
+            Strings = new PackStringsFile(PackStringsFile.DefaultPath, Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(table)), table.LongLength),
+        };
+        Api.CommitBytes(Registry, "master", new Dictionary<string, byte[]?>
+        {
+            ["games/steam-620/ru/full/manifest.json"] = Encoding.UTF8.GetBytes(PackManifestSerializer.Write(manifest)),
+            ["games/steam-620/ru/full/strings/strings.json.gz"] = table,
+        });
+        return manifest;
+    }
+
+    /// <summary>The local manifest made on <paramref name="os"/> for build 1000.</summary>
+    public static PackManifest LocalManifestOn(OsKind os) =>
+        LocalManifest() with { Builds = [new PackBuild("1000", new Dictionary<string, string> { ["data/Items.json"] = new('a', 64) }, os)] };
+
     public PackManifest CommittedManifest(string fork, string branch, string folder) =>
         PackManifestSerializer.Read(Encoding.UTF8.GetString(Api.Files(fork, branch)![$"{folder}/manifest.json"])).Value!;
 }

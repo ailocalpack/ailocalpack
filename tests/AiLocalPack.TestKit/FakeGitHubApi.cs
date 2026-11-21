@@ -105,22 +105,26 @@ public sealed partial class FakeGitHubApi : HttpMessageHandler
     }
 
     /// <summary>Adds a commit to <paramref name="fullName"/>'s <paramref name="branch"/> with these files changed.</summary>
-    public string Commit(string fullName, string branch, IReadOnlyDictionary<string, string?> changes, string message = "Change")
+    public string Commit(string fullName, string branch, IReadOnlyDictionary<string, string?> changes, string message = "Change") =>
+        CommitBytes(fullName, branch, changes.ToDictionary(c => c.Key, c => c.Value is null ? null : Encoding.UTF8.GetBytes(c.Value), StringComparer.Ordinal), message);
+
+    /// <summary>Like <see cref="Commit"/>, with binary contents (<c>null</c> deletes the file).</summary>
+    public string CommitBytes(string fullName, string branch, IReadOnlyDictionary<string, byte[]?> changes, string message = "Change")
     {
         lock (_lock)
         {
             var repo = _repos[fullName];
             var parent = repo.Refs.GetValueOrDefault(branch) ?? repo.Refs[repo.DefaultBranch];
             var tree = new Dictionary<string, string>(_trees[_commits[parent].Tree], StringComparer.Ordinal);
-            foreach (var (path, text) in changes)
+            foreach (var (path, content) in changes)
             {
-                if (text is null)
+                if (content is null)
                 {
                     tree.Remove(path);
                 }
                 else
                 {
-                    tree[path] = PutBlob(Encoding.UTF8.GetBytes(text));
+                    tree[path] = PutBlob(content);
                 }
             }
 

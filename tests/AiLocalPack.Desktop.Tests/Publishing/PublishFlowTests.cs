@@ -132,6 +132,86 @@ public sealed class PublishFlowTests
         (Dialog(bed), Publisher(bed).Requests.Single().Target).Should().Be((null, new PublishTarget.NewPack()));
     }
 
+    private static readonly Core.Packs.PlatformLoss WindowsLost =
+        new(1, [Core.Storage.OsKind.Windows], [Core.Storage.OsKind.MacOS], [Core.Storage.OsKind.Windows]);
+
+    /// <summary>A revision of «neon» the publish client refused for the platforms it takes away; the dialog shows again.</summary>
+    private static async Task<SimilarPackDialogViewModel> RefusedForPlatformsAsync(InstallBed bed)
+    {
+        var pack = bed.LocalPack(tried: Tried);
+        SignedInAndLicensed(bed);
+        Publisher(bed).Result = r => r.DropPlatforms
+            ? null!
+            : new PublishResult.Failed(PublishStep.Commit, PublishProblem.PlatformsLost, "Lost Windows.", Loss: WindowsLost);
+        Flow(bed).Publish(bed.Game, pack);
+        var first = (SimilarPackDialogViewModel)Dialog(bed)!;
+        first.ChooseRevisionCommand.Execute(null);
+        first.PublishCommand.Execute(null);
+        await Until(() => !Flow(bed).IsBusy && Publisher(bed).Requests.Count > 0);
+        Flow(bed).Publish(bed.Game, Fresh(bed));
+        return (SimilarPackDialogViewModel)Dialog(bed)!;
+    }
+
+    [Fact]
+    public async Task A_revision_refused_for_its_platforms_warns_on_its_card_next_time()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.Registry.Pack(10, "ru", "neon", translated: 5));
+
+        // Act
+        var dialog = await RefusedForPlatformsAsync(bed);
+
+        // Assert
+        (dialog.HasPlatformWarning, dialog.PlatformWarning).Should().Be((true, "Rev 1 supports Windows; your revision would support only macOS: Windows players would lose a compatible translation."));
+    }
+
+    [Fact]
+    public async Task A_revision_refused_for_its_platforms_preselects_a_separate_pack()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.Registry.Pack(10, "ru", "neon", translated: 5));
+
+        // Act
+        var dialog = await RefusedForPlatformsAsync(bed);
+
+        // Assert
+        (dialog.IsRecommended, dialog.Target).Should().Be((false, new PublishTarget.NewPack()));
+    }
+
+    [Fact]
+    public async Task Choosing_the_revision_after_the_warning_sends_it_anyway()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.Registry.Pack(10, "ru", "neon", translated: 5));
+        var dialog = await RefusedForPlatformsAsync(bed);
+        dialog.ChooseRevisionCommand.Execute(null);
+
+        // Act
+        dialog.PublishCommand.Execute(null);
+        await Until(() => !Flow(bed).IsBusy && Publisher(bed).Requests.Count > 1);
+
+        // Assert
+        (Publisher(bed).Requests[^1].Target, Publisher(bed).Requests[^1].DropPlatforms).Should().Be((new PublishTarget.RevisionOf("neon"), true));
+    }
+
+    [Fact]
+    public async Task A_revision_without_a_warning_is_sent_without_dropping_platforms()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync(b => b.Registry.Pack(10, "ru", "neon", translated: 5));
+        var pack = bed.LocalPack(tried: Tried);
+        SignedInAndLicensed(bed);
+        Flow(bed).Publish(bed.Game, pack);
+        var dialog = (SimilarPackDialogViewModel)Dialog(bed)!;
+
+        // Act
+        dialog.PublishCommand.Execute(null);
+        await Until(() => !Flow(bed).IsBusy && Publisher(bed).Requests.Count > 0);
+
+        // Assert
+        Publisher(bed).Requests.Single().DropPlatforms.Should().BeFalse();
+    }
+
     [Fact]
     public async Task Continue_in_the_first_time_dialog_remembers_the_license_and_goes_on()
     {

@@ -232,6 +232,16 @@ public sealed class PullRequestStatusTests : IDisposable
     }
 
     [Fact]
+    public void A_dropped_platform_is_a_platforms_failure()
+    {
+        // Act
+        var failure = CiFailures.Explain([Failure(Folder + "/manifest.json", "platforms", "rev 1 supports Windows; this revision would support only macOS")], Folder);
+
+        // Assert
+        failure.Kind.Should().Be(CiFailureKind.Platforms);
+    }
+
+    [Fact]
     public void A_validator_error_on_a_pack_file_is_a_pack_failure_worded_with_its_field()
     {
         // Act

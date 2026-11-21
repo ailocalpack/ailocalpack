@@ -3337,6 +3337,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>Como publicar</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>A rev. {0} funciona em {1}; sua revisão funcionaria só em {2}: os jogadores de {3} perderiam uma tradução compatível.</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} Publique a sua como uma tradução separada ou escolha de novo a nova revisão para publicá-la mesmo assim.</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>Esta revisão oferece suporte a menos plataformas que a publicada ({0}). A CI do registro deixa a decisão para um mantenedor, que ainda pode fazer o merge; para que os outros jogadores mantenham a tradução, publique a sua separadamente.</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>Publicar de novo</value>
   </data>

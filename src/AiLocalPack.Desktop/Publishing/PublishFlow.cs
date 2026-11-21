@@ -45,6 +45,9 @@ public sealed class PublishFlow
     private readonly ILogger<PublishFlow> _logger;
     private readonly Lock _lock = new();
     private readonly Dictionary<string, PublishResult.Failed> _failures = [];
+
+    /// <summary>The registry pack a failure with <see cref="PublishResult.Failed.Loss"/> was a revision of, per pack key.</summary>
+    private readonly Dictionary<string, string> _lossTargets = [];
     private PublishRun? _running;
     private ActivityTask? _task;
 
@@ -190,7 +193,11 @@ public sealed class PublishFlow
     /// another one runs.
     /// </summary>
     /// <param name="fresh">A resubmit: an open PR's branch is rebuilt on the registry's head (<see cref="PublishRequest.Fresh"/>).</param>
-    public async Task<PublishResult?> SendAsync(Game game, LocalPack pack, PublishTarget target, bool fresh = false)
+    /// <param name="dropPlatforms">
+    /// The player chose the revision after its warning that it takes platforms away (task 87,
+    /// <see cref="PublishRequest.DropPlatforms"/>); a resubmit to an open PR sends what was chosen then.
+    /// </param>
+    public async Task<PublishResult?> SendAsync(Game game, LocalPack pack, PublishTarget target, bool fresh = false, bool dropPlatforms = false)
     {
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(pack);
@@ -210,6 +217,7 @@ public sealed class PublishFlow
 
             _running = run;
             _failures.Remove(key);
+            _lossTargets.Remove(key);
         }
 
         var started = _time.GetUtcNow();
@@ -241,7 +249,7 @@ public sealed class PublishFlow
         try
         {
             _logger.LogInformation("Publishing {Pack} of {Game} to {Registry} as {Target}", key, game.Id, _publisher.Registry, target);
-            result = await Task.Run(() => _publisher.PublishAsync(new PublishRequest(pack, target, _publisher.Registry, index, game.Name, fresh), progress));
+            result = await Task.Run(() => _publisher.PublishAsync(new PublishRequest(pack, target, _publisher.Registry, index, game.Name, fresh, dropPlatforms || fresh), progress));
         }
         catch (Exception e) when (e is not OperationCanceledException)
         {
@@ -256,6 +264,10 @@ public sealed class PublishFlow
             if (result is PublishResult.Failed failed)
             {
                 _failures[key] = failed;
+                if (failed.Loss is not null && target is PublishTarget.RevisionOf lossTarget)
+                {
+                    _lossTargets[key] = lossTarget.PackId;
+                }
             }
         }
 
@@ -301,7 +313,18 @@ public sealed class PublishFlow
             return;
         }
 
-        _dialogs.Show<SimilarPackDialogViewModel>(new SimilarPackRequest(fresh, similar[0], target => _ = SendAsync(game, fresh, target)));
+        // A revision the publish client refused for the platforms it takes away (a loss the index couldn't tell) warns now.
+        var key = PublishStatuses.KeyOf(fresh);
+        SimilarPack shown;
+        lock (_lock)
+        {
+            shown = SimilarPacks.WithLoss(similar[0], _lossTargets.GetValueOrDefault(key), _failures.GetValueOrDefault(key)?.Loss);
+        }
+
+        _dialogs.Show<SimilarPackDialogViewModel>(new SimilarPackRequest(
+            fresh,
+            shown,
+            target => _ = SendAsync(game, fresh, target, dropPlatforms: target is PublishTarget.RevisionOf && shown.Loss is not null)));
     }
 
     /// <summary>The step moved: the pages and the Activity running item follow.</summary>

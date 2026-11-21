@@ -50,6 +50,12 @@ public enum PublishProblem
     /// <summary>The fork didn't become ready in time.</summary>
     ForkNotReady,
 
+    /// <summary>
+    /// The new revision would take platforms away from the existing revision's players (task 87); sent only with
+    /// <see cref="PublishRequest.DropPlatforms"/>.
+    /// </summary>
+    PlatformsLost,
+
     /// <summary>An answer the app can't use, or a local file that can't be read.</summary>
     Unexpected,
 }

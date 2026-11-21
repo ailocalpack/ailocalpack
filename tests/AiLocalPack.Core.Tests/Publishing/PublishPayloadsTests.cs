@@ -1,5 +1,6 @@
 using AiLocalPack.Core.Packs;
 using AiLocalPack.Core.Publishing;
+using AiLocalPack.Core.Storage;
 
 namespace AiLocalPack.Core.Tests.Publishing;
 
@@ -65,6 +66,62 @@ public sealed class PublishPayloadsTests
         (manifest.Id, manifest.Title, manifest.Created, manifest.Updated).Should().Be(("full", "Full translation", Existing.Created, Now));
     }
 
+    private static PackBuild Build(string id, OsKind? os) => new(id, new Dictionary<string, string> { ["data/Items.json"] = new('c', 64) }, os);
+
+    private static StringTable Table(params string[] keys) => new("ru", keys.ToDictionary(k => k, k => "т " + k, StringComparer.Ordinal));
+
+    [Fact]
+    public void A_revision_keeps_the_builds_of_another_platform()
+    {
+        // Arrange
+        var existing = Existing with { Builds = [Build("1000", OsKind.Windows)] };
+
+        // Act
+        var manifest = PublishPayloads.Revision(PublishBed.LocalManifestOn(OsKind.MacOS), existing, Octo, Now, RegistryRepo.Default, Table("a"), Table("a"));
+
+        // Assert
+        manifest.Builds.Select(b => (b.BuildId, b.Os)).Should().Equal(("1000", OsKind.MacOS), ("1000", OsKind.Windows));
+    }
+
+    [Fact]
+    public void A_revision_replaces_the_builds_of_its_own_platform()
+    {
+        // Arrange
+        var existing = Existing with { Builds = [Build("900", OsKind.MacOS)] };
+
+        // Act
+        var manifest = PublishPayloads.Revision(PublishBed.LocalManifestOn(OsKind.MacOS), existing, Octo, Now, RegistryRepo.Default, Table("a"), Table("a"));
+
+        // Assert
+        manifest.Builds.Select(b => (b.BuildId, b.Os)).Should().Equal(("1000", OsKind.MacOS));
+    }
+
+    [Fact]
+    public void A_revision_missing_keys_of_the_existing_table_keeps_no_other_platform()
+    {
+        // Arrange
+        var existing = Existing with { Builds = [Build("1000", OsKind.Windows)] };
+
+        // Act
+        var manifest = PublishPayloads.Revision(PublishBed.LocalManifestOn(OsKind.MacOS), existing, Octo, Now, RegistryRepo.Default, Table("a"), Table("a", "b"));
+
+        // Assert
+        manifest.Builds.Select(b => b.Os).Should().Equal(OsKind.MacOS);
+    }
+
+    [Fact]
+    public void A_revision_keeps_builds_without_a_platform()
+    {
+        // Arrange
+        var existing = Existing with { Builds = [Build("1000", null)] };
+
+        // Act
+        var manifest = PublishPayloads.Revision(PublishBed.LocalManifestOn(OsKind.MacOS), existing, Octo, Now, RegistryRepo.Default, Table("a"), Table("a"));
+
+        // Assert
+        manifest.Builds.Select(b => (b.BuildId, b.Os)).Should().Equal(("1000", OsKind.MacOS), ("1000", (OsKind?)null));
+    }
+
     [Fact]
     public void A_revision_takes_the_local_packs_content()
     {
@@ -75,7 +132,7 @@ public sealed class PublishPayloadsTests
         var manifest = PublishPayloads.Revision(local, Existing, Octo, Now, RegistryRepo.Default);
 
         // Assert
-        (manifest.Coverage, manifest.Fonts, manifest.Builds).Should().Be((local.Coverage, local.Fonts, local.Builds));
+        manifest.Should().BeEquivalentTo(new { local.Coverage, local.Fonts, local.Builds }, o => o.ExcludingMissingMembers());
     }
 
     [Fact]

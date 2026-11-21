@@ -3269,6 +3269,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>How to publish</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>Rev {0} supports {1}; your revision would support only {2}: {3} players would lose a compatible translation.</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} Publish yours as a separate translation, or choose the new revision again to publish it anyway.</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>This revision supports fewer platforms than the published one ({0}). Registry CI leaves it to a maintainer, who can still merge it; to keep the other players' translation, publish yours as a separate translation.</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>Publish again</value>
   </data>

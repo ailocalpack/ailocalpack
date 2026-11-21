@@ -3337,6 +3337,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>Как опубликовать</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>Ревизия {0} работает на {1}; ваша ревизия будет работать только на {2}: игроки на {3} потеряют совместимый перевод.</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} Опубликуйте свой перевод отдельно или снова выберите новую ревизию, чтобы всё равно её опубликовать.</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>Эта ревизия поддерживает меньше платформ, чем опубликованная ({0}). CI реестра оставляет её мейнтейнеру — он всё ещё может её принять; чтобы у других игроков остался перевод, опубликуйте свой отдельно.</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>Опубликовать снова</value>
   </data>

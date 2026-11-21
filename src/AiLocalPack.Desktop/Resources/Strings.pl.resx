@@ -3337,6 +3337,15 @@
   <data name="Publish_Similar_Choice" xml:space="preserve">
     <value>Jak opublikować</value>
   </data>
+  <data name="Publish_Similar_PlatformsLost" xml:space="preserve">
+    <value>Rewizja {0} działa na {1}; twoja rewizja działałaby tylko na {2}: gracze na {3} straciliby zgodne tłumaczenie.</value>
+  </data>
+  <data name="Publish_Error_PlatformsLost" xml:space="preserve">
+    <value>{0} Opublikuj swoje jako osobne tłumaczenie albo wybierz ponownie nową rewizję, aby mimo to ją opublikować.</value>
+  </data>
+  <data name="Publish_Ci_Platforms" xml:space="preserve">
+    <value>Ta rewizja obsługuje mniej platform niż opublikowana ({0}). CI rejestru zostawia ją opiekunowi, który nadal może ją scalić; aby inni gracze zachowali tłumaczenie, opublikuj swoje osobno.</value>
+  </data>
   <data name="Publish_Again" xml:space="preserve">
     <value>Opublikuj ponownie</value>
   </data>
