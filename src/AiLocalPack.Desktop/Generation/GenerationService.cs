@@ -110,6 +110,7 @@ public interface IGenerationStagesFactory
 /// </summary>
 public sealed class GenerationService : IDisposable
 {
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<GenerationRun, object> _raising = [];
     private readonly GenerationJobs _jobs;
     private readonly AntiCheatPolicy _policy;
     private readonly PackIndex _packIndex;
@@ -765,11 +766,29 @@ public sealed class GenerationService : IDisposable
         lock (_lock)
         {
             _runs[game] = run;
-            _open[game] = new GenerationJobEntry(run.Folder, run.Job);
         }
 
+        // Subscribed first, then the current state under the run's gate: a report in between is raised by itself, and
+        // this one is never older than it (Gate).
         run.Changed += (_, job) => Update(run, job);
-        Changed?.Invoke(this, run.Job);
+        lock (Gate(run))
+        {
+            var current = run.Job;
+            lock (_lock)
+            {
+                if (current.IsOpen)
+                {
+                    _open[game] = new GenerationJobEntry(run.Folder, current);
+                }
+                else if (_open.GetValueOrDefault(game)?.Job.Id == current.Id)
+                {
+                    _open.Remove(game);
+                }
+            }
+
+            Changed?.Invoke(this, current);
+        }
+
         _ = run.Completion.ContinueWith(
             t =>
             {
@@ -783,34 +802,51 @@ public sealed class GenerationService : IDisposable
 
                 if (t.IsCompletedSuccessfully && t.Result is { } last)
                 {
-                    Update(run, last);
+                    Update(run, last, final: true);
                 }
             },
             TaskScheduler.Default);
     }
 
-    private void Update(GenerationRun run, GenerationJob job)
+    private void Update(GenerationRun run, GenerationJob job, bool final = false)
     {
-        lock (_lock)
+        // One state of a run at a time, never an older one after a newer (see Raise).
+        lock (Gate(run))
         {
-            if (job.IsOpen)
+            if (!final && !ReferenceEquals(job, run.Job))
             {
-                _open[job.Game] = new GenerationJobEntry(run.Folder, job);
+                return;
             }
-            else if (_open.GetValueOrDefault(job.Game)?.Job.Id == job.Id)
+
+            lock (_lock)
             {
-                _open.Remove(job.Game);
+                if (job.IsOpen)
+                {
+                    _open[job.Game] = new GenerationJobEntry(run.Folder, job);
+                }
+                else if (_open.GetValueOrDefault(job.Game)?.Job.Id == job.Id)
+                {
+                    _open.Remove(job.Game);
+                }
             }
-        }
 
-        if (job.Status == GenerationJobStatus.Completed)
-        {
-            // The Build stage saved the local pack: the game's result.
-            RefreshResult(job.Game, raise: false);
-        }
+            if (job.Status == GenerationJobStatus.Completed)
+            {
+                // The Build stage saved the local pack: the game's result.
+                RefreshResult(job.Game, raise: false);
+            }
 
-        Changed?.Invoke(this, job);
+            Changed?.Invoke(this, job);
+        }
     }
+
+    /// <summary>
+    /// A run's states are raised one at a time and never an older one after a newer: the run reports from its own thread
+    /// while <see cref="Follow"/> raises its first state, so a snapshot taken before a pause would otherwise arrive after it
+    /// (and the Activity panel would settle the limit decision it had just added). A report that isn't the run's current
+    /// state any more is dropped (the newer one is raised by its own report); the run's final state always is.
+    /// </summary>
+    private object Gate(GenerationRun run) => _raising.GetValue(run, _ => new object());
 
     private void EnsureLoaded()
     {
