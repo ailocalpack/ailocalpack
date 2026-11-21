@@ -554,15 +554,16 @@ public sealed class GameTestRunnerTests : IDisposable
     [Fact]
     public async Task The_agent_can_ask_for_a_longer_watch()
     {
-        // Arrange
-        var options = Short with { MaxWatch = TimeSpan.FromMilliseconds(400) };
+        // Arrange: the original's own watch is its loading time (≥ 100 ms); a slow runner may take a few hundred to load
+        // it, and one past MaxReady would read as "never loaded" (the cap), so both stay well apart from what is asked.
+        var options = Short with { MaxWatch = TimeSpan.FromSeconds(2), MaxReady = TimeSpan.FromSeconds(5) };
         var probe = new FakeProbe(FakeProbe.Checkers, bytes: 1000);
 
         // Act
-        var result = await RunAsync(new FakeGameProcesses(), options: options, probe: probe, atLeast: TimeSpan.FromMilliseconds(300));
+        var result = await RunAsync(new FakeGameProcesses(), options: options, probe: probe, atLeast: TimeSpan.FromMilliseconds(900));
 
         // Assert
-        result.Watch.Should().Be(TimeSpan.FromMilliseconds(300));
+        result.Watch.Should().Be(TimeSpan.FromMilliseconds(900));
     }
 
     [Fact]
