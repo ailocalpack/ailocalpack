@@ -881,12 +881,13 @@
                                 <Border Classes="genFoot">
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                         <StackPanel Spacing="6" VerticalAlignment="Center">
-                                            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding ShowCopyNote}">
-                                                <Viewbox Classes="icon" Width="14" Height="14">
+                                            <!-- A Grid, not a horizontal StackPanel: the note wraps within its column instead of running under the buttons. -->
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6" IsVisible="{Binding ShowCopyNote}">
+                                                <Viewbox Classes="icon" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0">
                                                     <Path Classes="icon" Data="{StaticResource IconUndo}" Stroke="{DynamicResource AppMutedBrush}" />
                                                 </Viewbox>
-                                                <TextBlock Classes="muted" FontSize="13" Text="{l:Loc Gen_Result_CopyNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
-                                            </StackPanel>
+                                                <TextBlock Grid.Column="1" Classes="muted" FontSize="13" Text="{l:Loc Gen_Result_CopyNote}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                            </Grid>
                                             <Button x:Name="ResultNewTranslation" Classes="link" HorizontalAlignment="Left" Margin="-4,0,0,0"
                                                     Command="{Binding NewTranslationCommand}" ToolTip.Tip="{l:Loc Gen_Result_NewTranslationTip}"
                                                     Foreground="{DynamicResource AppMutedBrush}">
