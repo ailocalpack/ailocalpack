@@ -25,9 +25,9 @@
 
 ## What it does
 
-- **Finds your games.** Your Steam library shows up on its own. Games from elsewhere: add their folder.
+- **Finds your games.** Your Steam, Epic Games, GOG and EA app games show up on their own (Heroic and Legendary too). Any other game: add its folder.
 - **Shows which games have a translation** into your language and installs one with a single click.
-- **Creates a translation when there is none.** An AI agent (Claude Code or Codex, on your own subscription) translates the game's text. You review the names and terms, then play.
+- **Creates a translation when there is none.** An AI agent (Claude Code or Codex on your own subscription, or your own model: Ollama, LM Studio, OpenRouter, OpenAI…) translates the game's text and tries it in the game. You review the names and terms, play, and tell the AI in your own words what to fix.
 - **Shares it with everyone.** Publish your translation in one click so other players get it too.
 - **Undo any time.** Every file a translation changes is backed up first. Uninstall it and the game is as it was.
 
@@ -53,8 +53,8 @@ The app updates itself: when a new version is ready, it offers *Restart to updat
 
 ### Install a translation
 
-1. Open the app. Your Steam games appear. Another game? Click **Folder** and pick the folder it is installed in.
-2. Choose your language at the top: **Translate to …**. Games that have a translation are marked *Translation available*.
+1. Open the app. Your games from Steam, Epic Games, GOG and the EA app appear. Another game? Click **Folder** and pick the folder it is installed in.
+2. Choose your language at the top: **Translate to …**. Games that have a translation are marked *Translation available*; games that already have your language themselves are marked *In game*.
 3. Open a game, pick a translation and click **Install**. Then play as usual.
 
 To go back to the original, open the game and click **Uninstall**.
@@ -66,9 +66,14 @@ To go back to the original, open the game and click **Uninstall**.
 No translation for your game yet? Open it and click **Create with AI**.
 
 - You need **Claude Code** (with a Claude Pro or Max subscription) or **Codex** (with a ChatGPT Plus or Pro subscription). The app installs the agent for you if it's missing and opens its sign-in. AI Local Pack itself costs nothing; the AI work counts against your own subscription.
+- Or use **your own model**: in *Settings → AI agents → Your models* add any server that speaks the OpenAI API, such as Ollama or LM Studio on your computer, or OpenRouter / OpenAI with your API key. (Games whose engine the app can't read need Claude Code or Codex.)
+- Pick the quality: **Quick**, **Balanced** (the default) or **Thorough**, which first studies the whole game and writes a brief so the tone and terms stay consistent.
 - Before starting, the app shows how big the job is. A large game can take hours, and if your subscription's limit runs out, the app waits and continues on its own.
 - Halfway through, you can check the list of names and terms (characters, places, how characters address each other) and fix anything you'd translate differently.
-- When it's done, click **Install & play**.
+- The app then tries the translation in the game by itself, and if the game crashes, the AI looks for the cause and fixes it.
+- When it's done, click **Install & play**. Something wrong? Tell the AI below the result in your own words (*"the menu text doesn't fit"*, *"call her Anna, not Ann"*) and it makes a fixed version.
+
+Can't make one yourself? On the game's **Text** tab click **Request translation**; other players add their vote, and translators see what players want.
 
 ### Share it
 
@@ -114,19 +119,19 @@ Yes, the app and every translation in it. Only creating a new translation with A
 Most games made with Unity, Unreal Engine 4 / 5, RPG Maker MV / MZ, Ren'Py and Godot. The app shows a game's engine on its card. For other engines the AI can still try to make a translation, with less certainty.
 
 **Is it safe for my game?**
-Installing a translation runs only the app's own code: no AI and no downloaded scripts touch your game. Translations contain only text, never programs, and every file they change is backed up so you can undo. The AI works on a copy of the game, never on the game itself.
+Installing a translation runs only the app's own code: no AI and no downloaded scripts touch your game. Translations contain only text, never programs, and every file they change is backed up so you can undo. When you create a translation, the AI only reads the game, and only the app itself changes its files: to try the translation it installs it for a test run and puts everything back afterwards.
 
 **Can I get banned?**
 Games with anti-cheat (Easy Anti-Cheat, BattlEye, Vanguard and others) are blocked: the app won't change them, unless the game officially allows mods.
 
 **What happens when the game updates?**
-A Steam update can overwrite the translation. The app notices and puts it back if it still fits the new version. If it doesn't, the app tells you and offers a newer version of the translation, or to translate only the new text with AI.
+A game update (or *Verify integrity of game files*) can overwrite the translation. The app notices and puts it back if it still fits the new version. If it doesn't, the app tells you and offers a newer version of the translation, or to translate only the new text with AI.
 
 **Which languages?**
 Any language Steam supports, as the language you translate games into. The app itself is in English, Deutsch, Español, Français, Italiano, 日本語, 한국어, Polski, Português (Brasil), Русский, Türkçe, Українська and 简体中文.
 
-**Steam Deck? Epic, GOG?**
-Planned. For now: Steam games, plus any game folder you add yourself (so Epic and GOG games work if you add their folder).
+**Epic, GOG, EA app? Steam Deck?**
+Steam, Epic Games, GOG and the EA app are found on their own, including Epic and GOG games installed through Heroic or Legendary; each store can be switched off in *Settings → Libraries*. Any other game works if you add its folder. Steam Deck isn't supported yet.
 
 **A translation is wrong or doesn't work.**
 Rate it in the app (*Doesn't work* with a short comment), or fix it with AI and publish the fix as its new version.
@@ -139,7 +144,7 @@ From players like you: they live in the public [translation registry](https://gi
 
 ## Status
 
-Early version: things may still break. Planned next: voice-over and translated textures in games, Steam Deck, more stores, and your own API key or a local AI model. Found a bug? [Open an issue](https://github.com/ailocalpack/ailocalpack/issues).
+Early version: things may still break. Planned next: voice-over and translated textures in games, Steam Deck, and more stores (Ubisoft Connect, itch.io, Amazon Games, Humble). Found a bug? [Open an issue](https://github.com/ailocalpack/ailocalpack/issues).
 
 ## For developers
 
@@ -155,8 +160,10 @@ AI Local Pack collects no telemetry and has no server of its own. It sends none 
 - **GitHub Pages** (`ailocalpack.github.io`): the list of translations, read at start and from time to time.
 - **GitHub** (`github.com`, `raw.githubusercontent.com`): the translation files you install, app updates (checked at start and every 6 hours), fonts a translation needs, and the official downloads of Claude Code / Codex when you ask the app to install one.
 - **Steam's image servers** (`steamstatic.com`): game covers.
+- **Steam's store** (`store.steampowered.com`): which languages a game already has, only for games Steam's own local data doesn't cover.
 - **The GitHub API** (`api.github.com`), only after you sign in with GitHub: publishing your translations, rating translations and following your pull requests. Your GitHub token is kept only in your system's keychain.
 - **Your AI agent** (Claude Code from `downloads.claude.ai`, or Codex), only when you create a translation. The agent sends the game's text to its vendor (Anthropic or OpenAI) under that vendor's privacy policy and your own account.
+- **Your own model's server**, only when you create a translation with it: the address you entered (on your computer for Ollama or LM Studio, otherwise the service you chose, such as OpenRouter or OpenAI). Its API key is kept only in your system's keychain.
 
 What you publish (your translation and your GitHub user name as its author, ratings and comments) is public on GitHub.
 
