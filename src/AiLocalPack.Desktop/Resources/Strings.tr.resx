@@ -3436,6 +3436,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI başarısız</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · Çevirinin yazarı bekleniyor</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>Bu, başka birinin çevirisinin yeni bir revizyonu; yazarlarından biri GitHub'da pull request'i onaylayınca eklenir. GitHub onlara haber verdi; yanıt verene kadar hiçbir şey olmaz.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · Yazar değişiklik istedi</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>Çevirinin yazarlarından biri pull request'te değişiklik istedi: yorumu GitHub'da. Eklenip eklenmeyeceğine bir bakımcı karar verir; ayrı bir çeviri olarak da yayımlayabilirsin.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · yazar bekleniyor</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · yazar değişiklik istedi</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} birleştirildi · alfa</value>
   </data>

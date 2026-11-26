@@ -74,6 +74,50 @@ public sealed class PullRequestStatusTests : IDisposable
     // ---------- Pull request ----------
 
     [Fact]
+    public void A_pull_request_labelled_awaiting_author_waits_for_the_author()
+    {
+        // Act
+        var review = PullRequestStatuses.Review(Json("""{"labels":[{"name":"pack"},{"name":"awaiting-author"}]}"""));
+
+        // Assert
+        review.Should().Be(AuthorReview.Awaiting);
+    }
+
+    [Fact]
+    public void An_author_declining_wins_over_waiting()
+    {
+        // Act
+        var review = PullRequestStatuses.Review(Json("""{"labels":[{"name":"awaiting-author"},{"name":"author-declined"}]}"""));
+
+        // Assert
+        review.Should().Be(AuthorReview.Declined);
+    }
+
+    [Fact]
+    public void A_pull_request_without_labels_waits_for_nobody()
+    {
+        // Act
+        var review = PullRequestStatuses.Review(Json(Pull()));
+
+        // Assert
+        review.Should().Be(AuthorReview.None);
+    }
+
+    [Fact]
+    public async Task An_open_pull_request_comes_with_its_author_review()
+    {
+        // Arrange
+        Answer("pulls/7", Pull().Replace("\"number\":7,", "\"number\":7,\"labels\":[{\"name\":\"awaiting-author\"}],", StringComparison.Ordinal));
+        Answer($"commits/{Head}/check-runs?per_page=100", Runs(Run(42, "completed", "success")));
+
+        // Act
+        var result = await CheckAsync();
+
+        // Assert
+        result.Should().BeOfType<PullRequestCheckResult.Checked>().Which.Status.Review.Should().Be(AuthorReview.Awaiting);
+    }
+
+    [Fact]
     public void A_merged_pull_request_is_merged_whatever_its_state_says()
     {
         // Act

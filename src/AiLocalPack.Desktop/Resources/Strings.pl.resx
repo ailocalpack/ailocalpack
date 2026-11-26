@@ -3535,6 +3535,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI nie przeszło</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · Czeka na autora tłumaczenia</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>To nowa rewizja cudzego tłumaczenia, więc trafi do rejestru, gdy jeden z jego autorów zatwierdzi pull request na GitHubie. GitHub już ich powiadomił; dopóki nie odpowiedzą, nic się nie stanie.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · Autor poprosił o zmiany</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>Jeden z autorów tłumaczenia poprosił o zmiany w pull requeście: jego komentarz jest na GitHubie. O przyjęciu zdecyduje opiekun; możesz też opublikować ją jako osobne tłumaczenie.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · czeka na autora</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · autor poprosił o zmiany</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} scalony · alfa</value>
   </data>

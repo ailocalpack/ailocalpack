@@ -9,6 +9,14 @@ namespace AiLocalPack.Desktop.Publishing;
 /// <summary>The publish flow's words in the UI language (the publish client's own messages are English, for the log and the CLI).</summary>
 public static class PublishTexts
 {
+    /// <summary>The resource key of the Mine / Settings row while the PR is open: CI running, or waiting for the pack's authors.</summary>
+    public static string RowChecking(AuthorReview review) => review switch
+    {
+        AuthorReview.Awaiting => nameof(Strings.Publish_Row_AwaitingAuthor),
+        AuthorReview.Declined => nameof(Strings.Publish_Row_AuthorDeclined),
+        _ => nameof(Strings.Publish_Row_Checking),
+    };
+
     /// <summary>The mini-step's label: "Fork the registry", "Commit the pack", "Open a pull request".</summary>
     public static string Step(PublishStep step, Localizer localizer)
     {

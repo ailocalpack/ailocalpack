@@ -3337,6 +3337,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI 失敗</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · 翻訳の作者の承認待ち</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>他の人の翻訳の新しいリビジョンなので、作者の誰かが GitHub でプルリクエストを承認すると取り込まれます。GitHub から作者に通知済みです。返答があるまで何も起きません。</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · 作者が変更を求めました</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>翻訳の作者の一人がプルリクエストで変更を求めました。コメントは GitHub にあります。取り込むかはメンテナーが決めます。別の翻訳として公開することもできます。</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · 作者の承認待ち</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · 作者が変更を要求</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} マージ済み · アルファ</value>
   </data>

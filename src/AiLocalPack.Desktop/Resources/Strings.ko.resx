@@ -3337,6 +3337,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI 실패</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · 번역 작성자의 승인 대기 중</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>다른 사람 번역의 새 리비전이므로 작성자 중 한 명이 GitHub에서 풀 리퀘스트를 승인하면 반영됩니다. GitHub가 작성자에게 알렸으며, 답이 올 때까지는 아무 일도 일어나지 않습니다.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · 작성자가 변경을 요청했습니다</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>번역 작성자 중 한 명이 풀 리퀘스트에서 변경을 요청했습니다. 댓글은 GitHub에 있습니다. 반영 여부는 메인테이너가 결정하며, 별도의 번역으로 게시할 수도 있습니다.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · 작성자 대기 중</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · 작성자가 변경 요청</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} 병합됨 · 알파</value>
   </data>

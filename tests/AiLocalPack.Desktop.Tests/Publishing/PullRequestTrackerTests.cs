@@ -4,7 +4,9 @@ using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Publishing;
 using AiLocalPack.Desktop.Registry;
+using AiLocalPack.Desktop.Localization;
 using AiLocalPack.Desktop.Tests.Install;
+using AiLocalPack.Desktop.ViewModels.GamePage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AiLocalPack.Desktop.Tests.Publishing;
@@ -39,6 +41,58 @@ public sealed class PullRequestTrackerTests
     private static LocalPack Fresh(InstallBed bed) => bed.Services.GetRequiredService<LocalPacks>().Find(InstallBed.Alpha, "ru", "claude-code")!;
 
     private static PublishStatus StatusOf(InstallBed bed) => bed.Services.GetRequiredService<PublishFlow>().StatusOf(Fresh(bed));
+
+    private static PackPublishViewModel Strip(InstallBed bed) =>
+        new(bed.Services.GetRequiredService<PublishFlow>(), () => bed.Game, Fresh(bed), bed.Services.GetRequiredService<Localizer>());
+
+    [Fact]
+    public async Task A_revision_waiting_for_the_packs_author_says_so_in_the_strip()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        Sent(bed);
+        GitHub(bed).AnswerReview(7, AuthorReview.Awaiting);
+
+        // Act
+        await Tracker(bed).CheckAsync(all: true, TestContext.Current.CancellationToken);
+
+        // Assert
+        var strip = Strip(bed);
+        (strip.Phase, strip.Title, strip.RowMeta).Should().Be((PublishPhase.Checking, "PR #7 · Waiting for the translation's author", "PR #7 · waiting for the author"));
+    }
+
+    [Fact]
+    public async Task A_revision_the_author_asked_changes_for_says_a_maintainer_decides()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        Sent(bed);
+        GitHub(bed).AnswerReview(7, AuthorReview.Declined);
+
+        // Act
+        await Tracker(bed).CheckAsync(all: true, TestContext.Current.CancellationToken);
+
+        // Assert
+        var strip = Strip(bed);
+        (strip.Title, strip.Text.Contains("A maintainer decides", StringComparison.Ordinal)).Should().Be(("PR #7 · The author asked for changes", true));
+    }
+
+    [Fact]
+    public async Task The_author_approving_a_revision_takes_the_wait_away()
+    {
+        // Arrange
+        using var bed = await InstallBed.CreateAsync();
+        Sent(bed);
+        GitHub(bed).AnswerReview(7, AuthorReview.Awaiting);
+        await Tracker(bed).CheckAsync(all: true, TestContext.Current.CancellationToken);
+        GitHub(bed).AnswerReview(7, AuthorReview.None);
+
+        // Act
+        await Tracker(bed).CheckAsync(all: true, TestContext.Current.CancellationToken);
+
+        // Assert
+        StatusOf(bed).Review.Should().Be(AuthorReview.None);
+    }
 
     [Fact]
     public async Task An_open_pr_is_read_from_the_registry_it_went_to()

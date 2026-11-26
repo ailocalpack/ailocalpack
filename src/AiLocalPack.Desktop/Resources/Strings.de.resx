@@ -3436,6 +3436,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI fehlgeschlagen</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · Wartet auf den Autor der Übersetzung</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>Das ist eine neue Revision einer fremden Übersetzung: Sie wird aufgenommen, sobald einer ihrer Autoren den Pull-Request auf GitHub genehmigt. GitHub hat sie benachrichtigt; bis sie antworten, passiert nichts.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · Der Autor bittet um Änderungen</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>Einer der Autoren der Übersetzung bittet im Pull-Request um Änderungen: Sein Kommentar steht auf GitHub. Ob sie aufgenommen wird, entscheidet ein Maintainer; du kannst sie auch als eigene Übersetzung veröffentlichen.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · wartet auf den Autor</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · Autor bittet um Änderungen</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} gemergt · Alpha</value>
   </data>

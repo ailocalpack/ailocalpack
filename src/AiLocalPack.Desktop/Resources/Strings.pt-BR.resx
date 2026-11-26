@@ -3535,6 +3535,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · o CI falhou</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · Aguardando o autor da tradução</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>É uma nova revisão da tradução de outra pessoa: ela entra quando um dos autores aprovar o pull request no GitHub. O GitHub já os avisou; nada acontece até eles responderem.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · O autor pediu alterações</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>Um dos autores da tradução pediu alterações no pull request: o comentário está no GitHub. Um mantenedor decide se ela entra; você também pode publicá-la como uma tradução separada.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · aguardando o autor</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · o autor pediu alterações</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} mesclado · alfa</value>
   </data>

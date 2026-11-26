@@ -45,13 +45,16 @@ public sealed record PublishRun(string Key, PublishStep? Step, string TargetTitl
 /// <param name="Publication">The PR the pack was sent as (<see cref="PublishPhase.Checking"/>, <see cref="PublishPhase.Published"/>).</param>
 /// <param name="Live">The registry's pack once the index lists the sent revision.</param>
 /// <param name="CiFailure">Why registry CI rejected the PR (<see cref="PublishPhase.CiFailed"/>).</param>
+/// <param name="Review">While <see cref="PublishPhase.Checking"/>: whether a revision of someone else's pack waits for
+/// its authors' approval, or one of them asked for changes.</param>
 public sealed record PublishStatus(
     PublishPhase Phase,
     PublishRun? Run = null,
     PublishResult.Failed? Failure = null,
     LocalPackPublication? Publication = null,
     RegistryPack? Live = null,
-    CiFailure? CiFailure = null)
+    CiFailure? CiFailure = null,
+    AuthorReview Review = AuthorReview.None)
 {
     public static PublishStatus NotPublished { get; } = new(PublishPhase.NotPublished);
 }
@@ -75,7 +78,7 @@ public static class PublishStatuses
     /// when the index lists its pack at the sent revision or later; otherwise, from the report's PR state and what the
     /// tracker last read (task 62): merged → <see cref="PublishPhase.Merged"/>, closed → <see cref="PublishPhase.Closed"/>,
     /// CI failed → <see cref="PublishPhase.CiFailed"/>, else <see cref="PublishPhase.Checking"/> (CI running, or not read
-    /// yet); no PR → <see cref="PublishPhase.NotPublished"/>.
+    /// yet; with the tracker's <see cref="AuthorReview"/> when it waits for the pack's authors); no PR → <see cref="PublishPhase.NotPublished"/>.
     /// </summary>
     public static PublishStatus Of(LocalPack pack, RegistryIndex? index, PublishRun? running, PublishResult.Failed? failure, TrackedPullRequest? tracked = null)
     {
@@ -108,7 +111,7 @@ public static class PublishStatuses
             PullRequestState.Merged => new PublishStatus(PublishPhase.Merged, Publication: publication),
             PullRequestState.Closed => new PublishStatus(PublishPhase.Closed, Publication: publication),
             _ when tracked is { Status.Ci: CiState.Failed, Failure: { } ci } => new PublishStatus(PublishPhase.CiFailed, Publication: publication, CiFailure: ci),
-            _ => new PublishStatus(PublishPhase.Checking, Publication: publication),
+            _ => new PublishStatus(PublishPhase.Checking, Publication: publication, Review: tracked?.Status?.Review ?? AuthorReview.None),
         };
     }
 

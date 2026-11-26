@@ -3535,6 +3535,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI не прошёл</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · Ждёт автора перевода</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>Это новая ревизия чужого перевода, поэтому она попадёт в реестр, когда один из его авторов одобрит pull request на GitHub. GitHub уже сообщил им; пока они не ответят, ничего не произойдёт.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · Автор попросил изменений</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>Один из авторов перевода попросил изменений в pull request: его комментарий на GitHub. Принять ли ревизию, решит мейнтейнер; можно также опубликовать её отдельным переводом.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · ждёт автора</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · автор попросил изменений</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} принят · alpha</value>
   </data>

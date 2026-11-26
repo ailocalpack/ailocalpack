@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Text.Json.Nodes;
 using AiLocalPack.Core.Packs;
 
 namespace AiLocalPack.Cli.Tests;
@@ -38,12 +39,34 @@ public sealed class PackValidateTests : IDisposable
         return folder;
     }
 
+    /// <summary>Changes the manifest of the pack at <paramref name="folder"/> as JSON.</summary>
+    private static void Change(string folder, Action<JsonObject> change)
+    {
+        var path = Path.Combine(folder, "manifest.json");
+        var json = JsonNode.Parse(File.ReadAllText(path))!.AsObject();
+        change(json);
+        File.WriteAllText(path, json.ToJsonString());
+    }
+
+    /// <summary>Revision 3 by <paramref name="by"/> on top of the pack at <paramref name="folder"/>, its author appended.</summary>
+    private static void AddRevision(string folder, string by = "carol")
+    {
+        Change(folder, json =>
+        {
+            json["revision"] = 3;
+            json["revisions"]!.AsArray().Add(new JsonObject { ["revision"] = 3, ["date"] = "2026-11-20T00:00:00Z", ["by"] = by });
+            json["authors"]!.AsArray().Add(new JsonObject { ["github"] = by });
+            json["status"] = "alpha";
+        });
+    }
+
     [Fact]
     public async Task A_revision_dropping_a_platform_of_the_merged_one_fails()
     {
         // Arrange
         CopyPackOn("base", "windows");
         var folder = CopyPackOn("pr", "macos");
+        AddRevision(folder);
 
         // Act
         var result = await CliRunner.RunAsync("pack", "validate", folder, "--github", "--base", _dir.Combine("base"));
@@ -59,6 +82,7 @@ public sealed class PackValidateTests : IDisposable
         // Arrange
         CopyPackOn("base", "windows");
         var folder = CopyPackOn("pr", "windows");
+        AddRevision(folder);
 
         // Act
         var result = await CliRunner.RunAsync("pack", "validate", folder, "--base", _dir.Combine("base"));
@@ -73,12 +97,88 @@ public sealed class PackValidateTests : IDisposable
         // Arrange
         Directory.CreateDirectory(_dir.Combine("base"));
         var folder = CopyPackOn("pr", "macos");
+        Change(folder, json =>
+        {
+            json["revision"] = 1;
+            json["revisions"]!.AsArray().RemoveAt(1);
+            json["authors"]!.AsArray().RemoveAt(1);
+        });
 
         // Act
         var result = await CliRunner.RunAsync("pack", "validate", folder, "--base", _dir.Combine("base"));
 
         // Assert
         result.ExitCode.Should().Be(0, result.StdOut);
+    }
+
+    [Fact]
+    public async Task A_revision_putting_its_author_first_fails()
+    {
+        // Arrange
+        CopyPackOn("base", "windows");
+        var folder = CopyPackOn("pr", "windows");
+        AddRevision(folder);
+        Change(folder, json =>
+        {
+            var authors = json["authors"]!.AsArray();
+            var carol = authors[2]!;
+            authors.RemoveAt(2);
+            authors.Insert(0, carol);
+        });
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--github", "--base", _dir.Combine("base"));
+
+        // Assert
+        (result.ExitCode, result.StdOut).Should().Match<(int, string)>(r =>
+            r.Item1 == 1 && r.Item2.Contains("title=history::the pack's authors (alice, bob-2) must stay first", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task A_revision_rewriting_an_earlier_revision_fails()
+    {
+        // Arrange
+        CopyPackOn("base", "windows");
+        var folder = CopyPackOn("pr", "windows");
+        AddRevision(folder);
+        Change(folder, json => json["revisions"]![0]!["by"] = "bob-2");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--github", "--base", _dir.Combine("base"));
+
+        // Assert
+        (result.ExitCode, result.StdOut).Should().Match<(int, string)>(r =>
+            r.Item1 == 1 && r.Item2.Contains("title=history::revisions 1–2 must stay as the registry has them", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task A_revision_that_is_not_the_next_number_fails()
+    {
+        // Arrange
+        CopyPackOn("base", "windows");
+        var folder = CopyPackOn("pr", "windows");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--github", "--base", _dir.Combine("base"));
+
+        // Assert
+        (result.ExitCode, result.StdOut).Should().Match<(int, string)>(r =>
+            r.Item1 == 1 && r.Item2.Contains("title=history::the registry has revision 2 of this pack, so the next one is 3, not 2.", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task A_new_pack_with_a_made_up_history_fails()
+    {
+        // Arrange
+        Directory.CreateDirectory(_dir.Combine("base"));
+        var folder = CopyPackOn("pr", "windows");
+
+        // Act
+        var result = await CliRunner.RunAsync("pack", "validate", folder, "--github", "--base", _dir.Combine("base"));
+
+        // Assert
+        (result.ExitCode, result.StdOut).Should().Match<(int, string)>(r =>
+            r.Item1 == 1 && r.Item2.Contains("title=history::a new pack starts at revision 1, not 2.", StringComparison.Ordinal));
     }
 
     [Fact]

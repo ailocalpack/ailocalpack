@@ -110,7 +110,12 @@ public sealed partial class PackPublishViewModel : ObservableObject
     public string Title => Phase switch
     {
         PublishPhase.Sending => _localizer.Format(nameof(Strings.Publish_Sending_Title), PublishTexts.Target(Status.Run!.TargetTitle, Status.Run.TargetRevision, _localizer)),
-        PublishPhase.Checking => _localizer.Format(nameof(Strings.Publish_Checking_Title), Status.Publication!.PullRequest),
+        PublishPhase.Checking => _localizer.Format(Status.Review switch
+        {
+            AuthorReview.Awaiting => nameof(Strings.Publish_AwaitingAuthor_Title),
+            AuthorReview.Declined => nameof(Strings.Publish_AuthorDeclined_Title),
+            _ => nameof(Strings.Publish_Checking_Title),
+        }, Status.Publication!.PullRequest),
         PublishPhase.Failed => _localizer.Format(nameof(Strings.Publish_Failed_Title), Pack.Manifest.Title),
         PublishPhase.Published => _localizer.Format(nameof(Strings.Publish_Published_Title), PublishedTarget, StatusName),
         PublishPhase.CiFailed => _localizer.Format(nameof(Strings.Publish_CiFailed_Title), Status.Publication!.PullRequest),
@@ -122,7 +127,12 @@ public sealed partial class PackPublishViewModel : ObservableObject
     /// <summary>The strip's second line (what happens now, the failure's reason, how a pack becomes verified).</summary>
     public string Text => Phase switch
     {
-        PublishPhase.Checking => _localizer[nameof(Strings.Publish_Checking_Text)],
+        PublishPhase.Checking => _localizer[Status.Review switch
+        {
+            AuthorReview.Awaiting => nameof(Strings.Publish_AwaitingAuthor_Text),
+            AuthorReview.Declined => nameof(Strings.Publish_AuthorDeclined_Text),
+            _ => nameof(Strings.Publish_Checking_Text),
+        }],
         PublishPhase.Failed => PublishTexts.Failure(Status.Failure!, _flow.Registry, _localizer),
         PublishPhase.Published when Status.Live!.Status == PackStatus.Verified => _localizer[nameof(Strings.Publish_Published_VerifiedText)],
         PublishPhase.Published => _localizer.Format(nameof(Strings.Publish_Published_Text), PublishStatuses.VerifiedConfirmations),
@@ -184,7 +194,7 @@ public sealed partial class PackPublishViewModel : ObservableObject
     public string? RowMeta => Phase switch
     {
         PublishPhase.Sending => _localizer[nameof(Strings.Publish_Row_Sending)],
-        PublishPhase.Checking => _localizer.Format(nameof(Strings.Publish_Row_Checking), Status.Publication!.PullRequest),
+        PublishPhase.Checking => _localizer.Format(PublishTexts.RowChecking(Status.Review), Status.Publication!.PullRequest),
         PublishPhase.Published => _localizer.Format(nameof(Strings.Publish_Row_Published), StatusName, Status.Live!.Revision),
         PublishPhase.Failed => _localizer[nameof(Strings.Publish_Row_Failed)],
         PublishPhase.CiFailed => _localizer.Format(nameof(Strings.Publish_Row_CiFailed), Status.Publication!.PullRequest),

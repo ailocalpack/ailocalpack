@@ -30,6 +30,23 @@ public enum CiState
     Failed,
 }
 
+/// <summary>
+/// Whether a revision of someone else's pack waits for its authors (decided 2026-11-26): registry CI merges a revision by
+/// a player who isn't among the merged pack's authors only once one of them approves the PR (a GitHub review), and
+/// labels the PR meanwhile (<see cref="PullRequestStatuses.AwaitingAuthorLabel"/>, <see cref="PullRequestStatuses.AuthorDeclinedLabel"/>).
+/// </summary>
+public enum AuthorReview
+{
+    /// <summary>Nothing to wait for: the player's own pack, a new pack, or an approved revision.</summary>
+    None,
+
+    /// <summary>Waits for an author's approval; nothing happens without one.</summary>
+    Awaiting,
+
+    /// <summary>An author asked for changes: a maintainer decides.</summary>
+    Declined,
+}
+
 public enum CiAnnotationLevel
 {
     Notice,
@@ -46,13 +63,15 @@ public sealed record CiAnnotation(string? Path, CiAnnotationLevel Level, string?
 /// <param name="HeadSha">The PR's head commit (a push to the branch changes it and starts CI again).</param>
 /// <param name="Annotations">The failed checks' annotations when <see cref="Ci"/> is <see cref="CiState.Failed"/>.</param>
 /// <param name="ClosedAt">When it was merged or closed.</param>
+/// <param name="Review">Whether it waits for the pack's authors (an open PR's labels).</param>
 public sealed record PullRequestStatus(
     int Number,
     PullRequestState State,
     string HeadSha,
     CiState Ci,
     IReadOnlyList<CiAnnotation> Annotations,
-    DateTimeOffset? ClosedAt = null);
+    DateTimeOffset? ClosedAt = null,
+    AuthorReview Review = AuthorReview.None);
 
 /// <summary>How <see cref="PullRequestStatusClient.CheckAsync"/> ended.</summary>
 public abstract record PullRequestCheckResult
@@ -109,7 +128,7 @@ public sealed class PullRequestStatusClient(HttpClient http, GitHubOAuthApp app,
                 }
             }
 
-            return new PullRequestCheckResult.Checked(new PullRequestStatus(number, state, head, ci, annotations));
+            return new PullRequestCheckResult.Checked(new PullRequestStatus(number, state, head, ci, annotations, Review: PullRequestStatuses.Review(pull)));
         }
         catch (GitHubApiException e)
         {
@@ -144,6 +163,23 @@ public sealed class PullRequestStatusClient(HttpClient http, GitHubOAuthApp app,
 /// <summary>GitHub's pull request and check run answers read into states (pure).</summary>
 public static class PullRequestStatuses
 {
+    /// <summary>Registry CI's label on a revision PR that waits for an author's approval.</summary>
+    public const string AwaitingAuthorLabel = "awaiting-author";
+
+    /// <summary>Registry CI's label on a revision PR an author asked changes for.</summary>
+    public const string AuthorDeclinedLabel = "author-declined";
+
+    /// <summary>The PR's <see cref="AuthorReview"/> from its labels (declined wins).</summary>
+    public static AuthorReview Review(JsonElement pull)
+    {
+        var labels = Property(pull, "labels") is { ValueKind: JsonValueKind.Array } array
+            ? array.EnumerateArray().Select(l => Text(l, "name")).ToHashSet(StringComparer.Ordinal)
+            : [];
+        return labels.Contains(AuthorDeclinedLabel) ? AuthorReview.Declined
+            : labels.Contains(AwaitingAuthorLabel) ? AuthorReview.Awaiting
+            : AuthorReview.None;
+    }
+
     /// <summary>A pull request's state (merged wins over closed), head SHA and when it was merged or closed.</summary>
     public static (PullRequestState State, string? Head, DateTimeOffset? ClosedAt) Pull(JsonElement pull)
     {

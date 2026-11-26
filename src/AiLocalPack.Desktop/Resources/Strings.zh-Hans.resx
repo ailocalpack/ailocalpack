@@ -3337,6 +3337,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI 失败</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · 等待翻译作者批准</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>这是他人翻译的新修订版，需由其作者之一在 GitHub 上批准该拉取请求后才会收录。GitHub 已通知他们；在他们回复之前不会有任何变化。</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · 作者要求修改</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>该翻译的一位作者在拉取请求中要求修改：评论在 GitHub 上。是否收录由维护者决定；你也可以将其作为单独的翻译发布。</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · 等待作者</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · 作者要求修改</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} 已合并 · alpha</value>
   </data>

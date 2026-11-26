@@ -269,7 +269,7 @@ public sealed class PullRequestTracker : IDisposable
                     entry.RetryAt = null;
                     entry.Status = status;
                     entry.Failure = failure;
-                    if (before is null || before.State != status.State || before.Ci != status.Ci || before.HeadSha != status.HeadSha)
+                    if (before is null || before.State != status.State || before.Ci != status.Ci || before.HeadSha != status.HeadSha || before.Review != status.Review)
                     {
                         entry.Since = now;
                     }
@@ -278,9 +278,9 @@ public sealed class PullRequestTracker : IDisposable
                 }
 
                 Record(entry, before, status, failure);
-                if (before is null || before.State != status.State || before.Ci != status.Ci || before.HeadSha != status.HeadSha)
+                if (before is null || before.State != status.State || before.Ci != status.Ci || before.HeadSha != status.HeadSha || before.Review != status.Review)
                 {
-                    _logger.LogInformation("PR {Registry}#{Number}: {State}, CI {Ci} at {Head}{Reason}", registry, publication.PullRequest, status.State, status.Ci, status.HeadSha, failure is null ? "" : $" ({failure.Kind}: {failure.FirstProblem})");
+                    _logger.LogInformation("PR {Registry}#{Number}: {State}, CI {Ci}, author review {Review} at {Head}{Reason}", registry, publication.PullRequest, status.State, status.Ci, status.Review, status.HeadSha, failure is null ? "" : $" ({failure.Kind}: {failure.FirstProblem})");
                     Changed?.Invoke(this, game);
                 }
 

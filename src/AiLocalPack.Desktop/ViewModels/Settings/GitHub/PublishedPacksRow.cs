@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using AiLocalPack.Core.Games;
 using AiLocalPack.Core.Languages;
 using AiLocalPack.Core.Packs;
+using AiLocalPack.Core.Publishing;
 using AiLocalPack.Desktop.Generation;
 using AiLocalPack.Desktop.Library;
 using AiLocalPack.Desktop.Publishing;
@@ -123,7 +124,7 @@ public sealed class PublishedPackItem
             PublishPhase.Closed => localizer.Format(nameof(Strings.Publish_Row_Closed), publication.PullRequest),
             PublishPhase.Sending => localizer[nameof(Strings.Publish_Row_Sending)],
             PublishPhase.Failed => localizer[nameof(Strings.Publish_Row_Failed)],
-            _ => localizer.Format(nameof(Strings.Publish_Row_Checking), publication.PullRequest),
+            _ => localizer.Format(PublishTexts.RowChecking(status.Review), publication.PullRequest),
         };
         Likes = status.Live?.Rating.Likes;
         LikesName = Likes is { } likes ? localizer.Format(nameof(Strings.Settings_PublishedPack_Likes), likes) : null;

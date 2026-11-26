@@ -3535,6 +3535,24 @@
   <data name="Publish_Row_CiFailed" xml:space="preserve">
     <value>PR #{0} · CI non riuscita</value>
   </data>
+  <data name="Publish_AwaitingAuthor_Title" xml:space="preserve">
+    <value>PR #{0} · In attesa dell'autore della traduzione</value>
+  </data>
+  <data name="Publish_AwaitingAuthor_Text" xml:space="preserve">
+    <value>È una nuova revisione della traduzione di un'altra persona: entra quando uno dei suoi autori approva la pull request su GitHub. GitHub li ha già avvisati; finché non rispondono non succede nulla.</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Title" xml:space="preserve">
+    <value>PR #{0} · L'autore ha chiesto modifiche</value>
+  </data>
+  <data name="Publish_AuthorDeclined_Text" xml:space="preserve">
+    <value>Uno degli autori della traduzione ha chiesto modifiche nella pull request: il suo commento è su GitHub. Decide un maintainer se entra; puoi anche pubblicarla come traduzione separata.</value>
+  </data>
+  <data name="Publish_Row_AwaitingAuthor" xml:space="preserve">
+    <value>PR #{0} · in attesa dell'autore</value>
+  </data>
+  <data name="Publish_Row_AuthorDeclined" xml:space="preserve">
+    <value>PR #{0} · l'autore ha chiesto modifiche</value>
+  </data>
   <data name="Publish_Row_Merged" xml:space="preserve">
     <value>PR #{0} accettata · alpha</value>
   </data>

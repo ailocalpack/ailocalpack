@@ -221,7 +221,7 @@ internal static class PackCommand
         var github = new Option<bool>("--github") { Description = "Also print problems as GitHub Actions annotations (::error file=...)." };
         var baseRoot = new Option<string?>("--base")
         {
-            Description = "The registry as merged (a checkout of the base commit): a pack that is there too (games/<game>/<language>/<pack id>) is a new revision, refused when it supports fewer platforms (Windows, macOS, Linux) than the merged one.",
+            Description = "The registry as merged (a checkout of the base commit): a pack that is there too (games/<game>/<language>/<pack id>) is a new revision: refused unless it is the merged revision + 1 keeping its revisions, created date and authors (first, in order), and when it supports fewer platforms (Windows, macOS, Linux) than the merged one; a pack that isn't there must be revision 1.",
         };
         var validate = new Command(
             "validate",
@@ -238,10 +238,16 @@ internal static class PackCommand
             foreach (var folder in result.GetValue(folders)!)
             {
                 var validation = PackValidator.Validate(folder, cancellationToken);
-                if (merged is not null && validation.Manifest is { } revision && MergedManifest(merged, revision) is { } previous
-                    && PackPlatforms.Problem(previous, revision) is { } lost)
+                if (merged is not null && validation.Manifest is { } revision)
                 {
-                    validation = validation with { Problems = [.. validation.Problems, lost] };
+                    var previous = MergedManifest(merged, revision);
+                    IEnumerable<PackProblem> problems = PackHistory.Problems(previous, revision);
+                    if (previous is not null && PackPlatforms.Problem(previous, revision) is { } lost)
+                    {
+                        problems = problems.Append(lost);
+                    }
+
+                    validation = validation with { Problems = [.. validation.Problems, .. problems] };
                 }
 
                 allValid &= validation.IsValid;
